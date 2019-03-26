@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.IO;
 using System.Linq;
@@ -26,19 +27,7 @@ namespace ALE.ETLBox.DataFlow {
         public override void Execute() => ExecuteAsync();
 
         /* Public properties */
-        public int CSVReaderBufferSize { get; set; } = 2048;
-        public Encoding Encoding { get; set; } = Encoding.UTF8;
-        public int SourceCommentRows { get; set; } = 0;
-        public bool TrimFields { get; set; } = true;
-        public string Delimiter { get; set; } = ",";
-        public char Esacpe { get; set; } = '"';
-        public char Quote { get; set; } = '"';
-        public bool LineBreakInQuotedFieldIsBadData { get; set; }
-        public bool IgnoreQuotes { get; set; }
-        public bool AllowComments { get; set; } = true;
-        public char Comment { get; set; } = '/';
-        public bool SkipEmptyRecords { get; set; } = true;
-        public bool IgnoreBlankLines { get; set; } = true;
+        public Configuration Configuration { get; set; }
         public string FileName { get; set; }
         public string[] FieldHeaders { get; private set; }
 
@@ -56,6 +45,7 @@ namespace ALE.ETLBox.DataFlow {
             NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BufferBlock<TOutput>();
             TypeInfo = new TypeInfo(typeof(TOutput));
+            Configuration = new Configuration();
         }
 
         public CSVSource(string fileName) : this() {
@@ -77,14 +67,9 @@ namespace ALE.ETLBox.DataFlow {
         }
 
         private void Open() {
-            StreamReader = new StreamReader(FileName, Encoding.UTF8);
-            SkipSourceCommentRows();
-            CsvReader = new CsvReader(StreamReader);
-            ConfigureCSVReader();
-        }
-        private void SkipSourceCommentRows() {
-            for (int i = 0; i < SourceCommentRows; i++)
-                StreamReader.ReadLine();
+            StreamReader = new StreamReader(FileName, Configuration.Encoding ?? Encoding.UTF8);
+            CsvReader = new CsvReader(StreamReader, Configuration);
+
         }
 
         private async Task ReadAll() {
@@ -104,21 +89,6 @@ namespace ALE.ETLBox.DataFlow {
                 TOutput bufferObject = CsvReader.GetRecord<TOutput>();
                 await Buffer.SendAsync(bufferObject);
             }
-        }
-
-        private void ConfigureCSVReader() {
-
-            CsvReader.Configuration.BufferSize = CSVReaderBufferSize;
-            CsvReader.Configuration.Delimiter = Delimiter;
-            CsvReader.Configuration.Escape = Esacpe;
-            CsvReader.Configuration.Quote = Quote;
-            CsvReader.Configuration.IgnoreQuotes = IgnoreQuotes;
-            CsvReader.Configuration.AllowComments = AllowComments;
-            CsvReader.Configuration.Comment = Comment;
-            CsvReader.Configuration.IgnoreBlankLines = IgnoreBlankLines;
-            CsvReader.Configuration.IgnoreBlankLines = LineBreakInQuotedFieldIsBadData;
-            CsvReader.Configuration.TrimOptions = TrimFields ? CsvHelper.Configuration.TrimOptions.Trim : CsvHelper.Configuration.TrimOptions.None;
-            CsvReader.Configuration.Encoding = Encoding;
         }
 
         private void Close() {

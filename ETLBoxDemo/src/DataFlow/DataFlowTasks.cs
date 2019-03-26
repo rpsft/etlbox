@@ -21,7 +21,7 @@ namespace ALE.ETLBoxDemo {
         TableDefinition CustomerTableDef = new TableDefinition("demo.Customer",
             new List<TableColumn>() {
                 new TableColumn("CustomerKey", "int",allowNulls: false, isPrimaryKey:true, isIdentity:true),
-                new TableColumn("Name","nvarchar(200)", allowNulls: false),                
+                new TableColumn("Name","nvarchar(200)", allowNulls: false),
             });
 
         TableDefinition CustomerRatingTableDef = new TableDefinition("demo.CustomerRating",
@@ -29,7 +29,7 @@ namespace ALE.ETLBoxDemo {
                new TableColumn("RatingKey", "int",allowNulls: false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("CustomerKey", "int",allowNulls: false),
                 new TableColumn("TotalAmount","decimal(10,2)", allowNulls: false),
-                new TableColumn("Rating","nvarchar(3)", allowNulls: false)                
+                new TableColumn("Rating","nvarchar(3)", allowNulls: false)
            });
 
 
@@ -48,18 +48,18 @@ namespace ALE.ETLBoxDemo {
             SqlTask.ExecuteNonQuery("Fill customer table", "INSERT INTO demo.Customer values('Margit Gries')");
         }
 
-        public class Order {            
+        public class Order {
             public string Number { get; set; }
             public string Item { get; set; }
-            public decimal Amount { get; set; }            
+            public decimal Amount { get; set; }
             public int CustomerKey { get; set; }
-            public string CustomerName { get; set; }            
+            public string CustomerName { get; set; }
             public Rating Rating { get; set; }
         }
 
         public class Customer {
             public int CustomerKey { get; set; }
-            public string CustomerName { get; set; }            
+            public string CustomerName { get; set; }
         }
 
         public class Rating {
@@ -79,15 +79,15 @@ namespace ALE.ETLBoxDemo {
             }
         }
 
-        
+
         public void Start() {
             CSVSource sourceOrderData = new CSVSource("src/DataFlow/DemoData.csv");
-            sourceOrderData.Delimiter = ";";
+            sourceOrderData.Configuration.Delimiter = ";";
             RowTransformation<string[], Order> transIntoObject = new RowTransformation<string[], Order>(CSVIntoObject);
             DBSource<Customer> sourceCustomerData = new DBSource<Customer>(CustomerTableDef);
             LookupCustomerKey lookupCustKeyClass = new LookupCustomerKey();
             Lookup<Order, Order, Customer> lookupCustomerKey = new Lookup<Order, Order, Customer>(
-                lookupCustKeyClass.FindKey, sourceCustomerData, lookupCustKeyClass.LookupData);            
+                lookupCustKeyClass.FindKey, sourceCustomerData, lookupCustKeyClass.LookupData);
 
             Multicast<Order> multiCast = new Multicast<Order>();
             DBDestination<Order> destOrderTable = new DBDestination<Order>(OrderDataTableDef);
@@ -99,7 +99,7 @@ namespace ALE.ETLBoxDemo {
 
             sourceOrderData.LinkTo(transIntoObject);
             transIntoObject.LinkTo(lookupCustomerKey);
-            
+
             lookupCustomerKey.LinkTo(multiCast);
             multiCast.LinkTo(destOrderTable);
 
@@ -129,7 +129,7 @@ namespace ALE.ETLBoxDemo {
                 firstOrder.Rating = new Rating();
                 firstOrder.Rating.CustomerKey = custKey;
                 firstOrder.Rating.TotalAmount = allOrders.Where(ord => ord.CustomerKey == custKey).Sum(ord => ord.Amount);
-                firstOrder.Rating.RatingValue = firstOrder.Rating.TotalAmount > 50 ? "A" : "F";                    
+                firstOrder.Rating.RatingValue = firstOrder.Rating.TotalAmount > 50 ? "A" : "F";
             }
             return allOrders;
         }
@@ -144,6 +144,6 @@ namespace ALE.ETLBoxDemo {
 
 
 
-        
+
     }
 }
