@@ -26,11 +26,15 @@ namespace ALE.ETLBox.DataFlow {
         public override void Execute() => ExecuteAsync();
 
         /* Public properties */
+        public int CSVReaderBufferSize { get; set; } = 2048;
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
         public int SourceCommentRows { get; set; } = 0;
         public bool TrimFields { get; set; } = true;
-        public bool TrimHeaders { get; set; } = true;
         public string Delimiter { get; set; } = ",";
+        public char Esacpe { get; set; } = '"';
         public char Quote { get; set; } = '"';
+        public bool LineBreakInQuotedFieldIsBadData { get; set; }
+        public bool IgnoreQuotes { get; set; }
         public bool AllowComments { get; set; } = true;
         public char Comment { get; set; } = '/';
         public bool SkipEmptyRecords { get; set; } = true;
@@ -104,18 +108,23 @@ namespace ALE.ETLBox.DataFlow {
                 }
                 await Buffer.SendAsync(bufferObject);
             }
-                
-            
+
+
         }
 
         private void ConfigureCSVReader() {
+
+            CsvReader.Configuration.BufferSize = CSVReaderBufferSize;
             CsvReader.Configuration.Delimiter = Delimiter;
+            CsvReader.Configuration.Escape = Esacpe;
             CsvReader.Configuration.Quote = Quote;
+            CsvReader.Configuration.IgnoreQuotes = IgnoreQuotes;
             CsvReader.Configuration.AllowComments = AllowComments;
             CsvReader.Configuration.Comment = Comment;
             CsvReader.Configuration.IgnoreBlankLines = IgnoreBlankLines;
-            CsvReader.Configuration.TrimOptions = CsvHelper.Configuration.TrimOptions.Trim;
-            CsvReader.Configuration.Encoding = Encoding.UTF8;
+            CsvReader.Configuration.IgnoreBlankLines = LineBreakInQuotedFieldIsBadData;
+            CsvReader.Configuration.TrimOptions = TrimFields ? CsvHelper.Configuration.TrimOptions.Trim : CsvHelper.Configuration.TrimOptions.None;
+            CsvReader.Configuration.Encoding = Encoding;
         }
 
         private void Close() {
