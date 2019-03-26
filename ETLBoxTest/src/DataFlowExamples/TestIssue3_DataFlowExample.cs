@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace ALE.ETLBoxTest {
     [TestClass]
-    public class TestIssues {
+    public class TestIssue3_DataFlowExample {
         public TestContext TestContext { get; set; }
         public string ConnectionStringParameter => TestContext?.Properties["connectionString"].ToString();
         public string DBNameParameter => TestContext?.Properties["dbName"].ToString();
@@ -24,8 +24,8 @@ namespace ALE.ETLBoxTest {
         }
 
         [TestMethod]
-        public void DataflowExample_Issue3() {
-            SqlTask.ExecuteNonQuery("Create test table", 
+        public void DBSource_RowTrans_DBDest_Issue3() {
+            SqlTask.ExecuteNonQuery("Create test table",
                 @"CREATE TABLE dbo.test 
                 (Col1 int null, Col2 int null, Col3 int null)"
             );
@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTest {
 
             RowTransformation<EntitiesInfo, EntitiesInfo> rowT = new RowTransformation<EntitiesInfo, EntitiesInfo>(
                 input => new EntitiesInfo {
-                    Col1 = input.Col2+ input.Col3, 
+                    Col1 = input.Col2+ input.Col3,
                     Col2 = 0,
                     Col3 = input.Col1
                 }
@@ -52,6 +52,6 @@ namespace ALE.ETLBoxTest {
             public int Col3 { get; set; }
         }
 
-    } 
+    }
 
 }
