@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using CsvHelper.Configuration.Attributes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace ALE.ETLBoxTest {
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
         }
-        
+
         /*
          * CSVSource (out: string[]) -> DBDestination (in: string[])
          * Table without key columns
@@ -107,7 +108,7 @@ namespace ALE.ETLBoxTest {
             source.LinkTo(dest);
 
             source.Execute();
-            dest.Wait(); 
+            dest.Wait();
 
             Assert.AreEqual(3, RowCountTask.Count($"test.Staging{keyPosition}","Col1 Like '%ValueRow%' and Col2 <> 1"));
         }
@@ -134,14 +135,16 @@ namespace ALE.ETLBoxTest {
             source.LinkTo(dest);
 
             source.Execute();
-            dest.Wait(); 
+            dest.Wait();
 
             Assert.AreEqual(1, RowCountTask.Count("test.Staging","Col1 Like '%ValueRow%' and Col2 <> 1"));
             Assert.AreEqual(2, RowCountTask.Count("test.Staging","Col1 = 'NewValue'"));
         }
 
         public class CSVData {
+            [Name("Header1")]
             public string Col1 { get; set; }
+            [Name("Header2")]
             public int Col2 { get; set; }
         }
         [TestMethod]

@@ -25,3 +25,4 @@ Reorganization of namespaces.
 
 ## Version 1.1.2 (Unreleased)
 * `CSVSource`: Aligning configuration properties with CSVHelper
+* `CSVSource`: POCOs now accept a CSVHelper classmap or CSVHelper attributes that support easy mapping of header names in CSV source files to C# properties (See issue #5)

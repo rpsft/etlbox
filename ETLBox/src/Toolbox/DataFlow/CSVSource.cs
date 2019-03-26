@@ -92,24 +92,18 @@ namespace ALE.ETLBox.DataFlow {
             CsvReader.ReadHeader();
             FieldHeaders = CsvReader.Context.HeaderRecord;
             while (CsvReader.Read()) {
-                string[] line = CsvReader.Context.Record;
-                await SendIntoBuffer(line);
+                await ReadLineAndSendIntoBuffer();
             }
         }
 
-        private async Task SendIntoBuffer(string[] line) {
+        private async Task ReadLineAndSendIntoBuffer() {
             if (TypeInfo.IsArray) {
+                string[] line = CsvReader.Context.Record;
                 await Buffer.SendAsync((TOutput)(object)line);
             } else {
-                TOutput bufferObject = (TOutput)Activator.CreateInstance(typeof(TOutput));
-                for (int col=0;col < line.Length;col++) {
-                    if (col > TypeInfo.PropertyLength) break;
-                    TypeInfo.PropertyInfos[col].SetValue(bufferObject, TypeInfo.CastPropertyValue(TypeInfo.PropertyInfos[col], line[col]));
-                }
+                TOutput bufferObject = CsvReader.GetRecord<TOutput>();
                 await Buffer.SendAsync(bufferObject);
             }
-
-
         }
 
         private void ConfigureCSVReader() {
