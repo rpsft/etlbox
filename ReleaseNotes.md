@@ -1,14 +1,14 @@
 # Release Notes
 
-## Version 1.0.0
+## Version 1.0.0 (Released)
 
 Initial release working on .NET Core.
 
-## Version 1.0.1
+## Version 1.0.1 (Released)
 
 Reorganization of namespaces.
 
-## Version 1.1.0
+## Version 1.1.0 (Releesed)
 
 * `DropDatabaseTask`: static "convenience" method name changed from delete to drop 
 * `ConnectionManager` (general) improved:verified that the underlying ADO.NET connection pooling is working (see Issue#1)
@@ -20,5 +20,8 @@ Reorganization of namespaces.
 * `RowTransformation`: Adding a non generic implementation (same as `RowTansformation<string[],string[]`>)
 * `DBDestination`: Adding a non generic implemnetation. (same as `DBDestination<string[]`>)
 
-## Version 1.1.1
+## Version 1.1.1 (Released)
 * `DBDestination`: Fixed issue (#4) when destination table has more columns than input type.
+
+## Version 1.1.2 (Unreleased)
+* `CSVSource`: Aligning configuration properties with CSVHelper
