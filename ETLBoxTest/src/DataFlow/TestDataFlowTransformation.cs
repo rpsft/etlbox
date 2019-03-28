@@ -26,8 +26,8 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MySimpleRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         /*
@@ -45,8 +45,8 @@ namespace ALE.ETLBoxTest {
             RowTransformation<string[], MySimpleRow> trans = new RowTransformation<string[], MySimpleRow>(
                 csvdata => {
                     return new MySimpleRow() {
-                        Value1 = csvdata[0],
-                        Value2 = int.Parse(csvdata[1])
+                        Col1 = csvdata[0],
+                        Col2 = int.Parse(csvdata[1])
                     };
                 });
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>() { DestinationTableDefinition = destinationTableDefinition };
@@ -89,7 +89,7 @@ namespace ALE.ETLBoxTest {
 
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() { SourceTableDefinition = sourceTableDefinition };
             RowTransformation<MySimpleRow, MySimpleRow> trans = new RowTransformation<MySimpleRow, MySimpleRow>(myRow => {
-                myRow.Value2 += 1;
+                myRow.Col2 += 1;
                 return myRow;
             });
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>() { DestinationTableDefinition = destinationTableDefinition };
@@ -153,7 +153,7 @@ namespace ALE.ETLBoxTest {
             }
 
             public MySimpleRow TestTransformationFunc(MySimpleRow myRow) {
-                myRow.Value2 += AddValue;
+                myRow.Col2 += AddValue;
                 return myRow;
             }
         }

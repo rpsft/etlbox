@@ -25,8 +25,8 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MyDataRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         /*

@@ -24,5 +24,8 @@ Reorganization of namespaces.
 * `DBDestination`: Fixed issue (#4) when destination table has more columns than input type.
 
 ## Version 1.1.2 (Unreleased)
-* `CSVSource`: Aligning configuration properties with CSVHelper
+* `CSVSource`: Now you must use the `CsvHelper.Configuration.Configuration` class to modify the configuration settings. 
 * `CSVSource`: POCOs now accept a CSVHelper classmap or CSVHelper attributes that support easy mapping of header names in CSV source files to C# properties (See issue #5)
+The CsvHelper configuration and classmap feature is described on https://joshclose.github.io/CsvHelper/
+* `DBDestination`: In previous versions, the name of the properties were not matched with the column names of the destination table. 
+    This is fixed now.

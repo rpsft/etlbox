@@ -25,8 +25,8 @@ namespace ALE.ETLBoxTest {
         }        
 
         public class MySimpleRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         public class CustomRowReader {
@@ -34,8 +34,8 @@ namespace ALE.ETLBoxTest {
             public int _readIndex = 0;
             public MySimpleRow ReadData() {
                 var result = new MySimpleRow() {
-                    Value1 = Data[_readIndex],
-                    Value2 = _readIndex
+                    Col1 = Data[_readIndex],
+                    Col2 = _readIndex
                 };
                 _readIndex++;
                 return result;

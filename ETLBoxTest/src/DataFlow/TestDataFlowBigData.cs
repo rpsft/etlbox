@@ -7,22 +7,26 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ALE.ETLBoxTest {
+namespace ALE.ETLBoxTest
+{
     [TestClass]
-    public class TestDataFlowBigData {
+    public class TestDataFlowBigData
+    {
         public TestContext TestContext { get; set; }
         public string ConnectionStringParameter => TestContext?.Properties["connectionString"].ToString();
         public string DBNameParameter => TestContext?.Properties["dbName"].ToString();
 
         [ClassInitialize]
-        public static void ClassInit(TestContext testContext) {
+        public static void ClassInit(TestContext testContext)
+        {
             TestHelper.RecreateDatabase(testContext);
             ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(testContext.Properties["connectionString"].ToString()));
             CreateSchemaTask.Create("test");
         }
 
         [TestInitialize]
-        public void TestInit() {
+        public void TestInit()
+        {
             CleanUpSchemaTask.CleanUp("test");
         }
 
@@ -32,17 +36,21 @@ namespace ALE.ETLBoxTest {
         * X Rows with 8007 bytes per Row (8000 bytes data + 7 bytes for sql server) 
         */
         [TestMethod]
-        public void BigData_CSV_DB() {
-            BigData_CSV_DB(100000);                        
+        public void BigData_CSV_DB()
+        {
+            //BigData_CSV_DB(100000);
+            BigData_CSV_DB(10);
         }
 
         [TestMethod]
-        public void BigData_CSVGeneric_DB() {
+        public void BigData_CSVGeneric_DB()
+        {
             BigData_CSV_DB(100000, useGenericCSVSource: true);
         }
 
-        public void BigData_CSV_DB(int numberOfRows, bool useGenericCSVSource = false) {
-            Stopwatch watch = new Stopwatch();                        
+        public void BigData_CSV_DB(int numberOfRows, bool useGenericCSVSource = false)
+        {
+            Stopwatch watch = new Stopwatch();
             TableDefinition stagingTable = new TableDefinition("test.Staging", new List<TableColumn>() {
                 new TableColumn("Col1", "nchar(1000)", allowNulls: false),
                 new TableColumn("Col2", "nchar(1000)", allowNulls: false),
@@ -51,7 +59,8 @@ namespace ALE.ETLBoxTest {
             });
             stagingTable.CreateTable();
             string fileName = "src/DataFlow/BigData_CSV2DB.csv";
-            BigDataHelper bigData = new BigDataHelper() {
+            BigDataHelper bigData = new BigDataHelper()
+            {
                 FileName = fileName,
                 NumberOfRows = numberOfRows,
                 TableDefinition = stagingTable
@@ -62,9 +71,12 @@ namespace ALE.ETLBoxTest {
             LogTask.Info($"Needed {watch.Elapsed.TotalMinutes} to create .csv file");
             watch.Reset();
 
-            if (useGenericCSVSource) {
+            if (useGenericCSVSource)
+            {
                 StartGenericCSVLoad(watch, stagingTable, fileName);
-            } else {
+            }
+            else
+            {
                 StartDefaultCSVLoad(watch, stagingTable, fileName);
             }
 
@@ -73,7 +85,8 @@ namespace ALE.ETLBoxTest {
             Assert.AreEqual(numberOfRows, SqlTask.ExecuteScalar<int>("Check staging table", $"select count(*) from test.Staging"));
         }
 
-        private static void StartDefaultCSVLoad(Stopwatch watch, TableDefinition stagingTable, string fileName) {
+        private static void StartDefaultCSVLoad(Stopwatch watch, TableDefinition stagingTable, string fileName)
+        {
             CSVSource source = new CSVSource(fileName);
             DBDestination<string[]> dest = new DBDestination<string[]>(1000) { DestinationTableDefinition = stagingTable };
             source.LinkTo(dest);
@@ -84,7 +97,8 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
         }
 
-        private static void StartGenericCSVLoad(Stopwatch watch, TableDefinition stagingTable, string fileName) {
+        private static void StartGenericCSVLoad(Stopwatch watch, TableDefinition stagingTable, string fileName)
+        {
             CSVSource<CSVData> source = new CSVSource<CSVData>(fileName);
             DBDestination<CSVData> dest = new DBDestination<CSVData>(1000) { DestinationTableDefinition = stagingTable };
             source.LinkTo(dest);
@@ -95,14 +109,15 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
         }
 
-        public class CSVData {
+        public class CSVData
+        {
             public string Col1 { get; set; }
             public string Col2 { get; set; }
             public string Col3 { get; set; }
             public string Col4 { get; set; }
         }
-   
-        
+
+
     }
 
 }

@@ -16,7 +16,8 @@ namespace ALE.ETLBox.DataFlow {
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DBDestination<TInput> : GenericTask, ITask, IDataFlowDestination<TInput> {
+    public class DBDestination<TInput> : GenericTask, ITask, IDataFlowDestination<TInput>
+    {
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_DBDEST";
         public override string TaskName => $"Dataflow: Write Data batchwise into table {DestinationTableDefinition.Name}";
@@ -89,7 +90,7 @@ namespace ALE.ETLBox.DataFlow {
             NLogStart();
             if (BeforeBatchWrite != null)
                 data = BeforeBatchWrite.Invoke(data);
-            TableData<object> td = new TableData<object>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
+            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
             td.Rows = ConvertRows(data);
             new SqlTask(this, $"Execute Bulk insert into {DestinationTableDefinition.Name}").BulkInsert(td, DestinationTableDefinition.Name);
             NLogFinish();

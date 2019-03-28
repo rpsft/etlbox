@@ -23,11 +23,11 @@ namespace ALE.ETLBoxTest {
         [TestInitialize]
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
-        }        
+        }
 
         public class MySimpleRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
 
@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTest {
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(destinationTableDefinition);
             BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
                 inputData => {
-                    return inputData.Select( row => new MySimpleRow() { Value1 = row.Value1, Value2 = 3 }).ToList();
+                    return inputData.Select( row => new MySimpleRow() { Col1 = row.Col1, Col2 = 3 }).ToList();
                 });
             source.LinkTo(block);
             block.LinkTo(dest);

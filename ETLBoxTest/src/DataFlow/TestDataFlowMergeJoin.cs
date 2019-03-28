@@ -25,12 +25,12 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MyDataRow1 {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         public class MyDataRow2 {
-            public int Value3 { get; set; }                
+            public int Col3 { get; set; }                
         }
 
 
@@ -51,7 +51,7 @@ namespace ALE.ETLBoxTest {
 
             MergeJoin<MyDataRow1, MyDataRow2, MyDataRow1> join = new MergeJoin<MyDataRow1, MyDataRow2, MyDataRow1>(
                 (input1, input2) => {
-                    input1.Value2 += input2.Value3;
+                    input1.Col2 += input2.Col3;
                     return input1;
                 });
 

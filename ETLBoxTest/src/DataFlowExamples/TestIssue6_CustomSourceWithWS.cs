@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTest {
         public void CustomSourceWithWebService() {
             SqlTask.ExecuteNonQuery("Create test table",
                 @"CREATE TABLE dbo.ws_dest 
-                ( id INT NOT NULL, userId INT NOT NULL, title NVARCHAR(100) NOT NULL, completed BIT NOT NULL )"
+                ( Id INT NOT NULL, UserId INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
             );
 
             WebserviceReader wsreader = new WebserviceReader();

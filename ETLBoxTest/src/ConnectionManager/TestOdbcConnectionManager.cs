@@ -25,7 +25,7 @@ namespace ALE.ETLBoxTest {
        }
 
         [TestMethod]
-        public void TestSqlTaskWithOdbcConnection() { 
+        public void TestSqlTaskWithOdbcConnection() {
             OdbcConnectionManager con = new OdbcConnectionManager(new OdbcConnectionString(OdbcConnectionStringParameter));
             new SqlTask($"Test statement", $@"
                     CREATE TABLE dbo.test (
@@ -52,7 +52,10 @@ namespace ALE.ETLBoxTest {
                 new TableColumn("Col6", "nvarchar(100)", allowNulls: true)
             });
             stagingTable.CreateTable();
-            CSVSource source = new CSVSource("src/ConnectionManager/DatatypeCSV.csv");
+            CSVSource source = new CSVSource("src/ConnectionManager/DatatypeCSV.csv")
+            {
+                Configuration = new CsvHelper.Configuration.Configuration() { Quote = '"' }
+            };
             RowTransformation<string[], string[]> trans = new RowTransformation<string[], string[]>("Set empty values to null",
                 row => {
                     for (int i=0;i<row.Length;i++)
@@ -65,7 +68,7 @@ namespace ALE.ETLBoxTest {
 
             source.Execute();
             dest.Wait();
-          
+
 
             Assert.AreEqual(3, RowCountTask.Count(stagingTable.Name));
         }

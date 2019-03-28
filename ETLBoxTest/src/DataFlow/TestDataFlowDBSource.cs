@@ -22,11 +22,11 @@ namespace ALE.ETLBoxTest {
         [TestInitialize]
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
-        }        
+        }
 
         public class MySimpleRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         /*
@@ -61,7 +61,7 @@ namespace ALE.ETLBoxTest {
          * DSBSource (out: object) -> DBDestination (in: object)
          */
         [TestMethod]
-        public void Sql_DB() {           
+        public void Sql_DB() {
             TableDefinition destinationTableDefinition = new TableDefinition("test.Destination", new List<TableColumn>() {
                 new TableColumn("Col1", "nvarchar(100)", allowNulls: false),
                 new TableColumn("Col2", "int", allowNulls: true)
@@ -102,12 +102,12 @@ namespace ALE.ETLBoxTest {
 */
         [TestMethod]
         public void TableName_Tablename() {
-            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source 
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
                 (Col1 nvarchar(100) null, Col2 int null)");
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1',1)");
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test2',2)");
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test3',3)");
-            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination 
+            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
                 (Col1 nvarchar(30) null, Col2 bigint null)");
 
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() { TableName = "test.Source" };

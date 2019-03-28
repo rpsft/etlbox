@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -45,7 +46,7 @@ namespace ALE.ETLBox.DataFlow {
             NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BufferBlock<TOutput>();
             TypeInfo = new TypeInfo(typeof(TOutput));
-            Configuration = new Configuration();
+            Configuration = new Configuration(CultureInfo.InvariantCulture);
         }
 
         public CSVSource(string fileName) : this() {

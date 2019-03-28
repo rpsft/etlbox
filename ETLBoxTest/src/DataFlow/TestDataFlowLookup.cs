@@ -36,8 +36,8 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MyOutputDataRow {
-            public string Value1 { get; set; }
-            public string LookupValue2 { get; set; }
+            public string Col1 { get; set; }
+            public string Col2 { get; set; }
         }
 
         /*
@@ -107,8 +107,8 @@ namespace ALE.ETLBoxTest {
             
             public MyOutputDataRow TestTransformationFunc(MyInputDataRow myRow) {
                 MyOutputDataRow output = new MyOutputDataRow() {
-                    Value1 = myRow.Value1,
-                    LookupValue2 = LookupData.Where(ld => ld.Key == myRow.Value2).Select(ld=>ld.LookupValue).FirstOrDefault()
+                    Col1 = myRow.Value1,
+                    Col2 = LookupData.Where(ld => ld.Key == myRow.Value2).Select(ld=>ld.LookupValue).FirstOrDefault()
                 };
                 return output;
             }
