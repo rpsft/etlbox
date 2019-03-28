@@ -12,12 +12,18 @@ ETLBox is a comprehensive C# class library that is able to manage your whole ETL
     <PackageLicenseUrl>https://github.com/roadrunnerlenny/etlbox/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
-    <PackageTags>ETL SSIS ELT Dataflow Controlflow</PackageTags>
-    <PackageReleaseNotes>DBDestination: Fixed issue (#4) when destination table has more columns than input type.</PackageReleaseNotes>
-    <Version>1.1.1</Version>
+    <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
+    <PackageReleaseNotes>CSVSource: Now you must use the CsvHelper.Configuration.Configuration class to modify the configuration settings. Additionally, POCOs now accept a CSVHelper classmap or CSVHelper attributes that support easy mapping of header names in CSV source files to C# properties.
+
+The CsvHelper configuration and classmap feature is described on https://joshclose.github.io/CsvHelper/
+
+DBDestination: In previous versions, the name of the properties were not matched with the column names of the destination table.  This is fixed now.</PackageReleaseNotes>
+    <Version>1.1.2</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
