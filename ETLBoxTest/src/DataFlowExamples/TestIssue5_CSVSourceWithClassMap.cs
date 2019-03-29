@@ -127,14 +127,17 @@ namespace ALE.ETLBoxTest
 
             source.LinkTo(multicast);
             multicast.LinkTo(row1);
-            //multicast.LinkTo(row2);
+            multicast.LinkTo(row2);
 
             row1.LinkTo(destination1);
-            //row2.LinkTo(destination2);
+            row2.LinkTo(destination2);
 
             source.Execute();
             destination1.Wait();
-           // destination2.Wait();
+            destination2.Wait();
+
+            Assert.AreEqual(2, RowCountTask.Count("test.Table1", "Col1 in ('one','five') and Col3 in ('three','seven')"));
+            Assert.AreEqual(2, RowCountTask.Count("test.Table2", "Col2 in ('two','six') and Col4 in ('four','eight')"));
         }
     }
 }
