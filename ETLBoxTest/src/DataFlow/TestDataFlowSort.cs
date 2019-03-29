@@ -23,13 +23,13 @@ namespace ALE.ETLBoxTest {
         [TestInitialize]
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
-        }        
+        }
 
-        public class MySimpleRow  {            
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+        public class MySimpleRow  {
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
 
-         
+
         }
 
 
@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTest {
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(sourceTableDefinition);
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(destinationTableDefinition);
             Comparison<MySimpleRow> comp = new Comparison<MySimpleRow>(
-                   (x, y) => y.Value2 - x.Value2
+                   (x, y) => y.Col2 - x.Col2
                 );
             Sort<MySimpleRow> block = new Sort<MySimpleRow>(comp);
             source.LinkTo(block);
@@ -57,7 +57,7 @@ namespace ALE.ETLBoxTest {
         }
 
         private static TableDefinition CreateSourceTable(string tableName) {
-            TableDefinition sourceTableDefinition = new TableDefinition(tableName, new List<TableColumn>() {                
+            TableDefinition sourceTableDefinition = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("Col1", "nvarchar(100)", allowNulls: false),
                 new TableColumn("Col2", "int", allowNulls: true)
             });

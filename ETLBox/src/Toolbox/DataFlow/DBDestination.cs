@@ -113,7 +113,7 @@ namespace ALE.ETLBox.DataFlow {
                 } else {
                     rowResult = new object[TypeInfo.PropertyLength];
                     int index = 0;
-                    foreach (PropertyInfo propInfo in TypeInfo.PropertyInfos) {
+                    foreach (PropertyInfo propInfo in TypeInfo.Properties) {
                         rowResult[index] = propInfo.GetValue(CurrentRow);
                         index++;
                     }

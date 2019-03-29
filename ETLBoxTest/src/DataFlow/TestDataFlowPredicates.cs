@@ -26,18 +26,18 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MyDataRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         /*
-         * DBSource (out: object) 
-         * -> Multicast (in/out: object with predicates) 
+         * DBSource (out: object)
+         * -> Multicast (in/out: object with predicates)
          * 1-> DBDestination (in: object) 2-> DBDestination (in: object)
          */
         [TestMethod]
         public void DB_MulticastWPredicates_DB() {
-            TableDefinition sourceTableDefinition = CreateTableForMyDataRow("test.Source");            
+            TableDefinition sourceTableDefinition = CreateTableForMyDataRow("test.Source");
             TableDefinition dest1TableDefinition = CreateTableForMyDataRow("test.Destination1");
             TableDefinition dest2TableDefinition = CreateTableForMyDataRow("test.Destination2");
             InsertDemoDataForMyRowTable("test.Source");
@@ -51,8 +51,8 @@ namespace ALE.ETLBoxTest {
             dest2.DestinationTableDefinition = dest2TableDefinition;
 
             source.LinkTo(multicast);
-            multicast.LinkTo(dest1, row => row.Value2 <= 2);
-            multicast.LinkTo(dest2,  row => row.Value2 > 2);
+            multicast.LinkTo(dest1, row => row.Col2 <= 2);
+            multicast.LinkTo(dest2,  row => row.Col2 > 2);
             source.Execute();
             dest1.Wait();
             dest2.Wait();

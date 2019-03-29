@@ -1,34 +1,41 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow {
-    public abstract class DbTask : GenericTask {
+namespace ALE.ETLBox.ControlFlow
+{
+    public abstract class DbTask : GenericTask
+    {
 
         /* Public Properties */
         public string Sql { get; set; }
         public FileConnectionManager FileConnection { get; set; }
-        public List<Action<object>> Actions { get; set; }        
+        public List<Action<object>> Actions { get; set; }
         public Action BeforeRowReadAction { get; set; }
-        public Action AfterRowReadAction { get; set; }        
+        public Action AfterRowReadAction { get; set; }
         Action InternalBeforeRowReadAction { get; set; }
-        Action InternalAfterRowReadAction { get; set; }        
+        Action InternalAfterRowReadAction { get; set; }
         public long ReadTopX { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
         public bool IsOdbcConnection => DbConnectionManager.GetType() == typeof(OdbcConnectionManager)
             || DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager);
 
         public bool DisableExtension { get; set; }
-        public string Command {
-            get {
+        public string Command
+        {
+            get
+            {
                 if (HasSql)
                     return HasName && !IsOdbcConnection ? NameAsComment + Sql : Sql;
-                else if (HasFileConnection) {
+                else if (HasFileConnection)
+                {
                     if (FileConnection.FileExists)
                         return HasName ? NameAsComment + FileConnection.ReadContent() : FileConnection.ReadContent();
-                    else {
+                    else
+                    {
                         NLogger.Warn($"Sql file was not found: {FileConnection.FileName}", TaskType, "RUN", TaskHash, ControlFlow.STAGE);
                         return $"SELECT 'File {FileConnection.FileName} not found'";
                     }
@@ -36,7 +43,7 @@ namespace ALE.ETLBox.ControlFlow {
                 else
                     throw new Exception("Empty command");
             }
-        }        
+        }
 
         /* Internal/Private properties */
         internal bool DoSkipSql { get; private set; }
@@ -46,44 +53,53 @@ namespace ALE.ETLBox.ControlFlow {
         internal IEnumerable<QueryParameter> _Parameter { get; set; }
 
         /* Some constructors */
-        public DbTask() {
+        public DbTask()
+        {
             NLogger = NLog.LogManager.GetLogger("ETL");
         }
 
-        public DbTask(string name) : this() {
+        public DbTask(string name) : this()
+        {
             this.TaskName = name;
         }
 
-        public DbTask(string name, string sql) : this(name) {
+        public DbTask(string name, string sql) : this(name)
+        {
             this.Sql = sql;
         }
 
-        public DbTask(ITask callingTask, string sql) : this() {
+        public DbTask(ITask callingTask, string sql) : this()
+        {
             TaskName = callingTask.TaskName;
-            TaskHash = callingTask.TaskHash;        
+            TaskHash = callingTask.TaskHash;
             ConnectionManager = callingTask.ConnectionManager;
             TaskType = callingTask.TaskType;
             DisableLogging = callingTask.DisableLogging;
             this.Sql = sql;
         }
 
-        public DbTask(string name, string sql, params Action<object>[] actions) : this(name, sql) {
+        public DbTask(string name, string sql, params Action<object>[] actions) : this(name, sql)
+        {
             Actions = actions.ToList();
-        }                
+        }
 
-        public DbTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : this(name, sql) {
+        public DbTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : this(name, sql)
+        {
             BeforeRowReadAction = beforeRowReadAction;
             AfterRowReadAction = afterRowReadAction;
             Actions = actions.ToList();
         }
 
-        public DbTask(string name, FileConnectionManager fileConnection) : this(name) {
+        public DbTask(string name, FileConnectionManager fileConnection) : this(name)
+        {
             this.FileConnection = fileConnection;
         }
 
         /* Public methods */
-        public int ExecuteNonQuery() {
-            using (var conn= DbConnectionManager.Clone()) {
+        public int ExecuteNonQuery()
+        {
+            using (var conn = DbConnectionManager.Clone())
+            {
                 conn.Open();
                 QueryStart();
                 RowsAffected = DoSkipSql ? 0 : conn.ExecuteNonQuery(Command, _Parameter);//DbConnectionManager.ExecuteNonQuery(Command);
@@ -92,9 +108,11 @@ namespace ALE.ETLBox.ControlFlow {
             return RowsAffected ?? 0;
         }
 
-        public object ExecuteScalar() {
+        public object ExecuteScalar()
+        {
             object result = null;
-            using (var conn = DbConnectionManager.Clone()) {
+            using (var conn = DbConnectionManager.Clone())
+            {
                 conn.Open();
                 QueryStart();
                 result = conn.ExecuteScalar(Command, _Parameter);
@@ -103,7 +121,8 @@ namespace ALE.ETLBox.ControlFlow {
             return result;
         }
 
-        public Nullable<T> ExecuteScalar<T>() where T : struct {
+        public Nullable<T> ExecuteScalar<T>() where T : struct
+        {
             object result = ExecuteScalar();
             if (result == null || result == DBNull.Value)
                 return null;
@@ -112,31 +131,41 @@ namespace ALE.ETLBox.ControlFlow {
         }
 
 
-        public bool ExecuteScalarAsBool() {
+        public bool ExecuteScalarAsBool()
+        {
             int? result = ExecuteScalar<int>();
             return IntToBool(result);
         }
 
-        public void ExecuteReader() {
-            using (var conn = DbConnectionManager.Clone()) {
+        public void ExecuteReader()
+        {
+            using (var conn = DbConnectionManager.Clone())
+            {
                 conn.Open();
-                QueryStart();                
+                QueryStart();
                 IDataReader reader = conn.ExecuteReader(Command, _Parameter) as IDataReader;
-                for (int rowNr = 0; rowNr < ReadTopX; rowNr++) {
-                    if (reader.Read()) {
+                for (int rowNr = 0; rowNr < ReadTopX; rowNr++)
+                {
+                    if (reader.Read())
+                    {
                         InternalBeforeRowReadAction?.Invoke();
                         BeforeRowReadAction?.Invoke();
-                        for (int i = 0; i < Actions?.Count; i++) {
-                            if (!reader.IsDBNull(i)) {
+                        for (int i = 0; i < Actions?.Count; i++)
+                        {
+                            if (!reader.IsDBNull(i))
+                            {
                                 Actions?[i]?.Invoke(reader.GetValue(i));
-                            } else {                                
+                            }
+                            else
+                            {
                                 Actions?[i]?.Invoke(null);
                             }
                         }
                         AfterRowReadAction?.Invoke();
                         InternalAfterRowReadAction?.Invoke();
                     }
-                    else {
+                    else
+                    {
                         break;
                     }
                 }
@@ -145,28 +174,55 @@ namespace ALE.ETLBox.ControlFlow {
             }
         }
 
-        internal List<T> Query<T>(Action<T> doWithRowAction, bool saveResult = true) where T : new() {
+        internal List<T> Query<T>(Action<T> doWithRowAction = null, bool saveResult = true, List<string> columnNames = null)
+        {
             List<T> result = null;
             if (saveResult) result = new List<T>();
-            Actions = new List<Action<object>>();
+            PrepareQuery();
             T row = default(T);
-            foreach (var propInfo in typeof(T).GetProperties()) {
-                Actions.Add(colValue => propInfo.SetValue(row, colValue));
+            TypeInfo typeInfo = new TypeInfo(typeof(T));
+
+            if (typeInfo.IsArray)
+            {
+                throw new Exception("Not supported yet");
             }
-            InternalBeforeRowReadAction = () => row = new T();
+            else
+            {
+                if (columnNames == null) columnNames = typeInfo.PropertyNames;
+                foreach (var colName in columnNames)
+                {
+                    if (typeInfo.HasProperty(colName))
+                        Actions.Add(colValue => typeInfo.GetProperty(colName).SetValue(row, colValue));
+                    else
+                        Actions.Add(col => { });
+                }
+                InternalBeforeRowReadAction = () => row = (T)Activator.CreateInstance(typeof(T));
+            }
             if (saveResult) InternalAfterRowReadAction = () => result.Add(row);
             else InternalAfterRowReadAction = () => doWithRowAction(row);
             ExecuteReader();
-            Actions = null;
+            CleanupQuery();
             return result;
         }
 
-        public List<T> Query<T>() where T : new() => Query<T>(null,true);
-        public void Query<T>(Action<T> doWithRowAction) where T : new() => Query<T>(doWithRowAction, false);
+        private void PrepareQuery()
+        {
+            Actions = new List<Action<object>>();
+        }
+
+        private void CleanupQuery()
+        {
+            Actions = null;
+        }
+
+        public List<T> Query<T>() => Query<T>();
+        public void Query<T>(Action<T> doWithRowAction, List<string> columNames) => Query<T>(doWithRowAction, false, columNames);
 
 
-        public void BulkInsert(ITableData data, string tableName) {
-            using (var conn = DbConnectionManager.Clone()) {
+        public void BulkInsert(ITableData data, string tableName)
+        {
+            using (var conn = DbConnectionManager.Clone())
+            {
                 conn.Open();
                 QueryStart(LogType.Bulk);
                 conn.BeforeBulkInsert();
@@ -179,20 +235,23 @@ namespace ALE.ETLBox.ControlFlow {
 
 
         /* Private implementation & stuff */
-        enum LogType {
+        enum LogType
+        {
             None,
             Rows,
             Bulk
         }
 
-        static bool IntToBool(int? result) {
+        static bool IntToBool(int? result)
+        {
             if (result != null && result > 0)
                 return true;
             else
                 return false;
         }
 
-        void QueryStart(LogType logType = LogType.None) {
+        void QueryStart(LogType logType = LogType.None)
+        {
             if (!DisableLogging)
                 LoggingStart(logType);
 
@@ -200,12 +259,14 @@ namespace ALE.ETLBox.ControlFlow {
                 ExecuteExtension();
         }
 
-        void QueryFinish(LogType logType = LogType.None) {
+        void QueryFinish(LogType logType = LogType.None)
+        {
             if (!DisableLogging)
                 LoggingEnd(logType);
         }
 
-        void LoggingStart(LogType logType) {
+        void LoggingStart(LogType logType)
+        {
             NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
             if (logType == LogType.Bulk)
                 NLogger.Debug($"SQL Bulk Insert", TaskType, "RUN", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
@@ -213,19 +274,25 @@ namespace ALE.ETLBox.ControlFlow {
                 NLogger.Debug($"{Command}", TaskType, "RUN", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
-        void LoggingEnd(LogType logType) {
+        void LoggingEnd(LogType logType)
+        {
             NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
             if (logType == LogType.Rows)
                 NLogger.Debug($"Rows affected: {RowsAffected ?? 0}", TaskType, "RUN", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
-        void ExecuteExtension() {
-            if (ExtensionFileLoader.ExistsFolder && HasName) {
+        void ExecuteExtension()
+        {
+            if (ExtensionFileLoader.ExistsFolder && HasName)
+            {
                 List<ExtensionFile> extFiles = ExtensionFileLoader.GetExtensionFiles(TaskHash);
 
-                if (extFiles.Count > 0) {
-                    foreach (var extFile in extFiles) {
-                        new SqlTask($"Extensions: {extFile.Name}", new FileConnectionManager(extFile.FileName)) {
+                if (extFiles.Count > 0)
+                {
+                    foreach (var extFile in extFiles)
+                    {
+                        new SqlTask($"Extensions: {extFile.Name}", new FileConnectionManager(extFile.FileName))
+                        {
                             ConnectionManager = this.ConnectionManager,
                             DisableExtension = true
                         }.ExecuteNonQuery();

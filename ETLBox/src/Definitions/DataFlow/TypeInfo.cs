@@ -7,14 +7,16 @@ namespace ALE.ETLBox.DataFlow
 {
     internal class TypeInfo
     {
-        internal PropertyInfo[] PropertyInfos { get; set; }
+        internal PropertyInfo[] Properties { get; set; }
         internal List<string> PropertyNames { get; set; }
+        internal Dictionary<string, int> PropertyIndex { get; set; }
         internal int PropertyLength { get; set; }
         internal bool IsArray { get; set; } = true;
 
         internal TypeInfo(Type typ)
         {
             PropertyNames = new List<string>();
+            PropertyIndex = new Dictionary<string, int>();
             GatherTypeInfos(typ);
         }
         private void GatherTypeInfos(Type typ)
@@ -22,10 +24,14 @@ namespace ALE.ETLBox.DataFlow
             IsArray = typ.IsArray;
             if (!typ.IsArray)
             {
-                PropertyInfos = typ.GetProperties();
-                PropertyLength = PropertyInfos.Length;
-                foreach (var propInfo in PropertyInfos)
+                Properties = typ.GetProperties();
+                PropertyLength = Properties.Length;
+                int index = 0;
+                foreach (var propInfo in Properties)
+                {
                     PropertyNames.Add(propInfo.Name);
+                    PropertyIndex.Add(propInfo.Name, index++);
+                }
             }
 
         }
@@ -41,6 +47,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         internal bool HasProperty(string name) => PropertyNames.Any(propName => propName == name);
+        internal PropertyInfo GetProperty(string name) => Properties[PropertyIndex[name]];
     }
 }
 

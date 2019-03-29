@@ -1,16 +1,19 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox {
-    public class TableDefinition {
+namespace ALE.ETLBox
+{
+    public class TableDefinition
+    {
         public string Name { get; set; }
         public List<TableColumn> Columns { get; set; }
-        public int? IDColumnIndex {
-            get {
+        public int? IDColumnIndex
+        {
+            get
+            {
                 TableColumn idCol = Columns.FirstOrDefault(col => col.IsIdentity);
                 if (idCol != null)
                     return Columns.IndexOf(idCol);
@@ -20,25 +23,30 @@ namespace ALE.ETLBox {
         }
 
         public string AllColumnsWithoutIdentity => Columns.Where(col => !col.IsIdentity).AsString();
-        
 
-        public TableDefinition() {
+
+        public TableDefinition()
+        {
             Columns = new List<TableColumn>();
         }
 
-        public TableDefinition(string name) : this() {
+        public TableDefinition(string name) : this()
+        {
             Name = name;
         }
 
-        public TableDefinition(string name, List<TableColumn> columns) : this(name) {
+        public TableDefinition(string name, List<TableColumn> columns) : this(name)
+        {
             Columns = columns;
         }
 
-        public void CreateTable() {
+        public void CreateTable()
+        {
             CreateTableTask.Create(this);
         }
 
-        internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection) {
+        internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
+        {
             TableDefinition result = new TableDefinition(tableName);
             TableColumn curCol = null;
             var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
@@ -55,19 +63,20 @@ namespace ALE.ETLBox {
   and tpes.name <> 'sysname'"
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
-            , name => curCol.Name = name.ToString()            
+            , name => curCol.Name = name.ToString()
             , colname => curCol.DataType = colname.ToString()
             , is_nullable => curCol.AllowNulls = (bool)is_nullable
             , is_identity => curCol.IsIdentity = (bool)is_identity
-             ) 
-            { DisableLogging = true,
-            DisableExtension = true,
-            ConnectionManager = connection
+             )
+            {
+                DisableLogging = true,
+                DisableExtension = true,
+                ConnectionManager = connection
             };
             readMetaSql.ExecuteReader();
             return result;
         }
 
-      
+
     }
 }

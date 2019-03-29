@@ -15,10 +15,8 @@ namespace ALE.ETLBox.DataFlow {
     /// </summary>
     /// <example>
     /// <code>
-    /// CSVSource&lt;CSVData&gt; source = new CSVSource&lt;CSVData&gt;("Demo.csv") {
-    ///    Delimiter = ";",
-    ///    SourceCommentRows = 2
-    /// }
+    /// CSVSource&lt;CSVData&gt; source = new CSVSource&lt;CSVData&gt;("Demo.csv");
+    /// source.Configuration.Delimiter = ";";
     /// </code>
     /// </example>
     public class CSVSource<TOutput> : GenericTask, ITask, IDataFlowSource<TOutput> {

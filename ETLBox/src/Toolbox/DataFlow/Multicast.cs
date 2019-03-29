@@ -53,7 +53,7 @@ namespace ALE.ETLBox.DataFlow {
             TInput clone = default(TInput);
             if (!TypeInfo.IsArray) {
                 clone = new TInput();                
-                foreach (PropertyInfo propInfo in TypeInfo.PropertyInfos) {
+                foreach (PropertyInfo propInfo in TypeInfo.Properties) {
                     propInfo.SetValue(clone, propInfo.GetValue(row));                    
                 }
             }

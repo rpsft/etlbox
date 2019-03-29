@@ -44,15 +44,15 @@ namespace ALE.ETLBox {
             return mapping;
         }
 
-        public bool HasIdentityColumn => IDColumnIndex != null;
         public List<object[]> Rows { get; set; }
-
         public object[] CurrentRow { get; set; }
         int ReadIndex { get; set; }
         TableDefinition Definition { get; set; }
         public bool HasDefinition => Definition != null;
-        int? IDColumnIndex { get; set; }
         TypeInfo TypeInfo { get; set; }
+        int? IDColumnIndex { get; set; }
+        bool HasIDColumnIndex => IDColumnIndex != null;
+
         public TableData()
         {
             Rows = new List<object[]>();
@@ -66,11 +66,11 @@ namespace ALE.ETLBox {
         public TableData(TableDefinition definition, int estimatedBatchSize)
         {
             Definition = definition;
+            IDColumnIndex = Definition.IDColumnIndex;
             EstimatedBatchSize = estimatedBatchSize;
             Rows = new List<object[]>(estimatedBatchSize);
             TypeInfo = new TypeInfo(typeof(T));
         }
-
 
         public object this[string name] => Rows[GetOrdinal(name)];
         public object this[int i] => Rows[i];
@@ -111,13 +111,10 @@ namespace ALE.ETLBox {
             }
             else
             {
-                int index = 0;
-                foreach (System.Reflection.PropertyInfo propInfo in TypeInfo.PropertyInfos)
-                {
-                    if (propInfo.Name == name) break;
-                    index++;
-                }
-                return index;
+                int ix = TypeInfo.PropertyIndex[name];
+                if (HasIDColumnIndex)
+                    if (ix > IDColumnIndex) ix++;
+                return ix;
             }
         }
 
@@ -130,7 +127,7 @@ namespace ALE.ETLBox {
 
         int ShiftIndexAroundIDColumn(int i)
         {
-            if (IDColumnIndex != null)
+            if (HasIDColumnIndex)
             {
                 if (i > IDColumnIndex) return i - 1;
                 else if (i <= IDColumnIndex) return i;
@@ -159,7 +156,6 @@ namespace ALE.ETLBox {
 
         public bool Read()
         {
-            IDColumnIndex = Definition.IDColumnIndex;
             if (Rows?.Count > ReadIndex)
             {
                 CurrentRow = Rows[ReadIndex];

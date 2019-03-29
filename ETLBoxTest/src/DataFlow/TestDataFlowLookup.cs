@@ -31,8 +31,8 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MyInputDataRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         public class MyOutputDataRow {
@@ -41,8 +41,8 @@ namespace ALE.ETLBoxTest {
         }
 
         /*
-         * DBSource (out: MyInputDataRow) 
-         *      -> Lookup (in: MyInputDataRow, out: MyOutputDataRow, lookup: DBSource(out: MyLooupRow) ) 
+         * DBSource (out: MyInputDataRow)
+         *      -> Lookup (in: MyInputDataRow, out: MyOutputDataRow, lookup: DBSource(out: MyLooupRow) )
          *      -> DBDestination (in: MyOutputDataRow)
          */
         [TestMethod]
@@ -54,12 +54,12 @@ namespace ALE.ETLBoxTest {
             TransformationTestClass testClass = new TransformationTestClass();
             DBSource<MyInputDataRow> source = new DBSource<MyInputDataRow>() { SourceTableDefinition = sourceTableDefinition };
             DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>() { SourceTableDefinition = lookupTableDefinition };
-            Lookup<MyInputDataRow, MyOutputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyOutputDataRow,MyLookupRow>(                
-                testClass.TestTransformationFunc, lookupSource, testClass.LookupData                
+            Lookup<MyInputDataRow, MyOutputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyOutputDataRow,MyLookupRow>(
+                testClass.TestTransformationFunc, lookupSource, testClass.LookupData
             );
             DBDestination<MyOutputDataRow> dest = new DBDestination<MyOutputDataRow>() { DestinationTableDefinition = destinationTableDefinition };
             source.LinkTo(lookup);
-            lookup.LinkTo(dest);            
+            lookup.LinkTo(dest);
             source.Execute();
             dest.Wait();
             Assert.AreEqual(1, RowCountTask.Count("test.Destination","Col1 = 'Test1' and Col2 = 'Lookup for 1'"));
@@ -82,7 +82,7 @@ namespace ALE.ETLBoxTest {
         internal static TableDefinition CreateDBLookupTable() {
             TableDefinition sourceTableDefinition = new TableDefinition("test.Lookup", new List<TableColumn>() {
                 new TableColumn("Key", "int", allowNulls: false),
-                new TableColumn("Col1", "nvarchar(100)", allowNulls: true)
+                new TableColumn("LookupValue", "nvarchar(100)", allowNulls: true)
             });
             sourceTableDefinition.CreateTable();
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Lookup values(1, 'Lookup for 1')");
@@ -104,11 +104,11 @@ namespace ALE.ETLBoxTest {
             public int AddValue { get; set; } = 0;
 
             public List<MyLookupRow> LookupData { get; set; } = new List<MyLookupRow>();
-            
+
             public MyOutputDataRow TestTransformationFunc(MyInputDataRow myRow) {
                 MyOutputDataRow output = new MyOutputDataRow() {
-                    Col1 = myRow.Value1,
-                    Col2 = LookupData.Where(ld => ld.Key == myRow.Value2).Select(ld=>ld.LookupValue).FirstOrDefault()
+                    Col1 = myRow.Col1,
+                    Col2 = LookupData.Where(ld => ld.Key == myRow.Col2).Select(ld=>ld.LookupValue).FirstOrDefault()
                 };
                 return output;
             }
