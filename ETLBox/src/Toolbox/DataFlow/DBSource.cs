@@ -106,7 +106,7 @@ namespace ALE.ETLBox.DataFlow {
                 DisableLogging = true,
                 DisableExtension = true,
                 Sql = SqlForRead,
-            }.Query<TOutput>(row => Buffer.Post(row), false, ColumnNamesEvaluated );
+            }.Query<TOutput>(row => Buffer.Post(row), ColumnNamesEvaluated );
         }
 
         public void LinkTo(IDataFlowLinkTarget<TOutput> target) {

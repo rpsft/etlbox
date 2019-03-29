@@ -174,17 +174,28 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
-        internal List<T> Query<T>(Action<T> doWithRowAction = null, bool saveResult = true, List<string> columnNames = null)
+        internal List<T> Query<T>(Action<T> doWithRowAction = null, List<string> columnNames = null)
         {
             List<T> result = null;
-            if (saveResult) result = new List<T>();
             PrepareQuery();
             T row = default(T);
             TypeInfo typeInfo = new TypeInfo(typeof(T));
 
             if (typeInfo.IsArray)
             {
-                throw new Exception("Not supported yet");
+                row = (T)Activator.CreateInstance(typeof(T), new object[] { columnNames.Count }); // Length 1
+                var ar = row as System.Array;
+                int index = 0;
+                foreach (var colName in columnNames)
+                {
+                    int currentIndexNeededToAvoidClosureInAction = index;
+                    Actions.Add(col =>
+                    {
+                        var x = Convert.ChangeType(col, typeof(T).GetElementType());
+                        ar.SetValue(x, currentIndexNeededToAvoidClosureInAction);
+                    });
+                    index++;
+                }
             }
             else
             {
@@ -198,8 +209,7 @@ namespace ALE.ETLBox.ControlFlow
                 }
                 InternalBeforeRowReadAction = () => row = (T)Activator.CreateInstance(typeof(T));
             }
-            if (saveResult) InternalAfterRowReadAction = () => result.Add(row);
-            else InternalAfterRowReadAction = () => doWithRowAction(row);
+            InternalAfterRowReadAction = () => doWithRowAction(row);
             ExecuteReader();
             CleanupQuery();
             return result;
@@ -214,10 +224,6 @@ namespace ALE.ETLBox.ControlFlow
         {
             Actions = null;
         }
-
-        public List<T> Query<T>() => Query<T>();
-        public void Query<T>(Action<T> doWithRowAction, List<string> columNames) => Query<T>(doWithRowAction, false, columNames);
-
 
         public void BulkInsert(ITableData data, string tableName)
         {
