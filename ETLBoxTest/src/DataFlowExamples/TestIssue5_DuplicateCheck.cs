@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +70,8 @@ namespace ALE.ETLBoxTest
 
 
             var trash = new CustomDestination<Poco>(input => {
-                int i = 7; });
+                LogTask.Warn($"Duplicate found. ID: {input.ID} Name: {input.Name}");
+            });
 
             source.LinkTo(rowTrans);
             rowTrans.LinkTo(multicast);
