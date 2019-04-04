@@ -28,6 +28,9 @@
     <None Update="src\ConnectionManager\DatatypeCSV.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="src\DataFlowExamples\Duplicate.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="src\DataFlowExamples\Issue5.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
