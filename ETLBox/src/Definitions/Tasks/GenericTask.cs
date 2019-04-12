@@ -12,18 +12,7 @@ namespace ALE.ETLBox {
         }       
 
         public virtual IConnectionManager ConnectionManager { get; set; }
-        //IConnectionManager _connectionManager;
-        //public IConnectionManager ConnectionManager {
-        //    get {
-        //        if (_connectionManager == null && ControlFlow.CurrentDbConnection != null)
-        //            return ControlFlow.CurrentDbConnection;
-        //        else
-        //            return _connectionManager;
-        //    }
-        //    set {
-        //        _connectionManager = value;
-        //    }
-        //}
+
         internal virtual IDbConnectionManager DbConnectionManager {
             get {
                 if (ConnectionManager == null) 

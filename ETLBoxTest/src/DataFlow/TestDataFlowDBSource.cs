@@ -22,6 +22,7 @@ namespace ALE.ETLBoxTest {
         [TestInitialize]
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
+            CleanUpSchemaTask.CleanUp("dbo");
         }
 
         public class MySimpleRow {
@@ -101,21 +102,21 @@ namespace ALE.ETLBoxTest {
 * DSBSource (out: object) -> DBDestination (in: object)
 */
         [TestMethod]
-        public void TableName_Tablename() {
-            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
+        public void DboTableName_DboTablename() {
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE Source
                 (Col1 nvarchar(100) null, Col2 int null)");
-            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1',1)");
-            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test2',2)");
-            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test3',3)");
-            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into Source values('Test1',1)");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into Source values('Test2',2)");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into Source values('Test3',3)");
+            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE Destination
                 (Col1 nvarchar(30) null, Col2 bigint null)");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() { TableName = "test.Source" };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>("test.Destination");
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() { TableName = "Source" };
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>("Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
-            Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
+            Assert.AreEqual(3, RowCountTask.Count("Destination"));
         }
 
         public class MyExtendedRow
@@ -181,8 +182,8 @@ namespace ALE.ETLBoxTest {
             SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
                 (Col1 nvarchar(30) null, Col2 bigint null)");
 
-            DBSource<string[]> source = new DBSource<string[]>() { TableName = "test.Source" };
-            DBDestination<string[]> dest = new DBDestination<string[]>("test.Destination");
+            DBSource source = new DBSource() { TableName = "test.Source" };
+            DBDestination dest = new DBDestination("test.Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -2,8 +2,7 @@
 
 ## Bugs
 
-- DBDestination / DBSource: A tablename can be defined. If the tablename does not contain the schema name, the default schema (dbo) should be used. This is currently not the case
-- If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes. 
+- If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes.
 
 ## Todos
 

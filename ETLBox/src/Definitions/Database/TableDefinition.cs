@@ -58,7 +58,8 @@ namespace ALE.ETLBox
    on tbl.schema_id = sc.schema_id
    inner join sys.systypes tpes
     on tpes.xtype = cols.system_type_id
-  where sc.name + '.' + tbl.name  =  '{tableName}'
+  where (sc.name + '.' + tbl.name ='{tableName}'
+            or tbl.name = '{tableName}')
   and tbl.type = 'U'
   and tpes.name <> 'sysname'"
             , () => { curCol = new TableColumn(); }

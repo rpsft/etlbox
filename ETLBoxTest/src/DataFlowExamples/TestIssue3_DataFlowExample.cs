@@ -21,6 +21,7 @@ namespace ALE.ETLBoxTest {
 
         [TestInitialize]
         public void TestInit() {
+            CleanUpSchemaTask.CleanUp("dbo");
         }
 
         [TestMethod]
@@ -40,7 +41,7 @@ namespace ALE.ETLBoxTest {
                 );
 
             ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(ConnectionStringParameter));
-            DBDestination<EntitiesInfo> dest = new DBDestination<EntitiesInfo>("dbo.test");
+            DBDestination<EntitiesInfo> dest = new DBDestination<EntitiesInfo>("test");
             source.LinkTo(rowT);
             rowT.LinkTo(dest);
             source.Execute();

@@ -129,4 +129,25 @@ namespace ALE.ETLBox.DataFlow {
                 NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
     }
+
+    /// <summary>
+    /// A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
+    /// into the targets. The non generic version of the DBSource creates a string array that contains the data.
+    /// </summary>
+    /// <see cref="DBSource{TOutput}"/>
+    /// <example>
+    /// <code>
+    /// //Non generic DBSource works with string[] as output
+    /// //use DBSource&lt;TOutput&gt; for generic usage!
+    /// DBSource source = new DBSource("dbo.table");
+    /// source.LinkTo(dest); //Transformation or Destination
+    /// source.Execute(); //Start the data flow
+    /// </code>
+    /// </example>
+    public class DBSource : DBSource<string[]>
+    {
+        public DBSource() : base() { }
+        public DBSource(TableDefinition sourceTableDefinition) : base(sourceTableDefinition) { }
+        public DBSource(string sql) : base() { }
+    }
 }

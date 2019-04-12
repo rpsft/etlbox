@@ -8,7 +8,7 @@ Initial release working on .NET Core.
 
 Reorganization of namespaces.
 
-## Version 1.1.0 (Releesed)
+## Version 1.1.0 (Released)
 
 * `DropDatabaseTask`: static "convenience" method name changed from delete to drop 
 * `ConnectionManager` (general) improved:verified that the underlying ADO.NET connection pooling is working (see Issue#1)
@@ -33,4 +33,4 @@ The CsvHelper configuration and classmap feature is described on https://joshclo
 ## Version 1.2 (Unreleased)
 * `ColumnMap`: Normally a mapping between property and column name is resolved using the property name. With the ColumnMap
 attribute you can define the name of the column that should match with the property.
-
+* `ExcelColumn`: The excel source now has it's own attribute to identify which property has which column index in the excel file. (Starting with 0)
