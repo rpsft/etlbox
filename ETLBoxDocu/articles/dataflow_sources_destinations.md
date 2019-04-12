@@ -5,12 +5,16 @@
 The DBSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data. While ADO.NET is reading from the source, data is simutaneously posted into the dataflow pipe.
 To initialize a DBSource, you can either hand over a `TableDefinition`, a SQL-statement or a tablename. 
 The DBSource needs to be defined with a POCO that matches the data types of the data. 
+By default, the mapping of column names to properties is resolved by the property name itself. E.g. a column named Value1 
+would stored in the property with the same name. If you use the `ColumnMap` attribute, you can add what column name will be mapped 
+to the property. If there is no match, the column will be ignored.
 
 Usage example:
 
 ```C#
 public class MySimpleRow {
-    public string Value1 { get; set; }
+    [ColumnMap("Value1")]
+    public string Col1 { get; set; }
     public int Value2 { get; set; }
 }
 
@@ -95,12 +99,22 @@ CSVSource<CSVData> source = new CSVSource<CSVData>("Demo.csv");
 
 ## ExcelSource
 
-An Excel source reads data from a xls or xlsx file. It uses the 3rd party library `ExcelDataReader`. By default the excel reader will try to read all data 
-in the file. You can specify a sheet name and a range to restrict this behaviour.
+An Excel source reads data from a xls or xlsx file. It uses the 3rd party library `ExcelDataReader`. 
+By default the excel reader will try to read all data in the file. You can specify a sheet name and a range 
+to restrict this behaviour. Additionally, you have to use the Attribute `ExcelColumn` to define the column index
+for each property. The first column would be 0, the 2nd column 1, ...
 
 Usage example:
 
 ```C#
+
+public class ExcelData {
+    [ExcelColumn(0)]
+    public string Col1 { get; set; }
+    [ExcelColumn(1)]
+    public int Col2 { get; set; }
+}
+
 ExcelSource<ExcelData> source = new ExcelSource<ExcelData>("src/DataFlow/ExcelDataFile.xlsx") {
     Range = new ExcelRange(2, 4, 5, 9),
     SheetName = "Sheet2"

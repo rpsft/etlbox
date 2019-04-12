@@ -3,6 +3,7 @@
 ## Bugs
 
 - DBDestination / DBSource: A tablename can be defined. If the tablename does not contain the schema name, the default schema (dbo) should be used. This is currently not the case
+- If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes. 
 
 ## Todos
 
@@ -28,4 +29,4 @@
 
 - all SQL statements in Uppercase / perhaps code formating
 
-- Custom Parameter should be part of a control flow (as a static object?) or a typed control flow? Or a parameter helper object that can be used for own paramter object?
+- Integrate DataFlowExamples into current test cases

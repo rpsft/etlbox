@@ -202,8 +202,8 @@ namespace ALE.ETLBox.ControlFlow
                 if (columnNames == null) columnNames = typeInfo.PropertyNames;
                 foreach (var colName in columnNames)
                 {
-                    if (typeInfo.HasProperty(colName))
-                        Actions.Add(colValue => typeInfo.GetProperty(colName).SetValue(row, colValue));
+                    if (typeInfo.HasPropertyOrColumnMapping(colName))
+                        Actions.Add(colValue => typeInfo.GetInfoByPropertyNameOrColumnMapping(colName).SetValue(row, colValue));
                     else
                         Actions.Add(col => { });
                 }

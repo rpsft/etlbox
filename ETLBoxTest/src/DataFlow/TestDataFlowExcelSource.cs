@@ -25,9 +25,14 @@ namespace ALE.ETLBoxTest {
         }
 
         public class ExcelData {
-            public int Col1 { get; set; }
+            [ExcelColumn(1)]
             public string Col2 { get; set; }
+            [ExcelColumn(2)]
             public decimal Col3 { get; set; }
+            public string Empty { get; set; } = "";
+            [ExcelColumn(0)]
+            public int Col1 { get; set; }
+
         }
 
 
@@ -50,7 +55,7 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
 
             Assert.AreEqual(5, RowCountTask.Count("test.Staging"));
-            
+
         }
 
     }

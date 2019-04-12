@@ -33,7 +33,7 @@ namespace ALE.ETLBox {
                 if (!col.IsIdentity) {
                     if (TypeInfo != null && !TypeInfo.IsArray)
                     {
-                        if (TypeInfo.HasProperty(col.Name))
+                        if (TypeInfo.HasPropertyOrColumnMapping(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
                     }
                     else
@@ -111,7 +111,7 @@ namespace ALE.ETLBox {
             }
             else
             {
-                int ix = TypeInfo.PropertyIndex[name];
+                int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(name);
                 if (HasIDColumnIndex)
                     if (ix > IDColumnIndex) ix++;
                 return ix;

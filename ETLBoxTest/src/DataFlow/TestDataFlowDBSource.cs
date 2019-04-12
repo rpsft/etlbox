@@ -188,6 +188,34 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
             Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
         }
+
+        public class ColumnMapRow
+        {
+            public string Col1 { get; set; }
+            [ColumnMap("Col2")]
+            public string B { get; set; }
+
+        }
+
+        [TestMethod]
+        public void DBSourceWithColumnMapping()
+        {
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
+                (Col1 nvarchar(100) null, Col2 nvarchar(100) null)");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+
+            DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>() { TableName = "test.Source" };
+            CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
+                input => {
+                    Assert.AreEqual("Test1",input.Col1);
+                    Assert.AreEqual("Test2", input.B);
+                });
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+        }
     }
 
 }

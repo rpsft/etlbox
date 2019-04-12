@@ -91,7 +91,8 @@ namespace ALE.ETLBox.DataFlow {
                 if (HasRange && col > Range.EndColumnIfSet) break;
                 if (HasRange && (col + 1) < Range.StartColumn) continue;
                 if (colInRange > typeInfo.PropertyLength) break;
-                PropertyInfo propInfo = typeInfo.Properties[colInRange];
+                if (!typeInfo.ExcelIndex2PropertyIndex.ContainsKey(colInRange)) continue;
+                PropertyInfo propInfo = typeInfo.Properties[typeInfo.ExcelIndex2PropertyIndex[colInRange]];
                 object value = ExcelDataReader.GetValue(col);
                 propInfo.SetValue(row, TypeInfo.CastPropertyValue(propInfo, value.ToString()));
                 colInRange++;
