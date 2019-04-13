@@ -14,11 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum RecoveryModel
-   </title>
+    <title>Example: Mutlicast to split data </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum RecoveryModel
-   ">
+    <meta name="title" content="Example: Mutlicast to split data ">
     <meta name="generator" content="docfx 2.40.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -77,52 +75,97 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.ControlFlow.RecoveryModel">
+            <article class="content wrap" id="_content" data-uid="">
 				<div class="buttons-unit">
 					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
 					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
 					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
 				</div>
-  
-  
-  <h1 id="ALE_ETLBox_ControlFlow_RecoveryModel" data-uid="ALE.ETLBox.ControlFlow.RecoveryModel" class="text-break">Enum RecoveryModel
-  </h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.ControlFlow.html">ALE.ETLBox.ControlFlow</a></h6>
-  <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_ControlFlow_RecoveryModel_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum RecoveryModel</code></pre>
-  </div>
-  <h3 id="fields">Fields
-  </h3>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    <thead>
-    <tbody>
-      <tr>
-        <td id="ALE_ETLBox_ControlFlow_RecoveryModel_BulkLogged">BulkLogged</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="ALE_ETLBox_ControlFlow_RecoveryModel_Default">Default</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="ALE_ETLBox_ControlFlow_RecoveryModel_Full">Full</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="ALE_ETLBox_ControlFlow_RecoveryModel_Simple">Simple</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </thead></thead></table>
+<h1 id="example-mutlicast-to-split-data">Example: Mutlicast to split data</h1>
+
+<h2 id="purpose">Purpose</h2>
+<p>The following examples shows how to use a Multicast to split data. We receive data from one flat file
+and we want to split up the data into two tables, each containing only a part of the data.</p>
+<h2 id="creating-the-flat-file">Creating the flat file</h2>
+<p>For this example we have a flat file containing a small example data set</p>
+<pre><code class="lang-CSV">Value1;Value2;Value3;Value4
+one;two;three;four
+five;six;seven;eight
+</code></pre>
+<h2 id="creating-the-pocos">Creating the POCOs</h2>
+<pre><code class="lang-C#">internal class TestPoco
+{
+    public string Value1 { get; set; }
+    public string Value2 { get; set; }
+    public string Value3 { get; set; }
+    public string Value4 { get; set; }
+}
+
+internal class TestEntity1
+{
+    public string Col1 { get; set; }
+    public string Col3 { get; set; }
+}
+
+internal class TestEntity2
+{
+    public string Col2 { get; set; }
+    public string Col4 { get; set; }
+}
+</code></pre>
+<h2 id="creating-the-destination-tables">Creating the destination tables</h2>
+<p>Now we create the destination tables.</p>
+<pre><code class="lang-C#">    private TableDefinition CreateTable(string tablename)
+    {
+        var def = new TableDefinition(tablename, new List&lt;TableColumn&gt;
+        {
+        new TableColumn(&quot;Col1&quot;, &quot;nvarchar(100)&quot;, true),
+        new TableColumn(&quot;Col2&quot;, &quot;nvarchar(100)&quot;, true),
+        new TableColumn(&quot;Col3&quot;, &quot;nvarchar(100)&quot;, true),
+        new TableColumn(&quot;Col4&quot;, &quot;nvarchar(100)&quot;, true)
+        });
+        def.CreateTable();
+        return def;
+    }
+</code></pre>
+<h2 id="creating-the-dataflow">Creating the dataflow</h2>
+<p>Now we create a dataflow that reads from the source and splits the data into Table1 and Table2.</p>
+<pre><code class="lang-C#">var tableDestination1 = this.CreateTable(&quot;test.Table1&quot;);
+var tableDestination2 = this.CreateTable(&quot;test.Table2&quot;);
+
+var row1 = new RowTransformation&lt;TestPoco, TestEntity1&gt;(input =&gt; {
+    return new TestEntity1
+    {
+        Col1 = input.Value1,
+        Col3 = input.Value3
+    };
+});
+var row2 = new RowTransformation&lt;TestPoco, TestEntity2&gt;(input =&gt; {
+    return new TestEntity2
+    {
+        Col2 = input.Value2,
+        Col4 = input.Value4
+    };
+});
+
+var source = new CSVSource&lt;TestPoco&gt;(&quot;src/DataFlowExamples/Issue5.csv&quot;) {
+    Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
+};
+var multicast = new Multicast&lt;TestPoco&gt;();
+var destination1 = new DBDestination&lt;TestEntity1&gt;(&quot;test.Table1&quot;);
+var destination2 = new DBDestination&lt;TestEntity2&gt;(&quot;test.Table2&quot;);
+
+source.LinkTo(multicast);
+multicast.LinkTo(row1);
+multicast.LinkTo(row2);
+
+row1.LinkTo(destination1);
+row2.LinkTo(destination2);
+
+source.Execute();
+destination1.Wait();
+destination2.Wait();
+</code></pre>
 </article>
           </div>
           
@@ -131,10 +174,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_RecoveryModel.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.RecoveryModel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/CreateDatabaseTask.cs/#L103" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/example_multicast.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

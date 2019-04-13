@@ -34,3 +34,5 @@ The CsvHelper configuration and classmap feature is described on https://joshclo
 * `ColumnMap`: Normally a mapping between property and column name is resolved using the property name. With the ColumnMap
 attribute you can define the name of the column that should match with the property.
 * `ExcelColumn`: The excel source now has it's own attribute to identify which property has which column index in the excel file. (Starting with 0)
+* `DBSource`: Adding non generic implementation, fixing a bug that a Table Name without schema would throw an error.
+* `Multicast`: Adding non generic implementation

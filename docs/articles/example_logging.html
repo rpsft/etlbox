@@ -86,7 +86,9 @@
 <h2 id="set-up-nlogconfig">Set up nlog.config</h2>
 <p>Put a file name nlog.config in the root of your project. This file should look like this:</p>
 <pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;nlog&gt;
+&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
   &lt;targets&gt;
     &lt;target xsi:type=&quot;Database&quot; name=&quot;database&quot;
        useTransactions=&quot;false&quot; keepConnection=&quot;true&quot;&gt;
@@ -117,14 +119,10 @@
     &lt;logger name=&quot;*&quot; minlevel=&quot;Debug&quot; writeTo=&quot;database&quot; /&gt;
   &lt;/rules&gt;
 &lt;/nlog&gt;
-```xml
-
-## Set up the connection, database and log tables
-
-Now you need to create a database and the log tables using the `CreateLogTablesTask`.
-
-```C#
-ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;&quot;));
+</code></pre>
+<h2 id="set-up-the-connection-database-and-log-tables">Set up the connection, database and log tables</h2>
+<p>Now you need to create a database and the log tables using the <code>CreateLogTablesTask</code>.</p>
+<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;&quot;));
 CreateDatabaseTask.Create(&quot;DemoDB&quot;);
 ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=DemoDB;&quot;));
             
@@ -155,7 +153,7 @@ string jsonLog = GetLogAsJSONTask.GetJSON(1);
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBoxDocu/articles/example_logging.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/example_logging.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

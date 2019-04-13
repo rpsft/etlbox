@@ -6,7 +6,9 @@ Put a file name nlog.config in the root of your project. This file should look l
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<nlog>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xsi:schemaLocation="NLog NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <targets>
     <target xsi:type="Database" name="database"
        useTransactions="false" keepConnection="true">
@@ -37,7 +39,7 @@ Put a file name nlog.config in the root of your project. This file should look l
     <logger name="*" minlevel="Debug" writeTo="database" />
   </rules>
 </nlog>
-```xml
+```
 
 ## Set up the connection, database and log tables
 

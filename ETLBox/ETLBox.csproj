@@ -4,26 +4,26 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>It's all in the box! Run all your ETL jobs with this awesome C# class library.
-
+    <Description>It's all in the box! Run all your ETL jobs with this awesome C# class library. 
+    
 ETLBox is a comprehensive C# class library that is able to manage your whole ETL or ELT. You can use it to run some simple (or complex) sql against your database. You can easily manage your database using some easy-to-use and easy-to-understand objects. You can even create your own dataflow, where data is send from a source to a target and transformed on its way.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
-    <PackageLicenseUrl>https://github.com/roadrunnerlenny/etlbox/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
-    <PackageReleaseNotes>CSVSource: Now you must use the CsvHelper.Configuration.Configuration class to modify the configuration settings. Additionally, POCOs now accept a CSVHelper classmap or CSVHelper attributes that support easy mapping of header names in CSV source files to C# properties.
-
-The CsvHelper configuration and classmap feature is described on https://joshclose.github.io/CsvHelper/
-
-DBDestination: In previous versions, the name of the properties were not matched with the column names of the destination table.  This is fixed now.</PackageReleaseNotes>
-    <Version>1.1.2</Version>
+    <PackageReleaseNotes>ColumnMap: Normally a mapping between property and column name is resolved using the property name. With the ColumnMap attribute you can define the name of the column that should match with the property.
+ ... ExcelColumn: The excel source now has it's own attribute to identify which property has which column index in the excel file. (Starting with 0) 
+ ... DBSource: Adding non generic implementation, fixing a bug that a Table Name without schema would throw an error.
+ ... Multicast: Adding non generic implementation</PackageReleaseNotes>
+    <Version>1.2.0</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
-    <FileVersion>1.1.2.0</FileVersion>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

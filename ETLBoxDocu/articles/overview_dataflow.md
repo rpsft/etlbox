@@ -127,7 +127,7 @@ This code will execute as an asynchronous task. If you want to wait for the Data
 dest.Wait();
 ```
 
-When ``dest.Wait()` returns, all data was read from the source and written into the database table. 
+When `dest.Wait()` returns, all data was read from the source and written into the database table. 
 
 ## Predicates 
 

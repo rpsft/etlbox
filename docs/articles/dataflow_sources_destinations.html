@@ -86,10 +86,14 @@
 <h2 id="dbsource">DBSource</h2>
 <p>The DBSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data. While ADO.NET is reading from the source, data is simutaneously posted into the dataflow pipe.
 To initialize a DBSource, you can either hand over a <code>TableDefinition</code>, a SQL-statement or a tablename.
-The DBSource needs to be defined with a POCO that matches the data types of the data.</p>
+The DBSource needs to be defined with a POCO that matches the data types of the data.
+By default, the mapping of column names to properties is resolved by the property name itself. E.g. a column named Value1
+would stored in the property with the same name. If you use the <code>ColumnMap</code> attribute, you can add what column name will be mapped
+to the property. If there is no match, the column will be ignored.</p>
 <p>Usage example:</p>
 <pre><code class="lang-C#">public class MySimpleRow {
-    public string Value1 { get; set; }
+    [ColumnMap(&quot;Value1&quot;)]
+    public string Col1 { get; set; }
     public int Value2 { get; set; }
 }
 
@@ -141,10 +145,20 @@ CSVSource source = new CSVSource(&quot;Demo.csv&quot;) {
 <pre><code class="lang-C#">CSVSource&lt;CSVData&gt; source = new CSVSource&lt;CSVData&gt;(&quot;Demo.csv&quot;);
 </code></pre>
 <h2 id="excelsource">ExcelSource</h2>
-<p>An Excel source reads data from a xls or xlsx file. It uses the 3rd party library <code>ExcelDataReader</code>. By default the excel reader will try to read all data
-in the file. You can specify a sheet name and a range to restrict this behaviour.</p>
+<p>An Excel source reads data from a xls or xlsx file. It uses the 3rd party library <code>ExcelDataReader</code>.
+By default the excel reader will try to read all data in the file. You can specify a sheet name and a range
+to restrict this behaviour. Additionally, you have to use the Attribute <code>ExcelColumn</code> to define the column index
+for each property. The first column would be 0, the 2nd column 1, ...</p>
 <p>Usage example:</p>
-<pre><code class="lang-C#">ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt;(&quot;src/DataFlow/ExcelDataFile.xlsx&quot;) {
+<pre><code class="lang-C#">
+public class ExcelData {
+    [ExcelColumn(0)]
+    public string Col1 { get; set; }
+    [ExcelColumn(1)]
+    public int Col2 { get; set; }
+}
+
+ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt;(&quot;src/DataFlow/ExcelDataFile.xlsx&quot;) {
     Range = new ExcelRange(2, 4, 5, 9),
     SheetName = &quot;Sheet2&quot;
 };
@@ -157,7 +171,7 @@ in the file. You can specify a sheet name and a range to restrict this behaviour
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBoxDocu/articles/dataflow_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

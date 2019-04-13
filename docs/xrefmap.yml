@@ -2872,31 +2872,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.DbTask.IsOdbcConnection
   nameWithType: DbTask.IsOdbcConnection
-- uid: ALE.ETLBox.ControlFlow.DbTask.Query*
-  name: Query
-  href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Query_
-  commentId: Overload:ALE.ETLBox.ControlFlow.DbTask.Query
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.DbTask.Query
-  nameWithType: DbTask.Query
-- uid: ALE.ETLBox.ControlFlow.DbTask.Query``1
-  name: Query<T>()
-  href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Query__1
-  commentId: M:ALE.ETLBox.ControlFlow.DbTask.Query``1
-  name.vb: Query(Of T)()
-  fullName: ALE.ETLBox.ControlFlow.DbTask.Query<T>()
-  fullName.vb: ALE.ETLBox.ControlFlow.DbTask.Query(Of T)()
-  nameWithType: DbTask.Query<T>()
-  nameWithType.vb: DbTask.Query(Of T)()
-- uid: ALE.ETLBox.ControlFlow.DbTask.Query``1(System.Action{``0})
-  name: Query<T>(Action<T>)
-  href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Query__1_System_Action___0__
-  commentId: M:ALE.ETLBox.ControlFlow.DbTask.Query``1(System.Action{``0})
-  name.vb: Query(Of T)(Action(Of T))
-  fullName: ALE.ETLBox.ControlFlow.DbTask.Query<T>(System.Action<T>)
-  fullName.vb: ALE.ETLBox.ControlFlow.DbTask.Query(Of T)(System.Action(Of T))
-  nameWithType: DbTask.Query<T>(Action<T>)
-  nameWithType.vb: DbTask.Query(Of T)(Action(Of T))
 - uid: ALE.ETLBox.ControlFlow.DbTask.ReadTopX
   name: ReadTopX
   href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ReadTopX
@@ -4800,57 +4775,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).CSVSource
   nameWithType: CSVSource<TOutput>.CSVSource
   nameWithType.vb: CSVSource(Of TOutput).CSVSource
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.AllowComments
-  name: AllowComments
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_AllowComments
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.AllowComments
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.AllowComments
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).AllowComments
-  nameWithType: CSVSource<TOutput>.AllowComments
-  nameWithType.vb: CSVSource(Of TOutput).AllowComments
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.AllowComments*
-  name: AllowComments
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_AllowComments_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.AllowComments
+- uid: ALE.ETLBox.DataFlow.CSVSource`1.Configuration
+  name: Configuration
+  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Configuration
+  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.Configuration
+  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Configuration
+  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Configuration
+  nameWithType: CSVSource<TOutput>.Configuration
+  nameWithType.vb: CSVSource(Of TOutput).Configuration
+- uid: ALE.ETLBox.DataFlow.CSVSource`1.Configuration*
+  name: Configuration
+  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Configuration_
+  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.Configuration
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.AllowComments
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).AllowComments
-  nameWithType: CSVSource<TOutput>.AllowComments
-  nameWithType.vb: CSVSource(Of TOutput).AllowComments
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.Comment
-  name: Comment
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Comment
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.Comment
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Comment
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Comment
-  nameWithType: CSVSource<TOutput>.Comment
-  nameWithType.vb: CSVSource(Of TOutput).Comment
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.Comment*
-  name: Comment
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Comment_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.Comment
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Comment
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Comment
-  nameWithType: CSVSource<TOutput>.Comment
-  nameWithType.vb: CSVSource(Of TOutput).Comment
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.Delimiter
-  name: Delimiter
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Delimiter
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.Delimiter
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Delimiter
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Delimiter
-  nameWithType: CSVSource<TOutput>.Delimiter
-  nameWithType.vb: CSVSource(Of TOutput).Delimiter
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.Delimiter*
-  name: Delimiter
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Delimiter_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.Delimiter
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Delimiter
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Delimiter
-  nameWithType: CSVSource<TOutput>.Delimiter
-  nameWithType.vb: CSVSource(Of TOutput).Delimiter
+  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Configuration
+  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Configuration
+  nameWithType: CSVSource<TOutput>.Configuration
+  nameWithType.vb: CSVSource(Of TOutput).Configuration
 - uid: ALE.ETLBox.DataFlow.CSVSource`1.Execute
   name: Execute()
   href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Execute
@@ -4919,23 +4860,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).FileName
   nameWithType: CSVSource<TOutput>.FileName
   nameWithType.vb: CSVSource(Of TOutput).FileName
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.IgnoreBlankLines
-  name: IgnoreBlankLines
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_IgnoreBlankLines
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.IgnoreBlankLines
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.IgnoreBlankLines
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).IgnoreBlankLines
-  nameWithType: CSVSource<TOutput>.IgnoreBlankLines
-  nameWithType.vb: CSVSource(Of TOutput).IgnoreBlankLines
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.IgnoreBlankLines*
-  name: IgnoreBlankLines
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_IgnoreBlankLines_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.IgnoreBlankLines
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.IgnoreBlankLines
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).IgnoreBlankLines
-  nameWithType: CSVSource<TOutput>.IgnoreBlankLines
-  nameWithType.vb: CSVSource(Of TOutput).IgnoreBlankLines
 - uid: ALE.ETLBox.DataFlow.CSVSource`1.IsHeaderRead
   name: IsHeaderRead
   href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_IsHeaderRead
@@ -4980,40 +4904,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).LinkTo
   nameWithType: CSVSource<TOutput>.LinkTo
   nameWithType.vb: CSVSource(Of TOutput).LinkTo
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.Quote
-  name: Quote
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Quote
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.Quote
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Quote
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Quote
-  nameWithType: CSVSource<TOutput>.Quote
-  nameWithType.vb: CSVSource(Of TOutput).Quote
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.Quote*
-  name: Quote
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Quote_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.Quote
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.Quote
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).Quote
-  nameWithType: CSVSource<TOutput>.Quote
-  nameWithType.vb: CSVSource(Of TOutput).Quote
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.SkipEmptyRecords
-  name: SkipEmptyRecords
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SkipEmptyRecords
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.SkipEmptyRecords
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.SkipEmptyRecords
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).SkipEmptyRecords
-  nameWithType: CSVSource<TOutput>.SkipEmptyRecords
-  nameWithType.vb: CSVSource(Of TOutput).SkipEmptyRecords
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.SkipEmptyRecords*
-  name: SkipEmptyRecords
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SkipEmptyRecords_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.SkipEmptyRecords
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.SkipEmptyRecords
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).SkipEmptyRecords
-  nameWithType: CSVSource<TOutput>.SkipEmptyRecords
-  nameWithType.vb: CSVSource(Of TOutput).SkipEmptyRecords
 - uid: ALE.ETLBox.DataFlow.CSVSource`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SourceBlock
@@ -5031,23 +4921,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).SourceBlock
   nameWithType: CSVSource<TOutput>.SourceBlock
   nameWithType.vb: CSVSource(Of TOutput).SourceBlock
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.SourceCommentRows
-  name: SourceCommentRows
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SourceCommentRows
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.SourceCommentRows
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.SourceCommentRows
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).SourceCommentRows
-  nameWithType: CSVSource<TOutput>.SourceCommentRows
-  nameWithType.vb: CSVSource(Of TOutput).SourceCommentRows
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.SourceCommentRows*
-  name: SourceCommentRows
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SourceCommentRows_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.SourceCommentRows
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.SourceCommentRows
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).SourceCommentRows
-  nameWithType: CSVSource<TOutput>.SourceCommentRows
-  nameWithType.vb: CSVSource(Of TOutput).SourceCommentRows
 - uid: ALE.ETLBox.DataFlow.CSVSource`1.TaskName
   name: TaskName
   href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_TaskName
@@ -5082,40 +4955,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).TaskType
   nameWithType: CSVSource<TOutput>.TaskType
   nameWithType.vb: CSVSource(Of TOutput).TaskType
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.TrimFields
-  name: TrimFields
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_TrimFields
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.TrimFields
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.TrimFields
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).TrimFields
-  nameWithType: CSVSource<TOutput>.TrimFields
-  nameWithType.vb: CSVSource(Of TOutput).TrimFields
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.TrimFields*
-  name: TrimFields
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_TrimFields_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.TrimFields
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.TrimFields
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).TrimFields
-  nameWithType: CSVSource<TOutput>.TrimFields
-  nameWithType.vb: CSVSource(Of TOutput).TrimFields
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.TrimHeaders
-  name: TrimHeaders
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_TrimHeaders
-  commentId: P:ALE.ETLBox.DataFlow.CSVSource`1.TrimHeaders
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.TrimHeaders
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).TrimHeaders
-  nameWithType: CSVSource<TOutput>.TrimHeaders
-  nameWithType.vb: CSVSource(Of TOutput).TrimHeaders
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.TrimHeaders*
-  name: TrimHeaders
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_TrimHeaders_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.TrimHeaders
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.TrimHeaders
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).TrimHeaders
-  nameWithType: CSVSource<TOutput>.TrimHeaders
-  nameWithType.vb: CSVSource(Of TOutput).TrimHeaders
 - uid: ALE.ETLBox.DataFlow.CustomDestination`1
   name: CustomDestination<TInput>
   href: api/ALE.ETLBox.DataFlow.CustomDestination-1.html
@@ -5784,6 +5623,40 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).DBSource
   nameWithType: DBSource<TOutput>.DBSource
   nameWithType.vb: DBSource(Of TOutput).DBSource
+- uid: ALE.ETLBox.DataFlow.DBSource`1.ColumnNames
+  name: ColumnNames
+  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_ColumnNames
+  commentId: P:ALE.ETLBox.DataFlow.DBSource`1.ColumnNames
+  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.ColumnNames
+  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).ColumnNames
+  nameWithType: DBSource<TOutput>.ColumnNames
+  nameWithType.vb: DBSource(Of TOutput).ColumnNames
+- uid: ALE.ETLBox.DataFlow.DBSource`1.ColumnNames*
+  name: ColumnNames
+  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_ColumnNames_
+  commentId: Overload:ALE.ETLBox.DataFlow.DBSource`1.ColumnNames
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.ColumnNames
+  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).ColumnNames
+  nameWithType: DBSource<TOutput>.ColumnNames
+  nameWithType.vb: DBSource(Of TOutput).ColumnNames
+- uid: ALE.ETLBox.DataFlow.DBSource`1.ColumnNamesEvaluated
+  name: ColumnNamesEvaluated
+  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_ColumnNamesEvaluated
+  commentId: P:ALE.ETLBox.DataFlow.DBSource`1.ColumnNamesEvaluated
+  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.ColumnNamesEvaluated
+  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).ColumnNamesEvaluated
+  nameWithType: DBSource<TOutput>.ColumnNamesEvaluated
+  nameWithType.vb: DBSource(Of TOutput).ColumnNamesEvaluated
+- uid: ALE.ETLBox.DataFlow.DBSource`1.ColumnNamesEvaluated*
+  name: ColumnNamesEvaluated
+  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_ColumnNamesEvaluated_
+  commentId: Overload:ALE.ETLBox.DataFlow.DBSource`1.ColumnNamesEvaluated
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.ColumnNamesEvaluated
+  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).ColumnNamesEvaluated
+  nameWithType: DBSource<TOutput>.ColumnNamesEvaluated
+  nameWithType.vb: DBSource(Of TOutput).ColumnNamesEvaluated
 - uid: ALE.ETLBox.DataFlow.DBSource`1.Execute
   name: Execute()
   href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_Execute
@@ -5818,6 +5691,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).ExecuteAsync
   nameWithType: DBSource<TOutput>.ExecuteAsync
   nameWithType.vb: DBSource(Of TOutput).ExecuteAsync
+- uid: ALE.ETLBox.DataFlow.DBSource`1.HasColumnNames
+  name: HasColumnNames
+  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_HasColumnNames
+  commentId: P:ALE.ETLBox.DataFlow.DBSource`1.HasColumnNames
+  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.HasColumnNames
+  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).HasColumnNames
+  nameWithType: DBSource<TOutput>.HasColumnNames
+  nameWithType.vb: DBSource(Of TOutput).HasColumnNames
+- uid: ALE.ETLBox.DataFlow.DBSource`1.HasColumnNames*
+  name: HasColumnNames
+  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_HasColumnNames_
+  commentId: Overload:ALE.ETLBox.DataFlow.DBSource`1.HasColumnNames
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.HasColumnNames
+  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).HasColumnNames
+  nameWithType: DBSource<TOutput>.HasColumnNames
+  nameWithType.vb: DBSource(Of TOutput).HasColumnNames
 - uid: ALE.ETLBox.DataFlow.DBSource`1.HasSourceTableDefinition
   name: HasSourceTableDefinition
   href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_HasSourceTableDefinition
@@ -11832,23 +11722,6 @@ references:
   fullName.vb: ALE.ETLBox.TableData(Of T).HasDefinition
   nameWithType: TableData<T>.HasDefinition
   nameWithType.vb: TableData(Of T).HasDefinition
-- uid: ALE.ETLBox.TableData`1.HasIdentityColumn
-  name: HasIdentityColumn
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_HasIdentityColumn
-  commentId: P:ALE.ETLBox.TableData`1.HasIdentityColumn
-  fullName: ALE.ETLBox.TableData<T>.HasIdentityColumn
-  fullName.vb: ALE.ETLBox.TableData(Of T).HasIdentityColumn
-  nameWithType: TableData<T>.HasIdentityColumn
-  nameWithType.vb: TableData(Of T).HasIdentityColumn
-- uid: ALE.ETLBox.TableData`1.HasIdentityColumn*
-  name: HasIdentityColumn
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_HasIdentityColumn_
-  commentId: Overload:ALE.ETLBox.TableData`1.HasIdentityColumn
-  isSpec: "True"
-  fullName: ALE.ETLBox.TableData<T>.HasIdentityColumn
-  fullName.vb: ALE.ETLBox.TableData(Of T).HasIdentityColumn
-  nameWithType: TableData<T>.HasIdentityColumn
-  nameWithType.vb: TableData(Of T).HasIdentityColumn
 - uid: ALE.ETLBox.TableData`1.IsClosed
   name: IsClosed
   href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_IsClosed
@@ -11910,23 +11783,6 @@ references:
   fullName.vb: ALE.ETLBox.TableData(Of T).Item
   nameWithType: TableData<T>.Item
   nameWithType.vb: TableData(Of T).Item
-- uid: ALE.ETLBox.TableData`1.NewRow
-  name: NewRow()
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_NewRow
-  commentId: M:ALE.ETLBox.TableData`1.NewRow
-  fullName: ALE.ETLBox.TableData<T>.NewRow()
-  fullName.vb: ALE.ETLBox.TableData(Of T).NewRow()
-  nameWithType: TableData<T>.NewRow()
-  nameWithType.vb: TableData(Of T).NewRow()
-- uid: ALE.ETLBox.TableData`1.NewRow*
-  name: NewRow
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_NewRow_
-  commentId: Overload:ALE.ETLBox.TableData`1.NewRow
-  isSpec: "True"
-  fullName: ALE.ETLBox.TableData<T>.NewRow
-  fullName.vb: ALE.ETLBox.TableData(Of T).NewRow
-  nameWithType: TableData<T>.NewRow
-  nameWithType.vb: TableData(Of T).NewRow
 - uid: ALE.ETLBox.TableData`1.NextResult
   name: NextResult()
   href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_NextResult

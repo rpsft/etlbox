@@ -8,7 +8,7 @@
 
   <TestRunParameters>
     <Parameter name="connectionString" value="Data Source=.\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=ETLBox;" />
-    <Parameter name="odbcConnectionString" value="Driver={SQL Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;" />
+    <Parameter name="odbcConnectionString" value="Driver={SQL Server};Server=.\SQLEXPRESS;Database=ETLBox;Trusted_Connection=Yes;" />
     <Parameter name="accessConnectionString" value="Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb" />
     <Parameter name="dbName" value="ETLBox" />
   </TestRunParameters>
