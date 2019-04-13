@@ -39,6 +39,7 @@ namespace ALE.ETLBoxTest {
             TableDefinition sourceTableDefinition = CreateTableForMyDataRow("test.Source");
             TableDefinition dest1TableDefinition = CreateTableForMyDataRow("test.Destination1");
             TableDefinition dest2TableDefinition = CreateTableForMyDataRow("test.Destination2");
+            TableDefinition dest3TableDefinition = CreateTableForMyDataRow("test.Destination3");
             InsertDemoDataForMyRowTable("test.Source");
 
             DBSource<MyDataRow> source = new DBSource<MyDataRow>();
@@ -48,17 +49,22 @@ namespace ALE.ETLBoxTest {
             dest1.DestinationTableDefinition = dest1TableDefinition;
             DBDestination<MyDataRow> dest2 = new DBDestination<MyDataRow>();
             dest2.DestinationTableDefinition = dest2TableDefinition;
+            DBDestination<MyDataRow> dest3 = new DBDestination<MyDataRow>();
+            dest3.DestinationTableDefinition = dest3TableDefinition;
 
             source.LinkTo(multicast);
             multicast.LinkTo(dest1);
             multicast.LinkTo(dest2);
+            multicast.LinkTo(dest3);
             source.Execute();
             dest1.Wait();
             dest2.Wait();
+            dest3.Wait();
 
             Assert.AreEqual(3, RowCountTask.Count("test.Source","Col2 in (1,2,3)"));
             Assert.AreEqual(3, RowCountTask.Count("test.Destination1", "Col2 in (1,2,3)"));
             Assert.AreEqual(3, RowCountTask.Count("test.Destination2", "Col2 in (1,2,3)"));
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination3", "Col2 in (1,2,3)"));
 
         }
 
