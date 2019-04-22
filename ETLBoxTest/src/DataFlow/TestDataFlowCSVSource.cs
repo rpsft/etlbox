@@ -163,6 +163,25 @@ namespace ALE.ETLBoxTest {
 
             Assert.AreEqual(3, RowCountTask.Count("test.Staging","Col1 Like '%ValueRow%' and Col2 <> 1"));
         }
+
+        [TestMethod]
+        public void CSVGenericWithSkipRows_DB()
+        {
+            TableDefinition stagingTable = new TableDefinition("test.Staging", new List<TableColumn>() {
+                new TableColumn("Col1", "nvarchar(100)", allowNulls: false),
+                new TableColumn("Col2", "int", allowNulls: true)
+            });
+            stagingTable.CreateTable();
+            CSVSource<CSVData> source = new CSVSource<CSVData>("src/DataFlow/CSVSkipRows.csv");
+            source.SkipRows = 2;
+            DBDestination<CSVData> dest = new DBDestination<CSVData>() { DestinationTableDefinition = stagingTable };
+            source.LinkTo(dest);
+
+            source.Execute();
+            dest.Wait();
+
+            Assert.AreEqual(3, RowCountTask.Count("test.Staging", "Col1 Like '%ValueRow%' and Col2 <> 1"));
+        }
     }
 
 }

@@ -30,9 +30,12 @@ The CsvHelper configuration and classmap feature is described on https://joshclo
 * `DBDestination`: In previous versions, the name of the properties were not matched with the column names of the destination table. 
     This is fixed now.
 
-## Version 1.2 (Unreleased)
+## Version 1.2 (Released)
 * `ColumnMap`: Normally a mapping between property and column name is resolved using the property name. With the ColumnMap
 attribute you can define the name of the column that should match with the property.
 * `ExcelColumn`: The excel source now has it's own attribute to identify which property has which column index in the excel file. (Starting with 0)
 * `DBSource`: Adding non generic implementation, fixing a bug that a Table Name without schema would throw an error.
 * `Multicast`: Adding non generic implementation
+
+## Version 1.2.1 (Release)
+* `CSVSource`: Adding `SkipRows` Property to skip the first X rows in a source file before start reading.
