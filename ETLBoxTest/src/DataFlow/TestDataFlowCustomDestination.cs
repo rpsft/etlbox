@@ -3,7 +3,11 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
+
 
 namespace ALE.ETLBoxTest {
     [TestClass]
@@ -22,11 +26,11 @@ namespace ALE.ETLBoxTest {
         [TestInitialize]
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
-        }        
+        }
 
         public class MySimpleRow {
-            public string Value1 { get; set; }
-            public int Value2 { get; set; }
+            public string Col1 { get; set; }
+            public int Col2 { get; set; }
         }
 
         /*
@@ -40,13 +44,38 @@ namespace ALE.ETLBoxTest {
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() { SourceTableDefinition = sourceTableDefinition };
             CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
                 row => {
-                    SqlTask.ExecuteNonQuery("Insert row", $"insert into test.Destination values('{row.Value1}',{row.Value2})");
+                    SqlTask.ExecuteNonQuery("Insert row", $"insert into test.Destination values('{row.Col1}',{row.Col2})");
                     }
             );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
-            Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination","Col2 > 0"));
+        }
+
+        [TestMethod]
+        public void Table2JsonFile()
+        {
+            TableDefinition sourceTableDefinition = CreateSourceTable("test.Source");
+
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(sourceTableDefinition);
+
+            List<MySimpleRow> rows = new List<MySimpleRow>();
+            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
+                row => {
+                    rows.Add(row);
+                }
+            );
+
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+            string json = JsonConvert.SerializeObject(rows, Formatting.Indented);
+
+
+            Assert.AreEqual(json, File.ReadAllText("src/DataFlow/json_tobe.json"));
+
+
         }
 
         private static TableDefinition CreateSourceTable(string tableName) {
@@ -70,7 +99,7 @@ namespace ALE.ETLBoxTest {
             return destinationTableDefinition;
         }
 
-        
+
 
     }
 

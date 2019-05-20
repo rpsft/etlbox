@@ -40,6 +40,9 @@
     <None Update="src\DataFlow\CSVSkipRows.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="src\DataFlow\json_tobe.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="src\DataFlow\Simple_CSV2DB.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
