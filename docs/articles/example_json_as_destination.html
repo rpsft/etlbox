@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Example: Writing into a json file </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Example: Writing into a json file ">
+    <meta name="generator" content="docfx 2.40.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="example-writing-into-a-json-file">Example: Writing into a json file</h1>
+
+<h2 id="purpose">Purpose</h2>
+<p>Sometimes you want to extract data and store it into a json file or use the json to send it to an Rest API.
+This example shows you how to use the <code>CustomDestination</code> to create a json.</p>
+<h2 id="create-necessary-poco">Create necessary POCO</h2>
+<p>In this example we will receceive some demo data from a database table. The table has two columns - <code>Col1</code> and <code>Col2</code>.
+In order to store the data from table, we first create a POCO (Plain old Compononent object) to use in the dataflow.</p>
+<pre><code class="lang-C#">public class MySimpleRow {
+    public string Col1 { get; set; }
+    public int Col2 { get; set; }
+}
+</code></pre>
+<h2 id="implement-the-dataflow">Implement the dataflow</h2>
+<p>First, we will read the data from the source. We create a table use a <code>TableDefinition</code> object and pass this
+to the <code>DBSource</code>.</p>
+<pre><code class="lang-C#">TableDefinition sourceTableDefinition = new TableDefinition(&quot;test.Source&quot;
+            , new List&lt;TableColumn&gt;() {
+                new TableColumn(&quot;Col1&quot;, &quot;nvarchar(100)&quot;, allowNulls: false),
+                new TableColumn(&quot;Col2&quot;, &quot;int&quot;, allowNulls: true)
+            });
+sourceTableDefinition.CreateTable();
+SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, $&quot;insert into {tableName} values('Test1',1)&quot;);
+SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, $&quot;insert into {tableName} values('Test2',2)&quot;);
+SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, $&quot;insert into {tableName} values('Test3',3)&quot;);
+
+DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(sourceTableDefinition);
+</code></pre>
+<p>Next, we need to have the Destination defined. We create a <code>CustomDestination</code> that basically reads all the rows
+into a List object. Be careful when you do this with huge amount of data, as all data will be stored in memory.</p>
+<pre><code class="lang-C#">List&lt;MySimpleRow&gt; rows = new List&lt;MySimpleRow&gt;();
+CustomDestination&lt;MySimpleRow&gt; dest = new CustomDestination&lt;MySimpleRow&gt;(
+    row =&gt; {
+        rows.Add(row);
+    }
+);
+</code></pre>
+<p>Then, we connect the source with destination and start the dataflow.</p>
+<pre><code class="lang-C#">source.LinkTo(dest);
+source.Execute();
+dest.Wait();
+</code></pre>
+<p>Now that all data is in the List object, we can serialize it using <code>JsonConvert</code>.</p>
+<pre><code class="lang-C#">string json = JsonConvert.SerializeObject(rows, Formatting.Indented);
+</code></pre>
+<p>This json string can now be saved into a file or send to a web service.</p>
+<h2 id="big-data">Big data</h2>
+<p>If you need to write a big amount of data into a json, I recommend that you write the data into the file while reading it.
+Instead of you a List object, you could you some kind of File stream in which you write while receive the row within the
+<code>CustomDestination</code>. But in this case you have to make sure that your json is valid and you have to take care of the
+formatting etc. yourself.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/example_json_as_destination.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
