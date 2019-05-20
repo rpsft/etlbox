@@ -17,6 +17,8 @@
       href: dataflow_sources_destinations.md
     - name: Example WebService as Source
       href: example_webservice_as_source.md
+    - name: Example Json as Destination
+      href: example_json_as_destination.md
     - name: Example Multicast to split data
       href: example_multicast.md
 - name: Overview Logging
