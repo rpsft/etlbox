@@ -72,10 +72,7 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
             string json = JsonConvert.SerializeObject(rows, Formatting.Indented);
 
-
             Assert.AreEqual(json, File.ReadAllText("src/DataFlow/json_tobe.json"));
-
-
         }
 
         private static TableDefinition CreateSourceTable(string tableName) {
