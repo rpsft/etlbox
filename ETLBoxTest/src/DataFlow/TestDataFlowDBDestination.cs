@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTest {
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
 
-            DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>() { TableName = "test.Source" };
+            DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>("test.Source");
             CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
                 input => {
                     Assert.AreEqual("Test1",input.Col1);

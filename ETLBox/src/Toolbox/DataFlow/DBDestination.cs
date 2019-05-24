@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -59,7 +60,21 @@ namespace ALE.ETLBox.DataFlow {
             InitObjects(DEFAULT_BATCH_SIZE);
         }
 
+        public DBDestination(IConnectionManager connectionManager, string tableName)
+        {
+            ConnectionManager = connectionManager;
+            TableName = tableName;
+            InitObjects(DEFAULT_BATCH_SIZE);
+        }
+
         public DBDestination(string tableName, int batchSize) {
+            TableName = tableName;
+            InitObjects(batchSize);
+        }
+
+        public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize)
+        {
+            ConnectionManager = connectionManager;
             TableName = tableName;
             InitObjects(batchSize);
         }
@@ -158,7 +173,11 @@ namespace ALE.ETLBox.DataFlow {
 
         public DBDestination(string tableName) : base(tableName) { }
 
+        public DBDestination(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
+
         public DBDestination(string tableName, int batchSize) : base(tableName, batchSize) { }
+
+        public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize) { }
 
         public DBDestination(TableDefinition tableDefinition, int batchSize) : base(tableDefinition, batchSize) { }
 

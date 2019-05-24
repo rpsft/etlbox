@@ -30,7 +30,10 @@ namespace ALE.ETLBoxTest {
                 @"CREATE TABLE dbo.test 
                 (Col1 int null, Col2 int null, Col3 int null)"
             );
-            DBSource<EntitiesInfo> source = new DBSource<EntitiesInfo>("SELECT * FROM (VALUES (1,2,3), (4,5,6), (7,8,9)) AS MyTable(Col1,Col2,Col3)");
+            DBSource<EntitiesInfo> source = new DBSource<EntitiesInfo>()
+            {
+                Sql = "SELECT * FROM (VALUES (1,2,3), (4,5,6), (7,8,9)) AS MyTable(Col1,Col2,Col3)"
+            };
 
             RowTransformation<EntitiesInfo, EntitiesInfo> rowT = new RowTransformation<EntitiesInfo, EntitiesInfo>(
                 input => new EntitiesInfo {

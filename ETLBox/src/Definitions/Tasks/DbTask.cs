@@ -174,7 +174,7 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
-        internal List<T> Query<T>(Action<T> doWithRowAction = null, List<string> columnNames = null)
+        internal List<T> Query<T>(Action<T> doWithRowAction, List<string> columnNames)
         {
             List<T> result = null;
             PrepareQuery();
@@ -183,16 +183,18 @@ namespace ALE.ETLBox.ControlFlow
 
             if (typeInfo.IsArray)
             {
-                row = (T)Activator.CreateInstance(typeof(T), new object[] { columnNames.Count }); // Length 1
-                var ar = row as System.Array;
+                InternalBeforeRowReadAction = () => {
+                    row = (T)Activator.CreateInstance(typeof(T), new object[] { columnNames.Count });
+                };
                 int index = 0;
                 foreach (var colName in columnNames)
                 {
-                    int currentIndexNeededToAvoidClosureInAction = index;
+                    int currentIndexAvoidingClosure = index;
                     Actions.Add(col =>
                     {
+                        var ar = row as System.Array;
                         var x = Convert.ChangeType(col, typeof(T).GetElementType());
-                        ar.SetValue(x, currentIndexNeededToAvoidClosureInAction);
+                        ar.SetValue(x, currentIndexAvoidingClosure);
                     });
                     index++;
                 }
