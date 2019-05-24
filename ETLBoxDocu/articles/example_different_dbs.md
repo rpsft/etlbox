@@ -1,4 +1,4 @@
-# Example: Writing into a json file
+# Example: Data flow across different Databases
 
 ## Purpose
 Sometimes you are in need to transfer data across databases or across server. ETLBox was desinged with this
