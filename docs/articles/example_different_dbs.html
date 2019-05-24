@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Example Control Flow </title>
+    <title>Example: Writing into a json file </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Example Control Flow ">
+    <meta name="title" content="Example: Writing into a json file ">
     <meta name="generator" content="docfx 2.40.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -81,57 +81,69 @@
 					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
 					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
 				</div>
-<h1 id="example-control-flow">Example Control Flow</h1>
+<h1 id="example-writing-into-a-json-file">Example: Writing into a json file</h1>
 
-<p>Control Flow tasks are a great way to alter a database and run some sql against it.
-This example will give you a quick example how to create, alter and query a database.</p>
-<h2 id="prerequisites">Prerequisites</h2>
-<p>If you want to run this example on your system, please use nuget to add the package as reference.
-How to install the nuget package is written on the <a href="https://www.nuget.org/packages/ETLBox/">Nuget package description page for ETLBox</a>
-Alternatively, you can use the [Github repo] to clone and build the ETLBox project yourself. Visual Studio 2017 or higher is recommended.</p>
-<h2 id="namespace">Namespace</h2>
-<p>The namespace for all objects in ETLBox is <code>ALE.ETLBox</code></p>
-<h2 id="connection-string-to-database">Connection String to database</h2>
-<p>First of all, you will need a connection string tied to your code. To avoid handing over this string again and again, you can preserve it in a static object - the ControlFlow object. It's purpose is to store parameters that are used in every ControlFlow Task.</p>
-<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;&quot;));
+<h2 id="purpose">Purpose</h2>
+<p>Sometimes you are in need to transfer data across databases or across server. ETLBox was desinged with this
+scenario always in mind and offers the ability to define the connection manager for eaach task.
+This example will guide you through a basic scenario.</p>
+<h2 id="implement-the-dataflow">Implement the dataflow</h2>
+<h3 id="understand-the-default-connectionmanager">Understand the default ConnectionManager</h3>
+<p>The <code>ControlFlow</code> contains a default ConnectionManager property that is always used as a fallback value if
+no other connection manager property was defined.</p>
+<h3 id="creating-the-tables">Creating the tables</h3>
+<p>First, we define two tables in different databases, and create log tables in a log database.
+To do this, we use the CurrentDBConnection property in the
+ControlFlow object, and change it value always to the right connection. But only for the source table and log tables.
+For the destination, we use the property ConnectionManager of the CreateTableTask.</p>
+<p>Please note that almost every task or component (ControlFlow and Dataflow!) has a ConnectionManager property that
+can be set. This is only available if you use instances of the classes. Only a few classes have a static constructor method
+that also accepts a ConnectionManager.</p>
+<pre><code class="lang-C#">//CurrentDbConnection is always use if ConnectionManager is not specified otherwise!
+ControlFlow.CurrentDbConnection = new SqlConnectionManager(&quot;Connection String Source&quot;);
+
+SqlTask.ExecuteNonQuery(&quot;Create source table&quot;, @&quot;CREATE TABLE test.Source
+                (Col1 nvarchar(100) null, Col2 int null)&quot;);
+SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, &quot;insert into test.Source values('Test1',1)&quot;);
+SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, &quot;insert into test.Source values('Test2',2)&quot;);
+SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, &quot;insert into test.Source values('Test3',3)&quot;);
+
+new CreateTableTask(&quot;test.Destination&quot;, new List&lt;ITableColumn&gt;() {
+                new TableColumn(&quot;Col1&quot;, &quot;nvarchar(100)&quot;, allowNulls: false),
+                new TableColumn(&quot;Col2&quot;, &quot;int&quot;, allowNulls: true)
+            })
+{
+    ConnectionManager = new SqlConnectionManager(&quot;Connection String Destination&quot;)
+}.Execute();
+
+ControlFlow.CurrentDbConnection = new SqlConnectionManager(&quot;Connection String Logging DB&quot;);
+CreateLogTablesTask.CreateLog();
 </code></pre>
-<h2 id="creating-a-database">Creating a database</h2>
-<p>You can now simply create a database with</p>
-<pre><code class="lang-C#">CreateDatabaseTask.Create(&quot;DemoDB&quot;);
-</code></pre>
-<p>If you want to drop it again, simple add <code>C# DropDatabaseTask.Delete(&quot;DemoDB&quot;);</code> before you create.
-Drop database won't give you an exception, even if the database does not exists.</p>
-<h2 id="changing-the-connection">Changing the connection</h2>
-<p>Now you need to change the connection string to the database you just created:</p>
-<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=DemoDB;&quot;));
-</code></pre>
-<h2 id="altering-the-database">Altering the database</h2>
-<p>Let's now create a new schema and a table on the database.</p>
-<pre><code class="lang-C#">CreateSchemaTask.Create(&quot;demo&quot;);
-CreateTableTask.Create(&quot;demo.table1&quot;, new List&lt;TableColumn&gt;() {
-   new TableColumn(name:&quot;key&quot;,dataType:&quot;int&quot;,allowNulls:false,isPrimaryKey:true, isIdentity:true),
-   new TableColumn(name:&quot;value&quot;, dataType:&quot;nvarchar(100)&quot;,allowNulls:true)
+<h3 id="defining-the-dataflow">Defining the dataflow</h3>
+<p>Next, we define a <code>DBSource</code> and <code>DBDestination</code> with a <code>RowTransformation</code> in between.
+Please note that you can pass the connection manager as part of the static constructor.
+In the RowTransformation, we use the LogTask. As no connection manager is specified here (which you could),
+the fallback connection value from the <code>ControlFlow.CurrentDBConnection</code> is used. The last time we set this it pointed
+to the logging database connection, so we are fine here.</p>
+<pre><code class="lang-C#">DBSource source = new DBSource(new SqlConnectionManager(new ConnectionString(&quot;Connection string Source))
+                                , &quot;test.Source&quot;);
+
+RowTransformation trans = new RowTransformation(row =&gt;
+{
+    LogTask.Info($&quot;Test message: {row[0]}, {row[1]}&quot;); //Log DB is used as this is the ControlFlow.CurrentDBConnection!
+    return row;
 });
+
+DBDestination destination = new DBDestination(&quot;test.Destination&quot;) {
+    ConnectionManager = new SqlConnectionManager(new ConnectionString(&quot;Connection String Destination&quot;))
+};
 </code></pre>
-<p>There is a <code>TableColumn</code> object that helps you to define columns in the table.</p>
-<h2 id="running-sql-on-the-database">Running sql on the database</h2>
-<p>The most powerful and comman task that you want to run against a database is sql. It will use the underlying ADO.NET connection manager, which allows you to do almost everything on the database, without the &quot;overhead&quot; and boilerplate code that ADO.NET brings with it.</p>
-<pre><code class="lang-C#">SqlTask.ExecuteNonQuery(&quot;Insert data&quot;,
-   $@&quot;insert into demo.table1 (value) select * from (values ('Ein Text'), ('Noch mehr Text')) as data(v)&quot;);
-</code></pre>
-<h2 id="using-further-tasks">Using further tasks</h2>
-<p>There are quite a lot of different control flow tasks that ETLBox comes with.</p>
-<p>A simple example is the RowCountTask, which unsuprisingly count the rows in a table.</p>
-<pre><code class="lang-C#">int count = RowCountTask.Count(&quot;demo.table1&quot;);
-Debug.WriteLine($&quot;Found {count} entries in demo table!&quot;);
-</code></pre>
-<h2 id="truncating-a-table">Truncating a table</h2>
-<p>Truncating a table is as simple as</p>
-<pre><code class="lang-C#">TruncateTableTask.Truncate(&quot;demo.table1&quot;);
-</code></pre>
-<h2 id="creating-a-stored-procedure">Creating a stored procedure</h2>
-<p>To create or alter a stored procedure in the database, you execute this:</p>
-<pre><code class="lang-C#">CRUDProcedureTask.CreateOrAlter(&quot;demo.proc1&quot;, &quot;select 1 as test&quot;);
+<h3 id="linking-everything-together">Linking everything together</h3>
+<p>Finally, we link our components and start the dataflow.</p>
+<pre><code class="lang-C#">source.LinkTo(trans);
+trans.LinkTo(destination);
+source.Execute();
+destination.Wait();
 </code></pre>
 </article>
           </div>
@@ -141,7 +153,7 @@ Debug.WriteLine($&quot;Found {count} entries in demo table!&quot;);
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBoxDocu/articles/example_controlflow.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBoxDocu/articles/example_different_dbs.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
