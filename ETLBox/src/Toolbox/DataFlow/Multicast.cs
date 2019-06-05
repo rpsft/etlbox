@@ -16,11 +16,11 @@ namespace ALE.ETLBox.DataFlow
     /// multicast.LinkTo(dest2);
     /// </code>
     /// </example>
-    public class Multicast<TInput> : GenericTask, ITask, IDataFlowTransformation<TInput, TInput>
+    public class Multicast<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_MULTICAST";
-        public override string TaskName { get; set; } = "Multicast (unnamed)";
+        public override string TaskName { get; set; } = "Dataflow: Multicast";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
         /* Public Properties */
@@ -46,13 +46,15 @@ namespace ALE.ETLBox.DataFlow
         public void LinkTo(IDataFlowLinkTarget<TInput> target)
         {
             BroadcastBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
         {
             BroadcastBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         private TInput Clone(TInput row)
@@ -73,7 +75,15 @@ namespace ALE.ETLBox.DataFlow
                     propInfo.SetValue(clone, propInfo.GetValue(row));
                 }
             }
+            LogProgress(1);
             return clone;
+        }
+
+        void LogProgress(int rowsProcessed)
+        {
+            ProgressCount += rowsProcessed;
+            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
+                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
     }
 

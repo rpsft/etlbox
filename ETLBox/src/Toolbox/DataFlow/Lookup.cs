@@ -12,18 +12,18 @@ namespace ALE.ETLBox.DataFlow {
     /// <typeparam name="TSourceOutput">Type of lookup data</typeparam>
     /// <example>
     /// <code>
-    /// Lookup&lt;MyInputDataRow, MyOutputDataRow, MyLookupRow&gt; lookup = new Lookup&lt;MyInputDataRow, MyOutputDataRow,MyLookupRow&gt;(                
-    ///     testClass.TestTransformationFunc, lookupSource, testClass.LookupData                
+    /// Lookup&lt;MyInputDataRow, MyOutputDataRow, MyLookupRow&gt; lookup = new Lookup&lt;MyInputDataRow, MyOutputDataRow,MyLookupRow&gt;(
+    ///     testClass.TestTransformationFunc, lookupSource, testClass.LookupData
     /// );
     /// </code>
     /// </example>
     public class Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>
-        : GenericTask, ITask, IDataFlowTransformation<TTransformationInput, TTransformationOutput>
+        : DataFlowTask, ITask, IDataFlowTransformation<TTransformationInput, TTransformationOutput>
         where TSourceOutput : new() {
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_LOOKUP";
-        public override string TaskName { get; set; } = "Lookup (unnamed)";
+        public override string TaskName { get; set; } = "Dataflow: Lookup";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
         public List<TSourceOutput> LookupList { get; set; }
@@ -54,15 +54,15 @@ namespace ALE.ETLBox.DataFlow {
             }
             set {
                 _rowTransformationFunc = value;
-                RowTransformation = new RowTransformation<TTransformationInput, TTransformationOutput>(_rowTransformationFunc);
+                RowTransformation = new RowTransformation<TTransformationInput, TTransformationOutput>(this, _rowTransformationFunc);
                 RowTransformation.InitAction = LoadLookupData;
             }
         }
 
         NLog.Logger NLogger { get; set; }
         public Lookup() {
-            NLogger = NLog.LogManager.GetLogger("ETL");            
-            LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));            
+            NLogger = NLog.LogManager.GetLogger("ETL");
+            LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
         }
 
         public Lookup(Func<TTransformationInput, TTransformationOutput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source) : this() {
@@ -89,12 +89,14 @@ namespace ALE.ETLBox.DataFlow {
 
         public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target) {
             RowTransformation.LinkTo(target);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate) {
             RowTransformation.LinkTo(target, predicate);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
 

@@ -22,6 +22,10 @@ namespace ALE.ETLBox.ControlFlow
         public int? RowsAffected { get; private set; }
         public bool IsOdbcConnection => DbConnectionManager.GetType() == typeof(OdbcConnectionManager)
             || DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager);
+        internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
+        private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
+        private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
+        public virtual bool DoXMLCommentStyle { get; set; }
 
         public bool DisableExtension { get; set; }
         public string Command

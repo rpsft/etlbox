@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;

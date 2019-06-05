@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -32,7 +33,6 @@ namespace ALE.ETLBoxTest {
             public string Empty { get; set; } = "";
             [ExcelColumn(0)]
             public int Col1 { get; set; }
-
         }
 
 
@@ -55,7 +55,6 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
 
             Assert.AreEqual(5, RowCountTask.Count("test.Staging"));
-
         }
 
     }

@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -28,8 +29,6 @@ namespace ALE.ETLBoxTest {
         public class MySimpleRow  {
             public string Col1 { get; set; }
             public int Col2 { get; set; }
-
-
         }
 
 

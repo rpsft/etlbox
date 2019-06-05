@@ -6,10 +6,6 @@
 
 ## Todos
 
-### General
-
-- If no schema name is given, the default schema (dbo) should be used
-
 ### Control Flow Tasks
 
 - New Tasks: Add Ola Hallagren script for database maintenance (backup, restore, ...)
@@ -29,3 +25,5 @@
 - all SQL statements in Uppercase / perhaps code formating
 
 - Integrate DataFlowExamples into current test cases
+
+- Restructure Test cases

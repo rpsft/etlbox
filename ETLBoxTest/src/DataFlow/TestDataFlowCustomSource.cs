@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -22,7 +23,7 @@ namespace ALE.ETLBoxTest {
         [TestInitialize]
         public void TestInit() {
             CleanUpSchemaTask.CleanUp("test");
-        }        
+        }
 
         public class MySimpleRow {
             public string Col1 { get; set; }
@@ -50,7 +51,7 @@ namespace ALE.ETLBoxTest {
          * CustomSource (out: object) -> DBDestination (in: object)
          */
         [TestMethod]
-        public void CustSource_DB() {            
+        public void CustSource_DB() {
             TableDefinition destinationTableDefinition = CreateDestinationTable("test.Destination");
 
             CustomRowReader rowReaderClass = new CustomRowReader();
@@ -71,7 +72,7 @@ namespace ALE.ETLBoxTest {
             return destinationTableDefinition;
         }
 
-        
+
 
     }
 

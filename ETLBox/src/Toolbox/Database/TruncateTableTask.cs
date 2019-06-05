@@ -15,7 +15,8 @@
 
         /* Public properties */
         public string TableName { get; set; }
-        public string Sql => $@"truncate table {TableName}";
+        public string Sql => $@"if object_id('{TableName}', 'U') is not null
+truncate table {TableName}";
 
         public TruncateTableTask() {
 

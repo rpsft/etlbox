@@ -17,18 +17,18 @@ namespace ALE.ETLBox.DataFlow {
     /// join.LinkTo(dest);
     /// </code>
     /// </example>
-    public class MergeJoin<TInput1, TInput2, TOutput> : GenericTask, ITask, IDataFlowLinkSource<TOutput> {
+    public class MergeJoin<TInput1, TInput2, TOutput> : DataFlowTask, ITask, IDataFlowLinkSource<TOutput> {
         private Func<TInput1, TInput2, TOutput> _mergeJoinFunc;
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_JOIN";
-        public override string TaskName { get; set; } = "Join (unnamed)";
+        public override string TaskName { get; set; } = "Dataflow: Mergejoin";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
         /* Public Properties */
         public MergeJoinTarget<TInput1> Target1 { get; set; }
         public MergeJoinTarget<TInput2> Target2 { get; set; }
-        public ISourceBlock<TOutput> SourceBlock => Transformation.SourceBlock;        
+        public ISourceBlock<TOutput> SourceBlock => Transformation.SourceBlock;
 
         public Func<TInput1, TInput2, TOutput> MergeJoinFunc {
             get { return _mergeJoinFunc; }
@@ -49,12 +49,10 @@ namespace ALE.ETLBox.DataFlow {
 
         public MergeJoin() {
             NLogger = NLog.LogManager.GetLogger("ETL");
-            Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>();
-            JoinBlock = new JoinBlock<TInput1, TInput2>();            
+            Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
+            JoinBlock = new JoinBlock<TInput1, TInput2>();
             Target1 = new MergeJoinTarget<TInput1>(JoinBlock.Target1);
             Target2 = new MergeJoinTarget<TInput2>(JoinBlock.Target2);
-            
-            
         }
 
         public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc) : this() {
@@ -67,21 +65,23 @@ namespace ALE.ETLBox.DataFlow {
 
         public void LinkTo(IDataFlowLinkTarget<TOutput> target) {
             Transformation.LinkTo(target);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         public void LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate) {
             Transformation.LinkTo(target, predicate);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
     }
 
-    public class MergeJoinTarget<TInput> : IDataFlowDestination<TInput>{                        
+    public class MergeJoinTarget<TInput> : IDataFlowDestination<TInput>{
         public ITargetBlock<TInput> TargetBlock { get; set; }
 
         public void Wait() {
-            TargetBlock.Completion.Wait();     
+            TargetBlock.Completion.Wait();
         }
         public MergeJoinTarget(ITargetBlock<TInput> joinTarget) {
             TargetBlock = joinTarget;

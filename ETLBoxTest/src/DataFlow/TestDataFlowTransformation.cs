@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTest {
         */
         [TestMethod]
         public void CSV_RowTrans_DB_NonGeneric() {
-            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Staging 
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Staging
                 (Col1 int null, Col2 nvarchar(100) null)");
 
             CSVSource source = new CSVSource("src/DataFlow/Simple_CSV2DB.csv");
@@ -121,10 +121,10 @@ namespace ALE.ETLBoxTest {
             destinationTableDefinition.CreateTable();
             return destinationTableDefinition;
         }
-        
+
         /*
          * DBSource (out: object) -> RowTransformation (in: object, out: object) --> DBDestination (in: object)
-         */        
+         */
         [TestMethod]
         public void DB_RowTrans_DB_WithInitAction() {
             TableDefinition sourceTableDefinition = CreateDBSourceTableForSimpleRow();
@@ -134,7 +134,7 @@ namespace ALE.ETLBoxTest {
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() { SourceTableDefinition = sourceTableDefinition };
             RowTransformation<MySimpleRow, MySimpleRow> trans = new RowTransformation<MySimpleRow, MySimpleRow>(
                 "RowTransformation testing init Action",
-                testClass.TestTransformationFunc, 
+                testClass.TestTransformationFunc,
                 testClass.SetAddValue
             );
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>() { DestinationTableDefinition = destinationTableDefinition };
@@ -162,19 +162,17 @@ namespace ALE.ETLBoxTest {
         public void TestLogging_DB_RowTrans_DB() {
             CreateLogTablesTask.CreateLog();
             DB_RowTrans_DB();
-            Assert.AreEqual(2, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBSOURCE' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
-            Assert.AreEqual(2, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBDEST' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
+            Assert.AreEqual(3, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBSOURCE' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
+            Assert.AreEqual(3, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBDEST' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
         }
 
         [TestMethod]
         public void TestLogging_CSV_RowTrans_DB() {
             CreateLogTablesTask.CreateLog();
             CSV_RowTrans_DB();
-            Assert.AreEqual(2, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_CSVSOURCE' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
-            Assert.AreEqual(2, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBDEST' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
+            Assert.AreEqual(3, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_CSVSOURCE' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
+            Assert.AreEqual(3, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBDEST' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
         }
-
-      
     }
 
 }

@@ -9,13 +9,13 @@ namespace ALE.ETLBox {
         public virtual string TaskName { get; set; } = "N/A";
         public virtual void Execute() {
             throw new Exception("Not implemented!");
-        }       
+        }
 
         public virtual IConnectionManager ConnectionManager { get; set; }
 
         internal virtual IDbConnectionManager DbConnectionManager {
             get {
-                if (ConnectionManager == null) 
+                if (ConnectionManager == null)
                     return (IDbConnectionManager)ControlFlow.ControlFlow.CurrentDbConnection;
                else
                     return (IDbConnectionManager)ConnectionManager;
@@ -48,10 +48,10 @@ namespace ALE.ETLBox {
             }
         }
         internal virtual bool HasName => !String.IsNullOrWhiteSpace(TaskName);
-        internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
-        private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
-        private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";        
-        public virtual bool DoXMLCommentStyle { get; set; }
+        //internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
+        //private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
+        //private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
+        //public virtual bool DoXMLCommentStyle { get; set; }
 
     }
 }

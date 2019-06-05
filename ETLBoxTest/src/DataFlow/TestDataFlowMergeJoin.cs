@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -30,14 +31,14 @@ namespace ALE.ETLBoxTest {
         }
 
         public class MyDataRow2 {
-            public int Col3 { get; set; }                
+            public int Col3 { get; set; }
         }
 
 
         /*
-         * 1-DBSource (out: MyDataRow1) 
-         * 2-DBSource (out: MyDataRow2) 
-         * 1,2-> Join (in: MyDataRow1, in: MyDataRow2, out: MyDataRow1) 
+         * 1-DBSource (out: MyDataRow1)
+         * 2-DBSource (out: MyDataRow2)
+         * 1,2-> Join (in: MyDataRow1, in: MyDataRow2, out: MyDataRow1)
          * -> DBDestination (in: MyDataRow1)
          */
         [TestMethod]
@@ -62,11 +63,9 @@ namespace ALE.ETLBoxTest {
 
             source1.Execute();
             source2.Execute();
-            dest.Wait();            
+            dest.Wait();
 
             Assert.AreEqual(3, RowCountTask.Count("test.Destination","Col2 in (11,102,1003)"));
-            
-
         }
 
         internal TableDefinition CreateTableForInput1(string tableName) {
@@ -78,7 +77,7 @@ namespace ALE.ETLBoxTest {
             SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test1',1)");
             SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test2',2)");
             SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test3',3)");
-            
+
             return def;
         }
 
@@ -96,9 +95,9 @@ namespace ALE.ETLBoxTest {
         internal TableDefinition CreateTableForDestination(string tableName) {
             TableDefinition def = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("Col1", "nvarchar(100)", allowNulls: true),
-                new TableColumn("Col2", "int", allowNulls: true)                
+                new TableColumn("Col2", "int", allowNulls: true)
             });
-            def.CreateTable();           
+            def.CreateTable();
             return def;
         }
     }

@@ -14,14 +14,14 @@ namespace ALE.ETLBox.DataFlow {
     /// RowTransformation&lt;string[], MyDataRow&gt; trans = new RowTransformation&lt;string[], MyDataRow&gt;(
     ///     csvdata => {
     ///       return new MyDataRow() { Value1 = csvdata[0], Value2 = int.Parse(csvdata[1]) };
-    /// });    
-    /// trans.LinkTo(dest);    
+    /// });
+    /// trans.LinkTo(dest);
     /// </code>
     /// </example>
-    public class RowTransformation<TInput, TOutput> : GenericTask, ITask, IDataFlowTransformation<TInput, TOutput> {
+    public class RowTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput> {
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_ROWTRANSFORMATION";
-        public override string TaskName { get; set; } = "Row Transformation (unnamed)";
+        public override string TaskName { get; set; } = "Dataflow: Row Transformation";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
         /* Public Properties */
@@ -63,14 +63,35 @@ namespace ALE.ETLBox.DataFlow {
             this.InitAction = initAction;
         }
 
+        public RowTransformation(ITask task) : this()
+        {
+            CopyTaskProperties(task);
+        }
+
+        public RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
+        {
+            CopyTaskProperties(task);
+        }
+
+        private void CopyTaskProperties(ITask task)
+        {
+            this.TaskHash = task.TaskHash;
+            this.TaskName = task.TaskName;
+            this.TaskType = task.TaskType;
+        }
+
+
+
         public void LinkTo(IDataFlowLinkTarget<TOutput> target) {
             TransformBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         public void LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate) {
             TransformBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
 
@@ -78,15 +99,24 @@ namespace ALE.ETLBox.DataFlow {
             if (!WasInitialized) {
                 InitAction?.Invoke();
                 WasInitialized = true;
-                NLogger.Debug(TaskName + " was initialized!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+                if (!DisableLogging)
+                    NLogger.Debug(TaskName + " was initialized!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
             }
+            LogProgress(1);
             return RowTransformationFunc.Invoke(row);
+        }
+
+        void LogProgress(int rowsProcessed)
+        {
+            ProgressCount += rowsProcessed;
+            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
+                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
     }
 
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
-    /// The non generic RowTransformation accepts a string array as input and returns a string array as output. 
+    /// The non generic RowTransformation accepts a string array as input and returns a string array as output.
     /// If you need other data types, use the generic RowTransformation instead.
     /// </summary>
     /// <see cref="RowTransformation{TInput, TOutput}"/>
@@ -97,8 +127,8 @@ namespace ALE.ETLBox.DataFlow {
     /// RowTransformation trans = new RowTransformation(
     ///     csvdata => {
     ///       return new string[] { csvdata[0],  int.Parse(csvdata[1]) };
-    /// });    
-    /// trans.LinkTo(dest);    
+    /// });
+    /// trans.LinkTo(dest);
     /// </code>
     /// </example>
     public class RowTransformation : RowTransformation<string[],string[]> {

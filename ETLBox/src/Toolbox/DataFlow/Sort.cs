@@ -5,7 +5,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow {
     /// <summary>
-    /// Sort the input with the given sort function. 
+    /// Sort the input with the given sort function.
     /// </summary>
     /// <typeparam name="TInput">Type of input data (equal type of output data).</typeparam>
     /// <example>
@@ -16,12 +16,12 @@ namespace ALE.ETLBox.DataFlow {
     /// Sort&lt;MyDataRow&gt; block = new Sort&lt;MyDataRow&gt;(comp);
     /// </code>
     /// </example>
-    public class Sort<TInput> : GenericTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TInput> {
-        
+    public class Sort<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TInput> {
+
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_SORT";
-        public override string TaskName { get; set; } = "Sort (unnamed)";
+        public override string TaskName { get; set; } = "Dataflow: Sort";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
         /* Public Properties */
@@ -30,10 +30,10 @@ namespace ALE.ETLBox.DataFlow {
             get { return _sortFunction; }
             set {
                 _sortFunction = value;
-                BlockTransformation = new BlockTransformation<TInput>(SortByFunc);
+                BlockTransformation = new BlockTransformation<TInput>(this, SortByFunc);
             }
         }
-     
+
         public ISourceBlock<TInput> SourceBlock => BlockTransformation.SourceBlock;
         public ITargetBlock<TInput> TargetBlock => BlockTransformation.TargetBlock;
 
@@ -43,7 +43,7 @@ namespace ALE.ETLBox.DataFlow {
         NLog.Logger NLogger { get; set; }
 
         public Sort() {
-            NLogger = NLog.LogManager.GetLogger("ETL");            
+            NLogger = NLog.LogManager.GetLogger("ETL");
         }
 
         public Sort(Comparison<TInput> sortFunction) : this() {
@@ -61,14 +61,15 @@ namespace ALE.ETLBox.DataFlow {
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target) {
             BlockTransformation.LinkTo(target);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate) {
             BlockTransformation.LinkTo(target, predicate);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
-
     }
 
 

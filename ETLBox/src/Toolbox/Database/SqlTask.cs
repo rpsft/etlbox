@@ -6,7 +6,7 @@ using System.Data;
 namespace ALE.ETLBox.ControlFlow {
     /// <summary>
     /// Executes any sql on the database. Use ExecuteNonQuery for SQL statements returning no data, ExecuteScalar for statements with one row and one column or
-    /// ExecuteReader for SQL that returns a result set. 
+    /// ExecuteReader for SQL that returns a result set.
     /// </summary>
     /// <example>
     /// <code>
@@ -45,7 +45,7 @@ namespace ALE.ETLBox.ControlFlow {
         public SqlTask(string name, string sql, params Action<object>[] actions) : base(name, sql, actions) {
         }
 
-        public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) : base(name, sql, actions) {            
+        public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) : base(name, sql, actions) {
             _Parameter = parameterList;
         }
 
@@ -57,7 +57,7 @@ namespace ALE.ETLBox.ControlFlow {
         }
 
         /* Static methods for convenience */
-        public static int ExecuteNonQuery(string name, string sql) => new SqlTask(name, sql).ExecuteNonQuery();        
+        public static int ExecuteNonQuery(string name, string sql) => new SqlTask(name, sql).ExecuteNonQuery();
         public static int ExecuteNonQuery(string name, FileConnectionManager fileConnection) => new SqlTask(name, fileConnection).ExecuteNonQuery();
         public static object ExecuteScalar(string name, string sql) => new SqlTask(name, sql).ExecuteScalar();
         public static Nullable<T> ExecuteScalar<T>(string name, string sql) where T : struct => new SqlTask(name, sql).ExecuteScalar<T>();

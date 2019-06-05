@@ -10,7 +10,7 @@ namespace ALE.ETLBox.DataFlow {
     /// </summary>
     /// <typeparam name="TInput">Type of data input (equal type of data output)</typeparam>
     /// <example>
-    /// <code>    
+    /// <code>
     /// BlockTransformation&lt;MyDataRow&gt; block = new BlockTransformation&lt;MyDataRow&gt;(
     ///     inputData => {
     ///         return inputData.Select( row => new MyDataRow() { Value1 = row.Value1, Value2 = 3 }).ToList();
@@ -18,13 +18,13 @@ namespace ALE.ETLBox.DataFlow {
     /// block.LinkTo(dest);
     /// </code>
     /// </example>
-    public class BlockTransformation<TInput> : GenericTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TInput> {
+    public class BlockTransformation<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TInput> {
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_BLOCKTRANSFORMATION";
-        public override string TaskName { get; set; } = "Block Transformation (unnamed)";
+        public override string TaskName { get; set; } = "Dataflow: Block Transformation";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
-        /* Public Properties */        
+        /* Public Properties */
         public Func<List<TInput>, List<TInput>> BlockTransformationFunc {
             get {
                 return _blockTransformationFunc;
@@ -38,7 +38,7 @@ namespace ALE.ETLBox.DataFlow {
                 });
 
             }
-        }        
+        }
         public ISourceBlock<TInput> SourceBlock => OutputBuffer;
         public ITargetBlock<TInput> TargetBlock => InputBuffer;
 
@@ -62,21 +62,60 @@ namespace ALE.ETLBox.DataFlow {
             this.TaskName = name;
         }
 
+        public BlockTransformation(ITask task, Func<List<TInput>, List<TInput>> blockTransformationFunc) : this(blockTransformationFunc)
+        {
+            CopyTaskProperties(task);
+        }
+
+        private void CopyTaskProperties(ITask task)
+        {
+            this.TaskHash = task.TaskHash;
+            this.TaskName = task.TaskName;
+            this.TaskType = task.TaskType;
+        }
+
         private void WriteIntoOutput() {
+            NLogStart();
             foreach (TInput row in InputData) {
                 OutputBuffer.Post(row);
+                LogProgress(1);
             }
             OutputBuffer.Complete();
+            NLogFinish();
         }
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target) {
             OutputBuffer.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate) {
             OutputBuffer.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
-            NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+        }
+
+
+        void NLogStart()
+        {
+            if (!DisableLogging)
+                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+        }
+
+        void NLogFinish()
+        {
+            if (!DisableLogging && HasLoggingThresholdRows)
+                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (!DisableLogging)
+                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+        }
+
+        void LogProgress(int rowsProcessed)
+        {
+            ProgressCount += rowsProcessed;
+            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
+                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
 
     }
