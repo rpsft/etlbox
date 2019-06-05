@@ -160,6 +160,7 @@ namespace ALE.ETLBoxTest {
 
         [TestMethod]
         public void TestLogging_DB_RowTrans_DB() {
+            DataFlow.ClearSettings();
             CreateLogTablesTask.CreateLog();
             DB_RowTrans_DB();
             Assert.AreEqual(3, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_DBSOURCE' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());
@@ -168,6 +169,7 @@ namespace ALE.ETLBoxTest {
 
         [TestMethod]
         public void TestLogging_CSV_RowTrans_DB() {
+            DataFlow.ClearSettings();
             CreateLogTablesTask.CreateLog();
             CSV_RowTrans_DB();
             Assert.AreEqual(3, new SqlTask("Find log entry", "select count(*) from etl.Log where TaskType='DF_CSVSOURCE' group by TaskHash") { DisableLogging = true }.ExecuteScalar<int>());

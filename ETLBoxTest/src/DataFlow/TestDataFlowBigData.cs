@@ -38,13 +38,13 @@ namespace ALE.ETLBoxTest
         [TestMethod]
         public void BigData_CSV_DB()
         {
-            BigData_CSV_DB(100000);
+            BigData_CSV_DB(10000);
         }
 
         [TestMethod]
         public void BigData_CSVGeneric_DB()
         {
-            BigData_CSV_DB(100000, useGenericCSVSource: true);
+            BigData_CSV_DB(10000, useGenericCSVSource: true);
         }
 
         public void BigData_CSV_DB(int numberOfRows, bool useGenericCSVSource = false)

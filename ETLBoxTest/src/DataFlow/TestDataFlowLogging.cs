@@ -29,6 +29,8 @@ namespace ALE.ETLBoxTest
         {
             DropTableTask.Drop("Source");
             DropTableTask.Drop("Destination");
+            DropTableTask.Drop("etl.Log");
+            DropTableTask.Drop("etl.LoadProcess");
         }
 
         [TestMethod]
