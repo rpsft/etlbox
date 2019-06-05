@@ -13,13 +13,14 @@ ETLBox is a comprehensive C# class library that is able to manage your whole ETL
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
-    <PackageReleaseNotes>Fixed bug with ConnectionManager in DBSource. Using a DBSource as non-generic class now works flawless.</PackageReleaseNotes>
-    <Version>1.2.2</Version>
+    <PackageReleaseNotes>Improved logging for Dataflow tasks. 
+</PackageReleaseNotes>
+    <Version>1.2.3</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.2.2.0</AssemblyVersion>
-    <FileVersion>1.2.2.0</FileVersion>
+    <AssemblyVersion>1.2.3.0</AssemblyVersion>
+    <FileVersion>1.2.3.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

@@ -12,25 +12,10 @@ namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Contains static information which affects all Dataflow tasks in ETLBox.
-    /// Here you can set a default database connection for the source and for destination components.
-    /// If no connection is set here, the default connection provided in the ControlFlow task is used.
+    /// Here you can set the threshold value when information about processed records should appear.
     /// </summary>
     public static class DataFlow
     {
-        private static IDbConnectionManager sourceDbConnection;
-        private static IDbConnectionManager destinationDbConnection;
-
-        public static IDbConnectionManager SourceDbConnection
-        {
-            get => sourceDbConnection ?? CF.ControlFlow.CurrentDbConnection;
-            set => sourceDbConnection = value;
-        }
-        public static IDbConnectionManager DestinationDbConnection
-        {
-            get => destinationDbConnection ?? CF.ControlFlow.CurrentDbConnection;
-            set => destinationDbConnection = value;
-        }
-
         public static int? LoggingThresholdRows { get; set; } = 1000;
         public static bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         /// <summary>
@@ -38,13 +23,7 @@ namespace ALE.ETLBox.DataFlow
         /// </summary>
         public static void ClearSettings()
         {
-            SourceDbConnection = null;
-            DestinationDbConnection = null;
-            LoggingThresholdRows = null;
+            LoggingThresholdRows = 1000;
         }
-
     }
-
-
-
 }

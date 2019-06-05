@@ -133,7 +133,7 @@ namespace ALE.ETLBoxTest
             {
                 ConnectionManager = new SqlConnectionManager(ConnectionStringDest)
             }.Count().Rows);
-        }
+        } 
 
     }
 

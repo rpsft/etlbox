@@ -27,7 +27,8 @@ namespace ALE.ETLBoxTest
         [TestInitialize]
         public void TestInit()
         {
-            TruncateTableTask.Truncate("Source");
+            DropTableTask.Drop("Source");
+            DropTableTask.Drop("Destination");
         }
 
         [TestMethod]

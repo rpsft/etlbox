@@ -119,7 +119,9 @@ namespace ALE.ETLBox.DataFlow
             TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
             td.Rows = ConvertRows(data);
             new SqlTask(this, $"Execute Bulk insert into {DestinationTableDefinition.Name}")
-            { DisableLogging = true }
+            {
+                DisableLogging = true
+            }
             .BulkInsert(td, DestinationTableDefinition.Name);
             LogProgress(data.Length);
         }

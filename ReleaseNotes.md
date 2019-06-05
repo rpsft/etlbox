@@ -37,5 +37,11 @@ attribute you can define the name of the column that should match with the prope
 * `DBSource`: Adding non generic implementation, fixing a bug that a Table Name without schema would throw an error.
 * `Multicast`: Adding non generic implementation
 
-## Version 1.2.1 (Release)
+## Version 1.2.1 (Released)
 * `CSVSource`: Adding `SkipRows` Property to skip the first X rows in a source file before start reading.
+
+## Version 1.2.2 (Released)
+* Fixed bug with ConnectionManager in `DBSource`. Using a `DBSource` as non-generic class now works flawless.
+
+## Version 1.2.3 (Released)
+* Improved logging for Dataflow tasks. 

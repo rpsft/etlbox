@@ -1,7 +1,7 @@
 # Example: Data flow across different Databases
 
 ## Purpose
-Sometimes you are in need to transfer data across databases or across server. ETLBox was desinged with this
+Sometimes you are in need to transfer data across databases or across server. ETLBox was designed with this
 scenario always in mind and offers the ability to define the connection manager for eaach task. 
 This example will guide you through a basic scenario.
 

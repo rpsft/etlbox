@@ -72,6 +72,7 @@ namespace ALE.ETLBox.DataFlow {
             this.TaskHash = task.TaskHash;
             this.TaskName = task.TaskName;
             this.TaskType = task.TaskType;
+            this.DisableLogging = task.DisableLogging;
         }
 
         private void WriteIntoOutput() {

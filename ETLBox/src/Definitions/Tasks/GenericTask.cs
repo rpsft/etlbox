@@ -48,10 +48,5 @@ namespace ALE.ETLBox {
             }
         }
         internal virtual bool HasName => !String.IsNullOrWhiteSpace(TaskName);
-        //internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
-        //private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
-        //private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
-        //public virtual bool DoXMLCommentStyle { get; set; }
-
     }
 }
