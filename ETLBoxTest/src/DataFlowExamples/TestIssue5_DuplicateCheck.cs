@@ -42,6 +42,8 @@ namespace ALE.ETLBoxTest
         [TestMethod]
         public void TestDuplicateCheckInRowTrans()
         {
+            CreateLogTablesTask.CreateLog();
+            DataFlow.LoggingThresholdRows = 2;
             CSVSource<Poco> source = new CSVSource<Poco>("src/DataFlowExamples/Duplicate.csv");
             source.Configuration.Delimiter = ";";
             source.Configuration.TrimOptions = CsvHelper.Configuration.TrimOptions.Trim;
@@ -69,9 +71,7 @@ namespace ALE.ETLBoxTest
             stagingTable.CreateTable();
 
 
-            var trash = new CustomDestination<Poco>(input => {
-                LogTask.Warn($"Duplicate found. ID: {input.ID} Name: {input.Name}");
-            });
+            var trash = new VoidDestination<Poco>();
 
             source.LinkTo(rowTrans);
             rowTrans.LinkTo(multicast);

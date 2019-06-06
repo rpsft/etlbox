@@ -2,6 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -56,6 +57,8 @@ namespace ALE.ETLBoxTest {
         [TestMethod]
         public void Table2JsonFile()
         {
+            CreateLogTablesTask.CreateLog();
+            DataFlow.LoggingThresholdRows = 2;
             TableDefinition sourceTableDefinition = CreateSourceTable("test.Source");
 
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(sourceTableDefinition);

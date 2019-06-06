@@ -125,8 +125,7 @@ Please note that you can pass the connection manager as part of the static const
 In the RowTransformation, we use the LogTask. As no connection manager is specified here (which you could),
 the fallback connection value from the <code>ControlFlow.CurrentDBConnection</code> is used. The last time we set this it pointed
 to the logging database connection, so we are fine here.</p>
-<pre><code class="lang-C#">DBSource source = new DBSource(new SqlConnectionManager(new ConnectionString(&quot;Connection string Source))
-                                , &quot;test.Source&quot;);
+<pre><code class="lang-C#">DBSource source = new DBSource(new SqlConnectionManager(new ConnectionString(&quot;Connection string Source&quot;)), &quot;test.Source&quot;);
 
 RowTransformation trans = new RowTransformation(row =&gt;
 {

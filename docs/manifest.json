@@ -1316,7 +1316,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/example_different_dbs.html",
-          "hash": "KKkrGmQx9WeuSx3xGTPDVQ=="
+          "hash": "AtClsybTuZliFez6oGndng=="
         }
       },
       "is_incremental": true,
@@ -1549,17 +1549,17 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 102,
-          "skipped_file_count": 102
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 16,
           "skipped_file_count": 16
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 102,
+          "skipped_file_count": 102
         },
         "TocDocumentProcessor": {
           "can_incremental": false,

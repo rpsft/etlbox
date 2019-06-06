@@ -10,7 +10,7 @@ namespace ALE.ETLBox.DataFlow {
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_CUSTOMDEST";
-        public override string TaskName => $"Dataflow: Write Data into custom target";
+        public override string TaskName { get; set; } = $"Dataflow: Write Data into custom target";
         public override void Execute() { throw new Exception("Dataflow destinations can't be started directly"); }
 
         /* Public properties */
@@ -21,7 +21,7 @@ namespace ALE.ETLBox.DataFlow {
             }
             set {
                 _writeAction = value;
-                TargetActionBlock = new ActionBlock<TInput>(_writeAction);
+                TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
 
             }
         }
@@ -38,10 +38,22 @@ namespace ALE.ETLBox.DataFlow {
 
         public CustomDestination(Action<TInput> writeAction) : this()
         {
-            if (ProgressCount == 0) NLogStart();
             WriteAction = writeAction;
-            LogProgress(1);
         }
+
+        public CustomDestination(ITask task, Action<TInput> writeAction) : this(writeAction)
+        {
+            CopyTaskProperties(task);
+        }
+
+        private void CopyTaskProperties(ITask task)
+        {
+            this.TaskHash = task.TaskHash;
+            this.TaskName = task.TaskName;
+            this.TaskType = task.TaskType;
+            this.DisableLogging = task.DisableLogging;
+        }
+
 
         public void Wait()  {
             TargetActionBlock.Completion.Wait();
@@ -67,6 +79,17 @@ namespace ALE.ETLBox.DataFlow {
             ProgressCount += rowsProcessed;
             if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
                 NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+        }
+
+        private Action<TInput> AddLogging(Action<TInput> writeAction)
+        {
+            return new Action<TInput>(
+                input =>
+                {
+                    if (ProgressCount == 0) NLogStart();
+                    writeAction.Invoke(input);
+                    LogProgress(1);
+                });
         }
     }
 

@@ -95,7 +95,7 @@ namespace ALE.ETLBoxDemo {
             BlockTransformation<Order> blockOrders = new BlockTransformation<Order>(BlockTransformOrders);
             DBDestination<Rating> destRating = new DBDestination<Rating>(CustomerRatingTableDef);
             RowTransformation<Order, Rating> transOrderIntoCust = new RowTransformation<Order, Rating>(OrderIntoRating);
-            CustomDestination<Order> destSink = new CustomDestination<Order>(row => {; });
+            VoidDestination<Order> destSink = new VoidDestination<Order>();
 
             sourceOrderData.LinkTo(transIntoObject);
             transIntoObject.LinkTo(lookupCustomerKey);

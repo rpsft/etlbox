@@ -54,8 +54,7 @@ the fallback connection value from the `ControlFlow.CurrentDBConnection` is used
 to the logging database connection, so we are fine here.
 
 ```C#
-DBSource source = new DBSource(new SqlConnectionManager(new ConnectionString("Connection string Source))
-                                , "test.Source");
+DBSource source = new DBSource(new SqlConnectionManager(new ConnectionString("Connection string Source")), "test.Source");
 
 RowTransformation trans = new RowTransformation(row =>
 {
