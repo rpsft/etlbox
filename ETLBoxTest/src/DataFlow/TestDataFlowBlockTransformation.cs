@@ -74,7 +74,32 @@ namespace ALE.ETLBoxTest {
             return destinationTableDefinition;
         }
 
+        public class MyOtherRow
+        {
+            [ColumnMap("Col1")]
+            public string Col3 { get; set; }
+            [ColumnMap("Col2")]
+            public int Col4 { get; set; }
+        }
 
+        [TestMethod]
+        public void DB_BlockTransDifferentObjects_DB()
+        {
+            TableDefinition sourceTableDefinition = CreateSourceTable("test.Source");
+            TableDefinition destinationTableDefinition = CreateDestinationTable("test.Destination");
+
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(sourceTableDefinition);
+            DBDestination<MyOtherRow> dest = new DBDestination<MyOtherRow>(destinationTableDefinition);
+            BlockTransformation<MySimpleRow, MyOtherRow> block = new BlockTransformation<MySimpleRow, MyOtherRow>(
+                inputData => {
+                    return inputData.Select(row => new MyOtherRow() { Col3 = row.Col1, Col4 = row.Col2 }).ToList();
+                });
+            source.LinkTo(block);
+            block.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination", "Col2 in (1,2,3)"));
+        }
 
     }
 
