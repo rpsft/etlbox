@@ -162,5 +162,21 @@ namespace ALE.ETLBox.DataFlow
         {  }
     }
 
+    /// <summary>
+    /// A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
+    /// is execution and the result posted into the targets.
+    /// The non generic implementation uses a string array as input and output
+    /// </summary>
+    public class BlockTransformation : BlockTransformation<string[]>
+    {
+        public BlockTransformation(Func<List<string[]>, List<string[]>> blockTransformationFunc) : base(blockTransformationFunc)
+        { }
+
+        public BlockTransformation(string name, Func<List<string[]>, List<string[]>> blockTransformationFunc) : base(name, blockTransformationFunc)
+        { }
+
+        public BlockTransformation(ITask task, Func<List<string[]>, List<string[]>> blockTransformationFunc) : base(task, blockTransformationFunc)
+        { }
+    }
 
 }

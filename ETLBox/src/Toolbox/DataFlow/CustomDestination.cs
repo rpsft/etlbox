@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow {
+namespace ALE.ETLBox.DataFlow
+{
     /// <summary>
     /// Define your own destination block.
     /// </summary>
     /// <typeparam name="TInput">Type of datasoure input.</typeparam>
-    public class CustomDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput> {
+    public class CustomDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
+    {
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_CUSTOMDEST";
@@ -15,11 +17,14 @@ namespace ALE.ETLBox.DataFlow {
 
         /* Public properties */
         public ITargetBlock<TInput> TargetBlock => TargetActionBlock;
-        public Action<TInput> WriteAction {
-            get {
+        public Action<TInput> WriteAction
+        {
+            get
+            {
                 return _writeAction;
             }
-            set {
+            set
+            {
                 _writeAction = value;
                 TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
 
@@ -32,7 +37,8 @@ namespace ALE.ETLBox.DataFlow {
         internal ActionBlock<TInput> TargetActionBlock { get; set; }
 
         NLog.Logger NLogger { get; set; }
-        public CustomDestination() {
+        public CustomDestination()
+        {
             NLogger = NLog.LogManager.GetLogger("ETL");
         }
 
@@ -55,7 +61,8 @@ namespace ALE.ETLBox.DataFlow {
         }
 
 
-        public void Wait()  {
+        public void Wait()
+        {
             TargetActionBlock.Completion.Wait();
             NLogFinish();
         }
@@ -93,4 +100,15 @@ namespace ALE.ETLBox.DataFlow {
         }
     }
 
+    /// <summary>
+    /// Define your own destination block. The non generic implementation accepts a string array as input.
+    /// </summary>
+    public class CustomDestination : CustomDestination<string[]>
+    {
+        public CustomDestination() : base()
+        { }
+
+        public CustomDestination(Action<string[]> writeAction) : base(writeAction)
+        { }
+    }
 }

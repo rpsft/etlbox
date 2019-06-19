@@ -87,5 +87,22 @@ namespace ALE.ETLBox.DataFlow {
             TargetBlock = joinTarget;
         }
     }
+
+    /// <summary>
+    /// Will join data from the two inputs into one output - on a row by row base.
+    /// Make sure both inputs are sorted or in the right order. The non generic implementation deals with
+    /// string array as inputs and merged output.
+    /// </summary>
+    public class MergeJoin : MergeJoin<string[], string[], string[]>
+    {
+        public MergeJoin() : base()
+        { }
+
+        public MergeJoin(Func<string[], string[], string[]> mergeJoinFunc) : base(mergeJoinFunc)
+        { }
+
+        public MergeJoin(string name) : base(name)
+        { }
+    }
 }
 
