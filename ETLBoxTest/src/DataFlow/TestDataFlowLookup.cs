@@ -41,11 +41,6 @@ namespace ALE.ETLBoxTest {
             public string Col2 { get; set; }
         }
 
-        /*
-         * DBSource (out: MyInputDataRow)
-         *      -> Lookup (in: MyInputDataRow, out: MyOutputDataRow, lookup: DBSource(out: MyLooupRow) )
-         *      -> DBDestination (in: MyOutputDataRow)
-         */
         [TestMethod]
         public void DB_Lookup_DB() {
             TableDefinition sourceTableDefinition = CreateDBSourceTableForInputRow();
@@ -113,6 +108,36 @@ namespace ALE.ETLBoxTest {
                 };
                 return output;
             }
+        }
+
+        [TestMethod]
+        public void DB_Lookup_DB_nongeneric()
+        {
+            TableDefinition sourceTableDefinition = CreateDBSourceTableForInputRow();
+            TableDefinition destinationTableDefinition = CreateDBDestinationTableForOutputRow();
+            TableDefinition lookupTableDefinition = CreateDBLookupTable();
+
+            List<string[]> lookupList = new List<string[]>();
+
+            DBSource source = new DBSource("test.Source");
+            DBSource lookupSource = new DBSource("test.Lookup");
+            Lookup lookup = new Lookup(
+                row => {
+                    row[1] = lookupList.Where(ld => ld[0] == row[1]).Select(ld => ld[1]).FirstOrDefault();
+                    return row;
+                    },
+                lookupSource,
+                lookupList
+            );
+            DBDestination dest = new DBDestination("test.Destination");
+            source.LinkTo(lookup);
+            lookup.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test1' and Col2 = 'Lookup for 1'"));
+            Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test2' and Col2 = 'Lookup for 2'"));
+            Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test3' and Col2 = 'Lookup for 3'"));
         }
     }
 

@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow {
     /// </example>
     public class Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>
         : DataFlowTask, ITask, IDataFlowTransformation<TTransformationInput, TTransformationOutput>
-        where TSourceOutput : new() {
+        {
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_LOOKUP";
@@ -95,4 +95,31 @@ namespace ALE.ETLBox.DataFlow {
             RowTransformation.LinkTo(target, predicate);
         }
     }
+
+    /// <summary>
+    /// A lookup task - data from the input can be enriched with data retrieved from the lookup source.
+    /// The non generic implementation accepts a string array as input and output. The lookup data source
+    /// always returns a list of string array.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// Lookup = new Lookup(
+    ///     testClass.TestTransformationFunc, lookupSource, testClass.LookupData
+    /// );
+    /// </code>
+    /// </example>
+    public class Lookup : Lookup<string[], string[], string[]>
+    {
+        public Lookup() : base()
+        { }
+
+        public Lookup(Func<string[], string[]> rowTransformationFunc, IDataFlowSource<string[]> source)
+            : base(rowTransformationFunc, source)
+        { }
+
+        public Lookup(Func<string[], string[]> rowTransformationFunc, IDataFlowSource<string[]> source, List<string[]> lookupList)
+            : base(rowTransformationFunc, source, lookupList)
+        { }
+    }
+
 }

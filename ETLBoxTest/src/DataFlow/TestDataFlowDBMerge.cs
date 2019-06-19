@@ -76,7 +76,7 @@ namespace ALE.ETLBoxTest {
         }
 
         [TestMethod]
-        public void DBMergeNoMergIdColumn()
+        public void DBMergeNoMergeIdColumn()
         {
             CreateSourceTable();
             CreateDestinationTable();
