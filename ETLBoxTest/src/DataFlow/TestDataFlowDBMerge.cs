@@ -5,6 +5,7 @@ using ALE.ETLBox.DataFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ALE.ETLBoxTest {
     [TestClass]
@@ -73,6 +74,16 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
 
             AssertDestinationTable();
+            AssertDeltaTable(dest.DeltaTable);
+        }
+
+        private void AssertDeltaTable(List<MySimpleRow> deltaTable)
+        {
+            Assert.IsTrue(deltaTable.Count == 5);
+            Assert.IsTrue(deltaTable.Where(row => row.ChangeAction == 'U').Count() == 2);
+            Assert.IsTrue(deltaTable.Where(row => row.ChangeAction == 'D' && row.Key == 5).Count() == 1);
+            Assert.IsTrue(deltaTable.Where(row => row.ChangeAction == 'I' && row.Key == 4).Count() == 1);
+            Assert.IsTrue(deltaTable.Where(row => row.ChangeAction == 'E' && row.Key == 3).Count() == 1);
         }
 
         [TestMethod]
@@ -89,6 +100,7 @@ namespace ALE.ETLBoxTest {
 
             AssertDestinationTable();
         }
+
 
         private static void AssertDestinationTable()
         {

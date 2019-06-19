@@ -30,6 +30,7 @@ namespace ALE.ETLBox.DataFlow
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         public string TableName { get; set; }
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+        public List<TInput> DeltaTable { get; set; } = new List<TInput>();
 
         /* Private stuff */
         Lookup<TInput, TInput, TInput> Lookup { get; set; }
@@ -77,8 +78,10 @@ namespace ALE.ETLBox.DataFlow
             DestinationTable.BeforeBatchWrite = batch =>
             {
                 DeleteMissingEntriesOnce();
-                if (!UseTruncateMethod) SqlDeleteIds(batch.Where(row => row.ChangeAction != 'I' && row.ChangeAction != 'C'));
-                return batch.Where(row => row.ChangeAction == 'I' || row.ChangeAction == 'U').ToArray();
+                DeltaTable.AddRange(batch);
+                if (!UseTruncateMethod)
+                   SqlDeleteIds(batch.Where(row => row.ChangeAction != 'I' && row.ChangeAction != 'E'));
+                 return batch.Where(row => row.ChangeAction == 'I' || row.ChangeAction == 'U').ToArray();
             };
 
             Lookup.LinkTo(DestinationTable);
@@ -93,14 +96,14 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (row.Equals(find))
                 {
-                    row.ChangeAction = 'C';
-                    find.ChangeAction = 'U';
+                    row.ChangeAction = 'E';
+                    find.ChangeAction = 'E';
                 }
                 else
                 {
                     row.ChangeAction = 'U';
+                    find.ChangeAction = 'U';
                 }
-
             }
 
             return row;
@@ -108,27 +111,33 @@ namespace ALE.ETLBox.DataFlow
 
         void DeleteMissingEntriesOnce()
         {
+            var deletions = InputData.Where(row => row.ChangeAction == 0);
             if (DisableDeletion == false && WasDeletionExecuted == false) {
                 if (UseTruncateMethod)
                     TruncateTableTask.Truncate(TableName);
                 else
-                    SqlDeleteIds(InputData.Where(row => row.ChangeAction == 0));
+                    SqlDeleteIds(deletions);
             }
+            DeltaTable.AddRange(deletions);
+            DeltaTable.ForEach(row => row.ChangeAction = 'D');
             WasDeletionExecuted = true;
         }
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
             var idsToDelete = rowsToDelete.Select(row => $"'{row.UniqueId}'");
-            new SqlTask(this, $@"
+            if (idsToDelete.Count() > 0)
+            {
+                new SqlTask(this, $@"
             DELETE FROM {TableName} 
             WHERE {MergeIdColumnName} IN (
             {String.Join(",", idsToDelete)}
             )")
-            {
-                DisableLogging = true,
-                DisableExtension = true,
-            }.ExecuteNonQuery();
+                {
+                    DisableLogging = true,
+                    DisableExtension = true,
+                }.ExecuteNonQuery();
+            }
         }
 
         public void Wait() => DestinationTable.Wait();
