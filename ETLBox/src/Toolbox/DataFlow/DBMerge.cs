@@ -14,14 +14,14 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DBMerge<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput> where TInput : IMergable, new()
+    public class DBMerge<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>,IDataFlowSource<TInput> where TInput : IMergable, new()
     {
 
 
         /* ITask Interface */
         public override string TaskType { get; set; } = "DF_DBMERGE";
         public override string TaskName { get; set; } = "Dataflow: Insert, Upsert or delete in destination";
-        public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
+        public override void Execute() => OutputSource.Execute();
 
         /* Public Properties */
         public ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
@@ -37,6 +37,7 @@ namespace ALE.ETLBox.DataFlow
         DBSource<TInput> DestinationTableAsSource { get; set; }
         DBDestination<TInput> DestinationTable { get; set; }
         List<TInput> InputData { get; set; } = new List<TInput>();
+        CustomSource<TInput> OutputSource { get; set; }
         bool WasDeletionExecuted { get; set; }
         string MergeIdColumnName { get; set; }
         bool UseTruncateMethod => String.IsNullOrWhiteSpace(MergeIdColumnName);
@@ -47,8 +48,7 @@ namespace ALE.ETLBox.DataFlow
             TableName = tableName;
             DestinationTableAsSource = new DBSource<TInput>(TableName);
             DestinationTable = new DBDestination<TInput>(TableName);
-            GetIdColumName();
-            InitInternalFlow();
+            Init();
         }
 
         private void GetIdColumName()
@@ -62,9 +62,14 @@ namespace ALE.ETLBox.DataFlow
             DestinationTableDefinition = tableDefinition;
             TableName = tableDefinition.Name;
             DestinationTableAsSource = new DBSource<TInput>(DestinationTableDefinition);
-            DestinationTable = new DBDestination<TInput>(DestinationTableDefinition);
+            Init();
+        }
+
+        private void Init()
+        {
             GetIdColumName();
             InitInternalFlow();
+            InitOutputFlow();
         }
 
         private void InitInternalFlow()
@@ -80,11 +85,23 @@ namespace ALE.ETLBox.DataFlow
                 DeleteMissingEntriesOnce();
                 DeltaTable.AddRange(batch);
                 if (!UseTruncateMethod)
-                   SqlDeleteIds(batch.Where(row => row.ChangeAction != 'I' && row.ChangeAction != 'E'));
-                 return batch.Where(row => row.ChangeAction == 'I' || row.ChangeAction == 'U').ToArray();
+                    SqlDeleteIds(batch.Where(row => row.ChangeAction != 'I' && row.ChangeAction != 'E'));
+                return batch.Where(row => row.ChangeAction == 'I' || row.ChangeAction == 'U').ToArray();
             };
 
             Lookup.LinkTo(DestinationTable);
+        }
+
+        private void InitOutputFlow()
+        {
+            int x = 0;
+            OutputSource = new CustomSource<TInput>(() =>
+            {
+                return  DeltaTable.ElementAt(x++);
+            }, () => x >= DeltaTable.Count);
+
+            DestinationTable.OnCompletion = () => OutputSource.Execute();
+            //OutputSource.LinkTo(new VoidDestination<TInput>());
         }
 
         private TInput UpdateRowWithDeltaInfo(TInput row)
@@ -97,11 +114,13 @@ namespace ALE.ETLBox.DataFlow
                 if (row.Equals(find))
                 {
                     row.ChangeAction = 'E';
+                    row.ChangeDate = DateTime.Now;
                     find.ChangeAction = 'E';
                 }
                 else
                 {
                     row.ChangeAction = 'U';
+                    row.ChangeDate = DateTime.Now;
                     find.ChangeAction = 'U';
                 }
             }
@@ -119,7 +138,10 @@ namespace ALE.ETLBox.DataFlow
                     SqlDeleteIds(deletions);
             }
             DeltaTable.AddRange(deletions);
-            DeltaTable.ForEach(row => row.ChangeAction = 'D');
+            DeltaTable.ForEach(row => {
+                row.ChangeAction = 'D';
+                row.ChangeDate = DateTime.Now;
+            });
             WasDeletionExecuted = true;
         }
 
@@ -141,6 +163,15 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => DestinationTable.Wait();
+
+        public void LinkTo(IDataFlowLinkTarget<TInput> target) => OutputSource.LinkTo(target);
+
+        public void LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate) => OutputSource.LinkTo(target);
+
+        public void ExecuteAsync() => OutputSource.ExecuteAsync();
+
+        public ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
+
     }
 
 

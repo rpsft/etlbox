@@ -31,6 +31,7 @@ namespace ALE.ETLBox.DataFlow
         public string TableName { get; set; }
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
+        public Action OnCompletion { get; set; }
 
         public ITargetBlock<TInput> TargetBlock => Buffer;
 
@@ -163,6 +164,7 @@ namespace ALE.ETLBox.DataFlow
         public void Wait()
         {
             TargetAction.Completion.Wait();
+            OnCompletion?.Invoke();
             NLogFinish();
         }
 

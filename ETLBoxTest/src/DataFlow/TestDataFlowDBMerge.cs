@@ -131,6 +131,28 @@ namespace ALE.ETLBoxTest {
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values(3,'Test3')");
             SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values(4,'Test4')");
         }
+
+        [TestMethod]
+        public void DBMergeWithDeltaDestination()
+        {
+            CreateSourceTable();
+            CreateDestinationTable();
+
+            SqlTask.ExecuteNonQuery("Create delta table", @"CREATE TABLE test.Delta
+                (ColKey int not null, ColValue nvarchar(30) null,
+                    ChangeDate datetime null, ChangeAction char(1) not null)");
+
+
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("test.Source");
+            DBMerge<MySimpleRow> merge = new DBMerge<MySimpleRow>("test.Destination");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>("test.Delta");
+            source.LinkTo(merge);
+            merge.LinkTo(dest);
+            source.Execute();
+            merge.Wait();
+            dest.Wait();
+            //dest.Wait();
+        }
     }
 
 }
