@@ -107,10 +107,17 @@ namespace ALE.ETLBox.DataFlow
             TableName = tableName;
         }
 
+        public DBSource(IConnectionManager connectionManager) : this()
+        {
+            ConnectionManager = connectionManager;
+        }
+
         public DBSource(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;
         }
+
+
 
         public void ExecuteAsync()
         {
@@ -187,6 +194,7 @@ namespace ALE.ETLBox.DataFlow
         public DBSource() : base() { }
         public DBSource(TableDefinition sourceTableDefinition) : base(sourceTableDefinition) { }
         public DBSource(string tableName) : base(tableName) { }
-        public DBSource(IConnectionManager connectionManager, string sql) : base(connectionManager, sql) { }
+        public DBSource(IConnectionManager connectionManager) : base(connectionManager) { }
+        public DBSource(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
     }
 }
