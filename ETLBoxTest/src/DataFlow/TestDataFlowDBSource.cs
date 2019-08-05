@@ -247,6 +247,84 @@ namespace ALE.ETLBoxTest
             source.Execute();
             dest.Wait();
         }
+
+
+        [TestMethod]
+        public void DBSourceWithSqlAndNoTableDefinition()
+        {
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
+                (Col1 nvarchar(100) null, Col2 nvarchar(100) null)");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+
+            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
+                (Col1 nvarchar(100) null, Col2 nvarchar(100) null)");
+
+            DBSource source = new DBSource()
+            {
+                Sql = "SELECT Col1, Col2 FROM test.Source"
+            };
+            DBDestination dest = new DBDestination("test.Destination");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination", "Col1 = 'Test1' AND Col2='Test2'"));
+        }
+
+
+        [TestMethod]
+        public void DBSourceWithSqlAndNoTableDefinitionNotMatchingColumns()
+        {
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
+                (Col1 nvarchar(100) null, Col2 nvarchar(100) null)");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+
+            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
+                (Col3 nvarchar(100) null, Col4 nvarchar(100) null, Col1 nvarchar(100) null)");
+
+            DBSource source = new DBSource()
+            {
+                Sql = "SELECT Col1, Col2 FROM test.Source"
+            };
+            DBDestination dest = new DBDestination("test.Destination");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination", "Col3 = 'Test1' AND Col4='Test2'"));
+        }
+
+
+        [TestMethod]
+        public void DBSourceWithSqlAndNoTableDefinitionLessColumns()
+        {
+            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
+                (Col1 nvarchar(100) null, Col2 nvarchar(100) null)");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1','Test2')");
+
+            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
+                (Col nvarchar (100) not null )");
+
+            DBSource source = new DBSource()
+            {
+                Sql = "SELECT Col1, Col2 FROM test.Source"
+            };
+            DBDestination dest = new DBDestination("test.Destination");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
+            Assert.AreEqual(3, RowCountTask.Count("test.Destination", "Col = 'Test1'"));
+        }
     }
 
 }

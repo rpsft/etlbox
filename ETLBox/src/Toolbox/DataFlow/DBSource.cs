@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
+using TSQL;
+using TSQL.Statements;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -61,8 +63,20 @@ namespace ALE.ETLBox.DataFlow
                 if (HasSourceTableDefinition)
                     return SourceTableDefinition?.Columns?.Select(col => col.Name).ToList();
                 else
-                    return null;
+                    return ParseColumnNamesFromSql();
             }
+        }
+
+        private List<string> ParseColumnNamesFromSql()
+        {
+            var statement = TSQLStatementReader.ParseStatements(SqlForRead).FirstOrDefault() as TSQLSelectStatement;
+
+            List<string> columNames = statement?.Select
+                                                .Tokens
+                                                .Where(token => token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
+                                                .Select(token => token.Text)
+                                                .ToList();
+            return columNames;
         }
 
         public void LoadTableDefinition()
@@ -116,8 +130,6 @@ namespace ALE.ETLBox.DataFlow
         {
             ConnectionManager = connectionManager;
         }
-
-
 
         public void ExecuteAsync()
         {

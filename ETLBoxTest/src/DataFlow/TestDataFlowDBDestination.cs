@@ -7,20 +7,23 @@ using System.Collections.Generic;
 
 namespace ALE.ETLBoxTest {
     [TestClass]
-    public class TestDataFlowDBDestination {
+    public class TestDataFlowDBDestination
+    {
         public TestContext TestContext { get; set; }
         public string ConnectionStringParameter => TestContext?.Properties["connectionString"].ToString();
         public string DBNameParameter => TestContext?.Properties["dbName"].ToString();
 
         [ClassInitialize]
-        public static void ClassInit(TestContext testContext) {
+        public static void ClassInit(TestContext testContext)
+        {
             TestHelper.RecreateDatabase(testContext);
             ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(testContext.Properties["connectionString"].ToString()));
             CreateSchemaTask.Create("test");
         }
 
         [TestInitialize]
-        public void TestInit() {
+        public void TestInit()
+        {
             CleanUpSchemaTask.CleanUp("test");
         }
 
@@ -32,7 +35,8 @@ namespace ALE.ETLBoxTest {
                  Col1 nvarchar(30) null, Col2 nvarchar(30) null)");
 
             int index = 1;
-            CustomSource<ColumnMapRow> source = new CustomSource<ColumnMapRow>( () => {
+            CustomSource<ColumnMapRow> source = new CustomSource<ColumnMapRow>(() =>
+            {
                 return new ColumnMapRow()
                 {
                     Col1 = "Test" + index++,
@@ -66,8 +70,9 @@ namespace ALE.ETLBoxTest {
 
             DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>("test.Source");
             CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
-                input => {
-                    Assert.AreEqual("Test1",input.Col1);
+                input =>
+                {
+                    Assert.AreEqual("Test1", input.Col1);
                     Assert.AreEqual("Test2", input.B);
                 });
             source.LinkTo(dest);
@@ -75,5 +80,4 @@ namespace ALE.ETLBoxTest {
             dest.Wait();
         }
     }
-
 }
