@@ -21,7 +21,7 @@ if object_id('dbo.TRC') is not null drop table dbo.TRC
 create table dbo.TRC ( value int null )
 insert into dbo.TRC select * from (values (1), (2), (3)) AS MyTable(v)");
         }
-      
+
         [TestMethod]
         public void TestTruncate() {
             Assert.AreEqual(3, RowCountTask.Count("dbo.TRC"));

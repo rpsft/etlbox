@@ -31,6 +31,8 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+        public Action OnCompletion { get; set; }
+
         /* Private stuff */
         private Action<TInput> _writeAction;
 
@@ -64,6 +66,7 @@ namespace ALE.ETLBox.DataFlow
         public void Wait()
         {
             TargetActionBlock.Completion.Wait();
+            OnCompletion?.Invoke();
             NLogFinish();
         }
 
