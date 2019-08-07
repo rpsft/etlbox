@@ -58,10 +58,7 @@ namespace ALE.ETLBox.DataFlow {
                 RowTransformation.InitAction = LoadLookupData;
             }
         }
-
-        NLog.Logger NLogger { get; set; }
         public Lookup() {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
         }
 

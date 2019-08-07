@@ -14,7 +14,6 @@
         public string Message { get; set; }
 
         public LogTask() {
-            NLogger = NLog.LogManager.GetLogger("ETL");
         }
 
         public LogTask(string message) : this() {
@@ -33,6 +32,5 @@
         public static void Warn(string message) => new LogTask(message).Warn();
         public static void Error(string message) => new LogTask(message).Error();
         public static void Fatal(string message) => new LogTask(message).Fatal();
-        NLog.Logger NLogger { get; set; }
     }
 }

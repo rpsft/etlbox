@@ -29,11 +29,9 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         internal BroadcastBlock<TInput> BroadcastBlock { get; set; }
-        NLog.Logger NLogger { get; set; }
         TypeInfo TypeInfo { get; set; }
         public Multicast()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             TypeInfo = new TypeInfo(typeof(TInput));
             BroadcastBlock = new BroadcastBlock<TInput>(Clone);
         }

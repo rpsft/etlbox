@@ -44,8 +44,6 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         Comparison<TInput> _sortFunction;
         BlockTransformation<TInput> BlockTransformation { get; set; }
-        NLog.Logger NLogger { get; set; }
-
         public Sort()
         {
             NLogger = NLog.LogManager.GetLogger("ETL");

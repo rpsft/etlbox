@@ -71,7 +71,7 @@ namespace ALE.ETLBoxTest
          * DSBSource (out: object) -> DBDestination (in: object)
          */
         [TestMethod]
-        public void Sql_DB()
+        public void Sql_DB_withSelectStar()
         {
             TableDefinition destinationTableDefinition = new TableDefinition("test.Destination", new List<TableColumn>() {
                 new TableColumn("Col1", "nvarchar(100)", allowNulls: false),
@@ -98,7 +98,7 @@ namespace ALE.ETLBoxTest
        * DSBSource (out: object) -> DBDestination (in: object)
        */
         [TestMethod]
-        public void Sql_Tablename()
+        public void Sql_Tablename_WithSelectStar()
         {
             TableDefinition destinationTableDefinition = new TableDefinition("test.Destination", new List<TableColumn>() {
                 new TableColumn("Col1", "nvarchar(100)", allowNulls: false),

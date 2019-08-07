@@ -4,8 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>It's all in the box! Run all your ETL jobs with this awesome C# class library. 
-    
+    <Description>It's all in the box! Run all your ETL jobs with this awesome C# class library.
+
 ETLBox is a comprehensive C# class library that is able to manage your whole ETL or ELT. You can use it to run some simple (or complex) sql against your database. You can easily manage your database using some easy-to-use and easy-to-understand objects. You can even create your own dataflow, where data is send from a source to a target and transformed on its way.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
@@ -13,8 +13,7 @@ ETLBox is a comprehensive C# class library that is able to manage your whole ETL
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
-    <PackageReleaseNotes>Addin OnCompletion to CustomDestination
-</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfix for non-Generic DBSource and custom sql. Adding support for Sqlite3.</PackageReleaseNotes>
     <Version>1.3.2</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
@@ -27,13 +26,14 @@ ETLBox is a comprehensive C# class library that is able to manage your whole ETL
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="12.1.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="150.18118.0" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="150.18147.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NLog" Version="4.6.4" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.5.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.Odbc" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.9.0" />
     <PackageReference Include="TSQL.Parser" Version="1.2.7" />
     <PackageReference Include="Unofficial.Microsoft.AnalysisServices.AdomdClientNetCore" Version="15.3.1.1" />

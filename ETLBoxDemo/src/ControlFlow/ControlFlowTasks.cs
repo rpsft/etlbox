@@ -41,6 +41,6 @@ namespace ALE.ETLBoxDemo {
             AddFileGroupTask.AddFileGroup("FGName", "DemoDB", "200MB", "10MB", isDefaultFileGroup: true);
 
             CRUDProcedureTask.CreateOrAlter("demo.proc1", "select 1 as test");
-        }    
+        }
     }
 }

@@ -13,6 +13,8 @@
 
         <Parameter name="odbcConnectionString" value="Driver={SQL Server};Server=.\SQLEXPRESS;Database=ETLBox;Trusted_Connection=Yes;" />
         <Parameter name="accessConnectionString" value="Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb" />
+        <Parameter name="sqliteConnectionString" value="Data Source=.\db\SQLite.db;Version=3;" />
+
         <Parameter name="dbName" value="ETLBox" />
         <Parameter name="dbNameDest" value="ETLBoxDest" />
         <Parameter name="dbNameLog" value="ETLBoxLog" />

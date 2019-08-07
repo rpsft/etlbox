@@ -55,10 +55,8 @@ namespace ALE.ETLBox.DataFlow
         Func<List<TInput>, List<TOutput>> _blockTransformationFunc;
         List<TInput> InputData { get; set; }
         List<TOutput> OutputData { get; set; }
-        NLog.Logger NLogger { get; set; }
         public BlockTransformation()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             InputData = new List<TInput>();
             OutputBuffer = new BufferBlock<TOutput>();
         }

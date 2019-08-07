@@ -37,11 +37,8 @@ namespace ALE.ETLBox.DataFlow
         private Action<TInput> _writeAction;
 
         internal ActionBlock<TInput> TargetActionBlock { get; set; }
-
-        NLog.Logger NLogger { get; set; }
         public CustomDestination()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
         }
 
         public CustomDestination(Action<TInput> writeAction) : this()

@@ -40,12 +40,10 @@ namespace ALE.ETLBox.DataFlow
         CsvReader CsvReader { get; set; }
         StreamReader StreamReader { get; set; }
         BufferBlock<TOutput> Buffer { get; set; }
-        NLog.Logger NLogger { get; set; }
         TypeInfo TypeInfo { get; set; }
 
         public CSVSource()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BufferBlock<TOutput>();
             TypeInfo = new TypeInfo(typeof(TOutput));
             Configuration = new Configuration(CultureInfo.InvariantCulture);

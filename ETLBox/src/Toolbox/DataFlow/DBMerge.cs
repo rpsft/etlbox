@@ -41,7 +41,6 @@ namespace ALE.ETLBox.DataFlow
         bool WasDeletionExecuted { get; set; }
         string MergeIdColumnName { get; set; }
         bool UseTruncateMethod => String.IsNullOrWhiteSpace(MergeIdColumnName);
-        NLog.Logger NLogger { get; set; }
 
         public DBMerge(string tableName)
         {

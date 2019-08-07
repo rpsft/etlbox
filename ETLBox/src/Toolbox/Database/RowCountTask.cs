@@ -3,12 +3,12 @@
 
 namespace ALE.ETLBox.ControlFlow {
     /// <summary>
-    /// Count the row in a table. This task can either use the normal COUNT(*) method (could take some time on big tables)    
-    /// or query the sys.partition table to get the count  (much faster).    
+    /// Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables)
+    /// For Sql Server, you can set the QuickQueryMode to true. This will query the sys.partition table which can be much faster.
     /// </summary>
     /// <example>
     /// <code>
-    /// int count = RowCountTask.Count("demo.table1").Value;
+    /// int count = RowCountTask.Count("table1").Value;
     /// </code>
     /// </example>
     public class RowCountTask : GenericTask, ITask {
@@ -16,7 +16,10 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskType { get; set; } = "ROWCOUNT";
         public override string TaskName => $"Count Rows for {TableName}" + (HasCondition ? $" with condition {Condition}" : "");
         public override void Execute() {
-            Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
+            if (this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.SQLLite)
+                Rows = (int)new SqlTask(this, Sql).ExecuteScalar<long>();
+            else
+                Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
         }
 
         public string TableName { get; set; }
@@ -28,8 +31,15 @@ namespace ALE.ETLBox.ControlFlow {
         public bool NoLock { get; set; }
         public string Sql {
             get {
-                return QuickQueryMode && !HasCondition ? $@"select cast(sum([rows]) as int) from sys.partitions where [object_id] = object_id(N'{TableName}') and index_id in (0,1)" :
-                    $"select count(*) from {TableName} {WhereClause} {Condition} {NoLockHint}";
+                return QuickQueryMode && !HasCondition ? $@"
+SELECT CAST ( SUM ( [rows]) AS INT) 
+FROM [sys].[partitions] 
+WHERE [object_id] = object_id(N'{TableName}') 
+  AND [index_id] IN (0,1)" :
+                $@"
+SELECT COUNT (*)
+FROM {TableName} 
+{WhereClause} {Condition} {NoLockHint}";
             }
         }
 
@@ -67,8 +77,8 @@ namespace ALE.ETLBox.ControlFlow {
         public static int? Count(string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options).Count().Rows;
 
 
-        string WhereClause => HasCondition ? "where" : String.Empty;
-        string NoLockHint => NoLock ? "with (nolock)" : String.Empty;
+        string WhereClause => HasCondition ? "WHERE" : String.Empty;
+        string NoLockHint => NoLock ? "WITH (NOLOCK)" : String.Empty;
 
     }
 

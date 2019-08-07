@@ -21,11 +21,9 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         BufferBlock<TOutput> Buffer { get; set; }
-        NLog.Logger NLogger { get; set; }
 
         public CustomSource()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BufferBlock<TOutput>();
         }
 

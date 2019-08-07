@@ -7,6 +7,8 @@ namespace ALE.ETLBox {
     public abstract class GenericTask : ITask {
         public virtual string TaskType { get; set; } = "N/A";
         public virtual string TaskName { get; set; } = "N/A";
+        public NLog.Logger NLogger { get; set; } = NLog.LogManager.GetLogger("ETL");
+
         public virtual void Execute() {
             throw new Exception("Not implemented!");
         }
@@ -17,8 +19,27 @@ namespace ALE.ETLBox {
             get {
                 if (ConnectionManager == null)
                     return (IDbConnectionManager)ControlFlow.ControlFlow.CurrentDbConnection;
-               else
+                else
                     return (IDbConnectionManager)ConnectionManager;
+            }
+        }
+
+        public ConnectionManagerType ConnectionType
+        {
+            get
+            {
+                if (this.DbConnectionManager.GetType() == typeof(SqlConnectionManager) ||
+                    this.DbConnectionManager.GetType() == typeof(SMOConnectionManager))
+                    return ConnectionManagerType.SqlServer;
+                else if (this.DbConnectionManager.GetType() == typeof(OdbcConnectionManager))
+                    return ConnectionManagerType.Odbc;
+                else if (this.DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager))
+                    return ConnectionManagerType.Access;
+                else if (this.DbConnectionManager.GetType() == typeof(AdomdConnectionManager))
+                    return ConnectionManagerType.Adomd;
+                else if (this.DbConnectionManager.GetType() == typeof(SQLiteConnectionManager))
+                    return ConnectionManagerType.SQLLite;
+                else return ConnectionManagerType.Unknown;
             }
         }
 

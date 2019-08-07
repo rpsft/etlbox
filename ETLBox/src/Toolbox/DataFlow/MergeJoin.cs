@@ -45,10 +45,7 @@ namespace ALE.ETLBox.DataFlow {
         internal JoinBlock<TInput1, TInput2> JoinBlock { get; set; }
         internal RowTransformation<Tuple<TInput1, TInput2>, TOutput> Transformation { get; set; }
 
-        NLog.Logger NLogger { get; set; }
-
         public MergeJoin() {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
             JoinBlock = new JoinBlock<TInput1, TInput2>();
             Target1 = new MergeJoinTarget<TInput1>(JoinBlock.Target1);

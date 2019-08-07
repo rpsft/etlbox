@@ -22,11 +22,8 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         CustomDestination<TInput> _voidDestination { get; set; }
-        NLog.Logger NLogger { get; set; }
-
         public VoidDestination()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             _voidDestination = new CustomDestination<TInput>(this, row => {; });
         }
 

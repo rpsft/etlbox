@@ -24,6 +24,10 @@
 
 - all SQL statements in Uppercase / perhaps code formating
 
-- Integrate DataFlowExamples into current test cases
-
 - Restructure Test cases
+    - Integrate DataFlowExamples into current test cases
+
+- Refactor Dataflow classes 
+  - use inheritance or compostion, but all code which conflicts with DRY needs to be moved
+  - Using Inheritance: Inherit from DataFlowTask, e.g. DataFlowSource which has LinkTo method
+  - Using Composition: Source-Dataflow have a ComponentLink-Instance, which LinkTo methods are used (perhaps the best approach!)

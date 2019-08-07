@@ -40,7 +40,6 @@ namespace ALE.ETLBox.DataFlow
         const int DEFAULT_BATCH_SIZE = 100000;
         internal BatchBlock<TInput> Buffer { get; set; }
         internal ActionBlock<TInput[]> TargetAction { get; set; }
-        NLog.Logger NLogger { get; set; }
         private int ThresholdCount { get; set; } = 1;
         TypeInfo TypeInfo { get; set; }
         public DBDestination()
@@ -104,7 +103,6 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitObjects(int batchSize)
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BatchBlock<TInput>(batchSize);
             TargetAction = new ActionBlock<TInput[]>(d => WriteBatch(d));
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });

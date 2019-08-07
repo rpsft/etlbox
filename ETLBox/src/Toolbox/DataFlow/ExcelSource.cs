@@ -40,10 +40,8 @@ namespace ALE.ETLBox.DataFlow {
         FileStream FileStream { get; set; }
         IExcelDataReader ExcelDataReader { get; set; }
         BufferBlock<TOutput> Buffer { get; set; }
-        NLog.Logger NLogger { get; set; }
 
         public ExcelSource() {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BufferBlock<TOutput>();
         }
 

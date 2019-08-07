@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace ALE.ETLBox.ConnectionManager {
     /// <summary>
-    /// Connection manager of a classic ADO.NET connection to a sql server.
+    /// Connection manager of a classic ADO.NET connection to a (Microsoft) Sql Server.
     /// </summary>
     /// <example>
     /// <code>
@@ -35,7 +35,5 @@ namespace ALE.ETLBox.ConnectionManager {
             };
             return clone;
         }
-
-
     }
 }

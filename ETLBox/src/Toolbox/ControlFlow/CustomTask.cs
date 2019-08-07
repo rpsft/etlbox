@@ -13,7 +13,6 @@ namespace ALE.ETLBox.ControlFlow {
         }
 
         public CustomTask(string name) {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             this.TaskName = name;
         }
 
@@ -45,7 +44,6 @@ namespace ALE.ETLBox.ControlFlow {
         public static void Execute<t1, t2>(string name, Action<t1, t2> task, t1 param1, t2 param2) =>
             new CustomTask(name).Execute<t1, t2>(task, param1, param2);
 
-        NLog.Logger NLogger { get; set; }
 
         void NLogStart() {
             if (!DisableLogging)

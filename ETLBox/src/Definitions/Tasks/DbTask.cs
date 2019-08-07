@@ -51,7 +51,6 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Internal/Private properties */
         internal bool DoSkipSql { get; private set; }
-        NLog.Logger NLogger { get; set; }
         bool HasSql => !(String.IsNullOrWhiteSpace(Sql));
         bool HasFileConnection => FileConnection != null;
         internal IEnumerable<QueryParameter> _Parameter { get; set; }
@@ -59,7 +58,7 @@ namespace ALE.ETLBox.ControlFlow
         /* Some constructors */
         public DbTask()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
+            
         }
 
         public DbTask(string name) : this()
@@ -205,7 +204,7 @@ namespace ALE.ETLBox.ControlFlow
             }
             else
             {
-                if (columnNames == null) columnNames = typeInfo.PropertyNames;
+                if (columnNames?.Count == 0) columnNames = typeInfo.PropertyNames;
                 foreach (var colName in columnNames)
                 {
                     if (typeInfo.HasPropertyOrColumnMapping(colName))

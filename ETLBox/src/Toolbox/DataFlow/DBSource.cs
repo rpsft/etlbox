@@ -60,7 +60,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (HasColumnNames)
                     return ColumnNames;
-                if (HasSourceTableDefinition)
+                else if (HasSourceTableDefinition)
                     return SourceTableDefinition?.Columns?.Select(col => col.Name).ToList();
                 else
                     return ParseColumnNamesFromSql();
@@ -103,11 +103,8 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         internal BufferBlock<TOutput> Buffer { get; set; }
-        NLog.Logger NLogger { get; set; }
-
         public DBSource()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
             Buffer = new BufferBlock<TOutput>();
         }
 

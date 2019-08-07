@@ -49,11 +49,8 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         Func<TInput, TOutput> _rowTransformationFunc;
         internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
-
-        NLog.Logger NLogger { get; set; }
         public RowTransformation()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
         }
 
         public RowTransformation(Func<TInput, TOutput> rowTransformationFunc) : this()
