@@ -1,5 +1,8 @@
 ﻿using System.Data.SqlClient;
 
+// for string extensions
+using ALE.ETLBox.Helper;
+
 namespace ALE.ETLBox {
     /// <summary>
     /// A helper class for encapsulating a conection string to a sql server in an object.
@@ -11,7 +14,7 @@ namespace ALE.ETLBox {
 
         public string Value {
             get {
-                return _builder?.ConnectionString.Replace("Integrated Security=true", "Integrated Security=SSPI", System.StringComparison.InvariantCultureIgnoreCase);
+                return _builder?.ConnectionString.ReplaceIgnoreCase("Integrated Security=true", "Integrated Security=SSPI");
             }
             set {
                 _builder = new SqlConnectionStringBuilder(value);

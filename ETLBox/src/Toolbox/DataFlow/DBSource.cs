@@ -74,7 +74,7 @@ namespace ALE.ETLBox.DataFlow
             List<string> columNames = statement?.Select
                                                 .Tokens
                                                 .Where(token => token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
-                                                .Select(token => token.Text)
+                                                .Select(token => token.AsIdentifier.Name)
                                                 .ToList();
             return columNames;
         }
