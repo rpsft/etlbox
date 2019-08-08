@@ -13,13 +13,15 @@ ETLBox is a comprehensive C# class library that is able to manage your whole ETL
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
-    <PackageReleaseNotes>Bugfix for non-Generic DBSource and custom sql. Adding support for Sqlite3.</PackageReleaseNotes>
-    <Version>1.3.2</Version>
+    <PackageReleaseNotes>No supports .NET Standard 2.0! This project can now be used in .NET Core and .NET applications!
+1.4.0 also includes: - Bugfix for non-Generic DBSource and custom sql - Adding connection manager for Sqlite3.
+</PackageReleaseNotes>
+    <Version>1.4.0</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.3.2.0</AssemblyVersion>
-    <FileVersion>1.3.2.0</FileVersion>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
