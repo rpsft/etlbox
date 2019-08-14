@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ConnectionManager {
     /// </summary>
     /// <see cref="OdbcConnectionManager"/>
     /// <see cref="AccessOdbcConnectionManager"/>
-    internal class OdbcBulkInsertString {
+    internal class BulkInsertString {
         internal bool IsAccessDatabase { get; set; }
         StringBuilder _sb { get; set; } = new StringBuilder();
         List<string> SourceColumnNames { get; set; }

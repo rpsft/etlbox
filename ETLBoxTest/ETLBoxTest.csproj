@@ -31,6 +31,9 @@
     <None Update="src\ConnectionManager\AccessData.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="src\ConnectionManager\Sqllite.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="src\ConnectionManager\DatatypeCSV.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
