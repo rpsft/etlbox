@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2048
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox", "ETLBox\ETLBox.csproj", "{03805F53-2270-44DC-AEF5-F534539EBEA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxTest", "ETLBoxTest\ETLBoxTest.csproj", "{D4BE57C8-DA0A-4A52-9101-02C312C4951F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxDocu", "ETLBoxDocu\ETLBoxDocu.csproj", "{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxDemo", "ETLBoxDemo\ETLBoxDemo.csproj", "{58E67120-034D-4820-96C1-F7A7E6266549}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +26,6 @@ Global
 		{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58E67120-034D-4820-96C1-F7A7E6266549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58E67120-034D-4820-96C1-F7A7E6266549}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58E67120-034D-4820-96C1-F7A7E6266549}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58E67120-034D-4820-96C1-F7A7E6266549}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
