@@ -13,17 +13,18 @@ namespace ALE.ETLBox.ControlFlow {
     {
         /* ITask Interface */
         public override string TaskType { get; set; } = "CREATEDB";
-        public override string TaskName => $"Create DB {DatabaseName}";       
+        public override string TaskName => $"Create DB {DatabaseName}";
         public override void Execute()
         {
             new SqlTask(this, Sql).ExecuteNonQuery();
-            
+
         }
-     
+
+        public void Create() => Execute();
 
         /* Public properties */
         public string DatabaseName { get; set; }
-        public RecoveryModel RecoveryModel { get; set; } = RecoveryModel.Simple;      
+        public RecoveryModel RecoveryModel { get; set; } = RecoveryModel.Simple;
         public string Collation { get; set; }
         public string Sql
         {
@@ -31,25 +32,25 @@ namespace ALE.ETLBox.ControlFlow {
             {
                 return
     $@"
-if (db_id('{DatabaseName}') is null)
-begin 
-  use [master]
-  --Create Database
-  create database [{DatabaseName}] {CollationString}
-  {RecoveryString}  
-  alter database [{DatabaseName}] set auto_create_statistics on
-  alter database [{DatabaseName}] set auto_update_statistics on
-  alter database [{DatabaseName}] set auto_update_statistics_async off
-  alter database [{DatabaseName}] set auto_close off
-  alter database [{DatabaseName}] set auto_shrink off
-  
-  --wait for database to enter 'ready' state
-  declare @dbReady bit = 0
-  while (@dbReady = 0)
-  begin
-    select @dbReady = case when DATABASEPROPERTYEX('{DatabaseName}', 'Collation') is null then 0 else 1 end                    
-  end  
-end
+IF (db_id('{DatabaseName}') IS NULL)
+BEGIN
+    USE [master]
+
+    CREATE DATABASE [{DatabaseName}] {CollationString}
+    {RecoveryString}
+    ALTER DATABASE [{DatabaseName}] SET AUTO_CREATE_STATISTICS ON
+    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS ON
+    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
+    ALTER DATABASE [{DatabaseName}] SET AUTO_CLOSE OFF
+    ALTER DATABASE [{DatabaseName}] SET AUTO_SHRINK OFF
+
+    --wait for database to enter 'ready' state
+    DECLARE @dbReady BIT = 0
+    WHILE (@dbReady = 0)
+    BEGIN
+    SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
+    END
+END
 ";
             }
         }
@@ -62,7 +63,7 @@ end
         {
             DatabaseName = databaseName;
         }
-       
+
         public CreateDatabaseTask(string databaseName, RecoveryModel recoveryModel) : this(databaseName)
         {
             RecoveryModel = recoveryModel;
@@ -84,25 +85,25 @@ end
             get
             {
                 if (RecoveryModel == RecoveryModel.Simple)
-                    return "simple";
+                    return "SIMPLE";
                 else if (RecoveryModel == RecoveryModel.BulkLogged)
-                    return "bulk";
+                    return "BULK";
                 else if (RecoveryModel == RecoveryModel.Full)
-                    return "full";
+                    return "FULL";
                 else return string.Empty;
             }
         }
         bool HasCollation => !String.IsNullOrWhiteSpace(Collation);
         string CollationString => HasCollation ? "collate " + Collation : string.Empty;
         string RecoveryString => RecoveryModel != RecoveryModel.Default ?
-            $"alter database [{DatabaseName}] set recovery {RecoveryModelAsString} with no_wait"
+            $"ALTER DATABASE [{DatabaseName}] SET RECOVERY {RecoveryModelAsString} WITH no_wait"
             : string.Empty;
-       
+
     }
 
     public enum RecoveryModel
     {
         Default, Simple, BulkLogged, Full
-    }  
+    }
 
 }

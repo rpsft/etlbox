@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Namespace ALE.ETLBox.DataFlow
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Namespace ALE.ETLBox.DataFlow
+   ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+  
+  <h1 id="ALE_ETLBox_DataFlow" data-uid="ALE.ETLBox.DataFlow" class="text-break">Namespace ALE.ETLBox.DataFlow
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation.html">BlockTransformation</a></h4>
+      <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
+is execution and the result posted into the targets.
+The non generic implementation uses a string array as input and output</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-1.html">BlockTransformation&lt;TInput&gt;</a></h4>
+      <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
+is execution and the result posted into the targets.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html">BlockTransformation&lt;TInput, TOutput&gt;</a></h4>
+      <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
+is execution and the result posted into the targets.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.ColumnMap.html">ColumnMap</a></h4>
+      <section><p>This attribute defines a column name to which the value of the property is mapped when writing or reading
+from a database.
+By default, when reading from a database source the mapping which property stores data of which column
+is resolved by the property names. Using this attribute, you can specify the column name that maps to a propety.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVSource.html">CSVSource</a></h4>
+      <section><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
+CSVSource as a nongeneric type always return a string array as output. If you need typed output, use
+the CSVSource&lt;TOutput&gt; object instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html">CSVSource&lt;TOutput&gt;</a></h4>
+      <section><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
+Data is read a as string from the source and dynamically converted into the corresponding data format.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomDestination.html">CustomDestination</a></h4>
+      <section><p>Define your own destination block. The non generic implementation accepts a string array as input.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomDestination-1.html">CustomDestination&lt;TInput&gt;</a></h4>
+      <section><p>Define your own destination block.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomSource.html">CustomSource</a></h4>
+      <section><p>Define your own source block. The non generic implementation return a string array as output.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomSource-1.html">CustomSource&lt;TOutput&gt;</a></h4>
+      <section><p>Define your own source block.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DataFlow.html">DataFlow</a></h4>
+      <section><p>Contains static information which affects all Dataflow tasks in ETLBox.
+Here you can set the threshold value when information about processed records should appear.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBDestination.html">DBDestination</a></h4>
+      <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+The DBDestination access a string array as input type. If you need other data types, use the generic DBDestination instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBDestination-1.html">DBDestination&lt;TInput&gt;</a></h4>
+      <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBMerge-1.html">DBMerge&lt;TInput&gt;</a></h4>
+      <section><p>Inserts, updates and (optionally) deletes data in db target.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBSource.html">DBSource</a></h4>
+      <section><p>A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
+into the targets. The non generic version of the DBSource creates a string array that contains the data.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBSource-1.html">DBSource&lt;TOutput&gt;</a></h4>
+      <section><p>A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
+into the targets.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.ExcelColumn.html">ExcelColumn</a></h4>
+      <section><p>This attribute defines which column index is mapped to the property.
+By default, when reading from an excel file, the sequence of the properties is used to store the data.
+With this attribute, you can define the column index of the excel column for the property.
+The index starts at 0.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.ExcelRange.html">ExcelRange</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.ExcelSource-1.html">ExcelSource&lt;TOutput&gt;</a></h4>
+      <section><p>Reads data from a excel source. While reading the data from the file, data is also asnychronously posted into the targets.
+You can define a sheet name and a range - only the data in the specified sheet and range is read. Otherwise, all data
+in all sheets will be processed.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup.html">Lookup</a></h4>
+      <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source.
+The non generic implementation accepts a string array as input and output. The lookup data source
+always returns a list of string array.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup-3.html">Lookup&lt;TTransformationInput, TTransformationOutput, TSourceOutput&gt;</a></h4>
+      <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source. The result is then posted into the output.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeIdColumnName.html">MergeIdColumnName</a></h4>
+      <section><p>This attribute defines a the Id column name used for the DBMerge
+If you do not provide this attribute on the UniqueId property (used by the IMergable interface),
+the default is that the table data is read into the memory and before rewriting the data back the
+table will be truncated.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin.html">MergeJoin</a></h4>
+      <section><p>Will join data from the two inputs into one output - on a row by row base.
+Make sure both inputs are sorted or in the right order. The non generic implementation deals with
+string array as inputs and merged output.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html">MergeJoin&lt;TInput1, TInput2, TOutput&gt;</a></h4>
+      <section><p>Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoinTarget-1.html">MergeJoinTarget&lt;TInput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Multicast.html">Multicast</a></h4>
+      <section><p>A multicast duplicates data from the input into two outputs. The non generic version or the multicast
+excepct a string array as input and has two output with the copies of the incoming stríng array.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Multicast-1.html">Multicast&lt;TInput&gt;</a></h4>
+      <section><p>A multicast duplicates data from the input into two outputs.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation.html">RowTransformation</a></h4>
+      <section><p>Transforms the data row-by-row with the help of the transformation function.
+The non generic RowTransformation accepts a string array as input and returns a string array as output.
+If you need other data types, use the generic RowTransformation instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-1.html">RowTransformation&lt;TInput&gt;</a></h4>
+      <section><p>Transforms the data row-by-row with the help of the transformation function.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html">RowTransformation&lt;TInput, TOutput&gt;</a></h4>
+      <section><p>Transforms the data row-by-row with the help of the transformation function.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Sort.html">Sort</a></h4>
+      <section><p>Sort the input with the given sort function. The non generic implementation works with string array.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html">Sort&lt;TInput&gt;</a></h4>
+      <section><p>Sort the input with the given sort function.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.VoidDestination.html">VoidDestination</a></h4>
+      <section><p>This destination if used as a trash.
+Redirect all data in this destination which you do not want for further processing.
+Every records needs to be transferred to a destination to have a dataflow completed.
+The non generic implementation works with a string array as input.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.VoidDestination-1.html">VoidDestination&lt;TInput&gt;</a></h4>
+      <section><p>This destination if used as a trash.
+Redirect all data in this destination which you do not want for further processing.
+Every records needs to be transferred to a destination to have a dataflow completed.</p>
+</section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource&lt;TOutput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource&lt;TOutput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IMergable.html">IMergable</a></h4>
+      <section></section>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

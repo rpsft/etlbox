@@ -1,0 +1,1055 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class XmlaTask
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class XmlaTask
+   ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.ControlFlow.XmlaTask">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+  
+  
+  <h1 id="ALE_ETLBox_ControlFlow_XmlaTask" data-uid="ALE.ETLBox.ControlFlow.XmlaTask" class="text-break">Class XmlaTask
+  </h1>
+  <div class="markdown level0 summary"><p>This task can exeucte any XMLA.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
+    <div class="level2"><a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html">DbTask</a></div>
+    <div class="level3"><span class="xref">XmlaTask</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Sql">DbTask.Sql</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_FileConnection">DbTask.FileConnection</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Actions">DbTask.Actions</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_BeforeRowReadAction">DbTask.BeforeRowReadAction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_AfterRowReadAction">DbTask.AfterRowReadAction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ReadTopX">DbTask.ReadTopX</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_RowsAffected">DbTask.RowsAffected</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_IsOdbcConnection">DbTask.IsOdbcConnection</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_DoXMLCommentStyle">DbTask.DoXMLCommentStyle</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_DisableExtension">DbTask.DisableExtension</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Command">DbTask.Command</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ExecuteNonQuery">DbTask.ExecuteNonQuery()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ExecuteScalar">DbTask.ExecuteScalar()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ExecuteScalar__1">DbTask.ExecuteScalar&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ExecuteScalarAsBool">DbTask.ExecuteScalarAsBool()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ExecuteReader">DbTask.ExecuteReader()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_BulkInsert_ALE_ETLBox_ITableData_System_String_">DbTask.BulkInsert(ITableData, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_ConnectionManager">GenericTask.ConnectionManager</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_ConnectionType">GenericTask.ConnectionType</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask__disableLogging">GenericTask._disableLogging</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_DisableLogging">GenericTask.DisableLogging</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskHash">GenericTask.TaskHash</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.ControlFlow.html">ALE.ETLBox.ControlFlow</a></h6>
+  <h6><strong>Assembly</strong>: ETLBox.dll</h6>
+  <h5 id="ALE_ETLBox_ControlFlow_XmlaTask_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class XmlaTask : DbTask, ITask</code></pre>
+  </div>
+  <h5 id="ALE_ETLBox_ControlFlow_XmlaTask_examples"><strong>Examples</strong></h5>
+  <pre><code>XmlaTask.ExecuteNonQuery(&quot;Log description here&quot;,&quot;Xmla goes here...&quot;)</code></pre>
+
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L20">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor">XmlaTask()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor_ALE_ETLBox_ITask_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor(ALE.ETLBox.ITask%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L32">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_ALE_ETLBox_ITask_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor(ALE.ETLBox.ITask,System.String)">XmlaTask(ITask, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask(ITask callingTask, string sql)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></td>
+        <td><span class="parametername">callingTask</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L24">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor(System.String)">XmlaTask(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_ALE_ETLBox_ConnectionManager_FileConnectionManager_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor(System.String%2CALE.ETLBox.ConnectionManager.FileConnectionManager)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L28">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_ALE_ETLBox_ConnectionManager_FileConnectionManager_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor(System.String,ALE.ETLBox.ConnectionManager.FileConnectionManager)">XmlaTask(String, FileConnectionManager)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask(string name, FileConnectionManager fileConnection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.FileConnectionManager.html">FileConnectionManager</a></td>
+        <td><span class="parametername">fileConnection</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L36">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor(System.String,System.String)">XmlaTask(String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask(string name, string sql)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_System_String_System_Action_System_Action_System_Action_System_Object____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor(System.String%2CSystem.String%2CSystem.Action%2CSystem.Action%2CSystem.Action%7BSystem.Object%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L44">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_System_String_System_Action_System_Action_System_Action_System_Object____" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor(System.String,System.String,System.Action,System.Action,System.Action{System.Object}[])">XmlaTask(String, String, Action, Action, Action&lt;Object&gt;[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action&lt;object&gt;[] actions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">beforeRowReadAction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">afterRowReadAction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Object</span>&gt;[]</td>
+        <td><span class="parametername">actions</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_System_String_System_Action_System_Object____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.%23ctor(System.String%2CSystem.String%2CSystem.Action%7BSystem.Object%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L40">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask__ctor_System_String_System_String_System_Action_System_Object____" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.#ctor(System.String,System.String,System.Action{System.Object}[])">XmlaTask(String, String, Action&lt;Object&gt;[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XmlaTask(string name, string sql, params Action&lt;object&gt;[] actions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Object</span>&gt;[]</td>
+        <td><span class="parametername">actions</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L17">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_TaskName_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.TaskName*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_TaskName" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.TaskName">TaskName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string TaskName { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_TaskType.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.TaskType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L16">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_TaskType_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.TaskType*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_TaskType" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.TaskType">TaskType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string TaskType { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a></div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_Execute.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.Execute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L18">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_Execute_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.Execute*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_Execute" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.Execute">Execute()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Execute()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_Execute">GenericTask.Execute()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteNonQuery_System_String_ALE_ETLBox_ConnectionManager_FileConnectionManager_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteNonQuery(System.String%2CALE.ETLBox.ConnectionManager.FileConnectionManager)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L54">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteNonQuery_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteNonQuery*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteNonQuery_System_String_ALE_ETLBox_ConnectionManager_FileConnectionManager_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteNonQuery(System.String,ALE.ETLBox.ConnectionManager.FileConnectionManager)">ExecuteNonQuery(String, FileConnectionManager)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int ExecuteNonQuery(string name, FileConnectionManager fileConnection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.FileConnectionManager.html">FileConnectionManager</a></td>
+        <td><span class="parametername">fileConnection</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteNonQuery_System_String_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteNonQuery(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L53">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteNonQuery_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteNonQuery*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteNonQuery_System_String_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteNonQuery(System.String,System.String)">ExecuteNonQuery(String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int ExecuteNonQuery(string name, string sql)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_System_String_ALE_ETLBox_ConnectionManager_FileConnectionManager_System_Action_System_Action_System_Action_System_Object____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader(System.String%2CALE.ETLBox.ConnectionManager.FileConnectionManager%2CSystem.Action%2CSystem.Action%2CSystem.Action%7BSystem.Object%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L63">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_System_String_ALE_ETLBox_ConnectionManager_FileConnectionManager_System_Action_System_Action_System_Action_System_Object____" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader(System.String,ALE.ETLBox.ConnectionManager.FileConnectionManager,System.Action,System.Action,System.Action{System.Object}[])">ExecuteReader(String, FileConnectionManager, Action, Action, Action&lt;Object&gt;[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ExecuteReader(string name, FileConnectionManager fileConnection, Action beforeRowReadAction, Action afterRowReadAction, params Action&lt;object&gt;[] actions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.FileConnectionManager.html">FileConnectionManager</a></td>
+        <td><span class="parametername">fileConnection</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">beforeRowReadAction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">afterRowReadAction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Object</span>&gt;[]</td>
+        <td><span class="parametername">actions</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_System_String_System_String_System_Action_System_Action_System_Action_System_Object____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader(System.String%2CSystem.String%2CSystem.Action%2CSystem.Action%2CSystem.Action%7BSystem.Object%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L61">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_System_String_System_String_System_Action_System_Action_System_Action_System_Object____" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader(System.String,System.String,System.Action,System.Action,System.Action{System.Object}[])">ExecuteReader(String, String, Action, Action, Action&lt;Object&gt;[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ExecuteReader(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action&lt;object&gt;[] actions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">beforeRowReadAction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">afterRowReadAction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Object</span>&gt;[]</td>
+        <td><span class="parametername">actions</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_System_String_System_String_System_Action_System_Object____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader(System.String%2CSystem.String%2CSystem.Action%7BSystem.Object%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L60">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReader_System_String_System_String_System_Action_System_Object____" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReader(System.String,System.String,System.Action{System.Object}[])">ExecuteReader(String, String, Action&lt;Object&gt;[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ExecuteReader(string name, string sql, params Action&lt;object&gt;[] actions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Object</span>&gt;[]</td>
+        <td><span class="parametername">actions</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReaderSingleLine_System_String_System_String_System_Action_System_Object____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReaderSingleLine(System.String%2CSystem.String%2CSystem.Action%7BSystem.Object%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L58">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReaderSingleLine_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReaderSingleLine*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteReaderSingleLine_System_String_System_String_System_Action_System_Object____" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteReaderSingleLine(System.String,System.String,System.Action{System.Object}[])">ExecuteReaderSingleLine(String, String, Action&lt;Object&gt;[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ExecuteReaderSingleLine(string name, string sql, params Action&lt;object&gt;[] actions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<span class="xref">System.Object</span>&gt;[]</td>
+        <td><span class="parametername">actions</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalar_System_String_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalar(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L55">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalar_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalar*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalar_System_String_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalar(System.String,System.String)">ExecuteScalar(String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static object ExecuteScalar(string name, string sql)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalar__1_System_String_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalar%60%601(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L56">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalar_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalar*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalar__1_System_String_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalar``1(System.String,System.String)">ExecuteScalar&lt;T&gt;(String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static T? ExecuteScalar&lt;T&gt;(string name, string sql)
+    where T : struct</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalarAsBool_System_String_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalarAsBool(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L57">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalarAsBool_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalarAsBool*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_XmlaTask_ExecuteScalarAsBool_System_String_System_String_" data-uid="ALE.ETLBox.ControlFlow.XmlaTask.ExecuteScalarAsBool(System.String,System.String)">ExecuteScalarAsBool(String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool ExecuteScalarAsBool(string name, string sql)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_XmlaTask.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.XmlaTask%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/XmlaTask.cs/#L15" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

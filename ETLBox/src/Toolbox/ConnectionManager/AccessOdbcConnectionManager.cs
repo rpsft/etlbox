@@ -47,7 +47,7 @@ namespace ALE.ETLBox.ConnectionManager {
         public bool AlwaysUseSameConnection { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName) {
-            OdbcBulkInsertString bulkInsert = new OdbcBulkInsertString() {
+            BulkInsertString bulkInsert = new BulkInsertString() {
                 IsAccessDatabase = true,
                 AccessDummyTableName = DummyTableName
             };

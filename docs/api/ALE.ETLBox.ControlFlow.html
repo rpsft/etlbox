@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Namespace ALE.ETLBox.ControlFlow
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Namespace ALE.ETLBox.ControlFlow
+   ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.ControlFlow">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+  
+  <h1 id="ALE_ETLBox_ControlFlow" data-uid="ALE.ETLBox.ControlFlow" class="text-break">Namespace ALE.ETLBox.ControlFlow
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.AddFileGroupTask.html">AddFileGroupTask</a></h4>
+      <section><p>This task will add a filegroup to the database.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CalculateDatabaseHashTask.html">CalculateDatabaseHashTask</a></h4>
+      <section><p>Calculates a hash value of the database. It will use only the schemas given in the property SchemaName for the calculation.
+The hash calcualtion is based only on the user tables in the schema.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CleanUpSchemaTask.html">CleanUpSchemaTask</a></h4>
+      <section><p>Tries to remove all database objects from the given schema(s).</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.ControlFlow.html">ControlFlow</a></h4>
+      <section><p>Contains static information which affects all ETLBox tasks.
+Here you can set default connections string, disbale the logging for all processes or set the current stage used in your logging configuration.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateDatabaseTask.html">CreateDatabaseTask</a></h4>
+      <section><p>Will create a database if the database doesn't exists.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateIndexTask.html">CreateIndexTask</a></h4>
+      <section><p>Creates an index if the index doesn't exists.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateSchemaTask.html">CreateSchemaTask</a></h4>
+      <section><p>Creates a schema if the schema doesn't exists.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateTableTask.html">CreateTableTask</a></h4>
+      <section><p>Creates a table. If the tables exists, this task won't change the table.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CRUDProcedureTask.html">CRUDProcedureTask</a></h4>
+      <section><p>Creates or updates a procedure.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CRUDViewTask.html">CRUDViewTask</a></h4>
+      <section><p>Creates or updates a view.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CustomTask.html">CustomTask</a></h4>
+      <section><p>A custom task allows you to run your own code (defined as an Action object), with additionally logging in place. (TaskType: CUSTOM)</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html">DbTask</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropDatabaseTask.html">DropDatabaseTask</a></h4>
+      <section><p>Tries to drop a database if the database exists.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropTableTask.html">DropTableTask</a></h4>
+      <section><p>Drops a table if the table exists.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.GetDatabaseListTask.html">GetDatabaseListTask</a></h4>
+      <section><p>Returns a list of all databases on the server (make sure to connect with the correct permissions).</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.Package.html">Package</a></h4>
+      <section><p>A package is a shortcute for custom task, but with the TaskType &quot;PACKAGE&quot;.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.RestoreDatabaseTask.html">RestoreDatabaseTask</a></h4>
+      <section><p>Restores a database from a backup.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.RowCountTask.html">RowCountTask</a></h4>
+      <section><p>Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables)
+For Sql Server, you can set the QuickQueryMode to true. This will query the sys.partition table which can be much faster.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.Sequence.html">Sequence</a></h4>
+      <section><p>A sequence is a shortcute for custom task, but with the TaskType &quot;SEQUENCE&quot;.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.Sequence-1.html">Sequence&lt;T&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.SqlTask.html">SqlTask</a></h4>
+      <section><p>Executes any sql on the database. Use ExecuteNonQuery for SQL statements returning no data, ExecuteScalar for statements with one row and one column or
+ExecuteReader for SQL that returns a result set.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.TruncateTableTask.html">TruncateTableTask</a></h4>
+      <section><p>Truncates a table.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.XmlaTask.html">XmlaTask</a></h4>
+      <section><p>This task can exeucte any XMLA.</p>
+</section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.RecoveryModel.html">RecoveryModel</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.ControlFlow.RowCountOptions.html">RowCountOptions</a></h4>
+      <section></section>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

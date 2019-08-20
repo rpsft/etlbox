@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTest {
                 new TableColumn("value2", "datetime", allowNulls:true)
             };
             new CreateTableTask("test.Table4", columns.Cast<ITableColumn>().ToList()) { OnlyNVarCharColumns = true }.Execute();
-            Assert.AreEqual(2, SqlTask.ExecuteScalar<int>("Check if column exists", $"select count(*) from sys.columns where object_id = object_id('test.Table4')"));            
+            Assert.AreEqual(2, SqlTask.ExecuteScalar<int>("Check if column exists", $"select count(*) from sys.columns where object_id = object_id('test.Table4')"));
             Assert.AreEqual(2,SqlTask.ExecuteScalar<int>("Check if columns are nvarchar", $@"select count(*) from sys.columns cols inner join sys.types t on t.system_type_id = cols.system_type_id where object_id = object_id('test.Table4') and t.name = 'nvarchar'"));
 
 
@@ -75,7 +75,7 @@ namespace ALE.ETLBoxTest {
         [TestMethod]
         public void TestCreateTableWithIdentity() {
             List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("value1", "int",allowNulls:false) { IsIdentity =true, IdentityIncrement = 1000, IdentitySeed = 50 }                
+                new TableColumn("value1", "int",allowNulls:false) { IsIdentity =true, IdentityIncrement = 1000, IdentitySeed = 50 }
             };
             CreateTableTask.Create("test.Table5", columns);
             Assert.AreEqual(1, SqlTask.ExecuteScalar<int>("Check if column exists", $"select count(*) from sys.columns where object_id = object_id('test.Table5')"));

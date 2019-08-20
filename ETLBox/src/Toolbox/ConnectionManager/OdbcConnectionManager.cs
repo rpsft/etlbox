@@ -12,12 +12,12 @@ namespace ALE.ETLBox.ConnectionManager {
     /// <code>
     /// insert into (...) values (..),(..),(..) statementes.
     /// </code>
-    /// Be careful with the batch size - some databases have limitations regarding the length of sql statements. 
+    /// Be careful with the batch size - some databases have limitations regarding the length of sql statements.
     /// Reduce the batch if encounter issues here.
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection = 
+    /// ControlFlow.CurrentDbConnection =
     ///   new OdbcConnectionManager(new ObdcConnectionString(
     ///     "Driver={SQL Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;"));
     /// </code>
@@ -28,7 +28,7 @@ namespace ALE.ETLBox.ConnectionManager {
         public OdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
 
         public override void BulkInsert(ITableData data, string tableName) {
-            OdbcBulkInsertString bulkInsert = new OdbcBulkInsertString() { };
+            BulkInsertString bulkInsert = new BulkInsertString() { };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();
             cmd.CommandText = sql;

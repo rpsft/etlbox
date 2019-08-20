@@ -1,0 +1,4 @@
+﻿bool, decimal, Int, Int, guid, string
+true,1.3,2,-1,e1bd17bb-1a9c-4d06-87ba-613b7238e1a1,Some Value
+false,1.5,2,-1,e1bd17bb-1a9c-4d06-87ba-613b7238e1a1,Anything
+true,100.343,67,,e1bd17bb-1a9c-4d06-87ba-613b7238e1a1,Some Value
