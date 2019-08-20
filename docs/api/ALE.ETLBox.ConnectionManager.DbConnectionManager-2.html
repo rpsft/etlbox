@@ -1,0 +1,705 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class DbConnectionManager&lt;Connection, Command&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class DbConnectionManager&lt;Connection, Command&gt;
+   ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+  
+  
+  <h1 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2" class="text-break">Class DbConnectionManager&lt;Connection, Command&gt;
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">DbConnectionManager&lt;Connection, Command&gt;</span></div>
+      <div class="level2"><a class="xref" href="ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html">AccessOdbcConnectionManager</a></div>
+      <div class="level2"><a class="xref" href="ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html">AdomdConnectionManager</a></div>
+      <div class="level2"><a class="xref" href="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.html">OdbcConnectionManager</a></div>
+      <div class="level2"><a class="xref" href="ALE.ETLBox.ConnectionManager.SqlConnectionManager.html">SqlConnectionManager</a></div>
+      <div class="level2"><a class="xref" href="ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html">SQLiteConnectionManager</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a></div>
+    <div><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></div>
+    <div><span class="xref">System.IDisposable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.ConnectionManager.html">ALE.ETLBox.ConnectionManager</a></h6>
+  <h6><strong>Assembly</strong>: ETLBox.dll</h6>
+  <h5 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class DbConnectionManager&lt;Connection, Command&gt; : IDbConnectionManager, IConnectionManager, IDisposable where Connection : class, IDbConnection, new()
+    where Command : class, IDbCommand, new()</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">Connection</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">Command</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L18">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2__ctor_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2__ctor" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.#ctor">DbConnectionManager()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DbConnectionManager()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2__ctor_ALE_ETLBox_IDbConnectionString_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.%23ctor(ALE.ETLBox.IDbConnectionString)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L20">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2__ctor_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2__ctor_ALE_ETLBox_IDbConnectionString_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.#ctor(ALE.ETLBox.IDbConnectionString)">DbConnectionManager(IDbConnectionString)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DbConnectionManager(IDbConnectionString connectionString)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.IDbConnectionString.html">IDbConnectionString</a></td>
+        <td><span class="parametername">connectionString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ConnectionString.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.ConnectionString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L12">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ConnectionString_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ConnectionString*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ConnectionString" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ConnectionString">ConnectionString</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDbConnectionString ConnectionString { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.IDbConnectionString.html">IDbConnectionString</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_MaxLoginAttempts.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.MaxLoginAttempts%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L10">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_MaxLoginAttempts_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.MaxLoginAttempts*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_MaxLoginAttempts" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.MaxLoginAttempts">MaxLoginAttempts</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxLoginAttempts { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_AfterBulkInsert.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.AfterBulkInsert%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L83">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_AfterBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.AfterBulkInsert*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_AfterBulkInsert" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.AfterBulkInsert">AfterBulkInsert()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void AfterBulkInsert()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_BeforeBulkInsert.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.BeforeBulkInsert%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L82">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_BeforeBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.BeforeBulkInsert*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_BeforeBulkInsert" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.BeforeBulkInsert">BeforeBulkInsert()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void BeforeBulkInsert()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_BulkInsert_ALE_ETLBox_ITableData_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.BulkInsert(ALE.ETLBox.ITableData%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L81">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_BulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.BulkInsert*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_BulkInsert_ALE_ETLBox_ITableData_System_String_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.BulkInsert(ALE.ETLBox.ITableData,System.String)">BulkInsert(ITableData, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void BulkInsert(ITableData data, string tableName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ITableData.html">ITableData</a></td>
+        <td><span class="parametername">data</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Clone.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L109">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Clone_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Clone*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Clone" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract IDbConnectionManager Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Close.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.Close%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L105">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Close_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Close*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Close" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Close">Close()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Close()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_CreateCommand_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.CreateCommand(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L49">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_CreateCommand_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.CreateCommand*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_CreateCommand_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.CreateCommand(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">CreateCommand(String, IEnumerable&lt;QueryParameter&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Command CreateCommand(string commandText, IEnumerable&lt;QueryParameter&gt; parameterList = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">commandText</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.QueryParameter.html">QueryParameter</a>&gt;</td>
+        <td><span class="parametername">parameterList</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Command</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Dispose.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L101">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Dispose_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Dispose*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Dispose" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L88">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Dispose_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Dispose*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Dispose_System_Boolean_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Dispose(System.Boolean)">Dispose(Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Dispose(bool disposing)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">disposing</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteNonQuery_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.ExecuteNonQuery(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L65">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteNonQuery_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ExecuteNonQuery*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteNonQuery_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">ExecuteNonQuery(String, IEnumerable&lt;QueryParameter&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int ExecuteNonQuery(string commandText, IEnumerable&lt;QueryParameter&gt; parameterList = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">commandText</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.QueryParameter.html">QueryParameter</a>&gt;</td>
+        <td><span class="parametername">parameterList</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteReader_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.ExecuteReader(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L75">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteReader_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ExecuteReader*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteReader_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">ExecuteReader(String, IEnumerable&lt;QueryParameter&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDataReader ExecuteReader(string commandText, IEnumerable&lt;QueryParameter&gt; parameterList = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">commandText</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.QueryParameter.html">QueryParameter</a>&gt;</td>
+        <td><span class="parametername">parameterList</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Data.IDataReader</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteScalar_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.ExecuteScalar(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L70">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteScalar_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ExecuteScalar*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_ExecuteScalar_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">ExecuteScalar(String, IEnumerable&lt;QueryParameter&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object ExecuteScalar(string commandText, IEnumerable&lt;QueryParameter&gt; parameterList = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">commandText</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.QueryParameter.html">QueryParameter</a>&gt;</td>
+        <td><span class="parametername">parameterList</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Open.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602.Open%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L24">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Open_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Open*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_2_Open" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`2.Open">Open()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Open()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a>
+  </div>
+  <div>
+      <span class="xref">System.IDisposable</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_DbConnectionManager_2.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.DbConnectionManager%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/ConnectionManager/DbConnectionManager.cs/#L7" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
