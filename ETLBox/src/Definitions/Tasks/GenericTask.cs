@@ -1,13 +1,14 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.ControlFlow;
+using CF = ALE.ETLBox.ControlFlow;
 using System;
+using ALE.ETLBox.Logging;
 
 namespace ALE.ETLBox {
     public abstract class GenericTask : ITask {
         public virtual string TaskType { get; set; } = "N/A";
         public virtual string TaskName { get; set; } = "N/A";
-        public NLog.Logger NLogger { get; set; } = NLog.LogManager.GetLogger("ETL");
+        public NLog.Logger NLogger { get; set; } = CF.ControlFlow.GetLogger();
 
         public virtual void Execute() {
             throw new Exception("Not implemented!");

@@ -58,7 +58,7 @@ namespace ALE.ETLBox.ControlFlow
         /* Some constructors */
         public DbTask()
         {
-            
+
         }
 
         public DbTask(string name) : this()
@@ -85,6 +85,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             Actions = actions.ToList();
         }
+
 
         public DbTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : this(name, sql)
         {

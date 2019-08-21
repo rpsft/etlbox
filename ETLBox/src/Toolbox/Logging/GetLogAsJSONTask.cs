@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using ALE.ETLBox.ConnectionManager;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ALE.ETLBox.Logging {
     /// <summary>
-    /// Returns the content of the etl.Log table as a JSON string. 
+    /// Returns the content of the etl.Log table as a JSON string.
     /// </summary>
     public class GetLogAsJSONTask : GenericTask, ITask {
         /* ITask Interface */
@@ -13,7 +14,7 @@ namespace ALE.ETLBox.Logging {
         public override string TaskName => $"Get log as JSON for {LoadProcessKey}";
 
         public override void Execute() {
-            List<LogEntry> logEntries = ReadLogTableTask.Read(LoadProcessKey);
+            List<LogEntry> logEntries = ReadLogTableTask.Read(this.ConnectionManager, LoadProcessKey);
             CalculateEndDate(logEntries);
             LogHierarchyEntry hierarchy = CreateHierarchyStructure(logEntries);
             JSON = JsonConvert.SerializeObject(hierarchy, new JsonSerializerSettings {
@@ -49,7 +50,7 @@ namespace ALE.ETLBox.Logging {
             }
             return root;
         }
-    
+
         /* Public properties */
         public List<string> ContainerTypes => new List<string>() { "sequence", "subpackage", "package" };
 
@@ -82,6 +83,10 @@ namespace ALE.ETLBox.Logging {
 
         public static string GetJSON() => new GetLogAsJSONTask().Create().JSON;
         public static string GetJSON(int? loadProcessKey) => new GetLogAsJSONTask(loadProcessKey).Create().JSON;
+        public static string GetJSON(IConnectionManager connectionManager)
+            => new GetLogAsJSONTask() { ConnectionManager = connectionManager }.Create().JSON;
+        public static string GetJSON(IConnectionManager connectionManager, int? loadProcessKey)
+            => new GetLogAsJSONTask(loadProcessKey) { ConnectionManager = connectionManager }.Create().JSON;
 
     }
 }

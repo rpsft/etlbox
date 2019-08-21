@@ -40,28 +40,32 @@ namespace ALE.ETLBox
             Columns = columns;
         }
 
-        public void CreateTable()
-        {
-            CreateTableTask.Create(this);
-        }
+        public void CreateTable()=> CreateTableTask.Create(this);
+
+        public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
 
         internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
         {
             TableDefinition result = new TableDefinition(tableName);
             TableColumn curCol = null;
             var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
-             $@" select cols.name, tpes.name, cols.is_nullable, cols.is_identity
-  from sys.columns cols
-  inner join sys.tables tbl
-   on cols.object_id = tbl.object_id
-  inner join sys.schemas sc
-   on tbl.schema_id = sc.schema_id
-   inner join sys.systypes tpes
-    on tpes.xtype = cols.system_type_id
-  where (sc.name + '.' + tbl.name ='{tableName}'
-            or tbl.name = '{tableName}')
-  and tbl.type = 'U'
-  and tpes.name <> 'sysname'"
+$@" 
+SELECT cols.name
+     , tpes.name
+     , cols.is_nullable
+     , cols.is_identity
+FROM sys.columns cols
+INNER JOIN sys.tables tbl
+  ON cols.object_id = tbl.object_id
+INNER JOIN sys.schemas sc
+  ON tbl.schema_id = sc.schema_id
+INNER JOIN sys.systypes tpes
+  ON tpes.xtype = cols.system_type_id
+WHERE (sc.name + '.' + tbl.name ='{tableName}'
+       OR  tbl.name = '{tableName}'
+      )
+  AND tbl.type = 'U'
+  AND tpes.name <> 'sysname'"
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
             , name => curCol.Name = name.ToString()

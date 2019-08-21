@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,22 +36,22 @@ namespace ALE.ETLBox.ControlFlow {
 
         string SchemaNamesAsString => String.Join(",",SchemaNames.Select(name=>$"'{name}'"));
     public string Sql => $@"
-select sch.name + '.' + tbls.name + N'|' + 
+SELECT sch.name + '.' + tbls.name + N'|' + 
 	   cols.name + N'|' + 
 	   typ.name + N'|' + 
-	   cast(cols.max_length as nvarchar(20))+ N'|' + 
-	   cast(cols.precision as nvarchar(20)) + N'|' + 
-	   cast(cols.scale as nvarchar(20)) + N'|' + 
-	   cast(cols.is_nullable as nvarchar(3)) + N'|' + 
-	   cast(cols.is_identity as nvarchar(3))+ N'|' + 
-	   cast(cols.is_computed as nvarchar(3)) as FullColumnName
-from sys.columns cols
-inner join sys.tables tbls on cols.object_id = tbls.object_id
-inner join sys.schemas sch on sch.schema_id = tbls.schema_id
-inner join sys.types typ on typ.user_type_id = cols.user_type_id
-where tbls.type = 'U'
-and sch.name in ({SchemaNamesAsString})
-order by sch.name, tbls.name, cols.column_id
+	   CAST(cols.max_length AS nvarchar(20))+ N'|' + 
+	   CAST(cols.precision AS nvarchar(20)) + N'|' + 
+	   CAST(cols.scale AS nvarchar(20)) + N'|' + 
+	   CAST(cols.is_nullable AS nvarchar(3)) + N'|' + 
+	   CAST(cols.is_identity AS nvarchar(3))+ N'|' + 
+	   CAST(cols.is_computed AS nvarchar(3)) AS FullColumnName
+FROM sys.columns cols
+INNER join sys.tables tbls ON cols.object_id = tbls.object_id
+INNER join sys.schemas sch ON sch.schema_id = tbls.schema_id
+INNER join sys.types typ ON typ.user_type_id = cols.user_type_id
+WHERE tbls.type = 'U'
+AND sch.name IN ({SchemaNamesAsString})
+ORDER BY sch.name, tbls.name, cols.column_id
 ";
 
         public CalculateDatabaseHashTask() {
@@ -65,6 +66,8 @@ order by sch.name, tbls.name, cols.column_id
         }
 
         public static string Calculate(List<string> schemaNames) => new CalculateDatabaseHashTask(schemaNames).Calculate().DatabaseHash;
+        public static string Calculate(IConnectionManager connectionManager, List<string> schemaNames)
+            => new CalculateDatabaseHashTask(schemaNames) { ConnectionManager = connectionManager }.Calculate().DatabaseHash;
 
 
     }

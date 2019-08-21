@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.ControlFlow {
+﻿using ALE.ETLBox.ConnectionManager;
+
+namespace ALE.ETLBox.ControlFlow {
     /// <summary>
     /// Drops a table if the table exists.
     /// </summary>
@@ -6,12 +8,12 @@
     {
         /* ITask Interface */
         public override string TaskType { get; set; } = "DROPTABLE";
-        public override string TaskName => $"Drop Table {TableName}";       
+        public override string TaskName => $"Drop Table {TableName}";
         public override void Execute()
         {
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
-     
+
         /* Public properties */
         public string TableName { get; set; }
         public string Sql
@@ -20,8 +22,8 @@
             {
                 return
     $@"
-if object_id('{TableName}', 'U') is not null
-  drop table {TableName} 
+IF OBJECT_ID('{TableName}', 'U') IS NOT NULL
+  DROP TABLE {TableName} 
 ";
             }
         }
@@ -33,13 +35,14 @@ if object_id('{TableName}', 'U') is not null
         public DropTableTask(string tableName) : this()
         {
             TableName = tableName;
-        }       
-       
+        }
+
 
         /* Static methods for convenience */
         public static void Drop(string tableName) => new DropTableTask(tableName).Execute();
-       
-       
+        public static void Drop(IConnectionManager connectionManager, string tableName) => new DropTableTask(tableName) { ConnectionManager = connectionManager }.Execute();
+
+
     }
 
 

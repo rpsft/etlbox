@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.ControlFlow {
+﻿using ALE.ETLBox.ConnectionManager;
+
+namespace ALE.ETLBox.ControlFlow {
     /// <summary>
     /// Tries to remove all database objects from the given schema(s).
     /// </summary>
@@ -109,6 +111,7 @@
 
         /* Static methods for convenience */
         public static void CleanUp(string schemaName) => new CleanUpSchemaTask(schemaName).Execute();
+        public static void CleanUp(IConnectionManager connectionManager, string schemaName) => new CleanUpSchemaTask(schemaName) { ConnectionManager = connectionManager }.Execute();
 
         /* Implementation & stuff */
 

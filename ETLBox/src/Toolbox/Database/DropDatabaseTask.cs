@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.ControlFlow {
+﻿using ALE.ETLBox.ConnectionManager;
+
+namespace ALE.ETLBox.ControlFlow {
     /// <summary>
     /// Tries to drop a database if the database exists.
     /// </summary>
@@ -52,6 +54,7 @@ END
 
         /* Static methods for convenience */
         public static void Drop(string databaseName) => new DropDatabaseTask(databaseName).Execute();
+        public static void Drop(IConnectionManager connectionManager, string databaseName) => new DropDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Execute();
 
         /* Implementation & stuff */
     }

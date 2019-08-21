@@ -9,11 +9,12 @@ namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an SQLite connection based on ADO.NET.
+    /// </summary>
     /// <example>
     /// <code>
     /// ControlFlow.CurrentDbConnection =
-    ///   new.SqlConnectionManager(new SqlConnectionString(
-    ///     "Driver={SQLite Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;"));
+    ///   new.SQLiteConnectionManager(new SQLiteConnectionString(
+    ///     "Data Source=.\db\SQLite.db;Version=3;"));
     /// </code>
     /// </example>
     public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection, SQLiteCommand>

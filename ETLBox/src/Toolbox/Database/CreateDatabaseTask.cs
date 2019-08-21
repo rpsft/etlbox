@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 
 namespace ALE.ETLBox.ControlFlow {
     /// <summary>
@@ -78,6 +79,12 @@ END
         public static void Create(string databaseName) => new CreateDatabaseTask(databaseName).Execute();
         public static void Create(string databaseName, RecoveryModel recoveryModel) => new CreateDatabaseTask(databaseName,recoveryModel).Execute();
         public static void Create(string databaseName, RecoveryModel recoveryModel, string collation) => new CreateDatabaseTask(databaseName, recoveryModel,collation).Execute();
+        public static void Create(IConnectionManager connectionManager, string databaseName)
+            => new CreateDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Execute();
+        public static void Create(IConnectionManager connectionManager, string databaseName, RecoveryModel recoveryModel)
+            => new CreateDatabaseTask(databaseName, recoveryModel) { ConnectionManager = connectionManager }.Execute();
+        public static void Create(IConnectionManager connectionManager, string databaseName, RecoveryModel recoveryModel, string collation)
+            => new CreateDatabaseTask(databaseName, recoveryModel, collation) { ConnectionManager = connectionManager }.Execute();
 
         /* Implementation & stuff */
         string RecoveryModelAsString

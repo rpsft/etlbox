@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Collections.Generic;
 
 namespace ALE.ETLBox.ControlFlow {
@@ -18,13 +19,13 @@ namespace ALE.ETLBox.ControlFlow {
             DatabaseNames = new List<string>();
             new SqlTask(this, Sql) {
                 Actions = new List<Action<object>>() {
-                    n => DatabaseNames.Add((string)n)               
+                    n => DatabaseNames.Add((string)n)
                 }
             }.ExecuteReader();
         }
 
 
-        public List<string> DatabaseNames { get; set; }      
+        public List<string> DatabaseNames { get; set; }
         public string Sql {
             get {
                 return $"SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4";
@@ -33,14 +34,17 @@ namespace ALE.ETLBox.ControlFlow {
 
         public GetDatabaseListTask() {
 
-        }     
-        
+        }
+
         public GetDatabaseListTask GetList() {
             Execute();
             return this;
         }
 
-        public static List<string> List() => new GetDatabaseListTask().GetList().DatabaseNames;        
+        public static List<string> List()
+            => new GetDatabaseListTask().GetList().DatabaseNames;
+        public static List<string> List(IConnectionManager connectionManager)
+            => new GetDatabaseListTask() { ConnectionManager = connectionManager }.GetList().DatabaseNames;
 
     }
 }

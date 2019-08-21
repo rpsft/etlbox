@@ -10,7 +10,7 @@ using System.Linq;
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Contains static information which affects all ETLBox tasks. 
+    /// Contains static information which affects all ETLBox tasks.
     /// Here you can set default connections string, disbale the logging for all processes or set the current stage used in your logging configuration.
     /// </summary>
     public static class ControlFlow
@@ -22,7 +22,7 @@ namespace ALE.ETLBox.ControlFlow
 
         private static IDbConnectionManager _currentDbConnection;
         /// <summary>
-        /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set. 
+        /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
         /// </summary>
         public static IDbConnectionManager CurrentDbConnection
         {
@@ -46,12 +46,7 @@ namespace ALE.ETLBox.ControlFlow
         /// If set to true, nothing will be logged by any task. When switched back to false, task will continue to log.
         /// </summary>
         public static bool DisableAllLogging { get; set; }
-        static ControlFlow()
-        {
-            NLog.Config.ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition("etllog", typeof(ETLLogLayoutRenderer));
-        }
 
-   
         /// <summary>
         /// By default, the logging database is derived from the CurrentDBConnection property. If you need to manually change the logging database, you can change it with this method
         /// </summary>
@@ -63,6 +58,16 @@ namespace ALE.ETLBox.ControlFlow
             {
                 dbTarget.ConnectionString = connection.ConnectionString.Value; //?? CurrentDbConnection.ConnectionString.Value; //""; Parameter.DWHConnection?.Value;
             }
+        }
+
+        static bool IsLayoutRendererRegisterd = false;
+        public static NLog.Logger GetLogger()
+        {
+            if (!IsLayoutRendererRegisterd) {
+                NLog.Config.ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition("etllog", typeof(ETLLogLayoutRenderer));
+                IsLayoutRendererRegisterd = true;
+            }
+            return NLog.LogManager.GetLogger("ETL");
         }
 
         /// <summary>

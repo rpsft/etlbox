@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox.Logging {
     /// <summary>
@@ -19,7 +20,13 @@ if (object_id('etl.TransferCompletedForLoadProcess')  is not null) drop procedur
 ";
 
         public RemoveLogTablesTask() { }
+        public RemoveLogTablesTask(IConnectionManager connectionManager) {
+            this.ConnectionManager = connectionManager;
+        }
+
         public static void Remove() => new RemoveLogTablesTask().Execute();
+
+        public static void Remove(IConnectionManager connectionManager) => new RemoveLogTablesTask(connectionManager).Execute();
 
 
     }

@@ -15,6 +15,7 @@ namespace ALE.ETLBox.Logging {
             var sql = new SqlTask(this, Sql) {
                 DisableLogging = true,
                 DisableExtension = true,
+                ConnectionManager = this.ConnectionManager,
                 Actions = new List<Action<object>>() {
                 col => LoadProcess.LoadProcessKey = (int)col,
                 col => LoadProcess.StartDate = (DateTime)col,
@@ -35,7 +36,7 @@ namespace ALE.ETLBox.Logging {
                 sql.BeforeRowReadAction = () => AllLoadProcesses = new List<LoadProcess>();
                 sql.AfterRowReadAction = () => AllLoadProcesses.Add(LoadProcess);
             }
-            sql.ExecuteReader();            
+            sql.ExecuteReader();
         }
 
         /* Public properties */
@@ -61,35 +62,35 @@ namespace ALE.ETLBox.Logging {
                 if (ReadOption != ReadOptions.ReadAllProcesses)
                     top1 = "top 1";
                 string sql = $@"
-select {top1} LoadProcessKey, StartDate, TransferCompletedDate, EndDate, ProcessName, StartMessage, IsRunning, EndMessage, WasSuccessful, AbortMessage, WasAborted, IsFinished, IsTransferCompleted
-from etl.LoadProcess ";
+SELECT {top1} LoadProcessKey, StartDate, TransferCompletedDate, EndDate, ProcessName, StartMessage, IsRunning, EndMessage, WasSuccessful, AbortMessage, WasAborted, IsFinished, IsTransferCompleted
+FROM etl.LoadProcess ";
                 if (ReadOption == ReadOptions.ReadSingleProcess)
-                    sql += $@"where LoadProcessKey = {LoadProcessKey}";
+                    sql += $@"WHERE LoadProcessKey = {LoadProcessKey}";
                 else if (ReadOption == ReadOptions.ReadLastFinishedProcess)
-                    sql += $@"where IsFinished = 1
-order by EndDate desc, LoadProcessKey desc";
+                    sql += $@"WHERE IsFinished = 1
+ORDER BY EndDate desc, LoadProcessKey DESC";
                 else if (ReadOption == ReadOptions.ReadLastSuccessful)
-                    sql += $@"where WasSuccessful = 1
-order by EndDate desc, LoadProcessKey desc";
+                    sql += $@"WHERE WasSuccessful = 1
+ORDER BY EndDate desc, LoadProcessKey DESC";
                 else if (ReadOption == ReadOptions.ReadLastAborted)
-                    sql += $@"where WasAborted = 1
-order by EndDate desc, LoadProcessKey desc";
+                    sql += $@"WHERE WasAborted = 1
+ORDER BY EndDate desc, LoadProcessKey DESC";
                 else if (ReadOption == ReadOptions.ReadLastTransferedProcess)
-                    sql += $@"where IsTransferCompleted = 1
-order by TransferCompletedDate desc,
-LoadProcessKey desc";
+                    sql += $@"WHERE IsTransferCompleted = 1
+ORDER BY TransferCompletedDate DESC,
+LoadProcessKey DESC";
 
                 return sql;
             }
         }
 
         public ReadLoadProcessTableTask() {
-            
+
         }
         public ReadLoadProcessTableTask(int? loadProcessKey) : this(){
             this.LoadProcessKey = loadProcessKey;
         }
-        
+
         public static LoadProcess Read(int? loadProcessKey) {
             var sql = new ReadLoadProcessTableTask(loadProcessKey);
             sql.Execute();
@@ -105,13 +106,13 @@ LoadProcessKey desc";
             var sql = new ReadLoadProcessTableTask() { ReadOption = option };
             sql.Execute();
             return sql.LoadProcess;
-        }      
+        }
     }
 
     public enum ReadOptions {
         ReadSingleProcess,
         ReadAllProcesses,
-        ReadLastFinishedProcess,        
+        ReadLastFinishedProcess,
         ReadLastTransferedProcess,
         ReadLastSuccessful,
         ReadLastAborted

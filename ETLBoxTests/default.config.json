@@ -1,0 +1,9 @@
+{
+    "ControlFlow": {
+        "AccessConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\\DB\\Test.mdb",
+        "OdbcConnectionString": "Driver={SQL Server};Server=.;Trusted_Connection=Yes",
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
+        "SSASConnectionString": "Data Source=.\\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLite.db;Version=3;"
+    }
+}

@@ -1,0 +1,96 @@
+﻿using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
+using ALE.ETLBox.Logging;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using Xunit;
+using System.Text.RegularExpressions;
+
+namespace ALE.ETLBoxLoggingTests
+{
+    [Collection("Logging")]
+    public class DemoLogTests : IDisposable
+    {
+        public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
+        public DemoLogTests(LoggingDatabaseFixture dbFixture)
+        {
+            CreateLogTablesTask.CreateLog(Connection);
+            ControlFlow.CurrentDbConnection = Connection;
+        }
+
+        public void Dispose()
+        {
+            RemoveLogTablesTask.Remove(Connection);
+            ControlFlow.ClearSettings();
+        }
+
+        private static string RemoveHashes(string jsonresult) => Regex.Replace(jsonresult, @"""taskhash"": ""[A-Za-z0-9]*""", @"""taskHash"": """"");
+        private static string RemoveDates(string jsonresult) => Regex.Replace(jsonresult, @"[0-9]+-[0-9]+-[0-9]([T]|\w)+[0-9]+:[0-9]+:[0-9]+[.][0-9]+", "");
+
+        private void RunDemoProcess()
+        {
+            new Sequence("Test sequence 1", RunSubSequence) { TaskType = "SUBPACKAGE" }.Execute();
+            SqlTask.ExecuteNonQuery($"Sql #1", "Select 1 as test");
+            LogTask.Info("Info message");
+        }
+
+        private void RunSubSequence()
+        {
+            Sequence.Execute("Test sub sequence 1.1", () => {
+                SqlTask.ExecuteNonQuery($"Sql #2", "Select 1 as test");
+                SqlTask.ExecuteNonQuery($"Sql #3", "Select 1 as test");
+                LogTask.Warn("Warn message #1");
+            });
+            Sequence.Execute("Test sub sequence 1.2", () => {
+                SqlTask.ExecuteNonQuery($"Sql #4", "Select 1 as test");
+            });
+            Sequence.Execute("Test sub sequence 1.3",
+                () => {
+                    Sequence.Execute("Test sub sequence 2.1", () => {
+                        Sequence.Execute("Test sub sequence 3.1", () => {
+                            SqlTask.ExecuteNonQuery($"Sql #5", "Select 1 as test");
+                            SqlTask.ExecuteNonQuery($"Sql #6", "Select 1 as test");
+                            LogTask.Warn("Warn message #2");
+                        });
+                        CustomTask.Execute($"Custom #1", () => {; });
+                        SqlTask.ExecuteNonQuery($"Sql #7", "Select 1 as test");
+
+                    });
+                    Sequence.Execute("Test sub sequence 2.2", () => {
+                        CustomTask.Execute($"Custom #2", () => {; });
+                        SqlTask.ExecuteNonQuery($"Sql #7", "Select 1 as test");
+                    });
+                    Sequence.Execute("Test sub sequence 2.3", () => {
+                        SqlTask.ExecuteNonQuery($"Sql #8", "Select 1 as test");
+                        CustomTask.Execute($"Custom #2", () => {; });
+                        Sequence.Execute("Test sub sequence 3.3", () => {
+                            SqlTask.ExecuteNonQuery($"Sql #9", "Select 1 as test");
+                            SqlTask.ExecuteNonQuery($"Sql #10", "Select 1 as test");
+                            LogTask.Error("Error message");
+                        });
+                    });
+                });
+            CustomTask.Execute($"Custom #3", () => {; });
+        }
+
+        [Fact]
+        public void TestGetDemoLogAsJSON()
+        {
+            //Arrange
+            RunDemoProcess();
+            string jsonresult = GetLogAsJSONTask.GetJSON();
+
+            //Act
+            jsonresult = RemoveHashes(RemoveDates(jsonresult.ToLower().Trim()));
+
+            //Assert
+            string expectedresult = RemoveHashes(RemoveDates(File.ReadAllText("res/Demo/demolog_tobe.json").ToLower().Trim()));
+            Assert.Equal(expectedresult, jsonresult);
+        }
+    }
+}

@@ -24,10 +24,13 @@
 
 - all SQL statements in Uppercase / perhaps code formating
 
-- Restructure Test cases
-    - Integrate DataFlowExamples into current test cases
-
 - Refactor Dataflow classes 
   - use inheritance or compostion, but all code which conflicts with DRY needs to be moved
   - Using Inheritance: Inherit from DataFlowTask, e.g. DataFlowSource which has LinkTo method
   - Using Composition: Source-Dataflow have a ComponentLink-Instance, which LinkTo methods are used (perhaps the best approach!)
+
+### Hot topices
+
+- throw exception when no connection manager is passed (e.g. use the Generic Task to check if Connectionmanager or DBConnectionManager is not null)
+- Witj new SqlConnectionManager(„string „) a new ConnectionString object should be created behind the scneens, to that SqlConnectionManager(string conString) is a new Constructor of SqlConnectionManager. 
+- check if parameter used in SqlTask can also be used for OdbcConnection

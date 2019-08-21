@@ -5,9 +5,9 @@
 Welcome to the API documentation of ETLBox. This will give you access to all class and interface definitions that come with ETLBox.
 Check the [Github page](https://github.com/roadrunnerlenny/etlbox) to see the full source code.
 
-## .NET Core App
+## .NET Standard App
 
-ETLBox is .NET Core app (2.1 or higher).
+ETLBox is .NET Standard app (.NET Standard 2.0 or higher).
 
 ## Namespaces
 
@@ -19,21 +19,6 @@ You'll find tasks related to logging in the namespace `ALE.ETLBox.Logging`.
 Classes with helpful (mostly static) methods are in the namespace `ALE.ETLBox.Helper`.
 To establish connection to a database, file or Analysis Services you'll need a connection manager from the `ALE.ETLBox.ConnectionManager` namespace.
 Everything else like generic classes or definitions are in the namespace `ALE.ETLBox`.
-
-## Dependencies
-
-Microsoft
-* Microsoft.SqlServer.SqlManagementObjects 
-* System.Data.Common 
-* System.Data.SqlClient
-* System.Threading.Tasks.Dataflow 
-* Unofficial.Microsoft. AnalysisServices. AdomdClientNetCore 
-* Docfx
-
-Other
-* CsvHelper 
-* Newtonsoft.Json
-* NLog 
 
 ## Docfx
 
