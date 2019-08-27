@@ -29,7 +29,7 @@ namespace ALE.ETLBoxTest {
             [ExcelColumn(1)]
             public string Col2 { get; set; }
             [ExcelColumn(2)]
-            public decimal Col3 { get; set; }
+            public decimal? Col3 { get; set; }
             public string Empty { get; set; } = "";
             [ExcelColumn(0)]
             public int Col1 { get; set; }

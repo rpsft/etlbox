@@ -73,7 +73,10 @@ namespace ALE.ETLBox.DataFlow
             if (property.PropertyType == typeof(bool))
                 return value == "1" || value == "true" || value == "on" || value == "checked";
             else
-                return Convert.ChangeType(value, property.PropertyType);
+            {
+                Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                return Convert.ChangeType(value, t);
+            }
         }
 
         internal bool HasPropertyOrColumnMapping(string name)

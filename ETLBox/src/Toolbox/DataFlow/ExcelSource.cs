@@ -92,7 +92,7 @@ namespace ALE.ETLBox.DataFlow {
                 if (!typeInfo.ExcelIndex2PropertyIndex.ContainsKey(colInRange)) continue;
                 PropertyInfo propInfo = typeInfo.Properties[typeInfo.ExcelIndex2PropertyIndex[colInRange]];
                 object value = ExcelDataReader.GetValue(col);
-                propInfo.SetValue(row, TypeInfo.CastPropertyValue(propInfo, value.ToString()));
+                propInfo.SetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
                 colInRange++;
             }
             return row;
