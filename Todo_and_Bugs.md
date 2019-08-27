@@ -34,3 +34,5 @@
 - throw exception when no connection manager is passed (e.g. use the Generic Task to check if Connectionmanager or DBConnectionManager is not null)
 - Witj new SqlConnectionManager(„string „) a new ConnectionString object should be created behind the scneens, to that SqlConnectionManager(string conString) is a new Constructor of SqlConnectionManager. 
 - check if parameter used in SqlTask can also be used for OdbcConnection
+- create test for logging on Dataflow - especially also for the `DataFlow.LoggingThresholdRows = 2;`
+- DBMerge will only properly work if the constructors are used. If not, e.g. the Connectionmanager is set via assignment, the underlying DBSource and DBDestination won't get updated. 

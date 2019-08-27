@@ -7,31 +7,13 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.SqlServer
+namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 {
-    public class RowCountTaskFixture
-    {
-        public RowCountTaskFixture()
-        {
-            SqlTask.ExecuteNonQuery(Config.SqlConnectionManager("ControlFlow")
-                , "Create test data table"
-                , $@"
-CREATE TABLE RowCountTest
-(
-
-    Col1 INT NULL
-)
-INSERT INTO RowCountTest
-SELECT * FROM
-(VALUES (1), (2), (3)) AS MyTable(v)");
-        }
-    }
-
     [Collection("Sql Server ControlFlow")]
-    public class RowCountTaskTests : IClassFixture<RowCountTaskFixture>
+    public class RowCountTaskTests : IClassFixture<RowCountTableFixture>
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public RowCountTaskTests(DatabaseFixture dbFixture, RowCountTaskFixture rcfixture)
+        public RowCountTaskTests(DatabaseFixture dbFixture, RowCountTableFixture rcfixture)
         { }
 
         [Fact]

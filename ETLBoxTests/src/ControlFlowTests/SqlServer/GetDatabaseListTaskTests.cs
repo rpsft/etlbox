@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.SqlServer
+namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 {
     [Collection("Sql Server ControlFlow")]
     public class GetDatabaseListTaskTests

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ALE.ETLBoxTests.SqlServer
+namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 {
     [Collection("Sql Server ControlFlow")]
     public class SqlTaskInParallelTests

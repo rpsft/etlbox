@@ -49,36 +49,36 @@ namespace ALE.ETLBoxTest
             }.Execute();
         }
 
-        [TestMethod]
-        public void TestTransferBetweenDBs()
-        {
-            var sourceConnection = new SqlConnectionManager(new ConnectionString(ConnectionStringSource));
-            var destConnection = new SqlConnectionManager(new ConnectionString(ConnectionStringDest));
+        //[TestMethod]
+        //public void TestTransferBetweenDBs()
+        //{
+        //    var sourceConnection = new SqlConnectionManager(new ConnectionString(ConnectionStringSource));
+        //    var destConnection = new SqlConnectionManager(new ConnectionString(ConnectionStringDest));
 
-            ControlFlow.CurrentDbConnection = new SqlConnectionManager(ConnectionStringSource);
-            SqlTask.ExecuteNonQuery("Drop source table", @"DROP TABLE IF EXISTS test.Source");
-            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
-                (Col1 nvarchar(100) null, Col2 int null)");
-            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1',1)");
-            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test2',2)");
-            SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test3',3)");
+        //    ControlFlow.CurrentDbConnection = new SqlConnectionManager(ConnectionStringSource);
+        //    SqlTask.ExecuteNonQuery("Drop source table", @"DROP TABLE IF EXISTS test.Source");
+        //    SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE test.Source
+        //        (Col1 nvarchar(100) null, Col2 int null)");
+        //    SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test1',1)");
+        //    SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test2',2)");
+        //    SqlTask.ExecuteNonQuery("Insert demo data", "insert into test.Source values('Test3',3)");
 
-            ControlFlow.CurrentDbConnection = new SqlConnectionManager(ConnectionStringDest);
-            SqlTask.ExecuteNonQuery("Drop source table", @"DROP TABLE IF EXISTS test.Destination");
-            SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
-                (Col1 nvarchar(30) null, Col2 bigint null)");
+        //    ControlFlow.CurrentDbConnection = new SqlConnectionManager(ConnectionStringDest);
+        //    SqlTask.ExecuteNonQuery("Drop source table", @"DROP TABLE IF EXISTS test.Destination");
+        //    SqlTask.ExecuteNonQuery("Create destination table", @"CREATE TABLE test.Destination
+        //        (Col1 nvarchar(30) null, Col2 bigint null)");
 
-            DBSource source = new DBSource(sourceConnection, "test.Source");
-            DBDestination dest = new DBDestination(destConnection, "test.Destination");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+        //    DBSource source = new DBSource(sourceConnection, "test.Source");
+        //    DBDestination dest = new DBDestination(destConnection, "test.Destination");
+        //    source.LinkTo(dest);
+        //    source.Execute();
+        //    dest.Wait();
 
-            Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
-            Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test1' AND Col2=1"));
-            Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test2' AND Col2=2"));
-            Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test3' AND Col2=3"));
-        }
+        //    Assert.AreEqual(3, RowCountTask.Count("test.Destination"));
+        //    Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test1' AND Col2=1"));
+        //    Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test2' AND Col2=2"));
+        //    Assert.AreEqual(1, RowCountTask.Count("test.Destination", "Col1 = 'Test3' AND Col2=3"));
+        //}
 
         [TestMethod]
         public void TestTransferAndLogging()

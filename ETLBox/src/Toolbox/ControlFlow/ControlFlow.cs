@@ -53,10 +53,17 @@ namespace ALE.ETLBox.ControlFlow
         /// <param name="connection">The new logging database connection</param>
         public static void SetLoggingDatabase(IConnectionManager connection)
         {
-            var dbTarget = LogManager.Configuration?.ConfiguredNamedTargets?.Where(t => t.GetType() == typeof(NLog.Targets.DatabaseTarget)).FirstOrDefault() as NLog.Targets.DatabaseTarget;
-            if (dbTarget != null)
+            try
             {
-                dbTarget.ConnectionString = connection.ConnectionString.Value; //?? CurrentDbConnection.ConnectionString.Value; //""; Parameter.DWHConnection?.Value;
+                var dbTarget = LogManager.Configuration?.ConfiguredNamedTargets?.Where(t => t.GetType() == typeof(NLog.Targets.DatabaseTarget)).FirstOrDefault() as NLog.Targets.DatabaseTarget;
+                if (dbTarget != null)
+                {
+                    dbTarget.ConnectionString = connection.ConnectionString.Value; //?? CurrentDbConnection.ConnectionString.Value; //""; Parameter.DWHConnection?.Value;
+                }
+            }
+            catch
+            {
+                ;
             }
         }
 

@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Generic
+namespace ALE.ETLBoxTests.ControlFlowTests.Independent
 {
     [Collection("Generic ControlFlow")]
     public class SequenceTests

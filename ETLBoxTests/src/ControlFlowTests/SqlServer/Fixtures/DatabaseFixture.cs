@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.SqlServer
+namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 {
     [CollectionDefinition("Sql Server ControlFlow")]
     public class ControlFlowCollectionClass : ICollectionFixture<DatabaseFixture> { }

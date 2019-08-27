@@ -5,5 +5,14 @@
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
         "SSASConnectionString": "Data Source=.\\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
         "SQLiteConnectionString": "Data Source=.\\db\\SQLite.db;Version=3;"
+    },
+    "DataFlow": {
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlow"
+    },
+    "DataFlowSource": {
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowSource"
+    },
+    "DataFlowDestination": {
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowDestination"
     }
 }

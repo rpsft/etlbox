@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.SSAS
+namespace ALE.ETLBoxTests.ControlFlowTests.SSAS
 {
     [Collection("SSAS ControlFlow")]
     public class XMLATaskTests
