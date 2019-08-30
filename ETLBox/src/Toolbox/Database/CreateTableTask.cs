@@ -24,6 +24,7 @@ namespace ALE.ETLBox.ControlFlow {
         public override void Execute() => new SqlTask(this, Sql).ExecuteNonQuery();
 
         /* Public properties */
+        public void Create() => Execute();
         public string TableName { get; set; }
         public string TableWithoutSchema => TableName.IndexOf('.') > 0 ? TableName.Substring(TableName.LastIndexOf('.') + 1) : TableName;
         public IList<ITableColumn> Columns { get; set; }

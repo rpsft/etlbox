@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxTest", "ETLBoxTest\ET
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxDocu", "ETLBoxDocu\ETLBoxDocu.csproj", "{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxTests", "ETLBoxTests\ETLBoxTests.csproj", "{968F4BD4-286C-4B52-8EB4-3C72F0137DFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsETLBox", "TestsETLBox\TestsETLBox.csproj", "{968F4BD4-286C-4B52-8EB4-3C72F0137DFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxNonParallelTests", "ETLBoxNonParallelTests\ETLBoxNonParallelTests.csproj", "{F5CF5138-7901-44B9-ABCC-8320717F6739}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsNonParallel", "TestsNonParallel\TestsNonParallel.csproj", "{F5CF5138-7901-44B9-ABCC-8320717F6739}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

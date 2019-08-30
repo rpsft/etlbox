@@ -9,7 +9,7 @@ namespace ALE.ETLBox.Helper
 {
     public static class Config
     {
-        static string SqlRawConnectionString(string section)
+        public static string SqlRawConnectionString(string section)
             => Config.DefaultConfigFile.GetSection(section)["SqlConnectionString"];
         public static ConnectionString SqlConnectionString(string section)
             => new ConnectionString(SqlRawConnectionString(section));

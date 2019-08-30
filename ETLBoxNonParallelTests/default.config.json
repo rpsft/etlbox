@@ -1,5 +1,0 @@
-{
-    "Logging": {
-        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_Logging"
-    }
-}

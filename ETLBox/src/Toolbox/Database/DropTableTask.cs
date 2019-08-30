@@ -28,6 +28,8 @@ IF OBJECT_ID('{TableName}', 'U') IS NOT NULL
             }
         }
 
+        public void Drop() => Execute();
+
         /* Some constructors */
         public DropTableTask() {
         }
