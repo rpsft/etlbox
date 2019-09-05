@@ -7,7 +7,8 @@
         "SQLiteConnectionString": "Data Source=.\\db\\SQLite.db;Version=3;"
     },
     "DataFlow": {
-        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlow"
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlow",
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLite.db;Version=3;"
     },
     "DataFlowSource": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowSource"

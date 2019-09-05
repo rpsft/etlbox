@@ -11,7 +11,7 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
 {
     public class TwoColumnsTableFixture
     {
-        public SqlConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
+        public IConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
         public TwoColumnsTableFixture(string tableName)
@@ -20,7 +20,7 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
             RecreateTable();
         }
 
-        public TwoColumnsTableFixture(SqlConnectionManager connection, string tableName)
+        public TwoColumnsTableFixture(IConnectionManager connection, string tableName)
         {
             this.Connection = connection;
             this.TableName = tableName;

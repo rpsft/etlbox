@@ -60,9 +60,9 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
         private void AssertDataWithoutDuplicates()
         {
             Assert.Equal(3, RowCountTask.Count(Connection, "dbo.DuplicateCheck"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 1 AND Name='ROOT' and Value = 'Lorem ipsum'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 2 AND Name='TEST 2' and Value = 'Lalandia'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 3 AND Name='TEST 3' and Value = 'XX'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 1 AND Name='ROOT' AND Value = 'Lorem ipsum'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 2 AND Name='TEST 2' AND Value = 'Lalandia'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 3 AND Name='TEST 3' AND Value = 'XX'"));
         }
 
         [Fact]

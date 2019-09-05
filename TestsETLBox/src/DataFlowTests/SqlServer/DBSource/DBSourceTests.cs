@@ -22,32 +22,41 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
         {
         }
 
-
-
         public class MySimpleRow
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }
         }
+        public static IEnumerable<object[]> Connections
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { (IConnectionManager)Config.SqlConnectionManager("DataFlow") },
+                    new object[] { (IConnectionManager)Config.SQLiteConnectionManager("DataFlow") }
+                };
+            }
+        }
 
-        [Fact]
-        public void DBSourceAndDestinationWithTableDefinition()
+        [Theory, MemberData(nameof(Connections))]
+        public void DBSourceAndDestinationWithTableDefinition(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "Destination");
 
             //Act
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
-                ConnectionManager = Connection
+                ConnectionManager = connection
             };
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>()
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
-                ConnectionManager = Connection
+                ConnectionManager = connection
             };
             source.LinkTo(dest);
             source.Execute();

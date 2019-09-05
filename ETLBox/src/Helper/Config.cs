@@ -23,6 +23,13 @@ namespace ALE.ETLBox.Helper
         public static AdomdConnectionManager SSASConnectionManager(string section)
             => new AdomdConnectionManager(SqlConnectionString(section));
 
+        public static string SQLiteRawConnectionString(string section)
+            => Config.DefaultConfigFile.GetSection(section)["SQLiteConnectionString"];
+        public static SQLiteConnectionString SQLiteConnectionString(string section)
+            => new SQLiteConnectionString(SQLiteRawConnectionString(section));
+        public static SQLiteConnectionManager SQLiteConnectionManager(string section)
+            => new SQLiteConnectionManager(SQLiteConnectionString(section));
+
         static IConfigurationRoot _defaultConfigFile;
         public static IConfigurationRoot DefaultConfigFile
         {
