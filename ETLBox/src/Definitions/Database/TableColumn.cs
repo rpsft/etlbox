@@ -18,7 +18,7 @@ namespace ALE.ETLBox {
         public string DefaultConstraintName { get; set; }
         public string Collation { get; set; }
         public string ComputedColumn { get; set; }
-        public System.Type NETDataType => Type.GetType(DataTypeConverter.GetObjectTypeString(DataType));
+        public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
 
         
         public string DataSetColumn {

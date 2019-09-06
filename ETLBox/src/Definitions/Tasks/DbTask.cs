@@ -71,13 +71,8 @@ namespace ALE.ETLBox.ControlFlow
             this.Sql = sql;
         }
 
-        public DbTask(ITask callingTask, string sql) : this()
+        public DbTask(ITask callingTask, string sql) : base(callingTask)
         {
-            TaskName = callingTask.TaskName;
-            TaskHash = callingTask.TaskHash;
-            ConnectionManager = callingTask.ConnectionManager;
-            TaskType = callingTask.TaskType;
-            DisableLogging = callingTask.DisableLogging;
             this.Sql = sql;
         }
 
@@ -137,8 +132,21 @@ namespace ALE.ETLBox.ControlFlow
 
         public bool ExecuteScalarAsBool()
         {
-            int? result = ExecuteScalar<int>();
-            return IntToBool(result);
+            object result = ExecuteScalar();
+            return ObjectToBool(result);
+        }
+
+        static bool ObjectToBool(object result)
+        {
+            if (result == null) return false;
+            int number = 0;
+            int.TryParse(result.ToString(), out number);
+            if (number > 0)
+                return true;
+            else if (result.ToString().Trim().ToLower() == "true")
+                return true;
+            else
+                return false;
         }
 
         public void ExecuteReader()
@@ -254,13 +262,7 @@ namespace ALE.ETLBox.ControlFlow
             Bulk
         }
 
-        static bool IntToBool(int? result)
-        {
-            if (result != null && result > 0)
-                return true;
-            else
-                return false;
-        }
+
 
         void QueryStart(LogType logType = LogType.None)
         {

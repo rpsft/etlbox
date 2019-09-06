@@ -78,27 +78,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
         }
 
         [Fact]
-        public void CreateTableOnlyNVarChars()
+        public void ThrowingException()
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("value1", "int",allowNulls:false),
-                new TableColumn("value2", "datetime", allowNulls:true)
+                new TableColumn("value1", "INT",allowNulls:false),
+                new TableColumn("value2", "DATETIME", allowNulls:true)
             };
+            CreateTableTask.Create(Connection, "dbo.CreateTable5", columns);
             //Act
-            new CreateTableTask("dbo.CreateTable5", columns.Cast<ITableColumn>().ToList())
-            {
-                OnlyNVarCharColumns = true,
-                ConnectionManager = Connection
-            }
-            .Execute();
+
             //Assert
-            Assert.Equal(2, RowCountTask.Count(Connection, " sys.columns",
-     "object_id = object_id('dbo.CreateTable5')"));
-            Assert.Equal(2, SqlTask.ExecuteScalar<int>(Connection, "Check if columns are nvarchar",
-                $@"SELECT COUNT(*) FROM sys.columns cols INNER JOIN sys.types t ON t.system_type_id = cols.system_type_id WHERE object_id = object_id('dbo.CreateTable5') AND t.name = 'nvarchar'"));
-
-
+            Assert.Throws<ETLBoxException>(() =>
+            {
+                new CreateTableTask("dbo.CreateTable5", columns.Cast<ITableColumn>().ToList())
+                {
+                    ConnectionManager = Connection,
+                    ThrowErrorIfTableExists = true
+                }
+                .Execute();
+            });
         }
 
         [Fact]

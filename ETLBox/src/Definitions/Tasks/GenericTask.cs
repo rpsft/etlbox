@@ -70,5 +70,17 @@ namespace ALE.ETLBox {
             }
         }
         internal virtual bool HasName => !String.IsNullOrWhiteSpace(TaskName);
+
+        public GenericTask()
+        { }
+
+        public GenericTask(ITask callingTask)
+        {
+            TaskName = callingTask.TaskName;
+            TaskHash = callingTask.TaskHash;
+            ConnectionManager = callingTask.ConnectionManager;
+            TaskType = callingTask.TaskType;
+            DisableLogging = callingTask.DisableLogging;
+        }
     }
 }

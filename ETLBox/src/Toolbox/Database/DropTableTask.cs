@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow
+{
     /// <summary>
     /// Drops a table if the table exists.
     /// </summary>
@@ -11,7 +12,9 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskName => $"Drop Table {TableName}";
         public override void Execute()
         {
-            new SqlTask(this, Sql).ExecuteNonQuery();
+            bool tableExists = new IfExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            if (tableExists)
+                new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
         /* Public properties */
@@ -20,18 +23,15 @@ namespace ALE.ETLBox.ControlFlow {
         {
             get
             {
-                return
-    $@"
-IF OBJECT_ID('{TableName}', 'U') IS NOT NULL
-  DROP TABLE {TableName} 
-";
+                return $@"DROP TABLE {TableName}";
             }
         }
 
         public void Drop() => Execute();
 
         /* Some constructors */
-        public DropTableTask() {
+        public DropTableTask()
+        {
         }
 
         public DropTableTask(string tableName) : this()

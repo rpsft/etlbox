@@ -12,7 +12,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SSAS
     [Collection("SSAS ControlFlow")]
     public class XMLATaskTests
     {
-        public AdomdConnectionManager DefaultCatalog => new AdomdConnectionManager(Config.SSASConnectionString("ControlFlow").GetConnectionWithoutCatalog());
+        public AdomdConnectionManager DefaultCatalog => new AdomdConnectionManager(Config.SSASConnection.ConnectionString("ControlFlow").GetConnectionWithoutCatalog());
         public XMLATaskTests()
         { }
 

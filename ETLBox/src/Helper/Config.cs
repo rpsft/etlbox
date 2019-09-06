@@ -7,28 +7,51 @@ using System.Text;
 
 namespace ALE.ETLBox.Helper
 {
+
     public static class Config
     {
-        public static string SqlRawConnectionString(string section)
-            => Config.DefaultConfigFile.GetSection(section)["SqlConnectionString"];
+        public class ConnectionDetails<TConnectionString, TConnectionManager>
+        where TConnectionString : IDbConnectionString, new()
+        where TConnectionManager : IConnectionManager, new()
+        {
+            public string ConnectionStringName { get; set; }
+            public ConnectionDetails(string connectionStringName)
+            {
+                this.ConnectionStringName = connectionStringName;
+            }
+            public string RawConnectionString(string section)
+               => Config.DefaultConfigFile.GetSection(section)[ConnectionStringName];
+            public TConnectionString ConnectionString(string section)
+                => new TConnectionString() { Value = RawConnectionString(section) };
+            public TConnectionManager ConnectionManager(string section)
+                => new TConnectionManager() { ConnectionString = ConnectionString(section) };
+
+        }
+
         public static ConnectionString SqlConnectionString(string section)
-            => new ConnectionString(SqlRawConnectionString(section));
+            => SqlConnection.ConnectionString(section);
         public static SqlConnectionManager SqlConnectionManager(string section)
-            => new SqlConnectionManager(SqlConnectionString(section));
+            => SqlConnection.ConnectionManager(section);
 
-        static string SSASRawConnectionString(string section)
-            => Config.DefaultConfigFile.GetSection(section)["SSASConnectionString"];
-        public static ConnectionString SSASConnectionString(string section)
-            => new ConnectionString(SSASRawConnectionString(section));
-        public static AdomdConnectionManager SSASConnectionManager(string section)
-            => new AdomdConnectionManager(SqlConnectionString(section));
+        public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager> SQLLiteConnection
+        { get; set; } = new ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>("SQLiteConnectionString");
 
-        public static string SQLiteRawConnectionString(string section)
-            => Config.DefaultConfigFile.GetSection(section)["SQLiteConnectionString"];
-        public static SQLiteConnectionString SQLiteConnectionString(string section)
-            => new SQLiteConnectionString(SQLiteRawConnectionString(section));
-        public static SQLiteConnectionManager SQLiteConnectionManager(string section)
-            => new SQLiteConnectionManager(SQLiteConnectionString(section));
+        public static ConnectionDetails<ConnectionString, AdomdConnectionManager> SSASConnection
+        { get; set; } = new ConnectionDetails<ConnectionString, AdomdConnectionManager>("SSASConnectionString");
+
+        public static ConnectionDetails<ConnectionString, SqlConnectionManager> SqlConnection
+        { get; set; } = new ConnectionDetails<ConnectionString, SqlConnectionManager>("SqlConnectionString");
+
+
+        public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
+                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)SQLLiteConnection.ConnectionManager(section) }
+        };
+
+        public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
+                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
+                    new object[] { (IConnectionManager)SQLLiteConnection.ConnectionManager(section) , value}
+        };
 
         static IConfigurationRoot _defaultConfigFile;
         public static IConfigurationRoot DefaultConfigFile
@@ -39,7 +62,8 @@ namespace ALE.ETLBox.Helper
                     Load("default.config.json");
                 return _defaultConfigFile;
             }
-            set{
+            set
+            {
                 _defaultConfigFile = value;
             }
         }

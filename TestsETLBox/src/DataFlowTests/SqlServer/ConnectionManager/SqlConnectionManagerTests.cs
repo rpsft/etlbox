@@ -17,7 +17,7 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
     [Collection("Sql Server Connection Manager")]
     public class SqlConnectionManagerTests : IDisposable
     {
-        public string ConnectionStringParameter => Config.SqlRawConnectionString("ConnectionManager");
+        public string ConnectionStringParameter => Config.SqlConnection.RawConnectionString("ConnectionManager");
         public SqlConnectionManagerTests(ConnectionManagerFixture dbFixture)
         {
         }

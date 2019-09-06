@@ -13,7 +13,10 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
     [Collection("Sql Server DataFlow")]
     public class DBSourceTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("DataFlow");
+
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public DBSourceTests(DatabaseFixture dbFixture)
         {
         }
@@ -26,17 +29,6 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }
-        }
-        public static IEnumerable<object[]> Connections
-        {
-            get
-            {
-                return new[]
-                {
-                    new object[] { (IConnectionManager)Config.SqlConnectionManager("DataFlow") },
-                    new object[] { (IConnectionManager)Config.SQLiteConnectionManager("DataFlow") }
-                };
-            }
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -70,15 +62,17 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
         public void SqlWithSelectStar()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(SqlConnection, "Source");
+            source2Columns.InsertTestData();
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "Destination");
 
             //Act
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
             {
-                Sql = $@"SELECT * FROM (VALUES (1,'Test1'), (2,'Test2'), (3,'Test3')) AS MyTable(Col1,Col2)",
-                ConnectionManager = Connection
+                Sql = $@"SELECT * FROM Source",
+                ConnectionManager = SqlConnection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "Destination");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -103,11 +97,11 @@ namespace ALE.ETLBoxTests.DataFlowTests.SqlServer
         public void ColumnMapping()
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("Source", identityColumnIndex:2);
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("Source", identityColumnIndex: 2);
             source4Columns.InsertTestData();
 
             //Act
-            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(Connection, "dbo.Source");
+            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(SqlConnection, "dbo.Source");
             CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(
                 input =>
                 {

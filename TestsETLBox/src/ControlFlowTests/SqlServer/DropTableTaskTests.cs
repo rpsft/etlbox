@@ -12,23 +12,24 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
     [Collection("Sql Server ControlFlow")]
     public class DropTableTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+
         public DropTableTaskTests(DatabaseFixture dbFixture)
         { }
 
-        [Fact]
-        public void DropTable()
+        [Theory, MemberData(nameof(Connections))]
+        public void DropTable(IConnectionManager connection)
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
-            CreateTableTask.Create(Connection, "DropTableTest", columns);
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
-                "type = 'U' AND object_id = object_id('DropTableTest')"));
+            CreateTableTask.Create(connection, "DropTableTest", columns);
+            Assert.True(IfExistsTask.IsExisting(connection, "DropTableTest"));
+
             //Act
-            DropTableTask.Drop(Connection, "DropTableTest");
+            DropTableTask.Drop(connection, "DropTableTest");
+
             //Assert
-            Assert.Equal(0, RowCountTask.Count(Connection, "sys.objects",
-                 "type = 'U' AND object_id = object_id('DropTableTest')"));
+            Assert.False(IfExistsTask.IsExisting(connection, "DropTableTest"));
         }
     }
 }

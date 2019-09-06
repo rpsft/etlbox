@@ -168,6 +168,18 @@ GROUP BY TaskHash")
         }
 
         [Fact]
+        public void IfExistsLogging()
+        {
+            //Arrange
+            CreateSimpleTable("IfExistsTable");
+            //Act
+            IfExistsTask.IsExisting(Connection, "IfExistsTable");
+            //Assert
+            Assert.Equal(2, CountLogEntries("IFEXISTS"));
+        }
+
+
+        [Fact]
         public void CheckHashValuesEquality()
         {
             //Arrange

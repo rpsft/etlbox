@@ -12,7 +12,12 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
     [Collection("Sql Server ControlFlow")]
     public class SqlTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
+
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public static IEnumerable<object[]> ConnectionsWithValue(string value) => Config.AllSqlConnectionsWithValue("ControlFlow", value);
+
+
         public SqlTaskTests(DatabaseFixture dbFixture)
         { }
 
@@ -21,11 +26,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
         {
             //Arrange
             string propName = HashHelper.RandomString(10);
-            SqlTask.ExecuteNonQuery(Connection,
+            SqlTask.ExecuteNonQuery(SqlConnection,
                 "Test add extended property",
                 $@"EXEC sp_addextendedproperty @name = N'{propName}', @value = 'Test';");
             //Act
-            string actual = SqlTask.ExecuteScalar(Connection,
+            string actual = SqlTask.ExecuteScalar(SqlConnection,
                 "Get reference result",
                 $"SELECT value FROM fn_listextendedproperty('{propName}', default, default, default, default, default, default)").ToString();
             //Assert
@@ -38,11 +43,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
             //Arrange
             string propName = HashHelper.RandomString(10);
             var parameter = new List<QueryParameter> { new QueryParameter("propName", "nvarchar(100)", propName) };
-            SqlTask.ExecuteNonQuery(Connection,
+            SqlTask.ExecuteNonQuery(SqlConnection,
                 "Test add extended property",
                 $"EXEC sp_addextendedproperty @name = @propName, @value = 'Test';", parameter);
             //Act
-            string actual = SqlTask.ExecuteScalar(Connection,
+            string actual = SqlTask.ExecuteScalar(SqlConnection,
                 "Get reference result",
                 $"SELECT value FROM fn_listextendedproperty(@propName, default, default, default, default, default, default)", parameter).ToString();
             //Assert
@@ -54,7 +59,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
         {
             //Arrange
             //Act
-            object result = SqlTask.ExecuteScalar(Connection,
+            object result = SqlTask.ExecuteScalar(SqlConnection,
                 "Test execute scalar",
                 $@"SELECT CAST('Hallo Welt' AS NVARCHAR(100)) AS ScalarResult");
             //Assert
@@ -67,7 +72,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
         {
             //Arrange
             //Act
-            decimal result = (decimal)(SqlTask.ExecuteScalar(Connection,
+            decimal result = (decimal)(SqlTask.ExecuteScalar(SqlConnection,
                 "Test execute scalar with datatype",
                 $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
             //Assert
@@ -75,16 +80,22 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 
         }
 
-        [Fact]
-        public void ExecuteScalarAsBool()
+        [Theory, MemberData(nameof(ConnectionsWithValue),"1"),
+        MemberData(nameof(ConnectionsWithValue), "7"),
+        MemberData(nameof(ConnectionsWithValue), "NULL"),
+        MemberData(nameof(ConnectionsWithValue), "'true'")]
+        public void ExecuteScalarAsBool(IConnectionManager connection, string sqlBoolValue)
         {
             //Arrange
             //Act
-            bool result = SqlTask.ExecuteScalarAsBool(Connection,
+            bool result = SqlTask.ExecuteScalarAsBool(connection,
                 "Test execute scalar as bool",
-                "SELECT 1 AS Bool");
+                $"SELECT {sqlBoolValue} AS Bool");
             //Assert
-            Assert.True(result);
+            if (sqlBoolValue == "NULL")
+                Assert.False(result);
+            else
+                Assert.True(result);
         }
 
         [Fact]
@@ -94,7 +105,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
             List<int> asIsResult = new List<int>();
             List<int> toBeResult = new List<int>() { 1, 2, 3 };
             //Act
-            SqlTask.ExecuteReader(Connection,
+            SqlTask.ExecuteReader(SqlConnection,
                 "Test execute reader",
                 "SELECT * FROM (VALUES (1),(2),(3)) MyTable(a)",
                 colA => asIsResult.Add((int)colA));
@@ -110,7 +121,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
             List<int> toBeResult = new List<int>() { 1 };
             List<QueryParameter> parameter = new List<QueryParameter>() { new QueryParameter("par1", "int", 1) };
             //Act
-            SqlTask.ExecuteReader(Connection, "Test execute reader",
+            SqlTask.ExecuteReader(SqlConnection, "Test execute reader",
                 "SELECT * FROM (VALUES (1),(2),(3)) MyTable(a) where a = @par1", parameter,
                 colA => asIsResult.Add((int)colA));
             //Assert
@@ -146,7 +157,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
             List<ThreeInteger> toBeResult = new List<ThreeInteger>() { new ThreeInteger(1, 2, 3), new ThreeInteger(4, 5, 6), new ThreeInteger(7, 8, 9) };
             ThreeInteger CurColumn = new ThreeInteger();
             //Act
-            SqlTask.ExecuteReader(Connection,
+            SqlTask.ExecuteReader(SqlConnection,
                 "Test execute reader",
                 "SELECT * FROM (VALUES (1, 2, 3), (4, 5, 6), (7, 8, 9)) AS MyTable(a,b,c)"
                 , () => CurColumn = new ThreeInteger()
@@ -170,7 +181,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
                 new TableColumn("Col1", "nvarchar(4000)", allowNulls: true),
                 new TableColumn("Col2", "nvarchar(4000)", allowNulls: true)
             });
-            tableDefinition.CreateTable(Connection);
+            tableDefinition.CreateTable(SqlConnection);
             TableData data = new TableData(tableDefinition);
             string[] values = { "Value1", "Value2" };
             data.Rows.Add(values);
@@ -180,10 +191,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
             data.Rows.Add(values3);
 
             //Act
-            SqlTask.BulkInsert(Connection, "Bulk insert demo data", data, "dbo.BulkInsert");
+            SqlTask.BulkInsert(SqlConnection, "Bulk insert demo data", data, "dbo.BulkInsert");
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "dbo.BulkInsert", "Col1 LIKE 'Value%'"));
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, "dbo.BulkInsert", "Col1 LIKE 'Value%'"));
         }
 
     }
