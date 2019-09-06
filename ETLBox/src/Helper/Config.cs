@@ -42,6 +42,9 @@ namespace ALE.ETLBox.Helper
         public static ConnectionDetails<ConnectionString, SqlConnectionManager> SqlConnection
         { get; set; } = new ConnectionDetails<ConnectionString, SqlConnectionManager>("SqlConnectionString");
 
+        public static ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager> AccessOdbcConnection
+        { get; set; } = new ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager>("AccessOdbcConnectionString");
+
 
         public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
