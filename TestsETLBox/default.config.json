@@ -1,13 +1,15 @@
 {
     "ControlFlow": {
-        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessControlFlow.mdb",
-        "OdbcConnectionString": "Driver={SQL Server};Server=.;Trusted_Connection=Yes",
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
         "SSASConnectionString": "Data Source=.\\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
-        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteControlFlow.db;Version=3;"
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteControlFlow.db;Version=3;",
+        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessControlFlow.mdb",
+        "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes"
+
     },
     "DataFlow": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlow",
+        "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_DataFlow;Trusted_Connection=Yes",
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlow.db;Version=3;",
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.mdb"
     },

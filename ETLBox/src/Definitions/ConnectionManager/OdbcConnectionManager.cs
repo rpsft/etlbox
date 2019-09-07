@@ -15,14 +15,7 @@ namespace ALE.ETLBox.ConnectionManager {
     /// Be careful with the batch size - some databases have limitations regarding the length of sql statements.
     /// Reduce the batch if encounter issues here.
     /// </summary>
-    /// <example>
-    /// <code>
-    /// ControlFlow.CurrentDbConnection =
-    ///   new OdbcConnectionManager(new ObdcConnectionString(
-    ///     "Driver={SQL Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;"));
-    /// </code>
-    /// </example>
-    public class OdbcConnectionManager : DbConnectionManager<OdbcConnection, OdbcCommand> {
+    public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection, OdbcCommand> {
         public OdbcConnectionManager() : base() { }
 
         public OdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
@@ -37,14 +30,6 @@ namespace ALE.ETLBox.ConnectionManager {
 
         public override void BeforeBulkInsert() { }
         public override void AfterBulkInsert() { }
-
-        public override IDbConnectionManager Clone() {
-            OdbcConnectionManager clone = new OdbcConnectionManager((OdbcConnectionString)ConnectionString) {
-                MaxLoginAttempts = this.MaxLoginAttempts
-            };
-            return clone;
-        }
-
 
     }
 }

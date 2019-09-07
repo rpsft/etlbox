@@ -30,10 +30,10 @@ namespace ALE.ETLBox {
             get
             {
                 if (this.DbConnectionManager.GetType() == typeof(SqlConnectionManager) ||
-                    this.DbConnectionManager.GetType() == typeof(SMOConnectionManager))
+                    this.DbConnectionManager.GetType() == typeof(SMOConnectionManager) ||
+                    this.DbConnectionManager.GetType() == typeof(SqlOdbcConnectionManager)
+                    )
                     return ConnectionManagerType.SqlServer;
-                else if (this.DbConnectionManager.GetType() == typeof(OdbcConnectionManager))
-                    return ConnectionManagerType.Odbc;
                 else if (this.DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager))
                     return ConnectionManagerType.Access;
                 else if (this.DbConnectionManager.GetType() == typeof(AdomdConnectionManager))

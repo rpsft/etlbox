@@ -20,8 +20,7 @@ namespace ALE.ETLBox.ControlFlow
         Action InternalAfterRowReadAction { get; set; }
         public long ReadTopX { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
-        public bool IsOdbcConnection => DbConnectionManager.GetType() == typeof(OdbcConnectionManager)
-            || DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager);
+        public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(OdbcConnectionManager));
         internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
         private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
         private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";

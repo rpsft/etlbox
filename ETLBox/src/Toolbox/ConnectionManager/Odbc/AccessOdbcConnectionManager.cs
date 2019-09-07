@@ -9,11 +9,11 @@ using ALE.ETLBox.ControlFlow;
 namespace ALE.ETLBox.ConnectionManager {
     /// <summary>
     /// Connection manager for an ODBC connection to Acccess databases.
-    /// This connection manager also is based on ADO.NET. 
-    /// ODBC by default does not support a Bulk Insert - and Access does not supoport the insert into (...) values (...),(...),(...) 
+    /// This connection manager also is based on ADO.NET.
+    /// ODBC by default does not support a Bulk Insert - and Access does not supoport the insert into (...) values (...),(...),(...)
     /// syntax. So the following syntax is used
     /// <code>
-    /// insert into (Col1, Col2,...) 
+    /// insert into (Col1, Col2,...)
     /// select * from (
     ///   select 'Val1' as Col1 from dummytable
     ///   union all
@@ -21,25 +21,25 @@ namespace ALE.ETLBox.ConnectionManager {
     ///   ...
     /// ) a;
     /// </code>
-    /// 
-    /// The dummytable is a special helper table containing only one record. 
-    /// 
+    ///
+    /// The dummytable is a special helper table containing only one record.
+    ///
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection = 
+    /// ControlFlow.CurrentDbConnection =
     ///   new AccessOdbcConnectionManager(new OdbcConnectionString(
     ///      "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb"));
     /// </code>
     /// </example>
-    public class AccessOdbcConnectionManager : DbConnectionManager<OdbcConnection, OdbcCommand> {
+    public class AccessOdbcConnectionManager : OdbcConnectionManager {
 
         public AccessOdbcConnectionManager() : base() { }
 
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
 
         /// <summary>
-        /// Helper table that needs to be created in order to simulate bulk inserts. 
+        /// Helper table that needs to be created in order to simulate bulk inserts.
         /// Contains only 1 record and is only temporarily created.
         /// </summary>
         public string DummyTableName { get; set; } = "etlboxdummydeleteme";

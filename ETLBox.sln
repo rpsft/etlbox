@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsETLBox", "TestsETLBox\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsNonParallel", "TestsNonParallel\TestsNonParallel.csproj", "{F5CF5138-7901-44B9-ABCC-8320717F6739}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsBigData", "TestsBigData\TestsBigData.csproj", "{6A90A684-BAFE-4E1A-A952-92B68396060A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{F5CF5138-7901-44B9-ABCC-8320717F6739}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5CF5138-7901-44B9-ABCC-8320717F6739}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5CF5138-7901-44B9-ABCC-8320717F6739}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A90A684-BAFE-4E1A-A952-92B68396060A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A90A684-BAFE-4E1A-A952-92B68396060A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A90A684-BAFE-4E1A-A952-92B68396060A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A90A684-BAFE-4E1A-A952-92B68396060A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

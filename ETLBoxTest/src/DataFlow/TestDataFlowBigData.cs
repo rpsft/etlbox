@@ -117,6 +117,50 @@ namespace ALE.ETLBoxTest
         }
 
 
+       // [TestMethod]
+        //public void BigData_CSV_ACCESS_ViaOdbc()
+        //{
+        //    int numberOfRows = 2000;
+        //    ControlFlow.CurrentDbConnection = new AccessOdbcConnectionManager(new OdbcConnectionString(AccessConnectionStringParameter))
+        //    {
+        //        AlwaysUseSameConnection = false
+        //    };
+        //    Stopwatch watch = new Stopwatch();
+        //    TableDefinition stagingTable = new TableDefinition("staging", new List<TableColumn>() {
+        //        new TableColumn("Col1", "CHAR", allowNulls: true),
+        //        new TableColumn("Col2", "CHAR", allowNulls: true),
+        //        new TableColumn("Col3", "CHAR", allowNulls: false),
+        //        new TableColumn("Col4", "CHAR", allowNulls: false),
+        //    });
+        //    try
+        //    {
+        //        SqlTask.ExecuteNonQuery("Try to drop table", $@"DROP TABLE {stagingTable.Name};");
+        //    }
+        //    catch { }
+        //    new CreateTableTask(stagingTable) { ThrowErrorIfTableExists = true }.Execute();
+        //    string fileName = "src/ConnectionManager/AccessBigData_CSV2DB.csv";
+        //    BigDataHelper bigData = new BigDataHelper()
+        //    {
+        //        FileName = fileName,
+        //        NumberOfRows = numberOfRows,
+        //        TableDefinition = stagingTable
+        //    };
+        //    watch.Start();
+        //    LogTask.Info($"Create .csv file {fileName} with {numberOfRows} Rows");
+        //    bigData.CreateBigDataCSV();
+        //    LogTask.Info($"Needed {watch.Elapsed.TotalMinutes} to create .csv file");
+        //    watch.Reset();
+
+        //    CSVSource source = new CSVSource(fileName);
+        //    DBDestination<string[]> dest = new DBDestination<string[]>(30) { DestinationTableDefinition = stagingTable };
+        //    source.LinkTo(dest);
+        //    watch.Start();
+        //    source.Execute();
+        //    dest.Wait();
+        //    LogTask.Info($"Needed {watch.Elapsed.TotalMinutes} to write everything into database");
+
+        //    Assert.AreEqual(numberOfRows, RowCountTask.Count(stagingTable.Name));
+        //}
     }
 
 }

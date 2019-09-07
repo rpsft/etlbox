@@ -37,7 +37,7 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         int BatchSize { get; set; } = DEFAULT_BATCH_SIZE;
-        const int DEFAULT_BATCH_SIZE = 100000;
+        const int DEFAULT_BATCH_SIZE = 1000;
         internal BatchBlock<TInput> Buffer { get; set; }
         internal ActionBlock<TInput[]> TargetAction { get; set; }
         private int ThresholdCount { get; set; } = 1;
