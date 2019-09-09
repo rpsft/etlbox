@@ -84,6 +84,7 @@ namespace ALE.ETLBox.ConnectionManager
             if (UseParameterQuery)
             {
                 Parameters.Add(new OdbcParameter(destColumnName, data.GetValue(colIndex)));
+
                 values.Add("?");
             }
             else

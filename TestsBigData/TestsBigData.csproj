@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="db\AccessBigData.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="default.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -35,10 +35,10 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        public static bool IsCharTypeDefinition(string value) =>new Regex(_REGEX).IsMatch(value);
+        public static bool IsCharTypeDefinition(string value) =>new Regex(_REGEX, RegexOptions.IgnoreCase).IsMatch(value);
 
         public static int GetStringLengthFromCharString(string value) {
-            string possibleResult = Regex.Replace(value, _REGEX, "${2}");
+            string possibleResult = Regex.Replace(value, _REGEX, "${2}", RegexOptions.IgnoreCase);
             int  result=0;
             if (int.TryParse(possibleResult, out result)) {
                 return result;
@@ -81,18 +81,24 @@ namespace ALE.ETLBox.Helper {
 
         public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
         {
-            var typeName = dbSpecificTypeName.Trim().ToLower();
+            var typeName = dbSpecificTypeName.Trim().ToUpper();
             if (connectionType == ConnectionManagerType.Access)
             {
                 if (IsCharTypeDefinition(typeName))
-                    return "CHAR";
-                if (typeName.StartsWith("int")
-                    || typeName.StartsWith("smallint")
-                    || typeName.StartsWith("bigint")
-                    || typeName.StartsWith("tinyint")
-                    || typeName.StartsWith("decimal")
-                    )
-                    return "NUMBER";
+                {
+                    if (typeName.StartsWith("N"))
+                        typeName = typeName.Substring(1);
+                    if (GetStringLengthFromCharString(typeName) > 255)
+                        return "LONGTEXT";
+                    //if (typeName.StartsWith("int")
+                    //    || typeName.StartsWith("smallint")
+                    //    || typeName.StartsWith("bigint")
+                    //    || typeName.StartsWith("tinyint")
+                    //    || typeName.StartsWith("decimal")
+                    //    )
+                    //    return "NUMBER";
+                    return typeName;
+                }
                 return dbSpecificTypeName;
             }
             else

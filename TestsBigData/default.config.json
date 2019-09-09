@@ -1,6 +1,7 @@
 {
     "BigData": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_BigData",
-        "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_BigData;Trusted_Connection=Yes"
+        "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_BigData;Trusted_Connection=Yes",
+        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessBigData.mdb"
     }
 }

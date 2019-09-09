@@ -17,8 +17,9 @@ namespace ALE.ETLBoxTests.BigData
     public class CSVSourceIntoDBTests : IDisposable
     {
         public static IEnumerable<object[]> Connections(int value1, int value2) => new[] {
-                    //new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("BigData") , value1, value2},
-                    new object[] { (IConnectionManager)Config.SqlOdbcConnection.ConnectionManager("BigData") , value1, value2}
+            new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("BigData") , value1, value2},
+            new object[] { (IConnectionManager)Config.SqlOdbcConnection.ConnectionManager("BigData") , value1, value2},
+            new object[] { (IConnectionManager)Config.AccessOdbcConnection.ConnectionManager("BigData") , value1, value2}
         };
 
         public CSVSourceIntoDBTests(BigDataDatabaseFixture dbFixture)
@@ -34,10 +35,10 @@ namespace ALE.ETLBoxTests.BigData
         {
             DropTableTask.Drop(connection, tableName);
             TableDefinition stagingTable = new TableDefinition(tableName, new List<TableColumn>() {
-                new TableColumn("Col1", "nchar(1000)", allowNulls: false),
-                new TableColumn("Col2", "nchar(1000)", allowNulls: false),
-                new TableColumn("Col3", "nchar(1000)", allowNulls: false),
-                new TableColumn("Col4", "nchar(1000)", allowNulls: true),
+                new TableColumn("Col1", "CHAR(255)", allowNulls: false),
+                new TableColumn("Col2", "CHAR(255)", allowNulls: false),
+                new TableColumn("Col3", "CHAR(255)", allowNulls: false),
+                new TableColumn("Col4", "CHAR(255)", allowNulls: true),
             });
             stagingTable.CreateTable(connection);
             return stagingTable;
@@ -56,8 +57,7 @@ namespace ALE.ETLBoxTests.BigData
             );
         }
         /*
-         * Table without key columns (HEAP)
-         * X Rows with 8007 bytes per Row (8000 bytes data + 7 bytes for sql server)
+         * X Rows with 1027 bytes per Row (1020 bytes data + 7 bytes for sql server)
          */
         [Theory,
             MemberData(nameof(Connections), 3, 3)]
@@ -86,7 +86,7 @@ namespace ALE.ETLBoxTests.BigData
             );
 
             //Assert
-            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CSVDestination", RowCountOptions.QuickQueryMode));
+            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CSVDestination"));
         }
 
         public class CSVData
