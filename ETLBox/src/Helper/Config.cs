@@ -60,6 +60,11 @@ namespace ALE.ETLBox.Helper
                     new object[] { (IConnectionManager)SQLLiteConnection.ConnectionManager(section) , value}
         };
 
+        public static IEnumerable<object[]> AllOdbcConnections(string section) => new[] {
+                    new object[] { (IConnectionManager)SqlOdbcConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)AccessOdbcConnection.ConnectionManager(section) }
+        };
+
         static IConfigurationRoot _defaultConfigFile;
         public static IConfigurationRoot DefaultConfigFile
         {

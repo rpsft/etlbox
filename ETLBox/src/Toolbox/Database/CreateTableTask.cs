@@ -79,7 +79,7 @@ $@"CREATE TABLE {TableName} (
         {
             string dataType = string.Empty;
             if (String.IsNullOrWhiteSpace(col.ComputedColumn))
-                dataType = col.DataType;
+                dataType = DataTypeConverter.TryGetDBSpecificType(col.DataType, this.ConnectionType);
             string identitySql = col.IsIdentity
                                     ? $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})"
                                     : string.Empty;

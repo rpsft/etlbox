@@ -23,7 +23,18 @@ namespace ALE.ETLBox.ConnectionManager {
         public override void BulkInsert(ITableData data, string tableName) {
             BulkInsertString bulkInsert = new BulkInsertString() { };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
+            //List<OdbcParameter> parameter = new List<OdbcParameter>();
+            //string sql = bulkInsert.CreateBulkInsertStatementWithParameter(data, tableName, ref parameter);
+            /*
+            string sql = "INSERT INTO CSVDestination (Col1, Col2, Col3, Col4) VALUES (?,?,?,?)";
             var cmd = DbConnection.CreateCommand();
+            cmd.Parameters.AddWithValue("name1","1");
+            cmd.Parameters.AddWithValue("name1", "2");
+            cmd.Parameters.AddWithValue("name1", 3);
+            cmd.Parameters.AddWithValue("name1", DBNull.Value);
+            */
+            var cmd = DbConnection.CreateCommand();
+            //cmd.Parameters.AddRange(parameter.ToArray());
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }

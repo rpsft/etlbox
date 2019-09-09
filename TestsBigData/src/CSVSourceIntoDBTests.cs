@@ -17,7 +17,7 @@ namespace ALE.ETLBoxTests.BigData
     public class CSVSourceIntoDBTests : IDisposable
     {
         public static IEnumerable<object[]> Connections(int value1, int value2) => new[] {
-                    new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("BigData") , value1, value2},
+                    //new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("BigData") , value1, value2},
                     new object[] { (IConnectionManager)Config.SqlOdbcConnection.ConnectionManager("BigData") , value1, value2}
         };
 
@@ -37,7 +37,7 @@ namespace ALE.ETLBoxTests.BigData
                 new TableColumn("Col1", "nchar(1000)", allowNulls: false),
                 new TableColumn("Col2", "nchar(1000)", allowNulls: false),
                 new TableColumn("Col3", "nchar(1000)", allowNulls: false),
-                new TableColumn("Col4", "nchar(1000)", allowNulls: false),
+                new TableColumn("Col4", "nchar(1000)", allowNulls: true),
             });
             stagingTable.CreateTable(connection);
             return stagingTable;
@@ -60,8 +60,8 @@ namespace ALE.ETLBoxTests.BigData
          * X Rows with 8007 bytes per Row (8000 bytes data + 7 bytes for sql server)
          */
         [Theory,
-            MemberData(nameof(Connections), 3, 2)]
-            //MemberData(nameof(Connections), 100000, 1000)]
+            //MemberData(nameof(Connections), 3, 3)]
+            MemberData(nameof(Connections), 200000, 1000)]
         public void UsingNonGeneric(IConnectionManager connection, int numberOfRows, int batchSize)
         {
             //Arrange

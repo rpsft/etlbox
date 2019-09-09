@@ -79,20 +79,26 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        //public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
-        //{
-        //    if (connectionType == ConnectionManagerType.SQLLite)
-        //    {
-        //        if (IsCharTypeDefinition(dbSpecificTypeName))
-        //        {
-        //            return "TEXT";
-        //        }
-        //        return dbSpecificTypeName;
-        //    }
-        //    else
-        //    {
-        //        return dbSpecificTypeName;
-        //    }
-        //}
+        public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
+        {
+            var typeName = dbSpecificTypeName.Trim().ToLower();
+            if (connectionType == ConnectionManagerType.Access)
+            {
+                if (IsCharTypeDefinition(typeName))
+                    return "CHAR";
+                if (typeName.StartsWith("int")
+                    || typeName.StartsWith("smallint")
+                    || typeName.StartsWith("bigint")
+                    || typeName.StartsWith("tinyint")
+                    || typeName.StartsWith("decimal")
+                    )
+                    return "NUMBER";
+                return dbSpecificTypeName;
+            }
+            else
+            {
+                return dbSpecificTypeName;
+            }
+        }
     }
 }
