@@ -20,8 +20,7 @@ namespace ALE.ETLBox.ControlFlow
         Action InternalAfterRowReadAction { get; set; }
         public long ReadTopX { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
-        public bool IsOdbcConnection => DbConnectionManager.GetType() == typeof(OdbcConnectionManager)
-            || DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager);
+        public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(OdbcConnectionManager));
         internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
         private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
         private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
@@ -58,7 +57,7 @@ namespace ALE.ETLBox.ControlFlow
         /* Some constructors */
         public DbTask()
         {
-            
+
         }
 
         public DbTask(string name) : this()
@@ -71,13 +70,8 @@ namespace ALE.ETLBox.ControlFlow
             this.Sql = sql;
         }
 
-        public DbTask(ITask callingTask, string sql) : this()
+        public DbTask(ITask callingTask, string sql) : base(callingTask)
         {
-            TaskName = callingTask.TaskName;
-            TaskHash = callingTask.TaskHash;
-            ConnectionManager = callingTask.ConnectionManager;
-            TaskType = callingTask.TaskType;
-            DisableLogging = callingTask.DisableLogging;
             this.Sql = sql;
         }
 
@@ -85,6 +79,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             Actions = actions.ToList();
         }
+
 
         public DbTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : this(name, sql)
         {
@@ -136,8 +131,21 @@ namespace ALE.ETLBox.ControlFlow
 
         public bool ExecuteScalarAsBool()
         {
-            int? result = ExecuteScalar<int>();
-            return IntToBool(result);
+            object result = ExecuteScalar();
+            return ObjectToBool(result);
+        }
+
+        static bool ObjectToBool(object result)
+        {
+            if (result == null) return false;
+            int number = 0;
+            int.TryParse(result.ToString(), out number);
+            if (number > 0)
+                return true;
+            else if (result.ToString().Trim().ToLower() == "true")
+                return true;
+            else
+                return false;
         }
 
         public void ExecuteReader()
@@ -253,13 +261,7 @@ namespace ALE.ETLBox.ControlFlow
             Bulk
         }
 
-        static bool IntToBool(int? result)
-        {
-            if (result != null && result > 0)
-                return true;
-            else
-                return false;
-        }
+
 
         void QueryStart(LogType logType = LogType.None)
         {

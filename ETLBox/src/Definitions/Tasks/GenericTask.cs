@@ -1,13 +1,14 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.ControlFlow;
+using CF = ALE.ETLBox.ControlFlow;
 using System;
+using ALE.ETLBox.Logging;
 
 namespace ALE.ETLBox {
     public abstract class GenericTask : ITask {
         public virtual string TaskType { get; set; } = "N/A";
         public virtual string TaskName { get; set; } = "N/A";
-        public NLog.Logger NLogger { get; set; } = NLog.LogManager.GetLogger("ETL");
+        public NLog.Logger NLogger { get; set; } = CF.ControlFlow.GetLogger();
 
         public virtual void Execute() {
             throw new Exception("Not implemented!");
@@ -29,10 +30,10 @@ namespace ALE.ETLBox {
             get
             {
                 if (this.DbConnectionManager.GetType() == typeof(SqlConnectionManager) ||
-                    this.DbConnectionManager.GetType() == typeof(SMOConnectionManager))
+                    this.DbConnectionManager.GetType() == typeof(SMOConnectionManager) ||
+                    this.DbConnectionManager.GetType() == typeof(SqlOdbcConnectionManager)
+                    )
                     return ConnectionManagerType.SqlServer;
-                else if (this.DbConnectionManager.GetType() == typeof(OdbcConnectionManager))
-                    return ConnectionManagerType.Odbc;
                 else if (this.DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager))
                     return ConnectionManagerType.Access;
                 else if (this.DbConnectionManager.GetType() == typeof(AdomdConnectionManager))
@@ -69,5 +70,17 @@ namespace ALE.ETLBox {
             }
         }
         internal virtual bool HasName => !String.IsNullOrWhiteSpace(TaskName);
+
+        public GenericTask()
+        { }
+
+        public GenericTask(ITask callingTask)
+        {
+            TaskName = callingTask.TaskName;
+            TaskHash = callingTask.TaskHash;
+            ConnectionManager = callingTask.ConnectionManager;
+            TaskType = callingTask.TaskType;
+            DisableLogging = callingTask.DisableLogging;
+        }
     }
 }

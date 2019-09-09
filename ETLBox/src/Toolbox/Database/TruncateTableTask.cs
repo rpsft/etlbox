@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.ControlFlow {
+﻿using ALE.ETLBox.ConnectionManager;
+
+namespace ALE.ETLBox.ControlFlow {
     /// <summary>
     /// Truncates a table.
     /// </summary>
@@ -26,6 +28,7 @@ truncate table {TableName}";
         }
 
         public static void Truncate(string tableName) => new TruncateTableTask(tableName).Execute();
+        public static void Truncate(IConnectionManager connection, string tableName) => new TruncateTableTask(tableName) { ConnectionManager = connection }.Execute();
 
 
     }

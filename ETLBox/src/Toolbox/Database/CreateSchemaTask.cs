@@ -40,6 +40,8 @@ END";
         }
 
         public static void Create(string schemaName) => new CreateSchemaTask(schemaName).Execute();
+        public static void Create(IConnectionManager connectionManager, string schemaName)
+            => new CreateSchemaTask(schemaName) { ConnectionManager = connectionManager }.Execute();
 
 
     }

@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 
@@ -15,6 +16,7 @@ namespace ALE.ETLBox.Logging {
             LogEntry current = new LogEntry();
             new SqlTask(this, Sql) {
                 DisableLogging = true,
+                ConnectionManager = this.ConnectionManager,
                 DisableExtension = true,
                 BeforeRowReadAction = () => current = new LogEntry(),
                 AfterRowReadAction = () => LogEntries.Add(current),
@@ -30,8 +32,8 @@ namespace ALE.ETLBox.Logging {
                     col => current.Source = (string)col,
                     col => current.LoadProcessKey = (int?)col,
                 }
-            }.ExecuteReader();            
-        }      
+            }.ExecuteReader();
+        }
 
         /* Public properties */
         public int? _loadProcessKey;
@@ -51,11 +53,11 @@ namespace ALE.ETLBox.Logging {
 
         public List<LogEntry> LogEntries { get; private set; }
 
-        public string Sql => $@"select LogKey, LogDate, Level, Message, TaskType, TaskAction, TaskHash, Stage, Source, LoadProcessKey
-    from etl.Log" +
-            (LoadProcessKey != null ? $@" where LoadProcessKey = {LoadProcessKey}"
+        public string Sql => $@"SELECT LogKey, LogDate, Level, Message, TaskType, TaskAction, TaskHash, Stage, Source, LoadProcessKey
+    FROM etl.Log" +
+            (LoadProcessKey != null ? $@" WHERE LoadProcessKey = {LoadProcessKey}"
             : "");
-        
+
         public ReadLogTableTask() {
 
         }
@@ -66,6 +68,10 @@ namespace ALE.ETLBox.Logging {
 
         public static List<LogEntry> Read() => new ReadLogTableTask().ReadLog().LogEntries;
         public static List<LogEntry> Read(int? loadProcessKey) => new ReadLogTableTask(loadProcessKey).ReadLog().LogEntries;
+        public static List<LogEntry> Read(IConnectionManager connectionManager)
+            => new ReadLogTableTask() { ConnectionManager = connectionManager }.ReadLog().LogEntries;
+        public static List<LogEntry> Read(IConnectionManager connectionManager, int? loadProcessKey)
+            => new ReadLogTableTask(loadProcessKey) { ConnectionManager = connectionManager }.ReadLog().LogEntries;
 
     }
 }

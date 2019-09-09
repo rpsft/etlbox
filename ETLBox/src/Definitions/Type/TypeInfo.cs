@@ -87,10 +87,12 @@ namespace ALE.ETLBox.DataFlow
                 return PropertyNames.Any(propName => propName == name);
         }
         internal PropertyInfo GetInfoByPropertyNameOrColumnMapping(string propNameOrColMapName) {
+            PropertyInfo result = null;
             if (ColumnMap2Property.ContainsKey(propNameOrColMapName))
-                return Properties[PropertyIndex[ColumnMap2Property[propNameOrColMapName]]];
+                result = Properties[PropertyIndex[ColumnMap2Property[propNameOrColMapName]]];
             else
-                return Properties[PropertyIndex[propNameOrColMapName]];
+                result = Properties[PropertyIndex[propNameOrColMapName]];
+            return result;
         }
 
         internal int GetIndexByPropertyNameOrColumnMapping(string propNameOrColMapName)

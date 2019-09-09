@@ -10,7 +10,7 @@ namespace ALE.ETLBox {
     /// </summary>
     public class ConnectionString : IDbConnectionString{
 
-        SqlConnectionStringBuilder _builder; 
+        SqlConnectionStringBuilder _builder;
 
         public string Value {
             get {
@@ -21,8 +21,10 @@ namespace ALE.ETLBox {
             }
         }
 
+        public string DBName => _builder?.InitialCatalog;
+
         public SqlConnectionStringBuilder SqlConnectionStringBuilder => _builder;
-        
+
         public ConnectionString() {
             _builder = new SqlConnectionStringBuilder();
         }

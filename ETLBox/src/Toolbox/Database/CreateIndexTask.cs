@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Collections.Generic;
 
 namespace ALE.ETLBox.ControlFlow {
@@ -24,11 +25,11 @@ namespace ALE.ETLBox.ControlFlow {
         public bool IsUnique { get; set; }
         public bool IsClustered { get; set; }
         public string Sql => $@"
-if not exists (select *  from sys.indexes  where name='{IndexName}' and object_id = object_id('{TableName}'))
-  create {UniqueSql} {ClusteredSql} index {IndexName} on {TableName}
+IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='{IndexName}' AND object_id = object_id('{TableName}'))
+  CREATE {UniqueSql} {ClusteredSql} INDEX {IndexName} ON {TableName}
   ( {String.Join(",", IndexColumns)} )
   {IncludeSql}
-  with(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = ON, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+  WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = ON, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 ";
 
         public CreateIndexTask() {
@@ -43,13 +44,18 @@ if not exists (select *  from sys.indexes  where name='{IndexName}' and object_i
         public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns, IList<string> includeColumns) : this(indexName, tableName, indexColumns) {
             this.IncludeColumns = includeColumns;
         }
+        public static void Create(string indexName, string tableName, IList<string> indexColumns)
+            => new CreateIndexTask(indexName,tableName,indexColumns).Execute();
+        public static void Create(string indexName, string tableName, IList<string> indexColumns, IList<string> includeColumns)
+            => new CreateIndexTask(indexName, tableName, indexColumns, includeColumns).Execute();
+        public static void Create(IConnectionManager connectionManager, string indexName, string tableName, IList<string> indexColumns)
+            => new CreateIndexTask(indexName, tableName, indexColumns) { ConnectionManager = connectionManager }.Execute();
+        public static void Create(IConnectionManager connectionManager, string indexName, string tableName, IList<string> indexColumns, IList<string> includeColumns)
+            => new CreateIndexTask(indexName, tableName, indexColumns, includeColumns) { ConnectionManager = connectionManager}.Execute();
 
-        public static void Create(string indexName, string tableName, IList<string> indexColumns) => new CreateIndexTask(indexName,tableName,indexColumns).Execute();
-        public static void Create(string indexName, string tableName, IList<string> indexColumns, IList<string> includeColumns) => new CreateIndexTask(indexName, tableName, indexColumns, includeColumns).Execute();
-
-        string UniqueSql => IsUnique ? "unique" : string.Empty;
-        string ClusteredSql => IsClustered ? "clustered" : "nonclustered";
-        string IncludeSql => IncludeColumns?.Count > 0 ? $"include ({String.Join("  ,", IncludeColumns)})" : string.Empty;
+        string UniqueSql => IsUnique ? "UNIQUE" : string.Empty;
+        string ClusteredSql => IsClustered ? "CLUSTERED" : "NONCLUSTERED";
+        string IncludeSql => IncludeColumns?.Count > 0 ? $"INCLUDE ({String.Join("  ,", IncludeColumns)})" : string.Empty;
 
     }
 }

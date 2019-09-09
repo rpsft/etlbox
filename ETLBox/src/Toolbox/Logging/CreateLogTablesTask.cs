@@ -1,21 +1,26 @@
-﻿using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Will create two tables: etl.Log and etl.LoadProcess. Also it will create some procedure for starting, stopping and aborting load processes.
     /// If logging is configured via a NLog config, these tables contain log information from the tasks.
     /// </summary>
-    public class CreateLogTablesTask : GenericTask, ITask {
+    public class CreateLogTablesTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskType { get; set; } = "CREATELOG";
         public override string TaskName => $"Create log tables";
-        public override void Execute() {           
+        public override void Execute()
+        {
             ExecuteTasks();
         }
 
-        public CreateLogTablesTask() {
+        public CreateLogTablesTask()
+        {
             CreateETLSchema();
             CreateETLLogTable();
             CreateLoadProcessTable();
@@ -25,11 +30,18 @@ namespace ALE.ETLBox.Logging {
             CreateAbortProcessProcedure();
         }
 
-        private void CreateETLSchema() {
+        public CreateLogTablesTask(IConnectionManager connectionManager) : this()
+        {
+            this.ConnectionManager = connectionManager;
+        }
+
+        private void CreateETLSchema()
+        {
             EtlSchema = new CreateSchemaTask("etl") { DisableLogging = true };
         }
 
-        private void CreateETLLogTable() {
+        private void CreateETLLogTable()
+        {
             List<ITableColumn> columns = new List<ITableColumn>() {
                 new TableColumn("LogKey","int", allowNulls: false, isPrimaryKey: true, isIdentity:true),
                 new TableColumn("LogDate","datetime", allowNulls: false),
@@ -45,7 +57,8 @@ namespace ALE.ETLBox.Logging {
             LogTable = new CreateTableTask("etl.Log", columns) { DisableLogging = true };
         }
 
-        private void CreateLoadProcessTable() {
+        private void CreateLoadProcessTable()
+        {
             List<ITableColumn> lpColumns = new List<ITableColumn>() {
                 new TableColumn("LoadProcessKey","int", allowNulls: false, isPrimaryKey: true, isIdentity:true),
                 new TableColumn("StartDate","datetime", allowNulls: false),
@@ -66,20 +79,23 @@ namespace ALE.ETLBox.Logging {
             LoadProcessTable = new CreateTableTask("etl.LoadProcess", lpColumns) { DisableLogging = true };
         }
 
-        private void CreateStartProcessProcedure() {
+        private void CreateStartProcessProcedure()
+        {
             StartProcess = new CRUDProcedureTask("etl.StartLoadProcess", $@"-- Create entry in etlLoadProcess
   insert into etl.LoadProcess(StartDate, ProcessName, StartMessage, Source, IsRunning)
-  select getdate(),@ProcessName, @StartMessage,@Source, 1 as IsRunning  
+  select getdate(),@ProcessName, @StartMessage,@Source, 1 as IsRunning
   select @LoadProcessKey = SCOPE_IDENTITY()"
                 , new List<ProcedureParameter>() {
                     new ProcedureParameter("ProcessName","nvarchar(100)"),
                     new ProcedureParameter("StartMessage","nvarchar(4000)",""),
                     new ProcedureParameter("Source","nvarchar(20)",""),
                     new ProcedureParameter("LoadProcessKey","int") { Out = true }
-                }) { DisableLogging = true };
+                })
+            { DisableLogging = true };
         }
 
-        private void CreateTransferCompletedProcedure() {
+        private void CreateTransferCompletedProcedure()
+        {
             TransferCompletedForProcess = new CRUDProcedureTask("etl.TransferCompletedForLoadProcess", $@"-- Set transfer completion date in load process
   update etl.LoadProcess
   set TransferCompletedDate = getdate()
@@ -87,10 +103,12 @@ namespace ALE.ETLBox.Logging {
   "
              , new List<ProcedureParameter>() {
                     new ProcedureParameter("LoadProcessKey","int")
-             }) { DisableLogging = true };
+             })
+            { DisableLogging = true };
         }
 
-        private void CreateEndProcessProcedure() {
+        private void CreateEndProcessProcedure()
+        {
             EndProcess = new CRUDProcedureTask("etl.EndLoadProcess", $@"-- Set entry in etlLoadProcess to completed
   update etl.LoadProcess
   set EndDate = getdate()
@@ -103,10 +121,12 @@ namespace ALE.ETLBox.Logging {
                , new List<ProcedureParameter>() {
                     new ProcedureParameter("LoadProcessKey","int"),
                     new ProcedureParameter("EndMessage","nvarchar(4000)",""),
-               }) { DisableLogging = true };
+               })
+            { DisableLogging = true };
         }
 
-        private void CreateAbortProcessProcedure() {
+        private void CreateAbortProcessProcedure()
+        {
             AbortProcess = new CRUDProcedureTask("etl.AbortLoadProcess", $@"-- Set entry in etlLoadProcess to aborted
   update etl.LoadProcess
   set EndDate = getdate()
@@ -119,21 +139,24 @@ namespace ALE.ETLBox.Logging {
               , new List<ProcedureParameter>() {
                     new ProcedureParameter("LoadProcessKey","int"),
                     new ProcedureParameter("AbortMessage","nvarchar(4000)",""),
-              }) { DisableLogging = true };
+              })
+            { DisableLogging = true };
         }
 
 
         public static void CreateLog() => new CreateLogTablesTask().Execute();
+        public static void CreateLog(IConnectionManager connectionManager) => new CreateLogTablesTask(connectionManager).Execute();
         public string Sql => EtlSchema.Sql + Environment.NewLine +
                              LoadProcessTable.Sql + Environment.NewLine +
                              LogTable.Sql + Environment.NewLine +
                              StartProcess.Sql + Environment.NewLine +
                              EndProcess.Sql + Environment.NewLine +
                              AbortProcess.Sql + Environment.NewLine +
-                             TransferCompletedForProcess.Sql + Environment.NewLine 
+                             TransferCompletedForProcess.Sql + Environment.NewLine
             ;
 
-        private void ExecuteTasks() {
+        private void ExecuteTasks()
+        {
             EtlSchema.ConnectionManager = this.ConnectionManager;
             LogTable.ConnectionManager = this.ConnectionManager;
             LoadProcessTable.ConnectionManager = this.ConnectionManager;

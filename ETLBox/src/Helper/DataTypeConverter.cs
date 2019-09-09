@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Data;
 using System.Text.RegularExpressions;
 
 namespace ALE.ETLBox.Helper {
-    public class DataTypeConverter {
+    public static class DataTypeConverter {
         public const int DefaultTinyIntegerLength = 5;
         public const int DefaultSmallIntegerLength = 7;
         public const int DefaultIntegerLength = 11;
@@ -15,8 +16,10 @@ namespace ALE.ETLBox.Helper {
 
         public const string _REGEX = @"(.*?)char\((\d*)\)(.*?)";
 
-        public static int GetTypeLength(string dataTypeString) {
-            switch (dataTypeString) {
+        public static int GetTypeLength(string dataTypeString)
+        {
+            switch (dataTypeString)
+            {
                 case "tinyint": return DefaultTinyIntegerLength;
                 case "smallint": return DefaultSmallIntegerLength;
                 case "int": return DefaultIntegerLength;
@@ -32,9 +35,7 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        public static bool IsCharTypeDefinition(string value) {
-            return new Regex(_REGEX).IsMatch(value);
-        }
+        public static bool IsCharTypeDefinition(string value) =>new Regex(_REGEX).IsMatch(value);
 
         public static int GetStringLengthFromCharString(string value) {
             string possibleResult = Regex.Replace(value, _REGEX, "${2}");
@@ -46,11 +47,11 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        public static string GetObjectTypeString(string dataTypeString) {
-            if (dataTypeString.IndexOf("(") > 0)
-                dataTypeString = dataTypeString.Substring(0, dataTypeString.IndexOf("("));
-            dataTypeString = dataTypeString.Trim().ToLower();
-            switch (dataTypeString) {      
+        public static string GetNETObjectTypeString(string dbSpecificTypeName) {
+            if (dbSpecificTypeName.IndexOf("(") > 0)
+                dbSpecificTypeName = dbSpecificTypeName.Substring(0, dbSpecificTypeName.IndexOf("("));
+            dbSpecificTypeName = dbSpecificTypeName.Trim().ToLower();
+            switch (dbSpecificTypeName) {
                 case "bit": return "System.Boolean";
                 case "tinyint": return "System.UInt16";
                 case "smallint": return "System.Int16";
@@ -65,16 +66,38 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        public static Type GetTypeObject(string dataTypeString) {
-            return Type.GetType(GetObjectTypeString(dataTypeString));
+        public static Type GetTypeObject(string dbSpecificTypeName) {
+            return Type.GetType(GetNETObjectTypeString(dbSpecificTypeName));
         }
 
-        public static DbType GetDBType(string dataTypeString) {
+        public static DbType GetDBType(string dbSpecificTypeName) {
             try {
-                return (DbType) Enum.Parse(typeof(DbType), GetObjectTypeString(dataTypeString).Replace("System.", ""), true);
+                return (DbType) Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
             }
             catch {
                 return DbType.String;
+            }
+        }
+
+        public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
+        {
+            var typeName = dbSpecificTypeName.Trim().ToLower();
+            if (connectionType == ConnectionManagerType.Access)
+            {
+                if (IsCharTypeDefinition(typeName))
+                    return "CHAR";
+                if (typeName.StartsWith("int")
+                    || typeName.StartsWith("smallint")
+                    || typeName.StartsWith("bigint")
+                    || typeName.StartsWith("tinyint")
+                    || typeName.StartsWith("decimal")
+                    )
+                    return "NUMBER";
+                return dbSpecificTypeName;
+            }
+            else
+            {
+                return dbSpecificTypeName;
             }
         }
     }

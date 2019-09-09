@@ -1,0 +1,8 @@
+{
+    "Logging": {
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_Logging"
+    },
+    "NoLog": {
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_NoLog"
+    }
+}

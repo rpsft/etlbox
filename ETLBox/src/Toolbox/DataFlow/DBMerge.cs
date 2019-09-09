@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks.Dataflow;
 using System.Linq;
 using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -50,10 +51,13 @@ namespace ALE.ETLBox.DataFlow
             Init();
         }
 
-        private void GetIdColumName()
+        public DBMerge(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
-            TypeInfo typeInfo = new TypeInfo(typeof(TInput));
-            MergeIdColumnName = typeInfo.MergeIdColumnName;
+            TableName = tableName;
+            ConnectionManager = connectionManager;
+            DestinationTableAsSource = new DBSource<TInput>(connectionManager, TableName);
+            DestinationTable = new DBDestination<TInput>(connectionManager, TableName);
+            Init();
         }
 
         public DBMerge(TableDefinition tableDefinition)
@@ -70,6 +74,13 @@ namespace ALE.ETLBox.DataFlow
             InitInternalFlow();
             InitOutputFlow();
         }
+
+        private void GetIdColumName()
+        {
+            TypeInfo typeInfo = new TypeInfo(typeof(TInput));
+            MergeIdColumnName = typeInfo.MergeIdColumnName;
+        }
+
 
         private void InitInternalFlow()
         {
@@ -132,7 +143,7 @@ namespace ALE.ETLBox.DataFlow
             var deletions = InputData.Where(row => row.ChangeAction == 0);
             if (DisableDeletion == false && WasDeletionExecuted == false) {
                 if (UseTruncateMethod)
-                    TruncateTableTask.Truncate(TableName);
+                    TruncateTableTask.Truncate(this.ConnectionManager, TableName);
                 else
                     SqlDeleteIds(deletions);
             }

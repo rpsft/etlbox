@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 
 namespace ALE.ETLBox.ControlFlow {
     /// <summary>
@@ -64,9 +65,13 @@ namespace ALE.ETLBox.ControlFlow {
         }
 
         public static void AddFileGroup(string fileGroupName, string databaseName) => new AddFileGroupTask(fileGroupName, databaseName).Execute();
+        public static void AddFileGroup(IConnectionManager connectionManager, string fileGroupName, string databaseName)
+            => new AddFileGroupTask(fileGroupName, databaseName) { ConnectionManager = connectionManager }.Execute();
 
         public static void AddFileGroup(string fileGroupName, string databaseName, string size, string fileGrowth, bool isDefaultFileGroup)
             => new AddFileGroupTask(fileGroupName, databaseName, size, fileGrowth, isDefaultFileGroup).Execute();
+        public static void AddFileGroup(IConnectionManager connectionManager, string fileGroupName, string databaseName, string size, string fileGrowth, bool isDefaultFileGroup)
+            => new AddFileGroupTask(fileGroupName, databaseName, size, fileGrowth, isDefaultFileGroup) { ConnectionManager = connectionManager }.Execute();
 
         private string SetDefaultFileGroupSql => IsDefaultFileGroup ?
              $@"--if not exists (select name from sys.filegroups where is_default = 1 and name = N'{FileGroupName}')    

@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.Logging {
+﻿using ALE.ETLBox.ConnectionManager;
+
+namespace ALE.ETLBox.Logging {
     /// <summary>
     /// Used this task for custom log messages.
     /// </summary>
@@ -17,7 +19,7 @@
         }
 
         public LogTask(string message) : this() {
-            Message = message; 
+            Message = message;
         }
         //NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         public void Trace() => NLogger?.Trace(Message, TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
@@ -32,5 +34,11 @@
         public static void Warn(string message) => new LogTask(message).Warn();
         public static void Error(string message) => new LogTask(message).Error();
         public static void Fatal(string message) => new LogTask(message).Fatal();
+        public static void Trace(IConnectionManager connectionManager, string message) => new LogTask(message) { ConnectionManager = connectionManager }.Trace();
+        public static void Debug(IConnectionManager connectionManager, string message) => new LogTask(message) { ConnectionManager = connectionManager }.Debug();
+        public static void Info(IConnectionManager connectionManager, string message) => new LogTask(message) { ConnectionManager = connectionManager }.Info();
+        public static void Warn(IConnectionManager connectionManager, string message) => new LogTask(message) { ConnectionManager = connectionManager }.Warn();
+        public static void Error(IConnectionManager connectionManager, string message) => new LogTask(message) { ConnectionManager = connectionManager }.Error();
+        public static void Fatal(IConnectionManager connectionManager, string message) => new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
     }
 }

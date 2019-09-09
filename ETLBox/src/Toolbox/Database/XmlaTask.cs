@@ -19,7 +19,7 @@ namespace ALE.ETLBox.ControlFlow {
 
         public XmlaTask() {
             Init();
-        }        
+        }
 
         public XmlaTask(string name) : base(name) {
             Init();
@@ -62,7 +62,15 @@ namespace ALE.ETLBox.ControlFlow {
             new XmlaTask(name, sql, beforeRowReadAction, afterRowReadAction, actions).ExecuteReader();
         public static void ExecuteReader(string name, FileConnectionManager fileConnection, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>
             new XmlaTask(name, fileConnection) { BeforeRowReadAction = beforeRowReadAction, AfterRowReadAction = afterRowReadAction, Actions = actions.ToList() }.ExecuteReader();
-        
+        public static int ExecuteNonQuery(IConnectionManager connectionManager, string name, string sql) => new XmlaTask(name, sql) { ConnectionManager = connectionManager }.ExecuteNonQuery();
+        public static int ExecuteNonQuery(IConnectionManager connectionManager, string name, FileConnectionManager fileConnection) => new XmlaTask(name, fileConnection) { ConnectionManager = connectionManager }.ExecuteNonQuery();
+        public static object ExecuteScalar(IConnectionManager connectionManager, string name, string sql) => new XmlaTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalar();
+        public static Nullable<T> ExecuteScalar<T>(IConnectionManager connectionManager, string name, string sql) where T : struct => new XmlaTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalar<T>();
+        public static bool ExecuteScalarAsBool(IConnectionManager connectionManager, string name, string sql) => new XmlaTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalarAsBool();
+        public static void ExecuteReader(IConnectionManager connectionManager, string name, string sql, params Action<object>[] actions) => new XmlaTask(name, sql, actions) { ConnectionManager = connectionManager }.ExecuteReader();
+        public static void ExecuteReader(IConnectionManager connectionManager, string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>
+            new XmlaTask(name, sql, beforeRowReadAction, afterRowReadAction, actions) { ConnectionManager = connectionManager }.ExecuteReader();
+
         //public static void BulkInsert(string name, ITableData data, string tableName) =>
         //    new XmlaTask(name).BulkInsert(data, tableName);
     }
