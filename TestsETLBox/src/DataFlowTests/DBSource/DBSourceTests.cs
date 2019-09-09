@@ -4,6 +4,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -17,7 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceTests(DatabaseFixture dbFixture)
+        public DBSourceTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

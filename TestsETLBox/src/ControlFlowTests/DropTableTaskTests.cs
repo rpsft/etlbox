@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -14,7 +15,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
 
-        public DropTableTaskTests(DatabaseFixture dbFixture)
+        public DropTableTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Theory, MemberData(nameof(Connections))]

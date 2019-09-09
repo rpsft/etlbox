@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class SqlTaskInParallelTests
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public SqlTaskInParallelTests(DatabaseFixture dbFixture)
+        public SqlTaskInParallelTests(ControlFlowDatabaseFixture dbFixture)
         {
             CreateTableTask.Create(Connection, "FastParallel",
                 new List<TableColumn>() { new TableColumn("id", "int") });

@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -30,7 +31,7 @@ SELECT * FROM
     public class TruncateTableTaskTests : IClassFixture<TruncateTableTaskFixture>
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public TruncateTableTaskTests(DatabaseFixture dbFixture, TruncateTableTaskFixture rcfixture)
+        public TruncateTableTaskTests(ControlFlowDatabaseFixture dbFixture, TruncateTableTaskFixture rcfixture)
         { }
 
 

@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -13,7 +14,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class CreateIndexTaskTests
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public CreateIndexTaskTests(DatabaseFixture dbFixture)
+        public CreateIndexTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Fact]

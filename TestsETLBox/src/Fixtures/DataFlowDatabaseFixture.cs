@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.Fixtures
 {
     [CollectionDefinition("DataFlow")]
-    public class DatalFlowCollectionClass : ICollectionFixture<DatabaseFixture> { }
-    public class DatabaseFixture
+    public class DatalFlowCollectionClass : ICollectionFixture<DataFlowDatabaseFixture> { }
+    public class DataFlowDatabaseFixture
     {
-        public DatabaseFixture()
+        public DataFlowDatabaseFixture()
         {
             DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("DataFlow").DBName
                 , Config.SqlConnectionString("DataFlow"));

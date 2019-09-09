@@ -4,6 +4,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class DuplicateCheckTests : IDisposable
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
-        public DuplicateCheckTests(DatabaseFixture dbFixture)
+        public DuplicateCheckTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

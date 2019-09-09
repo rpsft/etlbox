@@ -4,6 +4,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public AccessOdbcConnectionManager AccessOdbcConnection => Config.AccessOdbcConnection.ConnectionManager("DataFlow");
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public ImportExportAccessTests(DatabaseFixture dbFixture)
+        public ImportExportAccessTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

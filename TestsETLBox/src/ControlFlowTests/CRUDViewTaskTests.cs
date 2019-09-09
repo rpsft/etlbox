@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -13,7 +14,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class CRUDViewTaskTests
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public CRUDViewTaskTests(DatabaseFixture dbFixture)
+        public CRUDViewTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Fact]

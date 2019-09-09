@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -12,54 +13,54 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class SqlTaskTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
-
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> ConnectionsWithValue(string value) => Config.AllSqlConnectionsWithValue("ControlFlow", value);
 
 
-        public SqlTaskTests(DatabaseFixture dbFixture)
+        public SqlTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Fact]
-        public void ExecuteNonQuery()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteNonQuery(IConnectionManager connection)
         {
             //Arrange
-            string propName = HashHelper.RandomString(10);
-            SqlTask.ExecuteNonQuery(SqlConnection,
-                "Test add extended property",
-                $@"EXEC sp_addextendedproperty @name = N'{propName}', @value = 'Test';");
+            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "NonQueryTest");
+
             //Act
-            string actual = SqlTask.ExecuteScalar(SqlConnection,
-                "Get reference result",
-                $"SELECT value FROM fn_listextendedproperty('{propName}', default, default, default, default, default, default)").ToString();
+            SqlTask.ExecuteNonQuery(connection, "Test insert with parameter",
+                $"INSERT INTO NonQueryTest VALUES (1, 'Test1')");
+
             //Assert
-            Assert.Equal("Test", actual);
+            Assert.Equal(1, RowCountTask.Count(connection, "NonQueryTest", "Col1 = 1 AND Col2='Test1'"));
         }
 
-        [Fact]
-        public void ExecuteNonQueryWithParameter()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteNonQueryWithParameter(IConnectionManager connection)
         {
             //Arrange
-            string propName = HashHelper.RandomString(10);
-            var parameter = new List<QueryParameter> { new QueryParameter("propName", "nvarchar(100)", propName) };
-            SqlTask.ExecuteNonQuery(SqlConnection,
-                "Test add extended property",
-                $"EXEC sp_addextendedproperty @name = @propName, @value = 'Test';", parameter);
+            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "ParameterTest");
+
             //Act
-            string actual = SqlTask.ExecuteScalar(SqlConnection,
-                "Get reference result",
-                $"SELECT value FROM fn_listextendedproperty(@propName, default, default, default, default, default, default)", parameter).ToString();
+            var parameter = new List<QueryParameter>
+            {
+                new QueryParameter("value1", "INT", "1"),
+                new QueryParameter("value2", "NVARCHAR(100)", "Test1")
+            };
+            SqlTask.ExecuteNonQuery(connection, "Test insert with parameter",
+                $"INSERT INTO ParameterTest VALUES (@value1, @value2)", parameter);
+
             //Assert
-            Assert.Equal("Test", actual);
+            Assert.Equal(1, RowCountTask.Count(connection, "ParameterTest", "Col1 = 1 AND Col2='Test1'"));
         }
 
-        [Fact]
-        public void ExecuteScalar()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteScalar(IConnectionManager connection)
         {
             //Arrange
             //Act
-            object result = SqlTask.ExecuteScalar(SqlConnection,
+            object result = SqlTask.ExecuteScalar(connection,
                 "Test execute scalar",
                 $@"SELECT CAST('Hallo Welt' AS NVARCHAR(100)) AS ScalarResult");
             //Assert
@@ -67,20 +68,32 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
         }
 
-        [Fact]
-        public void ExecuteScalarDatatype()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteScalarWithCasting(IConnectionManager connection)
         {
-            //Arrange
-            //Act
-            decimal result = (decimal)(SqlTask.ExecuteScalar(SqlConnection,
-                "Test execute scalar with datatype",
-                $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
-            //Assert
-            Assert.Equal(1.343m,result);
-
+            if (connection.GetType() == typeof(SQLiteConnectionManager))
+            {
+                //Arrange
+                //Act
+                double result = (double)(SqlTask.ExecuteScalar(connection,
+                    "Test execute scalar with datatype",
+                    $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
+                //Assert
+                Assert.Equal(1.343, result);
+            }
+            else
+            {
+                //Arrange
+                //Act
+                decimal result = (decimal)(SqlTask.ExecuteScalar(connection,
+                    "Test execute scalar with datatype",
+                    $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
+                //Assert
+                Assert.Equal(1.343m, result);
+            }
         }
 
-        [Theory, MemberData(nameof(ConnectionsWithValue),"1"),
+        [Theory, MemberData(nameof(ConnectionsWithValue), "1"),
         MemberData(nameof(ConnectionsWithValue), "7"),
         MemberData(nameof(ConnectionsWithValue), "NULL"),
         MemberData(nameof(ConnectionsWithValue), "'true'")]
@@ -98,50 +111,60 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 Assert.True(result);
         }
 
-        [Fact]
-        public void ExecuteReaderSingleColumn()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteReaderSingleColumn(IConnectionManager connection)
         {
             //Arrange
+            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "ExecuteReader");
+            twoColumns.InsertTestData();
             List<int> asIsResult = new List<int>();
             List<int> toBeResult = new List<int>() { 1, 2, 3 };
+
             //Act
             SqlTask.ExecuteReader(SqlConnection,
                 "Test execute reader",
-                "SELECT * FROM (VALUES (1),(2),(3)) MyTable(a)",
+                "SELECT Col1 FROM ExecuteReader",
                 colA => asIsResult.Add((int)colA));
+
             //Assert
             Assert.Equal(toBeResult, asIsResult);
         }
 
-        [Fact]
-        public void ExecuteReaderWithParameter()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteReaderWithParameter(IConnectionManager connection)
         {
             //Arrange
+            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "ExecuteReaderWithPar");
+            twoColumns.InsertTestData();
             List<int> asIsResult = new List<int>();
-            List<int> toBeResult = new List<int>() { 1 };
-            List<QueryParameter> parameter = new List<QueryParameter>() { new QueryParameter("par1", "int", 1) };
+            List<int> toBeResult = new List<int>() { 2 };
+
+            List<QueryParameter> parameter = new List<QueryParameter>()
+            {
+                new QueryParameter("par1", "NVARCHAR(10)","Test2")
+            };
             //Act
-            SqlTask.ExecuteReader(SqlConnection, "Test execute reader",
-                "SELECT * FROM (VALUES (1),(2),(3)) MyTable(a) where a = @par1", parameter,
+            SqlTask.ExecuteReader(connection, "Test execute reader",
+                "SELECT Col1 FROM ExecuteReaderWithPar WHERE Col2 = @par1", parameter,
                 colA => asIsResult.Add((int)colA));
             //Assert
             Assert.Equal(toBeResult, asIsResult);
         }
 
-        public class ThreeInteger : IEquatable<ThreeInteger>
+        public class MySimpleRow : IEquatable<MySimpleRow>
         {
-            public int A { get; set; }
-            public int B { get; set; }
-            public int C { get; set; }
-            public ThreeInteger() { }
-            public ThreeInteger(int a, int b, int c)
+            public int Col1 { get; set; }
+            public string Col2 { get; set; }
+            public MySimpleRow() { }
+            public MySimpleRow(int col1, string col2)
             {
-                A = a; B = b; C = c;
+                Col1 = col1; Col2 = col2;
             }
-            public bool Equals(ThreeInteger other) => other != null ? other.A == A && other.B == B && other.C == C : false;
+            public bool Equals(MySimpleRow other) => other != null ?
+                other.Col1 == Col1 && other.Col2 == Col2 : false;
             public override bool Equals(object obj)
             {
-                return this.Equals((ThreeInteger)obj);
+                return this.Equals((MySimpleRow)obj);
             }
             public override int GetHashCode()
             {
@@ -149,52 +172,32 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             }
         }
 
-        [Fact]
-        public void ExecuteReaderMultiColumn()
+        [Theory, MemberData(nameof(Connections))]
+        public void ExecuteReaderMultiColumn(IConnectionManager connection)
         {
             //Arrange
-            List<ThreeInteger> asIsResult = new List<ThreeInteger>();
-            List<ThreeInteger> toBeResult = new List<ThreeInteger>() { new ThreeInteger(1, 2, 3), new ThreeInteger(4, 5, 6), new ThreeInteger(7, 8, 9) };
-            ThreeInteger CurColumn = new ThreeInteger();
+            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "MultiColumnRead");
+            twoColumns.InsertTestData();
+
+            List<MySimpleRow> asIsResult = new List<MySimpleRow>();
+            List<MySimpleRow> toBeResult = new List<MySimpleRow>() {
+                new MySimpleRow(1, "Test1"),
+                new MySimpleRow(2, "Test2"),
+                new MySimpleRow(3, "Test3") };
+            MySimpleRow CurColumn = new MySimpleRow();
+
             //Act
-            SqlTask.ExecuteReader(SqlConnection,
+            SqlTask.ExecuteReader(connection,
                 "Test execute reader",
-                "SELECT * FROM (VALUES (1, 2, 3), (4, 5, 6), (7, 8, 9)) AS MyTable(a,b,c)"
-                , () => CurColumn = new ThreeInteger()
+                "SELECT * FROM MultiColumnRead"
+                , () => CurColumn = new MySimpleRow()
                 , () => asIsResult.Add(CurColumn)
-                , colA => CurColumn.A = (int)colA
-                , colB => CurColumn.B = (int)colB
-                , colC => CurColumn.C = (int)colC
+                , colA => CurColumn.Col1 = (int)colA
+                , colB => CurColumn.Col2 = (string)colB
                 );
+
             //Assert
             Assert.Equal(toBeResult, asIsResult);
-        }
-
-
-
-        [Fact]
-        public void BulkInsert()
-        {
-            //Arrange
-            TableDefinition tableDefinition = new TableDefinition("dbo.BulkInsert", new List<TableColumn>() {
-                new TableColumn("ID", "int", allowNulls: false,isPrimaryKey:true,isIdentity:true)   ,
-                new TableColumn("Col1", "nvarchar(4000)", allowNulls: true),
-                new TableColumn("Col2", "nvarchar(4000)", allowNulls: true)
-            });
-            tableDefinition.CreateTable(SqlConnection);
-            TableData data = new TableData(tableDefinition);
-            string[] values = { "Value1", "Value2" };
-            data.Rows.Add(values);
-            string[] values2 = { "Value3", "Value4" };
-            data.Rows.Add(values2);
-            string[] values3 = { "Value5", "Value6" };
-            data.Rows.Add(values3);
-
-            //Act
-            SqlTask.BulkInsert(SqlConnection, "Bulk insert demo data", data, "dbo.BulkInsert");
-
-            //Assert
-            Assert.Equal(3, RowCountTask.Count(SqlConnection, "dbo.BulkInsert", "Col1 LIKE 'Value%'"));
         }
 
     }

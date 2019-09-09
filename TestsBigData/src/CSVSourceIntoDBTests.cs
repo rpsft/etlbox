@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.BigData
         public static IEnumerable<object[]> Connections(int value1, int value2) => new[] {
             new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("BigData") , value1, value2},
             new object[] { (IConnectionManager)Config.SqlOdbcConnection.ConnectionManager("BigData") , value1, value2},
-            new object[] { (IConnectionManager)Config.AccessOdbcConnection.ConnectionManager("BigData") , value1, value2}
+            //new object[] { (IConnectionManager)Config.AccessOdbcConnection.ConnectionManager("BigData") , value1, value2}
         };
 
         public CSVSourceIntoDBTests(BigDataDatabaseFixture dbFixture)

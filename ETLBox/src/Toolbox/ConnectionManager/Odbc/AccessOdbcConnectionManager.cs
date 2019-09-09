@@ -39,6 +39,7 @@ namespace ALE.ETLBox.ConnectionManager
         public AccessOdbcConnectionManager() : base() { }
 
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
+        public AccessOdbcConnectionManager(string connectionString) : base(new OdbcConnectionString(connectionString)) { }
 
         /// <summary>
         /// Helper table that needs to be created in order to simulate bulk inserts.

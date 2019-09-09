@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.Fixtures
 {
     public class TwoColumnsDeltaTableFixture
     {

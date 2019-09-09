@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.Fixtures
 {
     public class FourColumnsTableFixture
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public IConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
         public FourColumnsTableFixture(string tableName)
@@ -27,6 +27,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
             this.TableName = tableName;
             RecreateTable(identityColumnIndex);
         }
+
+        public FourColumnsTableFixture(IConnectionManager connection, string tableName)
+        {
+            this.TableName = tableName;
+            this.Connection = connection;
+            RecreateTable(0);
+        }
+
+        public FourColumnsTableFixture(IConnectionManager connection, string tableName, int identityColumnIndex)
+        {
+            this.TableName = tableName;
+            this.Connection = connection;
+            RecreateTable(identityColumnIndex);
+        }
+
 
         public void RecreateTable(int identityColumnIndex)
         {

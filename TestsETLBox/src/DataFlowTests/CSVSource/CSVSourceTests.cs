@@ -4,6 +4,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using CsvHelper.Configuration.Attributes;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +19,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class CSVSourceTests : IDisposable
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
-        public CSVSourceTests(DatabaseFixture dbFixture)
+        public CSVSourceTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

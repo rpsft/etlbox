@@ -22,6 +22,7 @@ namespace ALE.ETLBox.ConnectionManager
         public SQLiteConnectionManager() : base() { }
 
         public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString) { }
+        public SQLiteConnectionManager(string connectionString) : base(new SQLiteConnectionString(connectionString)) { }
 
         public override void BulkInsert(ITableData data, string tableName)
         {

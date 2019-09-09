@@ -22,10 +22,13 @@ namespace ALE.ETLBox.ConnectionManager
 
         public SMOConnectionManager(ConnectionString connectionString)
         {
-            //RuntimePolicyHelper.SetNET20Compatibilty();
             ConnectionString = connectionString;
             SqlConnectionManager = new SqlConnectionManager(connectionString);
         }
+
+        public SMOConnectionManager(string connectionString) : this (new ConnectionString(connectionString))
+        { }
+
 
         internal Server Server { get; set; }
         internal ServerConnection Context => Server.ConnectionContext;

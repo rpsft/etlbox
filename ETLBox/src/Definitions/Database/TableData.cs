@@ -6,10 +6,9 @@ using System.Data.Common;
 
 
 namespace ALE.ETLBox {
-    public class TableData : TableData<object> {
-        public TableData()  : base() { }
+    public class TableData : TableData<object[]> {
         public TableData(TableDefinition definition) : base(definition) { }
-        public TableData(TableDefinition definition, int estimatedBatchSize) : base() { }
+        public TableData(TableDefinition definition, int estimatedBatchSize) : base(definition, estimatedBatchSize) { }
     }
 
     public class TableData<T> : ITableData
@@ -53,14 +52,12 @@ namespace ALE.ETLBox {
         int? IDColumnIndex { get; set; }
         bool HasIDColumnIndex => IDColumnIndex != null;
 
-        public TableData()
-        {
-            Rows = new List<object[]>();
-            TypeInfo = new TypeInfo(typeof(T));
-        }
-        public TableData(TableDefinition definition) : this()
+        public TableData(TableDefinition definition)
         {
             Definition = definition;
+            IDColumnIndex = Definition.IDColumnIndex;
+            Rows = new List<object[]>();
+            TypeInfo = new TypeInfo(typeof(T));
         }
 
         public TableData(TableDefinition definition, int estimatedBatchSize)

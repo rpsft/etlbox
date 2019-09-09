@@ -18,6 +18,8 @@ namespace ALE.ETLBox.ConnectionManager
 
         public SqlConnectionManager(ConnectionString connectionString) : base(connectionString) { }
 
+        public SqlConnectionManager(string connectionString) : base(new ConnectionString(connectionString)) { }
+
         public override void BulkInsert(ITableData data, string tableName)
         {
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(DbConnection, SqlBulkCopyOptions.TableLock, null))

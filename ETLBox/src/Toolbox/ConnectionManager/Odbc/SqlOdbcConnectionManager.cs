@@ -30,6 +30,7 @@ namespace ALE.ETLBox.ConnectionManager
         public SqlOdbcConnectionManager() : base() { }
 
         public SqlOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
+        public SqlOdbcConnectionManager(string connectionString) : base(new OdbcConnectionString(connectionString)) { }
 
         public override IDbConnectionManager Clone()
         {

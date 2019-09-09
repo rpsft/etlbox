@@ -91,16 +91,28 @@ $@"CREATE TABLE {TableName} (
                 nullSql = col.AllowNulls
                             ? "NULL"
                             : "NOT NULL";
-            string primarySql = col.IsPrimaryKey
-                                ? $"CONSTRAINT [pk_{TableWithoutSchema}_{col.Name}] PRIMARY KEY CLUSTERED ( [{col.Name}] ASC )"
-                                : string.Empty;
+            string primarySql = CreatePrimaryKeyConstraint(col);
             string defaultSql = string.Empty;
             if (!col.IsPrimaryKey)
                 defaultSql = col.DefaultValue != null ? DefaultConstraintName(col.DefaultConstraintName) + $" DEFAULT {SetQuotesIfString(col.DefaultValue)}" : string.Empty;
             string computedColumnSql = !String.IsNullOrWhiteSpace(col.ComputedColumn)
                                         ? $"AS {col.ComputedColumn}"
                                         : string.Empty;
-            return $@"[{col.Name}] {dataType} {identitySql} {collationSql} {nullSql} {primarySql} {defaultSql} {computedColumnSql}";
+            return
+$@"[{col.Name}] {dataType} {identitySql} {collationSql} {nullSql} {primarySql} {defaultSql} {computedColumnSql}";
+        }
+
+        private string CreatePrimaryKeyConstraint(ITableColumn col)
+        {
+            if (col.IsPrimaryKey)
+            {
+                string pkConst = $"CONSTRAINT [pk_{TableWithoutSchema}_{col.Name}] PRIMARY KEY";
+                if (this.ConnectionType == ConnectionManagerType.SqlServer)
+                    pkConst += $" CLUSTERED( [{ col.Name}] ASC ) ";
+                return pkConst;
+            }
+            else
+                return String.Empty;
         }
 
         string DefaultConstraintName(string defConstrName) => !String.IsNullOrWhiteSpace(defConstrName) ? $"CONSTRAINT {defConstrName}" : string.Empty;

@@ -33,7 +33,7 @@ namespace ALE.ETLBox.Helper
         public static SqlConnectionManager SqlConnectionManager(string section)
             => SqlConnection.ConnectionManager(section);
 
-        public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager> SQLLiteConnection
+        public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager> SQLiteConnection
         { get; set; } = new ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>("SQLiteConnectionString");
 
         public static ConnectionDetails<ConnectionString, AdomdConnectionManager> SSASConnection
@@ -50,14 +50,17 @@ namespace ALE.ETLBox.Helper
 
         public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)SqlOdbcConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)SQLLiteConnection.ConnectionManager(section) }
+                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) },
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)SqlOdbcConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)SQLLiteConnection.ConnectionManager(section) , value}
+                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
+        };
+
+        public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value) => new[] {
+                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
+                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
         };
 
         public static IEnumerable<object[]> AllOdbcConnections(string section) => new[] {

@@ -4,6 +4,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class MulticastSplitDataTests : IDisposable
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
-        public MulticastSplitDataTests(DatabaseFixture dbFixture)
+        public MulticastSplitDataTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

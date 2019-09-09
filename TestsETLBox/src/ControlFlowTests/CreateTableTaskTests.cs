@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class CreateTableTaskTests
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public CreateTableTaskTests(DatabaseFixture dbFixture)
+        public CreateTableTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Fact]

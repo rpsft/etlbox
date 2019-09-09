@@ -18,6 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
         public AdomdConnectionManager() : base() { }
 
         public AdomdConnectionManager(ConnectionString connectionString) : base(connectionString) { }
+        public AdomdConnectionManager(string connectionString) : base(new ConnectionString(connectionString)) { }
 
         public override void BulkInsert(ITableData data, string tableName)
         {

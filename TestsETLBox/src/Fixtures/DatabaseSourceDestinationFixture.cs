@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.Fixtures
 {
     [CollectionDefinition("DataFlow Source and Destination")]
     public class DatalFlowSourceDestinationCollectionClass : ICollectionFixture<DatabaseSourceDestinationFixture> { }

@@ -4,6 +4,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -14,7 +15,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class DBSourceNonGenericTests : IDisposable
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
-        public DBSourceNonGenericTests(DatabaseFixture dbFixture)
+        public DBSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
