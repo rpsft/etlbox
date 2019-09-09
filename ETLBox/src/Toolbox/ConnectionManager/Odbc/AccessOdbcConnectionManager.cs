@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System;
 using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.ConnectionManager {
+namespace ALE.ETLBox.ConnectionManager
+{
     /// <summary>
     /// Connection manager for an ODBC connection to Acccess databases.
     /// This connection manager also is based on ADO.NET.
@@ -32,7 +33,8 @@ namespace ALE.ETLBox.ConnectionManager {
     ///      "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb"));
     /// </code>
     /// </example>
-    public class AccessOdbcConnectionManager : OdbcConnectionManager {
+    public class AccessOdbcConnectionManager : OdbcConnectionManager
+    {
 
         public AccessOdbcConnectionManager() : base() { }
 
@@ -46,47 +48,61 @@ namespace ALE.ETLBox.ConnectionManager {
 
         public bool AlwaysUseSameConnection { get; set; }
 
-        public override void BulkInsert(ITableData data, string tableName) {
-            BulkInsertString bulkInsert = new BulkInsertString() {
+        public override void BulkInsert(ITableData data, string tableName)
+        {
+            BulkInsertSql bulkInsert = new BulkInsertSql()
+            {
                 IsAccessDatabase = true,
-                AccessDummyTableName = DummyTableName
+                AccessDummyTableName = DummyTableName,
+                UseParameterQuery = true
             };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();
+            cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }
 
-        public override void BeforeBulkInsert() {
+        public override void BeforeBulkInsert()
+        {
             TryDropDummyTable();
             CreateDummyTable();
         }
-        public override void AfterBulkInsert() {
+        public override void AfterBulkInsert()
+        {
             TryDropDummyTable();
         }
 
-        private void TryDropDummyTable() {
-            try {
+        private void TryDropDummyTable()
+        {
+            try
+            {
                 ExecuteCommandOnSameConnection($@"DROP TABLE {DummyTableName};");
-            } catch { }
+            }
+            catch { }
         }
 
-        private void CreateDummyTable() {
+        private void CreateDummyTable()
+        {
             ExecuteCommandOnSameConnection($@"CREATE TABLE {DummyTableName} (Field1 NUMBER);");
             ExecuteCommandOnSameConnection($@"INSERT INTO { DummyTableName} VALUES(1);");
         }
 
-        private void ExecuteCommandOnSameConnection(string sql) {
+        private void ExecuteCommandOnSameConnection(string sql)
+        {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }
 
-        public override IDbConnectionManager Clone() {
+        public override IDbConnectionManager Clone()
+        {
             if (AlwaysUseSameConnection)
                 return this;
-            else {
-                AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager((OdbcConnectionString)ConnectionString) {
+            else
+            {
+                AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager((OdbcConnectionString)ConnectionString)
+                {
                     MaxLoginAttempts = this.MaxLoginAttempts
                 };
                 return clone;

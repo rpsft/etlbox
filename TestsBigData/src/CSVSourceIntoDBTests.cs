@@ -60,8 +60,8 @@ namespace ALE.ETLBoxTests.BigData
          * X Rows with 8007 bytes per Row (8000 bytes data + 7 bytes for sql server)
          */
         [Theory,
-            //MemberData(nameof(Connections), 3, 3)]
-            MemberData(nameof(Connections), 200000, 1000)]
+            MemberData(nameof(Connections), 3, 3)]
+            //MemberData(nameof(Connections), 200000, 1000)]
         public void UsingNonGeneric(IConnectionManager connection, int numberOfRows, int batchSize)
         {
             //Arrange
