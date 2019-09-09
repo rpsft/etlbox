@@ -13,8 +13,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class SqlTaskTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
-        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> ConnectionsWithValue(string value) => Config.AllSqlConnectionsWithValue("ControlFlow", value);
 
@@ -121,7 +119,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             List<int> toBeResult = new List<int>() { 1, 2, 3 };
 
             //Act
-            SqlTask.ExecuteReader(SqlConnection,
+            SqlTask.ExecuteReader(connection,
                 "Test execute reader",
                 "SELECT Col1 FROM ExecuteReader",
                 colA => asIsResult.Add((int)colA));

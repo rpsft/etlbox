@@ -11,38 +11,46 @@ using Xunit;
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
-    public class RowCountTaskTests : IClassFixture<RowCountTableFixture>
+    public class RowCountTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public RowCountTaskTests(ControlFlowDatabaseFixture dbFixture, RowCountTableFixture rcfixture)
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+
+        public RowCountTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Fact]
-        public void NormalCount()
+        [Theory, MemberData(nameof(Connections))]
+        public void NormalCount(IConnectionManager connection)
         {
             //Arrange
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(connection, "RowCountTest");
+            tableDef.InsertTestData();
             //Act
-            int? actual = RowCountTask.Count(Connection, "RowCountTest");
+            int? actual = RowCountTask.Count(connection, "RowCountTest");
             //Assert
             Assert.Equal(3, actual);
         }
 
-        [Fact]
-        public void CountWithCondition()
+        [Theory, MemberData(nameof(Connections))]
+        public void CountWithCondition(IConnectionManager connection)
         {
             //Arrange
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(connection, "RowCountTest");
+            tableDef.InsertTestData();
             //Act
-            int? actual = RowCountTask.Count(Connection,"RowCountTest", "Col1 = 2");
+            int? actual = RowCountTask.Count(connection, "RowCountTest", "Col1 = 2");
             //Assert
             Assert.Equal(1, actual );
         }
 
         [Fact]
-        public void CountWithQuickQueryMode()
+        public void SqlServerQuickQueryMode()
         {
             //Arrange
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(SqlConnection, "RowCountTest");
+            tableDef.InsertTestData();
             //Act
-            int? actual = RowCountTask.Count(Connection, "RowCountTest", RowCountOptions.QuickQueryMode);
+            int? actual = RowCountTask.Count(SqlConnection, "RowCountTest", RowCountOptions.QuickQueryMode);
             //Assert
             Assert.Equal(3, actual);
         }

@@ -59,13 +59,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-        [Fact]
-        public void SqlWithSelectStar()
+        [Theory, MemberData(nameof(Connections))]
+        public void SqlWithSelectStar(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(SqlConnection, "Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "Destination");
 
             //Act
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
@@ -73,7 +73,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 Sql = $@"SELECT * FROM Source",
                 ConnectionManager = SqlConnection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "Destination");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

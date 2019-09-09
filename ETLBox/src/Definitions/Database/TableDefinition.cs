@@ -40,11 +40,26 @@ namespace ALE.ETLBox
             Columns = columns;
         }
 
-        public void CreateTable()=> CreateTableTask.Create(this);
+        public void CreateTable() => CreateTableTask.Create(this);
 
         public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
 
-        internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
+        internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection, ConnectionManagerType connectionType)
+        {
+            if (connectionType == ConnectionManagerType.SqlServer)
+            {
+                return ReadTableDefinitionFromSqlServer(tableName, connection);
+            }
+            else if (connectionType == ConnectionManagerType.SQLLite)
+            {
+                return ReadTableDefinitionFromSQLite(tableName, connection);
+            }
+            else
+            {
+                throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
+            }
+        }
+        private static TableDefinition ReadTableDefinitionFromSqlServer(string tableName, IConnectionManager connection)
         {
             TableDefinition result = new TableDefinition(tableName);
             TableColumn curCol = null;
@@ -82,6 +97,32 @@ WHERE (sc.name + '.' + tbl.name ='{tableName}'
             return result;
         }
 
+        private static TableDefinition ReadTableDefinitionFromSQLite(string tableName, IConnectionManager connection)
+        {
+            TableDefinition result = new TableDefinition(tableName);
+            TableColumn curCol = null;
+            var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
+$@"PRAGMA table_info(""{tableName}"")"
+            , () => { curCol = new TableColumn(); }
+            , () => { result.Columns.Add(curCol); }
+            , cid => {; }
+            , name => curCol.Name = name.ToString()
+            , type => curCol.DataType = type.ToString()
+            , is_nullable =>
+            {
+                if ((long)is_nullable == 1)
+                    curCol.AllowNulls = true;
+            }
+            , dftl_value => {; }
+            , pk => {; }
+             )
+            {
+                DisableLogging = true,
+                ConnectionManager = connection
+            };
+            readMetaSql.ExecuteReader();
+            return result;
+        }
 
     }
 }
