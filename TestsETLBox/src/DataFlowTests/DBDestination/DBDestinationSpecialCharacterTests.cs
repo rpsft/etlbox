@@ -18,6 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class DBDestinationSpecialCharacterTests : IDisposable
     {
         public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnections("DataFlow");
+        public static IEnumerable<object[]> SqlConnections => Config.AllSqlConnections("DataFlow");
 
         public DBDestinationSpecialCharacterTests(DataFlowDatabaseFixture dbFixture)
         {
@@ -35,9 +36,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 , $@"INSERT INTO {tableName} VALUES(2,' '' """" ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                  , $@"INSERT INTO {tableName} VALUES(3,' !""§$%&/())='' ')");
+            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
+                , $@"INSERT INTO {tableName} VALUES(4,NULL)");
         }
 
-        [Theory, MemberData(nameof(OdbcConnections))]
+        [Theory, MemberData(nameof(OdbcConnections)),
+            MemberData(nameof(SqlConnections))]
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
@@ -62,8 +66,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "SpecialCharacterDestination"));
-
+            Assert.Equal(4, RowCountTask.Count(connection, "SpecialCharacterDestination"));
         }
     }
 }

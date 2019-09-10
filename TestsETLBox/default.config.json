@@ -14,10 +14,13 @@
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.mdb"
     },
     "DataFlowSource": {
-        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowSource"
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowSource",
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowSource.db;Version=3;"
+
     },
     "DataFlowDestination": {
-        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowDestination"
+        "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowDestination",
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowDestination.db;Version=3;"
     },
     "ConnectionManager": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_ConnectionManager"

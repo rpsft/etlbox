@@ -46,6 +46,7 @@ namespace ALE.ETLBox
 
         internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection, ConnectionManagerType connectionType)
         {
+            IfExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             if (connectionType == ConnectionManagerType.SqlServer)
             {
                 return ReadTableDefinitionFromSqlServer(tableName, connection);
@@ -90,7 +91,6 @@ WHERE (sc.name + '.' + tbl.name ='{tableName}'
              )
             {
                 DisableLogging = true,
-                DisableExtension = true,
                 ConnectionManager = connection
             };
             readMetaSql.ExecuteReader();

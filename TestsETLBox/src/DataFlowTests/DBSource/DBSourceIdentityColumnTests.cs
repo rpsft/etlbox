@@ -14,7 +14,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBSourceIdentityColumnTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public DBSourceIdentityColumnTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -29,63 +30,55 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public decimal? Col4 { get; set; }
         }
 
-        private void DataFlowForIdentityColumn()
+        private void DataFlowForIdentityColumn(IConnectionManager connection)
         {
-            DBSource<MyPartialRow> source = new DBSource<MyPartialRow>(Connection, "dbo.Source4Cols");
-            DBDestination<MyPartialRow> dest = new DBDestination<MyPartialRow>(Connection, "dbo.Destination4Cols");
+            DBSource<MyPartialRow> source = new DBSource<MyPartialRow>(connection, "Source4Cols");
+            DBDestination<MyPartialRow> dest = new DBDestination<MyPartialRow>(connection, "Destination4Cols");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
         }
 
-        [Fact]
-        private void IdentityColumnsAtTheBeginning()
+        [Theory, MemberData(nameof(Connections))]
+        private void IdentityColumnsAtTheBeginning(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("dbo.Source4Cols", identityColumnIndex: 0);
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "Source4Cols", identityColumnIndex: 0);
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("dbo.Destination4Cols", identityColumnIndex: 0);
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination4Cols", identityColumnIndex: 0);
 
             //Act
-            DataFlowForIdentityColumn();
+            DataFlowForIdentityColumn(connection);
 
             //Assert
             dest4Columns.AssertTestData();
         }
 
-        [Fact]
-        private void IdentityColumnInTheMiddle()
+        [Theory, MemberData(nameof(Connections))]
+        private void IdentityColumnInTheMiddle(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("dbo.Source4Cols", identityColumnIndex: 1);
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "Source4Cols", identityColumnIndex: 1);
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("dbo.Destination4Cols", identityColumnIndex: 2);
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination4Cols", identityColumnIndex: 2);
 
             //Act
-            DBSource<MyPartialRow> source = new DBSource<MyPartialRow>(Connection, "dbo.Source4Cols");
-            DBDestination<MyPartialRow> dest = new DBDestination<MyPartialRow>(Connection, "dbo.Destination4Cols");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+            DataFlowForIdentityColumn(connection);
 
             //Assert
             dest4Columns.AssertTestData();
         }
 
-        [Fact]
-        private void IdentityColumnAtTheEnd()
+        [Theory, MemberData(nameof(Connections))]
+        private void IdentityColumnAtTheEnd(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("dbo.Source4Cols", identityColumnIndex: 3);
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "Source4Cols", identityColumnIndex: 3);
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("dbo.Destination4Cols", identityColumnIndex: 3);
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination4Cols", identityColumnIndex: 3);
 
             //Act
-            DBSource<MyPartialRow> source = new DBSource<MyPartialRow>(Connection, "dbo.Source4Cols");
-            DBDestination<MyPartialRow> dest = new DBDestination<MyPartialRow>(Connection, "dbo.Destination4Cols");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+            DataFlowForIdentityColumn(connection);
 
             //Assert
             dest4Columns.AssertTestData();

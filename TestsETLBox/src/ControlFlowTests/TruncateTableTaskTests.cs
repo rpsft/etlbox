@@ -10,40 +10,25 @@ using Xunit;
 
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
-    public class TruncateTableTaskFixture
-    {
-        public TruncateTableTaskFixture()
-        {
-            SqlTask.ExecuteNonQuery(Config.SqlConnectionManager("ControlFlow")
-                , "Create test data table"
-                , $@"
-CREATE TABLE TruncateTableTest
-(
-    Col1 INT NULL
-)
-INSERT INTO TruncateTableTest
-SELECT * FROM
-(VALUES (1), (2), (3)) AS MyTable(v)");
-        }
-    }
-
     [Collection("ControlFlow")]
-    public class TruncateTableTaskTests : IClassFixture<TruncateTableTaskFixture>
+    public class TruncateTableTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public TruncateTableTaskTests(ControlFlowDatabaseFixture dbFixture, TruncateTableTaskFixture rcfixture)
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+
+        public TruncateTableTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-
-        [Fact]
-        public void Truncate()
+        [Theory, MemberData(nameof(Connections))]
+        public void Truncate(IConnectionManager connection)
         {
             //Arrange
-            Assert.Equal(3, RowCountTask.Count(Connection, "TruncateTableTest"));
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(connection, "TruncateTableTest");
+            tableDef.InsertTestData();
+            Assert.Equal(3, RowCountTask.Count(connection, "TruncateTableTest"));
             //Act
-            TruncateTableTask.Truncate(Connection, "TruncateTableTest");
+            TruncateTableTask.Truncate(connection, "TruncateTableTest");
             //Assert
-            Assert.Equal(0, RowCountTask.Count(Connection, "TruncateTableTest"));
+            Assert.Equal(0, RowCountTask.Count(connection, "TruncateTableTest"));
         }
 
     }

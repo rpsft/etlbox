@@ -36,5 +36,20 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.False(existsBefore);
             Assert.True(existsAfter);
         }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void ThrowException(IConnectionManager connection)
+        {
+            //Arrange
+            //Act
+            //Assert
+            Assert.Throws<ETLBoxException>(
+                () =>
+                {
+                    IfExistsTask.ThrowExceptionIfNotExists(connection, "xyz.Somestrangenamehere");
+                });
+
+
+        }
     }
 }

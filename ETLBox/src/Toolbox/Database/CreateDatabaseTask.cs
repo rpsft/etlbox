@@ -1,7 +1,8 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow
+{
     /// <summary>
     /// Will create a database if the database doesn't exists.
     /// </summary>
@@ -17,8 +18,9 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskName => $"Create DB {DatabaseName}";
         public override void Execute()
         {
+            if (ConnectionType == ConnectionManagerType.SQLLite)
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             new SqlTask(this, Sql).ExecuteNonQuery();
-
         }
 
         public void Create() => Execute();
@@ -57,7 +59,8 @@ END
         }
 
         /* Some constructors */
-        public CreateDatabaseTask() {
+        public CreateDatabaseTask()
+        {
         }
 
         public CreateDatabaseTask(string databaseName) : this()
@@ -77,8 +80,8 @@ END
 
         /* Static methods for convenience */
         public static void Create(string databaseName) => new CreateDatabaseTask(databaseName).Execute();
-        public static void Create(string databaseName, RecoveryModel recoveryModel) => new CreateDatabaseTask(databaseName,recoveryModel).Execute();
-        public static void Create(string databaseName, RecoveryModel recoveryModel, string collation) => new CreateDatabaseTask(databaseName, recoveryModel,collation).Execute();
+        public static void Create(string databaseName, RecoveryModel recoveryModel) => new CreateDatabaseTask(databaseName, recoveryModel).Execute();
+        public static void Create(string databaseName, RecoveryModel recoveryModel, string collation) => new CreateDatabaseTask(databaseName, recoveryModel, collation).Execute();
         public static void Create(IConnectionManager connectionManager, string databaseName)
             => new CreateDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Execute();
         public static void Create(IConnectionManager connectionManager, string databaseName, RecoveryModel recoveryModel)

@@ -17,8 +17,28 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow Source and Destination")]
     public class DBDestinationDifferentDBTests : IDisposable
     {
-        public SqlConnectionManager ConnectionSource => Config.SqlConnectionManager("DataFlowSource");
-        public SqlConnectionManager ConnectionDestination => Config.SqlConnectionManager("DataFlowDestination");
+        public static IEnumerable<object[]> MixedSourceDestinations() => new[] {
+            //Same DB
+            new object[] {
+                (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowDestination")
+            },
+            new object[] {
+                (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowDestination")
+            },
+            //Mixed
+            new object[] {
+                (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowDestination")
+            },
+             new object[] {
+                (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowDestination")
+            },
+
+        };
+
         public DBDestinationDifferentDBTests(DatabaseSourceDestinationFixture dbFixture)
         {
         }
@@ -27,24 +47,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
         }
 
-        [Fact]
-        public void TestTransferBetweenDBs()
+        [Theory, MemberData(nameof(MixedSourceDestinations))]
+        public void TestTransferBetweenDBs(IConnectionManager sourceConnection, IConnectionManager destConnection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(ConnectionSource, "Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(sourceConnection, "Source");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(ConnectionDestination, "Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(destConnection, "Destination");
 
             //Act
-            DBSource source = new DBSource(ConnectionSource, "Source");
-            DBDestination dest = new DBDestination(ConnectionDestination, "Destination");
+            DBSource source = new DBSource(sourceConnection, "Source");
+            DBDestination dest = new DBDestination(destConnection, "Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
             dest2Columns.AssertTestData();
-
         }
     }
 }

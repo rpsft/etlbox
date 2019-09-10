@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow
+{
     /// <summary>
     /// Tries to remove all database objects from the given schema(s).
     /// </summary>
@@ -9,19 +10,23 @@ namespace ALE.ETLBox.ControlFlow {
     /// CleanUpSchemaTask.CleanUp("demo");
     /// </code>
     /// </example>
-    public class CleanUpSchemaTask : GenericTask, ITask {
+    public class CleanUpSchemaTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskType { get; set; } = "CLEANSCHEMA";
         public override string TaskName => $"Clean up schema {SchemaName}";
-        public override void Execute() {
+        public override void Execute()
+        {
+            if (ConnectionType == ConnectionManagerType.SQLLite)
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
-
-
         /* Public properties */
         public string SchemaName { get; set; }
-        public string Sql {
-            get {
+        public string Sql
+        {
+            get
+            {
                 return $@"
     declare @SchemaName nvarchar(1000) = '{SchemaName}'
     declare @SQL varchar(4000)
@@ -101,10 +106,12 @@ namespace ALE.ETLBox.ControlFlow {
         }
 
         /* Some constructors */
-        public CleanUpSchemaTask() {
+        public CleanUpSchemaTask()
+        {
         }
 
-        public CleanUpSchemaTask(string schemaName) : this() {
+        public CleanUpSchemaTask(string schemaName) : this()
+        {
             SchemaName = schemaName;
         }
 

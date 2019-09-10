@@ -14,11 +14,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class GetDatabaseListTaskTests
     {
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");        public string DBName => Config.SqlConnectionString("ControlFlow").DBName;
+
         public GetDatabaseListTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public string DBName => Config.SqlConnectionString("ControlFlow").DBName;
 
         [Fact]
         public void GetDatabaseList()
@@ -26,12 +26,22 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Arrange
 
             //Act
-            List<string> allDatabases = GetDatabaseListTask.List(Connection);
+            List<string> allDatabases = GetDatabaseListTask.List(SqlConnection);
 
             //Assert
             Assert.True(allDatabases.Count >= 1);
             Assert.Contains(allDatabases, name => name == DBName);
 
+        }
+
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+
+        [Fact]
+        public void NotSupportedWithSQLite()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => GetDatabaseListTask.List(SQLiteConnection)
+                );
         }
     }
 }

@@ -4,12 +4,12 @@ namespace ALE.ETLBox.ControlFlow {
     /// <summary>
     /// Creates or updates a view.
     /// </summary>
-    public class CRUDViewTask : GenericTask, ITask {
+    public class CreateOrAlterViewTask : GenericTask, ITask {
         /* ITask Interface */
         public override string TaskType { get; set; } = "CRUDVIEW";
         public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
         public override void Execute() {
-            IsExisting = new SqlTask(this, CheckIfExistsSql) { TaskName = $"Check if view {ViewName} exists", TaskHash = this.TaskHash }.ExecuteScalarAsBool();
+            IsExisting = new IfExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
@@ -21,19 +21,17 @@ AS
 {Definition}
 ";
 
-        public CRUDViewTask() {
+        public CreateOrAlterViewTask() {
 
         }
-        public CRUDViewTask(string viewName, string definition) : this() {
+        public CreateOrAlterViewTask(string viewName, string definition) : this() {
             this.ViewName = viewName;
             this.Definition = definition;
         }
 
-        public static void CreateOrAlter(string viewName, string definition) => new CRUDViewTask(viewName, definition).Execute();
-        public static void CreateOrAlter(IConnectionManager connectionManager, string viewName, string definition) => new CRUDViewTask(viewName, definition) { ConnectionManager = connectionManager }.Execute();
+        public static void CreateOrAlter(string viewName, string definition) => new CreateOrAlterViewTask(viewName, definition).Execute();
+        public static void CreateOrAlter(IConnectionManager connectionManager, string viewName, string definition) => new CreateOrAlterViewTask(viewName, definition) { ConnectionManager = connectionManager }.Execute();
 
-        string CheckIfExistsSql => $@"IF EXISTS (SELECT * FROM sys.objects WHERE type = 'V' AND object_id = object_id('{ViewName}')) SELECT 1; 
-ELSE SELECT 0;";
         bool IsExisting { get; set; }
         string CreateOrAlterSql => IsExisting ? "ALTER" : "CREATE";
 

@@ -44,8 +44,8 @@ namespace ALE.ETLBox.ControlFlow
             {
                 return
 $@"CREATE TABLE {TableName} (
-  {ColumnsDefinitionSql}
-  )
+{ColumnsDefinitionSql}
+)
 ";
             }
         }
@@ -80,11 +80,9 @@ $@"CREATE TABLE {TableName} (
             string dataType = string.Empty;
             if (String.IsNullOrWhiteSpace(col.ComputedColumn))
                 dataType = DataTypeConverter.TryGetDBSpecificType(col.DataType, this.ConnectionType);
-            string identitySql = col.IsIdentity
-                                    ? $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})"
-                                    : string.Empty;
+            string identitySql = CreateIdentitySql(col);
             string collationSql = !String.IsNullOrWhiteSpace(col.Collation)
-                                    ? $"collate {col.Collation}"
+                                    ? $"COLLATE {col.Collation}"
                                     : string.Empty;
             string nullSql = string.Empty;
             if (String.IsNullOrWhiteSpace(col.ComputedColumn))
@@ -102,13 +100,20 @@ $@"CREATE TABLE {TableName} (
 $@"[{col.Name}] {dataType} {identitySql} {collationSql} {nullSql} {primarySql} {defaultSql} {computedColumnSql}";
         }
 
+        private string CreateIdentitySql(ITableColumn col)
+        {
+            if (ConnectionType == ConnectionManagerType.SQLLite) return string.Empty;
+            if (col.IsIdentity)
+                return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
+            else
+                return string.Empty;
+        }
+
         private string CreatePrimaryKeyConstraint(ITableColumn col)
         {
             if (col.IsPrimaryKey)
             {
-                string pkConst = $"CONSTRAINT [pk_{TableWithoutSchema}_{col.Name}] PRIMARY KEY";
-                if (this.ConnectionType == ConnectionManagerType.SqlServer)
-                    pkConst += $" CLUSTERED( [{ col.Name}] ASC ) ";
+                string pkConst = $"CONSTRAINT [pk_{TableWithoutSchema}_{col.Name}] PRIMARY KEY ";
                 return pkConst;
             }
             else

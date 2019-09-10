@@ -30,6 +30,12 @@
     <None Update="db\SQLiteControlFlow.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="db\SQLiteDataFlowDestination.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="db\SQLiteDataFlowSource.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="db\SQLiteDataFlow.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

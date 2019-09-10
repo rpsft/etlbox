@@ -17,7 +17,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBDestinationTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
         public DBDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -39,15 +39,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string Text { get; set; }
         }
 
-        [Fact]
-        public void ColumnMapping()
+        [Theory, MemberData(nameof(Connections))]
+        public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("Source");
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection,"Source");
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("Destination", identityColumnIndex: 2);
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination", identityColumnIndex: 2);
 
-            DBSource source = new DBSource(Connection, "dbo.Source");
+            DBSource source = new DBSource(connection, "Source");
             RowTransformation<string[], MyExtendedRow> trans = new RowTransformation<string[], MyExtendedRow>(
                 row => new MyExtendedRow()
                 {
@@ -58,7 +58,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(Connection, "dbo.Destination");
+            DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(connection, "Destination");
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

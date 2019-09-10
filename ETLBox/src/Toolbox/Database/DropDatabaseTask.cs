@@ -16,6 +16,8 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskName => $"Drop DB {DatabaseName}";
         public override void Execute()
         {
+            if (ConnectionType == ConnectionManagerType.SQLLite)
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 

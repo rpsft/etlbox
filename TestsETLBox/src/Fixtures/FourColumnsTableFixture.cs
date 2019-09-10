@@ -14,6 +14,7 @@ namespace ALE.ETLBoxTests.Fixtures
     public class FourColumnsTableFixture
     {
         public IConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
+        public bool IsSQLiteConnection => this.Connection.GetType() == typeof(SQLiteConnectionManager);
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
         public FourColumnsTableFixture(string tableName)
@@ -49,7 +50,7 @@ namespace ALE.ETLBoxTests.Fixtures
             bool hasIdentityCol = identityColumnIndex >= 0;
             var columns = new ObservableCollection<TableColumn>()
             {
-                new TableColumn("Col1", "INT", allowNulls: false, isPrimaryKey:true, isIdentity: hasIdentityCol),
+                new TableColumn("Col1", "INT", allowNulls: IsSQLiteConnection, isPrimaryKey:true, isIdentity: hasIdentityCol),
                 new TableColumn("Col2", "NVARCHAR(100)", allowNulls: true),
                 new TableColumn("Col3", "BIGINT", allowNulls: true),
                 new TableColumn("Col4", "DECIMAL(12,6)", allowNulls: false)
@@ -62,13 +63,26 @@ namespace ALE.ETLBoxTests.Fixtures
 
         public void InsertTestData()
         {
-            SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES('Test1', NULL, '1.2')");
-            SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES('Test2', 4711, '1.23')");
-            SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                 , $"INSERT INTO {TableName} VALUES('Test3', 185, '1.234')");
+            if (IsSQLiteConnection)
+            {
+                SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
+             , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')");
+                SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
+                    , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test2', 4711, '1.23')");
+                SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
+                     , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test3', 185, '1.234')");
+            }
+            else
+            {
+                SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
+                    , $"INSERT INTO {TableName} (Col2, Col3, Col4) VALUES('Test1', NULL, '1.2')");
+                SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
+                    , $"INSERT INTO {TableName} (Col2, Col3, Col4) VALUES('Test2', 4711, '1.23')");
+                SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
+                     , $"INSERT INTO {TableName} (Col2, Col3, Col4) VALUES('Test3', 185, '1.234')");
+            }
         }
+
 
         public void AssertTestData()
         {

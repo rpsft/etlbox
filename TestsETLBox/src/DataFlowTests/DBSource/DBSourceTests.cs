@@ -14,8 +14,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBSourceTests : IDisposable
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("DataFlow");
-
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
         public DBSourceTests(DataFlowDatabaseFixture dbFixture)
@@ -28,7 +26,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MySimpleRow
         {
-            public int Col1 { get; set; }
+            public long Col1 { get; set; }
             public string Col2 { get; set; }
         }
 
@@ -63,17 +61,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SqlWithSelectStar(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceSelectStart");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationSelectStart");
 
             //Act
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
             {
                 Sql = $@"SELECT * FROM Source",
-                ConnectionManager = SqlConnection
+                ConnectionManager = connection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "Destination");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSelectStart");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -84,25 +82,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MyExtendedRow
         {
-            [ColumnMap("Col1")]
-            public int Id { get; set; }
             [ColumnMap("Col3")]
             public long? Value { get; set; }
             [ColumnMap("Col4")]
             public decimal Percentage { get; set; }
+            [ColumnMap("Col1")]
+            public Int64 Id { get; set; }
             [ColumnMap("Col2")]
             public string Text { get; set; }
         }
 
-        [Fact]
-        public void ColumnMapping()
+        [Theory, MemberData(nameof(Connections))]
+        public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture("Source", identityColumnIndex: 2);
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection,
+                "SourceColumnMapping", identityColumnIndex: 0);
             source4Columns.InsertTestData();
 
             //Act
-            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(SqlConnection, "dbo.Source");
+            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(connection, "SourceColumnMapping");
             CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(
                 input =>
                 {

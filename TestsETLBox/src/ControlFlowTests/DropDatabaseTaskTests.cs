@@ -33,5 +33,15 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.False(sqlTask.ExecuteScalarAsBool());
         }
 
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+
+        [Fact]
+        public void NotSupportedWithSQLite()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => DropDatabaseTask.Drop(SQLiteConnection, "Test")
+                );
+        }
+
     }
 }

@@ -14,7 +14,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBSourceColumnMappingTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public DBSourceColumnMappingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -25,21 +26,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class ColumnMapRow
         {
-            public int Col1 { get; set; }
+            public long Col1 { get; set; }
             [ColumnMap("Col2")]
             public string B { get; set; }
 
         }
 
-        [Fact]
-        public void ColumnMapping()
+        [Theory, MemberData(nameof(Connections))]
+        public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
             source2Columns.InsertTestData();
 
             //Act
-            DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>(Connection, "Source");
+            DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>(connection, "Source");
             CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
                 input =>
                 {
@@ -51,8 +52,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.Execute();
             dest.Wait();
         }
-
-
-
     }
 }

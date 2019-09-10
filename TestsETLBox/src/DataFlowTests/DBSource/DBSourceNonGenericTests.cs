@@ -14,7 +14,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBSourceNonGenericTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public DBSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -23,24 +24,24 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
         }
 
-        [Fact]
-        public void UsingTableDefinitions()
+        [Theory, MemberData(nameof(Connections))]
+        public void UsingTableDefinitions(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceTableDef");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationTableDef");
 
             //Act
             DBSource source = new DBSource()
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
-                ConnectionManager = Connection
+                ConnectionManager = connection
             };
             DBDestination dest = new DBDestination()
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
-                ConnectionManager = Connection
+                ConnectionManager = connection
             };
             source.LinkTo(dest);
             source.Execute();
@@ -51,21 +52,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
 
-        [Fact]
-        public void WithSql()
+        [Theory, MemberData(nameof(Connections))]
+        public void WithSql(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"SourceWithSql");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationWithSql");
 
             //Act
             DBSource source = new DBSource()
             {
-                Sql = "SELECT Col1, Col2 FROM dbo.Source",
-                ConnectionManager = Connection
+                Sql = "SELECT Col1, Col2 FROM SourceWithSql",
+                ConnectionManager = connection
             };
-            DBDestination dest = new DBDestination(Connection, "dbo.Destination");
+            DBDestination dest = new DBDestination(connection, "DestinationWithSql");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -74,60 +75,55 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-        [Fact]
-        public void WithSqlNotMatchingColumns()
+        [Theory, MemberData(nameof(Connections))]
+        public void WithSqlNotMatchingColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceNotMatchingCols");
             source2Columns.InsertTestData();
-            SqlTask.ExecuteNonQuery(Connection, "Create destination table", @"CREATE TABLE DestinationNotMatching
+            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE DestinationNotMatchingCols
                 (Col3 nvarchar(100) null, Col4 nvarchar(100) null, Col1 nvarchar(100) null)");
 
             //Act
             DBSource source = new DBSource()
             {
-                Sql = "SELECT Col1, Col2 FROM dbo.Source",
-                ConnectionManager = Connection
+                Sql = "SELECT Col1, Col2 FROM SourceNotMatchingCols",
+                ConnectionManager = connection
             };
-            DBDestination dest = new DBDestination(Connection, "dbo.DestinationNotMatching");
+            DBDestination dest = new DBDestination(connection, "DestinationNotMatchingCols");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "DestinationNotMatching"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DestinationNotMatching", "Col3 = '1' AND Col4='Test1'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DestinationNotMatching", "Col3 = '2' AND Col4='Test2'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DestinationNotMatching", "Col3 = '3' AND Col4='Test3'"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DestinationNotMatchingCols"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DestinationNotMatchingCols", "Col3 = '1' AND Col4='Test1'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DestinationNotMatchingCols", "Col3 = '2' AND Col4='Test2'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DestinationNotMatchingCols", "Col3 = '3' AND Col4='Test3'"));
         }
 
 
-        [Fact]
-        public void WithLessColumnsInDestination()
+        [Theory, MemberData(nameof(Connections))]
+        public void WithLessColumnsInDestination(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
             source2Columns.InsertTestData();
-            SqlTask.ExecuteNonQuery(Connection, "Create destination table", @"CREATE TABLE dbo.DestinationOneColumn
+            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE DestinationOneColumn
                 (ColX nvarchar (100) not null )");
 
             //Act
-            DBSource source = new DBSource(Connection, "Source");
-            DBDestination dest = new DBDestination(Connection, "dbo.DestinationOneColumn");
+            DBSource source = new DBSource(connection, "SourceTwoColumns");
+            DBDestination dest = new DBDestination(connection, "DestinationOneColumn");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "DestinationOneColumn"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DestinationOneColumn", "ColX = '1'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DestinationOneColumn", "ColX = '2'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DestinationOneColumn", "ColX = '3'"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DestinationOneColumn"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DestinationOneColumn", "ColX = '1'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DestinationOneColumn", "ColX = '2'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DestinationOneColumn", "ColX = '3'"));
         }
-
-
-
-
-
     }
 }

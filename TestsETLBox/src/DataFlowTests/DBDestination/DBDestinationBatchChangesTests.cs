@@ -17,7 +17,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBDestinationBatchChangesTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public DBDestinationBatchChangesTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -26,12 +27,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
         }
 
-        [Fact]
-        public void WithBatchChanges()
+        [Theory, MemberData(nameof(Connections))]
+        public void WithBatchChanges(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DBDestinationBatchChanges");
-            DBDestination dest = new DBDestination(Connection, "DBDestinationBatchChanges", batchSize: 2)
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationBatchChanges");
+            DBDestination dest = new DBDestination(connection, "DBDestinationBatchChanges", batchSize: 2)
             {
                 BeforeBatchWrite = rowArray =>
                                    {
@@ -47,11 +48,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "DBDestinationBatchChanges"));
-            Assert.Equal(2, RowCountTask.Count(Connection, "DBDestinationBatchChanges", "Col2='NewValue'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DBDestinationBatchChanges", "Col1 = 2 AND Col2='Test2'"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DBDestinationBatchChanges"));
+            Assert.Equal(2, RowCountTask.Count(connection, "DBDestinationBatchChanges", "Col2='NewValue'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DBDestinationBatchChanges", "Col1 = 2 AND Col2='Test2'"));
         }
-
-
     }
 }

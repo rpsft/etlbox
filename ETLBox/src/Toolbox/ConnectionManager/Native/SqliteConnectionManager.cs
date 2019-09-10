@@ -27,20 +27,20 @@ namespace ALE.ETLBox.ConnectionManager
         public override void BulkInsert(ITableData data, string tableName)
         {
             var connection = this.DbConnection as SQLiteConnection;
+            var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
+            var sourceColumnValues = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => "?").ToList();
+            var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
+
             using (var transaction = connection.BeginTransaction())
             {
                 while (data.Read())
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
-                        var sourceColumnValues = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => "?").ToList();
-                        var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
-
                         command.CommandText =
                         $@"INSERT INTO {tableName} 
-                   ({String.Join(",", sourceColumnNames)})
-                    VALUES ({String.Join(",", sourceColumnValues)})
+({String.Join(",", sourceColumnNames)})
+VALUES ({String.Join(",", sourceColumnValues)})
                 ";
                         foreach (var mapping in destColumnNames)
                         {
@@ -67,7 +67,5 @@ namespace ALE.ETLBox.ConnectionManager
             };
             return clone;
         }
-
-
     }
 }

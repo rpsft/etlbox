@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow
+{
     /// <summary>
     /// Truncates a table.
     /// </summary>
@@ -9,21 +10,35 @@ namespace ALE.ETLBox.ControlFlow {
     /// TruncateTableTask.Truncate("demo.table1");
     /// </code>
     /// </example>
-    public class TruncateTableTask : GenericTask, ITask {
+    public class TruncateTableTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskType { get; set; } = "TRUNCATE";
         public override string TaskName => $"Truncate table {TableName}";
-        public override void Execute() => new SqlTask(this, Sql) .ExecuteNonQuery();
+        public override void Execute()
+        {
+            new SqlTask(this, Sql).ExecuteNonQuery();
+        }
 
         /* Public properties */
         public string TableName { get; set; }
-        public string Sql => $@"if object_id('{TableName}', 'U') is not null
-truncate table {TableName}";
+        public string Sql
+        {
+            get
+            {
+                if (ConnectionType == ConnectionManagerType.SQLLite)
+                    return $@"DELETE FROM {TableName}";
+                else
+                    return $@"TRUNCATE TABLE {TableName}";
+            }
+        }
 
-        public TruncateTableTask() {
+        public TruncateTableTask()
+        {
 
         }
-        public TruncateTableTask(string tableName) : this() {
+        public TruncateTableTask(string tableName) : this()
+        {
             this.TableName = tableName;
         }
 

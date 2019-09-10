@@ -48,5 +48,15 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.filegroups", $"name = '{fgName}' AND is_default = 1"));
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.sysfiles", $"name = '{fgName}'"));
         }
+
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+
+        [Fact]
+        public void NotSupportedWithSQLite()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => AddFileGroupTask.AddFileGroup(SQLiteConnection, "Test", "Test", "5MB", "5MB", true)
+                );
+        }
     }
 }

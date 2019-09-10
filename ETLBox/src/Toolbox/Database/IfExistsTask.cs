@@ -31,8 +31,8 @@ namespace ALE.ETLBox.ControlFlow
                 else if (this.ConnectionType == ConnectionManagerType.SqlServer)
                 {
                     return
-        $@"IF OBJECT_ID('{ObjectName}', 'U') IS NOT NULL
-    SELECT 1";
+        $@"IF ( OBJECT_ID('{ObjectName}', 'U') IS NOT NULL OR OBJECT_ID('{ObjectName}', 'V') IS NOT NULL)
+  SELECT 1";
                 }
                 else
                 {
@@ -64,8 +64,16 @@ namespace ALE.ETLBox.ControlFlow
         public static bool IsExisting(IConnectionManager connectionManager, string objectName)
             => new IfExistsTask(objectName) { ConnectionManager = connectionManager }.Exists();
 
+        public static void ThrowExceptionIfNotExists(IConnectionManager connectionManager, string objectName)
+        {
+            bool tableExists = new IfExistsTask(objectName)
+            {
+                ConnectionManager = connectionManager,
+                DisableLogging = true
+            }.Exists();
+            if (!tableExists)
+                throw new ETLBoxException($"An object {objectName} does not exists in the database!");
 
+        }
     }
-
-
 }

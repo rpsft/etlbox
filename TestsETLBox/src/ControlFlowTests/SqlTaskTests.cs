@@ -122,7 +122,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             SqlTask.ExecuteReader(connection,
                 "Test execute reader",
                 "SELECT Col1 FROM ExecuteReader",
-                colA => asIsResult.Add((int)colA));
+                colA => asIsResult.Add(int.Parse(colA.ToString()))
+                );
 
             //Assert
             Assert.Equal(toBeResult, asIsResult);
@@ -144,7 +145,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Act
             SqlTask.ExecuteReader(connection, "Test execute reader",
                 "SELECT Col1 FROM ExecuteReaderWithPar WHERE Col2 = @par1", parameter,
-                colA => asIsResult.Add((int)colA));
+                colA => asIsResult.Add(int.Parse(colA.ToString())));
             //Assert
             Assert.Equal(toBeResult, asIsResult);
         }
@@ -190,7 +191,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 "SELECT * FROM MultiColumnRead"
                 , () => CurColumn = new MySimpleRow()
                 , () => asIsResult.Add(CurColumn)
-                , colA => CurColumn.Col1 = (int)colA
+                , colA => CurColumn.Col1 = int.Parse(colA.ToString())
                 , colB => CurColumn.Col2 = (string)colB
                 );
 

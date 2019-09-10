@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow
+{
     /// <summary>
     /// Returns a list of all databases on the server (make sure to connect with the correct permissions).
     /// </summary>
@@ -11,13 +12,18 @@ namespace ALE.ETLBox.ControlFlow {
     /// GetDatabaseListTask.List();
     /// </code>
     /// </example>
-    public class GetDatabaseListTask : GenericTask, ITask {
+    public class GetDatabaseListTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskType { get; set; } = "GETDBLIST";
         public override string TaskName => $"Get names of all databases";
-        public override void Execute() {
+        public override void Execute()
+        {
+            if (ConnectionType == ConnectionManagerType.SQLLite)
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             DatabaseNames = new List<string>();
-            new SqlTask(this, Sql) {
+            new SqlTask(this, Sql)
+            {
                 Actions = new List<Action<object>>() {
                     n => DatabaseNames.Add((string)n)
                 }
@@ -26,17 +32,21 @@ namespace ALE.ETLBox.ControlFlow {
 
 
         public List<string> DatabaseNames { get; set; }
-        public string Sql {
-            get {
+        public string Sql
+        {
+            get
+            {
                 return $"SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4";
             }
         }
 
-        public GetDatabaseListTask() {
+        public GetDatabaseListTask()
+        {
 
         }
 
-        public GetDatabaseListTask GetList() {
+        public GetDatabaseListTask GetList()
+        {
             Execute();
             return this;
         }

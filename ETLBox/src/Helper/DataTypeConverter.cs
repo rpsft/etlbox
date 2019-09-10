@@ -3,8 +3,10 @@ using System;
 using System.Data;
 using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox.Helper {
-    public static class DataTypeConverter {
+namespace ALE.ETLBox.Helper
+{
+    public static class DataTypeConverter
+    {
         public const int DefaultTinyIntegerLength = 5;
         public const int DefaultSmallIntegerLength = 7;
         public const int DefaultIntegerLength = 11;
@@ -35,23 +37,29 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        public static bool IsCharTypeDefinition(string value) =>new Regex(_REGEX, RegexOptions.IgnoreCase).IsMatch(value);
+        public static bool IsCharTypeDefinition(string value) => new Regex(_REGEX, RegexOptions.IgnoreCase).IsMatch(value);
 
-        public static int GetStringLengthFromCharString(string value) {
+        public static int GetStringLengthFromCharString(string value)
+        {
             string possibleResult = Regex.Replace(value, _REGEX, "${2}", RegexOptions.IgnoreCase);
-            int  result=0;
-            if (int.TryParse(possibleResult, out result)) {
+            int result = 0;
+            if (int.TryParse(possibleResult, out result))
+            {
                 return result;
-            } else {
+            }
+            else
+            {
                 return DefaultStringLength;
             }
         }
 
-        public static string GetNETObjectTypeString(string dbSpecificTypeName) {
+        public static string GetNETObjectTypeString(string dbSpecificTypeName)
+        {
             if (dbSpecificTypeName.IndexOf("(") > 0)
                 dbSpecificTypeName = dbSpecificTypeName.Substring(0, dbSpecificTypeName.IndexOf("("));
             dbSpecificTypeName = dbSpecificTypeName.Trim().ToLower();
-            switch (dbSpecificTypeName) {
+            switch (dbSpecificTypeName)
+            {
                 case "bit": return "System.Boolean";
                 case "tinyint": return "System.UInt16";
                 case "smallint": return "System.Int16";
@@ -66,15 +74,19 @@ namespace ALE.ETLBox.Helper {
             }
         }
 
-        public static Type GetTypeObject(string dbSpecificTypeName) {
+        public static Type GetTypeObject(string dbSpecificTypeName)
+        {
             return Type.GetType(GetNETObjectTypeString(dbSpecificTypeName));
         }
 
-        public static DbType GetDBType(string dbSpecificTypeName) {
-            try {
-                return (DbType) Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
+        public static DbType GetDBType(string dbSpecificTypeName)
+        {
+            try
+            {
+                return (DbType)Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
             }
-            catch {
+            catch
+            {
                 return DbType.String;
             }
         }
@@ -99,6 +111,12 @@ namespace ALE.ETLBox.Helper {
                     //    return "NUMBER";
                     return typeName;
                 }
+                return dbSpecificTypeName;
+            }
+            if (connectionType == ConnectionManagerType.SQLLite)
+            {
+                if (typeName == "INT")
+                    return "INTEGER";
                 return dbSpecificTypeName;
             }
             else

@@ -62,7 +62,16 @@ WHERE sch.name = '{schemaName}'")
                $"type = 'U' AND name = 'Log' AND schema_id('etl') = schema_id"));
             Assert.Equal(0, RowCountTask.Count(Connection, "sys.tables",
                 $"type = 'U' AND name = 'LoadProcess' AND schema_id('etl') = schema_id"));
+        }
 
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+
+        [Fact]
+        public void NotSupportedWithSQLite()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => CleanUpSchemaTask.CleanUp(SQLiteConnection, "Test")
+                );
         }
     }
 }

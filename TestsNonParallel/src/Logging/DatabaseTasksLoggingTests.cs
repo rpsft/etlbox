@@ -119,7 +119,7 @@ GROUP BY TaskHash")
         {
             //Arrange
             //Act
-            CRUDViewTask.CreateOrAlter(Connection, "dbo.CRUDView", "SELECT 1 AS Test");
+            CreateOrAlterViewTask.CreateOrAlter(Connection, "dbo.CRUDView", "SELECT 1 AS Test");
             //Assert
             Assert.Equal(4, CountLogEntries("CRUDVIEW"));
         }

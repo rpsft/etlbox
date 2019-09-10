@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Data.Common;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -18,7 +19,7 @@ namespace ALE.ETLBox.ConnectionManager
     {
         internal bool IsAccessDatabase { get; set; }
         internal bool UseParameterQuery { get; set; } = true;
-        internal List<OdbcParameter> Parameters { get; set; }
+        internal List<DbParameter> Parameters { get; set; }
         StringBuilder QueryText { get; set; }
         List<string> SourceColumnNames { get; set; }
         List<string> DestColumnNames { get; set; }
@@ -38,7 +39,7 @@ namespace ALE.ETLBox.ConnectionManager
         private void InitObjects()
         {
             QueryText = new StringBuilder();
-            Parameters = new List<OdbcParameter>();
+            Parameters = new List<DbParameter>();
         }
 
         private void GetSourceAndDestColumNames(ITableData data)
