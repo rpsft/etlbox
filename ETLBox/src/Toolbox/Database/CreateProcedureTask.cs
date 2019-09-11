@@ -12,11 +12,14 @@ namespace ALE.ETLBox.ControlFlow {
     /// CRUDProcedureTask.CreateOrAlter("demo.proc1", "select 1 as test");
     /// </code>
     /// </example>
-    public class CRUDProcedureTask : GenericTask, ITask {
+    public class CreateProcedureTask : GenericTask, ITask {
         /* ITask Interface */
         public override string TaskType { get; set; } = "CRUDPROC";
         public override string TaskName => $"{CreateOrAlterSql} procedure {ProcedureName}";
         public override void Execute() {
+            if (ConnectionType == ConnectionManagerType.SQLLite)
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+
             IsExisting = new SqlTask(this, CheckIfExistsSql) { TaskName = $"Check if procedure {ProcedureName} exists", TaskHash = this.TaskHash }.ExecuteScalarAsBool();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
@@ -33,38 +36,38 @@ SET NOCOUNT ON
 
 {ProcedureDefinition}
 
-END --End of Procedure
+END
         ";
 
-        public CRUDProcedureTask() {
+        public CreateProcedureTask() {
 
         }
-        public CRUDProcedureTask(string procedureName, string procedureDefinition) : this() {
+        public CreateProcedureTask(string procedureName, string procedureDefinition) : this() {
             this.ProcedureName = procedureName;
             this.ProcedureDefinition = procedureDefinition;
         }
 
-        public CRUDProcedureTask(string procedureName, string procedureDefinition, IList<ProcedureParameter> procedureParameter) : this(procedureName, procedureDefinition) {
+        public CreateProcedureTask(string procedureName, string procedureDefinition, IList<ProcedureParameter> procedureParameter) : this(procedureName, procedureDefinition) {
             this.ProcedureParameters = procedureParameter;
         }
 
-        public CRUDProcedureTask(ProcedureDefinition definition) : this() {
+        public CreateProcedureTask(ProcedureDefinition definition) : this() {
             this.ProcedureName = definition.Name;
             this.ProcedureDefinition = definition.Definition;
             this.ProcedureParameters = definition.Parameter;
         }
 
-        public static void CreateOrAlter(string procedureName, string procedureDefinition) => new CRUDProcedureTask(procedureName, procedureDefinition).Execute();
+        public static void CreateOrAlter(string procedureName, string procedureDefinition) => new CreateProcedureTask(procedureName, procedureDefinition).Execute();
         public static void CreateOrAlter(string procedureName, string procedureDefinition, IList<ProcedureParameter> procedureParameter)
-            => new CRUDProcedureTask(procedureName, procedureDefinition, procedureParameter).Execute();
+            => new CreateProcedureTask(procedureName, procedureDefinition, procedureParameter).Execute();
         public static void CreateOrAlter(ProcedureDefinition procedure)
-            => new CRUDProcedureTask(procedure).Execute();
+            => new CreateProcedureTask(procedure).Execute();
         public static void CreateOrAlter(IConnectionManager connectionManager, string procedureName, string procedureDefinition)
-            => new CRUDProcedureTask(procedureName, procedureDefinition) { ConnectionManager = connectionManager }.Execute();
+            => new CreateProcedureTask(procedureName, procedureDefinition) { ConnectionManager = connectionManager }.Execute();
         public static void CreateOrAlter(IConnectionManager connectionManager, string procedureName, string procedureDefinition, IList<ProcedureParameter> procedureParameter)
-            => new CRUDProcedureTask(procedureName, procedureDefinition, procedureParameter) { ConnectionManager = connectionManager }.Execute();
+            => new CreateProcedureTask(procedureName, procedureDefinition, procedureParameter) { ConnectionManager = connectionManager }.Execute();
         public static void CreateOrAlter(IConnectionManager connectionManager, ProcedureDefinition procedure)
-            => new CRUDProcedureTask(procedure) { ConnectionManager = connectionManager }.Execute();
+            => new CreateProcedureTask(procedure) { ConnectionManager = connectionManager }.Execute();
 
 
         string CheckIfExistsSql => $@"IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ProcedureName}')) SELECT 1; 

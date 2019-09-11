@@ -11,10 +11,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
-    public class CRUDProcedureTaskTests
+    public class CreateProcedureTaskTests
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public CRUDProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
+
+        public CreateProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Fact]
@@ -22,7 +24,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             //Act
-            CRUDProcedureTask.CreateOrAlter(Connection, "dbo.Proc1", "SELECT 1 AS Test");
+            CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc1", "SELECT 1 AS Test");
             //Assert
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
                 "type = 'P' AND object_id = object_id('dbo.Proc1')"));
@@ -32,11 +34,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void AlterProcedure()
         {
             //Arrange
-            CRUDProcedureTask.CreateOrAlter(Connection, "dbo.Proc2", "SELECT 1 AS Test");
+            CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc2", "SELECT 1 AS Test");
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
                 "type = 'P' AND object_id = object_id('dbo.Proc2') AND create_date = modify_date"));
             //Act
-            CRUDProcedureTask.CreateOrAlter(Connection, "dbo.Proc2", "SELECT 5 AS Test");
+            CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc2", "SELECT 5 AS Test");
             //Assert
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
                 "type = 'P' AND object_id = object_id('dbo.Proc2') AND create_date <> modify_date"));
@@ -51,7 +53,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new ProcedureParameter("Par2", "int", "7"),
             };
             //Act
-            CRUDProcedureTask.CreateOrAlter(Connection, "dbo.Proc3", "SELECT 1 AS Test", pars);
+            CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc3", "SELECT 1 AS Test", pars);
             //Assert
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
                 "type = 'P' AND object_id = object_id('dbo.Proc3')"));
@@ -69,12 +71,22 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             };
             ProcedureDefinition procDef = new ProcedureDefinition("dbo.Proc4", "SELECT 1 AS Test", pars);
             //Act
-            CRUDProcedureTask.CreateOrAlter(Connection, procDef);
+            CreateProcedureTask.CreateOrAlter(Connection, procDef);
             //Assert
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
                 "type = 'P' AND object_id = object_id('dbo.Proc4')"));
             Assert.Equal(2, RowCountTask.Count(Connection, "sys.parameters",
                 "object_id = object_id('dbo.Proc4')"));
        }
+
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+
+        [Fact]
+        public void NotSupportedWithSQLite()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => CreateDatabaseTask.Create(SQLiteConnection, "Test")
+                );
+        }
     }
 }

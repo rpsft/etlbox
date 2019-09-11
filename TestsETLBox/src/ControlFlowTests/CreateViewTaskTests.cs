@@ -11,11 +11,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
-    public class CreateOrAlterViewTaskTests
+    public class CreateViewTaskTests
     {
        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
 
-        public CreateOrAlterViewTaskTests(ControlFlowDatabaseFixture dbFixture)
+        public CreateViewTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Theory, MemberData(nameof(Connections))]
@@ -23,7 +23,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             //Act
-            CreateOrAlterViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS Test");
+            CreateViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS Test");
             //Assert
             Assert.True(IfExistsTask.IsExisting(connection, "View1"));
         }
@@ -32,11 +32,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void AlterView(IConnectionManager connection)
         {
             //Arrange
-            CreateOrAlterViewTask.CreateOrAlter(connection, "View2", "SELECT 1 AS Test");
+            CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 1 AS Test");
             Assert.True(IfExistsTask.IsExisting(connection, "View2"));
 
             //Act
-            CreateOrAlterViewTask.CreateOrAlter(connection, "View2", "SELECT 5 AS Test");
+            CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 5 AS Test");
 
             //Assert
             if (connection.GetType() == typeof(SqlConnectionManager))

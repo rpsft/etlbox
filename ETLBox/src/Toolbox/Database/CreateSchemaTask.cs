@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ControlFlow
         public override void Execute()
         {
             if (ConnectionType == ConnectionManagerType.SQLLite)
-                throw new ETLBoxException("SQLite does not support schema!");
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 

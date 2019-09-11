@@ -44,9 +44,10 @@ namespace ALE.ETLBox
 
         public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
 
-        internal static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection, ConnectionManagerType connectionType)
+        public static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
         {
             IfExistsTask.ThrowExceptionIfNotExists(connection, tableName);
+            ConnectionManagerType connectionType = ConnectionManagerTypeFinder.GetType(connection);
             if (connectionType == ConnectionManagerType.SqlServer)
             {
                 return ReadTableDefinitionFromSqlServer(tableName, connection);

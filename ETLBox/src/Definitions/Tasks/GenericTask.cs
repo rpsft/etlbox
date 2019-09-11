@@ -25,24 +25,7 @@ namespace ALE.ETLBox {
             }
         }
 
-        public ConnectionManagerType ConnectionType
-        {
-            get
-            {
-                if (this.DbConnectionManager.GetType() == typeof(SqlConnectionManager) ||
-                    this.DbConnectionManager.GetType() == typeof(SMOConnectionManager) ||
-                    this.DbConnectionManager.GetType() == typeof(SqlOdbcConnectionManager)
-                    )
-                    return ConnectionManagerType.SqlServer;
-                else if (this.DbConnectionManager.GetType() == typeof(AccessOdbcConnectionManager))
-                    return ConnectionManagerType.Access;
-                else if (this.DbConnectionManager.GetType() == typeof(AdomdConnectionManager))
-                    return ConnectionManagerType.Adomd;
-                else if (this.DbConnectionManager.GetType() == typeof(SQLiteConnectionManager))
-                    return ConnectionManagerType.SQLLite;
-                else return ConnectionManagerType.Unknown;
-            }
-        }
+        public ConnectionManagerType ConnectionType => ConnectionManagerTypeFinder.GetType(this.DbConnectionManager);
 
         public bool _disableLogging;
         public virtual bool DisableLogging {

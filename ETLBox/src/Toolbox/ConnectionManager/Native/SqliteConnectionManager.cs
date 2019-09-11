@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -20,44 +21,57 @@ namespace ALE.ETLBox.ConnectionManager
     public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection, SQLiteCommand>
     {
         public SQLiteConnectionManager() : base() { }
-
         public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString) { }
         public SQLiteConnectionManager(string connectionString) : base(new SQLiteConnectionString(connectionString)) { }
 
+        string Synchronous { get; set; }
+        string JournalMode { get; set; }
+
         public override void BulkInsert(ITableData data, string tableName)
         {
-            var connection = this.DbConnection as SQLiteConnection;
             var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
             var sourceColumnValues = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => "?").ToList();
             var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
 
-            using (var transaction = connection.BeginTransaction())
+            using (var transaction = this.DbConnection.BeginTransaction())
+            using (var command = this.DbConnection.CreateCommand())
             {
-                while (data.Read())
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText =
-                        $@"INSERT INTO {tableName} 
+                command.Transaction = transaction;
+                command.CommandText =
+                $@"INSERT INTO {tableName} 
 ({String.Join(",", sourceColumnNames)})
 VALUES ({String.Join(",", sourceColumnValues)})
                 ";
-                        foreach (var mapping in destColumnNames)
-                        {
-                            SQLiteParameter par = new SQLiteParameter();
-                            par.Value = data.GetValue(data.GetOrdinal(mapping));
-                            command.Parameters.Add(par);
-                        }
-
-                        command.ExecuteNonQuery();
+                command.Prepare();
+                while (data.Read())
+                {
+                    foreach (var mapping in destColumnNames)
+                    {
+                        SQLiteParameter par = new SQLiteParameter();
+                        par.Value = data.GetValue(data.GetOrdinal(mapping));
+                        command.Parameters.Add(par);
                     }
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
                 }
                 transaction.Commit();
             }
         }
 
-        public override void BeforeBulkInsert() { }
-        public override void AfterBulkInsert() { }
+
+        public override void BeforeBulkInsert()
+        {
+            Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
+            JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
+            this.ExecuteNonQuery("PRAGMA synchronous = OFF");
+            this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+        }
+
+        public override void AfterBulkInsert()
+        {
+            this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
+            this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+        }
 
         public override IDbConnectionManager Clone()
         {

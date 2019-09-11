@@ -115,13 +115,24 @@ GROUP BY TaskHash")
         }
 
         [Fact]
-        public void CRUDViewLogging()
+        public void CreateViewLogging()
         {
             //Arrange
             //Act
-            CreateOrAlterViewTask.CreateOrAlter(Connection, "dbo.CRUDView", "SELECT 1 AS Test");
+            CreateViewTask.CreateOrAlter(Connection, "dbo.CreateView", "SELECT 1 AS Test");
             //Assert
-            Assert.Equal(4, CountLogEntries("CRUDVIEW"));
+            Assert.Equal(2, CountLogEntries("CREATEVIEW"));
+        }
+
+        [Fact]
+        public void DropViewLogging()
+        {
+            //Arrange
+            CreateViewTask.CreateOrAlter(Connection, "dbo.DropView", "SELECT 1 AS Test");
+            //Act
+            DropViewTask.Drop(Connection, "dbo.DropView");
+            //Assert
+            Assert.Equal(2, CountLogEntries("DROPVIEW"));
         }
 
         [Fact]
@@ -129,7 +140,7 @@ GROUP BY TaskHash")
         {
             //Arrange
             //Act
-            CRUDProcedureTask.CreateOrAlter(Connection, "dbo.Proc1", "SELECT 1 AS Test");
+            CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc1", "SELECT 1 AS Test");
             //Assert
             Assert.Equal(4, CountLogEntries("CRUDPROC"));
         }

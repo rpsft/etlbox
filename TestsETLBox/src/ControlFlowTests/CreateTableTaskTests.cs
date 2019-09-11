@@ -14,110 +14,131 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class CreateTableTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+
         public CreateTableTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Fact]
-        public void CreateTable()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
+            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "INT") };
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable1", columns);
+            CreateTableTask.Create(connection, "CreateTable1", columns);
             //Assert
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
-                "type = 'U' AND object_id = object_id('dbo.CreateTable1')"));
+            Assert.True(IfExistsTask.IsExisting(connection, "CreateTable1"));
         }
 
-        [Fact]
-        public void ReCreateTable()
+        [Theory, MemberData(nameof(Connections))]
+        public void ReCreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
-            CreateTableTask.Create(Connection, "dbo.CreateTable2", columns);
+            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "INT") };
+            CreateTableTask.Create(connection, "CreateTable2", columns);
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable2", columns);
+            CreateTableTask.Create(connection, "CreateTable2", columns);
             //Assert
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
-                "type = 'U' AND object_id = object_id('dbo.CreateTable2')"));
+            Assert.True(IfExistsTask.IsExisting(connection, "CreateTable2"));
         }
 
-        [Fact]
-        public void CreateTableWithNullable()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithNullable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int"), new TableColumn("value2", "datetime", true) };
+            List<TableColumn> columns = new List<TableColumn>() {
+                new TableColumn("value", "INT"),
+                new TableColumn("value2", "DATETIME", true)
+            };
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable3", columns);
+            CreateTableTask.Create(connection, "CreateTable3", columns);
             //Assert
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.objects",
-                "type = 'U' AND object_id = object_id('dbo.CreateTable3')"));
-       }
+            Assert.True(IfExistsTask.IsExisting(connection, "CreateTable3"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable3", connection);
+            Assert.Contains(td.Columns, col => col.AllowNulls);
+        }
 
-        [Fact]
-        public void CreateTableWithPrimaryKey()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithPrimaryKey(IConnectionManager connection)
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
                 new TableColumn("Key", "int",allowNulls:false,isPrimaryKey:true),
                 new TableColumn("value2", "datetime", allowNulls:true)
             };
+
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable4", columns);
+            CreateTableTask.Create(connection, "CreateTable4", columns);
+
             //Assert
-            Assert.Equal(2, RowCountTask.Count(Connection, " sys.columns",
-                "object_id = object_id('dbo.CreateTable4')"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.key_constraints",
-                "parent_object_id = object_id('dbo.CreateTable4')"));
-            Assert.Equal("pk_CreateTable4_Key",
-                SqlTask.ExecuteScalar(Connection, "Check if primary key has correct naming",
-                "SELECT name FROM sys.key_constraints WHERE parent_object_id = object_id('dbo.CreateTable4')"));
-            Assert.True(SqlTask.ExecuteScalarAsBool(Connection, "Check if column is nullable",
-                $"SELECT CASE WHEN is_nullable = 1 THEN 1 ELSE 0 END FROM sys.columns WHERE object_id = object_id('dbo.CreateTable4') AND name='value2'"));
+            Assert.True(IfExistsTask.IsExisting(connection, "CreateTable4"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable4", connection);
+            Assert.Contains(td.Columns, col => col.IsPrimaryKey);
 
         }
 
-        [Fact]
-        public void ThrowingException()
+        [Theory, MemberData(nameof(Connections))]
+        public void ThrowingException(IConnectionManager connection)
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
                 new TableColumn("value1", "INT",allowNulls:false),
                 new TableColumn("value2", "DATETIME", allowNulls:true)
             };
-            CreateTableTask.Create(Connection, "dbo.CreateTable5", columns);
+            CreateTableTask.Create(connection, "CreateTable5", columns);
             //Act
 
             //Assert
             Assert.Throws<ETLBoxException>(() =>
             {
-                new CreateTableTask("dbo.CreateTable5", columns.Cast<ITableColumn>().ToList())
+                new CreateTableTask("CreateTable5", columns.Cast<ITableColumn>().ToList())
                 {
-                    ConnectionManager = Connection,
+                    ConnectionManager = connection,
                     ThrowErrorIfTableExists = true
                 }
                 .Execute();
             });
         }
 
-        [Fact]
-        public void CreateTableWithIdentity()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithIdentity(IConnectionManager connection)
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("value1", "int",allowNulls:false) { IsIdentity =true, IdentityIncrement = 1000, IdentitySeed = 50 }
+                new TableColumn("value1", "int",allowNulls:false, isPrimaryKey:false, isIdentity:true)
             };
+
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable6", columns);
+            CreateTableTask.Create(connection, "CreateTable6", columns);
+
             //Assert
-            Assert.Equal(1, RowCountTask.Count(Connection, " sys.columns",
-"object_id = object_id('dbo.CreateTable6')"));
-            Assert.True(SqlTask.ExecuteScalarAsBool(Connection, "Check if column has identity"
-                , $@"SELECT CASE WHEN is_identity = 1 THEN 1 ELSE 0 END FROM sys.columns cols INNER JOIN sys.types t ON t.system_type_id = cols.system_type_id
-                     WHERE object_id = object_id('dbo.CreateTable6') AND cols.name = 'value1'"));
+            Assert.True(IfExistsTask.IsExisting(connection, "CreateTable6"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable6", connection);
+            Assert.Contains(td.Columns, col => col.IsIdentity);
+        }
 
+        [Fact]
+        public void CreateTableWithIdentityIncrement()
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>() {
+                new TableColumn("value1", "int",allowNulls:false)
+                {
+                    IsIdentity =true,
+                    IdentityIncrement = 1000,
+                    IdentitySeed = 50 }
+            };
 
+            //Act
+            CreateTableTask.Create(SqlConnection, "CreateTable7", columns);
+
+            //Assert
+            Assert.True(IfExistsTask.IsExisting(SqlConnection, "CreateTable7"));
+            if (SqlConnection.GetType() == typeof(SqlConnectionManager))
+                Assert.True(SqlTask.ExecuteScalarAsBool(SqlConnection, "Check if column has identity"
+                    , $@"SELECT CASE WHEN is_identity = 1 THEN 1 ELSE 0 END FROM sys.columns cols INNER JOIN sys.types t ON t.system_type_id = cols.system_type_id
+                     WHERE object_id = object_id('dbo.CreateTable7') AND cols.name = 'value1'"));
         }
 
         [Fact]
@@ -130,9 +151,9 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new TableColumn("value3", "decimal",allowNulls:false) { DefaultConstraintName="TestConstraint", DefaultValue = "3.12" }
             };
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable7", columns);
+            CreateTableTask.Create(SqlConnection, "dbo.CreateTable7", columns);
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, " sys.columns",
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, " sys.columns",
 "object_id = object_id('dbo.CreateTable7')"));
         }
 
@@ -147,9 +168,9 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new TableColumn("compValue", "bigint",allowNulls:true) { ComputedColumn = "value1 * value2" }
             };
             //Act
-            CreateTableTask.Create(Connection, "dbo.CreateTable8", columns);
+            CreateTableTask.Create(SqlConnection, "dbo.CreateTable8", columns);
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, " sys.columns",
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, " sys.columns",
 "object_id = object_id('dbo.CreateTable8')"));
         }
     }

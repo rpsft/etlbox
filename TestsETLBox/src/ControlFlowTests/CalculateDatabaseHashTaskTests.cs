@@ -34,5 +34,15 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal("DA39A3EE5E6B4B0D3255BFEF95601890AFD80709", hash);
 
         }
+
+        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+
+        [Fact]
+        public void NotSupportedWithSQLite()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => CalculateDatabaseHashTask.Calculate(SQLiteConnection, new List<string>() { "hash" })
+                ); ;
+        }
     }
 }

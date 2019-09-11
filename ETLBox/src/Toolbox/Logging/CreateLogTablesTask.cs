@@ -81,7 +81,7 @@ namespace ALE.ETLBox.Logging
 
         private void CreateStartProcessProcedure()
         {
-            StartProcess = new CRUDProcedureTask("etl.StartLoadProcess", $@"-- Create entry in etlLoadProcess
+            StartProcess = new CreateProcedureTask("etl.StartLoadProcess", $@"-- Create entry in etlLoadProcess
   insert into etl.LoadProcess(StartDate, ProcessName, StartMessage, Source, IsRunning)
   select getdate(),@ProcessName, @StartMessage,@Source, 1 as IsRunning
   select @LoadProcessKey = SCOPE_IDENTITY()"
@@ -96,7 +96,7 @@ namespace ALE.ETLBox.Logging
 
         private void CreateTransferCompletedProcedure()
         {
-            TransferCompletedForProcess = new CRUDProcedureTask("etl.TransferCompletedForLoadProcess", $@"-- Set transfer completion date in load process
+            TransferCompletedForProcess = new CreateProcedureTask("etl.TransferCompletedForLoadProcess", $@"-- Set transfer completion date in load process
   update etl.LoadProcess
   set TransferCompletedDate = getdate()
   where LoadProcessKey = @LoadProcessKey
@@ -109,7 +109,7 @@ namespace ALE.ETLBox.Logging
 
         private void CreateEndProcessProcedure()
         {
-            EndProcess = new CRUDProcedureTask("etl.EndLoadProcess", $@"-- Set entry in etlLoadProcess to completed
+            EndProcess = new CreateProcedureTask("etl.EndLoadProcess", $@"-- Set entry in etlLoadProcess to completed
   update etl.LoadProcess
   set EndDate = getdate()
   , IsRunning = 0
@@ -127,7 +127,7 @@ namespace ALE.ETLBox.Logging
 
         private void CreateAbortProcessProcedure()
         {
-            AbortProcess = new CRUDProcedureTask("etl.AbortLoadProcess", $@"-- Set entry in etlLoadProcess to aborted
+            AbortProcess = new CreateProcedureTask("etl.AbortLoadProcess", $@"-- Set entry in etlLoadProcess to aborted
   update etl.LoadProcess
   set EndDate = getdate()
   , IsRunning = 0
@@ -176,9 +176,9 @@ namespace ALE.ETLBox.Logging
         CreateTableTask LogTable { get; set; }
         CreateTableTask LoadProcessTable { get; set; }
         CreateSchemaTask EtlSchema { get; set; }
-        CRUDProcedureTask StartProcess { get; set; }
-        CRUDProcedureTask EndProcess { get; set; }
-        CRUDProcedureTask AbortProcess { get; set; }
-        CRUDProcedureTask TransferCompletedForProcess { get; set; }
+        CreateProcedureTask StartProcess { get; set; }
+        CreateProcedureTask EndProcess { get; set; }
+        CreateProcedureTask AbortProcess { get; set; }
+        CreateProcedureTask TransferCompletedForProcess { get; set; }
     }
 }
