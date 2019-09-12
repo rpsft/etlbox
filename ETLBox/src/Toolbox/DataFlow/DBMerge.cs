@@ -93,8 +93,8 @@ namespace ALE.ETLBox.DataFlow
                 DeleteMissingEntriesOnce();
                 DeltaTable.AddRange(batch);
                 if (!UseTruncateMethod)
-                    SqlDeleteIds(batch.Where(row => row.ChangeAction != 'I' && row.ChangeAction != 'E'));
-                return batch.Where(row => row.ChangeAction == 'I' || row.ChangeAction == 'U').ToArray();
+                    SqlDeleteIds(batch.Where(row => row.ChangeAction != "I" && row.ChangeAction != "E"));
+                return batch.Where(row => row.ChangeAction == "I" || row.ChangeAction == "U").ToArray();
             };
 
             Lookup.LinkTo(DestinationTable);
@@ -115,21 +115,21 @@ namespace ALE.ETLBox.DataFlow
         private TInput UpdateRowWithDeltaInfo(TInput row)
         {
             row.ChangeDate = DateTime.Now;
-            row.ChangeAction = 'I';
+            row.ChangeAction = "I";
             var find = InputData.Where(d => d.UniqueId == row.UniqueId).FirstOrDefault();
             if (find != null)
             {
                 if (row.Equals(find))
                 {
-                    row.ChangeAction = 'E';
+                    row.ChangeAction = "E";
                     row.ChangeDate = DateTime.Now;
-                    find.ChangeAction = 'E';
+                    find.ChangeAction = "E";
                 }
                 else
                 {
-                    row.ChangeAction = 'U';
+                    row.ChangeAction = "U";
                     row.ChangeDate = DateTime.Now;
-                    find.ChangeAction = 'U';
+                    find.ChangeAction = "U";
                 }
             }
 
@@ -138,7 +138,7 @@ namespace ALE.ETLBox.DataFlow
 
         void DeleteMissingEntriesOnce()
         {
-            var deletions = InputData.Where(row => row.ChangeAction == 0);
+            var deletions = InputData.Where(row => String.IsNullOrEmpty(row.ChangeAction));
             if (DisableDeletion == false && WasDeletionExecuted == false) {
                 if (UseTruncateMethod)
                     TruncateTableTask.Truncate(this.ConnectionManager, TableName);
@@ -147,7 +147,7 @@ namespace ALE.ETLBox.DataFlow
             }
             DeltaTable.AddRange(deletions);
             DeltaTable.ForEach(row => {
-                row.ChangeAction = 'D';
+                row.ChangeAction = "D";
                 row.ChangeDate = DateTime.Now;
             });
             WasDeletionExecuted = true;
