@@ -18,6 +18,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class LookupNonGenericTests : IDisposable
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public LookupNonGenericTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -26,23 +28,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
         }
 
-        [Fact]
-        public void SimpleLookupWithoutObject()
+        [Theory, MemberData(nameof(Connections))]
+        public void SimpleLookupWithoutObject(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"Source");
             source2Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("Destination", -1);
-            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture("Lookup");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"Destination", -1);
+            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection,"Lookup");
             lookup4Columns.InsertTestData();
 
-            DBSource source = new DBSource(Connection, "Source");
-            DBDestination dest = new DBDestination(Connection,"Destination");
+            DBSource source = new DBSource(connection, "Source");
+            DBDestination dest = new DBDestination(connection, "Destination");
 
             //Act
             List<string[]> lookupList = new List<string[]>();
 
-            DBSource lookupSource = new DBSource(Connection, "Lookup");
+            DBSource lookupSource = new DBSource(connection, "Lookup");
             Lookup lookup = new Lookup(
                 row =>
                 {

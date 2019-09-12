@@ -136,13 +136,13 @@ GROUP BY TaskHash")
         }
 
         [Fact]
-        public void CRUDProcedureLogging()
+        public void CreateOrAlterProcedureLogging()
         {
             //Arrange
             //Act
             CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc1", "SELECT 1 AS Test");
             //Assert
-            Assert.Equal(4, CountLogEntries("CRUDPROC"));
+            Assert.Equal(2, CountLogEntries("CREATEPROC"));
         }
 
         [Fact]
@@ -172,7 +172,7 @@ GROUP BY TaskHash")
             //Arrange
             CreateSimpleTable("dbo.CreateIndex");
             //Act
-            CreateIndexTask.Create(Connection, "ix_logIndexTest", "dbo.CreateIndex",
+            CreateIndexTask.CreateOrRecreate(Connection, "ix_logIndexTest", "dbo.CreateIndex",
                 new List<string>() { "Col1", "Col2" });
             //Assert
             Assert.Equal(2, CountLogEntries("CREATEINDEX"));

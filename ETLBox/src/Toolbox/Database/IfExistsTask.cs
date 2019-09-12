@@ -31,7 +31,10 @@ namespace ALE.ETLBox.ControlFlow
                 else if (this.ConnectionType == ConnectionManagerType.SqlServer)
                 {
                     return
-        $@"IF ( OBJECT_ID('{ObjectName}', 'U') IS NOT NULL OR OBJECT_ID('{ObjectName}', 'V') IS NOT NULL)
+        $@"
+IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}' )
+   SELECT 1
+IF ( OBJECT_ID('{ObjectName}') IS NOT NULL)
   SELECT 1";
                 }
                 else

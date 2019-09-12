@@ -6,33 +6,30 @@ using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
-    public class GetDatabaseListTaskTests
+    public class DropProcedureTaskTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
-        public string DBName => Config.SqlConnectionString("ControlFlow").DBName;
 
-        public GetDatabaseListTaskTests(ControlFlowDatabaseFixture dbFixture)
+        public DropProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-
         [Fact]
-        public void GetDatabaseList()
+        public void DropProcedure()
         {
             //Arrange
+            CreateProcedureTask.CreateOrAlter(SqlConnection, "DropProc1", "SELECT 1");
+            Assert.True(IfExistsTask.IsExisting(SqlConnection, "DropProc1"));
 
             //Act
-            List<string> allDatabases = GetDatabaseListTask.List(SqlConnection);
+            DropProcedureTask.Drop(SqlConnection, "DropProc1");
 
             //Assert
-            Assert.True(allDatabases.Count >= 1);
-            Assert.Contains(allDatabases, name => name == DBName);
-
+            Assert.False(IfExistsTask.IsExisting(SqlConnection, "DropProc1"));
         }
 
         public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
@@ -41,7 +38,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => GetDatabaseListTask.List(SQLiteConnection)
+                () => DropProcedureTask.Drop(SQLiteConnection, "Test")
                 );
         }
     }

@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a table if the table exists.
+    /// Drops a view if the view exists.
     /// </summary>
     public class DropViewTask : GenericTask, ITask
     {

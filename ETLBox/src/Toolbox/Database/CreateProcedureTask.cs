@@ -14,13 +14,13 @@ namespace ALE.ETLBox.ControlFlow {
     /// </example>
     public class CreateProcedureTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CRUDPROC";
+        public override string TaskType { get; set; } = "CREATEPROC";
         public override string TaskName => $"{CreateOrAlterSql} procedure {ProcedureName}";
         public override void Execute() {
             if (ConnectionType == ConnectionManagerType.SQLLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
 
-            IsExisting = new SqlTask(this, CheckIfExistsSql) { TaskName = $"Check if procedure {ProcedureName} exists", TaskHash = this.TaskHash }.ExecuteScalarAsBool();
+            IsExisting = new IfExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
@@ -69,9 +69,6 @@ END
         public static void CreateOrAlter(IConnectionManager connectionManager, ProcedureDefinition procedure)
             => new CreateProcedureTask(procedure) { ConnectionManager = connectionManager }.Execute();
 
-
-        string CheckIfExistsSql => $@"IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ProcedureName}')) SELECT 1; 
-ELSE SELECT 0;";
         bool IsExisting { get; set; }
         string CreateOrAlterSql => IsExisting ? "ALTER" : "CREATE";
         string ParameterDefinition => ProcedureParameters?.Count > 0 ?

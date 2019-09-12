@@ -17,7 +17,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DBMergeTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
         public DBMergeTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -52,21 +54,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleMerge()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("DBMergeSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(SqlConnection, "DBMergeSource");
             source2Columns.InsertTestData();
             source2Columns.InsertTestDataSet2();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DBMergeDestination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "DBMergeDestination");
             dest2Columns.InsertTestDataSet3();
-            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(Connection, "DBMergeSource");
+            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(SqlConnection, "DBMergeSource");
 
             //Act
-            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(Connection, "DBMergeDestination");
+            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(SqlConnection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(6, RowCountTask.Count(Connection, "DBMergeDestination", "Col1 BETWEEN 1 AND 7 AND Col2 LIKE 'Test%'"));
+            Assert.Equal(6, RowCountTask.Count(SqlConnection, "DBMergeDestination", "Col1 BETWEEN 1 AND 7 AND Col2 LIKE 'Test%'"));
             Assert.True(dest.DeltaTable.Count == 7);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == 'U').Count() == 2);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == 'D' && row.Key == 10).Count() == 1);
@@ -94,16 +96,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestDataSet2();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DBMergeDestination");
             dest2Columns.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(Connection, "DBMergeSource");
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "DBMergeSource");
 
             //Act
-            DBMerge<MySimpleRow> dest = new DBMerge<MySimpleRow>(Connection, "DBMergeDestination");
+            DBMerge<MySimpleRow> dest = new DBMerge<MySimpleRow>(SqlConnection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(6, RowCountTask.Count(Connection, "DBMergeDestination", "Col1 BETWEEN 1 AND 7 AND Col2 LIKE 'Test%'"));
+            Assert.Equal(6, RowCountTask.Count(SqlConnection, "DBMergeDestination", "Col1 BETWEEN 1 AND 7 AND Col2 LIKE 'Test%'"));
             Assert.True(dest.DeltaTable.Count == 7);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == 'U').Count() == 3);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == 'D' && row.Key == 10).Count() == 1);
@@ -121,11 +123,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.InsertTestDataSet3();
             TwoColumnsDeltaTableFixture delta2Columns = new TwoColumnsDeltaTableFixture("DBMergeDelta");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(Connection, "DBMergeSource");
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "DBMergeSource");
 
             //Act
-            DBMerge<MySimpleRow> merge = new DBMerge<MySimpleRow>(Connection, "DBMergeDestination");
-            DBDestination<MySimpleRow> delta = new DBDestination<MySimpleRow>(Connection, "DBMergeDelta");
+            DBMerge<MySimpleRow> merge = new DBMerge<MySimpleRow>(SqlConnection, "DBMergeDestination");
+            DBDestination<MySimpleRow> delta = new DBDestination<MySimpleRow>(SqlConnection, "DBMergeDelta");
             source.LinkTo(merge);
             merge.LinkTo(delta);
             source.Execute();
@@ -133,11 +135,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             delta.Wait();
 
             //Assert
-            Assert.Equal(6, RowCountTask.Count(Connection, "DBMergeDestination", "Col1 BETWEEN 1 AND 7 AND Col2 LIKE 'Test%'"));
-            Assert.Equal(7, RowCountTask.Count(Connection, "DBMergeDelta", "Col1 BETWEEN 1 AND 10 AND Col2 LIKE 'Test%'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "DBMergeDelta", "ChangeAction = 'D' AND Col1 = 10"));
-            Assert.Equal(3, RowCountTask.Count(Connection, "DBMergeDelta", "ChangeAction = 'U' AND Col1 IN (1,2,4)"));
-            Assert.Equal(3, RowCountTask.Count(Connection, "DBMergeDelta", "ChangeAction = 'I' AND Col1 IN (3,5,6)"));
+            Assert.Equal(6, RowCountTask.Count(SqlConnection, "DBMergeDestination", "Col1 BETWEEN 1 AND 7 AND Col2 LIKE 'Test%'"));
+            Assert.Equal(7, RowCountTask.Count(SqlConnection, "DBMergeDelta", "Col1 BETWEEN 1 AND 10 AND Col2 LIKE 'Test%'"));
+            Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDelta", "ChangeAction = 'D' AND Col1 = 10"));
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, "DBMergeDelta", "ChangeAction = 'U' AND Col1 IN (1,2,4)"));
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, "DBMergeDelta", "ChangeAction = 'I' AND Col1 IN (3,5,6)"));
         }
     }
 }
