@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Enum RowCountOptions
    ">
-    <meta name="generator" content="docfx 2.42.4.0">
+    <meta name="generator" content="docfx 2.44.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -87,7 +87,11 @@
   
   <h1 id="ALE_ETLBox_ControlFlow_RowCountOptions" data-uid="ALE.ETLBox.ControlFlow.RowCountOptions" class="text-break">Enum RowCountOptions
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Used in the RowCountTask. None forces the RowCountTask to do a normal COUNT(<em>) and works on all databases.
+QuickQueryMode only works on SqlServer and uses the partition table which can be much faster on tables with a big amount of data.
+NoLock does a normal COUNT(</em>) using the nolock - option which avoid tables locks when reading from the table (but while counting the tables
+new data could be inserted, which could lead to wrong results).</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.ControlFlow.html">ALE.ETLBox.ControlFlow</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
@@ -130,7 +134,7 @@
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_RowCountOptions.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.RowCountOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/RowCountTask.cs/#L85" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/RowCountTask.cs/#L107" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

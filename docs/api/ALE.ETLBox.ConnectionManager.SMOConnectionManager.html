@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class SMOConnectionManager
    ">
-    <meta name="generator" content="docfx 2.42.4.0">
+    <meta name="generator" content="docfx 2.44.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -97,7 +97,6 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a></div>
     <div><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></div>
     <div><span class="xref">System.IDisposable</span></div>
   </div>
@@ -129,7 +128,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SMOConnectionManager : IDbConnectionManager, IConnectionManager, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public class SMOConnectionManager : IConnectionManager, IDisposable</code></pre>
   </div>
   <h5 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_examples"><strong>Examples</strong></h5>
   <pre><code>ControlFlow.CurrentDbConnection = new SMOConnectionManager(new ConnectionString(&quot;Data Source=.;&quot;));
@@ -142,7 +141,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager__ctor_ALE_ETLBox_ConnectionString_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.%23ctor(ALE.ETLBox.ConnectionString)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L21">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L23">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager__ctor_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.#ctor*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager__ctor_ALE_ETLBox_ConnectionString_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.#ctor(ALE.ETLBox.ConnectionString)">SMOConnectionManager(ConnectionString)</h4>
@@ -169,6 +168,38 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L29">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager__ctor_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.#ctor*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager__ctor_System_String_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.#ctor(System.String)">SMOConnectionManager(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SMOConnectionManager(string connectionString)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">connectionString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -176,7 +207,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_ConnectionString.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.ConnectionString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L18">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L20">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ConnectionString_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ConnectionString*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ConnectionString" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ConnectionString">ConnectionString</h4>
@@ -206,7 +237,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_IsConnectionOpen.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.IsConnectionOpen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L19">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L21">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_IsConnectionOpen_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.IsConnectionOpen*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_IsConnectionOpen" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.IsConnectionOpen">IsConnectionOpen</h4>
@@ -238,7 +269,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_AfterBulkInsert.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.AfterBulkInsert%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L62">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L72">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_AfterBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.AfterBulkInsert*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_AfterBulkInsert" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.AfterBulkInsert">AfterBulkInsert()</h4>
@@ -253,7 +284,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_BeforeBulkInsert.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.BeforeBulkInsert%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L60">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L70">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_BeforeBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.BeforeBulkInsert*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_BeforeBulkInsert" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.BeforeBulkInsert">BeforeBulkInsert()</h4>
@@ -268,7 +299,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_BulkInsert_ALE_ETLBox_ITableData_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.BulkInsert(ALE.ETLBox.ITableData%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L57">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L67">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_BulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.BulkInsert*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_BulkInsert_ALE_ETLBox_ITableData_System_String_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.BulkInsert(ALE.ETLBox.ITableData,System.String)">BulkInsert(ITableData, String)</h4>
@@ -305,7 +336,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_Clone.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L82">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L95">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Clone_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Clone*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Clone" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Clone">Clone()</h4>
@@ -313,7 +344,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDbConnectionManager Clone()</code></pre>
+    <pre><code class="lang-csharp hljs">public IConnectionManager Clone()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -325,7 +356,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a></td>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -335,7 +366,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_Close.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.Close%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L80">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L93">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Close_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Close*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Close" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Close">Close()</h4>
@@ -347,10 +378,62 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_CreateCommand_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.CreateCommand(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L54">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_CreateCommand_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.CreateCommand*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_CreateCommand_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.CreateCommand(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">CreateCommand(String, IEnumerable&lt;QueryParameter&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDbCommand CreateCommand(string commandText, IEnumerable&lt;QueryParameter&gt; parameterList = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">commandText</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.QueryParameter.html">QueryParameter</a>&gt;</td>
+        <td><span class="parametername">parameterList</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Data.IDbCommand</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_Dispose.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L79">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L92">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Dispose_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Dispose*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Dispose" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Dispose">Dispose()</h4>
@@ -365,7 +448,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L66">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L76">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Dispose_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Dispose*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Dispose_System_Boolean_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Dispose(System.Boolean)">Dispose(Boolean)</h4>
@@ -397,7 +480,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteNonQuery_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteNonQuery(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L45">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L57">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteNonQuery_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteNonQuery*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteNonQuery_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">ExecuteNonQuery(String, IEnumerable&lt;QueryParameter&gt;)</h4>
@@ -449,7 +532,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteReader_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteReader(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L53">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L64">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteReader_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteReader*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteReader_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">ExecuteReader(String, IEnumerable&lt;QueryParameter&gt;)</h4>
@@ -501,7 +584,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteScalar_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteScalar(System.String%2CSystem.Collections.Generic.IEnumerable%7BALE.ETLBox.QueryParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L49">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L61">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteScalar_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteScalar*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_ExecuteScalar_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter})">ExecuteScalar(String, IEnumerable&lt;QueryParameter&gt;)</h4>
@@ -553,7 +636,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager_Open.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager.Open%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L38">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L46">View Source</a>
   </span>
   <a id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Open_" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Open*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_SMOConnectionManager_Open" data-uid="ALE.ETLBox.ConnectionManager.SMOConnectionManager.Open">Open()</h4>
@@ -564,9 +647,6 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
     <pre><code class="lang-csharp hljs">public void Open()</code></pre>
   </div>
   <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a>
-  </div>
   <div>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a>
   </div>
@@ -584,7 +664,7 @@ SqlTask.ExecuteNonQuery(&quot;sql with go keyword&quot;, @&quot;insert into demo
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ConnectionManager_SMOConnectionManager.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ConnectionManager.SMOConnectionManager%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/SMOConnectionManager.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/ConnectionManager/Native/SMOConnectionManager.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

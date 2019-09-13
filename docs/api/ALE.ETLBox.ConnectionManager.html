@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace ALE.ETLBox.ConnectionManager
    ">
-    <meta name="generator" content="docfx 2.42.4.0">
+    <meta name="generator" content="docfx 2.44.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -96,7 +96,7 @@
 This connection manager also is based on ADO.NET.
 ODBC by default does not support a Bulk Insert - and Access does not supoport the insert into (...) values (...),(...),(...)
 syntax. So the following syntax is used</p>
-<pre><code>insert into (Col1, Col2,...) 
+<pre><code>insert into (Col1, Col2,...)
 select * from (
   select &apos;Val1&apos; as Col1 from dummytable
   union all
@@ -108,17 +108,25 @@ select * from (
       <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html">AdomdConnectionManager</a></h4>
       <section><p>Connection manager for Adomd connection to a sql server analysis server.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-2.html">DbConnectionManager&lt;Connection, Command&gt;</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.ConnectionManagerTypeFinder.html">ConnectionManagerTypeFinder</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html">DbConnectionManager&lt;Connection&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.FileConnectionManager.html">FileConnectionManager</a></h4>
       <section><p>Connection manager to a file</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.html">OdbcConnectionManager</a></h4>
-      <section><p>Connection manager for an ODBC connection based on ADO.NET. ODBC can be used to connect to any ODBC able endpoint.
-ODBC by default does not support a Bulk Insert - inserting big amounts of data is translated into a</p>
+      <section><p>Abstract implementation of Connection manager for an ODBC connection based on ADO.NET.
+ODBC can be used to connect to any ODBC able endpoint. Please use the specific ODBC
+for each database, e.g. use the SqlOdbcConnectionManager when connecting to Sql Server via Odbc or
+the AccessOdbcConnectionManager when connecting to an Access database via Odbc.
+Please note: ODBC by default does not support a Bulk Insert -
+inserting big amounts of data is translated into a</p>
 <pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
-<p>Be careful with the batch size - some databases have limitations regarding the length of sql statements.
-Reduce the batch if encounter issues here.</p>
+<p>This means that inserting big amounts of data in a database via Odbc can be much slower
+than using the native connector.
+Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
+Reduce the batch size if you encounter issues here.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.SMOConnectionManager.html">SMOConnectionManager</a></h4>
       <section><p>Connection manager for Sql Server Managed Objects (SMO) connection to a sql server.</p>
@@ -129,13 +137,18 @@ Reduce the batch if encounter issues here.</p>
       <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html">SQLiteConnectionManager</a></h4>
       <section><p>Connection manager for an SQLite connection based on ADO.NET.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html">SqlOdbcConnectionManager</a></h4>
+      <section><p>Sql Connection manager for an ODBC connection based on ADO.NET to Sql Server.
+ODBC by default does not support a Bulk Insert - inserting big amounts of data is translated into a</p>
+<pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
+<p>This means that inserting big amounts of data in a database via Odbc can be much slower
+than using the native connector.
+Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
+Reduce the batch size if you encounter issues here.</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></h4>
-      <section></section>
-      <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.ICubeConnectionManager.html">ICubeConnectionManager</a></h4>
-      <section></section>
-      <h4><a class="xref" href="ALE.ETLBox.ConnectionManager.IDbConnectionManager.html">IDbConnectionManager</a></h4>
       <section></section>
     <h3 id="enums">Enums
   </h3>
