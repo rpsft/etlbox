@@ -73,7 +73,7 @@ VALUES ({String.Join(",", sourceColumnValues)})
             this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
         }
 
-        public override IDbConnectionManager Clone()
+        public override IConnectionManager Clone()
         {
             SQLiteConnectionManager clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {

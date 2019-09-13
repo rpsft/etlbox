@@ -15,7 +15,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// SqlTask.ExecuteNonQuery("sql with go keyword", @"insert into demo.table1 (value) select '####'; go 2");
     /// </code>
     /// </example>
-    public class SMOConnectionManager : IDbConnectionManager, IDisposable
+    public class SMOConnectionManager : IConnectionManager, IDisposable
     {
         public IDbConnectionString ConnectionString { get; set; }
         public bool IsConnectionOpen => SqlConnectionManager.DbConnection?.State == ConnectionState.Open;
@@ -51,20 +51,18 @@ namespace ALE.ETLBox.ConnectionManager
             Context.StatementTimeout = 0;
         }
 
+        public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null)
+            => SqlConnectionManager.CreateCommand(commandText,parameterList);
+
         public int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null)
-        {
-            return OpenedContext.ExecuteNonQuery(command);
-        }
+            =>  OpenedContext.ExecuteNonQuery(command);
+
 
         public object ExecuteScalar(string command, IEnumerable<QueryParameter> parameterList = null)
-        {
-            return OpenedContext.ExecuteScalar(command);
-        }
+            => OpenedContext.ExecuteScalar(command);
 
         public IDataReader ExecuteReader(string command, IEnumerable<QueryParameter> parameterList = null)
-        {
-            return OpenedContext.ExecuteReader(command);
-        }
+            => OpenedContext.ExecuteReader(command);
 
         public void BulkInsert(ITableData data, string tableName)
             => SqlConnectionManager.BulkInsert(data, tableName);
@@ -94,7 +92,7 @@ namespace ALE.ETLBox.ConnectionManager
         public void Dispose() => Dispose(true);
         public void Close() => Dispose();
 
-        public IDbConnectionManager Clone()
+        public IConnectionManager Clone()
         {
             SMOConnectionManager clone = new SMOConnectionManager((ConnectionString)ConnectionString) { };
             return clone;

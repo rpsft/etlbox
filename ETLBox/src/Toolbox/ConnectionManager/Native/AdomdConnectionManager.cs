@@ -28,7 +28,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override void BeforeBulkInsert() { }
         public override void AfterBulkInsert() { }
 
-        public override IDbConnectionManager Clone()
+        public override IConnectionManager Clone()
         {
             AdomdConnectionManager clone = new AdomdConnectionManager((ConnectionString)ConnectionString)
             {

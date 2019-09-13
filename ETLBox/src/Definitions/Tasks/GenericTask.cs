@@ -16,12 +16,12 @@ namespace ALE.ETLBox {
 
         public virtual IConnectionManager ConnectionManager { get; set; }
 
-        internal virtual IDbConnectionManager DbConnectionManager {
+        internal virtual IConnectionManager DbConnectionManager {
             get {
                 if (ConnectionManager == null)
-                    return (IDbConnectionManager)ControlFlow.ControlFlow.CurrentDbConnection;
+                    return (IConnectionManager)ControlFlow.ControlFlow.CurrentDbConnection;
                 else
-                    return (IDbConnectionManager)ConnectionManager;
+                    return (IConnectionManager)ConnectionManager;
             }
         }
 

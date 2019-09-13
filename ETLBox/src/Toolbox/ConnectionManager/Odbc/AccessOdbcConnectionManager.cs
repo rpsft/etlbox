@@ -96,7 +96,7 @@ namespace ALE.ETLBox.ConnectionManager
             cmd.ExecuteNonQuery();
         }
 
-        public override IDbConnectionManager Clone()
+        public override IConnectionManager Clone()
         {
             if (AlwaysUseSameConnection)
                 return this;

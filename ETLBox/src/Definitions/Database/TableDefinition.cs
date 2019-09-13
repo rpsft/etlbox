@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -49,6 +50,8 @@ namespace ALE.ETLBox
         {
             IfExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = ConnectionManagerTypeFinder.GetType(connection);
+
+            //return ReadTableDefinitionFromDataTable(tableName, connection);
             if (connectionType == ConnectionManagerType.SqlServer)
             {
                 return ReadTableDefinitionFromSqlServer(tableName, connection);
@@ -62,6 +65,12 @@ namespace ALE.ETLBox
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
             }
         }
+
+        private static TableDefinition ReadTableDefinitionFromDataTable(string tableName, IConnectionManager connection)
+        {
+            return null;
+        }
+
         private static TableDefinition ReadTableDefinitionFromSqlServer(string tableName, IConnectionManager connection)
         {
             TableDefinition result = new TableDefinition(tableName);

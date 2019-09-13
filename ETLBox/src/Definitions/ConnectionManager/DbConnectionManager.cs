@@ -4,17 +4,14 @@ using System.Data;
 using System.Threading.Tasks;
 
 namespace ALE.ETLBox.ConnectionManager {
-    public abstract class DbConnectionManager<Connection> : IDisposable, IDbConnectionManager
+    public abstract class DbConnectionManager<Connection> : IDisposable, IConnectionManager
         where Connection : class, IDbConnection, new()
-        //where Command : class, IDbCommand, new()
     {
         public int MaxLoginAttempts { get; set; } = 3;
 
         public IDbConnectionString ConnectionString { get; set; }
 
         internal Connection DbConnection { get; set; }
-
-        //internal bool IsConnectionOpen => DbConnection?.State == ConnectionState.Open;
 
         public DbConnectionManager() { }
 
@@ -107,7 +104,7 @@ namespace ALE.ETLBox.ConnectionManager {
             Dispose();
         }
 
-        public abstract IDbConnectionManager Clone();
+        public abstract IConnectionManager Clone();
         #endregion
 
     }

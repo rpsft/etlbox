@@ -52,7 +52,7 @@ namespace ALE.ETLBox.ConnectionManager
             this.ExecuteNonQuery($@"USE [{dbName}]");
         }
 
-        public override IDbConnectionManager Clone()
+        public override IConnectionManager Clone()
         {
             SqlConnectionManager clone = new SqlConnectionManager((ConnectionString)ConnectionString)
             {

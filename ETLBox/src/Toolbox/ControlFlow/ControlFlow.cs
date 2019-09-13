@@ -20,11 +20,11 @@ namespace ALE.ETLBox.ControlFlow
         /// </summary>
         public static string STAGE { get; set; }
 
-        private static IDbConnectionManager _currentDbConnection;
+        private static IConnectionManager _currentDbConnection;
         /// <summary>
         /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
         /// </summary>
-        public static IDbConnectionManager CurrentDbConnection
+        public static IConnectionManager CurrentDbConnection
         {
             get => _currentDbConnection;
             set
