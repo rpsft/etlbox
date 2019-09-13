@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTests.Fixtures
             if (IsSQLiteConnection)
             {
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-             , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')");
+                    , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
                     , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test2', 4711, '1.23')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"

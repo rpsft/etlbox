@@ -106,7 +106,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("value1", "int",allowNulls:false, isPrimaryKey:false, isIdentity:true)
+                new TableColumn("value1", "int",allowNulls:false, isPrimaryKey:true, isIdentity:true)
             };
 
             //Act
@@ -114,8 +114,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfExistsTask.IsExisting(connection, "CreateTable6"));
-            var td = TableDefinition.GetDefinitionFromTableName("CreateTable6", connection);
-            Assert.Contains(td.Columns, col => col.IsIdentity);
+            if (connection.GetType() != typeof(SQLiteConnectionManager))
+            {
+                var td = TableDefinition.GetDefinitionFromTableName("CreateTable6", connection);
+                Assert.Contains(td.Columns, col => col.IsIdentity);
+            }
         }
 
         [Fact]
@@ -135,10 +138,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfExistsTask.IsExisting(SqlConnection, "CreateTable7"));
-            if (SqlConnection.GetType() == typeof(SqlConnectionManager))
-                Assert.True(SqlTask.ExecuteScalarAsBool(SqlConnection, "Check if column has identity"
-                    , $@"SELECT CASE WHEN is_identity = 1 THEN 1 ELSE 0 END FROM sys.columns cols INNER JOIN sys.types t ON t.system_type_id = cols.system_type_id
-                     WHERE object_id = object_id('dbo.CreateTable7') AND cols.name = 'value1'"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable7", SqlConnection);
+            Assert.Contains(td.Columns, col => col.IsIdentity && col.IdentityIncrement == 1000 && col.IdentitySeed == 50);
         }
 
         [Fact]
@@ -151,10 +152,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new TableColumn("value3", "decimal",allowNulls:false) { DefaultConstraintName="TestConstraint", DefaultValue = "3.12" }
             };
             //Act
-            CreateTableTask.Create(SqlConnection, "dbo.CreateTable7", columns);
+            CreateTableTask.Create(SqlConnection, "dbo.CreateTable8", columns);
             //Assert
-            Assert.Equal(3, RowCountTask.Count(SqlConnection, " sys.columns",
-"object_id = object_id('dbo.CreateTable7')"));
+            Assert.True(IfExistsTask.IsExisting(SqlConnection, "CreateTable8"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable8", SqlConnection);
+            Assert.Contains(td.Columns, col => col.DefaultValue == "0");
+            Assert.Contains(td.Columns, col => col.DefaultValue == "Test");
+            Assert.Contains(td.Columns, col => col.DefaultValue == "3.12" && col.DefaultConstraintName == "TestConstraint");
         }
 
 
@@ -168,10 +172,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new TableColumn("compValue", "bigint",allowNulls:true) { ComputedColumn = "value1 * value2" }
             };
             //Act
-            CreateTableTask.Create(SqlConnection, "dbo.CreateTable8", columns);
+            CreateTableTask.Create(SqlConnection, "dbo.CreateTable9", columns);
             //Assert
-            Assert.Equal(3, RowCountTask.Count(SqlConnection, " sys.columns",
-"object_id = object_id('dbo.CreateTable8')"));
+            Assert.True(IfExistsTask.IsExisting(SqlConnection, "CreateTable9"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable9", SqlConnection);
+            Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
         }
     }
 }
