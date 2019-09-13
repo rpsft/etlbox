@@ -22,7 +22,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
     /// Reduce the batch size if you encounter issues here.
     /// </summary>
-    public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection, OdbcCommand>
+    public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection>
     {
         public OdbcConnectionManager() : base() { }
 

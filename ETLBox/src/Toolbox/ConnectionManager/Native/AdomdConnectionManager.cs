@@ -12,7 +12,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// ControlFlow.CurrentDbConnection = new AdmoConnectionManager(new ConnectionString("..connection string.."));
     /// </code>
     /// </example>
-    public class AdomdConnectionManager : DbConnectionManager<AdomdConnection, AdomdCommand>
+    public class AdomdConnectionManager : DbConnectionManager<AdomdConnection>
     {
 
         public AdomdConnectionManager() : base() { }

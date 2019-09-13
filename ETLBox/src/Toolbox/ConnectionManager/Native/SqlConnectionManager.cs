@@ -11,7 +11,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;"));
     /// </code>
     /// </example>
-    public class SqlConnectionManager : DbConnectionManager<SqlConnection, SqlCommand>
+    public class SqlConnectionManager : DbConnectionManager<SqlConnection>
     {
 
         public SqlConnectionManager() : base() { }

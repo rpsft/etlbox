@@ -2,6 +2,7 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace ALE.ETLBox
@@ -65,6 +66,7 @@ namespace ALE.ETLBox
         {
             TableDefinition result = new TableDefinition(tableName);
             TableColumn curCol = null;
+
             var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
 $@" 
 SELECT cols.name

@@ -4,9 +4,10 @@ using System.Data;
 using System.Threading.Tasks;
 
 namespace ALE.ETLBox.ConnectionManager {
-    public abstract class DbConnectionManager<Connection, Command> : IDisposable, IDbConnectionManager
+    public abstract class DbConnectionManager<Connection> : IDisposable, IDbConnectionManager
         where Connection : class, IDbConnection, new()
-        where Command : class, IDbCommand, new() {
+        //where Command : class, IDbCommand, new()
+    {
         public int MaxLoginAttempts { get; set; } = 3;
 
         public IDbConnectionString ConnectionString { get; set; }
@@ -46,7 +47,7 @@ namespace ALE.ETLBox.ConnectionManager {
             }
         }
 
-        public Command CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+        public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null) {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
             cmd.CommandText = commandText;
@@ -59,21 +60,21 @@ namespace ALE.ETLBox.ConnectionManager {
                     cmd.Parameters.Add(newPar);
                 }
             }
-            return cmd as Command;
+            return cmd;
         }
 
         public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null) {
-            Command sqlcmd = CreateCommand(commandText, parameterList);
+            IDbCommand sqlcmd = CreateCommand(commandText, parameterList);
             return sqlcmd.ExecuteNonQuery();
         }
 
         public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null) {
-            Command cmd = CreateCommand(commandText, parameterList);
+            IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteScalar();
         }
 
         public IDataReader ExecuteReader(string commandText, IEnumerable<QueryParameter> parameterList = null) {
-            Command cmd = CreateCommand(commandText, parameterList);
+            IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteReader();
 
         }

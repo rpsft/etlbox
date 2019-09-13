@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
     ///     "Data Source=.\db\SQLite.db;Version=3;"));
     /// </code>
     /// </example>
-    public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection, SQLiteCommand>
+    public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection>
     {
         public SQLiteConnectionManager() : base() { }
         public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString) { }
