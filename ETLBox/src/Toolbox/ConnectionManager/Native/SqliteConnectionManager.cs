@@ -20,6 +20,8 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection>
     {
+        public bool ModifyDBSettings { get; set; } = true;
+
         public SQLiteConnectionManager() : base() { }
         public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString) { }
         public SQLiteConnectionManager(string connectionString) : base(new SQLiteConnectionString(connectionString)) { }
@@ -61,16 +63,22 @@ VALUES ({String.Join(",", sourceColumnValues)})
 
         public override void BeforeBulkInsert()
         {
-            Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
-            JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
-            this.ExecuteNonQuery("PRAGMA synchronous = OFF");
-            this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+            if (ModifyDBSettings)
+            {
+                Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
+                JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
+                this.ExecuteNonQuery("PRAGMA synchronous = OFF");
+                this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+            }
         }
 
         public override void AfterBulkInsert()
         {
-            this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
-            this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+            if (ModifyDBSettings)
+            {
+                this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
+                this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+            }
         }
 
         public override IConnectionManager Clone()

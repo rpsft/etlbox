@@ -13,6 +13,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SqlConnectionManager : DbConnectionManager<SqlConnection>
     {
+        public bool ModifyDBSettings { get; set; } = true;
 
         public SqlConnectionManager() : base() { }
 
@@ -34,22 +35,30 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public override void BeforeBulkInsert() {
-            string dbName = this.DbConnection.Database;
-            PageVerify = this.ExecuteScalar($"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
-            RecoveryModel = this.ExecuteScalar($"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
-            this.ExecuteNonQuery($@"USE master");
-            this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
-            this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
-            this.ExecuteNonQuery($@"USE [{dbName}]");
+        public override void BeforeBulkInsert()
+        {
+            if (ModifyDBSettings)
+            {
+                string dbName = this.DbConnection.Database;
+                PageVerify = this.ExecuteScalar($"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
+                RecoveryModel = this.ExecuteScalar($"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
+                this.ExecuteNonQuery($@"USE master");
+                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
+                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
+                this.ExecuteNonQuery($@"USE [{dbName}]");
+            }
         }
 
-        public override void AfterBulkInsert() {
-            string dbName = this.DbConnection.Database;
-            this.ExecuteNonQuery($@"USE master");
-            this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
-            this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
-            this.ExecuteNonQuery($@"USE [{dbName}]");
+        public override void AfterBulkInsert()
+        {
+            if (ModifyDBSettings)
+            {
+                string dbName = this.DbConnection.Database;
+                this.ExecuteNonQuery($@"USE master");
+                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
+                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
+                this.ExecuteNonQuery($@"USE [{dbName}]");
+            }
         }
 
         public override IConnectionManager Clone()
