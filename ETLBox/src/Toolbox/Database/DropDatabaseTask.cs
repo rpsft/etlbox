@@ -29,7 +29,9 @@ namespace ALE.ETLBox.ControlFlow {
         {
             get
             {
-                return
+                if (ConnectionType == ConnectionManagerType.SqlServer)
+                {
+                    return
     $@"
 IF (db_id('{DatabaseName}') IS NOT NULL)
 BEGIN
@@ -41,6 +43,15 @@ BEGIN
     DROP DATABASE [{DatabaseName}]  
 END
 ";
+                }
+                else if (ConnectionType == ConnectionManagerType.MySql)
+                {
+                    return $@"DROP DATABASE IF EXISTS {DatabaseName}";
+                }
+                else
+                {
+                    return $@"DROP DATABASE {DatabaseName}";
+                }
             }
         }
 

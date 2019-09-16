@@ -8,7 +8,6 @@
         int? IdentityIncrement { get; }
         bool IsPrimaryKey { get; }
         string DefaultValue { get; }
-        string DefaultConstraintName { get; }
         string Collation { get; }
         string ComputedColumn { get; }
 

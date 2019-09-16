@@ -90,37 +90,53 @@ $@"CREATE TABLE {TableName} (
                             ? "NULL"
                             : "NOT NULL";
             string primarySql = CreatePrimaryKeyConstraint(col);
-            string defaultSql = string.Empty;
-            if (!col.IsPrimaryKey)
-                defaultSql = col.DefaultValue != null ? DefaultConstraintName(col.DefaultConstraintName) + $" DEFAULT {SetQuotesIfString(col.DefaultValue)}" : string.Empty;
+            string defaultSql = CreateDefaultSql(col);
             string computedColumnSql = !String.IsNullOrWhiteSpace(col.ComputedColumn)
                                         ? $"AS {col.ComputedColumn}"
                                         : string.Empty;
             return
-$@"[{col.Name}] {dataType} {identitySql} {collationSql} {nullSql} {primarySql} {defaultSql} {computedColumnSql}";
+$@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {defaultSql} {computedColumnSql}";
         }
 
         private string CreateIdentitySql(ITableColumn col)
         {
             if (ConnectionType == ConnectionManagerType.SQLLite) return string.Empty;
-            if (col.IsIdentity)
-                return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
             else
-                return string.Empty;
+            {
+                if (col.IsIdentity)
+                {
+                    if (ConnectionType == ConnectionManagerType.MySql)
+                        return "AUTO_INCREMENT";
+                    else
+                        return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
         }
 
         private string CreatePrimaryKeyConstraint(ITableColumn col)
         {
             if (col.IsPrimaryKey)
             {
-                string pkConst = $"CONSTRAINT [pk_{TableWithoutSchema}_{col.Name}] PRIMARY KEY ";
+                string pkConst = $", CONSTRAINT pk_{TableWithoutSchema}_{col.Name} PRIMARY KEY ({col.Name}) ";
                 return pkConst;
             }
             else
                 return String.Empty;
         }
 
-        string DefaultConstraintName(string defConstrName) => !String.IsNullOrWhiteSpace(defConstrName) ? $"CONSTRAINT {defConstrName}" : string.Empty;
+        private string CreateDefaultSql(ITableColumn col)
+        {
+            string defaultSql = string.Empty;
+            if (!col.IsPrimaryKey)
+                defaultSql = col.DefaultValue != null ? $" DEFAULT {SetQuotesIfString(col.DefaultValue)}" : string.Empty;
+            return defaultSql;
+        }
+
+        //string DefaultConstraintName(string defConstrName) => !String.IsNullOrWhiteSpace(defConstrName) ? $"CONSTRAINT {defConstrName}" : string.Empty;
 
         string SetQuotesIfString(string value)
         {

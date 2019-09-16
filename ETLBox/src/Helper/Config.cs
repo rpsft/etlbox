@@ -33,14 +33,17 @@ namespace ALE.ETLBox.Helper
         public static SqlConnectionManager SqlConnectionManager(string section)
             => SqlConnection.ConnectionManager(section);
 
-        public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager> SQLiteConnection
-        { get; set; } = new ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>("SQLiteConnectionString");
+        public static ConnectionDetails<ConnectionString, SqlConnectionManager> SqlConnection
+        { get; set; } = new ConnectionDetails<ConnectionString, SqlConnectionManager>("SqlConnectionString");
 
         public static ConnectionDetails<ConnectionString, AdomdConnectionManager> SSASConnection
         { get; set; } = new ConnectionDetails<ConnectionString, AdomdConnectionManager>("SSASConnectionString");
 
-        public static ConnectionDetails<ConnectionString, SqlConnectionManager> SqlConnection
-        { get; set; } = new ConnectionDetails<ConnectionString, SqlConnectionManager>("SqlConnectionString");
+        public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager> SQLiteConnection
+        { get; set; } = new ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>("SQLiteConnectionString");
+
+        public static ConnectionDetails<MySqlConnectionString, MySqlConnectionManager> MySqlConnection
+        { get; set; } = new ConnectionDetails<MySqlConnectionString, MySqlConnectionManager>("MySqlConnectionString");
 
         public static ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager> AccessOdbcConnection
         { get; set; } = new ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager>("AccessOdbcConnectionString");
@@ -50,16 +53,19 @@ namespace ALE.ETLBox.Helper
 
         public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) },
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
+                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
+                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value},
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
+                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
         };
 

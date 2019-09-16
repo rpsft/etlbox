@@ -13,28 +13,30 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class CreateDatabaseTaskTests
     {
         public SqlConnectionManager MasterConnection => new SqlConnectionManager(Config.SqlConnectionString("ControlFlow").GetMasterConnection());
+        public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
+                    new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
+                    new object[] { (IConnectionManager)new MySqlConnectionManager(Config.MySqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
+        };
         public CreateDatabaseTaskTests()
         { }
 
-        [Fact]
-        public void CreateWithAllParameters()
+        [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
+        public void CreateSimple(IConnectionManager connection)
         {
             //Arrange
             string dbName = "ETLBox_"+HashHelper.RandomString(10);
-            var sqlTask = new SqlTask("Get assert data", $"select cast(db_id('{dbName}') as int)")
-            {
-                ConnectionManager = MasterConnection
-            };
-            Assert.False(sqlTask.ExecuteScalarAsBool());
+            var dbListBefore = GetDatabaseListTask.List(connection);
+            Assert.DoesNotContain<string>(dbName, dbListBefore);
 
             //Act
-            CreateDatabaseTask.Create(MasterConnection, dbName);
+            CreateDatabaseTask.Create(connection, dbName);
 
             //Assert
-            Assert.True(sqlTask.ExecuteScalarAsBool());
+            var dbListAfter = GetDatabaseListTask.List(connection);
+            Assert.Contains<string>(dbName, dbListAfter);
 
             //Cleanup
-            DropDatabaseTask.Drop(MasterConnection, dbName);
+            DropDatabaseTask.Drop(connection, dbName);
         }
 
         public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");

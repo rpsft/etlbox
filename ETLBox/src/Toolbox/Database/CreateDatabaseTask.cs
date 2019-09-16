@@ -33,8 +33,10 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                return
-    $@"
+                if (ConnectionType == ConnectionManagerType.SqlServer)
+                {
+                    return
+        $@"
 IF (db_id('{DatabaseName}') IS NULL)
 BEGIN
     USE [master]
@@ -55,6 +57,15 @@ BEGIN
     END
 END
 ";
+                }
+                else if (ConnectionType == ConnectionManagerType.MySql)
+                {
+                    return $@"CREATE DATABASE IF NOT EXISTS {DatabaseName} {CollationString}";
+                }
+                else
+                {
+                    return $@"CREATE DATABASE {DatabaseName}";
+                }
             }
         }
 
@@ -104,7 +115,7 @@ END
             }
         }
         bool HasCollation => !String.IsNullOrWhiteSpace(Collation);
-        string CollationString => HasCollation ? "collate " + Collation : string.Empty;
+        string CollationString => HasCollation ? "COLLATE " + Collation : string.Empty;
         string RecoveryString => RecoveryModel != RecoveryModel.Default ?
             $"ALTER DATABASE [{DatabaseName}] SET RECOVERY {RecoveryModelAsString} WITH no_wait"
             : string.Empty;

@@ -12,10 +12,8 @@ namespace ALE.ETLBoxTests.Fixtures
     {
         public DatabaseSourceDestinationFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("DataFlowSource").DBName
-                , Config.SqlConnectionString("DataFlowSource"));
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("DataFlowDestination").DBName
-                , Config.SqlConnectionString("DataFlowDestination"));
+            DatabaseHelper.RecreateSqlDatabase("DataFlowSource");
+            DatabaseHelper.RecreateSqlDatabase("DataFlowDestination");
         }
     }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.Fixtures
 {
     [CollectionDefinition("Connection Manager")]
     public class CollectionConnectionManagerFixture : ICollectionFixture<ConnectionManagerFixture> { }
@@ -12,8 +12,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     {
         public ConnectionManagerFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("ConnectionManager").DBName
-                , Config.SqlConnectionString("ConnectionManager"));
+            DatabaseHelper.RecreateSqlDatabase("ConnectionManager");
         }
     }
 

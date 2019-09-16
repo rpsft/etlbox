@@ -4,23 +4,26 @@
         "SSASConnectionString": "Data Source=.\\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteControlFlow.db;Version=3;",
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessControlFlow.mdb",
-        "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes"
-
+        "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes",
+        "MySqlConnectionString": "Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;"
     },
     "DataFlow": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlow",
         "SqlOdbcConnectionString": "Driver={SQL Server};Server=.;Database=ETLBox_DataFlow;Trusted_Connection=Yes",
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlow.db;Version=3;",
-        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.mdb"
+        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.mdb",
+        "MySqlConnectionString": "Server=10.37.128.2;Database=ETLBox_DataFlow;Uid=etlbox;Pwd=etlboxpassword;"
     },
     "DataFlowSource": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowSource",
-        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowSource.db;Version=3;"
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowSource.db;Version=3;",
+        "MySqlConnectionString": "Server=10.37.128.2;Database=ETLBox_DataFlowSource;Uid=etlbox;Pwd=etlboxpassword;"
 
     },
     "DataFlowDestination": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowDestination",
-        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowDestination.db;Version=3;"
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowDestination.db;Version=3;",
+        "MySqlConnectionString": "Server=10.37.128.2;Database=ETLBox_DataFlowDestination;Uid=etlbox;Pwd=etlboxpassword;"
     },
     "ConnectionManager": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_ConnectionManager"

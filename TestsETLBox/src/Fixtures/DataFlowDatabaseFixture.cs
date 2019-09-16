@@ -1,4 +1,6 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,9 +14,11 @@ namespace ALE.ETLBoxTests.Fixtures
     {
         public DataFlowDatabaseFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("DataFlow").DBName
-                , Config.SqlConnectionString("DataFlow"));
+            DatabaseHelper.RecreateSqlDatabase("DataFlow");
+            DatabaseHelper.RecreateMySqlDatabase("DataFlow");
         }
+
+
     }
 
 }

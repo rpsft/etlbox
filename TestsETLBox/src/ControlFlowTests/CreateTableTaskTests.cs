@@ -142,23 +142,23 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Contains(td.Columns, col => col.IsIdentity && col.IdentityIncrement == 1000 && col.IdentitySeed == 50);
         }
 
-        [Fact]
-        public void CreateTableWithDefault()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithDefault(IConnectionManager connection)
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("value1", "int",allowNulls:false) { DefaultValue = "0" },
-                new TableColumn("value2", "nvarchar(10)",allowNulls:false) { DefaultValue = "Test" },
-                new TableColumn("value3", "decimal",allowNulls:false) { DefaultConstraintName="TestConstraint", DefaultValue = "3.12" }
+                new TableColumn("value1", "INT",allowNulls:false) { DefaultValue = "0" },
+                new TableColumn("value2", "NVARCHAR(10)",allowNulls:false) { DefaultValue = "Test" },
+                new TableColumn("value3", "DECIMAL(10,2)",allowNulls:false) { DefaultValue = "3.12" }
             };
             //Act
-            CreateTableTask.Create(SqlConnection, "dbo.CreateTable8", columns);
+            CreateTableTask.Create(connection, "CreateTable8", columns);
             //Assert
-            Assert.True(IfExistsTask.IsExisting(SqlConnection, "CreateTable8"));
-            var td = TableDefinition.GetDefinitionFromTableName("CreateTable8", SqlConnection);
+            Assert.True(IfExistsTask.IsExisting(connection, "CreateTable8"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable8", connection);
             Assert.Contains(td.Columns, col => col.DefaultValue == "0");
             Assert.Contains(td.Columns, col => col.DefaultValue == "Test");
-            Assert.Contains(td.Columns, col => col.DefaultValue == "3.12" && col.DefaultConstraintName == "TestConstraint");
+            Assert.Contains(td.Columns, col => col.DefaultValue == "3.12");
         }
 
 

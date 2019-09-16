@@ -21,13 +21,18 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (ConnectionType == ConnectionManagerType.SQLLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+
             DatabaseNames = new List<string>();
             new SqlTask(this, Sql)
             {
                 Actions = new List<Action<object>>() {
-                    n => DatabaseNames.Add((string)n)
+                    name => DatabaseNames.Add((string)name)
                 }
             }.ExecuteReader();
+
+            if (ConnectionType == ConnectionManagerType.MySql)
+                DatabaseNames.RemoveAll(m => new List<string>()
+                { "information_schema", "mysql", "performance_schema","sys"}.Contains(m));
         }
 
 
@@ -36,7 +41,18 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                return $"SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4";
+                if (ConnectionType == ConnectionManagerType.SqlServer)
+                {
+                    return $"SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4";
+                }
+                else if (ConnectionType == ConnectionManagerType.MySql)
+                {
+                    return $"SHOW DATABASES";
+                }
+                else
+                {
+                    throw new ETLBoxNotSupportedException("This database is not supported!");
+                }
             }
         }
 

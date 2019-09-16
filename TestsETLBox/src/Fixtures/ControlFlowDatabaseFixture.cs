@@ -12,8 +12,8 @@ namespace ALE.ETLBoxTests.Fixtures
     {
         public ControlFlowDatabaseFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("ControlFlow").DBName
-                , Config.SqlConnectionString("ControlFlow"));
+            DatabaseHelper.RecreateSqlDatabase("ControlFlow");
+            DatabaseHelper.RecreateMySqlDatabase("ControlFlow");
         }
     }
 

@@ -15,12 +15,11 @@ namespace ALE.ETLBox {
         public int? IdentityIncrement { get; set; }
         public bool IsPrimaryKey { get; set; }
         public string DefaultValue { get; set; }
-        public string DefaultConstraintName { get; set; }
         public string Collation { get; set; }
         public string ComputedColumn { get; set; }
         public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
 
-        
+
         public string DataSetColumn {
             get { return String.IsNullOrWhiteSpace(_dataSetColumn) ? Name : _dataSetColumn; }
             set {

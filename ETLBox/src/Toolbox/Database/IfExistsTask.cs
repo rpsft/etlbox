@@ -33,9 +33,18 @@ namespace ALE.ETLBox.ControlFlow
                     return
         $@"
 IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}' )
-   SELECT 1
+    SELECT 1
 IF ( OBJECT_ID('{ObjectName}') IS NOT NULL)
-  SELECT 1";
+    SELECT 1";
+                }
+                else if (this.ConnectionType == ConnectionManagerType.MySql)
+                {
+                    return $@"SELECT EXISTS(
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = DATABASE()
+    AND table_name = '{ObjectName}'
+) AS 'DoesExist'";
                 }
                 else
                 {

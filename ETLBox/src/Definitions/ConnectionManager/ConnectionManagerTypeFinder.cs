@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace ALE.ETLBox.ConnectionManager {
+namespace ALE.ETLBox.ConnectionManager
+{
     public class ConnectionManagerTypeFinder
     {
         public static ConnectionManagerType GetType(IConnectionManager connection)
@@ -17,7 +18,9 @@ namespace ALE.ETLBox.ConnectionManager {
                 return ConnectionManagerType.Adomd;
             else if (connection.GetType() == typeof(SQLiteConnectionManager))
                 return ConnectionManagerType.SQLLite;
+            else if (connection.GetType() == typeof(MySqlConnectionManager))
+                return ConnectionManagerType.MySql;
             else return ConnectionManagerType.Unknown;
         }
-        }
+    }
 }

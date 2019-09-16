@@ -8,6 +8,7 @@ namespace ALE.ETLBox.ConnectionManager {
         SqlServer,
         Adomd,
         SQLLite,
+        MySql,
         Access
     }
 }

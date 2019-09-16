@@ -1,26 +1,39 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using Microsoft.Extensions.Configuration;
+using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ALE.ETLBox.Helper
 {
-    public static class DatabaseHelper
+    public class DatabaseHelper
     {
-        static DatabaseHelper()
-        {
-
-        }
-
-        public static void RecreateDatabase(string dbName, ConnectionString connectionString)
+        public static void RecreateSqlDatabase(string section)
         {
             var connManagerMaster = new SqlConnectionManager(
-                    connectionString.GetMasterConnection()
-                    );
+                            Config.SqlConnection.ConnectionString(section).GetMasterConnection()
+                            );
+            var dbName = Config.SqlConnection.ConnectionString(section).DBName;
+            new DropDatabaseTask(dbName)
+            {
+                DisableLogging = true,
+                ConnectionManager = connManagerMaster
+            }.Drop();
 
+            new CreateDatabaseTask(dbName)
+            {
+                DisableLogging = true,
+                ConnectionManager = connManagerMaster
+            }.Execute();
+        }
+
+        public static void RecreateMySqlDatabase(string section)
+        {
+            var connManagerMaster = new MySqlConnectionManager(
+                            Config.MySqlConnection.ConnectionString(section).GetMasterConnection()
+                            );
+            var dbName = Config.MySqlConnection.ConnectionString(section).DBName;
             new DropDatabaseTask(dbName)
             {
                 DisableLogging = true,

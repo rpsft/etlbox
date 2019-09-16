@@ -15,7 +15,7 @@ namespace ALE.ETLBoxTests.Logging
     {
         public LoggingDatabaseFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("Logging").DBName, Config.SqlConnectionString("Logging"));
+            DatabaseHelper.RecreateSqlDatabase("Logging");
             ControlFlow.SetLoggingDatabase(Config.SqlConnectionManager("Logging"));
         }
     }

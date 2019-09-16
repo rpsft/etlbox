@@ -4,7 +4,7 @@ using System.Data.SQLite;
 namespace ALE.ETLBox {
     /// <summary>
     /// A helper class for encapsulating a conection string in an object.
-    /// Internally the SqlConnectionStringBuilder is used to access the values of the given connection string.
+    /// Internally the SQLiteConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
     public class SQLiteConnectionString : IDbConnectionString{
 

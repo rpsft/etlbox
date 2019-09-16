@@ -4,7 +4,7 @@ using System.Data.Odbc;
 namespace ALE.ETLBox {
     /// <summary>
     /// A helper class for encapsulating a conection string in an object.
-    /// Internally the SqlConnectionStringBuilder is used to access the values of the given connection string.
+    /// Internally the OdbcConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
     public class OdbcConnectionString : IDbConnectionString{
 
@@ -19,7 +19,7 @@ namespace ALE.ETLBox {
         }
 
         public OdbcConnectionStringBuilder OdbcConnectionStringBuilder => _builder;
-        
+
         public OdbcConnectionString() {
             _builder = new OdbcConnectionStringBuilder();
         }
@@ -28,7 +28,7 @@ namespace ALE.ETLBox {
             this.Value = connectionString;
         }
 
-     
+
         public static implicit operator OdbcConnectionString(string v) {
             return new OdbcConnectionString(v);
         }
