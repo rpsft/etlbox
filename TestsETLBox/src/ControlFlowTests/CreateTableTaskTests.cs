@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("Key", "int",allowNulls:false,isPrimaryKey:true),
+                new TableColumn("Id", "int",allowNulls:false,isPrimaryKey:true),
                 new TableColumn("value2", "datetime", allowNulls:true)
             };
 
@@ -157,26 +157,34 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.True(IfExistsTask.IsExisting(connection, "CreateTable8"));
             var td = TableDefinition.GetDefinitionFromTableName("CreateTable8", connection);
             Assert.Contains(td.Columns, col => col.DefaultValue == "0");
-            Assert.Contains(td.Columns, col => col.DefaultValue == "Test");
+            Assert.Contains(td.Columns, col => col.DefaultValue == "Test" || col.DefaultValue == "'Test'" );
             Assert.Contains(td.Columns, col => col.DefaultValue == "3.12");
         }
 
 
-        [Fact]
-        public void CreateTableWithComputedColumn()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithComputedColumn(IConnectionManager connection)
         {
-            //Arrange
-            List<TableColumn> columns = new List<TableColumn>() {
-                new TableColumn("value1", "int",allowNulls:false) ,
-                new TableColumn("value2", "int",allowNulls:false) ,
-                new TableColumn("compValue", "bigint",allowNulls:true) { ComputedColumn = "value1 * value2" }
-            };
-            //Act
-            CreateTableTask.Create(SqlConnection, "dbo.CreateTable9", columns);
-            //Assert
-            Assert.True(IfExistsTask.IsExisting(SqlConnection, "CreateTable9"));
-            var td = TableDefinition.GetDefinitionFromTableName("CreateTable9", SqlConnection);
-            Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
+            if (connection.GetType() != typeof(SQLiteConnectionManager))
+            {
+                //Arrange
+                List<TableColumn> columns = new List<TableColumn>() {
+                    new TableColumn("value1", "int",allowNulls:false) ,
+                    new TableColumn("value2", "int",allowNulls:false) ,
+                    new TableColumn("compValue", "bigint",allowNulls:true) { ComputedColumn = "(value1 * value2)" }
+                };
+
+                //Act
+                CreateTableTask.Create(connection, "CreateTable9", columns);
+
+                //Assert
+                Assert.True(IfExistsTask.IsExisting(connection, "CreateTable9"));
+                var td = TableDefinition.GetDefinitionFromTableName("CreateTable9", connection);
+                if (connection.GetType() == typeof(SqlConnectionManager))
+                    Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
+                else if  (connection.GetType() == typeof(MySqlConnectionManager))
+                      Assert.Contains(td.Columns, col => col.ComputedColumn == "(`value1` * `value2`)");
+            }
         }
     }
 }

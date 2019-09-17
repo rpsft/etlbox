@@ -17,7 +17,7 @@ namespace ALE.ETLBox.ConnectionManager
             else if (connection.GetType() == typeof(AdomdConnectionManager))
                 return ConnectionManagerType.Adomd;
             else if (connection.GetType() == typeof(SQLiteConnectionManager))
-                return ConnectionManagerType.SQLLite;
+                return ConnectionManagerType.SQLite;
             else if (connection.GetType() == typeof(MySqlConnectionManager))
                 return ConnectionManagerType.MySql;
             else return ConnectionManagerType.Unknown;

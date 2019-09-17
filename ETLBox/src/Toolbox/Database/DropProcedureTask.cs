@@ -12,7 +12,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Drop Procedure {ProcedureName}";
         public override void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLLite)
+            if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
 
             bool procExists = new IfExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();

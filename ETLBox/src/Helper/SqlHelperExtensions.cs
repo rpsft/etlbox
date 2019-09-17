@@ -5,7 +5,7 @@ using System.Linq;
 namespace ALE.ETLBox.Helper {
     public static class SqlHelperExtensions {
         public static string AsString(this ITableColumn column, string tblName = "", string prefix = "", string suffix = "") =>
-          (tblName != "" ? tblName + "." : "") + "[" + prefix + column.Name + suffix + "]";
+          (tblName != "" ? tblName + "." : "")  + prefix + column.Name + suffix;
 
         public static string AsString(this IEnumerable<ITableColumn> columns, string tblName = "", string prefix = "", string suffix = "") =>
             string.Join(", ", columns.Select(col => col.AsString(tblName, prefix, suffix)));

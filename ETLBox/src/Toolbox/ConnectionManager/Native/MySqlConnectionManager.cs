@@ -1,6 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using CsvHelper;
+using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -26,15 +29,35 @@ namespace ALE.ETLBox.ConnectionManager
         string RecoveryModel { get; set; }
         public override void BulkInsert(ITableData data, string tableName)
         {
-            ;
-            //using (SqlBulkCopy bulkCopy = new SqlBulkCopy(DbConnection, SqlBulkCopyOptions.TableLock, null))
-            //{
-            //    bulkCopy.BulkCopyTimeout = 0;
-            //    bulkCopy.DestinationTableName = tableName;
-            //    foreach (IColumnMapping colMap in data.ColumnMapping)
-            //        bulkCopy.ColumnMappings.Add(colMap.SourceColumn, colMap.DataSetColumn);
-            //    bulkCopy.WriteToServer(data);
-            //}
+            BulkInsertSql<MySqlParameter> bulkInsert = new BulkInsertSql<MySqlParameter>()
+            {
+                UseParameterQuery = true
+            };
+            string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
+            var cmd = DbConnection.CreateCommand();
+            cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+            //            var records = new List<object>
+            //    {
+            //        new { Id = 1, Name = "one" },
+            //    };
+            //            using (var writer = new StreamWriter(".etlboxtemp.csvdata"))
+            //            using (var csv = new CsvWriter(writer))
+            //            {
+            //                csv.WriteRecords(records);
+            //            }
+
+            //            string sql = $@"LOAD DATA INFILE '.etlboxtemp.csvdata' 
+            //INTO TABLE {tableName}
+            //FIELDS TERMINATED BY ';' 
+            //ENCLOSED BY '""'
+            //LINES TERMINATED BY '\r\n'
+            //IGNORE 1 LINES; "
+            //            ;
+            //            var cmd = DbConnection.CreateCommand();
+            //            cmd.CommandText = sql;
+            //            cmd.ExecuteNonQuery();
         }
 
         public override void BeforeBulkInsert()

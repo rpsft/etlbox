@@ -51,10 +51,9 @@ namespace ALE.ETLBox
             IfExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = ConnectionManagerTypeFinder.GetType(connection);
 
-            //return ReadTableDefinitionFromDataTable(tableName, connection);
             if (connectionType == ConnectionManagerType.SqlServer)
                 return ReadTableDefinitionFromSqlServer(tableName, connection);
-            else if (connectionType == ConnectionManagerType.SQLLite)
+            else if (connectionType == ConnectionManagerType.SQLite)
                 return ReadTableDefinitionFromSQLite(tableName, connection);
             else if (connectionType == ConnectionManagerType.MySql)
                 return ReadTableDefinitionFromMySqlServer(tableName, connection);
@@ -155,16 +154,6 @@ WHERE (sc.name + '.' + tbl.name ='{tableName}'
                 ConnectionManager = connection
             };
             readMetaSql.ExecuteReader();
-            //if (result.Columns.Where(col => col.IsPrimaryKey).Count() == 1)
-            //{
-            //    var pkCol = result.Columns.Where(col => col.IsPrimaryKey).First();
-            //    if (pkCol.DataType.ToUpper() == "INTEGER")
-            //    {
-            //        pkCol.IsIdentity = true;
-            //        pkCol.IdentityIncrement = 1;
-            //        pkCol.IdentitySeed = 1;
-            //    }
-            //}
             return result;
         }
 
@@ -182,6 +171,7 @@ SELECT cols.column_name
   , CASE WHEN isnull(k.constraint_name) THEN 0 ELSE 1 END AS 'primary_key'
   , cols.column_default
   , cols.collation_name
+  , cols.generation_expression
   FROM INFORMATION_SCHEMA.COLUMNS cols
   INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -203,13 +193,10 @@ SELECT cols.column_name
             , data_type => curCol.DataType = data_type.ToString()
             , is_nullable => curCol.AllowNulls = (long)is_nullable == 1 ? true : false
             , auto_increment => curCol.IsIdentity = (long)auto_increment == 1 ? true : false
-            //, seed_value => curCol.IdentitySeed = (int?)seed_value
-            //, increment_value => curCol.IdentityIncrement = (int?)increment_value
-            , primary_key => curCol.IsPrimaryKey = (long)primary_key == 1 ? true : false
+             , primary_key => curCol.IsPrimaryKey = (long)primary_key == 1 ? true : false
             , column_default => curCol.DefaultValue = column_default?.ToString()
-            //, default_constraint_name => curCol.DefaultConstraintName = default_constraint_name?.ToString()
             , collation_name => curCol.Collation = collation_name?.ToString()
-            //, computed_column_definition => curCol.ComputedColumn = computed_column_definition?.ToString().Substring(1, (computed_column_definition.ToString().Length) - 2)
+            , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
              )
             {
                 DisableLogging = true,

@@ -26,7 +26,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.SQLLite)
+                if (ConnectionType == ConnectionManagerType.SQLite)
                     return $@"DELETE FROM {TableName}";
                 else
                     return $@"TRUNCATE TABLE {TableName}";

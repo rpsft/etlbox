@@ -17,7 +17,7 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskType { get; set; } = "CREATEPROC";
         public override string TaskName => $"{CreateOrAlterSql} procedure {ProcedureName}";
         public override void Execute() {
-            if (ConnectionType == ConnectionManagerType.SQLLite)
+            if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
 
             IsExisting = new IfExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();

@@ -22,10 +22,10 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Count Rows for {TableName}" + (HasCondition ? $" with condition {Condition}" : "");
         public override void Execute()
         {
-            if (this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.SQLLite)
-                Rows = (int)new SqlTask(this, Sql).ExecuteScalar<long>();
-            else
+            if (this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.SqlServer)
                 Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
+            else
+                Rows = (int)new SqlTask(this, Sql).ExecuteScalar<long>();
         }
 
         public string TableName { get; set; }
@@ -45,7 +45,7 @@ FROM [sys].[partitions]
 WHERE [object_id] = object_id(N'{TableName}') 
   AND [index_id] IN (0,1)" :
                 $@"
-SELECT COUNT (*)
+SELECT COUNT(*)
 FROM {TableName} 
 {WhereClause} {Condition} {NoLockHint}";
             }

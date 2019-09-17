@@ -17,7 +17,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Clean up schema {SchemaName}";
         public override void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLLite)
+            if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             new SqlTask(this, Sql).ExecuteNonQuery();
         }

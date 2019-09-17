@@ -19,7 +19,7 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskType { get; set; } = "CALCDBHASH";
         public override string TaskName => $"Calculate hash value for schema(s) {SchemaNamesAsString}";
         public override void Execute() {
-            if (ConnectionType == ConnectionManagerType.SQLLite)
+            if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             List<string> allColumns = new List<string>();
             new SqlTask(this, Sql) {

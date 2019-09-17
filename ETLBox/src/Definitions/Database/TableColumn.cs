@@ -17,6 +17,7 @@ namespace ALE.ETLBox {
         public string DefaultValue { get; set; }
         public string Collation { get; set; }
         public string ComputedColumn { get; set; }
+        public bool HasComputedColumn => !String.IsNullOrWhiteSpace(ComputedColumn);
         public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
 
 

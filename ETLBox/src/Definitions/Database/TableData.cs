@@ -119,6 +119,7 @@ namespace ALE.ETLBox {
         {
             throw new NotImplementedException();
         }
+
         public string GetString(int i) => Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         public object GetValue(int i) => CurrentRow.Length > ShiftIndexAroundIDColumn(i) ? CurrentRow[ShiftIndexAroundIDColumn(i)] : (object)null;
 

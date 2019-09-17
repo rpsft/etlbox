@@ -113,7 +113,7 @@ namespace ALE.ETLBox.Helper
                 }
                 return dbSpecificTypeName;
             }
-            if (connectionType == ConnectionManagerType.SQLLite)
+            if (connectionType == ConnectionManagerType.SQLite)
             {
                 if (typeName == "INT")
                     return "INTEGER";

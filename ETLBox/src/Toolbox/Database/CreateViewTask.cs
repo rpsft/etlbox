@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ControlFlow
         public override void Execute()
         {
             IsExisting = new IfExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (ConnectionType == ConnectionManagerType.SQLLite && IsExisting)
+            if (ConnectionType == ConnectionManagerType.SQLite && IsExisting)
                 new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true}.Drop();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
@@ -45,6 +45,6 @@ AS
         public static void CreateOrAlter(IConnectionManager connectionManager, string viewName, string definition) => new CreateViewTask(viewName, definition) { ConnectionManager = connectionManager }.Execute();
 
         bool IsExisting { get; set; }
-        string CreateOrAlterSql => IsExisting && ConnectionType != ConnectionManagerType.SQLLite ? "ALTER" : "CREATE";
+        string CreateOrAlterSql => IsExisting && ConnectionType != ConnectionManagerType.SQLite ? "ALTER" : "CREATE";
     }
 }

@@ -78,8 +78,7 @@ $@"CREATE TABLE {TableName} (
         string CreateTableDefinition(ITableColumn col)
         {
             string dataType = string.Empty;
-            if (String.IsNullOrWhiteSpace(col.ComputedColumn))
-                dataType = DataTypeConverter.TryGetDBSpecificType(col.DataType, this.ConnectionType);
+            dataType = CreateDataTypeSql(col);
             string identitySql = CreateIdentitySql(col);
             string collationSql = !String.IsNullOrWhiteSpace(col.Collation)
                                     ? $"COLLATE {col.Collation}"
@@ -91,16 +90,22 @@ $@"CREATE TABLE {TableName} (
                             : "NOT NULL";
             string primarySql = CreatePrimaryKeyConstraint(col);
             string defaultSql = CreateDefaultSql(col);
-            string computedColumnSql = !String.IsNullOrWhiteSpace(col.ComputedColumn)
-                                        ? $"AS {col.ComputedColumn}"
-                                        : string.Empty;
+            string computedColumnSql = CreateComputedColumnSql(col);
             return
 $@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {defaultSql} {computedColumnSql}";
         }
 
+        private string CreateDataTypeSql(ITableColumn col)
+        {
+            if (ConnectionType == ConnectionManagerType.SqlServer && col.HasComputedColumn)
+                return string.Empty;
+            else
+                return DataTypeConverter.TryGetDBSpecificType(col.DataType, this.ConnectionType);
+        }
+
         private string CreateIdentitySql(ITableColumn col)
         {
-            if (ConnectionType == ConnectionManagerType.SQLLite) return string.Empty;
+            if (ConnectionType == ConnectionManagerType.SQLite) return string.Empty;
             else
             {
                 if (col.IsIdentity)
@@ -121,7 +126,9 @@ $@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {de
         {
             if (col.IsPrimaryKey)
             {
-                string pkConst = $", CONSTRAINT pk_{TableWithoutSchema}_{col.Name} PRIMARY KEY ({col.Name}) ";
+                string pkConst = $" CONSTRAINT pk_{TableWithoutSchema}_{col.Name} PRIMARY KEY ";
+                if (ConnectionType != ConnectionManagerType.SQLite)
+                    pkConst = $"," + pkConst + $"({ col.Name}) ";
                 return pkConst;
             }
             else
@@ -136,7 +143,15 @@ $@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {de
             return defaultSql;
         }
 
-        //string DefaultConstraintName(string defConstrName) => !String.IsNullOrWhiteSpace(defConstrName) ? $"CONSTRAINT {defConstrName}" : string.Empty;
+        private string CreateComputedColumnSql(ITableColumn col)
+        {
+            if (col.HasComputedColumn && ConnectionType == ConnectionManagerType.SQLite)
+                throw new ETLBoxNotSupportedException("SQLite does not support computed columns");
+            if (col.HasComputedColumn)
+                return $"AS {col.ComputedColumn}";
+            else
+                return string.Empty;
+        }
 
         string SetQuotesIfString(string value)
         {

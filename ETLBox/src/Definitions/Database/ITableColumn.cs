@@ -10,6 +10,7 @@
         string DefaultValue { get; }
         string Collation { get; }
         string ComputedColumn { get; }
+        bool HasComputedColumn { get; }
 
     }
 }

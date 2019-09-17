@@ -15,11 +15,11 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <see cref="OdbcConnectionManager"/>
     /// <see cref="AccessOdbcConnectionManager"/>
-    internal class BulkInsertSql
+    internal class BulkInsertSql<T> where T: DbParameter, new()
     {
         internal bool IsAccessDatabase { get; set; }
         internal bool UseParameterQuery { get; set; } = true;
-        internal List<DbParameter> Parameters { get; set; }
+        internal List<T> Parameters { get; set; }
         StringBuilder QueryText { get; set; }
         List<string> SourceColumnNames { get; set; }
         List<string> DestColumnNames { get; set; }
@@ -39,7 +39,7 @@ namespace ALE.ETLBox.ConnectionManager
         private void InitObjects()
         {
             QueryText = new StringBuilder();
-            Parameters = new List<DbParameter>();
+            Parameters = new List<T>();
         }
 
         private void GetSourceAndDestColumNames(ITableData data)
@@ -69,7 +69,11 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (UseParameterQuery)
             {
-                Parameters.Add(new OdbcParameter(destColumnName, DBNull.Value));
+                var par = new T();
+                //par.ParameterName = destColumnName;
+                par.Value = DBNull.Value;
+                Parameters.Add(par);
+                //Parameters.Add(new OdbcParameter(destColumnName, DBNull.Value));
                 values.Add("?");
             }
             else
@@ -84,8 +88,11 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (UseParameterQuery)
             {
-                Parameters.Add(new OdbcParameter(destColumnName, data.GetValue(colIndex)));
-
+                var par = new T();
+                //par.ParameterName = destColumnName;
+                par.Value = data.GetValue(colIndex);
+                Parameters.Add(par);
+                //Parameters.Add(new OdbcParameter(destColumnName, data.GetValue(colIndex)));
                 values.Add("?");
             }
             else
@@ -154,5 +161,10 @@ namespace ALE.ETLBox.ConnectionManager
             AppendEndSql();
             return QueryText.ToString();
         }
+    }
+
+    internal class BulkInsertSql : BulkInsertSql<OdbcParameter>
+    {
+
     }
 }

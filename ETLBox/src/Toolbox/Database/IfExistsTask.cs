@@ -24,7 +24,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (this.ConnectionType == ConnectionManagerType.SQLLite)
+                if (this.ConnectionType == ConnectionManagerType.SQLite)
                 {
                     return $@"SELECT 1 FROM sqlite_master WHERE name='{ObjectName}';";
                 }

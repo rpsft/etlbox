@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public override void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLLite)
+            if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
 
             DefaultDataPath = (string)new SqlTask(this, DefaultDataPathSql) { TaskName = $"Read default data path" }.ExecuteScalar();

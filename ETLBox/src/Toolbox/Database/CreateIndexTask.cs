@@ -85,7 +85,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 if (IncludeColumns == null
                     || IncludeColumns?.Count == 0
-                    || ConnectionType == ConnectionManagerType.SQLLite)
+                    || ConnectionType == ConnectionManagerType.SQLite)
                     return string.Empty;
                 else
                     return $"INCLUDE ({String.Join("  ,", IncludeColumns)})";

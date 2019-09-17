@@ -25,7 +25,7 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 string sql = $@"DROP INDEX {IndexName}";
-                if (ConnectionType != ConnectionManagerType.SQLLite)
+                if (ConnectionType != ConnectionManagerType.SQLite)
                     sql += $@" ON {TableName}";
                 return sql;
             }
