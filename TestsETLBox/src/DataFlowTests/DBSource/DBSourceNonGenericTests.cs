@@ -56,7 +56,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithSql(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"SourceWithSql");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceWithSql");
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationWithSql");
 
@@ -124,6 +124,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationOneColumn", "ColX = '1'"));
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationOneColumn", "ColX = '2'"));
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationOneColumn", "ColX = '3'"));
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void WithAdditionalNotNullCol(IConnectionManager connection)
+        {
+            //Arrange
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceAdditionalNotNullCol");
+            source2Columns.InsertTestData();
+            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE DestinationAdditionalNotNullCol
+                (Col1 NVARCHAR(100) NULL, Col2 NVARCHAR(100) NULL, Col3 NVARCHAR(100) NOT NULL)");
+
+            //Act
+            DBSource source = new DBSource(connection, "SourceAdditionalNotNullCol");
+            DBDestination dest = new DBDestination(connection, "DestinationAdditionalNotNullCol");
+            source.LinkTo(dest);
+            Assert.Throws<AggregateException>(() =>
+            {
+                source.Execute();
+                dest.Wait();
+            });
         }
     }
 }

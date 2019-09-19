@@ -106,9 +106,7 @@ LEFT JOIN sys.default_constraints defconstr
   AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
   ON compCol.object_id = cols.object_id
-WHERE (sc.name + '.' + tbl.name ='{tableName}'
-       OR  tbl.name = '{tableName}'
-      )
+WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tableName}' OR  tbl.name = '{tableName}' )
   AND tbl.type = 'U'
   AND tpes.name <> 'sysname'
 "
@@ -183,8 +181,7 @@ SELECT cols.column_name
     AND cols.table_catalog = k.table_catalog
    AND cols.column_name = k.column_name
   AND k.constraint_name = 'PRIMARY'
-  WHERE ( cols.table_name = '{tableName}'
-        OR  cols.table_catalog + '.' + cols.table_name = '{tableName}')
+  WHERE ( cols.table_name = '{tableName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{tableName}')
   AND cols.table_schema = DATABASE()
 "
             , () => { curCol = new TableColumn(); }

@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         private void InsertTestData(IConnectionManager connection, string tableName)
         {
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {tableName} VALUES(1,'\0 \'' \"" \b \n \r \t \Z \\ \% \_ ')");
+                , $@"INSERT INTO {tableName} VALUES(1,'\0 \"" \b \n \r \t \Z \\ \% \_ ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {tableName} VALUES(2,' '' """" ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"

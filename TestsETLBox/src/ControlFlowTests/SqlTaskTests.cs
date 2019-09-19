@@ -60,7 +60,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Act
             object result = SqlTask.ExecuteScalar(connection,
                 "Test execute scalar",
-                $@"SELECT CAST('Hallo Welt' AS NVARCHAR(100)) AS ScalarResult");
+                $@"SELECT 'Hallo Welt' AS ScalarResult");
             //Assert
             Assert.Equal("Hallo Welt", result.ToString());
 
@@ -83,11 +83,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             {
                 //Arrange
                 //Act
-                decimal result = (decimal)(SqlTask.ExecuteScalar(connection,
-                    "Test execute scalar with datatype",
-                    $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
+                DateTime result = (DateTime)(SqlTask.ExecuteScalar(connection,
+                        "Test execute scalar with datatype",
+                        $@"SELECT CAST('2020-02-29' AS DATETIME) AS ScalarResult"));
                 //Assert
-                Assert.Equal(1.343m, result);
+                Assert.Equal(DateTime.Parse("2020-02-29"), result);
             }
         }
 

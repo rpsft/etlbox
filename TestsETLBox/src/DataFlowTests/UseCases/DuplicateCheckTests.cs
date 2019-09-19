@@ -49,7 +49,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DropTableTask.Drop(Connection, tableName);
             var dest = new DBDestination<Poco>(Connection, tableName);
             TableDefinition stagingTable = new TableDefinition(tableName, new List<TableColumn>() {
-                new TableColumn("Key", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
+                new TableColumn("PKey", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("ID", "INT", allowNulls: false),
                 new TableColumn("Value", "NVARCHAR(100)", allowNulls: false),
                 new TableColumn("Name", "NVARCHAR(100)", allowNulls: false)

@@ -141,10 +141,8 @@ namespace ALE.ETLBox {
 
         public bool IsDBNull(int i)
         {
-            if (Definition.Columns[ShiftIndexAroundIDColumn(i)].AllowNulls)
-                return CurrentRow[ShiftIndexAroundIDColumn(i)] == null;
-            else
-                return false;
+            return CurrentRow.Length > ShiftIndexAroundIDColumn(i) ?
+                CurrentRow[ShiftIndexAroundIDColumn(i)] == null : true;
         }
 
         public bool NextResult()
