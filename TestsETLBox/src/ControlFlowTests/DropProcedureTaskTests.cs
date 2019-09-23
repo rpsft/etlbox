@@ -23,13 +23,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             CreateProcedureTask.CreateOrAlter(SqlConnection, "DropProc1", "SELECT 1");
-            Assert.True(IfExistsTask.IsExisting(SqlConnection, "DropProc1"));
+            Assert.True(IfTableExistsTask.IsExisting(SqlConnection, "DropProc1"));
 
             //Act
             DropProcedureTask.Drop(SqlConnection, "DropProc1");
 
             //Assert
-            Assert.False(IfExistsTask.IsExisting(SqlConnection, "DropProc1"));
+            Assert.False(IfTableExistsTask.IsExisting(SqlConnection, "DropProc1"));
         }
 
         public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");

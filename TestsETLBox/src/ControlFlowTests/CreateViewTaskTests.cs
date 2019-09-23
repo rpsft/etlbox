@@ -25,7 +25,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Act
             CreateViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS Test");
             //Assert
-            Assert.True(IfExistsTask.IsExisting(connection, "View1"));
+            Assert.True(IfTableExistsTask.IsExisting(connection, "View1"));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 1 AS Test");
-            Assert.True(IfExistsTask.IsExisting(connection, "View2"));
+            Assert.True(IfTableExistsTask.IsExisting(connection, "View2"));
 
             //Act
             CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 5 AS Test");
@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             if (connection.GetType() == typeof(SqlConnectionManager))
                 Assert.Equal(1, RowCountTask.Count(connection, "sys.objects",
                     "type = 'V' AND object_id = object_id('dbo.View2') AND create_date <> modify_date"));
-            Assert.True(IfExistsTask.IsExisting(connection, "View2"));
+            Assert.True(IfTableExistsTask.IsExisting(connection, "View2"));
         }
     }
 }

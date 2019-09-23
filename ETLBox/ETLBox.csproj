@@ -33,6 +33,7 @@ ETLBox is a comprehensive C# class library that is able to manage your whole ETL
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NLog" Version="4.6.6" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.5.2" />
+    <PackageReference Include="Npgsql" Version="4.0.10" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.Odbc" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />

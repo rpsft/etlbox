@@ -48,7 +48,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!HasSourceTableDefinition)
                         LoadTableDefinition();
-                    return $"select {SourceTableDefinition.Columns.AsString()} from " + SourceTableDefinition.Name;
+                    return $@"SELECT {SourceTableDefinition.Columns.AsString("" ,QB, QE)} FROM {QB}{SourceTableDefinition.Name}{QE}";
                 }
 
             }

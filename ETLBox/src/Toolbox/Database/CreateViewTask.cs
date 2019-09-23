@@ -12,7 +12,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
         public override void Execute()
         {
-            IsExisting = new IfExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            IsExisting = new IfTableExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (ConnectionType == ConnectionManagerType.SQLite && IsExisting)
                 new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true}.Drop();
             new SqlTask(this, Sql).ExecuteNonQuery();

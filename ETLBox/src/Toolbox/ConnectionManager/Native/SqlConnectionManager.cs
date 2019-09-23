@@ -39,13 +39,20 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (ModifyDBSettings)
             {
-                string dbName = this.DbConnection.Database;
-                PageVerify = this.ExecuteScalar($"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
-                RecoveryModel = this.ExecuteScalar($"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
-                this.ExecuteNonQuery($@"USE master");
-                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
-                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
-                this.ExecuteNonQuery($@"USE [{dbName}]");
+                try
+                {
+                    string dbName = this.DbConnection.Database;
+                    PageVerify = this.ExecuteScalar($"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
+                    RecoveryModel = this.ExecuteScalar($"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
+                    this.ExecuteNonQuery($@"USE master");
+                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
+                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
+                    this.ExecuteNonQuery($@"USE [{dbName}]");
+                }
+                catch
+                {
+                    ModifyDBSettings = false;
+                }
             }
         }
 
@@ -53,11 +60,14 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (ModifyDBSettings)
             {
+                try {
                 string dbName = this.DbConnection.Database;
                 this.ExecuteNonQuery($@"USE master");
                 this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
                 this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
                 this.ExecuteNonQuery($@"USE [{dbName}]");
+                }
+                catch {  }
             }
         }
 

@@ -42,21 +42,21 @@ namespace ALE.ETLBoxTests.Fixtures
         public void InsertTestData()
         {
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(1,'Test1')");
+                , $@"INSERT INTO ""{TableName}"" VALUES(1,'Test1')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(2,'Test2')");
+                , $@"INSERT INTO ""{TableName}"" VALUES(2,'Test2')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                 , $"INSERT INTO {TableName} VALUES(3,'Test3')");
+                 , $@"INSERT INTO ""{TableName}"" VALUES(3,'Test3')");
         }
 
         public void InsertTestDataSet2()
         {
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(4,'Test4')");
+                , $@"INSERT INTO {TableName} VALUES(4,'Test4')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(5,'Test5')");
+                , $@"INSERT INTO {TableName} VALUES(5,'Test5')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                 , $"INSERT INTO {TableName} VALUES(6,'Test6')");
+                 , $@"INSERT INTO {TableName} VALUES(6,'Test6')");
         }
 
         public void InsertTestDataSet3()

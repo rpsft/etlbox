@@ -102,21 +102,23 @@ namespace ALE.ETLBox.Helper
                         typeName = typeName.Substring(1);
                     if (GetStringLengthFromCharString(typeName) > 255)
                         return "LONGTEXT";
-                    //if (typeName.StartsWith("int")
-                    //    || typeName.StartsWith("smallint")
-                    //    || typeName.StartsWith("bigint")
-                    //    || typeName.StartsWith("tinyint")
-                    //    || typeName.StartsWith("decimal")
-                    //    )
-                    //    return "NUMBER";
                     return typeName;
                 }
                 return dbSpecificTypeName;
             }
-            if (connectionType == ConnectionManagerType.SQLite)
+            else if (connectionType == ConnectionManagerType.SQLite)
             {
                 if (typeName == "INT")
                     return "INTEGER";
+                return dbSpecificTypeName;
+            }
+            else if (connectionType == ConnectionManagerType.Postgres)
+            {
+                if (IsCharTypeDefinition(typeName))
+                {
+                    if (typeName.StartsWith("N"))
+                        return typeName.Substring(1);
+                }
                 return dbSpecificTypeName;
             }
             else

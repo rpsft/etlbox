@@ -15,7 +15,7 @@ namespace ALE.ETLBox.ControlFlow
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
 
-            bool procExists = new IfExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            bool procExists = new IfTableExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (procExists)
                 new SqlTask(this, Sql).ExecuteNonQuery();
         }

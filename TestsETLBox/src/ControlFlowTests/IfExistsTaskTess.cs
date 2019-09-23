@@ -23,14 +23,14 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             SqlTask.ExecuteNonQuery(connection,"Drop table if exists"
-               , $@"DROP TABLE IF EXISTS ExistTableTest");
+               , $@"DROP TABLE IF EXISTS exist_test");
 
             //Act
-            var existsBefore = IfExistsTask.IsExisting(connection, "ExistTableTest");
+            var existsBefore = IfTableExistsTask.IsExisting(connection, "exist_test");
 
             SqlTask.ExecuteNonQuery(connection, "Create test data table"
-                , $@"CREATE TABLE ExistTableTest ( Col1 INT NULL )");
-            var existsAfter = IfExistsTask.IsExisting(connection, "ExistTableTest");
+                , $@"CREATE TABLE exist_test ( Col1 INT NULL )");
+            var existsAfter = IfTableExistsTask.IsExisting(connection, "exist_test");
 
             //Assert
             Assert.False(existsBefore);
@@ -46,7 +46,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Throws<ETLBoxException>(
                 () =>
                 {
-                    IfExistsTask.ThrowExceptionIfNotExists(connection, "xyz.Somestrangenamehere");
+                    IfTableExistsTask.ThrowExceptionIfNotExists(connection, "xyz.Somestrangenamehere");
                 });
 
 

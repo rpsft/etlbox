@@ -45,6 +45,9 @@ namespace ALE.ETLBox.Helper
         public static ConnectionDetails<MySqlConnectionString, MySqlConnectionManager> MySqlConnection
         { get; set; } = new ConnectionDetails<MySqlConnectionString, MySqlConnectionManager>("MySqlConnectionString");
 
+        public static ConnectionDetails<PostgresConnectionString, PostgresConnectionManager> PostgresConnection
+        { get; set; } = new ConnectionDetails<PostgresConnectionString, PostgresConnectionManager>("PostgresConnectionString");
+
         public static ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager> AccessOdbcConnection
         { get; set; } = new ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager>("AccessOdbcConnectionString");
 
@@ -53,18 +56,21 @@ namespace ALE.ETLBox.Helper
 
         public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) },
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
+                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
                     new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value},
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
+                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
                     new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
         };

@@ -25,7 +25,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Create table {TableName}";
         public override void Execute()
         {
-            bool tableExists = new IfExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            bool tableExists = new IfTableExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (tableExists && ThrowErrorIfTableExists) throw new ETLBoxException($"Table {TableName} already exists!");
             if (!tableExists)
                 new SqlTask(this, Sql).ExecuteNonQuery();
@@ -43,7 +43,7 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 return
-$@"CREATE TABLE {TableName} (
+$@"CREATE TABLE {QB}{TableName}{QE} (
 {ColumnsDefinitionSql}
 )
 ";
@@ -83,21 +83,20 @@ $@"CREATE TABLE {TableName} (
             string collationSql = !String.IsNullOrWhiteSpace(col.Collation)
                                     ? $"COLLATE {col.Collation}"
                                     : string.Empty;
-            string nullSql = string.Empty;
-            if (String.IsNullOrWhiteSpace(col.ComputedColumn))
-                nullSql = col.AllowNulls
-                            ? "NULL"
-                            : "NOT NULL";
+            string nullSql = CreateNotNullSql(col);
             string primarySql = CreatePrimaryKeyConstraint(col);
             string defaultSql = CreateDefaultSql(col);
             string computedColumnSql = CreateComputedColumnSql(col);
             return
-$@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {defaultSql} {computedColumnSql}";
+$@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {defaultSql} {computedColumnSql}";
         }
+
 
         private string CreateDataTypeSql(ITableColumn col)
         {
             if (ConnectionType == ConnectionManagerType.SqlServer && col.HasComputedColumn)
+                return string.Empty;
+            else if (ConnectionType == ConnectionManagerType.Postgres && col.IsIdentity)
                 return string.Empty;
             else
                 return DataTypeConverter.TryGetDBSpecificType(col.DataType, this.ConnectionType);
@@ -112,8 +111,9 @@ $@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {de
                 {
                     if (ConnectionType == ConnectionManagerType.MySql)
                         return "AUTO_INCREMENT";
-                    else
-                        return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
+                    else if(ConnectionType == ConnectionManagerType.Postgres)
+                        return "SERIAL";
+                    return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
                 }
                 else
                 {
@@ -122,13 +122,25 @@ $@"{col.Name} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {de
             }
         }
 
+        private string CreateNotNullSql(ITableColumn col)
+        {
+            string nullSql = string.Empty;
+            if (ConnectionType == ConnectionManagerType.Postgres &&
+                col.IsIdentity) return string.Empty;
+            if (String.IsNullOrWhiteSpace(col.ComputedColumn))
+                nullSql = col.AllowNulls
+                            ? "NULL"
+                            : "NOT NULL";
+            return nullSql;
+        }
+
         private string CreatePrimaryKeyConstraint(ITableColumn col)
         {
             if (col.IsPrimaryKey)
             {
-                string pkConst = $" CONSTRAINT pk_{TableWithoutSchema}_{col.Name} PRIMARY KEY ";
+                string pkConst = $" CONSTRAINT {QB}pk_{TableWithoutSchema}_{col.Name}{QE} PRIMARY KEY ";
                 if (ConnectionType != ConnectionManagerType.SQLite)
-                    pkConst = $"," + pkConst + $"({ col.Name}) ";
+                    pkConst = $"," + pkConst + $"({QB}{ col.Name}{QE}) ";
                 return pkConst;
             }
             else

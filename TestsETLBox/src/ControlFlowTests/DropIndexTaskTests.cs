@@ -28,13 +28,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             });
             CreateIndexTask.CreateOrRecreate(connection, "IndexToDrop","DropIndexTable",
                 new List<string>() { "Test1" });
-            Assert.True(IfExistsTask.IsExisting(connection, "IndexToDrop"));
+            Assert.True(IfTableExistsTask.IsExisting(connection, "IndexToDrop"));
 
             //Act
             DropIndexTask.Drop(connection, "DropIndexTable", "IndexToDrop");
 
             //Assert
-            Assert.False(IfExistsTask.IsExisting(connection, "IndexToDrop"));
+            Assert.False(IfTableExistsTask.IsExisting(connection, "IndexToDrop"));
         }
     }
 }

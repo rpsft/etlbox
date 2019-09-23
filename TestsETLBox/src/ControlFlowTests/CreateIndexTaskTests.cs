@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new List<string>() { "Key1", "Key2" });
 
             //Assert
-            Assert.True(IfExistsTask.IsExisting(connection, "ix_IndexTest1"));
+            Assert.True(IfTableExistsTask.IsExisting(connection, "ix_IndexTest1"));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -56,7 +56,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new List<string>() { "Key1", "Key2" });
 
             //Assert
-            Assert.True(IfExistsTask.IsExisting(connection, "ix_IndexTest2"));
+            Assert.True(IfTableExistsTask.IsExisting(connection, "ix_IndexTest2"));
 
         }
 
@@ -77,7 +77,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new List<string>() { "Key1", "Key2" },
                 new List<string>() { "Value1", "Value2" });
             //Assert
-            Assert.True(IfExistsTask.IsExisting(SqlConnection, "ix_IndexTest3"));
+            Assert.True(IfTableExistsTask.IsExisting(SqlConnection, "ix_IndexTest3"));
         }
     }
 }

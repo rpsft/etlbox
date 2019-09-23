@@ -65,10 +65,16 @@ VALUES ({String.Join(",", sourceColumnValues)})
         {
             if (ModifyDBSettings)
             {
+                try {
                 Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
                 JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
                 this.ExecuteNonQuery("PRAGMA synchronous = OFF");
                 this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+                }
+                catch
+                {
+                    ModifyDBSettings = false;
+                }
             }
         }
 
@@ -76,8 +82,12 @@ VALUES ({String.Join(",", sourceColumnValues)})
         {
             if (ModifyDBSettings)
             {
-                this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
-                this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+                try
+                {
+                    this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
+                    this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+                }
+                catch { }
             }
         }
 

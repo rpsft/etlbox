@@ -20,7 +20,9 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            new SqlTask(this, Sql).ExecuteNonQuery();
+            bool doesExist = new IfDatabaseExistsTask(DatabaseName) { DisableLogging = true, ConnectionManager = ConnectionManager }.DoesExist;
+            if (!doesExist)
+                new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
         public void Create() => Execute();
@@ -33,39 +35,39 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.SqlServer)
-                {
-                    return
-        $@"
-IF (db_id('{DatabaseName}') IS NULL)
-BEGIN
-    USE [master]
+//                if (ConnectionType == ConnectionManagerType.SqlServer)
+//                {
+//                    return
+//        $@"
+//IF (db_id('{DatabaseName}') IS NULL)
+//BEGIN
+//    USE [master]
 
-    CREATE DATABASE [{DatabaseName}] {CollationString}
-    {RecoveryString}
-    ALTER DATABASE [{DatabaseName}] SET AUTO_CREATE_STATISTICS ON
-    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS ON
-    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
-    ALTER DATABASE [{DatabaseName}] SET AUTO_CLOSE OFF
-    ALTER DATABASE [{DatabaseName}] SET AUTO_SHRINK OFF
+//    CREATE DATABASE [{DatabaseName}] {CollationString}
+//    {RecoveryString}
+//    ALTER DATABASE [{DatabaseName}] SET AUTO_CREATE_STATISTICS ON
+//    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS ON
+//    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
+//    ALTER DATABASE [{DatabaseName}] SET AUTO_CLOSE OFF
+//    ALTER DATABASE [{DatabaseName}] SET AUTO_SHRINK OFF
 
-    --wait for database to enter 'ready' state
-    DECLARE @dbReady BIT = 0
-    WHILE (@dbReady = 0)
-    BEGIN
-    SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
-    END
-END
-";
-                }
-                else if (ConnectionType == ConnectionManagerType.MySql)
-                {
-                    return $@"CREATE DATABASE IF NOT EXISTS {DatabaseName} {CollationString}";
-                }
-                else
-                {
-                    return $@"CREATE DATABASE {DatabaseName}";
-                }
+//    --wait for database to enter 'ready' state
+//    DECLARE @dbReady BIT = 0
+//    WHILE (@dbReady = 0)
+//    BEGIN
+//    SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
+//    END
+//END
+//";
+//                }
+//                else if (ConnectionType == ConnectionManagerType.MySql)
+//                {
+//                    return $@"CREATE DATABASE IF NOT EXISTS {DatabaseName} {CollationString}";
+//                }
+//                else
+//                {
+                    return $@"CREATE DATABASE {QB}{DatabaseName}{QE}";
+                //}
             }
         }
 

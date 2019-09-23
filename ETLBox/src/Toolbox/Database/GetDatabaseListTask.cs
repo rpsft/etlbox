@@ -49,6 +49,10 @@ namespace ALE.ETLBox.ControlFlow
                 {
                     return $"SHOW DATABASES";
                 }
+                else if (ConnectionType == ConnectionManagerType.Postgres)
+                {
+                    return "SELECT datname FROM pg_database WHERE datistemplate=false";
+                }
                 else
                 {
                     throw new ETLBoxNotSupportedException("This database is not supported!");

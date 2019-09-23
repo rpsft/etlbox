@@ -25,7 +25,9 @@ namespace ALE.ETLBox {
             }
         }
 
-        public ConnectionManagerType ConnectionType => ConnectionManagerTypeFinder.GetType(this.DbConnectionManager);
+        public ConnectionManagerType ConnectionType => ConnectionManagerSpecifics.GetType(this.DbConnectionManager);
+        public string QB => ConnectionManagerSpecifics.GetBeginQuotation(this.ConnectionType);
+        public string QE => ConnectionManagerSpecifics.GetEndQuotation(this.ConnectionType);
 
         public bool _disableLogging;
         public virtual bool DisableLogging {

@@ -48,8 +48,8 @@ namespace ALE.ETLBox
 
         public static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
         {
-            IfExistsTask.ThrowExceptionIfNotExists(connection, tableName);
-            ConnectionManagerType connectionType = ConnectionManagerTypeFinder.GetType(connection);
+            IfTableExistsTask.ThrowExceptionIfNotExists(connection, tableName);
+            ConnectionManagerType connectionType = ConnectionManagerSpecifics.GetType(connection);
 
             if (connectionType == ConnectionManagerType.SqlServer)
                 return ReadTableDefinitionFromSqlServer(tableName, connection);
@@ -57,6 +57,8 @@ namespace ALE.ETLBox
                 return ReadTableDefinitionFromSQLite(tableName, connection);
             else if (connectionType == ConnectionManagerType.MySql)
                 return ReadTableDefinitionFromMySqlServer(tableName, connection);
+            else if (connectionType == ConnectionManagerType.Postgres)
+                return ReadTableDefinitionFromPostgres(tableName, connection);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
@@ -191,6 +193,53 @@ SELECT cols.column_name
             , is_nullable => curCol.AllowNulls = (long)is_nullable == 1 ? true : false
             , auto_increment => curCol.IsIdentity = (long)auto_increment == 1 ? true : false
              , primary_key => curCol.IsPrimaryKey = (long)primary_key == 1 ? true : false
+            , column_default => curCol.DefaultValue = column_default?.ToString()
+            , collation_name => curCol.Collation = collation_name?.ToString()
+            , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
+             )
+            {
+                DisableLogging = true,
+                ConnectionManager = connection
+            };
+            readMetaSql.ExecuteReader();
+            return result;
+        }
+
+        private static TableDefinition ReadTableDefinitionFromPostgres(string tableName, IConnectionManager connection)
+        {
+            TableDefinition result = new TableDefinition(tableName);
+            TableColumn curCol = null;
+
+            var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
+$@" 
+SELECT cols.column_name
+  , cols.data_type
+  , CASE WHEN cols.is_nullable = 'NO' THEN 0 ELSE 1 END AS ""is_nullable""
+  , CASE WHEN cols.column_default IS NOT NULL AND substring(cols.column_default,0,8) = 'nextval' THEN 1 ELSE 0 END AS ""serial""
+  , CASE WHEN k.constraint_name IS NULL THEN 0 ELSE 1 END AS ""primary_key""
+  , cols.column_default
+  , cols.collation_name
+  , cols.generation_expression
+  FROM INFORMATION_SCHEMA.COLUMNS cols
+  INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
+    ON cols.table_name = tbl.table_name
+    AND cols.table_schema = tbl.table_schema
+    AND cols.table_catalog = tbl.table_catalog
+  LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
+   ON cols.table_name = k.table_name
+   AND cols.table_schema = k.table_schema
+    AND cols.table_catalog = k.table_catalog
+   AND cols.column_name = k.column_name
+  WHERE(cols.table_name = '{tableName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tableName}')
+  AND cols.table_catalog = CURRENT_DATABASE()
+"
+            , () => { curCol = new TableColumn(); }
+            , () => { result.Columns.Add(curCol); }
+            , column_name => curCol.Name = column_name.ToString()
+            , data_type => curCol.DataType = data_type.ToString()
+            , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
+            , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
+             , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
             , column_default => curCol.DefaultValue = column_default?.ToString()
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()

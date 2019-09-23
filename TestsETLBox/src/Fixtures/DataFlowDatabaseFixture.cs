@@ -16,6 +16,7 @@ namespace ALE.ETLBoxTests.Fixtures
         {
             DatabaseHelper.RecreateSqlDatabase("DataFlow");
             DatabaseHelper.RecreateMySqlDatabase("DataFlow");
+            DatabaseHelper.RecreatePostgresDatabase("DataFlow");
         }
 
 

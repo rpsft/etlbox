@@ -12,7 +12,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Drop Index {IndexName} on Table {TableName}";
         public override void Execute()
         {
-            bool viewExists = new IfExistsTask(IndexName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            bool viewExists = new IfTableExistsTask(IndexName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (viewExists)
                 new SqlTask(this, Sql).ExecuteNonQuery();
         }

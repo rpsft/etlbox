@@ -9,12 +9,8 @@ namespace ALE.ETLBox.Helper
 {
     public class DatabaseHelper
     {
-        public static void RecreateSqlDatabase(string section)
+        private static void DropAndCreate(IConnectionManager connManagerMaster, string dbName)
         {
-            var connManagerMaster = new SqlConnectionManager(
-                            Config.SqlConnection.ConnectionString(section).GetMasterConnection()
-                            );
-            var dbName = Config.SqlConnection.ConnectionString(section).DBName;
             new DropDatabaseTask(dbName)
             {
                 DisableLogging = true,
@@ -28,23 +24,55 @@ namespace ALE.ETLBox.Helper
             }.Execute();
         }
 
+        public static void RecreateSqlDatabase(string section)
+        {
+            var connManagerMaster = new SqlConnectionManager(
+                            Config.SqlConnection.ConnectionString(section).GetMasterConnection()
+                            );
+            var dbName = Config.SqlConnection.ConnectionString(section).DBName;
+
+            DropAndCreate(connManagerMaster, dbName);
+        }
+
         public static void RecreateMySqlDatabase(string section)
         {
             var connManagerMaster = new MySqlConnectionManager(
                             Config.MySqlConnection.ConnectionString(section).GetMasterConnection()
                             );
             var dbName = Config.MySqlConnection.ConnectionString(section).DBName;
-            new DropDatabaseTask(dbName)
-            {
-                DisableLogging = true,
-                ConnectionManager = connManagerMaster
-            }.Drop();
+            DropAndCreate(connManagerMaster, dbName);
+            //new DropDatabaseTask(dbName)
+            //{
+            //    DisableLogging = true,
+            //    ConnectionManager = connManagerMaster
+            //}.Drop();
 
-            new CreateDatabaseTask(dbName)
-            {
-                DisableLogging = true,
-                ConnectionManager = connManagerMaster
-            }.Execute();
+            //new CreateDatabaseTask(dbName)
+            //{
+            //    DisableLogging = true,
+            //    ConnectionManager = connManagerMaster
+            //}.Execute();
+        }
+
+        public static void RecreatePostgresDatabase(string section)
+        {
+            var connManagerMaster = new PostgresConnectionManager(
+                            Config.PostgresConnection.ConnectionString(section).GetMasterConnection()
+                            );
+            var dbName = Config.PostgresConnection.ConnectionString(section).DBName;
+
+            DropAndCreate(connManagerMaster, dbName);
+            //new DropDatabaseTask(dbName)
+            //{
+            //    DisableLogging = true,
+            //    ConnectionManager = connManagerMaster
+            //}.Drop();
+
+            //new CreateDatabaseTask(dbName)
+            //{
+            //    DisableLogging = true,
+            //    ConnectionManager = connManagerMaster
+            //}.Execute();
         }
     }
 }

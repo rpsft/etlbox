@@ -44,9 +44,11 @@ BEGIN
 END
 ";
                 }
-                else if (ConnectionType == ConnectionManagerType.MySql)
+                else if (ConnectionType == ConnectionManagerType.MySql
+                    || ConnectionType == ConnectionManagerType.Postgres
+                    )
                 {
-                    return $@"DROP DATABASE IF EXISTS {DatabaseName}";
+                    return $@"DROP DATABASE IF EXISTS {QB}{DatabaseName}{QB}";
                 }
                 else
                 {

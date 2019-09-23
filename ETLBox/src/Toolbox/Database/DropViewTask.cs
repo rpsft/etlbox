@@ -12,7 +12,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Drop View {ViewName}";
         public override void Execute()
         {
-            bool viewExists = new IfExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            bool viewExists = new IfTableExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (viewExists)
                 new SqlTask(this, Sql).ExecuteNonQuery();
         }

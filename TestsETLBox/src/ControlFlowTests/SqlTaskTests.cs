@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Act
             var parameter = new List<QueryParameter>
             {
-                new QueryParameter("value1", "INT", "1"),
+                new QueryParameter("value1", "INT", 1),
                 new QueryParameter("value2", "NVARCHAR(100)", "Test1")
             };
             SqlTask.ExecuteNonQuery(connection, "Test insert with parameter",
@@ -85,7 +85,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 //Act
                 DateTime result = (DateTime)(SqlTask.ExecuteScalar(connection,
                         "Test execute scalar with datatype",
-                        $@"SELECT CAST('2020-02-29' AS DATETIME) AS ScalarResult"));
+                        $@"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"));
                 //Assert
                 Assert.Equal(DateTime.Parse("2020-02-29"), result);
             }

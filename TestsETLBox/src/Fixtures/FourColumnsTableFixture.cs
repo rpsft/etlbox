@@ -75,11 +75,11 @@ namespace ALE.ETLBoxTests.Fixtures
             else
             {
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                    , $"INSERT INTO {TableName} (Col2, Col3, Col4) VALUES('Test1', NULL, '1.2')");
+                    , $@"INSERT INTO ""{TableName}"" (""Col2"", ""Col3"", ""Col4"") VALUES('Test1', NULL, '1.2')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                    , $"INSERT INTO {TableName} (Col2, Col3, Col4) VALUES('Test2', 4711, '1.23')");
+                    , $@"INSERT INTO ""{TableName}"" (""Col2"", ""Col3"", ""Col4"") VALUES('Test2', 4711, '1.23')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                     , $"INSERT INTO {TableName} (Col2, Col3, Col4) VALUES('Test3', 185, '1.234')");
+                     , $@"INSERT INTO ""{TableName}"" (""Col2"", ""Col3"", ""Col4"") VALUES('Test3', 185, '1.234')");
             }
         }
 
