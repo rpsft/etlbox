@@ -12,7 +12,6 @@ namespace ALE.ETLBox.ControlFlow {
     public class DropDatabaseTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DROPDB";
         public override string TaskName => $"Drop DB {DatabaseName}";
         public override void Execute()
         {

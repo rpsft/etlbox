@@ -21,7 +21,6 @@ namespace ALE.ETLBox.DataFlow {
         private Func<TInput1, TInput2, TOutput> _mergeJoinFunc;
 
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_JOIN";
         public override string TaskName { get; set; } = "Dataflow: Mergejoin";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 

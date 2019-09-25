@@ -10,7 +10,6 @@ namespace ALE.ETLBox.DataFlow
     public class CustomSource<TOutput> : DataFlowTask, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_CUSTOMSOURCE";
         public override string TaskName => $"Dataflow: Custom source";
         public override void Execute() => ExecuteAsync();
 

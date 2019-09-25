@@ -19,7 +19,6 @@ namespace ALE.ETLBox.DataFlow
     public class Multicast<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_MULTICAST";
         public override string TaskName { get; set; } = "Dataflow: Multicast";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 

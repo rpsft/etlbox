@@ -6,7 +6,6 @@ namespace ALE.ETLBox.Logging {
     /// </summary>
     public class LogTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOG";
         public override string TaskName => $"Logs message";
         public override void Execute() {
             Info(Message);

@@ -13,7 +13,6 @@ namespace ALE.ETLBox.ControlFlow
     public class CleanUpSchemaTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CLEANSCHEMA";
         public override string TaskName => $"Clean up schema {SchemaName}";
         public override void Execute()
         {

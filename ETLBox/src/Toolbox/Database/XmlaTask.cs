@@ -13,7 +13,6 @@ namespace ALE.ETLBox.ControlFlow {
     /// </code>
     /// </example>
     public class XmlaTask : DbTask {
-        public override string TaskType { get; set; } = "XMLA";
         public override string TaskName { get; set; } = "Run some xmla";
         public override void Execute() => ExecuteNonQuery();
 

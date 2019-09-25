@@ -10,7 +10,6 @@ namespace ALE.ETLBox.Logging
     public class StartLoadProcessTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOADPROCESS_START";
         public override string TaskName => $"Start load process {ProcessName}";
         public override void Execute()
         {

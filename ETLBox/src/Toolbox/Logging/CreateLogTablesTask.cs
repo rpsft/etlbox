@@ -12,7 +12,6 @@ namespace ALE.ETLBox.Logging
     public class CreateLogTablesTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATELOG";
         public override string TaskName => $"Create log tables";
         public override void Execute()
         {
@@ -48,7 +47,7 @@ namespace ALE.ETLBox.Logging
                 new TableColumn("Level","nvarchar(10)", allowNulls: true),
                 new TableColumn("Stage","nvarchar(20)", allowNulls: true),
                 new TableColumn("Message","nvarchar(4000)", allowNulls: true),
-                new TableColumn("TaskType","nvarchar(40)", allowNulls: true),
+                new TableColumn("TaskType","nvarchar(200)", allowNulls: true),
                 new TableColumn("TaskAction","nvarchar(5)", allowNulls: true),
                 new TableColumn("TaskHash","char(40)", allowNulls: true),
                 new TableColumn("Source","nvarchar(20)", allowNulls: true),
@@ -82,9 +81,9 @@ namespace ALE.ETLBox.Logging
         private void CreateStartProcessProcedure()
         {
             StartProcess = new CreateProcedureTask("etl.StartLoadProcess", $@"-- Create entry in etlLoadProcess
-  insert into etl.LoadProcess(StartDate, ProcessName, StartMessage, Source, IsRunning)
-  select getdate(),@ProcessName, @StartMessage,@Source, 1 as IsRunning
-  select @LoadProcessKey = SCOPE_IDENTITY()"
+  INSERT INTO etl.LoadProcess(StartDate, ProcessName, StartMessage, Source, IsRunning)
+  SELECT getdate(),@ProcessName, @StartMessage,@Source, 1 as IsRunning
+  SELECT @LoadProcessKey = SCOPE_IDENTITY()"
                 , new List<ProcedureParameter>() {
                     new ProcedureParameter("ProcessName","nvarchar(100)"),
                     new ProcedureParameter("StartMessage","nvarchar(4000)",""),
@@ -97,9 +96,9 @@ namespace ALE.ETLBox.Logging
         private void CreateTransferCompletedProcedure()
         {
             TransferCompletedForProcess = new CreateProcedureTask("etl.TransferCompletedForLoadProcess", $@"-- Set transfer completion date in load process
-  update etl.LoadProcess
-  set TransferCompletedDate = getdate()
-  where LoadProcessKey = @LoadProcessKey
+  UPDATE etl.LoadProcess
+  SET TransferCompletedDate = getdate()
+  WHERE LoadProcessKey = @LoadProcessKey
   "
              , new List<ProcedureParameter>() {
                     new ProcedureParameter("LoadProcessKey","int")
@@ -110,13 +109,13 @@ namespace ALE.ETLBox.Logging
         private void CreateEndProcessProcedure()
         {
             EndProcess = new CreateProcedureTask("etl.EndLoadProcess", $@"-- Set entry in etlLoadProcess to completed
-  update etl.LoadProcess
-  set EndDate = getdate()
+  UPDATE etl.LoadProcess
+  SET EndDate = getdate()
   , IsRunning = 0
   , WasSuccessful = 1
   , WasAborted = 0
   , EndMessage = @EndMessage
-  where LoadProcessKey = @LoadProcessKey
+  WHERE LoadProcessKey = @LoadProcessKey
   "
                , new List<ProcedureParameter>() {
                     new ProcedureParameter("LoadProcessKey","int"),
@@ -128,13 +127,13 @@ namespace ALE.ETLBox.Logging
         private void CreateAbortProcessProcedure()
         {
             AbortProcess = new CreateProcedureTask("etl.AbortLoadProcess", $@"-- Set entry in etlLoadProcess to aborted
-  update etl.LoadProcess
-  set EndDate = getdate()
+  UPDATE etl.LoadProcess
+  SET EndDate = getdate()
   , IsRunning = 0
   , WasSuccessful = 0
   , WasAborted = 1
   , AbortMessage = @AbortMessage
-  where LoadProcessKey = @LoadProcessKey
+  WHERE LoadProcessKey = @LoadProcessKey
   "
               , new List<ProcedureParameter>() {
                     new ProcedureParameter("LoadProcessKey","int"),

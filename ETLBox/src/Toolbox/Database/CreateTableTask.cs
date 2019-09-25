@@ -21,7 +21,6 @@ namespace ALE.ETLBox.ControlFlow
     public class CreateTableTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATETABLE";
         public override string TaskName => $"Create table {TableName}";
         public override void Execute()
         {
@@ -43,7 +42,7 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 return
-$@"CREATE TABLE {QB}{TableName}{QE} (
+$@"CREATE TABLE {TableName} (
 {ColumnsDefinitionSql}
 )
 ";

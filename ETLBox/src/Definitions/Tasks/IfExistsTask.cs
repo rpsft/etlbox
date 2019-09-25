@@ -8,7 +8,6 @@ namespace ALE.ETLBox.ControlFlow
     public abstract class IfExistsTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "IFEXISTS";
         public override string TaskName => $"Check if {ObjectName} exists";
         public override void Execute()
         {

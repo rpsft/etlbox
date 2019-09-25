@@ -8,7 +8,6 @@ namespace ALE.ETLBox.Logging {
     /// </summary>
     public class ReadLoadProcessTableTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOADPROCESS_READ";
         public override string TaskName => $"Read process with Key ({LoadProcessKey}) or without";
         public override void Execute() {
             LoadProcess = new LoadProcess();

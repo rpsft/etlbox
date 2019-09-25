@@ -9,7 +9,6 @@ namespace ALE.ETLBox.Logging {
     /// </summary>
     public class ReadLogTableTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOG_READLOG";
         public override string TaskName => $"Read all log entries for {LoadProcessKey ?? 0 }";
         public override void Execute() {
             LogEntries = new List<LogEntry>();

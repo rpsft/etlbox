@@ -22,7 +22,6 @@ namespace ALE.ETLBox.DataFlow
     public class RowTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_ROWTRANSFORMATION";
         public override string TaskName { get; set; } = "Dataflow: Row Transformation";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 

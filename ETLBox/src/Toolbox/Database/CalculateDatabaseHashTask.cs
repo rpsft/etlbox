@@ -16,7 +16,6 @@ namespace ALE.ETLBox.ControlFlow {
     /// </example>
     public class CalculateDatabaseHashTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CALCDBHASH";
         public override string TaskName => $"Calculate hash value for schema(s) {SchemaNamesAsString}";
         public override void Execute() {
             if (ConnectionType == ConnectionManagerType.SQLite)

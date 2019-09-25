@@ -14,7 +14,6 @@ namespace ALE.ETLBox.ControlFlow {
     /// </example>
     public class CreateProcedureTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATEPROC";
         public override string TaskName => $"{CreateOrAlterSql} procedure {ProcedureName}";
         public override void Execute() {
             if (ConnectionType == ConnectionManagerType.SQLite)

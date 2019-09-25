@@ -11,7 +11,6 @@ namespace ALE.ETLBox.DataFlow
     {
 
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_CUSTOMDEST";
         public override string TaskName { get; set; } = $"Dataflow: Write Data into custom target";
         public override void Execute() { throw new Exception("Dataflow destinations can't be started directly"); }
 

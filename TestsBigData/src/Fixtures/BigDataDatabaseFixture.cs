@@ -15,8 +15,7 @@ namespace ALE.ETLBoxTests.BigData
     {
         public BigDataDatabaseFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnectionString("BigData").DBName,
-                Config.SqlConnectionString("BigData"));
+            DatabaseHelper.RecreateSqlDatabase("BigData");
         }
     }
 }

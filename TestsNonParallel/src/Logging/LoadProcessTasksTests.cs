@@ -142,7 +142,7 @@ namespace ALE.ETLBoxTests.Logging
             TransferCompletedForLoadProcessTask.Complete(ControlFlow.CurrentLoadProcess.LoadProcessKey);
 
             //Assert
-            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType='TRANSFERCOMPLETE'")
+            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType='TransferCompletedForLoadProcessTask'")
             {
                 DisableLogging = true
             }.Count().Rows);

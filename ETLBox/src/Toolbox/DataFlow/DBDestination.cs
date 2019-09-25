@@ -21,7 +21,6 @@ namespace ALE.ETLBox.DataFlow
     public class DBDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_DBDEST";
         public override string TaskName => $"Dataflow: Write Data batchwise into table {DestinationTableDefinition.Name}";
         public override void Execute() { throw new Exception("Dataflow destinations can't be started directly"); }
 

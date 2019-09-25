@@ -63,7 +63,7 @@ SELECT * FROM
             //Act
             RowCountTask.Count(Connection, "etl.RowCountLog");
             //Assert
-            Assert.Equal(2, CountLogEntries("ROWCOUNT"));
+            Assert.Equal(2, CountLogEntries("RowCountTask"));
         }
         [Fact]
         public void RowCountWithConditionLogging()
@@ -76,7 +76,7 @@ SELECT * FROM
             Assert.Equal(2, new SqlTask("Find log entry",
                @"
 SELECT COUNT(*) FROM etl.Log 
-WHERE TaskType='ROWCOUNT' 
+WHERE TaskType='RowCountTask' 
 AND Message LIKE '%with condition%' 
 GROUP BY TaskHash")
             { DisableLogging = true, ConnectionManager = Connection }.ExecuteScalar<int>());
@@ -89,7 +89,7 @@ GROUP BY TaskHash")
             //Act
             SqlTask.ExecuteNonQuery(Connection, "Test select", $"select 1 as test");
             //Assert
-            Assert.Equal(2, CountLogEntries("SQL"));
+            Assert.Equal(2, CountLogEntries("SqlTask"));
         }
 
         [Fact]
@@ -100,7 +100,7 @@ GROUP BY TaskHash")
             //Act
             TruncateTableTask.Truncate(Connection, "etl.TruncateTableLog");
             //Assert
-            Assert.Equal(2, CountLogEntries("TRUNCATE"));
+            Assert.Equal(2, CountLogEntries("TruncateTableTask"));
         }
 
         [Fact]
@@ -111,7 +111,7 @@ GROUP BY TaskHash")
             //Act
             DropTableTask.Drop(Connection, "etl.DropTableLog");
             //Assert
-            Assert.Equal(2, CountLogEntries("DROPTABLE"));
+            Assert.Equal(2, CountLogEntries("DropTableTask"));
         }
 
         [Fact]
@@ -121,7 +121,7 @@ GROUP BY TaskHash")
             //Act
             CreateViewTask.CreateOrAlter(Connection, "dbo.CreateView", "SELECT 1 AS Test");
             //Assert
-            Assert.Equal(2, CountLogEntries("CREATEVIEW"));
+            Assert.Equal(2, CountLogEntries("CreateViewTask"));
         }
 
         [Fact]
@@ -132,7 +132,7 @@ GROUP BY TaskHash")
             //Act
             DropViewTask.Drop(Connection, "dbo.DropView");
             //Assert
-            Assert.Equal(2, CountLogEntries("DROPVIEW"));
+            Assert.Equal(2, CountLogEntries("DropViewTask"));
         }
 
         [Fact]
@@ -142,7 +142,7 @@ GROUP BY TaskHash")
             //Act
             CreateProcedureTask.CreateOrAlter(Connection, "dbo.Proc1", "SELECT 1 AS Test");
             //Assert
-            Assert.Equal(2, CountLogEntries("CREATEPROC"));
+            Assert.Equal(2, CountLogEntries("CreateProcedureTask"));
         }
 
         [Fact]
@@ -153,7 +153,7 @@ GROUP BY TaskHash")
             CreateTableTask.Create(Connection, "dbo.CreateTable",
                 new List<TableColumn>() { new TableColumn("value", "INT") });
             //Assert
-            Assert.Equal(2, CountLogEntries("CREATETABLE"));
+            Assert.Equal(2, CountLogEntries("CreateTableTask"));
         }
 
         [Fact]
@@ -163,7 +163,7 @@ GROUP BY TaskHash")
             //Act
             CreateSchemaTask.Create(Connection, "createdSchema");
             //Assert
-            Assert.Equal(2, CountLogEntries("CREATESCHEMA"));
+            Assert.Equal(2, CountLogEntries("CreateSchemaTask"));
         }
 
         [Fact]
@@ -175,7 +175,7 @@ GROUP BY TaskHash")
             CreateIndexTask.CreateOrRecreate(Connection, "ix_logIndexTest", "dbo.CreateIndex",
                 new List<string>() { "Col1", "Col2" });
             //Assert
-            Assert.Equal(2, CountLogEntries("CREATEINDEX"));
+            Assert.Equal(2, CountLogEntries("CreateIndexTask"));
         }
 
         [Fact]
@@ -186,7 +186,7 @@ GROUP BY TaskHash")
             //Act
             IfTableExistsTask.IsExisting(Connection, "IfExistsTable");
             //Assert
-            Assert.Equal(2, CountLogEntries("IFEXISTS"));
+            Assert.Equal(2, CountLogEntries("IfTableExistsTask"));
         }
 
 
@@ -213,7 +213,7 @@ GROUP BY TaskHash")
             //Act
             CustomTask.Execute("Test custom task 4", () => { });
             //Assert
-            Assert.Equal(2, CountLogEntries("CUSTOM"));
+            Assert.Equal(2, CountLogEntries("CustomTask"));
         }
 
         [Fact]
@@ -223,7 +223,7 @@ GROUP BY TaskHash")
             //Act
             Sequence.Execute("Test sequence 3", () => { });
             //Assert
-            Assert.Equal(2, CountLogEntries("SEQUENCE"));
+            Assert.Equal(2, CountLogEntries("Sequence"));
         }
     }
 }

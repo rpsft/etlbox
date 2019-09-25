@@ -13,7 +13,6 @@ namespace ALE.ETLBox.ControlFlow
     public class CreateSchemaTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATESCHEMA";
         public override string TaskName => $"Create schema {SchemaName}";
         public override void Execute()
         {

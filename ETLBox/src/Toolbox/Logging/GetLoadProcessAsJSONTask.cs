@@ -11,7 +11,6 @@ namespace ALE.ETLBox.Logging
     public class GetLoadProcessAsJSONTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOADPROCESS_GETJSON";
         public override string TaskName => $"Get load process list as JSON";
 
         public override void Execute()

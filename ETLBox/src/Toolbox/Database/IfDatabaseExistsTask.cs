@@ -3,13 +3,11 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Check if a Database exists. 
+    /// Check if a Database exists.
     /// </summary>
     public class IfDatabaseExistsTask : IfExistsTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "IFDBEXISTS_DB";
-
         internal override string GetSql()
         {
             if (this.ConnectionType == ConnectionManagerType.SqlServer)

@@ -7,7 +7,6 @@ namespace ALE.ETLBox.Logging {
     /// </summary>
     public class RemoveLogTablesTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "REMOVELOG";
         public override string TaskName => $"Remove log tables";
         public override void Execute() => new SqlTask(this, Sql).ExecuteNonQuery();
         public string Sql => $@"

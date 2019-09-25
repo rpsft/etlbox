@@ -22,7 +22,6 @@ namespace ALE.ETLBox.DataFlow
 
 
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_SORT";
         public override string TaskName { get; set; } = "Dataflow: Sort";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 

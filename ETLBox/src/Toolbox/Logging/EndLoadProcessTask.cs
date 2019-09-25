@@ -10,7 +10,6 @@ namespace ALE.ETLBox.Logging
     public class EndLoadProcessTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOADPROCESS_END";
         public override string TaskName => $"End process with key {LoadProcessKey}";
         public override void Execute()
         {

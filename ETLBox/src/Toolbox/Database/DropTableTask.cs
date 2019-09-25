@@ -8,7 +8,6 @@ namespace ALE.ETLBox.ControlFlow
     public class DropTableTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DROPTABLE";
         public override string TaskName => $"Drop Table {TableName}";
         public override void Execute()
         {

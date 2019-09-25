@@ -14,7 +14,6 @@ namespace ALE.ETLBox.ControlFlow
     public class CreateDatabaseTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATEDB";
         public override string TaskName => $"Create DB {DatabaseName}";
         public override void Execute()
         {

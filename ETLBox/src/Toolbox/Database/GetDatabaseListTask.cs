@@ -15,7 +15,6 @@ namespace ALE.ETLBox.ControlFlow
     public class GetDatabaseListTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "GETDBLIST";
         public override string TaskName => $"Get names of all databases";
         public override void Execute()
         {

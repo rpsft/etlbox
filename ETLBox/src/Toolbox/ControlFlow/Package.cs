@@ -5,7 +5,6 @@ namespace ALE.ETLBox.ControlFlow {
     /// A package is a shortcute for custom task, but with the TaskType "PACKAGE".
     /// </summary>
     public class Package : GenericTask, ITask {
-        public override string TaskType { get; set; } = "PACKAGE";
         public override string TaskName { get; set; } = "Package";
         public override void Execute() => new CustomTask(TaskName) { TaskType = this.TaskType, TaskHash = this.TaskHash }.Execute(Tasks);
         public Action Tasks { get; set; }

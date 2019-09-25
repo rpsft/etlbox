@@ -12,7 +12,6 @@ namespace ALE.ETLBox.ControlFlow {
     /// </example>
     public class AddFileGroupTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATEFG";
         public override string TaskName => $"Create Filegroup {FileGroupName}";
         public override void Execute()
         {

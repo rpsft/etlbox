@@ -8,7 +8,6 @@ namespace ALE.ETLBox.ControlFlow
     public class DropViewTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DROPVIEW";
         public override string TaskName => $"Drop View {ViewName}";
         public override void Execute()
         {

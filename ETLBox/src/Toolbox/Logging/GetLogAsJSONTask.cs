@@ -10,7 +10,6 @@ namespace ALE.ETLBox.Logging {
     /// </summary>
     public class GetLogAsJSONTask : GenericTask, ITask {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOG_GETJSON";
         public override string TaskName => $"Get log as JSON for {LoadProcessKey}";
 
         public override void Execute() {

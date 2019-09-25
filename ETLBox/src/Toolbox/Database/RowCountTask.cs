@@ -18,7 +18,6 @@ namespace ALE.ETLBox.ControlFlow
     public class RowCountTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "ROWCOUNT";
         public override string TaskName => $"Count Rows for {TableName}" + (HasCondition ? $" with condition {Condition}" : "");
         public override void Execute()
         {

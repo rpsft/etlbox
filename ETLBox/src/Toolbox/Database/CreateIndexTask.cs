@@ -15,7 +15,6 @@ namespace ALE.ETLBox.ControlFlow
     public class CreateIndexTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATEINDEX";
         public override string TaskName => $"Create index {IndexName} on table {TableName}";
         public override void Execute()
         {

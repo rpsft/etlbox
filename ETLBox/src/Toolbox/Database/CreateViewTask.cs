@@ -8,7 +8,6 @@ namespace ALE.ETLBox.ControlFlow
     public class CreateViewTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "CREATEVIEW";
         public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
         public override void Execute()
         {

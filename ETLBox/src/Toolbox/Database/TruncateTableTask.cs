@@ -13,7 +13,6 @@ namespace ALE.ETLBox.ControlFlow
     public class TruncateTableTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "TRUNCATE";
         public override string TaskName => $"Truncate table {TableName}";
         public override void Execute()
         {

@@ -16,7 +16,6 @@ namespace ALE.ETLBox.ControlFlow
     /// </example>
     public class SqlTask : DbTask
     {
-        public override string TaskType { get; set; } = "SQL";
         public override string TaskName { get; set; } = "Run some sql";
         public override void Execute() => ExecuteNonQuery();
         public IEnumerable<QueryParameter> ParameterList => _Parameter;

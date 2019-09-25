@@ -23,7 +23,6 @@ namespace ALE.ETLBox.DataFlow
     public class BlockTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DF_BLOCKTRANSFORMATION";
         public override string TaskName { get; set; } = "Dataflow: Block Transformation";
         public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 

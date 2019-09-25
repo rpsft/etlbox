@@ -9,7 +9,6 @@ namespace ALE.ETLBox.Logging
     public class TransferCompletedForLoadProcessTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "TRANSFERCOMPLETE";
         public override string TaskName => $"Set transfer completed for {LoadProcessKey}";
         public override void Execute()
         {

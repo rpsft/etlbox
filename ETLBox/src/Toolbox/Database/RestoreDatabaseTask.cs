@@ -12,7 +12,6 @@ namespace ALE.ETLBox.ControlFlow
     public class RestoreDatabaseTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "RESTOREDB";
         public override string TaskName => $"Restore DB {DatabaseName} from {Path.GetFullPath(FileName)}";
 
 

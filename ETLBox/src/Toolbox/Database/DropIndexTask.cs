@@ -8,7 +8,6 @@ namespace ALE.ETLBox.ControlFlow
     public class DropIndexTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "DROPINDEX";
         public override string TaskName => $"Drop Index {IndexName} on Table {TableName}";
         public override void Execute()
         {

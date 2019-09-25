@@ -73,12 +73,12 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DF_DBSOURCE' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
+            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBSource' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
             {
                 DisableLogging = true,
                 ConnectionManager = Connection
             }.Count().Rows);
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DF_DBDEST' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
+            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBDestination' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
             {
                 DisableLogging = true,
                 ConnectionManager = Connection
@@ -104,9 +104,9 @@ namespace ALE.ETLBoxTests.Logging
 
             //Assert
 
-            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DF_DBSOURCE'")
+            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DBSource'")
                 { ConnectionManager = Connection, DisableLogging = true }.Count().Rows);
-            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DF_DBDEST'")
+            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
             { ConnectionManager = Connection, DisableLogging = true }.Count().Rows);
         }
 
@@ -129,7 +129,7 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'DF_ROWTRANSFORMATION' AND TaskAction = 'LOG'")
+            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'RowTransformation' AND TaskAction = 'LOG'")
             {
                 DisableLogging = true,
                 ConnectionManager = Connection
@@ -151,7 +151,7 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DF_CSVSOURCE' ")
+            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'CSVSource' ")
             {
                 DisableLogging = true,
                 ConnectionManager = Connection

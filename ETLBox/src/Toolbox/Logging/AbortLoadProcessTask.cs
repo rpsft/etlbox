@@ -10,7 +10,6 @@ namespace ALE.ETLBox.Logging
     public class AbortLoadProcessTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskType { get; set; } = "LOADPROCESS_ABORT";
         public override string TaskName => $"Abort process with key {LoadProcessKey}";
         public override void Execute()
         {
