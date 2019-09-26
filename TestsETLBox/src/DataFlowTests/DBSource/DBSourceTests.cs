@@ -61,23 +61,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SqlWithSelectStar(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceSelectStart");
-            source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationSelectStart");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceSelectStar");
+            s2c.InsertTestData();
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationSelectStar");
 
             //Act
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
             {
-                Sql = $@"SELECT * FROM Source",
+                Sql = $@"SELECT * FROM {s2c.QB}SourceSelectStar{s2c.QE}",
                 ConnectionManager = connection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSelectStart");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSelectStar");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            dest2Columns.AssertTestData();
+            d2c.AssertTestData();
         }
 
         public class MyExtendedRow

@@ -53,7 +53,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             BulkInsertSql bulkInsert = new BulkInsertSql()
             {
-                IsAccessDatabase = true,
+                ConnectionType = ConnectionManagerType.Access,
                 AccessDummyTableName = DummyTableName,
                 UseParameterQuery = true
             };

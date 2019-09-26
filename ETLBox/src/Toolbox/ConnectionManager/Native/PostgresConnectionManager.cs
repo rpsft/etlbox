@@ -30,16 +30,16 @@ namespace ALE.ETLBox.ConnectionManager
         string RecoveryModel { get; set; }
         public override void BulkInsert(ITableData data, string tableName)
         {
-            //BulkInsertSql<MySqlParameter> bulkInsert = new BulkInsertSql<MySqlParameter>()
-            //{
-            //    UseParameterQuery = true
-            //};
-            //string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
-            //var cmd = DbConnection.CreateCommand();
+            BulkInsertSql<NpgsqlParameter> bulkInsert = new BulkInsertSql<NpgsqlParameter>()
+            {
+                UseParameterQuery = false,
+                ConnectionType = ConnectionManagerType.Postgres
+            };
+            string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
+            var cmd = DbConnection.CreateCommand();
             //cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
-            //cmd.CommandText = sql;
-            //cmd.ExecuteNonQuery();
-
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
         }
 
         public override void BeforeBulkInsert()

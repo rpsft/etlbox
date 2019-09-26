@@ -17,6 +17,9 @@ namespace ALE.ETLBoxTests.Fixtures
         public bool IsSQLiteConnection => this.Connection.GetType() == typeof(SQLiteConnectionManager);
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, Connection);
+        public string QB => TN.QB;
+        public string QE => TN.QE;
         public FourColumnsTableFixture(string tableName)
         {
             this.TableName = tableName;
@@ -66,20 +69,20 @@ namespace ALE.ETLBoxTests.Fixtures
             if (IsSQLiteConnection)
             {
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                    , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')");
+                    , $"INSERT INTO {TN.QuotatedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                    , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test2', 4711, '1.23')");
+                    , $"INSERT INTO {TN.QuotatedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test2', 4711, '1.23')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                     , $"INSERT INTO {TableName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test3', 185, '1.234')");
+                     , $"INSERT INTO {TN.QuotatedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test3', 185, '1.234')");
             }
             else
             {
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                    , $@"INSERT INTO ""{TableName}"" (""Col2"", ""Col3"", ""Col4"") VALUES('Test1', NULL, '1.2')");
+                    , $@"INSERT INTO {TN.QuotatedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test1', NULL, '1.2')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                    , $@"INSERT INTO ""{TableName}"" (""Col2"", ""Col3"", ""Col4"") VALUES('Test2', 4711, '1.23')");
+                    , $@"INSERT INTO {TN.QuotatedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test2', 4711, '1.23')");
                 SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                     , $@"INSERT INTO ""{TableName}"" (""Col2"", ""Col3"", ""Col4"") VALUES('Test3', 185, '1.234')");
+                     , $@"INSERT INTO {TN.QuotatedFullName} ({QB}Col2{QE},{QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test3', 185, '1.234')");
             }
         }
 
@@ -87,9 +90,9 @@ namespace ALE.ETLBoxTests.Fixtures
         public void AssertTestData()
         {
             Assert.Equal(3, RowCountTask.Count(Connection, TableName));
-            Assert.Equal(1, RowCountTask.Count(Connection, TableName, "Col2 = 'Test1' AND (Col3 IS NULL OR Col3 = -1) AND Col4='1.2'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, TableName, "Col2 = 'Test2' AND (Col3 IS NULL OR Col3 = 4711) AND Col4='1.23'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, TableName, "Col2 = 'Test3' AND (Col3 IS NULL OR Col3 = 185) AND Col4='1.234'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, TableName, $"{QB}Col2{QE} = 'Test1' AND ({QB}Col3{QE} IS NULL OR {QB}Col3{QE} = -1) AND {QB}Col4{QE}='1.2'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, TableName, $"{QB}Col2{QE} = 'Test2' AND ({QB}Col3{QE} IS NULL OR {QB}Col3{QE} = 4711) AND {QB}Col4{QE}='1.23'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, TableName, $"{QB}Col2{QE} = 'Test3' AND ({QB}Col3{QE} IS NULL OR {QB}Col3{QE} = 185) AND {QB}Col4{QE}='1.234'"));
         }
     }
 }

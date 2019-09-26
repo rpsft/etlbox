@@ -31,7 +31,8 @@ namespace ALE.ETLBox.ConnectionManager
         {
             BulkInsertSql<MySqlParameter> bulkInsert = new BulkInsertSql<MySqlParameter>()
             {
-                UseParameterQuery = true
+                UseParameterQuery = true,
+                ConnectionType = ConnectionManagerType.MySql
             };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();

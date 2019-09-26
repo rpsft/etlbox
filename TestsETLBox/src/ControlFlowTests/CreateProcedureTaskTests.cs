@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         }
 
         [Fact]
-        public void CreatProcedureWithParameter()
+        public void CreateProcedureWithParameter()
         {
             //Arrange
             List<ProcedureParameter> pars = new List<ProcedureParameter>() {

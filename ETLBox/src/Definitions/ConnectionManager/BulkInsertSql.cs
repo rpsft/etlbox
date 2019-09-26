@@ -17,18 +17,24 @@ namespace ALE.ETLBox.ConnectionManager
     /// <see cref="AccessOdbcConnectionManager"/>
     internal class BulkInsertSql<T> where T: DbParameter, new()
     {
-        internal bool IsAccessDatabase { get; set; }
+        internal bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
         internal bool UseParameterQuery { get; set; } = true;
         internal List<T> Parameters { get; set; }
         StringBuilder QueryText { get; set; }
         List<string> SourceColumnNames { get; set; }
         List<string> DestColumnNames { get; set; }
         internal string AccessDummyTableName { get; set; }
+        internal ConnectionManagerType ConnectionType { get; set; }
+        internal string QB => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
+        internal string QE => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
+        internal string TableName { get; set; }
 
 
         internal string CreateBulkInsertStatement(ITableData data, string tableName)
         {
             InitObjects();
+            TableName = tableName;
             GetSourceAndDestColumNames(data);
             AppendBeginSql(tableName);
             ReadDataAndCreateQuery(data);
@@ -107,7 +113,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         private void AppendBeginSql(string tableName)
         {
-            QueryText.AppendLine($@"INSERT INTO {tableName} ({string.Join(",", SourceColumnNames)})");
+            QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col=> QB + col+QE) )})");
             if (IsAccessDatabase)
                 QueryText.AppendLine("  SELECT * FROM (");
             else
@@ -138,6 +144,7 @@ namespace ALE.ETLBox.ConnectionManager
         internal string CreateBulkInsertStatementWithParameter(ITableData data, string tableName, ref List<OdbcParameter> parameters)
         {
             QueryText.Clear();
+            TableName = tableName;
             GetSourceAndDestColumNames(data);
             AppendBeginSql(tableName);
             while (data.Read())
