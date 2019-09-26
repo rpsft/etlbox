@@ -184,7 +184,7 @@ GROUP BY TaskHash")
             //Arrange
             CreateSimpleTable("IfExistsTable");
             //Act
-            IfTableExistsTask.IsExisting(Connection, "IfExistsTable");
+            IfTableOrViewExistsTask.IsExisting(Connection, "IfExistsTable");
             //Assert
             Assert.Equal(2, CountLogEntries("IfTableExistsTask"));
         }

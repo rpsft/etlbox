@@ -34,39 +34,31 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-//                if (ConnectionType == ConnectionManagerType.SqlServer)
-//                {
-//                    return
-//        $@"
-//IF (db_id('{DatabaseName}') IS NULL)
-//BEGIN
-//    USE [master]
+                if (ConnectionType == ConnectionManagerType.SqlServer)
+                {
+                    return
+        $@"
+USE [master]
 
-//    CREATE DATABASE [{DatabaseName}] {CollationString}
-//    {RecoveryString}
-//    ALTER DATABASE [{DatabaseName}] SET AUTO_CREATE_STATISTICS ON
-//    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS ON
-//    ALTER DATABASE [{DatabaseName}] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
-//    ALTER DATABASE [{DatabaseName}] SET AUTO_CLOSE OFF
-//    ALTER DATABASE [{DatabaseName}] SET AUTO_SHRINK OFF
+CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString} 
+{RecoveryString}
 
-//    --wait for database to enter 'ready' state
-//    DECLARE @dbReady BIT = 0
-//    WHILE (@dbReady = 0)
-//    BEGIN
-//    SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
-//    END
-//END
-//";
-//                }
-//                else if (ConnectionType == ConnectionManagerType.MySql)
-//                {
-//                    return $@"CREATE DATABASE IF NOT EXISTS {DatabaseName} {CollationString}";
-//                }
-//                else
-//                {
-                    return $@"CREATE DATABASE {QB}{DatabaseName}{QE}";
+--wait for database to enter 'ready' state
+DECLARE @dbReady BIT = 0
+WHILE (@dbReady = 0)
+BEGIN
+SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
+END
+";
+                }
+                //else if (ConnectionType == ConnectionManagerType.MySql)
+                //{
+                //    return $@"CREATE DATABASE IF NOT EXISTS {DatabaseName} {CollationString}";
                 //}
+                else
+                {
+                    return $@"CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString}";
+                }
             }
         }
 
@@ -80,26 +72,18 @@ namespace ALE.ETLBox.ControlFlow
             DatabaseName = databaseName;
         }
 
-        public CreateDatabaseTask(string databaseName, RecoveryModel recoveryModel) : this(databaseName)
-        {
-            RecoveryModel = recoveryModel;
-        }
-
-        public CreateDatabaseTask(string databaseName, RecoveryModel recoveryModel, string collation) : this(databaseName, recoveryModel)
+        public CreateDatabaseTask(string databaseName, string collation) : this(databaseName)
         {
             Collation = collation;
         }
 
         /* Static methods for convenience */
         public static void Create(string databaseName) => new CreateDatabaseTask(databaseName).Execute();
-        public static void Create(string databaseName, RecoveryModel recoveryModel) => new CreateDatabaseTask(databaseName, recoveryModel).Execute();
-        public static void Create(string databaseName, RecoveryModel recoveryModel, string collation) => new CreateDatabaseTask(databaseName, recoveryModel, collation).Execute();
+        public static void Create(string databaseName, string collation) => new CreateDatabaseTask(databaseName, collation).Execute();
         public static void Create(IConnectionManager connectionManager, string databaseName)
             => new CreateDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Execute();
-        public static void Create(IConnectionManager connectionManager, string databaseName, RecoveryModel recoveryModel)
-            => new CreateDatabaseTask(databaseName, recoveryModel) { ConnectionManager = connectionManager }.Execute();
-        public static void Create(IConnectionManager connectionManager, string databaseName, RecoveryModel recoveryModel, string collation)
-            => new CreateDatabaseTask(databaseName, recoveryModel, collation) { ConnectionManager = connectionManager }.Execute();
+        public static void Create(IConnectionManager connectionManager, string databaseName,  string collation)
+            => new CreateDatabaseTask(databaseName, collation) { ConnectionManager = connectionManager }.Execute();
 
         /* Implementation & stuff */
         string RecoveryModelAsString
@@ -116,7 +100,17 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
         bool HasCollation => !String.IsNullOrWhiteSpace(Collation);
-        string CollationString => HasCollation ? "COLLATE " + Collation : string.Empty;
+        string CollationString
+        {
+            get
+            {
+                if (!HasCollation) return string.Empty;
+                if (ConnectionType == ConnectionManagerType.Postgres)
+                    return "LC_COLLATE " + Collation;
+                else
+                    return "COLLATE " + Collation;
+            }
+        }
         string RecoveryString => RecoveryModel != RecoveryModel.Default ?
             $"ALTER DATABASE [{DatabaseName}] SET RECOVERY {RecoveryModelAsString} WITH no_wait"
             : string.Empty;

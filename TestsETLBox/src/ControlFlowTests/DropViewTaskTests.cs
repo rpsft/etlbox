@@ -23,13 +23,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             CreateViewTask.CreateOrAlter(connection, "DropViewTest", "SELECT 1 AS Test");
-            Assert.True(IfTableExistsTask.IsExisting(connection, "DropViewTest"));
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropViewTest"));
 
             //Act
             DropViewTask.Drop(connection, "DropViewTest");
 
             //Assert
-            Assert.False(IfTableExistsTask.IsExisting(connection, "DropTableTest"));
+            Assert.False(IfTableOrViewExistsTask.IsExisting(connection, "DropTableTest"));
         }
     }
 }

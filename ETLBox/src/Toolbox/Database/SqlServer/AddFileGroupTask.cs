@@ -1,7 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// <summary>
     /// This task will add a filegroup to the database.
     /// </summary>
@@ -15,8 +15,8 @@ namespace ALE.ETLBox.ControlFlow {
         public override string TaskName => $"Create Filegroup {FileGroupName}";
         public override void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            if (ConnectionType != ConnectionManagerType.SqlServer)
+                throw new ETLBoxNotSupportedException("This task is only supported with SqlServer!");
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 

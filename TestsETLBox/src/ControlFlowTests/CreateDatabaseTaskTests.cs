@@ -40,6 +40,25 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             DropDatabaseTask.Drop(connection, dbName);
         }
 
+        [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
+        public void CreateWithCollation(IConnectionManager connection)
+        {
+            //Arrange
+            string dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string collation = "Latin1_General_CS_AS";
+            if (connection.GetType() == typeof(PostgresConnectionManager))
+                collation = "UTF8";
+            //Act
+            CreateDatabaseTask.Create(connection, dbName,collation );
+
+            //Assert
+            var dbList = GetDatabaseListTask.List(connection);
+            Assert.Contains<string>(dbName, dbList);
+
+            //Cleanup
+            DropDatabaseTask.Drop(connection, dbName);
+        }
+
         public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
 
         [Fact]

@@ -45,8 +45,9 @@ namespace ALE.ETLBox.ConnectionManager
                 return GetBeginQuotation(type);
         }
 
-        public static string QB(ConnectionManagerType type) => GetBeginQuotation(type);
-        public static string QE(ConnectionManagerType type) => GetEndQuotation(type);
+
+        public static string GetBeginQuotation(IConnectionManager connectionManager) => GetBeginQuotation(GetType(connectionManager));
+        public static string GetEndQuotation(IConnectionManager connectionManager) => GetEndQuotation(GetType(connectionManager));
 
 
     }

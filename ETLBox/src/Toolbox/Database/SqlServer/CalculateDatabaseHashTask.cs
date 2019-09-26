@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// <summary>
     /// Calculates a hash value of the database. It will use only the schemas given in the property SchemaName for the calculation.
     /// The hash calcualtion is based only on the user tables in the schema.
@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ControlFlow {
         /* ITask Interface */
         public override string TaskName => $"Calculate hash value for schema(s) {SchemaNamesAsString}";
         public override void Execute() {
-            if (ConnectionType == ConnectionManagerType.SQLite)
+            if (ConnectionType != ConnectionManagerType.SqlServer)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             List<string> allColumns = new List<string>();
             new SqlTask(this, Sql) {

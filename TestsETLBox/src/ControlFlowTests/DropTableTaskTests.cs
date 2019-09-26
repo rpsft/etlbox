@@ -24,13 +24,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
             CreateTableTask.Create(connection, "DropTableTest", columns);
-            Assert.True(IfTableExistsTask.IsExisting(connection, "DropTableTest"));
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropTableTest"));
 
             //Act
             DropTableTask.Drop(connection, "DropTableTest");
 
             //Assert
-            Assert.False(IfTableExistsTask.IsExisting(connection, "DropTableTest"));
+            Assert.False(IfTableOrViewExistsTask.IsExisting(connection, "DropTableTest"));
         }
     }
 }

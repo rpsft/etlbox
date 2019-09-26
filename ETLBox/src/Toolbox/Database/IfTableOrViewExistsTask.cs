@@ -5,7 +5,7 @@ namespace ALE.ETLBox.ControlFlow
     /// <summary>
     /// Drops a table if the table exists.
     /// </summary>
-    public class IfTableExistsTask : IfExistsTask, ITask
+    public class IfTableOrViewExistsTask : IfExistsTask, ITask
     {
         /* ITask Interface */
         internal override string GetSql()
@@ -48,25 +48,25 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         /* Some constructors */
-        public IfTableExistsTask() : base()
+        public IfTableOrViewExistsTask() : base()
         {
         }
 
-        public IfTableExistsTask(string tableName) : this()
+        public IfTableOrViewExistsTask(string tableName) : this()
         {
             ObjectName = tableName;
         }
 
 
         /* Static methods for convenience */
-        public static bool IsExisting(string objectName) => new IfTableExistsTask(objectName).Exists();
+        public static bool IsExisting(string objectName) => new IfTableOrViewExistsTask(objectName).Exists();
         public static bool IsExisting(IConnectionManager connectionManager, string objectName)
-            => new IfTableExistsTask(objectName) { ConnectionManager = connectionManager }.Exists();
+            => new IfTableOrViewExistsTask(objectName) { ConnectionManager = connectionManager }.Exists();
 
 
         public static void ThrowExceptionIfNotExists(IConnectionManager connectionManager, string tableName)
         {
-            bool tableExists = new IfTableExistsTask(tableName)
+            bool tableExists = new IfTableOrViewExistsTask(tableName)
             {
                 ConnectionManager = connectionManager,
                 DisableLogging = true

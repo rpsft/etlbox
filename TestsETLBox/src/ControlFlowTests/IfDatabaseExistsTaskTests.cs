@@ -10,6 +10,7 @@ using Xunit;
 
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
+    [Collection("ControlFlow")]
     public class IfDatabaseExistsTaskTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");

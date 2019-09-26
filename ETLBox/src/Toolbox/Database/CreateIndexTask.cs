@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -18,16 +19,18 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Create index {IndexName} on table {TableName}";
         public override void Execute()
         {
-            if (new IfTableExistsTask(IndexName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists())
-                new DropIndexTask(TableName, IndexName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
+            if (new IfIndexExistsTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists())
+                new DropIndexTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
-        public void CreateOrRecate() => Execute();
+        public void CreateOrRecrate() => Execute();
 
         /* Public properties */
         public string IndexName { get; set; }
+        public TableNameDescriptor IN => new TableNameDescriptor(IndexName, ConnectionType);
         public string TableName { get; set; }
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         public IList<string> IndexColumns { get; set; }
         public IList<string> IncludeColumns { get; set; }
         public bool IsUnique { get; set; }
@@ -36,8 +39,8 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IndexName} ON {TableName}
-( {String.Join(",", IndexColumns)} )
+                return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotatedFullName} ON {TN.QuotatedFullName}
+( {String.Join(",", IndexColumns.Select(col => QB + col+ QE))} )
 {IncludeSql}
 ";
             }
@@ -87,7 +90,7 @@ namespace ALE.ETLBox.ControlFlow
                     || ConnectionType == ConnectionManagerType.SQLite)
                     return string.Empty;
                 else
-                    return $"INCLUDE ({String.Join("  ,", IncludeColumns)})";
+                    return $"INCLUDE ({String.Join("  ,", IncludeColumns.Select ( col => QB+col+QE))})";
             }
         }
 

@@ -11,21 +11,22 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Drop Index {IndexName} on Table {TableName}";
         public override void Execute()
         {
-            bool viewExists = new IfTableExistsTask(IndexName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (viewExists)
+            bool indexExists = new IfIndexExistsTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            if (indexExists)
                 new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
         /* Public properties */
         public string IndexName { get; set; }
         public string TableName { get; set; }
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         public string Sql
         {
             get
             {
-                string sql = $@"DROP INDEX {IndexName}";
-                if (ConnectionType != ConnectionManagerType.SQLite)
-                    sql += $@" ON {TableName}";
+                string sql = $@"DROP INDEX {QB}{IndexName}{QE}";
+                if (ConnectionType != ConnectionManagerType.SQLite && ConnectionType != ConnectionManagerType.Postgres)
+                    sql += $@" ON {TN.QuotatedFullName}";
                 return sql;
             }
 
@@ -38,7 +39,7 @@ namespace ALE.ETLBox.ControlFlow
         {
         }
 
-        public DropIndexTask(string tableName, string indexName) : this()
+        public DropIndexTask(string indexName, string tableName) : this()
         {
             TableName = tableName;
             IndexName = indexName;
@@ -46,9 +47,9 @@ namespace ALE.ETLBox.ControlFlow
 
 
         /* Static methods for convenience */
-        public static void Drop(string tableName, string indexName) => new DropIndexTask(tableName, indexName).Execute();
-        public static void Drop(IConnectionManager connectionManager, string tableName, string indexName)
-            => new DropIndexTask(tableName,indexName) { ConnectionManager = connectionManager }.Execute();
+        public static void Drop(string indexName, string tableName) => new DropIndexTask(indexName, tableName).Execute();
+        public static void Drop(IConnectionManager connectionManager, string indexName, string tableName)
+            => new DropIndexTask(indexName, tableName) { ConnectionManager = connectionManager }.Execute();
     }
 
 

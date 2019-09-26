@@ -41,17 +41,6 @@ namespace ALE.ETLBox.Helper
                             );
             var dbName = Config.MySqlConnection.ConnectionString(section).DBName;
             DropAndCreate(connManagerMaster, dbName);
-            //new DropDatabaseTask(dbName)
-            //{
-            //    DisableLogging = true,
-            //    ConnectionManager = connManagerMaster
-            //}.Drop();
-
-            //new CreateDatabaseTask(dbName)
-            //{
-            //    DisableLogging = true,
-            //    ConnectionManager = connManagerMaster
-            //}.Execute();
         }
 
         public static void RecreatePostgresDatabase(string section)
@@ -62,17 +51,6 @@ namespace ALE.ETLBox.Helper
             var dbName = Config.PostgresConnection.ConnectionString(section).DBName;
 
             DropAndCreate(connManagerMaster, dbName);
-            //new DropDatabaseTask(dbName)
-            //{
-            //    DisableLogging = true,
-            //    ConnectionManager = connManagerMaster
-            //}.Drop();
-
-            //new CreateDatabaseTask(dbName)
-            //{
-            //    DisableLogging = true,
-            //    ConnectionManager = connManagerMaster
-            //}.Execute();
         }
     }
 }

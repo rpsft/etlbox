@@ -35,10 +35,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void CountWithCondition(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(connection, "RowCountTest");
-            tableDef.InsertTestData();
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "RowCountTest");
+            tc.InsertTestData();
             //Act
-            int? actual = RowCountTask.Count(connection, "RowCountTest", "Col1 = 2");
+            int? actual = RowCountTask.Count(connection, "RowCountTest", $"{tc.QB}Col1{tc.QE} = 2");
             //Assert
             Assert.Equal(1, actual );
         }

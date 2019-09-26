@@ -16,7 +16,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> ConnectionsWithValue(string value) => Config.AllSqlConnectionsWithValue("ControlFlow", value);
 
-
         public SqlTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
@@ -24,21 +23,21 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void ExecuteNonQuery(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "NonQueryTest");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "NonQueryTest");
 
             //Act
             SqlTask.ExecuteNonQuery(connection, "Test insert with parameter",
-                $"INSERT INTO NonQueryTest VALUES (1, 'Test1')");
+                $@"INSERT INTO {tc.QB}NonQueryTest{tc.QE} VALUES (1, 'Test1')");
 
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, "NonQueryTest", "Col1 = 1 AND Col2='Test1'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "NonQueryTest", $@"{tc.QB}Col1{tc.QE} = 1 AND {tc.QB}Col2{tc.QE}='Test1'"));
         }
 
         [Theory, MemberData(nameof(Connections))]
         public void ExecuteNonQueryWithParameter(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "ParameterTest");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ParameterTest");
 
             //Act
             var parameter = new List<QueryParameter>
@@ -47,10 +46,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new QueryParameter("value2", "NVARCHAR(100)", "Test1")
             };
             SqlTask.ExecuteNonQuery(connection, "Test insert with parameter",
-                $"INSERT INTO ParameterTest VALUES (@value1, @value2)", parameter);
+                $"INSERT INTO {tc.QB}ParameterTest{tc.QE} VALUES (@value1, @value2)", parameter);
 
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, "ParameterTest", "Col1 = 1 AND Col2='Test1'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "ParameterTest", $@"{tc.QB}Col1{tc.QE} = 1 AND {tc.QB}Col2{tc.QE}='Test1'"));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -113,15 +112,15 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void ExecuteReaderSingleColumn(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "ExecuteReader");
-            twoColumns.InsertTestData();
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ExecuteReader");
+            tc.InsertTestData();
             List<int> asIsResult = new List<int>();
             List<int> toBeResult = new List<int>() { 1, 2, 3 };
 
             //Act
             SqlTask.ExecuteReader(connection,
                 "Test execute reader",
-                "SELECT Col1 FROM ExecuteReader",
+                $"SELECT {tc.QB}Col1{tc.QE} FROM {tc.QB}ExecuteReader{tc.QE}",
                 colA => asIsResult.Add(int.Parse(colA.ToString()))
                 );
 
@@ -133,8 +132,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void ExecuteReaderWithParameter(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "ExecuteReaderWithPar");
-            twoColumns.InsertTestData();
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ExecuteReaderWithPar");
+            tc.InsertTestData();
             List<int> asIsResult = new List<int>();
             List<int> toBeResult = new List<int>() { 2 };
 
@@ -144,7 +143,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             };
             //Act
             SqlTask.ExecuteReader(connection, "Test execute reader",
-                "SELECT Col1 FROM ExecuteReaderWithPar WHERE Col2 = @par1", parameter,
+                $"SELECT {tc.QB}Col1{tc.QE} FROM {tc.QB}ExecuteReaderWithPar{tc.QE} WHERE {tc.QB}Col2{tc.QE} = @par1", parameter,
                 colA => asIsResult.Add(int.Parse(colA.ToString())));
             //Assert
             Assert.Equal(toBeResult, asIsResult);
@@ -175,8 +174,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void ExecuteReaderMultiColumn(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture twoColumns = new TwoColumnsTableFixture(connection, "MultiColumnRead");
-            twoColumns.InsertTestData();
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "MultiColumnRead");
+            tc.InsertTestData();
 
             List<MySimpleRow> asIsResult = new List<MySimpleRow>();
             List<MySimpleRow> toBeResult = new List<MySimpleRow>() {
@@ -188,7 +187,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Act
             SqlTask.ExecuteReader(connection,
                 "Test execute reader",
-                "SELECT * FROM MultiColumnRead"
+                $"SELECT * FROM {tc.QB}MultiColumnRead{tc.QE}"
                 , () => CurColumn = new MySimpleRow()
                 , () => asIsResult.Add(CurColumn)
                 , colA => CurColumn.Col1 = int.Parse(colA.ToString())

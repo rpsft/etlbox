@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         { }
 
         [Theory, MemberData(nameof(Connections))]
-        public void DropView(IConnectionManager connection)
+        public void DropIndex(IConnectionManager connection)
         {
             //Arrange
             CreateTableTask.Create(connection, "DropIndexTable", new List<TableColumn>()
@@ -28,13 +28,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             });
             CreateIndexTask.CreateOrRecreate(connection, "IndexToDrop","DropIndexTable",
                 new List<string>() { "Test1" });
-            Assert.True(IfTableExistsTask.IsExisting(connection, "IndexToDrop"));
+            Assert.True(IfIndexExistsTask.IsExisting(connection, "IndexToDrop", "DropIndexTable"));
 
             //Act
-            DropIndexTask.Drop(connection, "DropIndexTable", "IndexToDrop");
+            DropIndexTask.Drop(connection, "IndexToDrop", "DropIndexTable");
 
             //Assert
-            Assert.False(IfTableExistsTask.IsExisting(connection, "IndexToDrop"));
+            Assert.False(IfIndexExistsTask.IsExisting(connection, "IndexToDrop", "DropIndexTable"));
         }
     }
 }

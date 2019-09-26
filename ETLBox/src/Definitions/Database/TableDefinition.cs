@@ -48,7 +48,7 @@ namespace ALE.ETLBox
 
         public static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
         {
-            IfTableExistsTask.ThrowExceptionIfNotExists(connection, tableName);
+            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = ConnectionManagerSpecifics.GetType(connection);
 
             if (connectionType == ConnectionManagerType.SqlServer)

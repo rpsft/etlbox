@@ -1,6 +1,7 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
@@ -49,13 +50,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.sysfiles", $"name = '{fgName}'"));
         }
 
-        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
-
         [Fact]
-        public void NotSupportedWithSQLite()
+        public void NotSupportedWithOtherDBs()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => AddFileGroupTask.AddFileGroup(SQLiteConnection, "Test", "Test", "5MB", "5MB", true)
+                () => AddFileGroupTask.AddFileGroup(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test", "Test", "5MB", "5MB", true)
                 );
         }
     }

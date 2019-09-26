@@ -1,6 +1,7 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
@@ -64,13 +65,11 @@ WHERE sch.name = '{schemaName}'")
                 $"type = 'U' AND name = 'LoadProcess' AND schema_id('etl') = schema_id"));
         }
 
-        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
-
         [Fact]
-        public void NotSupportedWithSQLite()
+        public void NotSupportedWithOtherDBs()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => CleanUpSchemaTask.CleanUp(SQLiteConnection, "Test")
+                () => CleanUpSchemaTask.CleanUp(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
     }

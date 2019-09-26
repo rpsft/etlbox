@@ -24,7 +24,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Create table {TableName}";
         public override void Execute()
         {
-            bool tableExists = new IfTableExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            bool tableExists = new IfTableOrViewExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (tableExists && ThrowErrorIfTableExists) throw new ETLBoxException($"Table {TableName} already exists!");
             if (!tableExists)
                 new SqlTask(this, Sql).ExecuteNonQuery();
@@ -33,7 +33,7 @@ namespace ALE.ETLBox.ControlFlow
         /* Public properties */
         public void Create() => Execute();
         public string TableName { get; set; }
-        public string TableWithoutSchema => TableName.IndexOf('.') > 0 ? TableName.Substring(TableName.LastIndexOf('.') + 1) : TableName;
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         public IList<ITableColumn> Columns { get; set; }
         public bool ThrowErrorIfTableExists { get; set; }
 
@@ -42,7 +42,7 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 return
-$@"CREATE TABLE {TableName} (
+$@"CREATE TABLE {TN.QuotatedFullName} (
 {ColumnsDefinitionSql}
 )
 ";
@@ -137,7 +137,7 @@ $@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {primary
         {
             if (col.IsPrimaryKey)
             {
-                string pkConst = $" CONSTRAINT {QB}pk_{TableWithoutSchema}_{col.Name}{QE} PRIMARY KEY ";
+                string pkConst = $" CONSTRAINT {QB}pk_{TN.Table}_{col.Name}{QE} PRIMARY KEY ";
                 if (ConnectionType != ConnectionManagerType.SQLite)
                     pkConst = $"," + pkConst + $"({QB}{ col.Name}{QE}) ";
                 return pkConst;

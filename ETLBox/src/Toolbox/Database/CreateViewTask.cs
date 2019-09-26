@@ -11,20 +11,21 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
         public override void Execute()
         {
-            IsExisting = new IfTableExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (ConnectionType == ConnectionManagerType.SQLite && IsExisting)
+            IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            if ( (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Postgres) && IsExisting)
                 new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true}.Drop();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
         /* Public properties */
         public string ViewName { get; set; }
+        public TableNameDescriptor VN => new TableNameDescriptor(ViewName, ConnectionType);
         public string Definition { get; set; }
         public string Sql
         {
             get
             {
-                    return $@"{CreateOrAlterSql} VIEW {ViewName}
+                    return $@"{CreateOrAlterSql} VIEW {VN.QuotatedFullName}
 AS
 {Definition}
 ";
@@ -44,6 +45,7 @@ AS
         public static void CreateOrAlter(IConnectionManager connectionManager, string viewName, string definition) => new CreateViewTask(viewName, definition) { ConnectionManager = connectionManager }.Execute();
 
         bool IsExisting { get; set; }
-        string CreateOrAlterSql => IsExisting && ConnectionType != ConnectionManagerType.SQLite ? "ALTER" : "CREATE";
+        string CreateOrAlterSql => IsExisting &&
+            (ConnectionType != ConnectionManagerType.SQLite && ConnectionType != ConnectionManagerType.Postgres) ? "ALTER" : "CREATE";
     }
 }

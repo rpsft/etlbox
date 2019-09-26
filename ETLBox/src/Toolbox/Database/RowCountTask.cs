@@ -29,6 +29,7 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         public string TableName { get; set; }
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         public string Condition { get; set; }
         public bool HasCondition => !String.IsNullOrWhiteSpace(Condition);
         public int? Rows { get; private set; }
@@ -46,7 +47,7 @@ WHERE [object_id] = object_id(N'{TableName}')
   AND [index_id] IN (0,1)" :
                 $@"
 SELECT COUNT(*)
-FROM {TableName} 
+FROM {TN.QuotatedFullName} 
 {WhereClause} {Condition} {NoLockHint}";
             }
         }

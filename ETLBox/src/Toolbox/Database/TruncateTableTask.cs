@@ -21,14 +21,15 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public string TableName { get; set; }
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         public string Sql
         {
             get
             {
                 if (ConnectionType == ConnectionManagerType.SQLite)
-                    return $@"DELETE FROM {TableName}";
+                    return $@"DELETE FROM {TN.QuotatedFullName}";
                 else
-                    return $@"TRUNCATE TABLE {TableName}";
+                    return $@"TRUNCATE TABLE {TN.QuotatedFullName}";
             }
         }
 

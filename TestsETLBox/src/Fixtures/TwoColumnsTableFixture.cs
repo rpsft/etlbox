@@ -14,6 +14,11 @@ namespace ALE.ETLBoxTests.Fixtures
         public IConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
+
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, Connection);
+        public string QB => TN.QB;
+        public string QE => TN.QE;
+
         public TwoColumnsTableFixture(string tableName)
         {
             this.TableName = tableName;
@@ -42,41 +47,41 @@ namespace ALE.ETLBoxTests.Fixtures
         public void InsertTestData()
         {
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $@"INSERT INTO ""{TableName}"" VALUES(1,'Test1')");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'Test1')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $@"INSERT INTO ""{TableName}"" VALUES(2,'Test2')");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(2,'Test2')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                 , $@"INSERT INTO ""{TableName}"" VALUES(3,'Test3')");
+                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(3,'Test3')");
         }
 
         public void InsertTestDataSet2()
         {
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $@"INSERT INTO {TableName} VALUES(4,'Test4')");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(4,'Test4')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $@"INSERT INTO {TableName} VALUES(5,'Test5')");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(5,'Test5')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                 , $@"INSERT INTO {TableName} VALUES(6,'Test6')");
+                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(6,'Test6')");
         }
 
         public void InsertTestDataSet3()
         {
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(1,'Test1')");
+                , $"INSERT INTO {TN.QuotatedFullName} VALUES(1,'Test1')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(2,NULL)");
+                , $"INSERT INTO {TN.QuotatedFullName} VALUES(2,NULL)");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                , $"INSERT INTO {TableName} VALUES(4,'TestX')");
+                , $"INSERT INTO {TN.QuotatedFullName} VALUES(4,'TestX')");
             SqlTask.ExecuteNonQuery(Connection, "Insert demo data"
-                 , $"INSERT INTO {TableName} VALUES(10,'Test10')");
+                 , $"INSERT INTO {TN.QuotatedFullName} VALUES(10,'Test10')");
         }
 
         public void AssertTestData()
         {
             Assert.Equal(3, RowCountTask.Count(Connection, TableName));
-            Assert.Equal(1, RowCountTask.Count(Connection, TableName, "Col1 = 1 AND Col2='Test1'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, TableName, "Col1 = 2 AND Col2='Test2'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, TableName, "Col1 = 3 AND Col2='Test3'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, TableName, $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, TableName, $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2'"));
+            Assert.Equal(1, RowCountTask.Count(Connection, TableName, $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3'"));
         }
     }
 }
