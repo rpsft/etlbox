@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SqlConnectionManager : DbConnectionManager<SqlConnection>
     {
-        public bool ModifyDBSettings { get; set; } = true;
+        public bool ModifyDBSettings { get; set; } = false;
 
         public SqlConnectionManager() : base() { }
 
@@ -35,7 +35,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public override void BeforeBulkInsert()
+        public override void BeforeBulkInsert(string tableName)
         {
             if (ModifyDBSettings)
             {
@@ -56,7 +56,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public override void AfterBulkInsert()
+        public override void AfterBulkInsert(string tableName)
         {
             if (ModifyDBSettings)
             {

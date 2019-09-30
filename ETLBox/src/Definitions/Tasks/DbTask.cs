@@ -25,7 +25,6 @@ namespace ALE.ETLBox.ControlFlow
         private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
         private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
         public virtual bool DoXMLCommentStyle { get; set; }
-
         public bool DisableExtension { get; set; }
         public string Command
         {
@@ -244,9 +243,9 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 QueryStart(LogType.Bulk);
-                conn.BeforeBulkInsert();
+                conn.BeforeBulkInsert(tableName);
                 conn.BulkInsert(data, tableName);
-                conn.AfterBulkInsert();
+                conn.AfterBulkInsert(tableName);
                 RowsAffected = data.RecordsAffected;
                 QueryFinish(LogType.Bulk);
             }

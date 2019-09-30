@@ -106,7 +106,7 @@ END
             {
                 if (!HasCollation) return string.Empty;
                 if (ConnectionType == ConnectionManagerType.Postgres)
-                    return "LC_COLLATE " + Collation;
+                    return "LC_COLLATE '" + Collation + "'";
                 else
                     return "COLLATE " + Collation;
             }

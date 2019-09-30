@@ -17,8 +17,6 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class MySqlConnectionManager : DbConnectionManager<MySqlConnection>
     {
-        public bool ModifyDBSettings { get; set; } = true;
-
         public MySqlConnectionManager() : base() { }
 
         public MySqlConnectionManager(MySqlConnectionString connectionString) : base(connectionString) { }
@@ -40,43 +38,11 @@ namespace ALE.ETLBox.ConnectionManager
             cmd.CommandText = sql;
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-            //            var records = new List<object>
-            //    {
-            //        new { Id = 1, Name = "one" },
-            //    };
-            //            using (var writer = new StreamWriter(".etlboxtemp.csvdata"))
-            //            using (var csv = new CsvWriter(writer))
-            //            {
-            //                csv.WriteRecords(records);
-            //            }
-
-            //            string sql = $@"LOAD DATA INFILE '.etlboxtemp.csvdata' 
-            //INTO TABLE {tableName}
-            //FIELDS TERMINATED BY ';' 
-            //ENCLOSED BY '""'
-            //LINES TERMINATED BY '\r\n'
-            //IGNORE 1 LINES; "
-            //            ;
-            //            var cmd = DbConnection.CreateCommand();
-            //            cmd.CommandText = sql;
-            //            cmd.ExecuteNonQuery();
         }
 
-        public override void BeforeBulkInsert()
-        {
-            if (ModifyDBSettings)
-            {
-                ;
-            }
-        }
+        public override void BeforeBulkInsert(string tableName) { }
 
-        public override void AfterBulkInsert()
-        {
-            if (ModifyDBSettings)
-            {
-                ;
-            }
-        }
+        public override void AfterBulkInsert(string tableName) { }
 
         public override IConnectionManager Clone()
         {

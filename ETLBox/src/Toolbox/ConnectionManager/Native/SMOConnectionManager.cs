@@ -67,9 +67,9 @@ namespace ALE.ETLBox.ConnectionManager
         public void BulkInsert(ITableData data, string tableName)
             => SqlConnectionManager.BulkInsert(data, tableName);
 
-        public void BeforeBulkInsert() => SqlConnectionManager.BeforeBulkInsert();
+        public void BeforeBulkInsert(string tableName) => SqlConnectionManager.BeforeBulkInsert(tableName);
 
-        public void AfterBulkInsert() => SqlConnectionManager.AfterBulkInsert();
+        public void AfterBulkInsert(string tableName) => SqlConnectionManager.AfterBulkInsert(tableName);
 
 
         private bool disposedValue = false; // To detect redundant calls

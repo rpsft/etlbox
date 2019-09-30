@@ -20,7 +20,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection>
     {
-        public bool ModifyDBSettings { get; set; } = true;
+        public bool ModifyDBSettings { get; set; } = false;
 
         public SQLiteConnectionManager() : base() { }
         public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString) { }
@@ -61,7 +61,7 @@ VALUES ({String.Join(",", sourceColumnValues)})
         }
 
 
-        public override void BeforeBulkInsert()
+        public override void BeforeBulkInsert(string tableName)
         {
             if (ModifyDBSettings)
             {
@@ -78,7 +78,7 @@ VALUES ({String.Join(",", sourceColumnValues)})
             }
         }
 
-        public override void AfterBulkInsert()
+        public override void AfterBulkInsert(string tableName)
         {
             if (ModifyDBSettings)
             {

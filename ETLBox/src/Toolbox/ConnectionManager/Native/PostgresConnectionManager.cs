@@ -22,29 +22,15 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class PostgresConnectionManager : DbConnectionManager<NpgsqlConnection>
     {
-        public bool ModifyDBSettings { get; set; } = true;
-
         public PostgresConnectionManager() : base() { }
 
         public PostgresConnectionManager(PostgresConnectionString connectionString) : base(connectionString) { }
 
         public PostgresConnectionManager(string connectionString) : base(new PostgresConnectionString(connectionString)) { }
 
-        string PageVerify { get; set; }
-        string RecoveryModel { get; set; }
+        TableDefinition DestTableDef { get; set; }
+        Dictionary<string, TableColumn> DestinationColumns { get; set; }
 
-        //BulkInsertSql<NpgsqlParameter> bulkInsert = new BulkInsertSql<NpgsqlParameter>()
-        //{
-        //    UseParameterQuery = true,
-        //    UseNamedParameters = true,
-        //    ConnectionType = ConnectionManagerType.Postgres
-        //};
-        //string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
-        //var cmd = DbConnection.CreateCommand();
-        //cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
-        //cmd.CommandText = sql;
-        //cmd.Prepare();
-        //cmd.ExecuteNonQuery();
         public override void BulkInsert(ITableData data, string tableName)
         {
             var TN = new TableNameDescriptor(tableName, ConnectionManagerType.Postgres);
@@ -52,7 +38,6 @@ namespace ALE.ETLBox.ConnectionManager
             var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
             var quotedDestColumns = destColumnNames.Select(col => TN.QB + col + TN.QE);
 
-            TableDefinition DestTableDef = TableDefinition.GetDefinitionFromTableName(tableName, this.Clone());
             using (var writer = DbConnection.BeginBinaryImport($@"
 COPY {TN.QuotatedFullName} ({string.Join(", ", quotedDestColumns)})
 FROM STDIN (FORMAT BINARY)"))
@@ -62,7 +47,7 @@ FROM STDIN (FORMAT BINARY)"))
                     writer.StartRow();
                     foreach (var destCol in destColumnNames)
                     {
-                        var colDef = DestTableDef.Columns.Where(col => col.Name == destCol).FirstOrDefault();
+                        TableColumn colDef = DestinationColumns[destCol];
                         int ordinal = data.GetOrdinal(destCol);
                         object val = data.GetValue(ordinal);
                         if (val != null)
@@ -81,20 +66,18 @@ FROM STDIN (FORMAT BINARY)"))
             }
         }
 
-        public override void BeforeBulkInsert()
+        public override void BeforeBulkInsert(string tableName)
         {
-            if (ModifyDBSettings)
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(tableName, this.Clone());
+            DestinationColumns = new Dictionary<string, TableColumn>();
+            foreach (var colDef in DestTableDef.Columns)
             {
-                ;
+                DestinationColumns.Add(colDef.Name, colDef);
             }
         }
 
-        public override void AfterBulkInsert()
+        public override void AfterBulkInsert(string tableName)
         {
-            if (ModifyDBSettings)
-            {
-                ;
-            }
         }
 
         public override IConnectionManager Clone()

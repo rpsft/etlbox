@@ -77,8 +77,8 @@ namespace ALE.ETLBox.ConnectionManager {
         }
 
         public abstract void BulkInsert(ITableData data, string tableName);
-        public abstract void BeforeBulkInsert();
-        public abstract void AfterBulkInsert();
+        public abstract void BeforeBulkInsert(string tableName);
+        public abstract void AfterBulkInsert(string tableName);
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

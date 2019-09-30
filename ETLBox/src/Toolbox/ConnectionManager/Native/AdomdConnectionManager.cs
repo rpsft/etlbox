@@ -25,8 +25,8 @@ namespace ALE.ETLBox.ConnectionManager
             throw new NotImplementedException();
         }
 
-        public override void BeforeBulkInsert() { }
-        public override void AfterBulkInsert() { }
+        public override void BeforeBulkInsert(string tableName) { }
+        public override void AfterBulkInsert(string tableName) { }
 
         public override IConnectionManager Clone()
         {

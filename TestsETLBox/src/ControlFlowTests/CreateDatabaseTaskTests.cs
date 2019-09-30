@@ -47,7 +47,9 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             string dbName = "ETLBox_" + HashHelper.RandomString(10);
             string collation = "Latin1_General_CS_AS";
             if (connection.GetType() == typeof(PostgresConnectionManager))
-                collation = "UTF8";
+                collation = "en_US.utf8";
+            if (connection.GetType() == typeof(MySqlConnectionManager))
+                collation = "latin1_swedish_ci";
             //Act
             CreateDatabaseTask.Create(connection, dbName,collation );
 

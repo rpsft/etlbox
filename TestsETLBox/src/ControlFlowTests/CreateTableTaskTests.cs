@@ -165,7 +165,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void CreateTableWithComputedColumn(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(SQLiteConnectionManager))
+            if (connection.GetType() != typeof(SQLiteConnectionManager) &&
+                connection.GetType() != typeof(PostgresConnectionManager))
             {
                 //Arrange
                 List<TableColumn> columns = new List<TableColumn>() {

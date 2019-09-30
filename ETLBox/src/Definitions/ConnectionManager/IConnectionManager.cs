@@ -12,8 +12,8 @@ namespace ALE.ETLBox.ConnectionManager {
         object ExecuteScalar(string command, IEnumerable<QueryParameter> parameterList = null);
         IDataReader ExecuteReader(string command, IEnumerable<QueryParameter> parameterList = null);
         void BulkInsert(ITableData data, string tableName);
-        void BeforeBulkInsert();
-        void AfterBulkInsert();
+        void BeforeBulkInsert(string tableName);
+        void AfterBulkInsert(string tableName);
         IConnectionManager Clone();
 
     }

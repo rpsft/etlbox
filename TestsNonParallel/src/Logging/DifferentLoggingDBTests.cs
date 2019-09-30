@@ -58,7 +58,7 @@ namespace ALE.ETLBoxTests.Logging
             SqlTask.ExecuteNonQuery(NoLogConnection, "Insert demo data", "INSERT INTO CFLogSource VALUES(3,'Test3')");
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'SQL' ")
+            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'SqlTask' ")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection
@@ -89,12 +89,12 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DF_DBSOURCE'")
+            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBSource'")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection
             }.Count().Rows);
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DF_DBDEST'")
+            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection

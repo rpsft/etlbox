@@ -64,12 +64,12 @@ namespace ALE.ETLBox.ConnectionManager
             cmd.ExecuteNonQuery();
         }
 
-        public override void BeforeBulkInsert()
+        public override void BeforeBulkInsert(string tableName)
         {
             TryDropDummyTable();
             CreateDummyTable();
         }
-        public override void AfterBulkInsert()
+        public override void AfterBulkInsert(string tableName)
         {
             TryDropDummyTable();
         }

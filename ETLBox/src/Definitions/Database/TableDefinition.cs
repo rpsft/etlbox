@@ -243,7 +243,7 @@ ORDER BY cols.ordinal_position
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
              , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
-            , column_default => curCol.DefaultValue = column_default?.ToString()
+            , column_default => curCol.DefaultValue = column_default?.ToString().ReplaceIgnoreCase("::character varying", "")
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
              )
