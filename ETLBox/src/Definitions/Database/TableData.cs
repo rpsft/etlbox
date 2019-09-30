@@ -87,17 +87,18 @@ namespace ALE.ETLBox {
 
         }
         public DateTime GetDateTime(int i) => Convert.ToDateTime(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        public IDataReader GetData(int i) => null;
-        public string GetDataTypeName(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].NETDataType.Name;
+        public IDataReader GetData(int i) => throw new NotImplementedException();//null;
         public decimal GetDecimal(int i) => Convert.ToDecimal(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         public double GetDouble(int i) => Convert.ToDouble(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        public Type GetFieldType(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].NETDataType;
         public float GetFloat(int i) => float.Parse(Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]));
         public Guid GetGuid(int i) => Guid.Parse(Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]));
         public short GetInt16(int i) => Convert.ToInt16(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         public int GetInt32(int i) => Convert.ToInt32(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         public long GetInt64(int i) => Convert.ToInt64(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        public string GetName(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].Name;
+        public string GetName(int i) => throw new NotImplementedException();
+        public string GetDataTypeName(int i) => throw new NotImplementedException();
+        public Type GetFieldType(int i) => throw new NotImplementedException();
+
         public int GetOrdinal(string name) => FindOrdinalInObject(name);
 
         private int FindOrdinalInObject(string name)
@@ -110,7 +111,7 @@ namespace ALE.ETLBox {
             {
                 int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(name);
                 if (HasIDColumnIndex)
-                    if (ix > IDColumnIndex) ix++;
+                    if (ix >= IDColumnIndex) ix++;
                 return ix;
             }
         }
@@ -119,6 +120,9 @@ namespace ALE.ETLBox {
         {
             throw new NotImplementedException();
         }
+
+        //public string GetDestinationDataType(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].DataType;
+        //public System.Type GetDestinationNETDataType(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].NETDataType;
 
         public string GetString(int i) => Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         public object GetValue(int i) => CurrentRow.Length > ShiftIndexAroundIDColumn(i) ? CurrentRow[ShiftIndexAroundIDColumn(i)] : (object)null;
@@ -131,8 +135,8 @@ namespace ALE.ETLBox {
                 else if (i <= IDColumnIndex) return i;
             }
             return i;
-
         }
+
         public int GetValues(object[] values)
         {
             values = CurrentRow as object[];

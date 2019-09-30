@@ -15,10 +15,11 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <see cref="OdbcConnectionManager"/>
     /// <see cref="AccessOdbcConnectionManager"/>
-    internal class BulkInsertSql<T> where T: DbParameter, new()
+    internal class BulkInsertSql<T> where T : DbParameter, new()
     {
         internal bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
         internal bool UseParameterQuery { get; set; } = true;
+        internal bool UseNamedParameters { get; set; }
         internal List<T> Parameters { get; set; }
         StringBuilder QueryText { get; set; }
         List<string> SourceColumnNames { get; set; }
@@ -29,7 +30,7 @@ namespace ALE.ETLBox.ConnectionManager
         internal string QE => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
         public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         internal string TableName { get; set; }
-
+        private int ParameterNameCount { get; set; }
 
         internal string CreateBulkInsertStatement(ITableData data, string tableName)
         {
@@ -75,12 +76,20 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (UseParameterQuery)
             {
-                var par = new T();
-                //par.ParameterName = destColumnName;
-                par.Value = DBNull.Value;
-                Parameters.Add(par);
-                //Parameters.Add(new OdbcParameter(destColumnName, DBNull.Value));
-                values.Add("?");
+                values.Add(CreateParameterWithValue(DBNull.Value));
+                //var par = new T();
+                //par.Value = DBNull.Value;
+                //Parameters.Add(par);
+                //if (UseNamedParameters)
+                //{
+                //    string parName = $"@P{ParameterNameCount++}";
+                //    values.Add(parName);
+                //    par.ParameterName = parName;
+                //}
+                //else
+                //{
+                //    values.Add("?");
+                //}
             }
             else
             {
@@ -94,12 +103,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (UseParameterQuery)
             {
-                var par = new T();
-                //par.ParameterName = destColumnName;
-                par.Value = data.GetValue(colIndex);
-                Parameters.Add(par);
-                //Parameters.Add(new OdbcParameter(destColumnName, data.GetValue(colIndex)));
-                values.Add("?");
+                values.Add(CreateParameterWithValue(data.GetValue(colIndex))) ;
             }
             else
             {
@@ -111,9 +115,26 @@ namespace ALE.ETLBox.ConnectionManager
 
         }
 
+        private string CreateParameterWithValue(object parValue)
+        {
+            var par = new T();
+            par.Value = parValue;
+            Parameters.Add(par);
+            if (UseNamedParameters)
+            {
+                string parName = $"@P{ParameterNameCount++}";
+                par.ParameterName = parName;
+                return parName;
+            }
+            else
+            {
+                return "?";
+            }
+        }
+
         private void AppendBeginSql(string tableName)
         {
-            QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col=> QB + col+QE) )})");
+            QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
             if (IsAccessDatabase)
                 QueryText.AppendLine("  SELECT * FROM (");
             else

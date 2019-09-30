@@ -27,6 +27,7 @@ namespace ALE.ETLBox.DataFlow
         public TableDefinition DestinationTableDefinition { get; set; }
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         public string TableName { get; set; }
+        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         public List<TInput> DeltaTable { get; set; } = new List<TInput>();
 
@@ -158,8 +159,8 @@ namespace ALE.ETLBox.DataFlow
             if (idsToDelete.Count() > 0)
             {
                 new SqlTask(this, $@"
-            DELETE FROM {TableName} 
-            WHERE {MergeIdColumnName} IN (
+            DELETE FROM {TN.QuotatedFullName} 
+            WHERE {QB}{MergeIdColumnName}{QE} IN (
             {String.Join(",", idsToDelete)}
             )")
                 {

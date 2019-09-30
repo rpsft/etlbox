@@ -93,24 +93,25 @@ SELECT  cols.name
      , compCol.definition AS computed_column_definition
 FROM sys.columns cols
 INNER JOIN sys.tables tbl
-  ON cols.object_id = tbl.object_id
+    ON cols.object_id = tbl.object_id
 INNER JOIN sys.schemas sc
-  ON tbl.schema_id = sc.schema_id
+    ON tbl.schema_id = sc.schema_id
 INNER JOIN sys.systypes tpes
-  ON tpes.xtype = cols.system_type_id
+    ON tpes.xtype = cols.system_type_id
 LEFT JOIN sys.identity_columns ident
-  ON ident.object_id = cols.object_id
+    ON ident.object_id = cols.object_id
 LEFT JOIN sys.key_constraints pkconstr
-  ON pkconstr.parent_object_id = cols.object_id
-  AND ISNULL(pkconstr.type,'') = 'PK'
+    ON pkconstr.parent_object_id = cols.object_id
+    AND ISNULL(pkconstr.type,'') = 'PK'
 LEFT JOIN sys.default_constraints defconstr
-  ON defconstr.parent_object_id = cols.object_id
-  AND defconstr.parent_column_id = cols.column_id
+    ON defconstr.parent_object_id = cols.object_id
+    AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
-  ON compCol.object_id = cols.object_id
+    ON compCol.object_id = cols.object_id
 WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tableName}' OR  tbl.name = '{tableName}' )
-  AND tbl.type = 'U'
-  AND tpes.name <> 'sysname'
+    AND tbl.type = 'U'
+    AND tpes.name <> 'sysname'
+ORDER BY cols.column_id
 "
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
@@ -172,27 +173,28 @@ SELECT cols.column_name
   , cols.column_default
   , cols.collation_name
   , cols.generation_expression
-  FROM INFORMATION_SCHEMA.COLUMNS cols
-  INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
+FROM INFORMATION_SCHEMA.COLUMNS cols
+INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
     AND cols.table_schema = tbl.table_schema
     AND cols.table_catalog = tbl.table_catalog
-  LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
-   ON cols.table_name = k.table_name
-   AND cols.table_schema = k.table_schema
+LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
+    ON cols.table_name = k.table_name
+    AND cols.table_schema = k.table_schema
     AND cols.table_catalog = k.table_catalog
-   AND cols.column_name = k.column_name
-  AND k.constraint_name = 'PRIMARY'
-  WHERE ( cols.table_name = '{tableName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{tableName}')
-  AND cols.table_schema = DATABASE()
+    AND cols.column_name = k.column_name
+    AND k.constraint_name = 'PRIMARY'
+WHERE ( cols.table_name = '{tableName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{tableName}')
+    AND cols.table_schema = DATABASE()
+ORDER BY cols.ordinal_position
 "
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
             , column_name => curCol.Name = column_name.ToString()
             , data_type => curCol.DataType = data_type.ToString()
-            , is_nullable => curCol.AllowNulls = (long)is_nullable == 1 ? true : false
-            , auto_increment => curCol.IsIdentity = (long)auto_increment == 1 ? true : false
-             , primary_key => curCol.IsPrimaryKey = (long)primary_key == 1 ? true : false
+            , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
+            , auto_increment => curCol.IsIdentity = (int)auto_increment == 1 ? true : false
+             , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
             , column_default => curCol.DefaultValue = column_default?.ToString()
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
@@ -213,25 +215,26 @@ SELECT cols.column_name
             var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
 $@" 
 SELECT cols.column_name
-  , cols.data_type
-  , CASE WHEN cols.is_nullable = 'NO' THEN 0 ELSE 1 END AS ""is_nullable""
-  , CASE WHEN cols.column_default IS NOT NULL AND substring(cols.column_default,0,8) = 'nextval' THEN 1 ELSE 0 END AS ""serial""
-  , CASE WHEN k.constraint_name IS NULL THEN 0 ELSE 1 END AS ""primary_key""
-  , cols.column_default
-  , cols.collation_name
-  , cols.generation_expression
-  FROM INFORMATION_SCHEMA.COLUMNS cols
-  INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
+, cols.data_type
+, CASE WHEN cols.is_nullable = 'NO' THEN 0 ELSE 1 END AS ""is_nullable""
+, CASE WHEN cols.column_default IS NOT NULL AND substring(cols.column_default,0,8) = 'nextval' THEN 1 ELSE 0 END AS ""serial""
+, CASE WHEN k.constraint_name IS NULL THEN 0 ELSE 1 END AS ""primary_key""
+, cols.column_default
+, cols.collation_name
+, cols.generation_expression
+FROM INFORMATION_SCHEMA.COLUMNS cols
+INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
     AND cols.table_schema = tbl.table_schema
     AND cols.table_catalog = tbl.table_catalog
-  LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
-   ON cols.table_name = k.table_name
-   AND cols.table_schema = k.table_schema
+LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
+    ON cols.table_name = k.table_name
+    AND cols.table_schema = k.table_schema
     AND cols.table_catalog = k.table_catalog
-   AND cols.column_name = k.column_name
-  WHERE(cols.table_name = '{tableName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tableName}')
-  AND cols.table_catalog = CURRENT_DATABASE()
+    AND cols.column_name = k.column_name
+WHERE(cols.table_name = '{tableName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tableName}')
+    AND cols.table_catalog = CURRENT_DATABASE()
+ORDER BY cols.ordinal_position
 "
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }

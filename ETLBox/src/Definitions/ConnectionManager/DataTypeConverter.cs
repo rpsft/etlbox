@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.ConnectionManager
 {
     public static class DataTypeConverter
     {
@@ -60,17 +60,46 @@ namespace ALE.ETLBox.Helper
             dbSpecificTypeName = dbSpecificTypeName.Trim().ToLower();
             switch (dbSpecificTypeName)
             {
-                case "bit": return "System.Boolean";
-                case "tinyint": return "System.UInt16";
-                case "smallint": return "System.Int16";
-                case "int": return "System.Int32";
-                case "bigint": return "System.Int64";
-                case "decimal": return "System.Decimal";
-                case "number": return "System.Decimal";
-                case "datetime": return "System.DateTime";
-                case "datetime2": return "System.DateTime";
-                case "uniqueidentifier": return "System.Guid";
-                default: return "System.String";
+                case "bit":
+                case "boolean":
+                    return "System.Boolean";
+                case "tinyint":
+                    return "System.UInt16";
+                case "smallint":
+                case "int2":
+                    return "System.Int16";
+                case "int":
+                case "int4":
+                case "int8":
+                case "integer":
+                    return "System.Int32";
+                case "bigint":
+                    return "System.Int64";
+                case "decimal":
+                case "number":
+                case "money":
+                case "numeric":
+                    return "System.Decimal";
+                case "real":
+                case "float":
+                case "float4":
+                case "float8":
+                    return "System.Float";
+                case "double":
+                    return "System.Double";
+                case "date":
+                case "datetime":
+                case "datetime2":
+                case "time":
+                case "timetz":
+                case "timestamp":
+                case "timestamptz":
+                    return "System.DateTime";
+                case "uniqueidentifier":
+                case "uuid":
+                    return "System.Guid";
+                default:
+                    return "System.String";
             }
         }
 
@@ -119,6 +148,8 @@ namespace ALE.ETLBox.Helper
                     if (typeName.StartsWith("N"))
                         return typeName.Substring(1);
                 }
+                if (typeName == "DATETIME")
+                    return "DATE";
                 return dbSpecificTypeName;
             }
             else

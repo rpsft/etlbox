@@ -186,7 +186,7 @@ GROUP BY TaskHash")
             //Act
             IfTableOrViewExistsTask.IsExisting(Connection, "IfExistsTable");
             //Assert
-            Assert.Equal(2, CountLogEntries("IfTableExistsTask"));
+            Assert.Equal(2, CountLogEntries("IfTableOrViewExistsTask"));
         }
 
 

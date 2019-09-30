@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithBatchChanges(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationBatchChanges");
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBDestinationBatchChanges");
             DBDestination dest = new DBDestination(connection, "DBDestinationBatchChanges", batchSize: 2)
             {
                 BeforeBatchWrite = rowArray =>
@@ -49,8 +49,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(3, RowCountTask.Count(connection, "DBDestinationBatchChanges"));
-            Assert.Equal(2, RowCountTask.Count(connection, "DBDestinationBatchChanges", "Col2='NewValue'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "DBDestinationBatchChanges", "Col1 = 2 AND Col2='Test2'"));
+            Assert.Equal(2, RowCountTask.Count(connection, "DBDestinationBatchChanges", $"{d2c.QB}Col2{d2c.QE}='NewValue'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DBDestinationBatchChanges", $"{d2c.QB}Col1{d2c.QE} = 2 AND {d2c.QB}Col2{d2c.QE}='Test2'"));
         }
     }
 }

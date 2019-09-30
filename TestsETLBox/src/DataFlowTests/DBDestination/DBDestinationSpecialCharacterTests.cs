@@ -30,14 +30,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void InsertTestData(IConnectionManager connection, string tableName)
         {
+            var TN = new TableNameDescriptor(tableName, connection);
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {tableName} VALUES(1,'\0 \"" \b \n \r \t \Z \\ \% \_ ')");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'\0 \"" \b \n \r \t \Z \\ \% \_ ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {tableName} VALUES(2,' '' """" ')");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(2,' '' """" ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                 , $@"INSERT INTO {tableName} VALUES(3,' !""§$%&/())='' ')");
+                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(3,' !""§$%&/())='' ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {tableName} VALUES(4,NULL)");
+                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(4,NULL)");
         }
 
         [Theory, MemberData(nameof(OdbcConnections)),
@@ -45,21 +46,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SpecialCharacterSource");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SpecialCharacterSource");
             InsertTestData(connection, "SpecialCharacterSource");
 
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "SpecialCharacterDestination");
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "SpecialCharacterDestination");
 
             //Act
             DBSource source = new DBSource()
             {
                 ConnectionManager = connection,
-                SourceTableDefinition = source2Columns.TableDefinition
+                SourceTableDefinition = s2c.TableDefinition
             };
             DBDestination dest = new DBDestination()
             {
                 ConnectionManager = connection,
-                DestinationTableDefinition = dest2Columns.TableDefinition
+                DestinationTableDefinition = d2c.TableDefinition
             };
             source.LinkTo(dest);
             source.Execute();

@@ -38,6 +38,7 @@ namespace ALE.ETLBox.ConnectionManager
             var cmd = DbConnection.CreateCommand();
             cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
             cmd.CommandText = sql;
+            cmd.Prepare();
             cmd.ExecuteNonQuery();
             //            var records = new List<object>
             //    {

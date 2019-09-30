@@ -31,7 +31,7 @@ namespace ALE.ETLBox.ConnectionManager
                 return @"[";
             else if (type == ConnectionManagerType.MySql)
                 return @"`";
-            else if (type == ConnectionManagerType.Postgres)
+            else if (type == ConnectionManagerType.Postgres ||type == ConnectionManagerType.SQLite)
                 return @"""";
             else
                 return string.Empty;

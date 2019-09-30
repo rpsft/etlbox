@@ -47,7 +47,8 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!HasSourceTableDefinition)
                         LoadTableDefinition();
-                    return $@"SELECT {SourceTableDefinition.Columns.AsString("" ,QB, QE)} FROM {QB}{SourceTableDefinition.Name}{QE}";
+                    var TN = new TableNameDescriptor(SourceTableDefinition.Name, ConnectionType);
+                    return $@"SELECT {SourceTableDefinition.Columns.AsString("" ,QB, QE)} FROM {TN.QuotatedFullName}";
                 }
 
             }
@@ -68,7 +69,8 @@ namespace ALE.ETLBox.DataFlow
 
         private List<string> ParseColumnNamesFromSql()
         {
-            var statement = TSQLStatementReader.ParseStatements(SqlForRead).FirstOrDefault() as TSQLSelectStatement;
+            var sql = QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead;
+            var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
 
             List<string> columNames = statement?.Select
                                                 .Tokens
