@@ -27,6 +27,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowSource"),
                 (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowDestination")
             },
+            new object[] {
+                (IConnectionManager)Config.MySqlConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.MySqlConnection.ConnectionManager("DataFlowDestination")
+            },
+            new object[] {
+                (IConnectionManager)Config.PostgresConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.PostgresConnection.ConnectionManager("DataFlowDestination")
+            },
             //Mixed
             new object[] {
                 (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowSource"),
@@ -36,6 +44,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 (IConnectionManager)Config.SQLiteConnection.ConnectionManager("DataFlowSource"),
                 (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowDestination")
             },
+            new object[] {
+                (IConnectionManager)Config.MySqlConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.PostgresConnection.ConnectionManager("DataFlowDestination")
+            },
+                new object[] {
+                (IConnectionManager)Config.SqlConnection.ConnectionManager("DataFlowSource"),
+                (IConnectionManager)Config.PostgresConnection.ConnectionManager("DataFlowDestination")
+            }
 
         };
 

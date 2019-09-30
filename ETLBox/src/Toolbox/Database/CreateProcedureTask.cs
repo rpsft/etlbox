@@ -25,17 +25,16 @@ namespace ALE.ETLBox.ControlFlow {
 
         /* Public properties */
         public string ProcedureName { get; set; }
+        public TableNameDescriptor PN => new TableNameDescriptor(ProcedureName, ConnectionType);
         public string ProcedureDefinition { get; set; }
         public IList<ProcedureParameter> ProcedureParameters { get; set; }
-        public string Sql => $@"{CreateOrAlterSql} PROCEDURE {ProcedureName}
-{ParameterDefinition}
-AS
-BEGIN
-SET NOCOUNT ON
+        public string Sql => $@"{CreateOrAlterSql} PROCEDURE {PN.QuotatedFullName}{ParameterDefinition}{Language}
+{AS}
+{BEGIN}
 
 {ProcedureDefinition}
 
-END
+{END}
         ";
 
         public CreateProcedureTask() {
@@ -70,9 +69,28 @@ END
 
         bool IsExisting { get; set; }
         string CreateOrAlterSql => IsExisting ? "ALTER" : "CREATE";
-        string ParameterDefinition => ProcedureParameters?.Count > 0 ?
+        string ParameterDefinition
+        {
+            get
+            {
+                string result = "";
+                if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.MySql
+
+                    )
+                    result += "(";
+                result += ProcedureParameters?.Count > 0 ?
                 String.Join("," + Environment.NewLine, ProcedureParameters.Select(par => par.Sql))
                 : String.Empty;
+                if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.MySql)
+                    result += ")";
+                return result;
+            }
+        }
 
+        string Language => this.ConnectionType == ConnectionManagerType.Postgres ?
+            Environment.NewLine + "LANGUAGE SQL" : "";
+        string BEGIN => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "BEGIN";
+        string END => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "END";
+        string AS => this.ConnectionType == ConnectionManagerType.MySql ? "" : "AS";
     }
 }
