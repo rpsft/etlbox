@@ -8,18 +8,6 @@ namespace ALE.ETLBox {
         public bool HasDefaultValue => !String.IsNullOrWhiteSpace(DefaultValue);
         public bool ReadOnly { get; set; }
         public bool Out { get; set; }
-        public string Sql {
-            get {
-                string sql = $@"@{Name} {DataType}";
-                if (HasDefaultValue)
-                    sql += $" = {DefaultValue}";
-                if (Out)
-                    sql += " OUT";
-                if (ReadOnly)
-                    sql += " READONLY";
-                return sql;
-            }
-        }
 
         public ProcedureParameter() {
         }

@@ -61,6 +61,12 @@ namespace ALE.ETLBox.Helper
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) },
         };
 
+        public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section) => new[] {
+                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) },
+        };
+
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },

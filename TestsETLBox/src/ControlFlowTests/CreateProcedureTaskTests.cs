@@ -15,7 +15,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     {
         //public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
         public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
 
         public CreateProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
@@ -25,7 +25,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             //Act
-            CreateProcedureTask.CreateOrAlter(connection, "Proc1", "SELECT 1 AS Test");
+            CreateProcedureTask.CreateOrAlter(connection, "Proc1", "SELECT 1;");
             //Assert
             IfProcedureExistsTask.IsExisting(connection, "Proc1");
         }
@@ -34,14 +34,14 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void AlterProcedure(IConnectionManager connection)
         {
             //Arrange
-            CreateProcedureTask.CreateOrAlter(connection, "dbo.Proc2", "SELECT 1 AS Test");
-            Assert.Equal(1, RowCountTask.Count(connection, "sys.objects",
-                "type = 'P' AND object_id = object_id('dbo.Proc2') AND create_date = modify_date"));
+            CreateProcedureTask.CreateOrAlter(connection, "Proc2", "SELECT 1;");
+            IfProcedureExistsTask.IsExisting(connection, "Proc2");
+
             //Act
-            CreateProcedureTask.CreateOrAlter(connection, "dbo.Proc2", "SELECT 5 AS Test");
+            CreateProcedureTask.CreateOrAlter(connection, "Proc2", "SELECT 5;");
+
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, "sys.objects",
-                "type = 'P' AND object_id = object_id('dbo.Proc2') AND create_date <> modify_date"));
+            IfProcedureExistsTask.IsExisting(connection, "Proc2");
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -49,16 +49,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             List<ProcedureParameter> pars = new List<ProcedureParameter>() {
-                new ProcedureParameter("Par1", "varchar(10)"),
-                new ProcedureParameter("Par2", "int", "7"),
+                new ProcedureParameter("Par1", "VARCHAR(10)"),
+                new ProcedureParameter("Par2", "INT", "7"),
             };
             //Act
-            CreateProcedureTask.CreateOrAlter(connection, "dbo.Proc3", "SELECT 1 AS Test", pars);
+            CreateProcedureTask.CreateOrAlter(connection, "Proc3", "SELECT 1;", pars);
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, "sys.objects",
-                "type = 'P' AND object_id = object_id('dbo.Proc3')"));
-            Assert.Equal(2, RowCountTask.Count(connection, "sys.parameters",
-                "object_id = object_id('dbo.Proc3')"));
+            IfProcedureExistsTask.IsExisting(connection, "Proc3");
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -69,15 +66,12 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new ProcedureParameter("Par1", "varchar(10)"),
                 new ProcedureParameter("Par2", "int", "7"),
             };
-            ProcedureDefinition procDef = new ProcedureDefinition("dbo.Proc4", "SELECT 1 AS Test", pars);
+            ProcedureDefinition procDef = new ProcedureDefinition("Proc4", "SELECT 1;", pars);
             //Act
             CreateProcedureTask.CreateOrAlter(connection, procDef);
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, "sys.objects",
-                "type = 'P' AND object_id = object_id('dbo.Proc4')"));
-            Assert.Equal(2, RowCountTask.Count(connection, "sys.parameters",
-                "object_id = object_id('dbo.Proc4')"));
-       }
+            IfProcedureExistsTask.IsExisting(connection, "Proc4");
+        }
 
         [Fact]
         public void NotSupportedWithSQLite()
