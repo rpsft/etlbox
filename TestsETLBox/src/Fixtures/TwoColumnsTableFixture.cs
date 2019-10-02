@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.Fixtures
 
         public void RecreateTable()
         {
-            DropTableTask.Drop(Connection, TableName);
+            DropTableTask.DropIfExists(Connection, TableName);
 
             TableDefinition = new TableDefinition(TableName
                 , new List<TableColumn>() {

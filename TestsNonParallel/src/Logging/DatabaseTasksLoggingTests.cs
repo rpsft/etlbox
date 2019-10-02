@@ -109,7 +109,7 @@ GROUP BY TaskHash")
             //Arrange
             CreateSimpleTable("etl.DropTableLog");
             //Act
-            DropTableTask.Drop(Connection, "etl.DropTableLog");
+            DropTableTask.DropIfExists(Connection, "etl.DropTableLog");
             //Assert
             Assert.Equal(2, CountLogEntries("DropTableTask"));
         }

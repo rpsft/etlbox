@@ -5,31 +5,14 @@ namespace ALE.ETLBox.ControlFlow
     /// <summary>
     /// Drops a procedure if the procedure exists.
     /// </summary>
-    public class DropProcedureTask : GenericTask, ITask
+    public class DropProcedureTask : DropTask<IfProcedureExistsTask>, ITask
     {
-        /* ITask Interface */
-        public override string TaskName => $"Drop Procedure {ProcedureName}";
-        public override void Execute()
+        internal override string GetSql()
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-
-            bool procExists = new IfProcedureExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (procExists)
-                new SqlTask(this, Sql).ExecuteNonQuery();
+            return $@"DROP PROCEDURE {QB}{ObjectName}{QE}";
         }
-
-        /* Public properties */
-        public string ProcedureName { get; set; }
-        public string Sql
-        {
-            get
-            {
-                return $@"DROP PROCEDURE {ProcedureName}";
-            }
-        }
-
-        public void Drop() => Execute();
 
         /* Some constructors */
         public DropProcedureTask()
@@ -38,13 +21,20 @@ namespace ALE.ETLBox.ControlFlow
 
         public DropProcedureTask(string procedureName) : this()
         {
-            ProcedureName = procedureName;
+            ObjectName = procedureName;
         }
 
 
         /* Static methods for convenience */
-        public static void Drop(string procedureName) => new DropProcedureTask(procedureName).Execute();
-        public static void Drop(IConnectionManager connectionManager, string procedureName) => new DropProcedureTask(procedureName) { ConnectionManager = connectionManager }.Execute();
+        public static void Drop(string procedureName)
+            => new DropProcedureTask(procedureName).Drop();
+        public static void Drop(IConnectionManager connectionManager, string procedureName)
+            => new DropProcedureTask(procedureName) { ConnectionManager = connectionManager }.Drop();
+        public static void DropIfExists(string procedureName)
+            => new DropProcedureTask(procedureName).DropIfExists();
+        public static void DropIfExists(IConnectionManager connectionManager, string procedureName)
+            => new DropProcedureTask(procedureName) { ConnectionManager = connectionManager }.DropIfExists();
+
 
 
     }

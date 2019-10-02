@@ -7,7 +7,8 @@ namespace ALE.ETLBox.ControlFlow
     /// </summary>
     public class IfIndexExistsTask : IfExistsTask, ITask
     {
-        public string TableName { get; set; }
+
+        public string TableName => OnObjectName;
         /* ITask Interface */
         internal override string GetSql()
         {
@@ -21,7 +22,7 @@ SELECT 1 FROM sqlite_master WHERE name='{ObjectName}' AND type='index';
             {
                 return
     $@"
-IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}')
+IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}' AND object_id = OBJECT_ID('{TableName}'))
     SELECT 1
 ";
             }
@@ -54,14 +55,14 @@ WHERE     ( CONCAT(schemaname,'.',tablename) = '{TableName}'
         }
 
         /* Some constructors */
-        public IfIndexExistsTask() : base()
+        public IfIndexExistsTask()
         {
         }
 
         public IfIndexExistsTask(string indexName, string tableName) : this()
         {
             ObjectName = indexName;
-            TableName = tableName;
+            OnObjectName = tableName;
         }
 
 

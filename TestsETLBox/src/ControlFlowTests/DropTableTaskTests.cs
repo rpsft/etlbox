@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         { }
 
         [Theory, MemberData(nameof(Connections))]
-        public void DropTable(IConnectionManager connection)
+        public void Drop(IConnectionManager connection)
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
@@ -31,6 +31,22 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.False(IfTableOrViewExistsTask.IsExisting(connection, "DropTableTest"));
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void DropIfExists(IConnectionManager connection)
+        {
+            //Arrange
+            DropTableTask.DropIfExists(connection, "DropIfExistsTableTest");
+            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
+            CreateTableTask.Create(connection, "DropIfExistsTableTest", columns);
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropIfExistsTableTest"));
+
+            //Act
+            DropTableTask.DropIfExists(connection, "DropIfExistsTableTest");
+
+            //Assert
+            Assert.False(IfTableOrViewExistsTask.IsExisting(connection, "DropIfExistsTableTest"));
         }
     }
 }

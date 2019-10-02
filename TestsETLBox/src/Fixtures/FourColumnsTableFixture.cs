@@ -49,7 +49,7 @@ namespace ALE.ETLBoxTests.Fixtures
 
         public void RecreateTable(int identityColumnIndex)
         {
-            DropTableTask.Drop(Connection, TableName);
+            DropTableTask.DropIfExists(Connection, TableName);
             bool hasIdentityCol = identityColumnIndex >= 0;
             var columns = new ObservableCollection<TableColumn>()
             {

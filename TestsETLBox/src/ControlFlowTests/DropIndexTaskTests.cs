@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         { }
 
         [Theory, MemberData(nameof(Connections))]
-        public void DropIndex(IConnectionManager connection)
+        public void Drop(IConnectionManager connection)
         {
             //Arrange
             CreateTableTask.Create(connection, "DropIndexTable", new List<TableColumn>()
@@ -35,6 +35,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.False(IfIndexExistsTask.IsExisting(connection, "IndexToDrop", "DropIndexTable"));
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void DropIfExists(IConnectionManager connection)
+        {
+            //Arrange
+            DropIndexTask.DropIfExists(connection, "IndexIfExists", "DropIfExistsIndexTable");
+            CreateTableTask.Create(connection, "DropIfExistsIndexTable", new List<TableColumn>()
+            {
+                new TableColumn("Test1", "INT")
+            });
+            CreateIndexTask.CreateOrRecreate(connection, "IndexIfExists", "DropIfExistsIndexTable",
+                new List<string>() { "Test1" });
+            Assert.True(IfIndexExistsTask.IsExisting(connection, "IndexIfExists", "DropIfExistsIndexTable"));
+
+            //Act
+            DropIndexTask.DropIfExists(connection, "IndexIfExists", "DropIfExistsIndexTable");
+
+            //Assert
+            Assert.False(IfIndexExistsTask.IsExisting(connection, "IndexIfExists", "DropIfExistsIndexTable"));
         }
     }
 }

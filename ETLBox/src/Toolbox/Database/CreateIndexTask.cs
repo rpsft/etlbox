@@ -20,7 +20,7 @@ namespace ALE.ETLBox.ControlFlow
         public override void Execute()
         {
             if (new IfIndexExistsTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists())
-                new DropIndexTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
+                new DropIndexTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.DropIfExists();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 

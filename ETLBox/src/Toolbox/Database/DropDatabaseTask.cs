@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow
+{
     /// <summary>
     /// Tries to drop a database if the database exists.
     /// </summary>
@@ -9,69 +10,52 @@ namespace ALE.ETLBox.ControlFlow {
     /// DropDatabaseTask.Delete("DemoDB");
     /// </code>
     /// </example>
-    public class DropDatabaseTask : GenericTask, ITask
+    public class DropDatabaseTask : DropTask<IfDatabaseExistsTask>, ITask
     {
-        /* ITask Interface */
-        public override string TaskName => $"Drop DB {DatabaseName}";
-        public override void Execute()
+        internal override string GetSql()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            new SqlTask(this, Sql).ExecuteNonQuery();
-        }
 
-        public void Drop() => Execute();
-
-        /* Public properties */
-        public string DatabaseName { get; set; }
-        public string Sql
-        {
-            get
+            if (ConnectionType == ConnectionManagerType.SqlServer)
             {
-                if (ConnectionType == ConnectionManagerType.SqlServer)
-                {
-                    return
-    $@"
-IF (db_id('{DatabaseName}') IS NOT NULL)
-BEGIN
-    USE [master]
-    ALTER DATABASE [{DatabaseName}]
-    SET SINGLE_USER WITH ROLLBACK IMMEDIATE
-    ALTER DATABASE [{DatabaseName}]
-    SET MULTI_USER
-    DROP DATABASE [{DatabaseName}]  
-END
+                return
+$@"
+USE [master]
+ALTER DATABASE [{ObjectName}]
+SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+ALTER DATABASE [{ObjectName}]
+SET MULTI_USER
+DROP DATABASE [{ObjectName}]  
 ";
-                }
-                else if (ConnectionType == ConnectionManagerType.MySql
-                    || ConnectionType == ConnectionManagerType.Postgres
-                    )
-                {
-                    return $@"DROP DATABASE IF EXISTS {QB}{DatabaseName}{QB}";
-                }
-                else
-                {
-                    return $@"DROP DATABASE {DatabaseName}";
-                }
+            }
+            else if (ConnectionType == ConnectionManagerType.SQLite)
+            {
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            }
+            else 
+            {
+                return $@"DROP DATABASE {QB}{ObjectName}{QE}";
             }
         }
 
         /* Some constructors */
-        public DropDatabaseTask() {
+        public DropDatabaseTask()
+        {
         }
 
         public DropDatabaseTask(string databaseName) : this()
         {
-            DatabaseName = databaseName;
+            ObjectName = databaseName;
         }
 
 
         /* Static methods for convenience */
-        public static void Drop(string databaseName) => new DropDatabaseTask(databaseName).Execute();
-        public static void Drop(IConnectionManager connectionManager, string databaseName) => new DropDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Execute();
-
-        /* Implementation & stuff */
+        public static void Drop(string databaseName)
+            => new DropDatabaseTask(databaseName).Drop();
+        public static void Drop(IConnectionManager connectionManager, string databaseName)
+            => new DropDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Drop();
+        public static void DropIfExists(string databaseName)
+            => new DropDatabaseTask(databaseName).DropIfExists();
+        public static void DropIfExists(IConnectionManager connectionManager, string databaseName)
+            => new DropDatabaseTask(databaseName) { ConnectionManager = connectionManager }.DropIfExists();
     }
-
-
 }

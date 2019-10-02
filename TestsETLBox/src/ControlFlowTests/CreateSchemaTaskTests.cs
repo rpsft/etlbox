@@ -13,19 +13,19 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class CreateSchemaTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
         public CreateSchemaTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Fact]
-        public void CreateSchema()
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateSchema(IConnectionManager connection)
         {
             //Arrange
             string schemaName = "s" + HashHelper.RandomString(9);
             //Act
-            CreateSchemaTask.Create(Connection, schemaName);
+            CreateSchemaTask.Create(connection, schemaName);
             //Assert
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.schemas",
+            Assert.Equal(1, RowCountTask.Count(connection, "sys.schemas",
                 $"schema_name(schema_id) = '{schemaName}'"));
 
         }

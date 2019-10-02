@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void CreateSourceTable(string tableName)
         {
-            DropTableTask.Drop(ConnectionSource, tableName);
+            DropTableTask.DropIfExists(ConnectionSource, tableName);
             TableDefinition sourceTable = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("id", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("name", "NVARCHAR(100)", allowNulls: false),
@@ -47,7 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void CreateDestinationTable(string tableName)
         {
-            DropTableTask.Drop(ConnectionDestination, tableName);
+            DropTableTask.DropIfExists(ConnectionDestination, tableName);
             TableDefinition sourceTable = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("id", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("name", "NVARCHAR(100)", allowNulls: false),

@@ -50,7 +50,7 @@ WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ObjectName}'
         }
 
         /* Some constructors */
-        public IfProcedureExistsTask() : base()
+        public IfProcedureExistsTask()
         {
         }
 

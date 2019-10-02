@@ -12,7 +12,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class CreateDatabaseTaskTests
     {
-        public SqlConnectionManager MasterConnection => new SqlConnectionManager(Config.SqlConnectionString("ControlFlow").GetMasterConnection());
+        public SqlConnectionManager SqlMasterConnection => new SqlConnectionManager(Config.SqlConnectionString("ControlFlow").GetMasterConnection());
         public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
                     new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
                     new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
@@ -61,13 +61,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             DropDatabaseTask.Drop(connection, dbName);
         }
 
-        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
-
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => CreateDatabaseTask.Create(SQLiteConnection, "Test")
+                () => CreateDatabaseTask.Create(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
     }

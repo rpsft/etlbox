@@ -13,7 +13,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class IfDatabaseExistsTaskTests
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
 
         public IfDatabaseExistsTaskTests()
         { }
@@ -21,30 +21,27 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void IfDatabaseExists(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(SQLiteConnectionManager))
-            {
-                //Arrange
-                string dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
-                var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            //Arrange
+            string dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
+            var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
-                //Act
-                SqlTask.ExecuteNonQuery(connection, "Create DB", $"CREATE DATABASE {dbName}");
-                var existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            //Act
+            SqlTask.ExecuteNonQuery(connection, "Create DB", $"CREATE DATABASE {dbName}");
+            var existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
-                //Assert
-                Assert.False(existsBefore);
-                Assert.True(existsAfter);
+            //Assert
+            Assert.False(existsBefore);
+            Assert.True(existsAfter);
 
-                //Cleanup
-                DropDatabaseTask.Drop(connection, dbName);
-            }
+            //Cleanup
+            DropDatabaseTask.Drop(connection, dbName);
         }
 
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => CreateDatabaseTask.Create(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
+                () => IfDatabaseExistsTask.IsExisting(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
     }

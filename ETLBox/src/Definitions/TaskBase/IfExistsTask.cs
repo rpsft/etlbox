@@ -17,6 +17,7 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public string ObjectName { get; set; }
+        internal string OnObjectName { get; set; }
         public bool DoesExist { get; private set; }
 
         public string Sql { get

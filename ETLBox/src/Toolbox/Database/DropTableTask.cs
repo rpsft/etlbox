@@ -3,31 +3,14 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a table if the table exists.
+    /// Drops a table. Use DropIfExists to drop a table only if it exists.
     /// </summary>
-    public class DropTableTask : GenericTask, ITask
+    public class DropTableTask : DropTask<IfTableOrViewExistsTask>, ITask
     {
-        /* ITask Interface */
-        public override string TaskName => $"Drop Table {TableName}";
-        public override void Execute()
+        internal override string GetSql()
         {
-            bool tableExists = new IfTableOrViewExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (tableExists)
-                new SqlTask(this, Sql).ExecuteNonQuery();
+            return $@"DROP TABLE {ON.QuotatedFullName}";
         }
-
-        /* Public properties */
-        public string TableName { get; set; }
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
-        public string Sql
-        {
-            get
-            {
-                return $@"DROP TABLE {TN.QuotatedFullName}";
-            }
-        }
-
-        public void Drop() => Execute();
 
         /* Some constructors */
         public DropTableTask()
@@ -36,14 +19,19 @@ namespace ALE.ETLBox.ControlFlow
 
         public DropTableTask(string tableName) : this()
         {
-            TableName = tableName;
+            ObjectName = tableName;
         }
 
 
         /* Static methods for convenience */
-        public static void Drop(string tableName) => new DropTableTask(tableName).Execute();
-        public static void Drop(IConnectionManager connectionManager, string tableName) => new DropTableTask(tableName) { ConnectionManager = connectionManager }.Execute();
-
+        public static void Drop(string tableName)
+            => new DropTableTask(tableName).Drop();
+        public static void Drop(IConnectionManager connectionManager, string tableName)
+            => new DropTableTask(tableName) { ConnectionManager = connectionManager }.Drop();
+        public static void DropIfExists(string tableName)
+            => new DropTableTask(tableName).DropIfExists();
+        public static void DropIfExists(IConnectionManager connectionManager, string tableName)
+            => new DropTableTask(tableName) { ConnectionManager = connectionManager }.DropIfExists();
 
     }
 

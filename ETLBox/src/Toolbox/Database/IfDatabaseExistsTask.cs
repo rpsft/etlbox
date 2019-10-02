@@ -22,13 +22,17 @@ namespace ALE.ETLBox.ControlFlow
             {
                 return $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ObjectName}'";
             }
+            else if (this.ConnectionType == ConnectionManagerType.SQLite)
+            {
+                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            }
             else
             {
                 return string.Empty;
             }
         }
         /* Some constructors */
-        public IfDatabaseExistsTask() : base()
+        public IfDatabaseExistsTask()
         {
         }
 

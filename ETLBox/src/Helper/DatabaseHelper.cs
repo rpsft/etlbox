@@ -15,7 +15,7 @@ namespace ALE.ETLBox.Helper
             {
                 DisableLogging = true,
                 ConnectionManager = connManagerMaster
-            }.Drop();
+            }.DropIfExists();
 
             new CreateDatabaseTask(dbName)
             {

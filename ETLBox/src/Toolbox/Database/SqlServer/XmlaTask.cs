@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow {
+namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// <summary>
     /// This task can exeucte any XMLA.
     /// </summary>

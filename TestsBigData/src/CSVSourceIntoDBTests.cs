@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTests.BigData
 
         private TableDefinition CreateDestinationTable(IConnectionManager connection, string tableName)
         {
-            DropTableTask.Drop(connection, tableName);
+            DropTableTask.DropIfExists(connection, tableName);
             TableDefinition stagingTable = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("Col1", "CHAR(255)", allowNulls: false),
                 new TableColumn("Col2", "CHAR(255)", allowNulls: false),

@@ -13,33 +13,54 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class DropDatabaseTaskTests
     {
         public SqlConnectionManager MasterConnection => new SqlConnectionManager(Config.SqlConnectionString("ControlFlow").GetMasterConnection());
+        public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
+                    new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
+                    new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
+                    new object[] { (IConnectionManager)new MySqlConnectionManager(Config.MySqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
+        };
         public DropDatabaseTaskTests()
         { }
 
-        [Fact]
-        public void Drop()
+        [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
+        public void Drop(IConnectionManager connection)
         {
             //Arrange
             string dbName = "ETLBox_"+HashHelper.RandomString(10);
-            var sqlTask = new SqlTask("Get assert data", $"select cast(db_id('{dbName}') as int)")
-            {
-                ConnectionManager = MasterConnection
-            };
-            CreateDatabaseTask.Create(MasterConnection, dbName);
-            Assert.True(sqlTask.ExecuteScalarAsBool());
+            CreateDatabaseTask.Create(connection, dbName);
+            bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
+
             //Act
-            DropDatabaseTask.Drop(MasterConnection, dbName);
+            DropDatabaseTask.Drop(connection, dbName);
+
             //Assert
-            Assert.False(sqlTask.ExecuteScalarAsBool());
+            bool existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            Assert.True(existsBefore);
+            Assert.False(existsAfter);
         }
 
-        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+        [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
+        public void DropIfExists(IConnectionManager connection)
+        {
+            //Arrange
+            string dbName = "ETLBox_" + HashHelper.RandomString(10);
+            DropDatabaseTask.DropIfExists(connection, dbName);
+            CreateDatabaseTask.Create(connection, dbName);
+            bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
+
+            //Act
+            DropDatabaseTask.DropIfExists(connection, dbName);
+
+            //Assert
+            bool existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            Assert.True(existsBefore);
+            Assert.False(existsAfter);
+        }
 
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => DropDatabaseTask.Drop(SQLiteConnection, "Test")
+                () => DropDatabaseTask.Drop(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
 

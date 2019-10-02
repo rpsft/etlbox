@@ -3,31 +3,15 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a view if the view exists.
+    /// Drops a view. Use DropIfExists to drop a view only if it exists. 
     /// </summary>
-    public class DropViewTask : GenericTask, ITask
+    public class DropViewTask : DropTask<IfTableOrViewExistsTask>, ITask
     {
-        /* ITask Interface */
-        public override string TaskName => $"Drop View {ViewName}";
-        public override void Execute()
+        /* Implementation */
+        internal override string GetSql()
         {
-            bool viewExists = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (viewExists)
-                new SqlTask(this, Sql).ExecuteNonQuery();
+                return $@"DROP VIEW {ON.QuotatedFullName}";
         }
-
-        /* Public properties */
-        public string ViewName { get; set; }
-        public TableNameDescriptor TN => new TableNameDescriptor(ViewName, ConnectionType);
-        public string Sql
-        {
-            get
-            {
-                return $@"DROP VIEW {TN.QuotatedFullName}";
-            }
-        }
-
-        public void Drop() => Execute();
 
         /* Some constructors */
         public DropViewTask()
@@ -36,13 +20,19 @@ namespace ALE.ETLBox.ControlFlow
 
         public DropViewTask(string viewName) : this()
         {
-            ViewName = viewName;
+            ObjectName = viewName;
         }
 
-
         /* Static methods for convenience */
-        public static void Drop(string viewName) => new DropViewTask(viewName).Execute();
-        public static void Drop(IConnectionManager connectionManager, string viewName) => new DropViewTask(viewName) { ConnectionManager = connectionManager }.Execute();
+        public static void Drop(string viewName)
+            => new DropViewTask(viewName).Drop();
+        public static void Drop(IConnectionManager connectionManager, string viewName)
+            => new DropViewTask(viewName) { ConnectionManager = connectionManager }.Drop();
+        public static void DropIfExists(string viewName)
+            => new DropViewTask(viewName).DropIfExists();
+        public static void DropIfExists(IConnectionManager connectionManager, string viewName)
+            => new DropViewTask(viewName) { ConnectionManager = connectionManager }.DropIfExists();
+
     }
 
 

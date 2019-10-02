@@ -16,30 +16,26 @@ namespace ALE.ETLBox.ControlFlow
             }
             else if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
-                return
-    $@"
-        IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}' )
-            SELECT 1
-        IF ( OBJECT_ID('{ObjectName}') IS NOT NULL)
-            SELECT 1";
+                return  $@"IF ( OBJECT_ID('{ObjectName}', 'U') IS NOT NULL OR OBJECT_ID('{ObjectName}', 'V') IS NOT NULL)
+    SELECT 1";
             }
             else if (this.ConnectionType == ConnectionManagerType.MySql)
             {
                 return $@"SELECT EXISTS(
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = DATABASE()
-            AND ( table_name = '{ObjectName}' OR CONCAT(table_catalog, '.', table_name) = '{ObjectName}')
-        ) AS 'DoesExist'";
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = DATABASE()
+    AND ( table_name = '{ObjectName}' OR CONCAT(table_catalog, '.', table_name) = '{ObjectName}')
+) AS 'DoesExist'";
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {
                 return $@"SELECT EXISTS(
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_catalog = CURRENT_DATABASE()
-            AND ( table_name = '{ObjectName}' OR CONCAT(table_schema, '.', table_name) = '{ObjectName}')
-        )";
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_catalog = CURRENT_DATABASE()
+    AND ( table_name = '{ObjectName}' OR CONCAT(table_schema, '.', table_name) = '{ObjectName}')
+)";
             }
             else
             {
@@ -48,7 +44,7 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         /* Some constructors */
-        public IfTableOrViewExistsTask() : base()
+        public IfTableOrViewExistsTask()
         {
         }
 

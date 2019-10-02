@@ -13,32 +13,46 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class DropProcedureTaskTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
 
         public DropProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Fact]
-        public void DropProcedure()
+        [Theory, MemberData(nameof(Connections))]
+        public void Drop(IConnectionManager connection)
         {
             //Arrange
-            CreateProcedureTask.CreateOrAlter(SqlConnection, "DropProc1", "SELECT 1");
-            Assert.True(IfTableOrViewExistsTask.IsExisting(SqlConnection, "DropProc1"));
+            CreateProcedureTask.CreateOrAlter(connection, "DropProc1", "SELECT 1;");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "DropProc1"));
 
             //Act
-            DropProcedureTask.Drop(SqlConnection, "DropProc1");
+            DropProcedureTask.Drop(connection, "DropProc1");
 
             //Assert
-            Assert.False(IfTableOrViewExistsTask.IsExisting(SqlConnection, "DropProc1"));
+            Assert.False(IfProcedureExistsTask.IsExisting(connection, "DropProc1"));
         }
 
-        public SQLiteConnectionManager SQLiteConnection => Config.SQLiteConnection.ConnectionManager("ControlFlow");
+        [Theory, MemberData(nameof(Connections))]
+        public void DropIfExists(IConnectionManager connection)
+        {
+            //Arrange
+            DropProcedureTask.DropIfExists(connection, "DropProc2");
+            CreateProcedureTask.CreateOrAlter(connection, "DropProc2", "SELECT 1;");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "DropProc2"));
+
+            //Act
+            DropProcedureTask.DropIfExists(connection, "DropProc2");
+
+            //Assert
+            Assert.False(IfProcedureExistsTask.IsExisting(connection, "DropProc2"));
+        }
+
 
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => DropProcedureTask.Drop(SQLiteConnection, "Test")
+                () => DropProcedureTask.Drop(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
     }
