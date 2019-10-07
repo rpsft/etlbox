@@ -4,43 +4,40 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>It's all in the box! Run all your ETL jobs with this awesome C# class library.
-
-ETLBox is a comprehensive C# class library that is able to manage your whole ETL or ELT. You can use it to run some simple (or complex) sql against your database. You can easily manage your database using some easy-to-use and easy-to-understand objects. You can even create your own dataflow, where data is send from a source to a target and transformed on its way.</Description>
+    <Description>It's all in the box! Run all your ETL or ELT jobs with this C# class library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. files, Excel or databases. ETLbox currently supports SqlServer, SQLite, MySql and Postgres (and limited support for Access and SSIS). Furthermore, ETLBox offers control flow tasks that wraps sql in easy-to-use C# objects.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
-    <PackageReleaseNotes>Adding support for SQLite.
-</PackageReleaseNotes>
-    <Version>1.5.0</Version>
+    <PackageReleaseNotes>Adding support for MySql and Postgres.</PackageReleaseNotes>
+    <Version>1.6.0</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.5.0.0</AssemblyVersion>
-    <FileVersion>1.5.0.0</FileVersion>
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="12.1.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="150.18147.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="150.18178.0" />
     <PackageReference Include="MySql.Data" Version="8.0.17" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NLog" Version="4.6.6" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="1.5.2" />
-    <PackageReference Include="Npgsql" Version="4.0.10" />
+    <PackageReference Include="NLog" Version="4.6.7" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.5.4" />
+    <PackageReference Include="Npgsql" Version="4.1.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.Odbc" Version="4.5.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="System.Data.Odbc" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
-    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.9.0" />
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.10.0" />
     <PackageReference Include="TSQL.Parser" Version="1.2.8" />
-    <PackageReference Include="Unofficial.Microsoft.AnalysisServices.AdomdClientNetCore" Version="15.3.1.1" />
+    <PackageReference Include="Unofficial.Microsoft.AnalysisServices.AdomdClientNetCore" Version="15.3.1.2" />
   </ItemGroup>
 
 </Project>

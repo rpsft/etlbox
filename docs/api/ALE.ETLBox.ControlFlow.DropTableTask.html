@@ -87,14 +87,15 @@
   
   <h1 id="ALE_ETLBox_ControlFlow_DropTableTask" data-uid="ALE.ETLBox.ControlFlow.DropTableTask" class="text-break">Class DropTableTask
   </h1>
-  <div class="markdown level0 summary"><p>Drops a table if the table exists.</p>
+  <div class="markdown level0 summary"><p>Drops a table. Use DropIfExists to drop a table only if it exists.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
-    <div class="level2"><span class="xref">DropTableTask</span></div>
+    <div class="level2"><a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html">DropTask</a>&lt;<a class="xref" href="ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.html">IfTableOrViewExistsTask</a>&gt;</div>
+    <div class="level3"><span class="xref">DropTableTask</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -103,6 +104,30 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_TaskName">DropTask&lt;IfTableOrViewExistsTask&gt;.TaskName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_Execute">DropTask&lt;IfTableOrViewExistsTask&gt;.Execute()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_ObjectName">DropTask&lt;IfTableOrViewExistsTask&gt;.ObjectName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_ON">DropTask&lt;IfTableOrViewExistsTask&gt;.ON</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_Sql">DropTask&lt;IfTableOrViewExistsTask&gt;.Sql</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_Drop">DropTask&lt;IfTableOrViewExistsTask&gt;.Drop()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html#ALE_ETLBox_ControlFlow_DropTask_1_DropIfExists">DropTask&lt;IfTableOrViewExistsTask&gt;.DropIfExists()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
     </div>
     <div>
@@ -110,6 +135,12 @@
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_ConnectionType">GenericTask.ConnectionType</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_QB">GenericTask.QB</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_QE">GenericTask.QE</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask__disableLogging">GenericTask._disableLogging</a>
@@ -146,7 +177,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_ControlFlow_DropTableTask_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DropTableTask : GenericTask, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class DropTableTask : DropTask&lt;IfTableOrViewExistsTask&gt;, ITask</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -155,7 +186,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L33">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L16">View Source</a>
   </span>
   <a id="ALE_ETLBox_ControlFlow_DropTableTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.#ctor*"></a>
   <h4 id="ALE_ETLBox_ControlFlow_DropTableTask__ctor" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.#ctor">DropTableTask()</h4>
@@ -170,7 +201,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L37">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L20">View Source</a>
   </span>
   <a id="ALE_ETLBox_ControlFlow_DropTableTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.#ctor*"></a>
   <h4 id="ALE_ETLBox_ControlFlow_DropTableTask__ctor_System_String_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.#ctor(System.String)">DropTableTask(String)</h4>
@@ -197,155 +228,14 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_Sql.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.Sql%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L22">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_ControlFlow_DropTableTask_Sql_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Sql*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_Sql" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Sql">Sql</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Sql { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_TableName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.TableName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L21">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_ControlFlow_DropTableTask_TableName_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.TableName*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_TableName" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.TableName">TableName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string TableName { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L12">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_ControlFlow_DropTableTask_TaskName_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.TaskName*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_TaskName" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.TaskName">TaskName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string TaskName { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_TaskType.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.TaskType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L11">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_ControlFlow_DropTableTask_TaskType_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.TaskType*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_TaskType" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.TaskType">TaskType</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string TaskType { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a></div>
   <h3 id="methods">Methods
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_Drop.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.Drop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L30">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_ControlFlow_DropTableTask_Drop_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Drop*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_Drop" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Drop">Drop()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Drop()</code></pre>
-  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_Drop_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.Drop(ALE.ETLBox.ConnectionManager.IConnectionManager%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L45">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L29">View Source</a>
   </span>
   <a id="ALE_ETLBox_ControlFlow_DropTableTask_Drop_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Drop*"></a>
   <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_Drop_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Drop(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)">Drop(IConnectionManager, String)</h4>
@@ -382,7 +272,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_Drop_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.Drop(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L44">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L27">View Source</a>
   </span>
   <a id="ALE_ETLBox_ControlFlow_DropTableTask_Drop_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Drop*"></a>
   <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_Drop_System_String_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Drop(System.String)">Drop(String)</h4>
@@ -411,21 +301,73 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_Execute.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.Execute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_DropIfExists_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.DropIfExists(ALE.ETLBox.ConnectionManager.IConnectionManager%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L13">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L33">View Source</a>
   </span>
-  <a id="ALE_ETLBox_ControlFlow_DropTableTask_Execute_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Execute*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_Execute" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.Execute">Execute()</h4>
+  <a id="ALE_ETLBox_ControlFlow_DropTableTask_DropIfExists_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.DropIfExists*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_DropIfExists_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.DropIfExists(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)">DropIfExists(IConnectionManager, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void Execute()</code></pre>
+    <pre><code class="lang-csharp hljs">public static void DropIfExists(IConnectionManager connectionManager, string tableName)</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_Execute">GenericTask.Execute()</a></div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></td>
+        <td><span class="parametername">connectionManager</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_ControlFlow_DropTableTask_DropIfExists_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.ControlFlow.DropTableTask.DropIfExists(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/Database/DropTableTask.cs/#L31">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_ControlFlow_DropTableTask_DropIfExists_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.DropIfExists*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_DropTableTask_DropIfExists_System_String_" data-uid="ALE.ETLBox.ControlFlow.DropTableTask.DropIfExists(System.String)">DropIfExists(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DropIfExists(string tableName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
