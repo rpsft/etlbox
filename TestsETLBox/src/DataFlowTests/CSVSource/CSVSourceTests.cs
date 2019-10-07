@@ -39,8 +39,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSource2Cols");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVSource2Cols");
 
             //Act
             CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
@@ -56,8 +56,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void CSVGenericWithSkipRows_DB()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceSkipRows");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVSourceSkipRows");
 
             //Act
             CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumnsSkipRows.csv");

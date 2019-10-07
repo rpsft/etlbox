@@ -15,6 +15,7 @@ namespace ALE.ETLBox.DataFlow
         internal string MergeIdColumnName { get; set; }
         internal int PropertyLength { get; set; }
         internal bool IsArray { get; set; } = true;
+        internal int ArrayLength { get; set; }
 
         internal TypeInfo(Type typ)
         {
@@ -41,6 +42,10 @@ namespace ALE.ETLBox.DataFlow
                     AddMergeIdColumnNameAttribute(propInfo);
                     index++;
                 }
+            }
+            else
+            {
+                ArrayLength = typ.GetArrayRank();
             }
 
         }
@@ -86,7 +91,8 @@ namespace ALE.ETLBox.DataFlow
             else
                 return PropertyNames.Any(propName => propName == name);
         }
-        internal PropertyInfo GetInfoByPropertyNameOrColumnMapping(string propNameOrColMapName) {
+        internal PropertyInfo GetInfoByPropertyNameOrColumnMapping(string propNameOrColMapName)
+        {
             PropertyInfo result = null;
             if (ColumnMap2Property.ContainsKey(propNameOrColMapName))
                 result = Properties[PropertyIndex[ColumnMap2Property[propNameOrColMapName]]];
