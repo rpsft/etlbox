@@ -11,25 +11,29 @@ using Xunit;
 namespace ALE.ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
-    public class CreateSchemaTaskTests
+    public class IfSchemaExistsTaskTests
     {
         public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
-        public CreateSchemaTaskTests(ControlFlowDatabaseFixture dbFixture)
+
+        public IfSchemaExistsTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
         [Theory, MemberData(nameof(Connections))]
-        public void CreateSchema(IConnectionManager connection)
+        public void IfSchemaeExists(IConnectionManager connection)
         {
             if (connection.GetType() != typeof(MySqlConnectionManager))
             {
                 //Arrange
-                string schemaName = "s" + HashHelper.RandomString(9);
-                //Act
-                CreateSchemaTask.Create(connection, schemaName);
-                //Assert
-                Assert.True(IfSchemaExistsTask.IsExisting(connection, schemaName));
-            }
+                var existsBefore = IfSchemaExistsTask.IsExisting(connection, "testschema");
+                CreateSchemaTask.Create(connection, "testschema");
 
+                //Act
+                var existsAfter = IfSchemaExistsTask.IsExisting(connection, "testschema");
+
+                //Assert
+                Assert.False(existsBefore);
+                Assert.True(existsAfter);
+            }
         }
     }
 }

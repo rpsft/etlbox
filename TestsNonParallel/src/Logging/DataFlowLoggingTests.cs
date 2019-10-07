@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTests.Logging
             {
                 ConnectionManager = Connection,
                 DisableLogging = true
-            }.Drop();
+            }.DropIfExists();
 
             new CreateTableTask(new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("Col1", "INT", allowNulls: false),

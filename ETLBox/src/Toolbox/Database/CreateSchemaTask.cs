@@ -18,16 +18,16 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            new SqlTask(this, Sql).ExecuteNonQuery();
+            if (ConnectionType == ConnectionManagerType.MySql)
+                throw new ETLBoxNotSupportedException("This task is not supported with MySql! To create a database, use the CreateDatabaseTask instead.");
+            bool schemaExists = new IfSchemaExistsTask(SchemaName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            if (!schemaExists)
+                new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
         /* Public properties */
         public string SchemaName { get; set; }
-        public string Sql => $@"
-IF NOT EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{SchemaName}')
-BEGIN
-	EXEC sp_executesql N'CREATE SCHEMA [{SchemaName}]'
-END";
+        public string Sql => $@"CREATE SCHEMA {QB}{SchemaName}{QE}";
 
         public CreateSchemaTask()
         {
