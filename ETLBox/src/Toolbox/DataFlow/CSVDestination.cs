@@ -23,84 +23,55 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class CSVDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
+    public class CSVDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Write Data batchwise into file {FileName}";
 
-        /* Public properties */
         public string FileName { get; set; }
         public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
-        public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
-        public Action OnCompletion { get; set; }
-        public Configuration Configuration
-        {
-            get
-            {
-                return configuration;
-            }
-            set
-            {
-                configuration = value;
-                CsvWriter = new CsvWriter(StreamWriter, value, leaveOpen: true);
+        public Configuration Configuration { get; set; }
 
-            }
-        }
-
-        public ITargetBlock<TInput> TargetBlock => Buffer;
-
-        /* Private stuff */
-        int BatchSize { get; set; } = DEFAULT_BATCH_SIZE;
-        const int DEFAULT_BATCH_SIZE = 1000;
-        private Configuration configuration;
-
-        internal BatchBlock<TInput> Buffer { get; set; }
-        internal ActionBlock<TInput[]> TargetAction { get; set; }
-        private int ThresholdCount { get; set; } = 1;
-        TypeInfo TypeInfo { get; set; }
+        internal const int DEFAULT_BATCH_SIZE = 1000;
         StreamWriter StreamWriter { get; set; }
         CsvWriter CsvWriter { get; set; }
 
         public CSVDestination()
         {
-            InitObjects(DEFAULT_BATCH_SIZE);
-
+            BatchSize = DEFAULT_BATCH_SIZE;
         }
 
         public CSVDestination(int batchSize)
         {
             BatchSize = batchSize;
-            InitObjects(batchSize);
         }
 
-        public CSVDestination(string fileName)
+        public CSVDestination(string fileName) : this()
         {
             FileName = fileName;
-            InitObjects(DEFAULT_BATCH_SIZE);
         }
 
-        public CSVDestination(string fileName, int batchSize)
+        public CSVDestination(string fileName, int batchSize) : this(batchSize)
         {
             FileName = fileName;
-            InitObjects(batchSize);
         }
 
-        private void InitObjects(int batchSize)
+        internal override void InitObjects(int batchSize)
         {
-            Buffer = new BatchBlock<TInput>(batchSize);
-            TargetAction = new ActionBlock<TInput[]>(d => WriteBatch(d));
-            Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
-            TypeInfo = new TypeInfo(typeof(TInput));
-            StreamWriter = new StreamWriter(FileName);
+            base.InitObjects(batchSize);
             Configuration = new Configuration(CultureInfo.InvariantCulture);
         }
 
-        private void WriteBatch(TInput[] data)
+        internal void InitCsvWriter()
         {
+            StreamWriter = new StreamWriter(FileName);
+            CsvWriter = new CsvWriter(StreamWriter, Configuration, leaveOpen: true);
+        }
 
-            if (ProgressCount == 0) NLogStart();
-            if (BeforeBatchWrite != null)
-                data = BeforeBatchWrite.Invoke(data);
+        internal override void WriteBatch(ref TInput[] data)
+        {
+            if (CsvWriter == null) InitCsvWriter();
+            base.WriteBatch(ref data);
             if (TypeInfo.IsArray)
                 WriteArray(data);
             else
@@ -130,36 +101,13 @@ namespace ALE.ETLBox.DataFlow
             CsvWriter?.Dispose();
             StreamWriter?.Dispose();
         }
-        public void Wait()
+
+        public override void Wait()
         {
             TargetAction.Completion.Wait();
             CloseStreams();
             OnCompletion?.Invoke();
             NLogFinish();
-        }
-
-        void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && ProgressCount >= (LoggingThresholdRows * ThresholdCount))
-            {
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-                ThresholdCount++;
-            }
         }
     }
 

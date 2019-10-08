@@ -18,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DBDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
+    public class DBDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Write Data batchwise into table {DestinationTableDefinition.Name}";
@@ -27,98 +27,60 @@ namespace ALE.ETLBox.DataFlow
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         public string TableName { get; set; }
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
-        public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
-        public Action OnCompletion { get; set; }
 
-        public ITargetBlock<TInput> TargetBlock => Buffer;
 
-        /* Private stuff */
-        int BatchSize { get; set; } = DEFAULT_BATCH_SIZE;
-        const int DEFAULT_BATCH_SIZE = 1000;
-        internal BatchBlock<TInput> Buffer { get; set; }
-        internal ActionBlock<TInput[]> TargetAction { get; set; }
-        private int ThresholdCount { get; set; } = 1;
-        TypeInfo TypeInfo { get; set; }
+        internal const int DEFAULT_BATCH_SIZE = 1000;
+
+
         public DBDestination()
         {
-            InitObjects(DEFAULT_BATCH_SIZE);
-
+            BatchSize = DEFAULT_BATCH_SIZE;
         }
 
         public DBDestination(int batchSize)
         {
             BatchSize = batchSize;
-            InitObjects(batchSize);
         }
 
-        public DBDestination(TableDefinition tableDefinition)
-        {
-            DestinationTableDefinition = tableDefinition;
-            InitObjects(DEFAULT_BATCH_SIZE);
-        }
-
-        public DBDestination(string tableName)
+        public DBDestination(string tableName) : this()
         {
             TableName = tableName;
-            InitObjects(DEFAULT_BATCH_SIZE);
         }
 
-        public DBDestination(IConnectionManager connectionManager, string tableName)
+        public DBDestination(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;
-            TableName = tableName;
-            InitObjects(DEFAULT_BATCH_SIZE);
         }
 
-        public DBDestination(string tableName, int batchSize)
+        public DBDestination(string tableName, int batchSize) : this(batchSize)
         {
             TableName = tableName;
-            InitObjects(batchSize);
         }
 
-        public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize)
+        public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize) : this(tableName, batchSize)
         {
             ConnectionManager = connectionManager;
-            TableName = tableName;
-            InitObjects(batchSize);
         }
 
-        public DBDestination(TableDefinition tableDefinition, int batchSize)
+        internal override void InitObjects(int batchSize)
         {
-            DestinationTableDefinition = tableDefinition;
-            BatchSize = batchSize;
-            InitObjects(batchSize);
+            base.InitObjects(batchSize);
         }
 
-        public DBDestination(string name, TableDefinition tableDefinition, int batchSize)
-        {
-            this.TaskName = name;
-            DestinationTableDefinition = tableDefinition;
-            BatchSize = batchSize;
-            InitObjects(batchSize);
-        }
-
-        private void InitObjects(int batchSize)
-        {
-            Buffer = new BatchBlock<TInput>(batchSize);
-            TargetAction = new ActionBlock<TInput[]>(d => WriteBatch(d));
-            Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
-            TypeInfo = new TypeInfo(typeof(TInput));
-        }
-
-        private void WriteBatch(TInput[] data)
+        internal override void WriteBatch(ref TInput[] data)
         {
             if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
-            if (ProgressCount == 0) NLogStart();
-            if (BeforeBatchWrite != null)
-                data = BeforeBatchWrite.Invoke(data);
+
+            base.WriteBatch(ref data);
+
             TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
             td.Rows = ConvertRows(data);
             new SqlTask(this, $"Execute Bulk insert into {DestinationTableDefinition.Name}")
             {
                 DisableLogging = true
             }
-            .BulkInsert(td, DestinationTableDefinition.Name);
+                .BulkInsert(td, DestinationTableDefinition.Name);
+
             LogProgress(data.Length);
         }
 
@@ -129,7 +91,6 @@ namespace ALE.ETLBox.DataFlow
             else if (!HasDestinationTableDefinition && !HasTableName)
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
-
 
         private List<object[]> ConvertRows(TInput[] data)
         {
@@ -156,36 +117,11 @@ namespace ALE.ETLBox.DataFlow
             return result;
         }
 
-        public void Wait()
+        public override void Wait()
         {
-            TargetAction.Completion.Wait();
-            OnCompletion?.Invoke();
-            NLogFinish();
+            base.Wait();
         }
 
-        void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && ProgressCount >= (LoggingThresholdRows * ThresholdCount))
-            {
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-                ThresholdCount++;
-            }
-        }
     }
 
     /// <summary>
@@ -207,8 +143,6 @@ namespace ALE.ETLBox.DataFlow
 
         public DBDestination(int batchSize) : base(batchSize) { }
 
-        public DBDestination(TableDefinition tableDefinition) : base(tableDefinition) { }
-
         public DBDestination(string tableName) : base(tableName) { }
 
         public DBDestination(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
@@ -216,10 +150,6 @@ namespace ALE.ETLBox.DataFlow
         public DBDestination(string tableName, int batchSize) : base(tableName, batchSize) { }
 
         public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize) { }
-
-        public DBDestination(TableDefinition tableDefinition, int batchSize) : base(tableDefinition, batchSize) { }
-
-        public DBDestination(string name, TableDefinition tableDefinition, int batchSize) : base(name, tableDefinition, batchSize) { }
     }
 
 }

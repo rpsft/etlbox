@@ -59,8 +59,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CSVSource source = new CSVSource("res/UseCases/AccessData.csv");
-            DBDestination<string[]> dest = new DBDestination<string[]>(testTable, batchSize: 2)
+            DBDestination<string[]> dest = new DBDestination<string[]>(batchSize: 2)
             {
+                DestinationTableDefinition = testTable,
                 ConnectionManager = AccessOdbcConnection
             };
             source.LinkTo(dest);
