@@ -13,7 +13,7 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"Create log tables";
-        public override void Execute()
+        public void Execute()
         {
             ExecuteTasks();
         }

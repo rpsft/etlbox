@@ -9,7 +9,7 @@ namespace ALE.ETLBox.Logging {
     public class ReadLoadProcessTableTask : GenericTask, ITask {
         /* ITask Interface */
         public override string TaskName => $"Read process with Key ({LoadProcessKey}) or without";
-        public override void Execute() {
+        public void Execute() {
             LoadProcess = new LoadProcess();
             var sql = new SqlTask(this, Sql) {
                 DisableLogging = true,

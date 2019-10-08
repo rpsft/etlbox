@@ -9,7 +9,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
-        public override void Execute()
+        public void Execute()
         {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if ( (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Postgres) && IsExisting)

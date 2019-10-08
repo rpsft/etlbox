@@ -22,7 +22,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Create table {TableName}";
-        public override void Execute()
+        public void Execute()
         {
             bool tableExists = new IfTableOrViewExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (tableExists && ThrowErrorIfTableExists) throw new ETLBoxException($"Table {TableName} already exists!");

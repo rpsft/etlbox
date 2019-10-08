@@ -6,7 +6,7 @@ namespace ALE.ETLBox.ControlFlow {
     /// </summary>
     public class Package : GenericTask, ITask {
         public override string TaskName { get; set; } = "Package";
-        public override void Execute() => new CustomTask(TaskName) { TaskType = this.TaskType, TaskHash = this.TaskHash }.Execute(Tasks);
+        public void Execute() => new CustomTask(TaskName) { TaskType = this.TaskType, TaskHash = this.TaskHash }.Execute(Tasks);
         public Action Tasks { get; set; }
 
         public Package() { }

@@ -11,7 +11,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Custom source";
-        public override void Execute() => ExecuteAsync();
+        public void Execute() => ExecuteAsync();
 
         /* Public properties */
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;

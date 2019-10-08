@@ -22,8 +22,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Write Data batchwise into table {DestinationTableDefinition.Name}";
-        public override void Execute() { throw new Exception("Dataflow destinations can't be started directly"); }
-
         /* Public properties */
         public TableDefinition DestinationTableDefinition { get; set; }
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;

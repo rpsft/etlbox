@@ -2,12 +2,11 @@
 
 namespace ALE.ETLBox {
     public interface ITask
-    {        
-        string TaskName { get; }
-        string TaskType { get; }
-        string TaskHash { get; }        
-        IConnectionManager ConnectionManager { get; }
-        bool DisableLogging { get; }
-        void Execute();
+    {
+        string TaskName { get; set; }
+        string TaskType { get; set; }
+        string TaskHash { get; set; }
+        IConnectionManager ConnectionManager { get; set; }
+        bool DisableLogging { get; set; }
     }
 }

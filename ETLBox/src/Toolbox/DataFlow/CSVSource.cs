@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read CSV Source data from file {FileName}";
-        public override void Execute() => ExecuteAsync();
+        public void Execute() => ExecuteAsync();
 
         /* Public properties */
         public Configuration Configuration { get; set; }

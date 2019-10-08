@@ -19,7 +19,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Count Rows for {TableName}" + (HasCondition ? $" with condition {Condition}" : "");
-        public override void Execute()
+        public void Execute()
         {
             if (this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.SqlServer
                 || this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.Access)

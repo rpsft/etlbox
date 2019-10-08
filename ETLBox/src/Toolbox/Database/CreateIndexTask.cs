@@ -17,7 +17,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Create index {IndexName} on table {TableName}";
-        public override void Execute()
+        public void Execute()
         {
             if (new IfIndexExistsTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists())
                 new DropIndexTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.DropIfExists();

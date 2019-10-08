@@ -15,7 +15,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
         public override string TaskName => $"Restore DB {DatabaseName} from {Path.GetFullPath(FileName)}";
 
 
-        public override void Execute()
+        public void Execute()
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");

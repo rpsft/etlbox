@@ -12,7 +12,7 @@ namespace ALE.ETLBox.Logging {
         /* ITask Interface */
         public override string TaskName => $"Get log as JSON for {LoadProcessKey}";
 
-        public override void Execute() {
+        public void Execute() {
             List<LogEntry> logEntries = ReadLogTableTask.Read(this.ConnectionManager, LoadProcessKey);
             CalculateEndDate(logEntries);
             LogHierarchyEntry hierarchy = CreateHierarchyStructure(logEntries);

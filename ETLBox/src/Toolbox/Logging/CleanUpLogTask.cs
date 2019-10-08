@@ -8,7 +8,7 @@ namespace ALE.ETLBox.Logging {
     public class CleanUpLogTask : GenericTask, ITask {
         /* ITask Interface */
         public override string TaskName => $"Clean up log tables";
-        public override void Execute() {
+        public void Execute() {
             new SqlTask(this, Sql) { DisableLogging = true, DisableExtension = true }.ExecuteNonQuery();
         }
 

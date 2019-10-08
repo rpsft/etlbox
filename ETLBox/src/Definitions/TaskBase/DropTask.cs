@@ -9,7 +9,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Drop Object {ObjectName}";
-        public override void Execute()
+        public void Execute()
         {
             bool objectExists = new T() { ObjectName = ObjectName, OnObjectName = OnObjectName, ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (objectExists)

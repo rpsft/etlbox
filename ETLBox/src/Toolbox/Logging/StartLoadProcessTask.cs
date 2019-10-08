@@ -11,7 +11,7 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"Start load process {ProcessName}";
-        public override void Execute()
+        public void Execute()
         {
             LoadProcessKey = new SqlTask(this, Sql)
             {

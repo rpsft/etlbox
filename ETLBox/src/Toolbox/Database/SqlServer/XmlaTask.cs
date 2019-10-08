@@ -14,7 +14,6 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// </example>
     public class XmlaTask : DbTask {
         public override string TaskName { get; set; } = "Run some xmla";
-        public override void Execute() => ExecuteNonQuery();
 
         public XmlaTask() {
             Init();

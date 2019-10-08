@@ -24,7 +24,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Block Transformation";
-        public override void Execute() { throw new Exception("Transformations can't be executed directly"); }
 
         /* Public Properties */
         public Func<List<TInput>, List<TOutput>> BlockTransformationFunc

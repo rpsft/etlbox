@@ -4,19 +4,18 @@ using CF = ALE.ETLBox.ControlFlow;
 using System;
 using ALE.ETLBox.Logging;
 
-namespace ALE.ETLBox {
+namespace ALE.ETLBox
+{
     public abstract class GenericTask : ITask
     {
         private string _taskType;
-        public virtual string TaskType { get => String.IsNullOrEmpty(_taskType) ? this.GetType().Name : _taskType;
-            set => _taskType = value; }
+        public virtual string TaskType
+        {
+            get => String.IsNullOrEmpty(_taskType) ? this.GetType().Name : _taskType;
+            set => _taskType = value;
+        }
         public virtual string TaskName { get; set; } = "N/A";
         public NLog.Logger NLogger { get; set; } = CF.ControlFlow.GetLogger();
-
-        public virtual void Execute()
-        {
-            throw new Exception("Not implemented!");
-        }
 
         public virtual IConnectionManager ConnectionManager { get; set; }
 

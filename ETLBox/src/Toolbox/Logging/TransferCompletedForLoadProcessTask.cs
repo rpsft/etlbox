@@ -10,7 +10,7 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"Set transfer completed for {LoadProcessKey}";
-        public override void Execute()
+        public void Execute()
         {
             new SqlTask(this, Sql).ExecuteNonQuery();
             var rlp = new ReadLoadProcessTableTask(LoadProcessKey)

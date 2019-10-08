@@ -14,7 +14,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
     {
         /* ITask Interface */
         public override string TaskName => $"Clean up schema {SchemaName}";
-        public override void Execute()
+        public void Execute()
         {
             if (ConnectionType != ConnectionManagerType.SqlServer)
                 throw new ETLBoxNotSupportedException("This task is only supported with SqlServer!");

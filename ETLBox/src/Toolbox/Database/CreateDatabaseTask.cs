@@ -15,7 +15,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Create DB {DatabaseName}";
-        public override void Execute()
+        public void Execute()
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");

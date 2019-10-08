@@ -14,7 +14,6 @@ namespace ALE.ETLBox.DataFlow
 
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Ignore data";
-        public override void Execute() { throw new Exception("Dataflow destinations can't be started directly"); }
 
         /* Public properties */
         public ITargetBlock<TInput> TargetBlock => _voidDestination?.TargetBlock;

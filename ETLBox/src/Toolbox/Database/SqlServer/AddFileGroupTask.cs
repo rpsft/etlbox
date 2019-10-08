@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
     public class AddFileGroupTask : GenericTask, ITask {
         /* ITask Interface */
         public override string TaskName => $"Create Filegroup {FileGroupName}";
-        public override void Execute()
+        public void Execute()
         {
             if (ConnectionType != ConnectionManagerType.SqlServer)
                 throw new ETLBoxNotSupportedException("This task is only supported with SqlServer!");

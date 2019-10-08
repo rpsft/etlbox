@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Insert, Upsert or delete in destination";
-        public override void Execute() => OutputSource.Execute();
+        public void Execute() => OutputSource.Execute();
 
         /* Public Properties */
         public ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;

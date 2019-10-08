@@ -27,7 +27,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Write Data batchwise into file {FileName}";
-        public override void Execute() { throw new Exception("Dataflow destinations can't be started directly"); }
 
         /* Public properties */
         public string FileName { get; set; }

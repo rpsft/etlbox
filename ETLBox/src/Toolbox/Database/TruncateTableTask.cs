@@ -14,7 +14,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Truncate table {TableName}";
-        public override void Execute()
+        public void Execute()
         {
             new SqlTask(this, Sql).ExecuteNonQuery();
         }

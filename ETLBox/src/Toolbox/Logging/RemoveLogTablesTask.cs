@@ -8,7 +8,7 @@ namespace ALE.ETLBox.Logging {
     public class RemoveLogTablesTask : GenericTask, ITask {
         /* ITask Interface */
         public override string TaskName => $"Remove log tables";
-        public override void Execute() => new SqlTask(this, Sql).ExecuteNonQuery();
+        public void Execute() => new SqlTask(this, Sql).ExecuteNonQuery();
         public string Sql => $@"
 if (object_id('etl.Log')  is not null) drop table etl.Log
 if (object_id('etl.LoadProcess')  is not null) drop table etl.LoadProcess

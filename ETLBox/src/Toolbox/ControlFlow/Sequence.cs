@@ -7,7 +7,7 @@ namespace ALE.ETLBox.ControlFlow {
     public class Sequence : GenericTask, ITask
     {
         public override string TaskName { get; set; } = "Sequence";
-        public override void Execute() => new CustomTask(TaskName) { TaskType = this.TaskType, TaskHash = this.TaskHash }.Execute(Tasks);
+        public void Execute() => new CustomTask(TaskName) { TaskType = this.TaskType, TaskHash = this.TaskHash }.Execute(Tasks);
         public Action Tasks { get; set; }
 
         public Sequence() {
@@ -38,7 +38,7 @@ namespace ALE.ETLBox.ControlFlow {
             this.Parent = parent;
         }
 
-        public override void Execute() => new CustomTask(TaskName).Execute(Tasks, Parent);
+        public void Execute() => new CustomTask(TaskName).Execute(Tasks, Parent);
 
         public static void Execute(string name, Action<T> tasks, T parent) => new Sequence<T>(name, tasks, parent).Execute();
     }

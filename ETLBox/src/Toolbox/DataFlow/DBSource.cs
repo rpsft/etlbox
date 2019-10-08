@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read DB data from {SourceDescription}";
-        public override void Execute() => ExecuteAsync();
+        public void Execute() => ExecuteAsync();
 
         /* Public Properties */
         public TableDefinition SourceTableDefinition { get; set; }

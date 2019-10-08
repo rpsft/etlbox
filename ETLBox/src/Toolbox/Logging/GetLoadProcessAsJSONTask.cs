@@ -13,7 +13,7 @@ namespace ALE.ETLBox.Logging
         /* ITask Interface */
         public override string TaskName => $"Get load process list as JSON";
 
-        public override void Execute()
+        public void Execute()
         {
             //TODO umschreiben in eine Zeile?
             var read = new ReadLoadProcessTableTask()

@@ -11,7 +11,7 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"End process with key {LoadProcessKey}";
-        public override void Execute()
+        public void Execute()
         {
             new SqlTask(this, Sql)
             {

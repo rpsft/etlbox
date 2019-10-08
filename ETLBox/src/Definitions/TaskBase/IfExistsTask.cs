@@ -9,7 +9,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Check if {ObjectName} exists";
-        public override void Execute()
+        public void Execute()
         {
             if (Sql != string.Empty)
                 DoesExist = new SqlTask(this, Sql).ExecuteScalarAsBool();
