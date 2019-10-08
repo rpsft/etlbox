@@ -22,7 +22,7 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the data flow
     /// </code>
     /// </example>
-    public class DBSource<TOutput> : DataFlowTask, ITask, IDataFlowSource<TOutput>
+    public class DBSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read DB data from {SourceDescription}";
@@ -67,27 +67,6 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        private List<string> ParseColumnNamesFromSql()
-        {
-            var sql = QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead;
-            var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
-
-            List<string> columNames = statement?.Select
-                                                .Tokens
-                                                .Where(token => token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
-                                                .Select(token => token.AsIdentifier.Name)
-                                                .ToList();
-            return columNames;
-        }
-
-        public void LoadTableDefinition()
-        {
-            if (HasTableName)
-                SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(TableName, this.ConnectionManager);
-            else if (!HasSourceTableDefinition && !HasTableName)
-                throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
-        }
-
         public string SourceDescription
         {
             get
@@ -100,18 +79,9 @@ namespace ALE.ETLBox.DataFlow
                     return "custom sql";
             }
         }
-        public ISourceBlock<TOutput> SourceBlock => this.Buffer;
 
-        /* Private stuff */
-        internal BufferBlock<TOutput> Buffer { get; set; }
         public DBSource()
         {
-            Buffer = new BufferBlock<TOutput>();
-        }
-
-        public DBSource(TableDefinition sourceTableDefinition) : this()
-        {
-            SourceTableDefinition = sourceTableDefinition;
         }
 
         public DBSource(string tableName) : this()
@@ -137,7 +107,7 @@ namespace ALE.ETLBox.DataFlow
             NLogFinish();
         }
 
-        public void ReadAll()
+        private void ReadAll()
         {
             new SqlTask(this, SqlForRead)
             {
@@ -146,42 +116,28 @@ namespace ALE.ETLBox.DataFlow
             }.Query<TOutput>(row => {
                 LogProgress(1);
                 Buffer.Post(row);
-              }  , ColumnNamesEvaluated);
+            }, ColumnNamesEvaluated);
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TOutput> target)
+        private List<string> ParseColumnNamesFromSql()
         {
-            Buffer.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            if (!DisableLogging)
-                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            var sql = QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead;
+            var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
+
+            List<string> columNames = statement?.Select
+                                                .Tokens
+                                                .Where(token => token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
+                                                .Select(token => token.AsIdentifier.Name)
+                                                .ToList();
+            return columNames;
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
+        private void LoadTableDefinition()
         {
-            Buffer.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
-            if (!DisableLogging)
-                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && ( ProgressCount % LoggingThresholdRows == 0 ))
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            if (HasTableName)
+                SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(TableName, this.ConnectionManager);
+            else if (!HasSourceTableDefinition && !HasTableName)
+                throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
     }
 
@@ -202,7 +158,6 @@ namespace ALE.ETLBox.DataFlow
     public class DBSource : DBSource<string[]>
     {
         public DBSource() : base() { }
-        public DBSource(TableDefinition sourceTableDefinition) : base(sourceTableDefinition) { }
         public DBSource(string tableName) : base(tableName) { }
         public DBSource(IConnectionManager connectionManager) : base(connectionManager) { }
         public DBSource(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }

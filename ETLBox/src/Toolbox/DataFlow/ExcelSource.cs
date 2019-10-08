@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow {
+namespace ALE.ETLBox.DataFlow
+{
     /// <summary>
     /// Reads data from a excel source. While reading the data from the file, data is also asnychronously posted into the targets.
     /// You can define a sheet name and a range - only the data in the specified sheet and range is read. Otherwise, all data
@@ -22,13 +23,13 @@ namespace ALE.ETLBox.DataFlow {
     ///  };
     /// </code>
     /// </example>
-    public class ExcelSource<TOutput> : DataFlowTask, ITask, IDataFlowSource<TOutput> where TOutput : new() {
+    public class ExcelSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput> where TOutput : new()
+    {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read Excel source data from file {FileName}";
         public void Execute() => ExecuteAsync();
 
         /* Public properties */
-        public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         public string FileName { get; set; }
         public string ExcelFilePassword { get; set; }
         public ExcelRange Range { get; set; }
@@ -38,35 +39,44 @@ namespace ALE.ETLBox.DataFlow {
         /* Private stuff */
         FileStream FileStream { get; set; }
         IExcelDataReader ExcelDataReader { get; set; }
-        BufferBlock<TOutput> Buffer { get; set; }
 
-        public ExcelSource() {
-            Buffer = new BufferBlock<TOutput>();
+        public ExcelSource()
+        {
         }
 
-        public ExcelSource(string fileName) : this() {
+        public ExcelSource(string fileName) : this()
+        {
             FileName = fileName;
         }
 
-        public void ExecuteAsync() {
+        public void ExecuteAsync()
+        {
             NLogStart();
             Open();
-            try {
+            try
+            {
                 ReadAll().Wait();
                 Buffer.Complete();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new ETLBoxException("Error during reading data from excel file - see inner exception for details.", e);
-            } finally {
+            }
+            finally
+            {
                 Close();
             }
             NLogFinish();
         }
 
-        private async Task ReadAll() {
-            do {
+        private async Task ReadAll()
+        {
+            do
+            {
                 int rowNr = 0;
                 TypeInfo typeInfo = new TypeInfo(typeof(TOutput));
-                while (ExcelDataReader.Read()) {
+                while (ExcelDataReader.Read())
+                {
                     if (ExcelDataReader.VisibleState != "visible") continue;
                     if (HasSheetName && ExcelDataReader.Name != SheetName) continue;
                     rowNr++;
@@ -77,14 +87,14 @@ namespace ALE.ETLBox.DataFlow {
                     LogProgress(1);
                 }
             } while (ExcelDataReader.NextResult());
-
-
         }
 
-        private TOutput ParseDataRow(TypeInfo typeInfo) {
+        private TOutput ParseDataRow(TypeInfo typeInfo)
+        {
             TOutput row = new TOutput();
             int colInRange = 0;
-            for (int col = 0; col < ExcelDataReader.FieldCount; col++) {
+            for (int col = 0; col < ExcelDataReader.FieldCount; col++)
+            {
                 if (HasRange && col > Range.EndColumnIfSet) break;
                 if (HasRange && (col + 1) < Range.StartColumn) continue;
                 if (colInRange > typeInfo.PropertyLength) break;
@@ -97,46 +107,15 @@ namespace ALE.ETLBox.DataFlow {
             return row;
         }
 
-        private void Open() {
+        private void Open()
+        {
             FileStream = File.Open(FileName, FileMode.Open, FileAccess.Read);
             ExcelDataReader = ExcelReaderFactory.CreateReader(FileStream, new ExcelReaderConfiguration() { Password = ExcelFilePassword });
         }
 
-        private void Close() {
+        private void Close()
+        {
             ExcelDataReader.Close();
-
-        }
-        public void LinkTo(IDataFlowLinkTarget<TOutput> target) {
-            Buffer.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            if (!DisableLogging)
-                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        public void LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate) {
-            Buffer.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
-            if (!DisableLogging)
-                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-        }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
     }
 }

@@ -62,7 +62,10 @@ namespace ALE.ETLBox.DataFlow
         {
             DestinationTableDefinition = tableDefinition;
             TableName = tableDefinition.Name;
-            DestinationTableAsSource = new DBSource<TInput>(DestinationTableDefinition);
+            DestinationTableAsSource = new DBSource<TInput>()
+            {
+                SourceTableDefinition = DestinationTableDefinition
+            };
             Init();
         }
 
