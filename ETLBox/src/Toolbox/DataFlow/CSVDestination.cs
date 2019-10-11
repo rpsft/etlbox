@@ -66,6 +66,7 @@ namespace ALE.ETLBox.DataFlow
         {
             StreamWriter = new StreamWriter(FileName);
             CsvWriter = new CsvWriter(StreamWriter, Configuration, leaveOpen: true);
+            this.CloseStreamsAction = CloseStreams;
         }
 
         internal override void WriteBatch(ref TInput[] data)
@@ -99,15 +100,7 @@ namespace ALE.ETLBox.DataFlow
             CsvWriter?.Flush();
             StreamWriter?.Flush();
             CsvWriter?.Dispose();
-            StreamWriter?.Dispose();
-        }
-
-        public override void Wait()
-        {
-            TargetAction.Completion.Wait();
-            CloseStreams();
-            OnCompletion?.Invoke();
-            NLogFinish();
+            StreamWriter?.Close();
         }
     }
 

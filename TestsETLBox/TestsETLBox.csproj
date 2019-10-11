@@ -39,10 +39,10 @@
     <None Update="db\SQLiteDataFlow.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="res\CSVDestination\TwoColumns.csv">
+    <None Update="res\CSVDestination\TwoColumnsSet3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="res\CSVDestination\TwoColumnsNoHeader.csv">
+    <None Update="res\CSVDestination\TwoColumnsSet3NoHeader.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="res\CSVSource\OneColumn.csv">
@@ -70,6 +70,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="default.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\JsonDestination\TwoColumnsSet3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\JsonDestination\TwoColumnsSet3StringArray.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="res\Multicast\CSVSourceToSplit.csv">

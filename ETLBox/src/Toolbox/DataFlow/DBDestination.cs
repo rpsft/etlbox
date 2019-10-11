@@ -117,11 +117,6 @@ namespace ALE.ETLBox.DataFlow
             return result;
         }
 
-        public override void Wait()
-        {
-            base.Wait();
-        }
-
     }
 
     /// <summary>

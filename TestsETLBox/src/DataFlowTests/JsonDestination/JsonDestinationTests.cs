@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationTests : IDisposable
+    public class JsonDestinationTests : IDisposable
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationTests(DataFlowDatabaseFixture dbFixture)
+        public JsonDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -30,11 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MySimpleRow
         {
-            [Name("Header2")]
-            [Index(2)]
             public string Col2 { get; set; }
-            [Name("Header1")]
-            [Index(1)]
             public int Col1 { get; set; }
         }
 
@@ -42,38 +38,38 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimple");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestSimple");
             s2C.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVDestSimple");
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "JsonDestSimple");
 
             //Act
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./SimpleWithObject.csv");
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./SimpleWithObject.json");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("./SimpleWithObject.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsSet3.csv"));
+            Assert.Equal(File.ReadAllText("./SimpleWithObject.json"),
+                File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json"));
         }
 
         [Fact]
         public void SimpleFlowWithBatchWrite()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestBatch");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestBatch");
             s2C.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVDestBatch");
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "JsonDestBatch");
 
             //Act
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./ObjectWithBatchWrite.csv", 2);
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./ObjectWithBatchWrite.json", 1);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("./ObjectWithBatchWrite.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsSet3.csv"));
+            Assert.Equal(File.ReadAllText("./ObjectWithBatchWrite.json"),
+                File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json"));
         }
     }
 }

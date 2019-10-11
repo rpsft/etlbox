@@ -11,6 +11,8 @@ namespace ALE.ETLBox.DataFlow
     {
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
         public Action OnCompletion { get; set; }
+        internal Action CloseStreamsAction { get; set; }
+
         public ITargetBlock<TInput> TargetBlock => Buffer;
 
         internal int BatchSize
@@ -71,6 +73,7 @@ namespace ALE.ETLBox.DataFlow
         public virtual void Wait()
         {
             TargetAction.Completion.Wait();
+            CloseStreamsAction?.Invoke();
             OnCompletion?.Invoke();
             NLogFinish();
         }
