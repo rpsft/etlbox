@@ -1,12 +1,12 @@
-#  <span><img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32" /> Welcome to ETLBox</span>
+# <span><img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32" /> Welcome to ETLBox</span>
 
-It's all in the box! Run all your ETL jobs with this awesome C# class library.
+It's all in the box! Run all your ETL or ELT jobs with this C# class library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources.
 
 ## ETLBox.net
 
-There is a new project homepage for ETLBox availabe: [etlbox.net](https://etlbox.net) contains all the information you need about ETLBox. There is a whole set of [introductional articles](https://etlbox.net/articles/getting_started.html), examples for [Control Flow Tasks](https://etlbox.net/articles/example_controlflow.html), [Data Flow Tasks](https://etlbox.net/articles/example_dataflow.html) and [Logging](https://etlbox.net/articles/example_logging.html), and finally a [complete API documentation](https://etlbox.net/api/index.html)!
+There is a project homepage for ETLBox availabe: [etlbox.net](https://etlbox.net) contains all the information you need about ETLBox. There is a whole set of [introductional articles](https://etlbox.net/articles/getting_started.html), examples for [Control Flow Tasks](https://etlbox.net/articles/example_controlflow.html), [Data Flow Tasks](https://etlbox.net/articles/example_dataflow.html) and [Logging](https://etlbox.net/articles/example_logging.html), and finally a [complete API documentation](https://etlbox.net/api/index.html).
 
-## See the video
+### See the video
 
 Watch a short video that introduces you into the basic concepts of ETLBox and how to create your own ETL process. [See the video on Youtube!](https://www.youtube.com/watch?v=CsWZuRpl6PA)
 
@@ -14,67 +14,46 @@ Watch a short video that introduces you into the basic concepts of ETLBox and ho
 
 ETLBox is a comprehensive C# class library that is able to manage your whole ETL or ELT. You can use it to run some simple (or complex) sql against your database. You can easily manage your database using some easy-to-use and easy-to-understand objects. Or you can create your own dataflow pipeline, where data is send from a source to a target and transformed on its way. All that comes with extended logging capabilites, that allow you to monitor and anlayze your ETL job runs.
 
-## Why ETLBox
+### Why ETLBox
 
-Perhaps you are looking for an alternative to Sql Server Integrations Services (SSIS). Or you are searching for a framework to define and run ETL jobs with C# code. The goal of ETLBox is to provide an easy-to-use but still powerful library with which you can create complex ETL routines and sophisticated data flows. 
+Perhaps you are looking for an alternative to Sql Server Integrations Services (SSIS). Or you are searching for a framework to define and run ETL jobs with C# code. The goal of ETLBox is to provide an easy-to-use but still powerful library with which you can create complex ETL routines and sophisticated data flows.
 
-## Advantages of using ETLBox
+### Advantages of using ETLBox
 
 **Build ETL in C#**: Code your ETL with a language fitting your team’s skills and that is coming with a mature toolset
 
 **Run locally**: Develop and test your ETL code locally on your desktop using your existing development & debugging tools.
 
-**Process In-Memory**: ETLBox comes with dataflow components that allow in-memory processing which is much faster than storing data on disk and processing later. 
+**Process In-Memory**: ETLBox comes with dataflow components that allow in-memory processing which is much faster than storing data on disk and processing later.
 
 **Know your errors**: When exceptions are raised you get the exact line of code where your ETL stopped, including a hands-on description of the error.
 
 **Manage Change**: Track you changes with git (or other source controls), code review your etl logic, and use your existing CI/CD processes.
 
-**Embedded or standalone**: With .net core and .net standard, etlbox is a self-deploying toolbox – usable where .net core runs. (.NET Core 2.1 or higher required)
+**Embedded or standalone**: With .NET core and .NET standard, etlbox is a self-deploying toolbox – usable whereever .NET runs. (.NET Standard 2.0 or higher required). Or just include the library as a reference to your existing .NET projects.
 
-# ETLBox capabilites
+### Supported sources and destinations
 
-ETLBox is split into two main components: Control Flow Tasks and Data Flow Tasks. Both components will provide customizable logging functionalities. 
+The following table shows which types of sources and destination are supported with the current version of ETLBox
 
-## Control Flow Tasks
+Source or Destination type|Supported by ETLBox|
+---------------------------|-------------------
+Sql Server|Full support
+Postgres|Full support
+SQLite|Full support
+MySql|Full support
+Files|Support for Json and CSV
+*Any other*|Supported by CustomSource/CustomDestination
 
-### Control Flow - overview 
+## ETLBox capabilities
+
+ETLBox is split into two main components: Data Flow and Control Flow Tasks. Both components will provide customizable logging functionalities.
+
+### Control Flow Tasks
+
+#### Control Flow - overview
 
 Control Flow Tasks gives you control over your database: They allow you to create or delete databases, tables, procedures, schemas, ... or other objects in your database. With these tasks you also can truncate your tables, count rows or execute *any* sql you like. Anything you can script in sql can be done here - but mostly with only one line of easy-to-read C# code. This improves the readability of your code a lot, and gives you more time to focus on your business logic. But Control Flow tasks are not restricted to databases only: e.g. you can even run an XMLA on your Sql Server Analysis Service.
-
-### Control Flow - example
-
-The easiest way to connect all your tasks to a database is to store the connection string in the Control Flow object
-
-```C#
-ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("...connection string...")); 
-```
-
-Afer this, you can basically execute any kind of control flow tasks, for instance: 
-
-Execute some sql on the DB.
-```C#
-SqlTask.ExecuteNonQuery("Do some sql",$@"EXEC dbo.myProc");
-```
-
-Count rows in a table.
-```C#
-int count = RowCountTask.Count("demo.table1").Value; 
-```
-
-Create or change a Stored Procedure.
-```C#
-CRUDProcedureTask.CreateOrAlter("demo.proc1", "select 1 as test");
-```
-
-Create a schema and a table.
-```C#
-CreateSchemaTask.Create("demo");
-CreateTableTask.Create("demo.table1", new List<TableColumn>() {
-    new TableColumn(name:"key",dataType:"int",allowNulls:false,isPrimaryKey:true, isIdentity:true),
-    new TableColumn(name:"value", dataType:"nvarchar(100)",allowNulls:true)
-});
-```
 
 ## Data Flow Tasks
 
@@ -119,7 +98,38 @@ source.Execute();
 dest.Wait();
 ```
 
-## Logging 
+#### Control Flow - example
+
+The easiest way to connect all your tasks to a database is to store the connection string in the Control Flow object
+
+```C#
+ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("...connection string...")); 
+```
+
+Afer this, you can basically execute any kind of control flow tasks, for instance: 
+
+Execute some sql on the DB.
+
+```C#
+SqlTask.ExecuteNonQuery("Do some sql",$@"EXEC dbo.myProc");
+```
+
+Count rows in a table.
+
+```C#
+int count = RowCountTask.Count("demo.table1").Value; 
+```
+
+Create a table using a `TableDefinition` object:
+
+```C#
+CreateTableTask.Create("Table1", new List<TableColumn>() {
+    new TableColumn(name:"key",dataType:"INT",allowNulls:false,isPrimaryKey:true, isIdentity:true),
+    new TableColumn(name:"value", dataType:"NVARCHAR(100)",allowNulls:true)
+});
+```
+
+## Logging
 
 ### Default logging with NLog
 
@@ -158,26 +168,9 @@ Once you have data in these log tables, you can use the [ETLBox LogViewer](https
     <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen2.png" width=350 alt="Process Details of ETLBox LogViewer" />
 </span>
 
+## Getting ETLBox
 
-
-## What is in there?
-
-A quick overview of some of the available tasks:
-
-**Control Flow**: AddFileGroupTask, CalculateDatabaseHashTask, CleanUpSchemaTask, CreateDatabaseTask, CreateIndexTask, CreateSchemaTask
- , CreateTableTask, CRUDProcedureTask, CRUDViewTask, DropDatabaseTask, DropTableTask, GetDatabaseListTask, RestoreDatabaseTask, RowCountTask, SqlTask, TruncateTableTask, XmlaTask, ConnectionManager (Sql, SMO, AdoMD, File), ControlFlow, Package, Sequence, CustomTask
-
-**Data Flow**: BlockTransformation, CSVSource, DBSource, CustomSource, DBDestination, CustomDestination, Lookup, MergeJoin, Multicast, RowTransformation, Sort
-
-**Logging**: AbortLoadProcessTask, CleanUpLogTask, CreateLogTablesTask, EndLoadProcessTask, GetLoadProcessAsJSONTask, GetLogAsJSONTask, LogTask, ReadLoadProcessTable, ReadLogTableTask, RemoveLogTablesTask, StartLoadProcessTask, TransferCompletedForLoadProcessTask
-
-.. and much more
-
-# Getting Started
-
-## Prerequisites
-
-You can use ETLBox within any .NET or .NET core project. 
+You can use ETLBox within any .NET or .NET core project that support .NET Standard 2.0.
 
 ## Adding ETLBox to your project
 
@@ -194,18 +187,18 @@ git clone https://github.com/roadrunnerlenny/etlbox.git
 ```
 
 Then, open the downloaded solution file ETLBox.sln with Visual Studio 2015 or higher.
-Now you can build the solution, and use it as a reference in your other projects. 
+Now you can build the solution, and use it as a reference in your other projects.
 
-## Open Source
+## Going further
+
+### Open Source
 
 Feel free to make changes or to fix bugs. Every particiation in this open source project is appreciated.
 
-# Going further
-
-## Test project
+### Test projects
 
 To dig deeper into it, have a look at the ETLBox tests within the solution. There is a test for (almost) everything that you can do with ETLToolbox.
 
-## ETLBox.net
+### ETLBox.net
 
 [See the ETLBox Project website](https://etlbox.net) for [introductional articles](https://etlbox.net/articles/getting_started.html) and examples for [Control Flow Tasks](https://etlbox.net/articles/example_controlflow.html), [Data Flow Tasks](https://etlbox.net/articles/example_dataflow.html) and [Logging](https://etlbox.net/articles/example_logging.html). There is also a [complete API documentation](https://etlbox.net/api/index.html). Enjoy!

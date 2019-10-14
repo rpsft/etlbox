@@ -20,18 +20,12 @@
 
 ### DF - Code cleanup
 
-- Refactor Dataflow classes
-  - use inheritance (or compostion), but all code which conflicts with DRY needs to be moved
-  - Using Inheritance: Inherit from DataFlowTask, e.g. DataFlowSource which has LinkTo method
-  - Using Composition: Source-Dataflow have a ComponentLink-Instance, which LinkTo methods are used (perhaps the best approach!)
-
 - create test for logging on Dataflow - especially also for the `DataFlow.LoggingThresholdRows = 2;`
 
 ## Control Flow
 
 ### CF - Known Issues
 
-### CF - New features 
+### CF - New features
 
-- RowCountTask: Adding GROUP BY / HAVING to RowCount?
 - CreateTableTask: Function for adding test data into table (depending on table definition)
