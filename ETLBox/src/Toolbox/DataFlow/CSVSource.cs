@@ -36,11 +36,9 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         CsvReader CsvReader { get; set; }
         StreamReader StreamReader { get; set; }
-        TypeInfo TypeInfo { get; set; }
 
-        public CSVSource()
+        public CSVSource() : base()
         {
-            TypeInfo = new TypeInfo(typeof(TOutput));
             Configuration = new Configuration(CultureInfo.InvariantCulture);
         }
 
@@ -112,9 +110,7 @@ namespace ALE.ETLBox.DataFlow
         private void Close()
         {
             CsvReader?.Dispose();
-            CsvReader = null;
             StreamReader?.Dispose();
-            StreamReader = null;
         }
     }
 

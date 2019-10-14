@@ -10,6 +10,12 @@ namespace ALE.ETLBox.DataFlow {
     public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask {
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         internal BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
+        internal TypeInfo TypeInfo { get; set; }
+
+        public DataFlowSource()
+        {
+            TypeInfo = new TypeInfo(typeof(TOutput));
+        }
 
         public void LinkTo(IDataFlowLinkTarget<TOutput> target)
         {
