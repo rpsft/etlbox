@@ -1,23 +1,28 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Used this task for custom log messages.
     /// </summary>
-    public class LogTask : GenericTask, ITask {
+    public class LogTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Logs message";
-        public void Execute() {
+        public void Execute()
+        {
             Info(Message);
         }
 
         /* Public properties */
         public string Message { get; set; }
 
-        public LogTask() {
+        public LogTask()
+        {
         }
 
-        public LogTask(string message) : this() {
+        public LogTask(string message) : this()
+        {
             Message = message;
         }
         //NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);

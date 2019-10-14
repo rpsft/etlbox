@@ -5,8 +5,10 @@ using System.Data;
 using System.Data.Common;
 
 
-namespace ALE.ETLBox {
-    public class TableData : TableData<object[]> {
+namespace ALE.ETLBox
+{
+    public class TableData : TableData<object[]>
+    {
         public TableData(TableDefinition definition) : base(definition) { }
         public TableData(TableDefinition definition, int estimatedBatchSize) : base(definition, estimatedBatchSize) { }
     }
@@ -29,7 +31,8 @@ namespace ALE.ETLBox {
         {
             var mapping = new DataColumnMappingCollection();
             foreach (var col in Definition.Columns)
-                if (!col.IsIdentity) {
+                if (!col.IsIdentity)
+                {
                     if (TypeInfo != null && !TypeInfo.IsArray)
                     {
                         if (TypeInfo.HasPropertyOrColumnMapping(col.Name))

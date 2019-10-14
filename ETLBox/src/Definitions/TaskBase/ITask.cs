@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox {
+namespace ALE.ETLBox
+{
     public interface ITask
     {
         string TaskName { get; set; }

@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a procedure if the procedure exists.
+    /// Drops a procedure. Use DropIfExists to drop a procedure only if it exists.
     /// </summary>
     public class DropProcedureTask : DropTask<IfProcedureExistsTask>, ITask
     {
@@ -14,7 +14,6 @@ namespace ALE.ETLBox.ControlFlow
             return $@"DROP PROCEDURE {QB}{ObjectName}{QE}";
         }
 
-        /* Some constructors */
         public DropProcedureTask()
         {
         }
@@ -24,8 +23,6 @@ namespace ALE.ETLBox.ControlFlow
             ObjectName = procedureName;
         }
 
-
-        /* Static methods for convenience */
         public static void Drop(string procedureName)
             => new DropProcedureTask(procedureName).Drop();
         public static void Drop(IConnectionManager connectionManager, string procedureName)

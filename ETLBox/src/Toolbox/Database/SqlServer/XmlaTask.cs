@@ -1,9 +1,9 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
-using System.Data;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow.SqlServer {
+namespace ALE.ETLBox.ControlFlow.SqlServer
+{
     /// <summary>
     /// This task can exeucte any XMLA.
     /// </summary>
@@ -12,38 +12,47 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// XmlaTask.ExecuteNonQuery("Log description here","Xmla goes here...")
     /// </code>
     /// </example>
-    public class XmlaTask : DbTask {
+    public class XmlaTask : DbTask
+    {
         public override string TaskName { get; set; } = "Run some xmla";
 
-        public XmlaTask() {
+        public XmlaTask()
+        {
             Init();
         }
 
-        public XmlaTask(string name) : base(name) {
+        public XmlaTask(string name) : base(name)
+        {
             Init();
         }
 
-        public XmlaTask(string name, FileConnectionManager fileConnection) : base(name, fileConnection) {
+        public XmlaTask(string name, FileConnectionManager fileConnection) : base(name, fileConnection)
+        {
             Init();
         }
 
-        public XmlaTask(ITask callingTask, string sql) : base(callingTask, sql) {
+        public XmlaTask(ITask callingTask, string sql) : base(callingTask, sql)
+        {
             Init();
         }
 
-        public XmlaTask(string name, string sql) : base(name, sql) {
+        public XmlaTask(string name, string sql) : base(name, sql)
+        {
             Init();
         }
 
-        public XmlaTask(string name, string sql, params Action<object>[] actions) : base(name, sql, actions) {
+        public XmlaTask(string name, string sql, params Action<object>[] actions) : base(name, sql, actions)
+        {
             Init();
         }
 
-        public XmlaTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(name, sql, beforeRowReadAction, afterRowReadAction, actions) {
+        public XmlaTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(name, sql, beforeRowReadAction, afterRowReadAction, actions)
+        {
             Init();
         }
 
-        private void Init() {
+        private void Init()
+        {
             DoXMLCommentStyle = true;
         }
 

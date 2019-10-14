@@ -5,7 +5,8 @@ using System.Collections.Generic;
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Returns a list of all databases on the server (make sure to connect with the correct permissions).
+    /// Returns a list of all user databases on the server. Make sure to connect with the correct permissions!
+    /// In MySql, this will return a list of all schemas.
     /// </summary>
     /// <example>
     /// <code>

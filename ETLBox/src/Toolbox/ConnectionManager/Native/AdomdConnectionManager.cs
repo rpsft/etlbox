@@ -1,6 +1,5 @@
 ﻿using Microsoft.AnalysisServices.AdomdClient;
 using System;
-using System.Data;
 
 namespace ALE.ETLBox.ConnectionManager
 {

@@ -1,10 +1,6 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NLog;
-using NLog.Extensions.Logging;
-using System;
 using System.Linq;
 
 namespace ALE.ETLBox.ControlFlow
@@ -70,7 +66,8 @@ namespace ALE.ETLBox.ControlFlow
         static bool IsLayoutRendererRegisterd = false;
         public static NLog.Logger GetLogger()
         {
-            if (!IsLayoutRendererRegisterd) {
+            if (!IsLayoutRendererRegisterd)
+            {
                 NLog.Config.ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition("etllog", typeof(ETLLogLayoutRenderer));
                 IsLayoutRendererRegisterd = true;
             }

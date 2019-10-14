@@ -1,14 +1,17 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Removes log data older than the specified days to keep.
     /// </summary>
-    public class CleanUpLogTask : GenericTask, ITask {
+    public class CleanUpLogTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Clean up log tables";
-        public void Execute() {
+        public void Execute()
+        {
             new SqlTask(this, Sql) { DisableLogging = true, DisableExtension = true }.ExecuteNonQuery();
         }
 
@@ -22,7 +25,8 @@ DELETE FROM etl.Log
 
         public CleanUpLogTask() { }
 
-        public CleanUpLogTask(int daysToKeep) : this() {
+        public CleanUpLogTask(int daysToKeep) : this()
+        {
             DaysToKeep = daysToKeep;
         }
         public static void CleanUp(int daysToKeep) => new CleanUpLogTask(daysToKeep).Execute();

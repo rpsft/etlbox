@@ -1,11 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.ControlFlow;
-using System;
-using ALE.ETLBox.Logging;
-
-namespace ALE.ETLBox {
-    public abstract class DataFlowTask : GenericTask, ITask {
+﻿namespace ALE.ETLBox
+{
+    public abstract class DataFlowTask : GenericTask, ITask
+    {
         public int? _loggingThresholdRows;
         public virtual int? LoggingThresholdRows
         {

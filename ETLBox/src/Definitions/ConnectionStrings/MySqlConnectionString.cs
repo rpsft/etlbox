@@ -1,23 +1,26 @@
-﻿using System.Data.SqlClient;
-
+﻿
 // for string extensions
-using ALE.ETLBox.Helper;
 using MySql.Data.MySqlClient;
 
-namespace ALE.ETLBox {
+namespace ALE.ETLBox
+{
     /// <summary>
     /// A helper class for encapsulating a conection string to a MySql server in an object.
     /// Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class MySqlConnectionString : IDbConnectionString{
+    public class MySqlConnectionString : IDbConnectionString
+    {
 
         MySqlConnectionStringBuilder _builder;
 
-        public string Value {
-            get {
+        public string Value
+        {
+            get
+            {
                 return _builder?.ConnectionString;
             }
-            set {
+            set
+            {
                 _builder = new MySqlConnectionStringBuilder(value);
             }
         }
@@ -26,31 +29,37 @@ namespace ALE.ETLBox {
 
         public MySqlConnectionStringBuilder MySqlConnectionStringBuilder => _builder;
 
-        public MySqlConnectionString() {
+        public MySqlConnectionString()
+        {
             _builder = new MySqlConnectionStringBuilder();
         }
 
-        public MySqlConnectionString(string connectionString) {
+        public MySqlConnectionString(string connectionString)
+        {
             this.Value = connectionString;
         }
 
-        public MySqlConnectionString GetMasterConnection() {
+        public MySqlConnectionString GetMasterConnection()
+        {
             MySqlConnectionStringBuilder con = new MySqlConnectionStringBuilder(Value);
             con.Database = "mysql";
             return new MySqlConnectionString(con.ConnectionString);
         }
 
-        public MySqlConnectionString GetConnectionWithoutCatalog() {
+        public MySqlConnectionString GetConnectionWithoutCatalog()
+        {
             MySqlConnectionStringBuilder con = new MySqlConnectionStringBuilder(Value);
             con.Database = "";
             return new MySqlConnectionString(con.ConnectionString);
         }
 
-        public static implicit operator MySqlConnectionString(string v) {
+        public static implicit operator MySqlConnectionString(string v)
+        {
             return new MySqlConnectionString(v);
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return Value;
         }
     }

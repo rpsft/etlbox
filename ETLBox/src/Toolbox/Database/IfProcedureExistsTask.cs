@@ -3,11 +3,10 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a table if the table exists.
+    /// Checks if a procedure exists.
     /// </summary>
     public class IfProcedureExistsTask : IfExistsTask, ITask
     {
-        /* ITask Interface */
         internal override string GetSql()
         {
             if (this.ConnectionType == ConnectionManagerType.SQLite)
@@ -49,7 +48,6 @@ WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ObjectName}'
             }
         }
 
-        /* Some constructors */
         public IfProcedureExistsTask()
         {
         }
@@ -60,7 +58,6 @@ WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ObjectName}'
         }
 
 
-        /* Static methods for convenience */
         public static bool IsExisting(string procedureName) => new IfProcedureExistsTask(procedureName).Exists();
         public static bool IsExisting(IConnectionManager connectionManager, string procedureName)
             => new IfProcedureExistsTask(procedureName) { ConnectionManager = connectionManager }.Exists();

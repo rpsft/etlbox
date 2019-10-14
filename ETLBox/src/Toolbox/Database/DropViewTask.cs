@@ -3,17 +3,15 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a view. Use DropIfExists to drop a view only if it exists. 
+    /// Drops a view. Use DropIfExists to drop a view only if it exists.
     /// </summary>
     public class DropViewTask : DropTask<IfTableOrViewExistsTask>, ITask
     {
-        /* Implementation */
         internal override string GetSql()
         {
-                return $@"DROP VIEW {ON.QuotatedFullName}";
+            return $@"DROP VIEW {ON.QuotatedFullName}";
         }
 
-        /* Some constructors */
         public DropViewTask()
         {
         }
@@ -23,7 +21,6 @@ namespace ALE.ETLBox.ControlFlow
             ObjectName = viewName;
         }
 
-        /* Static methods for convenience */
         public static void Drop(string viewName)
             => new DropViewTask(viewName).Drop();
         public static void Drop(IConnectionManager connectionManager, string viewName)

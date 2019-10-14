@@ -3,11 +3,10 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops an index if the index exists.
+    /// Drops a schema. Use DropIfExists to drop a schema only if it exists. For MySql, use the DropDatabase task instead.
     /// </summary>
     public class DropSchemaTask : DropTask<IfSchemaExistsTask>, ITask
     {
-        /* Public properties */
         internal override string GetSql()
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
@@ -20,7 +19,6 @@ namespace ALE.ETLBox.ControlFlow
             return sql;
         }
 
-        /* Some constructors */
         public DropSchemaTask()
         {
         }
@@ -30,8 +28,6 @@ namespace ALE.ETLBox.ControlFlow
             ObjectName = schemaName;
         }
 
-
-        /* Static methods for convenience */
         public static void Drop(string schemaName)
             => new DropSchemaTask(schemaName).Drop();
         public static void Drop(IConnectionManager connectionManager, string schemaName)

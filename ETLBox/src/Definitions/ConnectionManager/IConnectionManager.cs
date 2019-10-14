@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace ALE.ETLBox.ConnectionManager {
-    public interface IConnectionManager : IDisposable {
+namespace ALE.ETLBox.ConnectionManager
+{
+    public interface IConnectionManager : IDisposable
+    {
         IDbConnectionString ConnectionString { get; set; }
         void Open();
         void Close();

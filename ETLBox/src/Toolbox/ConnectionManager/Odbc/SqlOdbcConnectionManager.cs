@@ -1,11 +1,4 @@
-﻿using System.Data;
-using System.Data.Odbc;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using System;
-
-namespace ALE.ETLBox.ConnectionManager
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Sql Connection manager for an ODBC connection based on ADO.NET to Sql Server.

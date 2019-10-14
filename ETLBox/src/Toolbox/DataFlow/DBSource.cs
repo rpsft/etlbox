@@ -48,7 +48,7 @@ namespace ALE.ETLBox.DataFlow
                     if (!HasSourceTableDefinition)
                         LoadTableDefinition();
                     var TN = new TableNameDescriptor(SourceTableDefinition.Name, ConnectionType);
-                    return $@"SELECT {SourceTableDefinition.Columns.AsString("" ,QB, QE)} FROM {TN.QuotatedFullName}";
+                    return $@"SELECT {SourceTableDefinition.Columns.AsString("", QB, QE)} FROM {TN.QuotatedFullName}";
                 }
 
             }
@@ -113,7 +113,8 @@ namespace ALE.ETLBox.DataFlow
             {
                 DisableLogging = true,
                 DisableExtension = true,
-            }.Query<TOutput>(row => {
+            }.Query<TOutput>(row =>
+            {
                 LogProgress(1);
                 Buffer.Post(row);
             }, ColumnNamesEvaluated);

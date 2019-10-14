@@ -193,7 +193,8 @@ namespace ALE.ETLBox.ControlFlow
 
             if (typeInfo.IsArray)
             {
-                InternalBeforeRowReadAction = () => {
+                InternalBeforeRowReadAction = () =>
+                {
                     row = (T)Activator.CreateInstance(typeof(T), new object[] { columnNames.Count });
                 };
                 int index = 0;

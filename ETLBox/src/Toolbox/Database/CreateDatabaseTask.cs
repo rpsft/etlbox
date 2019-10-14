@@ -4,7 +4,7 @@ using System;
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Will create a database if the database doesn't exists.
+    /// Will create a database if the database doesn't exists. In MySql, this will create a schema.
     /// </summary>
     /// <example>
     /// <code>
@@ -82,7 +82,7 @@ END
         public static void Create(string databaseName, string collation) => new CreateDatabaseTask(databaseName, collation).Execute();
         public static void Create(IConnectionManager connectionManager, string databaseName)
             => new CreateDatabaseTask(databaseName) { ConnectionManager = connectionManager }.Execute();
-        public static void Create(IConnectionManager connectionManager, string databaseName,  string collation)
+        public static void Create(IConnectionManager connectionManager, string databaseName, string collation)
             => new CreateDatabaseTask(databaseName, collation) { ConnectionManager = connectionManager }.Execute();
 
         /* Implementation & stuff */

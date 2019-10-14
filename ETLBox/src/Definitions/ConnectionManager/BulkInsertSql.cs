@@ -1,10 +1,10 @@
-﻿using System.Data;
-using System.Data.Odbc;
-using System.Text;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.Data;
 using System.Data.Common;
+using System.Data.Odbc;
+using System.Linq;
+using System.Text;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -103,7 +103,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (UseParameterQuery)
             {
-                values.Add(CreateParameterWithValue(data.GetValue(colIndex))) ;
+                values.Add(CreateParameterWithValue(data.GetValue(colIndex)));
             }
             else
             {

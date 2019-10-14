@@ -3,17 +3,21 @@ using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Reads data from the etl.Log table.
     /// </summary>
-    public class ReadLogTableTask : GenericTask, ITask {
+    public class ReadLogTableTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Read all log entries for {LoadProcessKey ?? 0 }";
-        public void Execute() {
+        public void Execute()
+        {
             LogEntries = new List<LogEntry>();
             LogEntry current = new LogEntry();
-            new SqlTask(this, Sql) {
+            new SqlTask(this, Sql)
+            {
                 DisableLogging = true,
                 ConnectionManager = this.ConnectionManager,
                 DisableExtension = true,
@@ -36,16 +40,20 @@ namespace ALE.ETLBox.Logging {
 
         /* Public properties */
         public int? _loadProcessKey;
-        public int? LoadProcessKey {
-            get {
+        public int? LoadProcessKey
+        {
+            get
+            {
                 return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
             }
-            set {
+            set
+            {
                 _loadProcessKey = value;
             }
         }
 
-        public ReadLogTableTask ReadLog() {
+        public ReadLogTableTask ReadLog()
+        {
             Execute();
             return this;
         }
@@ -57,11 +65,13 @@ namespace ALE.ETLBox.Logging {
             (LoadProcessKey != null ? $@" WHERE LoadProcessKey = {LoadProcessKey}"
             : "");
 
-        public ReadLogTableTask() {
+        public ReadLogTableTask()
+        {
 
         }
 
-        public ReadLogTableTask(int? loadProcessKey) : this() {
+        public ReadLogTableTask(int? loadProcessKey) : this()
+        {
             this.LoadProcessKey = loadProcessKey;
         }
 

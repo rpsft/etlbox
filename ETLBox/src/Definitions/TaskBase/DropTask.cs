@@ -1,13 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
-
-namespace ALE.ETLBox.ControlFlow
+﻿namespace ALE.ETLBox.ControlFlow
 {
-    /// <summary>
-    /// Drops an object- abstract implementation.
-    /// </summary>
     public abstract class DropTask<T> : GenericTask, ITask where T : IfExistsTask, new()
     {
-        /* ITask Interface */
         public override string TaskName => $"Drop Object {ObjectName}";
         public void Execute()
         {
@@ -16,7 +10,6 @@ namespace ALE.ETLBox.ControlFlow
                 new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
-        /* Public properties */
         public string ObjectName { get; set; }
         public TableNameDescriptor ON => new TableNameDescriptor(ObjectName, ConnectionType);
         internal string OnObjectName { get; set; }

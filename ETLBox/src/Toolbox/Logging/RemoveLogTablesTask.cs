@@ -1,11 +1,13 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Removes the log tables and all the log procedures.
     /// </summary>
-    public class RemoveLogTablesTask : GenericTask, ITask {
+    public class RemoveLogTablesTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Remove log tables";
         public void Execute() => new SqlTask(this, Sql).ExecuteNonQuery();
@@ -19,7 +21,8 @@ if (object_id('etl.TransferCompletedForLoadProcess')  is not null) drop procedur
 ";
 
         public RemoveLogTablesTask() { }
-        public RemoveLogTablesTask(IConnectionManager connectionManager) {
+        public RemoveLogTablesTask(IConnectionManager connectionManager)
+        {
             this.ConnectionManager = connectionManager;
         }
 

@@ -1,7 +1,8 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
 
-namespace ALE.ETLBox.ControlFlow.SqlServer {
+namespace ALE.ETLBox.ControlFlow.SqlServer
+{
     /// <summary>
     /// This task will add a filegroup to the database.
     /// </summary>
@@ -10,7 +11,8 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// AddFileGroupTask.AddFileGroup("FGName", "DemoDB", "200MB", "10MB", isDefaultFileGroup: true);
     /// </code>
     /// </example>
-    public class AddFileGroupTask : GenericTask, ITask {
+    public class AddFileGroupTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Create Filegroup {FileGroupName}";
         public void Execute()
@@ -26,8 +28,10 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
         public string Size { get; set; }
         public string Filegrowth { get; set; }
         public bool IsDefaultFileGroup { get; set; }
-        public string Sql {
-            get {
+        public string Sql
+        {
+            get
+            {
                 return $@"--Add the filegroup
   declare @sql nvarchar(4000) = N'select 1'
   alter database [{DatabaseName}] add filegroup [{FileGroupName}]
@@ -57,12 +61,14 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
 
         public AddFileGroupTask() { }
 
-        public AddFileGroupTask(string fileGroupName, string databaseName) : this() {
+        public AddFileGroupTask(string fileGroupName, string databaseName) : this()
+        {
             FileGroupName = fileGroupName;
             DatabaseName = databaseName;
         }
 
-        public AddFileGroupTask(string name, string databaseName, string size, string filegrowth, bool isDefaultFileGroup) : this(name, databaseName) {
+        public AddFileGroupTask(string name, string databaseName, string size, string filegrowth, bool isDefaultFileGroup) : this(name, databaseName)
+        {
             Size = size;
             Filegrowth = filegrowth;
             IsDefaultFileGroup = isDefaultFileGroup;

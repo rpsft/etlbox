@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ALE.ETLBox.DataFlow {
+namespace ALE.ETLBox.DataFlow
+{
     /// <summary>
     /// A lookup task - data from the input can be enriched with data retrieved from the lookup source. The result is then posted into the output.
     /// </summary>
@@ -19,7 +20,7 @@ namespace ALE.ETLBox.DataFlow {
     /// </example>
     public class Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>
         : DataFlowTask, ITask, IDataFlowTransformation<TTransformationInput, TTransformationOutput>
-        {
+    {
 
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Lookup";
@@ -30,11 +31,14 @@ namespace ALE.ETLBox.DataFlow {
         /* Public Properties */
         public ISourceBlock<TTransformationOutput> SourceBlock => RowTransformation.SourceBlock;
         public ITargetBlock<TTransformationInput> TargetBlock => RowTransformation.TargetBlock;
-        public IDataFlowSource<TSourceOutput> Source {
-            get {
+        public IDataFlowSource<TSourceOutput> Source
+        {
+            get
+            {
                 return _source;
             }
-            set {
+            set
+            {
                 _source = value;
                 Source.SourceBlock.LinkTo(LookupBuffer, new DataflowLinkOptions() { PropagateCompletion = true });
             }
@@ -46,47 +50,57 @@ namespace ALE.ETLBox.DataFlow {
         private Func<TTransformationInput, TTransformationOutput> _rowTransformationFunc;
         private IDataFlowSource<TSourceOutput> _source;
 
-        Func<TTransformationInput, TTransformationOutput> RowTransformationFunc {
-            get {
+        Func<TTransformationInput, TTransformationOutput> RowTransformationFunc
+        {
+            get
+            {
                 return _rowTransformationFunc;
             }
-            set {
+            set
+            {
                 _rowTransformationFunc = value;
                 RowTransformation = new RowTransformation<TTransformationInput, TTransformationOutput>(this, _rowTransformationFunc);
                 RowTransformation.InitAction = LoadLookupData;
             }
         }
-        public Lookup() {
+        public Lookup()
+        {
             LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
         }
 
-        public Lookup(Func<TTransformationInput, TTransformationOutput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source) : this() {
+        public Lookup(Func<TTransformationInput, TTransformationOutput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source) : this()
+        {
             RowTransformationFunc = rowTransformationFunc;
             Source = source;
         }
 
-        public Lookup(Func<TTransformationInput, TTransformationOutput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source, List<TSourceOutput> lookupList) : this() {
+        public Lookup(Func<TTransformationInput, TTransformationOutput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source, List<TSourceOutput> lookupList) : this()
+        {
             RowTransformationFunc = rowTransformationFunc;
             Source = source;
             LookupList = lookupList;
         }
 
 
-        private void LoadLookupData() {
+        private void LoadLookupData()
+        {
             Source.ExecuteAsync();
             LookupBuffer.Completion.Wait();
         }
 
-        private void FillBuffer(TSourceOutput sourceRow) {
+        private void FillBuffer(TSourceOutput sourceRow)
+        {
             if (LookupList == null) LookupList = new List<TSourceOutput>();
             LookupList.Add(sourceRow);
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target) {
+        public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target)
+        {
             RowTransformation.LinkTo(target);
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate) {
+        public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate)
+        {
             RowTransformation.LinkTo(target, predicate);
         }
     }

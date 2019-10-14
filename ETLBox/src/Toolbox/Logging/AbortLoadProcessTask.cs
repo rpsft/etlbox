@@ -74,7 +74,7 @@ namespace ALE.ETLBox.Logging
         public static void Abort(int? loadProcessKey, string abortMessage) => new AbortLoadProcessTask(loadProcessKey, abortMessage).Execute();
         public static void Abort(IConnectionManager connectionManager)
             => new AbortLoadProcessTask() { ConnectionManager = connectionManager }.Execute();
-        public static void Abort(IConnectionManager connectionManager,int? loadProcessKey)
+        public static void Abort(IConnectionManager connectionManager, int? loadProcessKey)
             => new AbortLoadProcessTask(loadProcessKey) { ConnectionManager = connectionManager }.Execute();
         public static void Abort(IConnectionManager connectionManager, string abortMessage)
             => new AbortLoadProcessTask(abortMessage) { ConnectionManager = connectionManager }.Execute();

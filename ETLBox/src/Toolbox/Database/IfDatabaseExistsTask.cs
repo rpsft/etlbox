@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Check if a Database exists.
+    /// Checks if a database exists.
     /// </summary>
     public class IfDatabaseExistsTask : IfExistsTask, ITask
     {

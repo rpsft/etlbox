@@ -7,17 +7,15 @@ namespace ALE.ETLBox.ControlFlow
     /// </summary>
     public class CreateViewTask : GenericTask, ITask
     {
-        /* ITask Interface */
         public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
         public void Execute()
         {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if ( (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Postgres) && IsExisting)
-                new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true}.Drop();
+            if ((ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Postgres) && IsExisting)
+                new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
-        /* Public properties */
         public string ViewName { get; set; }
         public TableNameDescriptor VN => new TableNameDescriptor(ViewName, ConnectionType);
         public string Definition { get; set; }
@@ -25,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                    return $@"{CreateOrAlterSql} VIEW {VN.QuotatedFullName}
+                return $@"{CreateOrAlterSql} VIEW {VN.QuotatedFullName}
 AS
 {Definition}
 ";

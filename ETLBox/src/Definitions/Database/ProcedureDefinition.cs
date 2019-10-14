@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
 
-namespace ALE.ETLBox {
-    public class ProcedureDefinition {
+namespace ALE.ETLBox
+{
+    public class ProcedureDefinition
+    {
         public string Name { get; set; }
         public string Definition { get; set; }
-      
+
         public List<ProcedureParameter> Parameter { get; set; }
 
-        public ProcedureDefinition() {
+        public ProcedureDefinition()
+        {
             Parameter = new List<ProcedureParameter>();
         }
 
-        public ProcedureDefinition(string name, string definition) : this() {
+        public ProcedureDefinition(string name, string definition) : this()
+        {
             Name = name;
             Definition = definition;
         }
 
-        public ProcedureDefinition(string name, string definition, List<ProcedureParameter> parameter) : this(name, definition) {
+        public ProcedureDefinition(string name, string definition, List<ProcedureParameter> parameter) : this(name, definition)
+        {
             Parameter = parameter;
         }
 

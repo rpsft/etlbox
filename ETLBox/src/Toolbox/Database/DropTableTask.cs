@@ -12,7 +12,6 @@ namespace ALE.ETLBox.ControlFlow
             return $@"DROP TABLE {ON.QuotatedFullName}";
         }
 
-        /* Some constructors */
         public DropTableTask()
         {
         }
@@ -22,8 +21,6 @@ namespace ALE.ETLBox.ControlFlow
             ObjectName = tableName;
         }
 
-
-        /* Static methods for convenience */
         public static void Drop(string tableName)
             => new DropTableTask(tableName).Drop();
         public static void Drop(IConnectionManager connectionManager, string tableName)

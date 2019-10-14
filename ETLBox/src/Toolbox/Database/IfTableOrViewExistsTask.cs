@@ -3,11 +3,10 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a table if the table exists.
+    /// Checks if a table exists.
     /// </summary>
     public class IfTableOrViewExistsTask : IfExistsTask, ITask
     {
-        /* ITask Interface */
         internal override string GetSql()
         {
             if (this.ConnectionType == ConnectionManagerType.SQLite)
@@ -16,7 +15,7 @@ namespace ALE.ETLBox.ControlFlow
             }
             else if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
-                return  $@"IF ( OBJECT_ID('{ObjectName}', 'U') IS NOT NULL OR OBJECT_ID('{ObjectName}', 'V') IS NOT NULL)
+                return $@"IF ( OBJECT_ID('{ObjectName}', 'U') IS NOT NULL OR OBJECT_ID('{ObjectName}', 'V') IS NOT NULL)
     SELECT 1";
             }
             else if (this.ConnectionType == ConnectionManagerType.MySql)
@@ -43,7 +42,6 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
-        /* Some constructors */
         public IfTableOrViewExistsTask()
         {
         }
@@ -54,7 +52,6 @@ namespace ALE.ETLBox.ControlFlow
         }
 
 
-        /* Static methods for convenience */
         public static bool IsExisting(string objectName) => new IfTableOrViewExistsTask(objectName).Exists();
         public static bool IsExisting(IConnectionManager connectionManager, string objectName)
             => new IfTableOrViewExistsTask(objectName) { ConnectionManager = connectionManager }.Exists();

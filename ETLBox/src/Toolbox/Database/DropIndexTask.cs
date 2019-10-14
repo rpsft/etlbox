@@ -3,11 +3,10 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops an index if the index exists.
+    /// Drops an index. Use DropIfExists to drop an index only if it exists.
     /// </summary>
     public class DropIndexTask : DropTask<IfIndexExistsTask>, ITask
     {
-        /* Public properties */
         public string TableName => OnObjectName;
         public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
         internal override string GetSql()
@@ -18,7 +17,6 @@ namespace ALE.ETLBox.ControlFlow
             return sql;
         }
 
-        /* Some constructors */
         public DropIndexTask()
         {
         }
@@ -29,8 +27,6 @@ namespace ALE.ETLBox.ControlFlow
             ObjectName = indexName;
         }
 
-
-        /* Static methods for convenience */
         public static void Drop(string indexName, string tableName)
             => new DropIndexTask(indexName, tableName).Drop();
         public static void Drop(IConnectionManager connectionManager, string indexName, string tableName)

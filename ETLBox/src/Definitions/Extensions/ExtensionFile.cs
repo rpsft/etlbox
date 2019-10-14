@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox {
-    public class ExtensionFile {
+namespace ALE.ETLBox
+{
+    public class ExtensionFile
+    {
         public const string VERSIONMATCH = @"--\W*@version\W*:\W*[><=]?(\d+.\d+)\W*([VFvf][Pp]\d+)?";
         public const string SKIPNEXT = @"--\W*@skipnext\W*:\W*[Tt]rue";
         public const string FILENAMEMATCH = @"^(\w*?)_([0-9A-Za-z!%&()=+#~äöüÄÖÜß -]*).sql";
@@ -19,8 +21,9 @@ namespace ALE.ETLBox {
         public bool IsValidExtension { get; private set; } = true;
         public bool HasSkipNextStatement { get; private set; }
 
-        public ExtensionFile(string filename) {
-            this.FileName = filename;            
+        public ExtensionFile(string filename)
+        {
+            this.FileName = filename;
 
             FillNameAndType();
             ReadContent();
@@ -31,25 +34,32 @@ namespace ALE.ETLBox {
 
 
 
-        private void FillNameAndType() {
+        private void FillNameAndType()
+        {
             string fileName = FileName.Substring(FileName.LastIndexOf(@"\") + 1);
             Match m = Regex.Match(fileName, FILENAMEMATCH);
-            if (m.Success) {
+            if (m.Success)
+            {
                 Type = m.Groups[1].Value;
                 Name = m.Groups[2].Value;
-            } else {
+            }
+            else
+            {
                 IsValidExtension = false;
             }
         }
 
-        public void ReadContent() {
+        public void ReadContent()
+        {
             Content = File.ReadAllText(FileName);
         }
 
-        public void CheckIfHasVersion() {
+        public void CheckIfHasVersion()
+        {
             if (!Regex.IsMatch(Content, VERSIONMATCH)) IsValidExtension = false;
         }
-        public void CheckIfHasSkipNext() {
+        public void CheckIfHasSkipNext()
+        {
             HasSkipNextStatement = Regex.IsMatch(Content, SKIPNEXT) ? true : false;
         }
 

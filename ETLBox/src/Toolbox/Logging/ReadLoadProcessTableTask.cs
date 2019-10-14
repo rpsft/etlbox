@@ -2,16 +2,20 @@
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Reads data from the etl.LoadProcessTable.
     /// </summary>
-    public class ReadLoadProcessTableTask : GenericTask, ITask {
+    public class ReadLoadProcessTableTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Read process with Key ({LoadProcessKey}) or without";
-        public void Execute() {
+        public void Execute()
+        {
             LoadProcess = new LoadProcess();
-            var sql = new SqlTask(this, Sql) {
+            var sql = new SqlTask(this, Sql)
+            {
                 DisableLogging = true,
                 DisableExtension = true,
                 ConnectionManager = this.ConnectionManager,
@@ -31,7 +35,8 @@ namespace ALE.ETLBox.Logging {
                 col => LoadProcess.IsTransferCompleted= (bool)col
                 }
             };
-            if (ReadOption == ReadOptions.ReadAllProcesses) {
+            if (ReadOption == ReadOptions.ReadAllProcesses)
+            {
                 sql.BeforeRowReadAction = () => AllLoadProcesses = new List<LoadProcess>();
                 sql.AfterRowReadAction = () => AllLoadProcesses.Add(LoadProcess);
             }
@@ -40,11 +45,14 @@ namespace ALE.ETLBox.Logging {
 
         /* Public properties */
         public int? _loadProcessKey;
-        public int? LoadProcessKey {
-            get {
+        public int? LoadProcessKey
+        {
+            get
+            {
                 return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
             }
-            set {
+            set
+            {
                 _loadProcessKey = value;
             }
         }
@@ -55,8 +63,10 @@ namespace ALE.ETLBox.Logging {
         public LoadProcess LastTransfered { get; private set; }
         public ReadOptions ReadOption { get; set; } = ReadOptions.ReadSingleProcess;
 
-        public string Sql {
-            get {
+        public string Sql
+        {
+            get
+            {
                 string top1 = "";
                 if (ReadOption != ReadOptions.ReadAllProcesses)
                     top1 = "top 1";
@@ -83,32 +93,38 @@ LoadProcessKey DESC";
             }
         }
 
-        public ReadLoadProcessTableTask() {
+        public ReadLoadProcessTableTask()
+        {
 
         }
-        public ReadLoadProcessTableTask(int? loadProcessKey) : this(){
+        public ReadLoadProcessTableTask(int? loadProcessKey) : this()
+        {
             this.LoadProcessKey = loadProcessKey;
         }
 
-        public static LoadProcess Read(int? loadProcessKey) {
+        public static LoadProcess Read(int? loadProcessKey)
+        {
             var sql = new ReadLoadProcessTableTask(loadProcessKey);
             sql.Execute();
             return sql.LoadProcess;
         }
-        public static List<LoadProcess> ReadAll() {
+        public static List<LoadProcess> ReadAll()
+        {
             var sql = new ReadLoadProcessTableTask() { ReadOption = ReadOptions.ReadAllProcesses };
             sql.Execute();
             return sql.AllLoadProcesses;
         }
 
-        public static LoadProcess ReadWithOption(ReadOptions option) {
+        public static LoadProcess ReadWithOption(ReadOptions option)
+        {
             var sql = new ReadLoadProcessTableTask() { ReadOption = option };
             sql.Execute();
             return sql.LoadProcess;
         }
     }
 
-    public enum ReadOptions {
+    public enum ReadOptions
+    {
         ReadSingleProcess,
         ReadAllProcesses,
         ReadLastFinishedProcess,

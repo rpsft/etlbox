@@ -155,7 +155,7 @@ namespace ALE.ETLBox.DataFlow
         { }
 
         public BlockTransformation(ITask task, Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(task, blockTransformationFunc)
-        {  }
+        { }
     }
 
     /// <summary>

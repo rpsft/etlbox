@@ -1,9 +1,6 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ALE.ETLBox.Helper
 {

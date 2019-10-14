@@ -3,13 +3,16 @@ using NLog.Config;
 using NLog.LayoutRenderers;
 using System.Text;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     [LayoutRenderer("etllog")]
-    public class ETLLogLayoutRenderer : LayoutRenderer {
+    public class ETLLogLayoutRenderer : LayoutRenderer
+    {
         [DefaultParameter]
         public string LogType { get; set; } = "message";
 
-        protected override void Append(StringBuilder builder, LogEventInfo logEvent) {
+        protected override void Append(StringBuilder builder, LogEventInfo logEvent)
+        {
             if (LogType?.ToLower() == "message")
                 builder.Append(logEvent.Message);
             else if (LogType?.ToLower() == "type" && logEvent?.Parameters?.Length >= 1)
@@ -20,7 +23,7 @@ namespace ALE.ETLBox.Logging {
                 builder.Append(logEvent.Parameters[2]);
             else if (LogType?.ToLower() == "stage" && logEvent?.Parameters?.Length >= 4)
                 builder.Append(logEvent.Parameters[3]);
-            else if (LogType?.ToLower() == "loadprocesskey" && logEvent?.Parameters?.Length >= 5) 
+            else if (LogType?.ToLower() == "loadprocesskey" && logEvent?.Parameters?.Length >= 5)
                 builder.Append(logEvent.Parameters[4]);
         }
 

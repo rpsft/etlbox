@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow.SqlServer {
+namespace ALE.ETLBox.ControlFlow.SqlServer
+{
     /// <summary>
     /// Calculates a hash value of the database. It will use only the schemas given in the property SchemaName for the calculation.
     /// The hash calcualtion is based only on the user tables in the schema.
@@ -14,14 +15,17 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
     /// CalculateDatabaseHashTask.Calculate(new List&lt;string&gt;() { "demo", "dbo" });
     /// </code>
     /// </example>
-    public class CalculateDatabaseHashTask : GenericTask, ITask {
+    public class CalculateDatabaseHashTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Calculate hash value for schema(s) {SchemaNamesAsString}";
-        public void Execute() {
+        public void Execute()
+        {
             if (ConnectionType != ConnectionManagerType.SqlServer)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             List<string> allColumns = new List<string>();
-            new SqlTask(this, Sql) {
+            new SqlTask(this, Sql)
+            {
                 Actions = new List<Action<object>>() {
                     col => allColumns.Add((string)col)
                 }
@@ -35,8 +39,8 @@ namespace ALE.ETLBox.ControlFlow.SqlServer {
 
         public string DatabaseHash { get; private set; }
 
-        string SchemaNamesAsString => String.Join(",",SchemaNames.Select(name=>$"'{name}'"));
-    public string Sql => $@"
+        string SchemaNamesAsString => String.Join(",", SchemaNames.Select(name => $"'{name}'"));
+        public string Sql => $@"
 SELECT sch.name + '.' + tbls.name + N'|' + 
 	   cols.name + N'|' + 
 	   typ.name + N'|' + 
@@ -55,13 +59,16 @@ AND sch.name IN ({SchemaNamesAsString})
 ORDER BY sch.name, tbls.name, cols.column_id
 ";
 
-        public CalculateDatabaseHashTask() {
+        public CalculateDatabaseHashTask()
+        {
 
         }
-        public CalculateDatabaseHashTask(List<string> schemaNames) : this() {
+        public CalculateDatabaseHashTask(List<string> schemaNames) : this()
+        {
             this.SchemaNames = schemaNames;
         }
-        public CalculateDatabaseHashTask Calculate() {
+        public CalculateDatabaseHashTask Calculate()
+        {
             Execute();
             return this;
         }

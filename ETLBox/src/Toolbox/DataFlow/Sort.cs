@@ -85,7 +85,7 @@ namespace ALE.ETLBox.DataFlow
         public Sort(Comparison<string[]> sortFunction) : base(sortFunction)
         { }
 
-        public Sort(string name, Comparison<string[]> sortFunction) : base(name,sortFunction)
+        public Sort(string name, Comparison<string[]> sortFunction) : base(name, sortFunction)
         { }
     }
 

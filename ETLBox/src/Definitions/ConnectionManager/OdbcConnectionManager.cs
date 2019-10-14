@@ -1,9 +1,4 @@
-﻿using System.Data;
-using System.Data.Odbc;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using System;
+﻿using System.Data.Odbc;
 
 namespace ALE.ETLBox.ConnectionManager
 {

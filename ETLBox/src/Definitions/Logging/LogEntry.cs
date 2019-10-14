@@ -3,13 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     [DebuggerDisplay("#{LogKey} {TaskType} - {TaskAction} {LogDate}")]
-    public class LogEntry {
+    public class LogEntry
+    {
         public int LogKey { get; set; }
         public DateTime LogDate { get; set; }
         public DateTime StartDate => LogDate;
-        public DateTime? EndDate {get;set;}
+        public DateTime? EndDate { get; set; }
         public string Level { get; set; }
         public string Message { get; set; }
         public string TaskType { get; set; }
@@ -21,14 +23,17 @@ namespace ALE.ETLBox.Logging {
     }
 
     [DebuggerDisplay("#{LogKey} {TaskType} {Message} - {TaskAction} {LogDate}")]
-    public class LogHierarchyEntry : LogEntry{         
+    public class LogHierarchyEntry : LogEntry
+    {
         public List<LogHierarchyEntry> Children { get; set; }
         [JsonIgnore]
         public LogHierarchyEntry Parent { get; set; }
-        public LogHierarchyEntry() {
+        public LogHierarchyEntry()
+        {
             Children = new List<LogHierarchyEntry>();
         }
-        public LogHierarchyEntry(LogEntry entry) : this(){
+        public LogHierarchyEntry(LogEntry entry) : this()
+        {
             this.LogKey = entry.LogKey;
             this.LogDate = entry.LogDate;
             this.EndDate = entry.EndDate;

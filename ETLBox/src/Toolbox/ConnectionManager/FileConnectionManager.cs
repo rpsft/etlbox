@@ -1,17 +1,21 @@
 ﻿using System;
 using System.IO;
 
-namespace ALE.ETLBox.ConnectionManager {
+namespace ALE.ETLBox.ConnectionManager
+{
     /// <summary>
     /// Connection manager to a file
     /// </summary>    
-    public class FileConnectionManager {
+    public class FileConnectionManager
+    {
         internal string FileName { get; set; }
 
         internal string Path { get; set; }
 
-        internal string FullFileName {
-            get {
+        internal string FullFileName
+        {
+            get
+            {
                 if (HasPath)
                     return System.IO.Path.Combine(Path, FileName);
                 else
@@ -23,15 +27,18 @@ namespace ALE.ETLBox.ConnectionManager {
 
         public bool FileExists => File.Exists(FullFileName);
 
-        public FileConnectionManager(string filename) {
+        public FileConnectionManager(string filename)
+        {
             this.FileName = filename;
         }
 
-        public FileConnectionManager(string path, string filename) : this(filename) {
+        public FileConnectionManager(string path, string filename) : this(filename)
+        {
             this.Path = path;
         }
 
-        internal string ReadContent() {
+        internal string ReadContent()
+        {
             if (FileExists)
                 return File.ReadAllText(FullFileName);
             else

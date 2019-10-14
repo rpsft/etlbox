@@ -1,7 +1,6 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -89,7 +88,7 @@ namespace ALE.ETLBox.ControlFlow
         public static void BulkInsert(string name, ITableData data, string tableName) =>
             new SqlTask(name).BulkInsert(data, tableName);
         public static void BulkInsert(IConnectionManager connectionManager, string name, ITableData data, string tableName) =>
-     new SqlTask(name) { ConnectionManager = connectionManager}.BulkInsert(data, tableName);
+     new SqlTask(name) { ConnectionManager = connectionManager }.BulkInsert(data, tableName);
 
     }
 

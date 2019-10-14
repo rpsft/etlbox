@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace ALE.ETLBox.ConnectionManager {
+namespace ALE.ETLBox.ConnectionManager
+{
     public abstract class DbConnectionManager<Connection> : IDisposable, IConnectionManager
         where Connection : class, IDbConnection, new()
     {
@@ -15,41 +16,53 @@ namespace ALE.ETLBox.ConnectionManager {
 
         public DbConnectionManager() { }
 
-        public DbConnectionManager(IDbConnectionString connectionString) : this() {
+        public DbConnectionManager(IDbConnectionString connectionString) : this()
+        {
             this.ConnectionString = connectionString;
         }
 
-        public void Open() {
+        public void Open()
+        {
             DbConnection?.Close();
-            DbConnection = new Connection {
+            DbConnection = new Connection
+            {
                 ConnectionString = ConnectionString.Value
             };
             bool successfullyConnected = false;
             Exception lastException = null;
-            for (int i = 1; i <= MaxLoginAttempts; i++) {
-                try {
+            for (int i = 1; i <= MaxLoginAttempts; i++)
+            {
+                try
+                {
                     DbConnection.Open();
                     successfullyConnected = true;
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     successfullyConnected = false;
                     lastException = e;
                     Task.Delay(1000 * i).Wait();
                 }
-                if (successfullyConnected) {
+                if (successfullyConnected)
+                {
                     break;
                 }
             }
-            if (!successfullyConnected) {
+            if (!successfullyConnected)
+            {
                 throw lastException ?? new Exception("Could not connect to database!");
             }
         }
 
-        public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+        public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
             cmd.CommandText = commandText;
-            if (parameterList != null) {
-                foreach (QueryParameter par in parameterList) {
+            if (parameterList != null)
+            {
+                foreach (QueryParameter par in parameterList)
+                {
                     var newPar = cmd.CreateParameter();
                     newPar.ParameterName = par.Name;
                     newPar.DbType = par.DBType;
@@ -60,17 +73,20 @@ namespace ALE.ETLBox.ConnectionManager {
             return cmd;
         }
 
-        public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+        public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        {
             IDbCommand sqlcmd = CreateCommand(commandText, parameterList);
             return sqlcmd.ExecuteNonQuery();
         }
 
-        public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+        public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        {
             IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteScalar();
         }
 
-        public IDataReader ExecuteReader(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+        public IDataReader ExecuteReader(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        {
             IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteReader();
 
@@ -83,10 +99,14 @@ namespace ALE.ETLBox.ConnectionManager {
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
-        protected void Dispose(bool disposing) {
-            if (!disposedValue) {
-                if (disposing) {
-                    if (DbConnection != null) {
+        protected void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    if (DbConnection != null)
+                    {
                         DbConnection.Close();
                     }
 
@@ -96,11 +116,13 @@ namespace ALE.ETLBox.ConnectionManager {
             }
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             Dispose(true);
         }
 
-        public void Close() {
+        public void Close()
+        {
             Dispose();
         }
 

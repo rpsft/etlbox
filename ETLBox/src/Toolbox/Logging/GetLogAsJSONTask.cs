@@ -4,45 +4,59 @@ using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.Logging {
+namespace ALE.ETLBox.Logging
+{
     /// <summary>
     /// Returns the content of the etl.Log table as a JSON string.
     /// </summary>
-    public class GetLogAsJSONTask : GenericTask, ITask {
+    public class GetLogAsJSONTask : GenericTask, ITask
+    {
         /* ITask Interface */
         public override string TaskName => $"Get log as JSON for {LoadProcessKey}";
 
-        public void Execute() {
+        public void Execute()
+        {
             List<LogEntry> logEntries = ReadLogTableTask.Read(this.ConnectionManager, LoadProcessKey);
             CalculateEndDate(logEntries);
             LogHierarchyEntry hierarchy = CreateHierarchyStructure(logEntries);
-            JSON = JsonConvert.SerializeObject(hierarchy, new JsonSerializerSettings {
+            JSON = JsonConvert.SerializeObject(hierarchy, new JsonSerializerSettings
+            {
                 Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore });
+                NullValueHandling = NullValueHandling.Ignore
+            });
         }
 
-        private  void CalculateEndDate(List<LogEntry> logEntries) {
-            foreach (var startEntry in logEntries.Where(entry => entry.TaskAction == "START")) {
+        private void CalculateEndDate(List<LogEntry> logEntries)
+        {
+            foreach (var startEntry in logEntries.Where(entry => entry.TaskAction == "START"))
+            {
                 var endEntry = logEntries.Where(entry => entry.TaskAction == "END" && entry.TaskHash == startEntry.TaskHash && entry.LogKey > startEntry.LogKey).FirstOrDefault();
                 startEntry.EndDate = endEntry.LogDate;
             }
         }
 
-        private LogHierarchyEntry CreateHierarchyStructure(List<LogEntry> entries) {
+        private LogHierarchyEntry CreateHierarchyStructure(List<LogEntry> entries)
+        {
             LogHierarchyEntry root = new LogHierarchyEntry(new LogEntry() { TaskType = "ROOT" });
             var currentParent = root;
             var currentList = root.Children;
-            foreach (LogEntry entry in entries) {
-                if (ContainerTypes.Contains(entry.TaskType.ToLower()) && entry.TaskAction == "START") {
+            foreach (LogEntry entry in entries)
+            {
+                if (ContainerTypes.Contains(entry.TaskType.ToLower()) && entry.TaskAction == "START")
+                {
                     var newEntry = new LogHierarchyEntry(entry) { Parent = currentParent };
                     currentList.Add(newEntry);
                     currentParent = newEntry;
                     currentList = newEntry.Children;
-                } else if (ContainerTypes.Contains(entry.TaskType.ToLower()) && entry.TaskAction == "END") {
+                }
+                else if (ContainerTypes.Contains(entry.TaskType.ToLower()) && entry.TaskAction == "END")
+                {
                     currentParent = currentParent.Parent;
                     currentList = currentParent.Children;
-                } else if (entry.TaskAction == "START" || entry.TaskAction == "LOG") {
+                }
+                else if (entry.TaskAction == "START" || entry.TaskAction == "LOG")
+                {
                     var hierarchyEntry = new LogHierarchyEntry(entry) { Parent = currentParent };
                     currentList.Add(hierarchyEntry);
                 }
@@ -54,11 +68,14 @@ namespace ALE.ETLBox.Logging {
         public List<string> ContainerTypes => new List<string>() { "sequence", "subpackage", "package" };
 
         public int? _loadProcessKey;
-        public int? LoadProcessKey {
-            get {
+        public int? LoadProcessKey
+        {
+            get
+            {
                 return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
             }
-            set {
+            set
+            {
                 _loadProcessKey = value;
             }
         }
@@ -67,16 +84,19 @@ namespace ALE.ETLBox.Logging {
 
         public string JSON { get; private set; }
 
-        public GetLogAsJSONTask Create() {
+        public GetLogAsJSONTask Create()
+        {
             this.Execute();
             return this;
         }
 
-        public GetLogAsJSONTask() {
+        public GetLogAsJSONTask()
+        {
 
         }
 
-        public GetLogAsJSONTask(int? loadProcessKey) : this() {
+        public GetLogAsJSONTask(int? loadProcessKey) : this()
+        {
             this.LoadProcessKey = loadProcessKey;
         }
 

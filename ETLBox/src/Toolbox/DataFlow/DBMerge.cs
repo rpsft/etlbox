@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks.Dataflow;
-using System.Linq;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.ConnectionManager;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -15,7 +15,7 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DBMerge<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>,IDataFlowSource<TInput> where TInput : IMergable, new()
+    public class DBMerge<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowSource<TInput> where TInput : IMergable, new()
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Insert, Upsert or delete in destination";
@@ -108,7 +108,7 @@ namespace ALE.ETLBox.DataFlow
             int x = 0;
             OutputSource = new CustomSource<TInput>(() =>
             {
-                return  DeltaTable.ElementAt(x++);
+                return DeltaTable.ElementAt(x++);
             }, () => x >= DeltaTable.Count);
 
             DestinationTable.OnCompletion = () => OutputSource.Execute();
@@ -142,14 +142,16 @@ namespace ALE.ETLBox.DataFlow
         void DeleteMissingEntriesOnce()
         {
             var deletions = InputData.Where(row => String.IsNullOrEmpty(row.ChangeAction));
-            if (DisableDeletion == false && WasDeletionExecuted == false) {
+            if (DisableDeletion == false && WasDeletionExecuted == false)
+            {
                 if (UseTruncateMethod)
                     TruncateTableTask.Truncate(this.ConnectionManager, TableName);
                 else
                     SqlDeleteIds(deletions);
             }
             DeltaTable.AddRange(deletions);
-            DeltaTable.ForEach(row => {
+            DeltaTable.ForEach(row =>
+            {
                 row.ChangeAction = "D";
                 row.ChangeDate = DateTime.Now;
             });

@@ -1,8 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Helper;
-using CF = ALE.ETLBox.ControlFlow;
 using System;
-using ALE.ETLBox.Logging;
+using CF = ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox
 {

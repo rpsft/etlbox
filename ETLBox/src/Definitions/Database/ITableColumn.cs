@@ -1,5 +1,7 @@
-﻿namespace ALE.ETLBox {
-    public interface ITableColumn {
+﻿namespace ALE.ETLBox
+{
+    public interface ITableColumn
+    {
         string Name { get; }
         string DataType { get; }
         bool AllowNulls { get; }

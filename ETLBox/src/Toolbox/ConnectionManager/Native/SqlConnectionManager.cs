@@ -60,14 +60,15 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (ModifyDBSettings)
             {
-                try {
-                string dbName = this.DbConnection.Database;
-                this.ExecuteNonQuery($@"USE master");
-                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
-                this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
-                this.ExecuteNonQuery($@"USE [{dbName}]");
+                try
+                {
+                    string dbName = this.DbConnection.Database;
+                    this.ExecuteNonQuery($@"USE master");
+                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
+                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
+                    this.ExecuteNonQuery($@"USE [{dbName}]");
                 }
-                catch {  }
+                catch { }
             }
         }
 

@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Creates a schema if the schema doesn't exists.
+    /// Creates a schema if the schema doesn't exists. For MySql, use the CreateDatabaseTask instead.
     /// </summary>
     /// <example>
     /// <code>

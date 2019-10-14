@@ -1,12 +1,4 @@
-﻿using System.Data;
-using System.Data.Odbc;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using System;
-using ALE.ETLBox.ControlFlow;
-
-namespace ALE.ETLBox.ConnectionManager
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an ODBC connection to Acccess databases.

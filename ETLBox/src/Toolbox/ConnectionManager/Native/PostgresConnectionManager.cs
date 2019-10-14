@@ -1,14 +1,7 @@
-﻿using ALE.ETLBox.Helper;
-using CsvHelper;
-using MySql.Data.MySqlClient;
-using Npgsql;
-using NpgsqlTypes;
+﻿using Npgsql;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -52,7 +45,7 @@ FROM STDIN (FORMAT BINARY)"))
                         object val = data.GetValue(ordinal);
                         if (val != null)
                         {
-                            object convertedVal = System.Convert.ChangeType(data.GetValue(ordinal),colDef.NETDataType);
+                            object convertedVal = System.Convert.ChangeType(data.GetValue(ordinal), colDef.NETDataType);
                             writer.Write(convertedVal, colDef.DataType);
 
                         }

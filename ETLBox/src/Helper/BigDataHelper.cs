@@ -1,6 +1,4 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Logging;
 using System;
 using System.Diagnostics;

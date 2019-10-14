@@ -1,5 +1,4 @@
 ﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +109,7 @@ $@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {primary
                 {
                     if (ConnectionType == ConnectionManagerType.MySql)
                         return "AUTO_INCREMENT";
-                    else if(ConnectionType == ConnectionManagerType.Postgres)
+                    else if (ConnectionType == ConnectionManagerType.Postgres)
                         return "SERIAL";
                     return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
                 }

@@ -1,10 +1,7 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SQLite;
-using System.Text;
 using System.Linq;
-using System.Collections.Generic;
-using System;
-using ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -65,11 +62,12 @@ VALUES ({String.Join(",", sourceColumnValues)})
         {
             if (ModifyDBSettings)
             {
-                try {
-                Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
-                JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
-                this.ExecuteNonQuery("PRAGMA synchronous = OFF");
-                this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+                try
+                {
+                    Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
+                    JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
+                    this.ExecuteNonQuery("PRAGMA synchronous = OFF");
+                    this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
                 }
                 catch
                 {

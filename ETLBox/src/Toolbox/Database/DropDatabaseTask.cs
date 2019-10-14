@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Tries to drop a database if the database exists.
+    /// Drops a database. Use DropIfExists to drop a database only if it exists. In MySql, this will drop a schema.
     /// </summary>
     /// <example>
     /// <code>
@@ -31,13 +31,12 @@ DROP DATABASE [{ObjectName}]
             {
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             }
-            else 
+            else
             {
                 return $@"DROP DATABASE {QB}{ObjectName}{QE}";
             }
         }
 
-        /* Some constructors */
         public DropDatabaseTask()
         {
         }
@@ -47,8 +46,6 @@ DROP DATABASE [{ObjectName}]
             ObjectName = databaseName;
         }
 
-
-        /* Static methods for convenience */
         public static void Drop(string databaseName)
             => new DropDatabaseTask(databaseName).Drop();
         public static void Drop(IConnectionManager connectionManager, string databaseName)

@@ -1,13 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -80,8 +73,9 @@ namespace ALE.ETLBox.DataFlow
         {
             if (JsonTextWriter == null) InitJsonWriter();
             base.WriteBatch(ref data);
-            foreach (var record in data) {
-                JsonSerializer.Serialize(JsonTextWriter,record);
+            foreach (var record in data)
+            {
+                JsonSerializer.Serialize(JsonTextWriter, record);
             }
             LogProgress(data.Length);
         }

@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a table if the table exists.
+    /// Checks if an index exists.
     /// </summary>
     public class IfIndexExistsTask : IfExistsTask, ITask
     {

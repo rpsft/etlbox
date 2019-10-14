@@ -40,7 +40,7 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotatedFullName} ON {TN.QuotatedFullName}
-( {String.Join(",", IndexColumns.Select(col => QB + col+ QE))} )
+( {String.Join(",", IndexColumns.Select(col => QB + col + QE))} )
 {IncludeSql}
 ";
             }
@@ -90,7 +90,7 @@ namespace ALE.ETLBox.ControlFlow
                     || ConnectionType == ConnectionManagerType.SQLite)
                     return string.Empty;
                 else
-                    return $"INCLUDE ({String.Join("  ,", IncludeColumns.Select ( col => QB+col+QE))})";
+                    return $"INCLUDE ({String.Join("  ,", IncludeColumns.Select(col => QB + col + QE))})";
             }
         }
 

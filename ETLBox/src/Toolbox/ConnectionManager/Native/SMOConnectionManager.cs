@@ -26,7 +26,7 @@ namespace ALE.ETLBox.ConnectionManager
             SqlConnectionManager = new SqlConnectionManager(connectionString);
         }
 
-        public SMOConnectionManager(string connectionString) : this (new ConnectionString(connectionString))
+        public SMOConnectionManager(string connectionString) : this(new ConnectionString(connectionString))
         { }
 
 
@@ -52,10 +52,10 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
         public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null)
-            => SqlConnectionManager.CreateCommand(commandText,parameterList);
+            => SqlConnectionManager.CreateCommand(commandText, parameterList);
 
         public int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null)
-            =>  OpenedContext.ExecuteNonQuery(command);
+            => OpenedContext.ExecuteNonQuery(command);
 
 
         public object ExecuteScalar(string command, IEnumerable<QueryParameter> parameterList = null)

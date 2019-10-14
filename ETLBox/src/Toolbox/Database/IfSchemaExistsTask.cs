@@ -3,7 +3,7 @@
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Drops a table if the table exists.
+    /// Checks if a schema exists. In MySql, use the IfDatabaseExistsTask instead.
     /// </summary>
     public class IfSchemaExistsTask : IfExistsTask, ITask
     {

@@ -145,7 +145,7 @@ namespace ALE.ETLBox.DataFlow
         public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc) : base(name, rowTransformationFunc) { }
         public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
         public RowTransformation(ITask task) : base(task) { }
-        public RowTransformation(ITask task, Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc)        { }
+        public RowTransformation(ITask task, Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc) { }
     }
 
     /// <summary>

@@ -1,14 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {

@@ -1,14 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Extensions.Logging;
-using System;
-using System.Linq;
-using CF = ALE.ETLBox.ControlFlow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Contains static information which affects all Dataflow tasks in ETLBox.

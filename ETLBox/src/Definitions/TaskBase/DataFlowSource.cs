@@ -1,13 +1,10 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.ControlFlow;
-using System;
-using ALE.ETLBox.Logging;
+﻿using System;
 using System.Threading.Tasks.Dataflow;
-using ALE.ETLBox.DataFlow;
 
-namespace ALE.ETLBox.DataFlow {
-    public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask {
+namespace ALE.ETLBox.DataFlow
+{
+    public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask
+    {
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         internal BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
         internal TypeInfo TypeInfo { get; set; }

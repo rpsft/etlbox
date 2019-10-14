@@ -1,7 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ALE.ETLBox
 {
@@ -15,7 +13,7 @@ namespace ALE.ETLBox
         public string QuotatedSchemaName =>
             String.IsNullOrWhiteSpace(Schema) ? string.Empty : Schema.Trim().StartsWith(QB) ? Schema : QB + Schema + QE;
         public string QuotatedFullName =>
-            String.IsNullOrWhiteSpace(Schema) ?  QuotatedTableName : QuotatedSchemaName + '.' + QuotatedTableName;
+            String.IsNullOrWhiteSpace(Schema) ? QuotatedTableName : QuotatedSchemaName + '.' + QuotatedTableName;
 
         public string FullName { get; private set; }
         public ConnectionManagerType ConnectionType { get; private set; }
@@ -31,7 +29,7 @@ namespace ALE.ETLBox
         public TableNameDescriptor(string tableName, IConnectionManager connection)
         {
             this.FullName = tableName;
-            this.ConnectionType = ConnectionManagerSpecifics.GetType(connection) ;
+            this.ConnectionType = ConnectionManagerSpecifics.GetType(connection);
         }
 
 

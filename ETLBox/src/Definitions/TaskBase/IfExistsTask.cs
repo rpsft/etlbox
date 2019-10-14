@@ -1,13 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
-
-namespace ALE.ETLBox.ControlFlow
+﻿namespace ALE.ETLBox.ControlFlow
 {
-    /// <summary>
-    /// Abstract base class to check if an object exists.
-    /// </summary>
     public abstract class IfExistsTask : GenericTask, ITask
     {
-        /* ITask Interface */
         public override string TaskName => $"Check if {ObjectName} exists";
         public void Execute()
         {
@@ -15,12 +9,13 @@ namespace ALE.ETLBox.ControlFlow
                 DoesExist = new SqlTask(this, Sql).ExecuteScalarAsBool();
         }
 
-        /* Public properties */
         public string ObjectName { get; set; }
         internal string OnObjectName { get; set; }
         public bool DoesExist { get; private set; }
 
-        public string Sql { get
+        public string Sql
+        {
+            get
             {
                 return GetSql();
             }

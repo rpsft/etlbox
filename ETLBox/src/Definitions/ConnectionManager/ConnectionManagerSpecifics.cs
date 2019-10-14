@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
-
-namespace ALE.ETLBox.ConnectionManager
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     public class ConnectionManagerSpecifics
     {
@@ -31,7 +28,7 @@ namespace ALE.ETLBox.ConnectionManager
                 return @"[";
             else if (type == ConnectionManagerType.MySql)
                 return @"`";
-            else if (type == ConnectionManagerType.Postgres ||type == ConnectionManagerType.SQLite)
+            else if (type == ConnectionManagerType.Postgres || type == ConnectionManagerType.SQLite)
                 return @"""";
             else
                 return string.Empty;
