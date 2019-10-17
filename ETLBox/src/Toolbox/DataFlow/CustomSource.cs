@@ -11,7 +11,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Custom source";
-        public void Execute() => ExecuteAsync();
+        
 
         /* Public properties */
         public Func<TOutput> ReadFunc { get; set; }
@@ -34,7 +34,9 @@ namespace ALE.ETLBox.DataFlow
             this.TaskName = name;
         }
 
-        public void ExecuteAsync()
+        public void Execute() => PostAll();
+
+        public void PostAll()
         {
             NLogStart();
             while (!ReadCompletedFunc.Invoke())

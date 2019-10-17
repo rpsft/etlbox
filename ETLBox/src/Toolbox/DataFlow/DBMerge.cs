@@ -19,7 +19,9 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Insert, Upsert or delete in destination";
-        public void Execute() => OutputSource.Execute();
+
+        public void PostAll() => OutputSource.PostAll();
+        public void Execute() => OutputSource.PostAll();
 
         /* Public Properties */
         public ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
@@ -181,7 +183,7 @@ namespace ALE.ETLBox.DataFlow
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate) => OutputSource.LinkTo(target);
 
-        public void ExecuteAsync() => OutputSource.ExecuteAsync();
+        public void ExecuteAsync() => OutputSource.PostAll();
 
         public ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
 

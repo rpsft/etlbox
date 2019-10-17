@@ -26,7 +26,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read DB data from {SourceDescription}";
-        public void Execute() => ExecuteAsync();
 
         /* Public Properties */
         public TableDefinition SourceTableDefinition { get; set; }
@@ -99,7 +98,8 @@ namespace ALE.ETLBox.DataFlow
             ConnectionManager = connectionManager;
         }
 
-        public void ExecuteAsync()
+        public void Execute() => PostAll();
+        public void PostAll()
         {
             NLogStart();
             ReadAll();

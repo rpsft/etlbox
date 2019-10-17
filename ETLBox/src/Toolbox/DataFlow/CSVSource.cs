@@ -23,7 +23,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read CSV Source data from file {FileName}";
-        public void Execute() => ExecuteAsync();
 
         /* Public properties */
         public Configuration Configuration { get; set; }
@@ -46,13 +45,14 @@ namespace ALE.ETLBox.DataFlow
             FileName = fileName;
         }
 
-        public void ExecuteAsync()
+        public void Execute() => PostAll();
+        public void PostAll()
         {
             NLogStart();
             Open();
             try
             {
-                ReadAll().Wait();
+                ReadAll();
                 Buffer.Complete();
             }
             catch (Exception e)
@@ -80,29 +80,29 @@ namespace ALE.ETLBox.DataFlow
         }
 
 
-        private async Task ReadAll()
+        private void ReadAll()
         {
             CsvReader.Read();
             CsvReader.ReadHeader();
             FieldHeaders = CsvReader.Context.HeaderRecord;
             while (CsvReader.Read())
             {
-                await ReadLineAndSendIntoBuffer();
+                ReadLineAndSendIntoBuffer();
                 LogProgress(1);
             }
         }
 
-        private async Task ReadLineAndSendIntoBuffer()
+        private void ReadLineAndSendIntoBuffer()
         {
             if (TypeInfo.IsArray)
             {
                 string[] line = CsvReader.Context.Record;
-                await Buffer.SendAsync((TOutput)(object)line);
+                Buffer.Post((TOutput)(object)line);
             }
             else
             {
                 TOutput bufferObject = CsvReader.GetRecord<TOutput>();
-                await Buffer.SendAsync(bufferObject);
+                Buffer.Post(bufferObject);
             }
         }
 

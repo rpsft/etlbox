@@ -2,7 +2,7 @@
 {
     public interface IDataFlowSource<TOutput> : IDataFlowLinkSource<TOutput>
     {
-        void ExecuteAsync();
+        void PostAll();
         void LinkTo(IDataFlowLinkTarget<TOutput> target);
     }
 }

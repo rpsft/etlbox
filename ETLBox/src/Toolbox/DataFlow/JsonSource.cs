@@ -19,7 +19,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Read Json source data from file {FileName}";
-        public void Execute() => ExecuteAsync();
 
         /* Public properties */
         public string FileName { get; set; }
@@ -40,7 +39,8 @@ namespace ALE.ETLBox.DataFlow
             FileName = fileName;
         }
 
-        public void ExecuteAsync()
+        public void Execute() => PostAll();
+        public void PostAll()
         {
             NLogStart();
             Open();
