@@ -89,7 +89,7 @@
 Now you want to define a pipeline which takes this data, transforms it &quot;on the fly&quot; and writes it into a target
 (this could be again a database, a file or somewhere else).
 On an abstract level this can be seen as an ETL process (ETL = Extract, Transform, Load).
-This artice shows you how ETLBox can help you with this.</p>
+This article shows you how ETLBox can help you with this.</p>
 <h2 id="namespace">Namespace</h2>
 <p>All Data Flow taks reside in the 'ALE.ETLBox.DataFlow' namespace.</p>
 <h2 id="source-components">Source components</h2>
@@ -104,19 +104,6 @@ There are different build-in data sources, e.g.: <code>CSVSource</code>, <code>D
 or to destinations.
 The purpose of a transformation component is to take the data from its input(s) and post the transformed data to its outputs. This is done on a row-by-row basis.
 As soon as there is any data in the input, the transformation will start and post the result to the output.</p>
-<h3 id="buffering">Buffering</h3>
-<p>Every transformation will come with an input. If the components connected to the input post data faster than the transformation
-can process it, the buffer will hold this data until the transformation can continue with the next item. This allows a source to read as fast as possible,
-allowing the already read data to be buffered in the memory - so the transformation will always have some data ready to process.</p>
-<h3 id="non-blocking-and-blocking-transformations">Non-Blocking and Blocking transformations</h3>
-<p>Transformation can be either blocking or non-blocking.</p>
-<p>Non-Blocking transformations will start to process data as soon as it finds something in its input buffer.
-In the moment where it discovers data in there, it will  start to transform it and send the data to registered output components.</p>
-<p>Blocking transformations will stop the data processing for the whole pipe - the input buffer will wait until all data has reached the input. This means it will wait until
-all sources in the pipe connected to the transformation have read all data from their source, and all transformations before have processed the incoming data.
-When all data was read from the connected sources and transformations further down the pipe, the blocking transformation will start the transformation. In a transformation
-of a blocking transformation, you will therefore have access to all data buffered within the memory. For instance, the sort component is a blocking transformation.
-It will wait until all data has reached the transformation block - then it will sort it and post the sorted data to its output.</p>
 <h2 id="destination-components">Destination components</h2>
 <p>Destination components will have normally only one input. They define a target for your data, e.g. a database table or CSV file. Currently, there is <code>DBDestination</code>
 and <code>CSVDestination</code> implemented. If you are in need of another destination component, you can either extend the <code>CustomDestination</code> or you <a href="https://github.com/roadrunnerlenny/etlbox/issues">open an
@@ -124,58 +111,6 @@ issue in github</a>.</p>
 <p>Every Destination comes with an input buffer.</p>
 <p>While a Destination for csv target will open a file stream where data is written into it as soon as arrives, a DB target will do this batch-by-batch - therefore,
 it will wait until the input buffer reaches the batch size (or the data is the last batch) and then insert it into the database using a bulk insert.</p>
-<h2 id="a-simple-dataflow">A simple dataflow</h2>
-<p>Let's look at a simple dataflow like this:</p>
-<p>CSV File (Source) --&gt; Row transformation --&gt; DB destination.</p>
-<h3 id="setting-up-the-connection">Setting up the connection</h3>
-<p>As the Data Flow Tasks are based on the same foundament like the Control Flow Tasks, you first should set up a connection like you do for
-a Control Flow Task.</p>
-<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;&quot;));
-</code></pre>
-<h3 id="creating-the-source">Creating the source</h3>
-<p>Now we need to create a source, in this example it could contain order data. This will look like this:</p>
-<pre><code class="lang-C#">CSVSource sourceOrderData = new CSVSource(&quot;demodata.csv&quot;);
-</code></pre>
-<h3 id="creating-the-row-transformation">Creating the row transformation</h3>
-<p>We now add a row transformation. The default output format of a <code>CSVSource</code> is an string array. In this example, we will convert the csv string array into an <code>Order</code> object.</p>
-<pre><code class="lang-C#">RowTransformation&lt;string[], Order&gt; rowTrans = new RowTransformation&lt;string[], Order&gt;(
-  row =&gt; new Order(row)
-);    
-</code></pre>
-<h3 id="creating-the-destination">Creating the destination</h3>
-<p>Now we need to create a destination. Notice that the destination is typed with the <code>Order</code> object.</p>
-<pre><code class="lang-C#">DBDestination&lt;Order&gt; dest = new DBDestination&lt;Order&gt;(&quot;dbo.OrderTable&quot;);
-</code></pre>
-<h3 id="linking-all-together">Linking all together</h3>
-<p>Until now we have only created the components, but we didn't define the Data Flow pipe. Let's do this now:</p>
-<pre><code class="lang-C#">sourceOrderData.LinkTo(rowTrans);
-rowTrans.LinkTo(dest);
-</code></pre>
-<p>This will create a data  flow pipe CSVSource -&gt; RowTransformation -&gt; DBDestination</p>
-<h3 id="starting-the-dataflow">Starting the dataflow</h3>
-<p>Now we will give the source the command to start reading data.</p>
-<pre><code class="lang-C#">  source.Execute();
-</code></pre>
-<p>This code will execute as an asynchronous task. If you want to wait for the Data Flow pipeline to finish, add this line to your code</p>
-<pre><code class="lang-C#">dest.Wait();
-</code></pre>
-<p>When <code>dest.Wait()</code> returns, all data was read from the source and written into the database table.</p>
-<h2 id="predicates">Predicates</h2>
-<p>Whenever you link components in a dataflow, you can add a filter expression to the link -
-this is called a predicate for the link.
-The filter expression is evaluated for every row that goes through the link.
-If the evaluated expression is true, data will pass into the linked component.
-If evaluated to false, the dataflow will try the next link to send its data through.</p>
-<p><strong>Note:</strong> Data will be send only into one of the connected links. If there is more than one link,
-the first link that either has no predicate or which predicate returns true is used.</p>
-<p>If you need data send into two ore more connected components, you can use the Multicast:</p>
-<pre><code class="lang-C#">source.LinkTo(multicast);
-multicast.LinkTo(dest1, row =&gt; row.Value2 &lt;= 2);
-multicast.LinkTo(dest2,  row =&gt; row.Value2 &gt; 2);
-source.Execute();
-dest1.Wait();
-dest2.Wait();
-</code></pre>
 </article>
           </div>
           

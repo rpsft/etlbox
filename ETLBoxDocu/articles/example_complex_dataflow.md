@@ -1,7 +1,7 @@
 # Example Data Flow
 
 ## Preparations
-First, you need to set up a database. You can use the [Controlflow Tasks](http://addlater.de) to do this.
+First, you need to set up a database. You can use the Controlflow Tasks to do this.
 
 ```C#
 ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;Integrated Security=SSPI;"));

@@ -96,7 +96,7 @@
 Here you can set default connections string, disbale the logging for all processes or set the current stage used in your logging configuration.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateDatabaseTask.html">CreateDatabaseTask</a></h4>
-      <section><p>Will create a database if the database doesn't exists.</p>
+      <section><p>Will create a database if the database doesn't exists. In MySql, this will create a schema.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateIndexTask.html">CreateIndexTask</a></h4>
       <section><p>Creates an index if the index doesn't exists, otherwise the index is dropped and recreated.</p>
@@ -105,7 +105,7 @@ Here you can set default connections string, disbale the logging for all process
       <section><p>Creates or updates a procedure.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateSchemaTask.html">CreateSchemaTask</a></h4>
-      <section><p>Creates a schema if the schema doesn't exists.</p>
+      <section><p>Creates a schema if the schema doesn't exists. For MySql, use the CreateDatabaseTask instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.CreateTableTask.html">CreateTableTask</a></h4>
       <section><p>Creates a table. If the tables exists, this task won't change the table.</p>
@@ -119,46 +119,45 @@ Here you can set default connections string, disbale the logging for all process
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DbTask.html">DbTask</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropDatabaseTask.html">DropDatabaseTask</a></h4>
-      <section><p>Tries to drop a database if the database exists.</p>
+      <section><p>Drops a database. Use DropIfExists to drop a database only if it exists. In MySql, this will drop a schema.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropIndexTask.html">DropIndexTask</a></h4>
-      <section><p>Drops an index if the index exists.</p>
+      <section><p>Drops an index. Use DropIfExists to drop an index only if it exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropProcedureTask.html">DropProcedureTask</a></h4>
-      <section><p>Drops a procedure if the procedure exists.</p>
+      <section><p>Drops a procedure. Use DropIfExists to drop a procedure only if it exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropSchemaTask.html">DropSchemaTask</a></h4>
-      <section><p>Drops an index if the index exists.</p>
+      <section><p>Drops a schema. Use DropIfExists to drop a schema only if it exists. For MySql, use the DropDatabase task instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropTableTask.html">DropTableTask</a></h4>
       <section><p>Drops a table. Use DropIfExists to drop a table only if it exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropTask-1.html">DropTask&lt;T&gt;</a></h4>
-      <section><p>Drops an object- abstract implementation.</p>
-</section>
+      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.DropViewTask.html">DropViewTask</a></h4>
       <section><p>Drops a view. Use DropIfExists to drop a view only if it exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.GetDatabaseListTask.html">GetDatabaseListTask</a></h4>
-      <section><p>Returns a list of all databases on the server (make sure to connect with the correct permissions).</p>
+      <section><p>Returns a list of all user databases on the server. Make sure to connect with the correct permissions!
+In MySql, this will return a list of all schemas.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.IfDatabaseExistsTask.html">IfDatabaseExistsTask</a></h4>
-      <section><p>Check if a Database exists.</p>
+      <section><p>Checks if a database exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.IfExistsTask.html">IfExistsTask</a></h4>
-      <section><p>Abstract base class to check if an object exists.</p>
-</section>
+      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.IfIndexExistsTask.html">IfIndexExistsTask</a></h4>
-      <section><p>Drops a table if the table exists.</p>
+      <section><p>Checks if an index exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.IfProcedureExistsTask.html">IfProcedureExistsTask</a></h4>
-      <section><p>Drops a table if the table exists.</p>
+      <section><p>Checks if a procedure exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.IfSchemaExistsTask.html">IfSchemaExistsTask</a></h4>
-      <section><p>Drops a table if the table exists.</p>
+      <section><p>Checks if a schema exists. In MySql, use the IfDatabaseExistsTask instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.html">IfTableOrViewExistsTask</a></h4>
-      <section><p>Drops a table if the table exists.</p>
+      <section><p>Checks if a table exists.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.Package.html">Package</a></h4>
       <section><p>A package is a shortcute for custom task, but with the TaskType &quot;PACKAGE&quot;.</p>

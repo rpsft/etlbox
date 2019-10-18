@@ -87,7 +87,7 @@
   
   <h1 id="ALE_ETLBox_ControlFlow_CreateDatabaseTask" data-uid="ALE.ETLBox.ControlFlow.CreateDatabaseTask" class="text-break">Class CreateDatabaseTask
   </h1>
-  <div class="markdown level0 summary"><p>Will create a database if the database doesn't exists.</p>
+  <div class="markdown level0 summary"><p>Will create a database if the database doesn't exists. In MySql, this will create a schema.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -578,10 +578,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void Execute()</code></pre>
+    <pre><code class="lang-csharp hljs">public void Execute()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_Execute">GenericTask.Execute()</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>

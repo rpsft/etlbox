@@ -110,6 +110,13 @@ from a database.
 By default, when reading from a database source the mapping which property stores data of which column
 is resolved by the property names. Using this attribute, you can specify the column name that maps to a propety.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination.html">CSVDestination</a></h4>
+      <section><p>A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+The CSVDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination-1.html">CSVDestination&lt;TInput&gt;</a></h4>
+      <section><p>A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVSource.html">CSVSource</a></h4>
       <section><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
 CSVSource as a nongeneric type always return a string array as output. If you need typed output, use
@@ -135,6 +142,10 @@ Data is read a as string from the source and dynamically converted into the corr
       <section><p>Contains static information which affects all Dataflow tasks in ETLBox.
 Here you can set the threshold value when information about processed records should appear.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination&lt;TInput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource&lt;TOutput&gt;</a></h4>
+      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBDestination.html">DBDestination</a></h4>
       <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
 The DBDestination access a string array as input type. If you need other data types, use the generic DBDestination instead.</p>
@@ -165,6 +176,21 @@ The index starts at 0.</p>
       <section><p>Reads data from a excel source. While reading the data from the file, data is also asnychronously posted into the targets.
 You can define a sheet name and a range - only the data in the specified sheet and range is read. Otherwise, all data
 in all sheets will be processed.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination.html">JsonDestination</a></h4>
+      <section><p>A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+The JsonDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html">JsonDestination&lt;TInput&gt;</a></h4>
+      <section><p>A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource.html">JsonSource</a></h4>
+      <section><p>Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.
+JsonSource as a nongeneric type always return a string array as output. If you need typed output, use
+the JsonSource&lt;TOutput&gt; object instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html">JsonSource&lt;TOutput&gt;</a></h4>
+      <section><p>Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup.html">Lookup</a></h4>
       <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source.

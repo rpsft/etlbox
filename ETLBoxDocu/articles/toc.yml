@@ -3,18 +3,19 @@
   items:
     - name: Example Basics
       href: example_basics.md
-- name: Control Flow
-  href: overview_controlflow.md
-  items:
-    - name: Example Control Flow
-      href: example_controlflow.md
 - name: Data Flow
   href: overview_dataflow.md
   items:
-    - name: Example Data Flow
-      href: example_dataflow.md
-    - name: Sources And Destinations
-      href: dataflow_sources_destinations.md
+    - name: Example Simple Data Flow
+      href: example_simple_dataflow.md
+    - name: Database sources and destinations
+      href: dataflow_db_sources_destinations.md
+    - name: File sources and destinations
+      href: dataflow_file_sources_destinations.md
+    - name: Custom sources and destinations
+      href: dataflow_custom_sources_destinations.md
+    - name: Transformations
+      href: dataflow_transformations.md
     - name: Data flow across databases
       href: example_different_dbs.md
     - name: Example WebService as Source
@@ -23,6 +24,15 @@
       href: example_json_as_destination.md
     - name: Example Multicast to split data
       href: example_multicast.md
+    - name: Predicates
+      href: dataflow_predicates.md
+    - name: Example Complex Data Flow
+      href: example_complex_dataflow.md
+- name: Control Flow
+  href: overview_controlflow.md
+  items:
+    - name: Example Control Flow
+      href: example_controlflow.md
 - name: Logging
   href: overview_logging.md
   items:

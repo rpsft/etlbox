@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Overview File source and destination </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Overview File source and destination ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="overview-file-source-and-destination">Overview File source and destination</h1>
+
+<h2 id="csvsource">CSVSource</h2>
+<p>A CSV source simple reads data from a CSV file. Under the hood is the 3rd party library <code>CSVHelper</code>. There are several configuration options for the Reader.
+The default output data type of the CSVReader is a string array. You can either use a <code>RowTransformation</code> to transform it into the data type you need, or use
+the generic implementation CSVSource.</p>
+<pre><code class="lang-C#">//Returns string[] as output type for other compoments
+CSVSource source = new CSVSource(&quot;Demo.csv&quot;) {
+    Delimiter = &quot;;&quot;,
+    SourceCommentRows = 2
+}
+</code></pre>
+<pre><code class="lang-C#">CSVSource&lt;CSVData&gt; source = new CSVSource&lt;CSVData&gt;(&quot;Demo.csv&quot;);
+</code></pre>
+<h2 id="csvdestination">CSVDestination</h2>
+<p>A csv destination will create a file containing the data in the desired CSV format. It is based on the 3rd party library <code>CSVHelper</code>.</p>
+<p>There is a generic and non-generic class avaiable. The generic approach will create a csv file including a header column - the header name is derived
+from the property names or the CSVHelper attributes.</p>
+<p>E.g.</p>
+<pre><code class="lang-C#"> public class MySimpleRow
+{    
+    [Name(&quot;Header1&quot;)]
+    [Index(1)]
+    public int Col1 { get; set; }
+    [Name(&quot;Header2&quot;)]
+    [Index(2)]
+    public string Col2 { get; set; }
+}
+
+CSVDestination&lt;MySimpleRow&gt; dest = new CSVDestination&lt;MySimpleRow&gt;(&quot;./SimpleWithObject.csv&quot;);
+</code></pre>
+<p>will create a .csv file like this</p>
+<pre><code>Header1,Header2
+1,Test1
+2,Test2
+3,Test3
+</code></pre>
+<h3 id="csv-configuration">CSV Configuration</h3>
+<p>The <code>CSVDestination</code> and the <code>CSVSource</code> does have a property <code>Configuration</code> which allows you to set e.g. the delimiter for the file.</p>
+<pre><code class="lang-C#">CSVSource source = new CSVSource(&quot;res/CSVSource/OneColumn.csv&quot;)
+{
+    Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
+};
+</code></pre>
+<h2 id="jsonsource">JsonSource</h2>
+<p>Let's consider we have a json file like this as our data input:</p>
+<pre><code>[
+  {
+    &quot;Col1&quot;: 1,
+    &quot;Col2&quot;: &quot;Test1&quot;    
+  },
+  {
+    &quot;Col1&quot;: 2,
+    &quot;Col2&quot;: &quot;Test2&quot;    
+  }
+]
+</code></pre>
+<p>This can be read into a dataflow using the <code>JsonSource</code> and the following code:</p>
+<pre><code class="lang-C#">public class MySimpleRow
+{
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+JsonSource&lt;MySimpleRow&gt; source = new JsonSource&lt;MySimpleRow&gt;(&quot;file.json&quot;);
+</code></pre>
+<h2 id="jsondestination">JsonDestination</h2>
+<p>To get your data outputted as json, you can use the <code>JSonDestination</code>:</p>
+<pre><code class="lang-C#">JsonDestination&lt;MySimpleRow&gt; dest = new JsonDestination&lt;MySimpleRow&gt;(&quot;file.json&quot;);
+</code></pre>
+<h2 id="excelsource">ExcelSource</h2>
+<p>An Excel source reads data from a xls or xlsx file. It uses the 3rd party library <code>ExcelDataReader</code>.
+By default the excel reader will try to read all data in the file. You can specify a sheet name and a range
+to restrict this behaviour. Additionally, you have to use the Attribute <code>ExcelColumn</code> to define the column index
+for each property. The first column would be 0, the 2nd column 1, ...</p>
+<p>Usage example:</p>
+<pre><code class="lang-C#">
+public class ExcelData {
+    [ExcelColumn(0)]
+    public string Col1 { get; set; }
+    [ExcelColumn(1)]
+    public int Col2 { get; set; }
+}
+
+ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt;(&quot;src/DataFlow/ExcelDataFile.xlsx&quot;) {
+    Range = new ExcelRange(2, 4, 5, 9),
+    SheetName = &quot;Sheet2&quot;
+};
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow_file_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

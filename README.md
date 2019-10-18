@@ -70,21 +70,24 @@ Of course, all data is processed asynchronously by the components. Each compomen
 
 ### Data flow tasks - examples
 
-It's easy to create your own data flow pipeline: 
+It's easy to create your own data flow pipeline. This example pipe will transfer data from a MySql database into a Sql Server database and transform the records on the fly. 
 
-Just create a source, some transformation and a destination. 
+Just create a source, some transformation and a destination:
 
 ```C#
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("select * from dbo.Source");
+var sourceCon = new MySqlConnectionManager("Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;");
+var destCon = new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
+
+DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(sourceCon, "SourceTable");
 RowTransformation<MySimpleRow, MySimpleRow> trans = new RowTransformation<MySimpleRow, MySimpleRow>(
     myRow => {  
         myRow.Value += 1;
         return myRow;
     });
-DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>("dbo.Destination");
+DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(destCon, "DestinationTable");
 ```
 
-Now link these pipeline elements together. 
+Now link these pipeline elements together.
 
 ```C#
 source.LinkTo(trans);

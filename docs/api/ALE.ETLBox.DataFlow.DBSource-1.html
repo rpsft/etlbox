@@ -96,8 +96,9 @@ into the targets.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><span class="xref">DBSource&lt;TOutput&gt;</span></div>
-      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DBSource.html">DBSource</a></div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;TOutput&gt;</div>
+    <div class="level4"><span class="xref">DBSource&lt;TOutput&gt;</span></div>
+      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.DBSource.html">DBSource</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -107,6 +108,15 @@ into the targets.</p>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;TOutput&gt;.SourceBlock</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;TOutput&gt;.LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;TOutput&gt;.LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</a>
+    </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
     </div>
@@ -172,7 +182,7 @@ into the targets.</p>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_DBSource_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DBSource&lt;TOutput&gt; : DataFlowTask, ITask, IDataFlowSource&lt;TOutput&gt;, IDataFlowLinkSource&lt;TOutput&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class DBSource&lt;TOutput&gt; : DataFlowSource&lt;TOutput&gt;, ITask, IDataFlowSource&lt;TOutput&gt;, IDataFlowLinkSource&lt;TOutput&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -202,7 +212,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L107">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L82">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1__ctor" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor">DBSource()</h4>
@@ -217,7 +227,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.%23ctor(ALE.ETLBox.ConnectionManager.IConnectionManager)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L122">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L91">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager)">DBSource(IConnectionManager)</h4>
@@ -249,7 +259,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.%23ctor(ALE.ETLBox.ConnectionManager.IConnectionManager%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L127">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L96">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)">DBSource(IConnectionManager, String)</h4>
@@ -283,42 +293,10 @@ source.Execute(); //Start the data flow</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1__ctor_ALE_ETLBox_TableDefinition_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.%23ctor(ALE.ETLBox.TableDefinition)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L112">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1__ctor_ALE_ETLBox_TableDefinition_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor(ALE.ETLBox.TableDefinition)">DBSource(TableDefinition)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DBSource(TableDefinition sourceTableDefinition)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.TableDefinition.html">TableDefinition</a></td>
-        <td><span class="parametername">sourceTableDefinition</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L117">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L86">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.#ctor(System.String)">DBSource(String)</h4>
@@ -352,7 +330,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_ColumnNames.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.ColumnNames%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L34">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L33">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_ColumnNames_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ColumnNames*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_ColumnNames" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ColumnNames">ColumnNames</h4>
@@ -382,7 +360,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_ColumnNamesEvaluated.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.ColumnNamesEvaluated%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L57">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L56">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_ColumnNamesEvaluated_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ColumnNamesEvaluated*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_ColumnNamesEvaluated" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ColumnNamesEvaluated">ColumnNamesEvaluated</h4>
@@ -412,7 +390,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_HasColumnNames.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.HasColumnNames%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L35">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L34">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_HasColumnNames_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasColumnNames*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_HasColumnNames" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasColumnNames">HasColumnNames</h4>
@@ -442,7 +420,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_HasSourceTableDefinition.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.HasSourceTableDefinition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L33">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L32">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_HasSourceTableDefinition_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasSourceTableDefinition*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_HasSourceTableDefinition" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasSourceTableDefinition">HasSourceTableDefinition</h4>
@@ -472,7 +450,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_HasSql.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.HasSql%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L39">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L38">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_HasSql_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasSql*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_HasSql" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasSql">HasSql</h4>
@@ -502,7 +480,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_HasTableName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.HasTableName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L37">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L36">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_HasTableName_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasTableName*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_HasTableName" data-uid="ALE.ETLBox.DataFlow.DBSource`1.HasTableName">HasTableName</h4>
@@ -529,40 +507,10 @@ source.Execute(); //Start the data flow</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L103">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SourceBlock*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_SourceBlock" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SourceBlock">SourceBlock</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ISourceBlock&lt;TOutput&gt; SourceBlock { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Dataflow.ISourceBlock</span>&lt;TOutput&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_SourceDescription.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.SourceDescription%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L91">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L69">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_SourceDescription_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SourceDescription*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_SourceDescription" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SourceDescription">SourceDescription</h4>
@@ -592,7 +540,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_SourceTableDefinition.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.SourceTableDefinition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L32">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L31">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_SourceTableDefinition_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SourceTableDefinition*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_SourceTableDefinition" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SourceTableDefinition">SourceTableDefinition</h4>
@@ -622,7 +570,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_Sql.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.Sql%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L38">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L37">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_Sql_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.Sql*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_Sql" data-uid="ALE.ETLBox.DataFlow.DBSource`1.Sql">Sql</h4>
@@ -652,7 +600,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_SqlForRead.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.SqlForRead%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L40">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L39">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_SqlForRead_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SqlForRead*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_SqlForRead" data-uid="ALE.ETLBox.DataFlow.DBSource`1.SqlForRead">SqlForRead</h4>
@@ -682,7 +630,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_TableName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.TableName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L36">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L35">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_TableName_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.TableName*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_TableName" data-uid="ALE.ETLBox.DataFlow.DBSource`1.TableName">TableName</h4>
@@ -746,7 +694,7 @@ source.Execute(); //Start the data flow</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_Execute.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.Execute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L29">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L101">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBSource_1_Execute_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.Execute*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBSource_1_Execute" data-uid="ALE.ETLBox.DataFlow.DBSource`1.Execute">Execute()</h4>
@@ -754,123 +702,22 @@ source.Execute(); //Start the data flow</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void Execute()</code></pre>
+    <pre><code class="lang-csharp hljs">public void Execute()</code></pre>
   </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_Execute">GenericTask.Execute()</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_ExecuteAsync.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.ExecuteAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_PostAll.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.PostAll%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L132">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L102">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1_ExecuteAsync_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ExecuteAsync*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_ExecuteAsync" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ExecuteAsync">ExecuteAsync()</h4>
+  <a id="ALE_ETLBox_DataFlow_DBSource_1_PostAll_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.PostAll*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_PostAll" data-uid="ALE.ETLBox.DataFlow.DBSource`1.PostAll">PostAll()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ExecuteAsync()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L152">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__" data-uid="ALE.ETLBox.DataFlow.DBSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void LinkTo(IDataFlowLinkTarget&lt;TOutput&gt; target)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TOutput&gt;</td>
-        <td><span class="parametername">target</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L159">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DBSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void LinkTo(IDataFlowLinkTarget&lt;TOutput&gt; target, Predicate&lt;TOutput&gt; predicate)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TOutput&gt;</td>
-        <td><span class="parametername">target</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Predicate</span>&lt;TOutput&gt;</td>
-        <td><span class="parametername">predicate</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_LoadTableDefinition.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.LoadTableDefinition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L83">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1_LoadTableDefinition_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.LoadTableDefinition*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_LoadTableDefinition" data-uid="ALE.ETLBox.DataFlow.DBSource`1.LoadTableDefinition">LoadTableDefinition()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void LoadTableDefinition()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBSource_1_ReadAll.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBSource%601.ReadAll%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBSource.cs/#L140">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DBSource_1_ReadAll_" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ReadAll*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DBSource_1_ReadAll" data-uid="ALE.ETLBox.DataFlow.DBSource`1.ReadAll">ReadAll()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ReadAll()</code></pre>
+    <pre><code class="lang-csharp hljs">public void PostAll()</code></pre>
   </div>
   <h3 id="implements">Implements</h3>
   <div>

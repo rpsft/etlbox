@@ -5,7 +5,7 @@ See the Table Of Content if you already know what you are looking for.
 
 ## ETLBox Components
 
-ETLBox is split into two main components: **Control Flow Tasks** and **Data Flow Tasks**. Some tasks in the Control Flow part are for logging purposes only.
+ETLBox is split into two main components: **Data Flow Tasks** and **Control Flow Tasks** . Some tasks in the Control Flow part are for logging purposes only.
 As there are advanced logging capabilities in ETLBox, logging itself is treated in separate articles.
 
 ## Clean coding
@@ -23,19 +23,19 @@ If you are able to understand and read german, I recommend you mein own book:
 
 # Getting started
 
+## Overview Data Flow Tasks
+
+All components in the Data Flow allow you to create your ETL (Extract, Transform, Load) pipeline - 
+where data is extracted from the source(s), asynchrounously transformed and then loaded into your destinations.
+Plese read the [Overview Data Flow](overview_dataflow.md) to get started. [There is also an Example Data Flow](example_basics.md).
+To understand the dataflow components, you can also visit the API reference and look at the description and details of each dataflow component.
+
 ## Overview Control Flow Tasks
 
 You will find an introduction into the Control Flow Tasks [in the article Overview Control Flow](overview_controlflow.md).
 This will give you all the basics you need to understand how the Control Flow tasks are designed.
 If you want to dig deeper, please see the API reference for detailled information about the tasks. 
 If you are in need of some examples of how to use Control Flow tasks, [see the Example Control Flow](example_controlflow.md)
-
-## Overview Data Flow Tasks
-
-All components in the Data Flow allow you to create your ETL (Extract, Transform, Load) pipeline - 
-where data is extracted from the source(s), asynchrounously transformed and then loaded into your destinations.
-Plese read the [Overview Data Flow](overview_dataflow.md) to get started. [There is also an Example Data Flow](example_dataflow.md).
-To understand the dataflow components, you can also visit the API reference and look at the description and details of each dataflow component.
 
 ## Overview Logging 
 
