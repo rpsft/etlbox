@@ -57,29 +57,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void SqlWithSelectStar(IConnectionManager connection)
-        {
-            //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceSelectStar");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationSelectStar");
-
-            //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
-            {
-                Sql = $@"SELECT * FROM {s2c.QB}SourceSelectStar{s2c.QE}",
-                ConnectionManager = connection
-            };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSelectStar");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            d2c.AssertTestData();
-        }
-
         public class MyExtendedRow
         {
             [ColumnMap("Col3")]
