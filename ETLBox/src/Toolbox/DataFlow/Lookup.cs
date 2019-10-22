@@ -84,7 +84,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void LoadLookupData()
         {
-            Source.PostAll();
+            Source.StartPostAll();
             LookupBuffer.Completion.Wait();
         }
 

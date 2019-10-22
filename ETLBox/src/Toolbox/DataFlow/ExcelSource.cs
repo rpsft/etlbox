@@ -23,7 +23,7 @@ namespace ALE.ETLBox.DataFlow
     public class ExcelSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput> where TOutput : new()
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Read Excel source data from file {FileName}";        
+        public override string TaskName => $"Dataflow: Read Excel source data from file {FileName}";
 
         /* Public properties */
         public string FileName { get; set; }
@@ -46,13 +46,13 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Execute() => PostAll();
-        public void PostAll()
+        public override void PostAll()
         {
             NLogStart();
             Open();
             try
             {
-                ReadAll().Wait();
+                ReadAll();
                 Buffer.Complete();
             }
             catch (Exception e)
@@ -66,7 +66,7 @@ namespace ALE.ETLBox.DataFlow
             NLogFinish();
         }
 
-        private async Task ReadAll()
+        private void ReadAll()
         {
             do
             {
@@ -80,7 +80,7 @@ namespace ALE.ETLBox.DataFlow
                     if (HasRange && rowNr > Range.EndRowIfSet) break;
                     if (HasRange && rowNr < Range.StartRow) continue;
                     TOutput row = ParseDataRow(typeInfo);
-                    await Buffer.SendAsync(row);
+                    Buffer.Post(row);
                     LogProgress(1);
                 }
             } while (ExcelDataReader.NextResult());

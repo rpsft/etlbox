@@ -7,6 +7,7 @@ using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests

@@ -46,7 +46,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Execute() => PostAll();
-        public void PostAll()
+        public override void PostAll()
         {
             NLogStart();
             Open();

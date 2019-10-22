@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>It's all in the box! Run all your ETL or ELT jobs with this C# class library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. files, Excel or databases. ETLbox currently supports SqlServer, SQLite, MySql and Postgres (and limited support for Access and SSIS). Furthermore, ETLBox offers control flow tasks that wraps sql in easy-to-use C# objects.</Description>
+    <Description>It's all in the box! Run all your ETL or ELT jobs with this C# class library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. files, Excel or databases. ETLbox currently supports SqlServer, SQLite, MySql and Postgres (and limited support for Access and SSAS). Furthermore, ETLBox offers control flow tasks that wraps sql in easy-to-use C# objects.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
@@ -12,12 +12,12 @@
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
     <PackageReleaseNotes>Adding JsonSource and JsonDestination.</PackageReleaseNotes>
-    <Version>1.6.1</Version>
+    <Version>1.6.2-alpha</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.6.1.0</AssemblyVersion>
-    <FileVersion>1.6.1.0</FileVersion>
+    <AssemblyVersion>1.6.2.0</AssemblyVersion>
+    <FileVersion>1.6.2.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

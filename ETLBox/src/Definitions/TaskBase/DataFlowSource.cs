@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -12,6 +13,16 @@ namespace ALE.ETLBox.DataFlow
         public DataFlowSource()
         {
             TypeInfo = new TypeInfo(typeof(TOutput));
+        }
+
+        public abstract void PostAll();
+
+        public async Task StartPostAll()
+        {
+            var task = Task.Factory.StartNew(
+                () => PostAll()
+                );
+            await task;
         }
 
         public void LinkTo(IDataFlowLinkTarget<TOutput> target)

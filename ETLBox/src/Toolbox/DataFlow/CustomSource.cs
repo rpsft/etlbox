@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -11,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Dataflow: Custom source";
-        
+
 
         /* Public properties */
         public Func<TOutput> ReadFunc { get; set; }
@@ -36,7 +37,7 @@ namespace ALE.ETLBox.DataFlow
 
         public void Execute() => PostAll();
 
-        public void PostAll()
+        public override void PostAll()
         {
             NLogStart();
             while (!ReadCompletedFunc.Invoke())
@@ -47,6 +48,7 @@ namespace ALE.ETLBox.DataFlow
             Buffer.Complete();
             NLogFinish();
         }
+
     }
 
     /// <summary>

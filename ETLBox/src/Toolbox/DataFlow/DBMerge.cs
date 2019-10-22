@@ -3,6 +3,7 @@ using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -21,6 +22,7 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName { get; set; } = "Dataflow: Insert, Upsert or delete in destination";
 
         public void PostAll() => OutputSource.PostAll();
+        public async Task StartPostAll() => await OutputSource.StartPostAll();
         public void Execute() => OutputSource.PostAll();
 
         /* Public Properties */
@@ -182,8 +184,6 @@ namespace ALE.ETLBox.DataFlow
         public void LinkTo(IDataFlowLinkTarget<TInput> target) => OutputSource.LinkTo(target);
 
         public void LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate) => OutputSource.LinkTo(target);
-
-        public void ExecuteAsync() => OutputSource.PostAll();
 
         public ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
 
