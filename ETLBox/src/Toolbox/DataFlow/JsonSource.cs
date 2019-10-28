@@ -46,7 +46,7 @@ namespace ALE.ETLBox.DataFlow
             Open();
             try
             {
-                ReadAll().Wait();
+                ReadAll();
                 Buffer.Complete();
             }
             catch (Exception e)
@@ -67,7 +67,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
 
-        private async Task ReadAll()
+        private void ReadAll()
         {
             JsonTextReader.Read();
             if (JsonTextReader.TokenType != JsonToken.StartArray)
@@ -79,7 +79,7 @@ namespace ALE.ETLBox.DataFlow
                 else
                 {
                     TOutput record = JsonSerializer.Deserialize<TOutput>(JsonTextReader);
-                    await Buffer.SendAsync(record);
+                    Buffer.Post(record);
                     LogProgress(1);
                 }
             }

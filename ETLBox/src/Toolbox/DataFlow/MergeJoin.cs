@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -89,6 +90,12 @@ namespace ALE.ETLBox.DataFlow
         {
             TargetBlock.Completion.Wait();
         }
+
+        public async Task Completion()
+        {
+            await TargetBlock.Completion;
+        }
+
         public MergeJoinTarget(ITargetBlock<TInput> joinTarget)
         {
             TargetBlock = joinTarget;

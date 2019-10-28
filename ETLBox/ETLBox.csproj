@@ -10,8 +10,8 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
-    <PackageTags>ETL SSIS ELT Dataflow Controlflow Datapipe</PackageTags>
-    <PackageReleaseNotes>Adding JsonSource and JsonDestination.</PackageReleaseNotes>
+    <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
+    <PackageReleaseNotes>Adding full async support for Sources and Destinations</PackageReleaseNotes>
     <Version>1.6.2-alpha</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
     <Authors>Andreas Lennartz</Authors>

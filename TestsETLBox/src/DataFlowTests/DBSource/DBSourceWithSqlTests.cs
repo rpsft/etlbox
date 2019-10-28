@@ -51,9 +51,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
-
-            //Assert
             d2c.AssertTestData();
+            //Assert
+
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -67,9 +67,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
             {
-                Sql = $@"SELECT CASE WHEN ISNULL(Col1,'') IS NOT NULL THEN Col1 ELSE Col1 END AS Col1, 
-Col2 
-FROM SourceSql",
+                Sql = $@"SELECT CASE WHEN {s2c.QB}Col1{s2c.QE} IS NOT NULL THEN {s2c.QB}Col1{s2c.QE} ELSE {s2c.QB}Col1{s2c.QE} END AS {s2c.QB}Col1{s2c.QE}, 
+{s2c.QB}Col2{s2c.QE} 
+FROM {s2c.QB}SourceSql{s2c.QE}",
                 ConnectionManager = connection
             };
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSql");
@@ -80,29 +80,5 @@ FROM SourceSql",
             //Assert
             d2c.AssertTestData();
         }
-
-        [Fact]
-        public void SqlWithSchemaName()
-        {
-            //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "dbo.SourceSqlSchemaName");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "dbo.DestinationSqlSchemaName");
-
-            //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
-            {
-                Sql = $@"SELECT sou.Col1, sou.Col2 FROM dbo.SourceSqlSchemaName AS sou",
-                ConnectionManager = SqlConnection
-            };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "dbo.DestinationSqlSchemaName");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            d2c.AssertTestData();
-        }
-
     }
 }

@@ -20,8 +20,7 @@ namespace ALE.ETLBox.DataFlow
         public async Task StartPostAll()
         {
             var task = Task.Factory.StartNew(
-                () => PostAll()
-                );
+                () => PostAll());
             await task;
         }
 

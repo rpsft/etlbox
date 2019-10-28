@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -25,6 +26,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => _voidDestination.Wait();
+        public async Task Completion() => await _voidDestination.Completion();
     }
 
     /// <summary>

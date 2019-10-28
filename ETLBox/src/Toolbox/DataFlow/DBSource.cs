@@ -63,7 +63,7 @@ namespace ALE.ETLBox.DataFlow
                 else if (HasSourceTableDefinition)
                     return SourceTableDefinition?.Columns?.Select(col => col.Name).ToList();
                 else
-                    return ParseColumnNamesFromSql();
+                    return SqlParser.ParseColumnNames(QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead);
             }
         }
 
@@ -119,19 +119,6 @@ namespace ALE.ETLBox.DataFlow
                 LogProgress(1);
                 Buffer.Post(row);
             }, ColumnNamesEvaluated);
-        }
-
-        private List<string> ParseColumnNamesFromSql()
-        {
-            var sql = QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead;
-            var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
-
-            List<string> columNames = statement?.Select
-                                                .Tokens
-                                                .Where(token => token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
-                                                .Select(token => token.AsIdentifier.Name)
-                                                .ToList();
-            return columNames;
         }
 
         private void LoadTableDefinition()

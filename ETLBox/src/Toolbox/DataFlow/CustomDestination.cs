@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -61,6 +62,17 @@ namespace ALE.ETLBox.DataFlow
         public void Wait()
         {
             TargetActionBlock.Completion.Wait();
+            CleanUp();
+        }
+
+        public async Task Completion()
+        {
+            await TargetActionBlock.Completion;
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
             OnCompletion?.Invoke();
             NLogFinish();
         }
