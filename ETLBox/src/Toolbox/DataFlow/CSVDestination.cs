@@ -54,6 +54,8 @@ namespace ALE.ETLBox.DataFlow
         {
             base.InitObjects(batchSize);
             Configuration = new Configuration(CultureInfo.InvariantCulture);
+            Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
+
         }
 
         internal void InitCsvWriter()

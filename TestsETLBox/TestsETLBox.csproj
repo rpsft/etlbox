@@ -39,6 +39,9 @@
     <None Update="db\SQLiteDataFlow.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\CSVDestination\DateTimeSerialization.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\CSVDestination\TwoColumnsSet3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
