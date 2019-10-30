@@ -4,7 +4,8 @@ namespace ALE.ETLBox.DataFlow
 {
     public interface IDataFlowSource<TOutput> : IDataFlowLinkSource<TOutput>
     {
-        Task StartPostAll();
+        Task ExecuteAsync();
+        void Execute();
         void LinkTo(IDataFlowLinkTarget<TOutput> target);
     }
 }

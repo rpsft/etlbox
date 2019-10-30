@@ -35,9 +35,7 @@ namespace ALE.ETLBox.DataFlow
             this.TaskName = name;
         }
 
-        public void Execute() => PostAll();
-
-        public override void PostAll()
+        public override void Execute()
         {
             NLogStart();
             while (!ReadCompletedFunc.Invoke())

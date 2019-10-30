@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -84,8 +85,16 @@ namespace ALE.ETLBox.DataFlow
 
         private void LoadLookupData()
         {
-            Source.StartPostAll();
-            LookupBuffer.Completion.Wait();
+            try
+            {
+                Task source = Source.ExecuteAsync();
+                Task dest = LookupBuffer.Completion;
+                Task.WhenAll(source, dest).Wait();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         private void FillBuffer(TSourceOutput sourceRow)

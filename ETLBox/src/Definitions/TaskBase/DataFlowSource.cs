@@ -15,12 +15,13 @@ namespace ALE.ETLBox.DataFlow
             TypeInfo = new TypeInfo(typeof(TOutput));
         }
 
-        public abstract void PostAll();
+        public abstract void Execute();
 
-        public async Task StartPostAll()
+        public async Task ExecuteAsync()
         {
             var task = Task.Factory.StartNew(
-                () => PostAll());
+                () => Execute()
+                );
             await task;
         }
 

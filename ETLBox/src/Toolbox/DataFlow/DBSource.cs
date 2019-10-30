@@ -98,9 +98,8 @@ namespace ALE.ETLBox.DataFlow
         {
             ConnectionManager = connectionManager;
         }
-
-        public void Execute() => PostAll();
-        public override void PostAll()
+        
+        public override void Execute()
         {
             NLogStart();
             ReadAll();
