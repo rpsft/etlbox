@@ -103,14 +103,16 @@ namespace ALE.ETLBox.DataFlow
             LookupList.Add(sourceRow);
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target)
+        public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target)
         {
             RowTransformation.LinkTo(target);
+            return target as IDataFlowLinkSource<TTransformationOutput>;
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate)
+        public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate)
         {
             RowTransformation.LinkTo(target, predicate);
+            return target as IDataFlowLinkSource<TTransformationOutput>;
         }
     }
 

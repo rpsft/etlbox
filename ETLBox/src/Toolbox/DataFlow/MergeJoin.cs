@@ -66,18 +66,20 @@ namespace ALE.ETLBox.DataFlow
             this.TaskName = name;
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TOutput> target)
+        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
         {
             Transformation.LinkTo(target);
             if (!DisableLogging)
                 NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            return target as IDataFlowLinkSource<TOutput>;
         }
 
-        public void LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
+        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
         {
             Transformation.LinkTo(target, predicate);
             if (!DisableLogging)
                 NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            return target as IDataFlowLinkSource<TOutput>;
         }
 
     }
