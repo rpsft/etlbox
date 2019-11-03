@@ -185,7 +185,10 @@ namespace ALE.ETLBox.DataFlow
             => OutputSource.LinkTo(target);
 
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => OutputSource.LinkTo(target);
+            => OutputSource.LinkTo(target, predicate);
+
+        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
+            => OutputSource.LinkTo(target, rowsToKeep, rowsIntoVoid);
 
         public ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
 

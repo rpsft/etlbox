@@ -108,6 +108,10 @@ namespace ALE.ETLBox.DataFlow
 
         public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate)
             => RowTransformation.LinkTo(target, predicate);
+
+        public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> rowsToKeep, Predicate<TTransformationOutput> rowsIntoVoid)
+            => RowTransformation.LinkTo(target, rowsToKeep, rowsIntoVoid);
+
     }
 
     /// <summary>

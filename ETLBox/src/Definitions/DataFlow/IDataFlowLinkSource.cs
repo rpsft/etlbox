@@ -9,5 +9,7 @@ namespace ALE.ETLBox.DataFlow
         IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target);
         IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate);
 
+        IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid);
+
     }
 }

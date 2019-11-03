@@ -32,7 +32,20 @@ namespace ALE.ETLBox.DataFlow
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
             if (!DisableLogging)
-                NLogger.Debug(CallingTask.TaskName + " was linked to Target!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+                NLogger.Debug(CallingTask.TaskName + " was linked to Target (with predicate)!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+            return target as IDataFlowLinkSource<TOutput>;
+        }
+
+        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
+        {
+            SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, rowsToKeep);
+            if (!DisableLogging)
+                NLogger.Debug(CallingTask.TaskName + " was linked to Target (with predicate)!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+
+            SourceBlock.LinkTo<TOutput>(new VoidDestination<TOutput>().TargetBlock, rowsIntoVoid);
+            if (!DisableLogging)
+                NLogger.Debug(CallingTask.TaskName + " was also linked to VoidDestination to ignore certain rows!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+
             return target as IDataFlowLinkSource<TOutput>;
         }
 

@@ -15,11 +15,17 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class RowTransformationMultipleLinkTests
+    public class RowTransformationFluentNotationTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowTransformationMultipleLinkTests(DataFlowDatabaseFixture dbFixture)
+        public RowTransformationFluentNotationTests(DataFlowDatabaseFixture dbFixture)
         {
+        }
+
+        public class MySimpleRow
+        {
+            public int Col1 { get; set; }
+            public string Col2 { get; set; }
         }
 
         [Fact]
@@ -38,6 +44,30 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
+            Task sourceT = source.ExecuteAsync();
+            Task destT = dest.Completion();
+
+            //Assert
+            sourceT.Wait();
+            destT.Wait();
+            dest2Columns.AssertTestData();
+        }
+
+        [Fact]
+        public void UsingFluentVoidPredicate()
+        {
+            //Arrange
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
+            source2Columns.InsertTestData();
+            source2Columns.InsertTestDataSet2();
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
+
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "DestinationMultipleLinks");
+            RowTransformation<MySimpleRow> trans1 = new RowTransformation<MySimpleRow>(row => row);
+
+            //Act
+            source.LinkTo(trans1, row => row.Col1 < 4, row => row.Col1 >= 4).LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion();
 

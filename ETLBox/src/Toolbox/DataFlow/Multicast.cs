@@ -45,6 +45,9 @@ namespace ALE.ETLBox.DataFlow
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
             => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target, predicate);
 
+        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
+            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target, rowsToKeep, rowsIntoVoid);
+
         private TInput Clone(TInput row)
         {
             TInput clone = default(TInput);
