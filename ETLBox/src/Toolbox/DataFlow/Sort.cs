@@ -62,16 +62,10 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target)
-        {
-            BlockTransformation.LinkTo(target);
-            return target as IDataFlowLinkSource<TInput>;
-        }
+            => BlockTransformation.LinkTo(target);
 
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-        {
-            BlockTransformation.LinkTo(target, predicate);
-            return target as IDataFlowLinkSource<TInput>;
-        }
+            => BlockTransformation.LinkTo(target, predicate);
     }
 
     /// <summary>

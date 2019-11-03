@@ -40,20 +40,10 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target)
-        {
-            BroadcastBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            if (!DisableLogging)
-                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            return target as IDataFlowLinkSource<TInput>;
-        }
+            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target);
 
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-        {
-            BroadcastBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
-            if (!DisableLogging)
-                NLogger.Debug(TaskName + " was linked to Target!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            return target as IDataFlowLinkSource<TInput>;
-        }
+            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target, predicate);
 
         private TInput Clone(TInput row)
         {
