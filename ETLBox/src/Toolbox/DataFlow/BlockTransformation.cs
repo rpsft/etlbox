@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
     /// block.LinkTo(dest);
     /// </code>
     /// </example>
-    public class BlockTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TOutput>
+    public class BlockTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Block Transformation";

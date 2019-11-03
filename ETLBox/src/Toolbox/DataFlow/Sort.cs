@@ -17,10 +17,8 @@ namespace ALE.ETLBox.DataFlow
     /// Sort&lt;MyDataRow&gt; block = new Sort&lt;MyDataRow&gt;(comp);
     /// </code>
     /// </example>
-    public class Sort<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowLinkSource<TInput>
+    public class Sort<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
     {
-
-
         /* ITask Interface */
         public override string TaskName { get; set; } = "Dataflow: Sort";
 
