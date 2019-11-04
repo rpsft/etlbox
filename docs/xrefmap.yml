@@ -6107,6 +6107,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
   nameWithType: BlockTransformation<TInput, TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
   nameWithType.vb: BlockTransformation(Of TInput, TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.BlockTransformation<TInput, TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: BlockTransformation<TInput, TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: BlockTransformation(Of TInput, TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo_
@@ -6515,23 +6524,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).IsHeaderRead
   nameWithType: CSVSource<TOutput>.IsHeaderRead
   nameWithType.vb: CSVSource(Of TOutput).IsHeaderRead
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.CSVSource`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).PostAll()
-  nameWithType: CSVSource<TOutput>.PostAll()
-  nameWithType.vb: CSVSource(Of TOutput).PostAll()
-- uid: ALE.ETLBox.DataFlow.CSVSource`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.CSVSource`1.PostAll
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CSVSource<TOutput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.CSVSource(Of TOutput).PostAll
-  nameWithType: CSVSource<TOutput>.PostAll
-  nameWithType.vb: CSVSource(Of TOutput).PostAll
 - uid: ALE.ETLBox.DataFlow.CSVSource`1.SkipRows
   name: SkipRows
   href: api/ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SkipRows
@@ -6638,6 +6630,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CustomDestination(Of TInput).CustomDestination
   nameWithType: CustomDestination<TInput>.CustomDestination
   nameWithType.vb: CustomDestination(Of TInput).CustomDestination
+- uid: ALE.ETLBox.DataFlow.CustomDestination`1.Completion
+  name: Completion()
+  href: api/ALE.ETLBox.DataFlow.CustomDestination-1.html#ALE_ETLBox_DataFlow_CustomDestination_1_Completion
+  commentId: M:ALE.ETLBox.DataFlow.CustomDestination`1.Completion
+  fullName: ALE.ETLBox.DataFlow.CustomDestination<TInput>.Completion()
+  fullName.vb: ALE.ETLBox.DataFlow.CustomDestination(Of TInput).Completion()
+  nameWithType: CustomDestination<TInput>.Completion()
+  nameWithType.vb: CustomDestination(Of TInput).Completion()
+- uid: ALE.ETLBox.DataFlow.CustomDestination`1.Completion*
+  name: Completion
+  href: api/ALE.ETLBox.DataFlow.CustomDestination-1.html#ALE_ETLBox_DataFlow_CustomDestination_1_Completion_
+  commentId: Overload:ALE.ETLBox.DataFlow.CustomDestination`1.Completion
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CustomDestination<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.CustomDestination(Of TInput).Completion
+  nameWithType: CustomDestination<TInput>.Completion
+  nameWithType.vb: CustomDestination(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.CustomDestination`1.OnCompletion
   name: OnCompletion
   href: api/ALE.ETLBox.DataFlow.CustomDestination-1.html#ALE_ETLBox_DataFlow_CustomDestination_1_OnCompletion
@@ -6821,23 +6830,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CustomSource(Of TOutput).Execute
   nameWithType: CustomSource<TOutput>.Execute
   nameWithType.vb: CustomSource(Of TOutput).Execute
-- uid: ALE.ETLBox.DataFlow.CustomSource`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.CustomSource-1.html#ALE_ETLBox_DataFlow_CustomSource_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.CustomSource`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.CustomSource<TOutput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.CustomSource(Of TOutput).PostAll()
-  nameWithType: CustomSource<TOutput>.PostAll()
-  nameWithType.vb: CustomSource(Of TOutput).PostAll()
-- uid: ALE.ETLBox.DataFlow.CustomSource`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.CustomSource-1.html#ALE_ETLBox_DataFlow_CustomSource_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.CustomSource`1.PostAll
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.CustomSource<TOutput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.CustomSource(Of TOutput).PostAll
-  nameWithType: CustomSource<TOutput>.PostAll
-  nameWithType.vb: CustomSource(Of TOutput).PostAll
 - uid: ALE.ETLBox.DataFlow.CustomSource`1.ReadCompletedFunc
   name: ReadCompletedFunc
   href: api/ALE.ETLBox.DataFlow.CustomSource-1.html#ALE_ETLBox_DataFlow_CustomSource_1_ReadCompletedFunc
@@ -6960,6 +6952,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowBatchDestination(Of TInput).BeforeBatchWrite
   nameWithType: DataFlowBatchDestination<TInput>.BeforeBatchWrite
   nameWithType.vb: DataFlowBatchDestination(Of TInput).BeforeBatchWrite
+- uid: ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.Completion
+  name: Completion()
+  href: api/ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Completion
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.Completion
+  fullName: ALE.ETLBox.DataFlow.DataFlowBatchDestination<TInput>.Completion()
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowBatchDestination(Of TInput).Completion()
+  nameWithType: DataFlowBatchDestination<TInput>.Completion()
+  nameWithType.vb: DataFlowBatchDestination(Of TInput).Completion()
+- uid: ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.Completion*
+  name: Completion
+  href: api/ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Completion_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.Completion
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowBatchDestination<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowBatchDestination(Of TInput).Completion
+  nameWithType: DataFlowBatchDestination<TInput>.Completion
+  nameWithType.vb: DataFlowBatchDestination(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.OnCompletion
   name: OnCompletion
   href: api/ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_OnCompletion
@@ -7011,6 +7020,137 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowBatchDestination(Of TInput).Wait
   nameWithType: DataFlowBatchDestination<TInput>.Wait
   nameWithType.vb: DataFlowBatchDestination(Of TInput).Wait
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1
+  name: DataFlowLinker<TOutput>
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html
+  commentId: T:ALE.ETLBox.DataFlow.DataFlowLinker`1
+  name.vb: DataFlowLinker(Of TOutput)
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput)
+  nameWithType: DataFlowLinker<TOutput>
+  nameWithType.vb: DataFlowLinker(Of TOutput)
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor(ALE.ETLBox.ITask,System.Threading.Tasks.Dataflow.ISourceBlock{`0},System.Boolean)
+  name: DataFlowLinker(ITask, ISourceBlock<TOutput>, Boolean)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_ALE_ETLBox_ITask_System_Threading_Tasks_Dataflow_ISourceBlock__0__System_Boolean_
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor(ALE.ETLBox.ITask,System.Threading.Tasks.Dataflow.ISourceBlock{`0},System.Boolean)
+  name.vb: DataFlowLinker(ITask, ISourceBlock(Of TOutput), Boolean)
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.DataFlowLinker(ALE.ETLBox.ITask, System.Threading.Tasks.Dataflow.ISourceBlock<TOutput>, System.Boolean)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).DataFlowLinker(ALE.ETLBox.ITask, System.Threading.Tasks.Dataflow.ISourceBlock(Of TOutput), System.Boolean)
+  nameWithType: DataFlowLinker<TOutput>.DataFlowLinker(ITask, ISourceBlock<TOutput>, Boolean)
+  nameWithType.vb: DataFlowLinker(Of TOutput).DataFlowLinker(ITask, ISourceBlock(Of TOutput), Boolean)
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor*
+  name: DataFlowLinker
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.DataFlowLinker
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).DataFlowLinker
+  nameWithType: DataFlowLinker<TOutput>.DataFlowLinker
+  nameWithType.vb: DataFlowLinker(Of TOutput).DataFlowLinker
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.CallingTask
+  name: CallingTask
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_CallingTask
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowLinker`1.CallingTask
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.CallingTask
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).CallingTask
+  nameWithType: DataFlowLinker<TOutput>.CallingTask
+  nameWithType.vb: DataFlowLinker(Of TOutput).CallingTask
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.CallingTask*
+  name: CallingTask
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_CallingTask_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowLinker`1.CallingTask
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.CallingTask
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).CallingTask
+  nameWithType: DataFlowLinker<TOutput>.CallingTask
+  nameWithType.vb: DataFlowLinker(Of TOutput).CallingTask
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.DisableLogging
+  name: DisableLogging
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_DisableLogging
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowLinker`1.DisableLogging
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.DisableLogging
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).DisableLogging
+  nameWithType: DataFlowLinker<TOutput>.DisableLogging
+  nameWithType.vb: DataFlowLinker(Of TOutput).DisableLogging
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.DisableLogging*
+  name: DisableLogging
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_DisableLogging_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowLinker`1.DisableLogging
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.DisableLogging
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).DisableLogging
+  nameWithType: DataFlowLinker<TOutput>.DisableLogging
+  nameWithType.vb: DataFlowLinker(Of TOutput).DisableLogging
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: DataFlowLinker<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowLinker<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowLinker<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo*
+  name: LinkTo
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo
+  nameWithType: DataFlowLinker<TOutput>.LinkTo
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.NLogger
+  name: NLogger
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_NLogger
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowLinker`1.NLogger
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.NLogger
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).NLogger
+  nameWithType: DataFlowLinker<TOutput>.NLogger
+  nameWithType.vb: DataFlowLinker(Of TOutput).NLogger
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.NLogger*
+  name: NLogger
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_NLogger_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowLinker`1.NLogger
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.NLogger
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).NLogger
+  nameWithType: DataFlowLinker<TOutput>.NLogger
+  nameWithType.vb: DataFlowLinker(Of TOutput).NLogger
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.SourceBlock
+  name: SourceBlock
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_SourceBlock
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowLinker`1.SourceBlock
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.SourceBlock
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).SourceBlock
+  nameWithType: DataFlowLinker<TOutput>.SourceBlock
+  nameWithType.vb: DataFlowLinker(Of TOutput).SourceBlock
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.SourceBlock*
+  name: SourceBlock
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_SourceBlock_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowLinker`1.SourceBlock
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.SourceBlock
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).SourceBlock
+  nameWithType: DataFlowLinker<TOutput>.SourceBlock
+  nameWithType.vb: DataFlowLinker(Of TOutput).SourceBlock
 - uid: ALE.ETLBox.DataFlow.DataFlowSource`1
   name: DataFlowSource<TOutput>
   href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html
@@ -7037,6 +7177,40 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).DataFlowSource
   nameWithType: DataFlowSource<TOutput>.DataFlowSource
   nameWithType.vb: DataFlowSource(Of TOutput).DataFlowSource
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.Execute
+  name: Execute()
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Execute
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowSource`1.Execute
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.Execute()
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).Execute()
+  nameWithType: DataFlowSource<TOutput>.Execute()
+  nameWithType.vb: DataFlowSource(Of TOutput).Execute()
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.Execute*
+  name: Execute
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Execute_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowSource`1.Execute
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.Execute
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).Execute
+  nameWithType: DataFlowSource<TOutput>.Execute
+  nameWithType.vb: DataFlowSource(Of TOutput).Execute
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.ExecuteAsync
+  name: ExecuteAsync()
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowSource`1.ExecuteAsync
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.ExecuteAsync()
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).ExecuteAsync()
+  nameWithType: DataFlowSource<TOutput>.ExecuteAsync()
+  nameWithType.vb: DataFlowSource(Of TOutput).ExecuteAsync()
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowSource`1.ExecuteAsync
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.ExecuteAsync
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).ExecuteAsync
+  nameWithType: DataFlowSource<TOutput>.ExecuteAsync
+  nameWithType.vb: DataFlowSource(Of TOutput).ExecuteAsync
 - uid: ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
   name: LinkTo(IDataFlowLinkTarget<TOutput>)
   href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
@@ -7055,6 +7229,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
   nameWithType: DataFlowSource<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
   nameWithType.vb: DataFlowSource(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowSource<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowSource(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_
@@ -7323,6 +7506,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).DBMerge
   nameWithType: DBMerge<TInput>.DBMerge
   nameWithType.vb: DBMerge(Of TInput).DBMerge
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.Completion
+  name: Completion()
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_Completion
+  commentId: M:ALE.ETLBox.DataFlow.DBMerge`1.Completion
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.Completion()
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).Completion()
+  nameWithType: DBMerge<TInput>.Completion()
+  nameWithType.vb: DBMerge(Of TInput).Completion()
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.Completion*
+  name: Completion
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_Completion_
+  commentId: Overload:ALE.ETLBox.DataFlow.DBMerge`1.Completion
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).Completion
+  nameWithType: DBMerge<TInput>.Completion
+  nameWithType.vb: DBMerge(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.DBMerge`1.DeltaTable
   name: DeltaTable
   href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_DeltaTable
@@ -7460,6 +7660,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput))
   nameWithType: DBMerge<TInput>.LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
   nameWithType.vb: DBMerge(Of TInput).LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DBMerge`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput), System.Predicate(Of TInput))
+  nameWithType: DBMerge<TInput>.LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  nameWithType.vb: DBMerge(Of TInput).LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
 - uid: ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_
@@ -7469,23 +7678,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo
   nameWithType: DBMerge<TInput>.LinkTo
   nameWithType.vb: DBMerge(Of TInput).LinkTo
-- uid: ALE.ETLBox.DataFlow.DBMerge`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.DBMerge`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).PostAll()
-  nameWithType: DBMerge<TInput>.PostAll()
-  nameWithType.vb: DBMerge(Of TInput).PostAll()
-- uid: ALE.ETLBox.DataFlow.DBMerge`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.DBMerge`1.PostAll
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).PostAll
-  nameWithType: DBMerge<TInput>.PostAll
-  nameWithType.vb: DBMerge(Of TInput).PostAll
 - uid: ALE.ETLBox.DataFlow.DBMerge`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_SourceBlock
@@ -7794,23 +7986,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).HasTableName
   nameWithType: DBSource<TOutput>.HasTableName
   nameWithType.vb: DBSource(Of TOutput).HasTableName
-- uid: ALE.ETLBox.DataFlow.DBSource`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.DBSource`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).PostAll()
-  nameWithType: DBSource<TOutput>.PostAll()
-  nameWithType.vb: DBSource(Of TOutput).PostAll()
-- uid: ALE.ETLBox.DataFlow.DBSource`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.DBSource`1.PostAll
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.DBSource<TOutput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.DBSource(Of TOutput).PostAll
-  nameWithType: DBSource<TOutput>.PostAll
-  nameWithType.vb: DBSource(Of TOutput).PostAll
 - uid: ALE.ETLBox.DataFlow.DBSource`1.SourceDescription
   name: SourceDescription
   href: api/ALE.ETLBox.DataFlow.DBSource-1.html#ALE_ETLBox_DataFlow_DBSource_1_SourceDescription
@@ -8141,23 +8316,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.ExcelSource(Of TOutput).HasSheetName
   nameWithType: ExcelSource<TOutput>.HasSheetName
   nameWithType.vb: ExcelSource(Of TOutput).HasSheetName
-- uid: ALE.ETLBox.DataFlow.ExcelSource`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.ExcelSource-1.html#ALE_ETLBox_DataFlow_ExcelSource_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.ExcelSource`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.ExcelSource<TOutput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.ExcelSource(Of TOutput).PostAll()
-  nameWithType: ExcelSource<TOutput>.PostAll()
-  nameWithType.vb: ExcelSource(Of TOutput).PostAll()
-- uid: ALE.ETLBox.DataFlow.ExcelSource`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.ExcelSource-1.html#ALE_ETLBox_DataFlow_ExcelSource_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.ExcelSource`1.PostAll
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.ExcelSource<TOutput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.ExcelSource(Of TOutput).PostAll
-  nameWithType: ExcelSource<TOutput>.PostAll
-  nameWithType.vb: ExcelSource(Of TOutput).PostAll
 - uid: ALE.ETLBox.DataFlow.ExcelSource`1.Range
   name: Range
   href: api/ALE.ETLBox.DataFlow.ExcelSource-1.html#ALE_ETLBox_DataFlow_ExcelSource_1_Range
@@ -8218,6 +8376,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.IDataFlowDestination(Of TInput)
   nameWithType: IDataFlowDestination<TInput>
   nameWithType.vb: IDataFlowDestination(Of TInput)
+- uid: ALE.ETLBox.DataFlow.IDataFlowDestination`1.Completion
+  name: Completion()
+  href: api/ALE.ETLBox.DataFlow.IDataFlowDestination-1.html#ALE_ETLBox_DataFlow_IDataFlowDestination_1_Completion
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowDestination`1.Completion
+  fullName: ALE.ETLBox.DataFlow.IDataFlowDestination<TInput>.Completion()
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowDestination(Of TInput).Completion()
+  nameWithType: IDataFlowDestination<TInput>.Completion()
+  nameWithType.vb: IDataFlowDestination(Of TInput).Completion()
+- uid: ALE.ETLBox.DataFlow.IDataFlowDestination`1.Completion*
+  name: Completion
+  href: api/ALE.ETLBox.DataFlow.IDataFlowDestination-1.html#ALE_ETLBox_DataFlow_IDataFlowDestination_1_Completion_
+  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowDestination`1.Completion
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.IDataFlowDestination<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowDestination(Of TInput).Completion
+  nameWithType: IDataFlowDestination<TInput>.Completion
+  nameWithType.vb: IDataFlowDestination(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.IDataFlowDestination`1.Wait
   name: Wait()
   href: api/ALE.ETLBox.DataFlow.IDataFlowDestination-1.html#ALE_ETLBox_DataFlow_IDataFlowDestination_1_Wait
@@ -8244,6 +8419,42 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput)
   nameWithType: IDataFlowLinkSource<TOutput>
   nameWithType.vb: IDataFlowLinkSource(Of TOutput)
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo*
+  name: LinkTo
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo_
+  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo
 - uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_SourceBlock
@@ -8296,41 +8507,40 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput)
   nameWithType: IDataFlowSource<TOutput>
   nameWithType.vb: IDataFlowSource(Of TOutput)
-- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
-  name: LinkTo(IDataFlowLinkTarget<TOutput>)
-  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
-  commentId: M:ALE.ETLBox.DataFlow.IDataFlowSource`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
-  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput))
-  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
-  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
-  nameWithType: IDataFlowSource<TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>)
-  nameWithType.vb: IDataFlowSource(Of TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput))
-- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.LinkTo*
-  name: LinkTo
-  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_LinkTo_
-  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowSource`1.LinkTo
+- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.Execute
+  name: Execute()
+  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_Execute
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowSource`1.Execute
+  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.Execute()
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).Execute()
+  nameWithType: IDataFlowSource<TOutput>.Execute()
+  nameWithType.vb: IDataFlowSource(Of TOutput).Execute()
+- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.Execute*
+  name: Execute
+  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_Execute_
+  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowSource`1.Execute
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.LinkTo
-  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).LinkTo
-  nameWithType: IDataFlowSource<TOutput>.LinkTo
-  nameWithType.vb: IDataFlowSource(Of TOutput).LinkTo
-- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.IDataFlowSource`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).PostAll()
-  nameWithType: IDataFlowSource<TOutput>.PostAll()
-  nameWithType.vb: IDataFlowSource(Of TOutput).PostAll()
-- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowSource`1.PostAll
+  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.Execute
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).Execute
+  nameWithType: IDataFlowSource<TOutput>.Execute
+  nameWithType.vb: IDataFlowSource(Of TOutput).Execute
+- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.ExecuteAsync
+  name: ExecuteAsync()
+  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_ExecuteAsync
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowSource`1.ExecuteAsync
+  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.ExecuteAsync()
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).ExecuteAsync()
+  nameWithType: IDataFlowSource<TOutput>.ExecuteAsync()
+  nameWithType.vb: IDataFlowSource(Of TOutput).ExecuteAsync()
+- uid: ALE.ETLBox.DataFlow.IDataFlowSource`1.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html#ALE_ETLBox_DataFlow_IDataFlowSource_1_ExecuteAsync_
+  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowSource`1.ExecuteAsync
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).PostAll
-  nameWithType: IDataFlowSource<TOutput>.PostAll
-  nameWithType.vb: IDataFlowSource(Of TOutput).PostAll
+  fullName: ALE.ETLBox.DataFlow.IDataFlowSource<TOutput>.ExecuteAsync
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowSource(Of TOutput).ExecuteAsync
+  nameWithType: IDataFlowSource<TOutput>.ExecuteAsync
+  nameWithType.vb: IDataFlowSource(Of TOutput).ExecuteAsync
 - uid: ALE.ETLBox.DataFlow.IDataFlowTransformation`2
   name: IDataFlowTransformation<TInput, TOutput>
   href: api/ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html
@@ -8667,23 +8877,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).JsonSerializer
   nameWithType: JsonSource<TOutput>.JsonSerializer
   nameWithType.vb: JsonSource(Of TOutput).JsonSerializer
-- uid: ALE.ETLBox.DataFlow.JsonSource`1.PostAll
-  name: PostAll()
-  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_PostAll
-  commentId: M:ALE.ETLBox.DataFlow.JsonSource`1.PostAll
-  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.PostAll()
-  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).PostAll()
-  nameWithType: JsonSource<TOutput>.PostAll()
-  nameWithType.vb: JsonSource(Of TOutput).PostAll()
-- uid: ALE.ETLBox.DataFlow.JsonSource`1.PostAll*
-  name: PostAll
-  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_PostAll_
-  commentId: Overload:ALE.ETLBox.DataFlow.JsonSource`1.PostAll
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.PostAll
-  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).PostAll
-  nameWithType: JsonSource<TOutput>.PostAll
-  nameWithType.vb: JsonSource(Of TOutput).PostAll
 - uid: ALE.ETLBox.DataFlow.JsonSource`1.TaskName
   name: TaskName
   href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_TaskName
@@ -8800,6 +8993,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TTransformationOutput), System.Predicate(Of TTransformationOutput))
   nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>)
   nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput))
+- uid: ALE.ETLBox.DataFlow.Lookup`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name: LinkTo(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>, Predicate<TTransformationOutput>)
+  href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput), Predicate(Of TTransformationOutput))
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TTransformationOutput>, System.Predicate<TTransformationOutput>, System.Predicate<TTransformationOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TTransformationOutput), System.Predicate(Of TTransformationOutput), System.Predicate(Of TTransformationOutput))
+  nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>, Predicate<TTransformationOutput>)
+  nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput), Predicate(Of TTransformationOutput))
 - uid: ALE.ETLBox.DataFlow.Lookup`3.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_LinkTo_
@@ -9021,6 +9223,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
   nameWithType: MergeJoin<TInput1, TInput2, TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
   nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2},System.Predicate{`2})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2},System.Predicate{`2})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput1, TInput2, TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: MergeJoin<TInput1, TInput2, TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_
@@ -9142,6 +9353,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MergeJoinTarget(Of TInput).MergeJoinTarget
   nameWithType: MergeJoinTarget<TInput>.MergeJoinTarget
   nameWithType.vb: MergeJoinTarget(Of TInput).MergeJoinTarget
+- uid: ALE.ETLBox.DataFlow.MergeJoinTarget`1.Completion
+  name: Completion()
+  href: api/ALE.ETLBox.DataFlow.MergeJoinTarget-1.html#ALE_ETLBox_DataFlow_MergeJoinTarget_1_Completion
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoinTarget`1.Completion
+  fullName: ALE.ETLBox.DataFlow.MergeJoinTarget<TInput>.Completion()
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoinTarget(Of TInput).Completion()
+  nameWithType: MergeJoinTarget<TInput>.Completion()
+  nameWithType.vb: MergeJoinTarget(Of TInput).Completion()
+- uid: ALE.ETLBox.DataFlow.MergeJoinTarget`1.Completion*
+  name: Completion
+  href: api/ALE.ETLBox.DataFlow.MergeJoinTarget-1.html#ALE_ETLBox_DataFlow_MergeJoinTarget_1_Completion_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeJoinTarget`1.Completion
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MergeJoinTarget<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoinTarget(Of TInput).Completion
+  nameWithType: MergeJoinTarget<TInput>.Completion
+  nameWithType.vb: MergeJoinTarget(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.MergeJoinTarget`1.TargetBlock
   name: TargetBlock
   href: api/ALE.ETLBox.DataFlow.MergeJoinTarget-1.html#ALE_ETLBox_DataFlow_MergeJoinTarget_1_TargetBlock
@@ -9253,6 +9481,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput))
   nameWithType: Multicast<TInput>.LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
   nameWithType.vb: Multicast(Of TInput).LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+- uid: ALE.ETLBox.DataFlow.Multicast`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Multicast-1.html#ALE_ETLBox_DataFlow_Multicast_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.Multicast`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Multicast<TInput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput), System.Predicate(Of TInput))
+  nameWithType: Multicast<TInput>.LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  nameWithType.vb: Multicast(Of TInput).LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
 - uid: ALE.ETLBox.DataFlow.Multicast`1.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.Multicast-1.html#ALE_ETLBox_DataFlow_Multicast_1_LinkTo_
@@ -9549,6 +9786,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.RowTransformation(Of TInput, TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
   nameWithType: RowTransformation<TInput, TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
   nameWithType.vb: RowTransformation(Of TInput, TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name: LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.RowTransformation<TInput, TOutput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowTransformation(Of TInput, TOutput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: RowTransformation<TInput, TOutput>.LinkTo(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: RowTransformation(Of TInput, TOutput).LinkTo(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkTo_
@@ -9742,6 +9988,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Sort(Of TInput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput))
   nameWithType: Sort<TInput>.LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
   nameWithType.vb: Sort(Of TInput).LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+- uid: ALE.ETLBox.DataFlow.Sort`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.Sort`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Sort<TInput>.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Sort(Of TInput).LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput), System.Predicate(Of TInput))
+  nameWithType: Sort<TInput>.LinkTo(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  nameWithType.vb: Sort(Of TInput).LinkTo(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
 - uid: ALE.ETLBox.DataFlow.Sort`1.LinkTo*
   name: LinkTo
   href: api/ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_LinkTo_
@@ -9864,6 +10119,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.VoidDestination(Of TInput).VoidDestination
   nameWithType: VoidDestination<TInput>.VoidDestination
   nameWithType.vb: VoidDestination(Of TInput).VoidDestination
+- uid: ALE.ETLBox.DataFlow.VoidDestination`1.Completion
+  name: Completion()
+  href: api/ALE.ETLBox.DataFlow.VoidDestination-1.html#ALE_ETLBox_DataFlow_VoidDestination_1_Completion
+  commentId: M:ALE.ETLBox.DataFlow.VoidDestination`1.Completion
+  fullName: ALE.ETLBox.DataFlow.VoidDestination<TInput>.Completion()
+  fullName.vb: ALE.ETLBox.DataFlow.VoidDestination(Of TInput).Completion()
+  nameWithType: VoidDestination<TInput>.Completion()
+  nameWithType.vb: VoidDestination(Of TInput).Completion()
+- uid: ALE.ETLBox.DataFlow.VoidDestination`1.Completion*
+  name: Completion
+  href: api/ALE.ETLBox.DataFlow.VoidDestination-1.html#ALE_ETLBox_DataFlow_VoidDestination_1_Completion_
+  commentId: Overload:ALE.ETLBox.DataFlow.VoidDestination`1.Completion
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.VoidDestination<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.VoidDestination(Of TInput).Completion
+  nameWithType: VoidDestination<TInput>.Completion
+  nameWithType.vb: VoidDestination(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.VoidDestination`1.TargetBlock
   name: TargetBlock
   href: api/ALE.ETLBox.DataFlow.VoidDestination-1.html#ALE_ETLBox_DataFlow_VoidDestination_1_TargetBlock
@@ -10991,6 +11263,25 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Helper.SqlHelperExtensions.AsStringWithNewLine
   nameWithType: SqlHelperExtensions.AsStringWithNewLine
+- uid: ALE.ETLBox.Helper.SqlParser
+  name: SqlParser
+  href: api/ALE.ETLBox.Helper.SqlParser.html
+  commentId: T:ALE.ETLBox.Helper.SqlParser
+  fullName: ALE.ETLBox.Helper.SqlParser
+  nameWithType: SqlParser
+- uid: ALE.ETLBox.Helper.SqlParser.ParseColumnNames(System.String)
+  name: ParseColumnNames(String)
+  href: api/ALE.ETLBox.Helper.SqlParser.html#ALE_ETLBox_Helper_SqlParser_ParseColumnNames_System_String_
+  commentId: M:ALE.ETLBox.Helper.SqlParser.ParseColumnNames(System.String)
+  fullName: ALE.ETLBox.Helper.SqlParser.ParseColumnNames(System.String)
+  nameWithType: SqlParser.ParseColumnNames(String)
+- uid: ALE.ETLBox.Helper.SqlParser.ParseColumnNames*
+  name: ParseColumnNames
+  href: api/ALE.ETLBox.Helper.SqlParser.html#ALE_ETLBox_Helper_SqlParser_ParseColumnNames_
+  commentId: Overload:ALE.ETLBox.Helper.SqlParser.ParseColumnNames
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.SqlParser.ParseColumnNames
+  nameWithType: SqlParser.ParseColumnNames
 - uid: ALE.ETLBox.Helper.StringExtension
   name: StringExtension
   href: api/ALE.ETLBox.Helper.StringExtension.html

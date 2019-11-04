@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Merging and syncing tables </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Merging and syncing tables ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="merging-and-syncing-tables">Merging and syncing tables</h1>
+
+<p>ETLbox can be used to integrate data from different source and write them into different destinations.
+Most of the time you will use tables in a database as target.
+A very common use case here is to keep a source and destination tables &quot;in sync&quot;.
+The following article describes how you can use the data from your data flow to insert
+new data in a destination table, update existing or delete removed records.</p>
+<p>Please note that for the sake of simplification we use a Database table as source which we want to
+sync with a destination Database table. But of course the source doesn’t necessarily needs to be a tables -
+every data that comes from a source or transformation in your data flow can be used as source for syncing.</p>
+<h2 id="full-or-delta">Full or Delta</h2>
+<p>First, we need to differentiate 2 scenarios.</p>
+<p>Scenario 1: The source table does not have any information about its changes.
+So no delta information is provided by the source.</p>
+<p>Scenario 2: The source table has information about its changes.
+This can be e.g. a timestamp indicating when the record was inserted or updated.
+One thing which is problematic here is how deletions are handled.
+There could be an extra flag saying that a record was deleted (including the deletion time).
+Or it could be that deletions are not transferred at all, either because they don't happen or for other reasons.</p>
+<h2 id="dbmerge">DBMerge</h2>
+<p>Both scenarios are supported with ETLBox.</p>
+<p>The <code>DBMerge</code> component can be used to tackle this problem</p>
+<p>The <code>DBMerge</code> is created on a destination table in your dataflow.
+It will wait for all data from the flow to arrive, and then either insert,
+update or delete the data in the detstination table.
+Deletion is optional (by default turned on) , and can be disabled with the property
+<code>DisableDeletion</code> set to true.</p>
+<p>The DBMergewas designed for scenario 1, but also  works for scenario 2 except deletions.</p>
+<p>To implement a sync between two tables you will  need a <code>DBSource</code> pointing to your source table.
+In our case we just use a table name for the source, but you could also define a sql query
+(e.g. which gives you only the delta records).</p>
+<p>The source is then connected to the DBMerge, and data from the source will then be inserted,
+updated or deleted in the destination.
+The DBMerge  is a generic object and expect as type an object that implements the interface IMergeable.
+This interface needs to have a ChangeDate and ChangeAction defines on your object.
+It is used to store in the record if it needs to be inserted, updated or delete, and when this happened.</p>
+<p>Optionally (but highly recommended) you should add the attribute <code>[MergeIdColumnName(...)]</code> to one of your
+properties of your object. It has two purposes: on the one hand, you pass a parameter the name of your database
+column which you would like to use to as identifier. This should be a unique column, e.g. a primary key.
+The property decorated with the attribute should return a unique value as well - if both match,
+the record is identified as a match.</p>
+<p>If a match occurs, the record does exist in the destination and the source. Now all column will be compared used
+the <code>Equals(object other)</code> method - if they differ, the record will be marked to be updated.
+If they do not differ, they will be marked as already existing.
+Records who exists in the source will be marked as instertions.
+Records missing in the source will be deleted from the destination (if <code>DisableDeletions = false</code>)</p>
+<p>When the DBMerge is executed, it first will compare the source and destination and check what records
+needs to inserted, updated (if different), needs no change or needs to be deleted (if enabled).
+Then, it will delete all records from the source that are either missing or need to be updated.
+After this, it will insert the new and updated records into the destination.</p>
+<p>The DBMerge has a property <code>DeltaTable</code> which is a List containing additionally information what records
+where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding
+<code>ChangeDate</code>/ <code>ChangeAction</code> properties.
+This information can be used as a source for further processing in the data flow,
+simple by connecting the DBMerge to a transformation or another Destination.</p>
+<p>Please note that if you connect the DBMerge to a source that provide you with delta information only,
+you need to disable the deletions - in that case, deletions need to be handled manually.</p>
+<h2 id="example-code">Example code</h2>
+<pre><code class="lang-C#">
+public class MyMergeRow : IMergable
+{
+    [ColumnMap(&quot;Col1&quot;)]
+    public long Key { get; set; }
+    [ColumnMap(&quot;Col2&quot;)]
+    public string Value { get; set; }
+
+    /* IMergable interface */
+    public DateTime ChangeDate { get; set; }
+    public string ChangeAction { get; set; }
+
+    [MergeIdColumnName(&quot;Col1&quot;)]
+    public string UniqueId =&gt; Key.ToString();
+
+    public override bool Equals(object other)
+    {
+        var msr = other as MyMergeRow;
+        if (other == null) return false;
+        return msr.Value == this.Value;
+    }
+}
+
+[Theory, MemberData(nameof(Connections))]
+public void SimpleMerge(IConnectionManager connection)
+{
+    //Arrange
+    TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, &quot;DBMergeSource&quot;);
+    s2c.InsertTestData();
+    s2c.InsertTestDataSet2();
+    TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, &quot;DBMergeDestination&quot;);
+    d2c.InsertTestDataSet3();
+    DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;DBMergeSource&quot;);
+
+    //Act
+    DBMerge&lt;MyMergeRow&gt; dest = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DBMergeDestination&quot;);
+    source.LinkTo(dest);
+    source.Execute();
+    dest.Wait();
+
+    //Assert
+    Assert.Equal(6, RowCountTask.Count(connection, &quot;DBMergeDestination&quot;, $&quot;{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'&quot;));
+    Assert.True(dest.DeltaTable.Count == 7);
+    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;U&quot;).Count() == 2);
+    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;D&quot; &amp;&amp; row.Key == 10).Count() == 1);
+    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;I&quot;).Count() == 3);
+    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;E&quot; &amp;&amp; row.Key == 1).Count() == 1);
+}
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow_dbmerge.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
