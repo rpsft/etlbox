@@ -34,7 +34,7 @@ Perhaps you are looking for an alternative to Sql Server Integrations Services (
 
 ### Supported sources and destinations
 
-The following table shows which types of sources and destination are supported with the current version of ETLBox
+The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox
 
 Source or Destination type|Supported by ETLBox|
 ---------------------------|-------------------
@@ -43,7 +43,8 @@ Postgres|Full support
 SQLite|Full support
 MySql|Full support
 Files|Support for Json and CSV
-*Any other*|Supported by CustomSource/CustomDestination
+
+Any other database, file or source can be supported by `CustomSource`/`CustomDestination`.
 
 ## ETLBox capabilities
 
