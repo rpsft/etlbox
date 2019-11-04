@@ -7,6 +7,7 @@ using ALE.ETLBox.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ALE.ETLBoxTests.Logging
@@ -14,15 +15,15 @@ namespace ALE.ETLBoxTests.Logging
     [Collection("Logging")]
     public class DataFlowLoggingTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
         public DataFlowLoggingTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(Connection);
+            CreateLogTablesTask.CreateLog(SqlConnection);
         }
 
         public void Dispose()
         {
-            RemoveLogTablesTask.Remove(Connection);
+            RemoveLogTablesTask.Remove(SqlConnection);
             ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
@@ -31,7 +32,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             new DropTableTask(tableName)
             {
-                ConnectionManager = Connection,
+                ConnectionManager = SqlConnection,
                 DisableLogging = true
             }.DropIfExists();
 
@@ -40,7 +41,7 @@ namespace ALE.ETLBoxTests.Logging
                 new TableColumn("Col2", "NVARCHAR(100)", allowNulls: true)
             }))
             {
-                ConnectionManager = Connection,
+                ConnectionManager = SqlConnection,
                 DisableLogging = true
             }.Create();
         }
@@ -50,7 +51,7 @@ namespace ALE.ETLBoxTests.Logging
             for (int i = 0; i < 10; i++)
                 new SqlTask("Insert demo data", $"INSERT INTO {tableName} VALUES({i},'Test{i}')")
                 {
-                    ConnectionManager = Connection,
+                    ConnectionManager = SqlConnection,
                     DisableLogging = true
                 }.ExecuteNonQuery();
         }
@@ -62,11 +63,11 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource source = new DBSource(Connection, "DBSource");
-            DBDestination dest = new DBDestination(Connection, "DBDestination", batchSize: 3);
+            DBSource source = new DBSource(SqlConnection, "DBSource");
+            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
-            StartLoadProcessTask.Start(Connection, "Test");
+            StartLoadProcessTask.Start(SqlConnection, "Test");
             DataFlow.LoggingThresholdRows = 3;
             source.LinkTo(dest);
             source.Execute();
@@ -76,12 +77,12 @@ namespace ALE.ETLBoxTests.Logging
             Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBSource' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
             {
                 DisableLogging = true,
-                ConnectionManager = Connection
+                ConnectionManager = SqlConnection
             }.Count().Rows);
             Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBDestination' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
             {
                 DisableLogging = true,
-                ConnectionManager = Connection
+                ConnectionManager = SqlConnection
             }.Count().Rows);
         }
 
@@ -92,8 +93,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource source = new DBSource(Connection, "DBSource");
-            DBDestination dest = new DBDestination(Connection, "DBDestination", batchSize: 3);
+            DBSource source = new DBSource(SqlConnection, "DBSource");
+            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 0;
@@ -105,9 +106,9 @@ namespace ALE.ETLBoxTests.Logging
             //Assert
 
             Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DBSource'")
-                { ConnectionManager = Connection, DisableLogging = true }.Count().Rows);
+                { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
             Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
-            { ConnectionManager = Connection, DisableLogging = true }.Count().Rows);
+            { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
         }
 
         [Fact]
@@ -117,8 +118,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource source = new DBSource(Connection, "DBSource");
-            DBDestination dest = new DBDestination(Connection, "DBDestination", batchSize: 3);
+            DBSource source = new DBSource(SqlConnection, "DBSource");
+            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
             RowTransformation rowTrans = new RowTransformation(row => row);
 
             //Act
@@ -132,7 +133,7 @@ namespace ALE.ETLBoxTests.Logging
             Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'RowTransformation' AND TaskAction = 'LOG'")
             {
                 DisableLogging = true,
-                ConnectionManager = Connection
+                ConnectionManager = SqlConnection
             }.Count().Rows);
          }
 
@@ -142,7 +143,7 @@ namespace ALE.ETLBoxTests.Logging
             //Arrange
             CreateTestTable("DBDestination");
             CSVSource source = new CSVSource("res/DataFlowLogging/TwoColumns.csv");
-            DBDestination dest = new DBDestination(Connection, "DBDestination", batchSize: 3);
+            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 2;
@@ -154,8 +155,45 @@ namespace ALE.ETLBoxTests.Logging
             Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'CSVSource' ")
             {
                 DisableLogging = true,
-                ConnectionManager = Connection
+                ConnectionManager = SqlConnection
             }.Count().Rows);
+        }
+
+        [Fact]
+        public void LoggingInAsyncTask()
+        {
+            //Arrange
+            CreateTestTable("Destination4CustomSource");
+            List<string> Data = new List<string>() { "Test1", "Test2", "Test3" };
+            int readIndex = 0;
+            Func<string[]> ReadData = () =>
+            {
+                var result = new string[2];
+                result[0] = readIndex.ToString();
+                result[1] = Data[readIndex];
+                readIndex++;
+                return result;
+            };
+
+            Func<bool> EndOfData = () => readIndex >= Data.Count;
+
+            //Act
+            CustomSource source = new CustomSource(ReadData, EndOfData);
+            DBDestination dest = new DBDestination(SqlConnection, "Destination4CustomSource");
+            source.LinkTo(dest);
+            Task sourceT = source.ExecuteAsync();
+            Task destT = dest.Completion();
+
+            //Assert
+            sourceT.Wait();
+            destT.Wait();
+
+            //Assert
+            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'CustomSource'")
+            { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
+            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
+            { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
+
         }
     }
 }
