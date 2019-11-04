@@ -112,11 +112,11 @@ start up the container.</p>
 <pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
 (&quot;Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123;Initial Catalog=demo&quot;));
 
-            CreateTableTask.Create(&quot;dbo.table1&quot;, new List&lt;TableColumn&gt;()
+            CreateTableTask.Create(&quot;Table1&quot;, new List&lt;TableColumn&gt;()
             {
-                new TableColumn(&quot;ID&quot;,&quot;int&quot;,allowNulls:false, isPrimaryKey:true, isIdentity:true),
-                new TableColumn(&quot;Col1&quot;,&quot;nvarchar(100)&quot;,allowNulls:true),
-                new TableColumn(&quot;Col2&quot;,&quot;smallint&quot;,allowNulls:true)
+                new TableColumn(&quot;ID&quot;,&quot;INT&quot;,allowNulls:false, isPrimaryKey:true, isIdentity:true),
+                new TableColumn(&quot;Col1&quot;,&quot;NVARCHAR(100)&quot;,allowNulls:true),
+                new TableColumn(&quot;Col2&quot;,&quot;SMALLINT&quot;,allowNulls:true)
             });
 </code></pre>
 <h3 id="adding-nlogconfig">Adding nlog.config</h3>
@@ -164,7 +164,7 @@ in our Mydata object.</p>
 );
 </code></pre>
 <p>Next we add a database destination pointing to our table.</p>
-<pre><code class="lang-C#">DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(&quot;dbo.table1&quot;);
+<pre><code class="lang-C#">DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(&quot;Table1&quot;);
 </code></pre>
 <p>Now we need to link the components of our dataflow.</p>
 <pre><code class="lang-C#">source.LinkTo(row);
@@ -176,8 +176,8 @@ The destination should wait until it received all data.</p>
 dest.Wait();
 </code></pre>
 <p>Finlly, we check if the data was successfully loaded into the table and write it into the console output. We use the SQLTask for this.</p>
-<pre><code class="lang-C#">SqlTask.ExecuteReader(&quot;Read all data from table1&quot;,
-    &quot;select Col1, Col2 from dbo.table1&quot;,
+<pre><code class="lang-C#">SqlTask.ExecuteReader(&quot;Read all data from Table1&quot;,
+    &quot;select Col1, Col2 from Table1&quot;,
     col1 =&gt; Console.WriteLine(col1.ToString() + &quot;,&quot;),
     col2 =&gt; Console.WriteLine(col2.ToString())
 );
@@ -208,7 +208,7 @@ namespace Demo
             ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
 (&quot;Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123;Initial Catalog=demo&quot;));
 
-            CreateTableTask.Create(&quot;dbo.table1&quot;, new List&lt;TableColumn&gt;()
+            CreateTableTask.Create(&quot;Table1&quot;, new List&lt;TableColumn&gt;()
             {
                 new TableColumn(&quot;ID&quot;,&quot;int&quot;,allowNulls:false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn(&quot;Col1&quot;,&quot;nvarchar(100)&quot;,allowNulls:true),
@@ -218,7 +218,7 @@ namespace Demo
             CSVSource source = new CSVSource(&quot;input.csv&quot;);
             RowTransformation&lt;string[], MyData&gt; row = new RowTransformation&lt;string[], MyData&gt;(
             input =&gt; new MyData() { Col1 = input[0], Col2 = input[1] });
-            DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(&quot;dbo.table1&quot;);
+            DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(&quot;Table1&quot;);
 
             source.LinkTo(row);
             row.LinkTo(dest);
@@ -226,7 +226,7 @@ namespace Demo
             dest.Wait();
 
             SqlTask.ExecuteReader(&quot;Read all data from table1&quot;,
-            &quot;select Col1, Col2 from dbo.table1&quot;,
+            &quot;select Col1, Col2 from Table1&quot;,
                 col1 =&gt; Console.WriteLine(col1.ToString() + &quot;,&quot;),
                 col2 =&gt; Console.WriteLine(col2.ToString()));
 

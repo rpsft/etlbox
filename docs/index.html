@@ -93,7 +93,7 @@
 <p><strong>Manage Change</strong>: Track you changes with git (or other source controls), code review your etl logic, and use your existing CI/CD processes.</p>
 <p><strong>Embedded or standalone</strong>: With .NET core and .NET standard, etlbox is a self-deploying toolbox – usable whereever .NET runs. (.NET Standard 2.0 or higher required). Or just include the library as a reference to your existing .NET projects.</p>
 <h3 id="supported-sources-and-destinations">Supported sources and destinations</h3>
-<p>The following table shows which types of sources and destination are supported with the current version of ETLBox</p>
+<p>The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox</p>
 <table>
 <thead>
 <tr>
@@ -122,12 +122,9 @@
 <td>Files</td>
 <td>Support for Json and CSV</td>
 </tr>
-<tr>
-<td>Supported by CustomSource/CustomDestination</td>
-<td></td>
-</tr>
 </tbody>
 </table>
+<p>Any other database, file or source can be supported by <code>CustomSource</code>/<code>CustomDestination</code>.</p>
 <h2 id="etlbox-capabilities">ETLBox capabilities</h2>
 <p>ETLBox is split into two main components: Data Flow and Control Flow Tasks. Both components will provide customizable logging functionalities.</p>
 <h3 id="control-flow-tasks">Control Flow Tasks</h3>
