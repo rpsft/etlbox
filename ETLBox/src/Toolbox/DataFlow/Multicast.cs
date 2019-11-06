@@ -48,6 +48,15 @@ namespace ALE.ETLBox.DataFlow
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
             => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target, rowsToKeep, rowsIntoVoid);
 
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target)
+            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
+            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, predicate);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
+            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+
         private TInput Clone(TInput row)
         {
             TInput clone = default(TInput);
@@ -76,6 +85,7 @@ namespace ALE.ETLBox.DataFlow
             if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
                 NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
         }
+
     }
 
     /// <summary>
