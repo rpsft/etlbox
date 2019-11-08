@@ -21,9 +21,8 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
-        {
-            return LinkTo<TOutput>(target);
-        }
+            => LinkTo<TOutput>(target);
+
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target)
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -33,9 +32,8 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-        {
-            return LinkTo<TOutput>(target, predicate);
-        }
+            => LinkTo<TOutput>(target, predicate);
+
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
@@ -45,9 +43,8 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-        {
-            return LinkTo<TOutput>(target, rowsToKeep, rowsIntoVoid);
-        }
+            => LinkTo<TOutput>(target, rowsToKeep, rowsIntoVoid);
+
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, rowsToKeep);

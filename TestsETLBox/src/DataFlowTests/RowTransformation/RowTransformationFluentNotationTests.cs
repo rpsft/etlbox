@@ -77,6 +77,44 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
+        public class MyOtherRow
+        {
+            [ColumnMap("Col1")]
+            public int ColA { get; set; }
+            [ColumnMap("Col2")]
+            public string ColB { get; set; }
+        }
+
+        [Fact]
+        public void UsingDifferentObjectTypes()
+        {
+            //Arrange
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
+            source2Columns.InsertTestData();            
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
+
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
+            DBDestination<MyOtherRow> dest = new DBDestination<MyOtherRow>(SqlConnection, "DestinationMultipleLinks");
+            RowTransformation<MySimpleRow, MyOtherRow> trans1 = new RowTransformation<MySimpleRow, MyOtherRow>
+                (row =>
+                {
+                    return new MyOtherRow()
+                    {
+                        ColA = row.Col1,
+                        ColB = row.Col2
+                    };
+                }
+                );
+
+            //Act
+            source.LinkTo<MyOtherRow>(trans1).LinkTo(dest);
+            
+            //Assert
+            source.Execute();
+            dest.Wait();
+            dest2Columns.AssertTestData();
+        }
+
 
     }
 }
