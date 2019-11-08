@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
     public class DBDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Write Data batchwise into table {DestinationTableDefinition.Name}";
+        public override string TaskName => $"Dataflow: Write Data batchwise into table {DestinationTableDefinition?.Name ?? TableName}";
         /* Public properties */
         public TableDefinition DestinationTableDefinition { get; set; }
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
