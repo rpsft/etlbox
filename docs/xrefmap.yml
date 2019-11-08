@@ -6125,6 +6125,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).LinkTo
   nameWithType: BlockTransformation<TInput, TOutput>.LinkTo
   nameWithType.vb: BlockTransformation(Of TInput, TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__
+  commentId: M:ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.BlockTransformation<TInput, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: BlockTransformation<TInput, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: BlockTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.BlockTransformation<TInput, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: BlockTransformation<TInput, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: BlockTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.BlockTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.BlockTransformation<TInput, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: BlockTransformation<TInput, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: BlockTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.BlockTransformation`2.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_SourceBlock
@@ -7117,6 +7144,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo
   nameWithType: DataFlowLinker<TOutput>.LinkTo
   nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: DataFlowLinker<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowLinker<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowLinker<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowLinker(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowLinker<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowLinker(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.DataFlowLinker`1.NLogger
   name: NLogger
   href: api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html#ALE_ETLBox_DataFlow_DataFlowLinker_1_NLogger
@@ -7247,6 +7301,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).LinkTo
   nameWithType: DataFlowSource<TOutput>.LinkTo
   nameWithType.vb: DataFlowSource(Of TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: DataFlowSource<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: DataFlowSource(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowSource<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowSource(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DataFlowSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.DataFlowSource<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowSource(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: DataFlowSource<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: DataFlowSource(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.DataFlowSource`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock
@@ -7678,6 +7759,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo
   nameWithType: DBMerge<TInput>.LinkTo
   nameWithType.vb: DBMerge(Of TInput).LinkTo
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>)
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput))
+  nameWithType: DBMerge<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>)
+  nameWithType.vb: DBMerge(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput))
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput))
+  nameWithType: DBMerge<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
+  nameWithType.vb: DBMerge(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput), System.Predicate(Of TInput))
+  nameWithType: DBMerge<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  nameWithType.vb: DBMerge(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
 - uid: ALE.ETLBox.DataFlow.DBMerge`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_SourceBlock
@@ -8455,6 +8563,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo
   nameWithType: IDataFlowLinkSource<TOutput>.LinkTo
   nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.IDataFlowLinkSource<TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowLinkSource(Of TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: IDataFlowLinkSource<TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: IDataFlowLinkSource(Of TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.IDataFlowLinkSource`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html#ALE_ETLBox_DataFlow_IDataFlowLinkSource_1_SourceBlock
@@ -9011,6 +9146,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo
   nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo
   nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.Lookup`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput>)
+  href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TTransformationOutput))
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TTransformationOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TTransformationOutput))
+  nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput>)
+  nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TTransformationOutput))
+- uid: ALE.ETLBox.DataFlow.Lookup`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>)
+  href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput))
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TTransformationOutput>, System.Predicate<TTransformationOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TTransformationOutput), System.Predicate(Of TTransformationOutput))
+  nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>)
+  nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput))
+- uid: ALE.ETLBox.DataFlow.Lookup`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>, Predicate<TTransformationOutput>)
+  href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput), Predicate(Of TTransformationOutput))
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TTransformationOutput>, System.Predicate<TTransformationOutput>, System.Predicate<TTransformationOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TTransformationOutput), System.Predicate(Of TTransformationOutput), System.Predicate(Of TTransformationOutput))
+  nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput>, Predicate<TTransformationOutput>, Predicate<TTransformationOutput>)
+  nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TTransformationOutput), Predicate(Of TTransformationOutput), Predicate(Of TTransformationOutput))
 - uid: ALE.ETLBox.DataFlow.Lookup`3.LookupList
   name: LookupList
   href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_LookupList
@@ -9241,6 +9403,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).LinkTo
   nameWithType: MergeJoin<TInput1, TInput2, TOutput>.LinkTo
   nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput1, TInput2, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: MergeJoin<TInput1, TInput2, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput1, TInput2, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: MergeJoin<TInput1, TInput2, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2},System.Predicate{`2})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2},System.Predicate{`2})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput1, TInput2, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: MergeJoin<TInput1, TInput2, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.MergeJoin`3.MergeJoinFunc
   name: MergeJoinFunc
   href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_MergeJoinFunc
@@ -9499,6 +9688,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).LinkTo
   nameWithType: Multicast<TInput>.LinkTo
   nameWithType.vb: Multicast(Of TInput).LinkTo
+- uid: ALE.ETLBox.DataFlow.Multicast`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Multicast-1.html#ALE_ETLBox_DataFlow_Multicast_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.Multicast`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Multicast<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput))
+  nameWithType: Multicast<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>)
+  nameWithType.vb: Multicast(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput))
+- uid: ALE.ETLBox.DataFlow.Multicast`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Multicast-1.html#ALE_ETLBox_DataFlow_Multicast_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.Multicast`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Multicast<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput))
+  nameWithType: Multicast<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
+  nameWithType.vb: Multicast(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+- uid: ALE.ETLBox.DataFlow.Multicast`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Multicast-1.html#ALE_ETLBox_DataFlow_Multicast_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.Multicast`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Multicast<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput), System.Predicate(Of TInput))
+  nameWithType: Multicast<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  nameWithType.vb: Multicast(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
 - uid: ALE.ETLBox.DataFlow.Multicast`1.SourceBlock
   name: SourceBlock
   href: api/ALE.ETLBox.DataFlow.Multicast-1.html#ALE_ETLBox_DataFlow_Multicast_1_SourceBlock
@@ -9804,6 +10020,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.RowTransformation(Of TInput, TOutput).LinkTo
   nameWithType: RowTransformation<TInput, TOutput>.LinkTo
   nameWithType.vb: RowTransformation(Of TInput, TOutput).LinkTo
+- uid: ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__
+  commentId: M:ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.RowTransformation<TInput, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput))
+  nameWithType: RowTransformation<TInput, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>)
+  nameWithType.vb: RowTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.RowTransformation<TInput, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: RowTransformation<TInput, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: RowTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__
+  commentId: M:ALE.ETLBox.DataFlow.RowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.RowTransformation<TInput, TOutput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TOutput>, System.Predicate<TOutput>, System.Predicate<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TOutput), System.Predicate(Of TOutput), System.Predicate(Of TOutput))
+  nameWithType: RowTransformation<TInput, TOutput>.LinkTo<TConvert>(IDataFlowLinkTarget<TOutput>, Predicate<TOutput>, Predicate<TOutput>)
+  nameWithType.vb: RowTransformation(Of TInput, TOutput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TOutput), Predicate(Of TOutput), Predicate(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.RowTransformation`2.RowTransformationFunc
   name: RowTransformationFunc
   href: api/ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_RowTransformationFunc
@@ -10006,6 +10249,33 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Sort(Of TInput).LinkTo
   nameWithType: Sort<TInput>.LinkTo
   nameWithType.vb: Sort(Of TInput).LinkTo
+- uid: ALE.ETLBox.DataFlow.Sort`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__
+  commentId: M:ALE.ETLBox.DataFlow.Sort`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Sort<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Sort(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput))
+  nameWithType: Sort<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>)
+  nameWithType.vb: Sort(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput))
+- uid: ALE.ETLBox.DataFlow.Sort`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.Sort`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Sort<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Sort(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput))
+  nameWithType: Sort<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>)
+  nameWithType.vb: Sort(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput))
+- uid: ALE.ETLBox.DataFlow.Sort`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name: LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  href: api/ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__
+  commentId: M:ALE.ETLBox.DataFlow.Sort`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})
+  name.vb: LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
+  fullName: ALE.ETLBox.DataFlow.Sort<TInput>.LinkTo<TConvert>(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<TInput>, System.Predicate<TInput>, System.Predicate<TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Sort(Of TInput).LinkTo(Of TConvert)(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of TInput), System.Predicate(Of TInput), System.Predicate(Of TInput))
+  nameWithType: Sort<TInput>.LinkTo<TConvert>(IDataFlowLinkTarget<TInput>, Predicate<TInput>, Predicate<TInput>)
+  nameWithType.vb: Sort(Of TInput).LinkTo(Of TConvert)(IDataFlowLinkTarget(Of TInput), Predicate(Of TInput), Predicate(Of TInput))
 - uid: ALE.ETLBox.DataFlow.Sort`1.SortFunction
   name: SortFunction
   href: api/ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_SortFunction
