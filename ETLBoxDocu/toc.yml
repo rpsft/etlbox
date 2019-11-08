@@ -2,6 +2,8 @@
   href: articles/
 - name: API Documentation
   href: api/
+  homepage: api/index.md
 - name: Getting help
   href: articles/more_help.md
-  homepage: api/index.md
+  homepage: articles/more_help.md
+
