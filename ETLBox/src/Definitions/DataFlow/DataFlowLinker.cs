@@ -21,22 +21,31 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
+            => LinkTo<TOutput>(target);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target)
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             if (!DisableLogging)
                 NLogger.Debug(CallingTask.TaskName + " was linked to Target!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            return target as IDataFlowLinkSource<TOutput>;
+            return target as IDataFlowLinkSource<TConvert>;
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
+            => LinkTo<TOutput>(target, predicate);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, predicate);
             if (!DisableLogging)
                 NLogger.Debug(CallingTask.TaskName + " was linked to Target (with predicate)!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
-            return target as IDataFlowLinkSource<TOutput>;
+            return target as IDataFlowLinkSource<TConvert>;
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
+            => LinkTo<TOutput>(target, rowsToKeep, rowsIntoVoid);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
         {
             SourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true }, rowsToKeep);
             if (!DisableLogging)
@@ -46,8 +55,7 @@ namespace ALE.ETLBox.DataFlow
             if (!DisableLogging)
                 NLogger.Debug(CallingTask.TaskName + " was also linked to VoidDestination to ignore certain rows!", CallingTask.TaskType, "LOG", CallingTask.TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey);
 
-            return target as IDataFlowLinkSource<TOutput>;
+            return target as IDataFlowLinkSource<TConvert>;
         }
-
     }
 }

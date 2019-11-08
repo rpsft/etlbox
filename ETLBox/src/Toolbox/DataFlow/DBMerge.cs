@@ -190,6 +190,15 @@ namespace ALE.ETLBox.DataFlow
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
             => OutputSource.LinkTo(target, rowsToKeep, rowsIntoVoid);
 
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target)
+            => OutputSource.LinkTo<TConvert>(target);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
+            => OutputSource.LinkTo<TConvert>(target, predicate);
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
+            => OutputSource.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+
         public ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
 
     }
