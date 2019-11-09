@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Predicates </title>
+    <title>Splitting and merging data </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Predicates ">
+    <meta name="title" content="Splitting and merging data ">
     <meta name="generator" content="docfx 2.44.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -81,41 +81,63 @@
 					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
 					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
 				</div>
-<h1 id="predicates">Predicates</h1>
+<h1 id="splitting-and-merging-data">Splitting and merging data</h1>
 
-<h2 id="predicates-1">Predicates</h2>
-<p>Whenever you link components in a dataflow, you can add a filter expression to the link -
-this is called a predicate for the link.
-The filter expression is evaluated for every row that goes through the link.
-If the evaluated expression is true, data will pass into the linked component.
-If evaluated to false, the dataflow will try the next link to send its data through.</p>
-<p><strong>Note:</strong> Data will be send only into one of the connected links. If there is more than one link,
-the first link that either has no predicate or which predicate returns true is used.</p>
-<p>If you need data send into two ore more connected components, you can use the Multicast:</p>
-<pre><code class="lang-C#">source.LinkTo(multicast);
-multicast.LinkTo(dest1, row =&gt; row.Value2 &lt;= 2);
-multicast.LinkTo(dest2,  row =&gt; row.Value2 &gt; 2);
-source.Execute();
-dest1.Wait();
-dest2.Wait();
+<h2 id="splitting-data">Splitting data</h2>
+<p>In some of your data flow you may want to split the data and have it processed differently in the further flow.
+E.g. your data comes from one source and you want parts of it written into one destination and parts of it
+written into another. Or you like to split up data based on some conditions. For this purpose you can use the Multicast</p>
+<h2 id="multicast">Multicast</h2>
+<p>The <code>Multicast</code> is a component which basically duplicates your data. It has one input and two or more outputs.
+(Technically, it could also be used with only one output, but then it wouldn't do much.)</p>
+<p>The following code demonstrate a simple example where data would be duplicated and copied into two destinations -
+a database table and a Json file.</p>
+<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
+
+var multicast = new Multicast();
+var destination1 = new JsonDestination(&quot;test.json&quot;);
+var destination2 = new DBDestination(&quot;TestTable&quot;);
+
+source.LinkTo(multicast);
+multicast.LinkTo(destination1);
+multicast.LinkTo(destination2);
 </code></pre>
-<h2 id="voiddestination">VoidDestination</h2>
-<p>Whenever you use predicates, sometime you end up with data which you don't want to write into a destination.
-Unfortunately, your DataFlow won't finish until all rows where written into any destination block. That's why
-there is a <code>VoidDestination</code> in ETLBox. Use this destination for all records for that you don't wish any futher processing.</p>
-<pre><code class="lang-C#">VoidDestination voidDest = new VoidDestination(); 
-source.LinkTo(dest, row =&gt; row.Value &gt; 0);
-souce.Link(voidDest, row =&gt; row.Value &lt;= 0);
+<p>If you want to split data, you can use <a href="dataflow_predicates.html">Predicates</a>.
+Predicates allow you to let only certain data pass.
+E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be
+copied into Table2.</p>
+<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
+
+var multicast = new Multicast();
+var destination1 = new DBDestination(&quot;Table1&quot;);
+var destination2 = new DBDestination(&quot;Table2&quot;);
+
+source.LinkTo(multicast);
+multicast.LinkTo(destination1, row =&gt; row[0] &gt; 0);
+multicast.LinkTo(destination2, row =&gt; row[0] &lt; 0);
 </code></pre>
-<h3 id="implicit-use-of-voiddestination">Implicit use of VoidDestination</h3>
-<p>You don't have to define the <code>VoidDestinatin</code> explicitly. Assuming that we have a Database Source
-that we want to link to a database destination. But we only want to let data pass throught where the
-a column is greater than 0. The rest we want to ignore. Normally, we would need to link the data twice like in
-the example above. But there is a short way to write it:</p>
-<pre><code class="lang-C#">source.LinkTo(dest, row =&gt; row.Value &gt; 0,  row =&gt; row.Value &lt;= 0);
+<p>Please note: Make sure when using predicate that always all rows arrive at a destination. Use a <code>VoidDestination</code>
+for records that you don't want to keep. See more about this in the <a href="dataflow_predicates.html">article about Predicates</a>.</p>
+<h2 id="merging-data">Merging data</h2>
+<p>If you want to merge data in your dataflow, you can use the <code>MergeJoin</code>.</p>
+<p>The MergeJoin accepts two inputs and has one output. E.g. you can link two sources with the MergeJoin, define
+a method how to combine these records and produce a new merged output. The data types of inputs and output can be
+different.</p>
+<pre><code class="lang-C#">DBSource&lt;MyInputRowType1&gt; source1 = new DBSource&lt;MyInputRowType1&gt;(Connection, &quot;MergeJoinSource1&quot;);
+DBSource&lt;MyInputRowType2&gt; source2 = new DBSource&lt;MyInputRowType2&gt;(Connection, &quot;MergeJoinSource2&quot;);
+DBDestination&lt;MyOutputRowType&gt; dest = new DBDestination&lt;MyOutputRowType&gt;(Connection, &quot;MergeJoinDestination&quot;);
+
+//Act
+MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt; join = new MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt;(
+    (inputRow1, inputRow2) =&gt; {
+        return new MyOutputRowType() {
+            Value = inputRow1.Value + inputRow2.Value
+        };
+    });
+source1.LinkTo(join.Target1);
+source2.LinkTo(join.Target2);
+join.LinkTo(dest);
 </code></pre>
-<p>Internally, this will create a <code>VoidDestination</code> when linking the components, but you don't have to deal with anymore.
-At the end, only records where the Value column is greate 0 will be written into the destination.</p>
 </article>
           </div>
           
@@ -124,7 +146,7 @@ At the end, only records where the Value column is greate 0 will be written into
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow_predicates.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow_splitting_merging.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

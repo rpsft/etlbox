@@ -18,18 +18,20 @@
       href: dataflow_transformations.md
     - name: Linking and Parallelism
       href: dataflow_execution_linking_completion.md
+    - name: Splitting and Merging data
+      href: dataflow_splitting_merging.md
     - name: Syncing tables with Merge
       href: dataflow_dbmerge.md
     - name: Data flow across databases
       href: example_different_dbs.md
+    - name: Predicates
+      href: dataflow_predicates.md
     - name: Example WebService as Source
       href: example_webservice_as_source.md
     - name: Example Json as Destination
       href: example_json_as_destination.md
     - name: Example Multicast to split data
       href: example_multicast.md
-    - name: Predicates
-      href: dataflow_predicates.md
     - name: Example Complex Data Flow
       href: example_complex_dataflow.md
 - name: Control Flow

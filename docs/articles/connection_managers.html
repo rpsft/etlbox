@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Predicates </title>
+    <title>Connection managers </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Predicates ">
+    <meta name="title" content="Connection managers ">
     <meta name="generator" content="docfx 2.44.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -81,41 +81,33 @@
 					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
 					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
 				</div>
-<h1 id="predicates">Predicates</h1>
+<h1 id="connection-managers">Connection managers</h1>
 
-<h2 id="predicates-1">Predicates</h2>
-<p>Whenever you link components in a dataflow, you can add a filter expression to the link -
-this is called a predicate for the link.
-The filter expression is evaluated for every row that goes through the link.
-If the evaluated expression is true, data will pass into the linked component.
-If evaluated to false, the dataflow will try the next link to send its data through.</p>
-<p><strong>Note:</strong> Data will be send only into one of the connected links. If there is more than one link,
-the first link that either has no predicate or which predicate returns true is used.</p>
-<p>If you need data send into two ore more connected components, you can use the Multicast:</p>
-<pre><code class="lang-C#">source.LinkTo(multicast);
-multicast.LinkTo(dest1, row =&gt; row.Value2 &lt;= 2);
-multicast.LinkTo(dest2,  row =&gt; row.Value2 &gt; 2);
-source.Execute();
-dest1.Wait();
-dest2.Wait();
-</code></pre>
-<h2 id="voiddestination">VoidDestination</h2>
-<p>Whenever you use predicates, sometime you end up with data which you don't want to write into a destination.
-Unfortunately, your DataFlow won't finish until all rows where written into any destination block. That's why
-there is a <code>VoidDestination</code> in ETLBox. Use this destination for all records for that you don't wish any futher processing.</p>
-<pre><code class="lang-C#">VoidDestination voidDest = new VoidDestination(); 
-source.LinkTo(dest, row =&gt; row.Value &gt; 0);
-souce.Link(voidDest, row =&gt; row.Value &lt;= 0);
-</code></pre>
-<h3 id="implicit-use-of-voiddestination">Implicit use of VoidDestination</h3>
-<p>You don't have to define the <code>VoidDestinatin</code> explicitly. Assuming that we have a Database Source
-that we want to link to a database destination. But we only want to let data pass throught where the
-a column is greater than 0. The rest we want to ignore. Normally, we would need to link the data twice like in
-the example above. But there is a short way to write it:</p>
-<pre><code class="lang-C#">source.LinkTo(dest, row =&gt; row.Value &gt; 0,  row =&gt; row.Value &lt;= 0);
-</code></pre>
-<p>Internally, this will create a <code>VoidDestination</code> when linking the components, but you don't have to deal with anymore.
-At the end, only records where the Value column is greate 0 will be written into the destination.</p>
+<h2 id="adonet-connection-pooling">ADO.NET Connection pooling</h2>
+<p>First of all, please let me clarify something about the Open() method of the connection manager:
+Whenever this method is called (doesn't matter if this happens on a completely new object or the object
+already exists), it will use instantiate a new connection on the underlying ADO.NET provider.
+It will also call the open method on this provider. But this won't always create a new database connection.
+The method naming Open could be misleading here - it actually should be something like 'OpenOrReuseConnectionFromPool. The reason for that is that ADO.NET (which the whole connection handling is based upon) has it's own connection pooling. Whenever you try to open a connection (which includes opening up the right port, doing a handshake, authentification etc.), the ADO.NET connection pooling will check if it makes sense to open up a new connection or if it could reuse an existing - already opened - connection from the pool. Whenever you call the Close()` method (which is totally recommended when using ADO.NET),this won't automatically close the connection. It will just return the connection to the pool - it will stay open until ADO.NET decides that it not needed anymore.</p>
+<p>Please see here for more details of connection pooling: <a href="https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-connection-pooling">https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-connection-pooling</a></p>
+<p>Thus having said, I don't think that calling the open / close (and also recreating the object every time) is actually a performance hit. It will just use the connection pooling provided - as recommended by ADO.NET, which probably will perform already very well. So if you would create a test environment where you open up a lot of connections to the database, you would see that the connection pool would have only one connection which stays open. So calling Open and Close multiple times in a row would in most cases never open up more than one connection. I also have a Test regarding the this pooling behavior in my test project:</p>
+<p>etlbox/TestsETLBox/src/DataFlowTests/ConnectionManager/SqlConnectionManagerTests.cs</p>
+<p>Lines 64 to 76 in 9135059
+[Fact]
+public void TestOpeningConnectionTwice()
+{
+SqlConnectionManager con = new SqlConnectionManager(new ConnectionString(ConnectionStringParameter));
+AssertOpenConnectionCount(0, ConnectionStringParameter);
+con.Open();
+con.Open();
+AssertOpenConnectionCount(1, ConnectionStringParameter);
+con.Close();
+AssertOpenConnectionCount(1, ConnectionStringParameter);
+SqlConnection.ClearAllPools();
+AssertOpenConnectionCount(0, ConnectionStringParameter);
+}</p>
+<p>In this test class you will also find other scenarios testing the ADO.NET pooling.</p>
+<p>TL;DR; - the current implementation follows the recommendation of Microsoft and makes use of the connection pooling provided by ADO.NET. This means that this actually can increase your performance, and in most scenarios you never have more connections open that you actually need for your application.</p>
 </article>
           </div>
           
@@ -124,7 +116,7 @@ At the end, only records where the Value column is greate 0 will be written into
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow_predicates.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/connection_managers.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

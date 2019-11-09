@@ -27,3 +27,24 @@ dest2.Wait();
 Whenever you use predicates, sometime you end up with data which you don't want to write into a destination.
 Unfortunately, your DataFlow won't finish until all rows where written into any destination block. That's why 
 there is a `VoidDestination` in ETLBox. Use this destination for all records for that you don't wish any futher processing. 
+
+```C#
+VoidDestination voidDest = new VoidDestination(); 
+source.LinkTo(dest, row => row.Value > 0);
+souce.Link(voidDest, row => row.Value <= 0);
+```
+
+
+### Implicit use of VoidDestination
+
+You don't have to define the `VoidDestinatin` explicitly. Assuming that we have a Database Source 
+that we want to link to a database destination. But we only want to let data pass throught where the 
+a column is greater than 0. The rest we want to ignore. Normally, we would need to link the data twice like in 
+the example above. But there is a short way to write it: 
+
+```C#
+source.LinkTo(dest, row => row.Value > 0,  row => row.Value <= 0);
+```
+
+Internally, this will create a `VoidDestination` when linking the components, but you don't have to deal with anymore.
+At the end, only records where the Value column is greate 0 will be written into the destination.
