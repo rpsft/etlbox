@@ -1,46 +1,54 @@
-- name: Getting started
-  href: getting_started.md
+- name: Introduction
   items:
-    - name: Example Basics
-      href: example_basics.md
-- name: Data Flow
-  href: overview_dataflow.md
+    - name: Getting started
+      href: getting_started.md
+    - name: Basic example
+      href: examples/example_basics.md
+- name: DataFlow Tutorial
   items:
-    - name: Example Simple Data Flow
-      href: example_simple_dataflow.md
+    - name: Data Flow
+      href: overview_dataflow.md
+    - name: A Simple Data Flow
+      href: examples/example_simple_dataflow.md
     - name: Database sources and destinations
-      href: dataflow_db_sources_destinations.md
+      href: dataflow/dataflow_db_sources_destinations.md
     - name: File sources and destinations
-      href: dataflow_file_sources_destinations.md
+      href: dataflow/dataflow_file_sources_destinations.md
     - name: Custom sources and destinations
-      href: dataflow_custom_sources_destinations.md
+      href: dataflow/dataflow_custom_sources_destinations.md
     - name: Transformations
-      href: dataflow_transformations.md
+      href: dataflow/dataflow_transformations.md
     - name: Linking and Parallelism
-      href: dataflow_execution_linking_completion.md
+      href: dataflow/dataflow_execution_linking_completion.md
     - name: Splitting and Merging data
-      href: dataflow_splitting_merging.md
+      href: dataflow/dataflow_splitting_merging.md
     - name: Syncing tables with Merge
-      href: dataflow_dbmerge.md
+      href: dataflow/dataflow_dbmerge.md
     - name: Data flow across databases
-      href: example_different_dbs.md
     - name: Predicates
-      href: dataflow_predicates.md
-    - name: Example WebService as Source
-      href: example_webservice_as_source.md
-    - name: Example Json as Destination
-      href: example_json_as_destination.md
-    - name: Example Multicast to split data
-      href: example_multicast.md
-    - name: Example Complex Data Flow
-      href: example_complex_dataflow.md
-- name: Control Flow
-  href: overview_controlflow.md
+      href: dataflow/dataflow_predicates.md
+- name: ControlFlow and Logging Tutorial
   items:
+    - name: ControlFlow Overview
+      href: overview_controlflow.md
     - name: Example Control Flow
-      href: example_controlflow.md
-- name: Logging
-  href: overview_logging.md
-  items:
+      href: examples/example_controlflow.md
+    - name: Logging
+      href: overview_logging.md
     - name: Example Logging
-      href: example_logging.md
+      href: examples/example_logging.md
+- name: DataFlow Examples
+  items:
+    - name: Simple Data Flow
+      href: examples/example_simple_dataflow.md
+    - name: Different Databases
+      href: examples/example_different_dbs.md
+    - name: WebService as Source
+      href: examples/example_webservice_as_source.md
+    - name: Json as Destination
+      href: examples/example_json_as_destination.md
+    - name: Multicast to split data
+      href: examples/example_multicast.md
+    - name: Complex Data Flow
+      href: examples/example_complex_dataflow.md
+

@@ -21,3 +21,16 @@ piece of software, I would be happy to help you. Feel free to contact me.
 
 Just send me an e-mail to (andreas.lennartz@gmail.com). 
 You can find my full contact information in the [imprint](imprint.md).
+
+## Clean coding
+
+At first glance, it can look like that some of the taks are not really adding big value to your project. But in accordance to clean coding, 
+having written everything in a format which is easy-to-read and easy-to-understand, you are able to produce code that is easier to maintain. Having your code "clean" 
+allows you to focus on the important parts of your logic and not be distracted by code lines that your brain need to "unravel" every time you go over them.
+If you are interested in clean coding, you should read the "bible" on that topic, written by 
+[Robert C. Martin: Clean Code](https://www.amazon.de/gp/product/0132350882/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=0132350882&linkCode=as2&tag=andreaslennar-21&linkId=CAKVL4PO6YCRW53L)
+
+### Books written by me
+
+If you are able to understand and read german, I recommend you mein own book: 
+[Mehr als Clean Code - Gedanken zur Softwareentwicklung](https://www.amazon.de/gp/product/3735736513/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=3735736513&linkCode=as2&tag=andreaslennar-21&linkId=D6HR6S6YAQ65Q3S6)

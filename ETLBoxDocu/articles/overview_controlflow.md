@@ -93,5 +93,5 @@ select cast(sum([rows]) as int) from sys.partitions where [object_id] = object_i
 
 ### Further reading
 
-Now you familiar with the basic concepts of Control Flow Task. Either continue with the [Control Flow Example](example_controlflow.md) 
+Now you familiar with the basic concepts of Control Flow Task. Either continue with the [Control Flow Example](examples/example_controlflow.md) 
 or have a look at the [API reference](../api/index.md).
