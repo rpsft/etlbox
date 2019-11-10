@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Overview Database source and destination </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Overview Database source and destination ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="overview-database-source-and-destination">Overview Database source and destination</h1>
+
+<p>This overview will give you a description of all the sources and destination reading and writing from databases</p>
+<h2 id="dbsource">DBSource</h2>
+<p>The DBSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data.
+While ADO.NET is reading from the source, data is simutaneously posted into the dataflow pipe.
+To initialize a DBSource, you can either hand over a <code>TableDefinition</code>, a SQL-statement or a tablename.
+The DBSource also accepts a connection manager. If no connection manager is specified, the &quot;default&quot; connection manager is used
+(which is stored in <code>ControlFlow.CurrentDbConnection</code>)</p>
+<h3 id="generic-approach">Generic approach</h3>
+<p>The DBSource can be defined with a POCO that matches the data types of the data.
+By default, the mapping of column names to properties is resolved by the property name itself. E.g. a column named Value1
+would stored in the property with the same name. If you use the <code>ColumnMap</code> attribute, you can add what column name will be mapped
+to the property. If there is no match, the column will be ignored.</p>
+<p>Usage example:</p>
+<pre><code class="lang-C#">public class MySimpleRow {
+    [ColumnMap(&quot;Value1&quot;)]
+    public string Col1 { get; set; }
+    public int Value2 { get; set; }
+}
+
+DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(
+    $@&quot;select Value1, Value2 from dbo.Test&quot;
+);
+</code></pre>
+<h3 id="non-generic-approach">Non generic approach</h3>
+<p>Instead of parsing your source data into a object, you can just read all your data in to string array. This is equivalent to <code>DBSource&lt;string[]&gt;</code>.
+E.g.:</p>
+<pre><code>DBSource source = new DBSource($@&quot;select Value1, Value2 from dbo.Test&quot;);
+RowTransformation row = new RowTransformation( 
+    row =&gt; {
+        string value1 = row[0];
+        string value2 = row[1];
+        }
+);
+</code></pre>
+<p>would have all data from column &quot;Value1&quot; accesable at the first position of the string array and &quot;Value2&quot; at the second position.</p>
+<h2 id="dbdestination">DBDestination</h2>
+<p>Like the <code>DBSource</code>, the <code>DBDestination</code> is the common component for sending data into a database. It is initalized with a table name or a <code>TableDefinition</code>.</p>
+<p>The following example would transfer data from the destination to the source, using all the same connection manager (derived from <code>ControlFlow.CurrentDbConnection</code>):</p>
+<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(&quot;SourceTable&quot;);
+DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(&quot;DestinationTable&quot;);
+//Link everything together
+source.LinkTo(dest);
+//Start the data flow
+source.Execute();
+dest.Wait()
+</code></pre>
+<h3 id="sql-server-connections">Sql Server Connections</h3>
+<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect via ADO.NET to a sql server.
+Use the <code>ConnectionString</code> object and a <code>SqlConnectionManger</code> to create a regular ADO.NET connection.</p>
+<pre><code class="lang-C#">DBSource source = DBSource (
+    new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;)),
+    &quot;SourceTable&quot;
+);
+</code></pre>
+<h3 id="mysql-connections">MySql Connections</h3>
+<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect to a MySql database via the MySql ADO.NET provider.
+Use the <code>MySqlConnectionString</code> object and a <code>MySqlConnectionManger</code>.</p>
+<pre><code class="lang-C#">DBSource source = DBSource (
+    new MySqlConnectionManager(new MySqlConnectionString(&quot;Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;&quot;)),
+    &quot;SourceTable&quot;
+);
+</code></pre>
+<h3 id="postgres-connections">Postgres Connections</h3>
+<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect to a Postgres database via the Postgres ADO.NET provider.
+Use the <code>PostgresConnectionString</code> object and a <code>PostgresConnectionManger</code>.</p>
+<pre><code class="lang-C#">DBDestination dest = DBDestination (
+    new PostgresConnectionManager(new PostgresConnectionString(&quot;&quot;Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;&quot;)),
+    &quot;DestinationTable&quot;
+);
+</code></pre>
+<h3 id="sqlite-connections">SQLite Connections</h3>
+<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect to a SQLite database via the SQLite ADO.NET provider.
+Use the <code>SQLiteConnectionString</code> object and a <code>SQLiteConnectionManger</code>.</p>
+<pre><code class="lang-C#">DBSource source = DBSource (
+    new SQLiteConnectionManager(new SQLiteConnectionString(&quot;Data Source=.\\db\\SQLiteControlFlow.db;Version=3;&quot;)),
+    &quot;SourceTable&quot;
+);
+</code></pre>
+<h3 id="smo-connection-manager">SMO Connection Manager</h3>
+<p>The <code>SMOConnectionManager</code> uses Sql Server Managed Objects to connect to a Sql Server. It allow the use of the GO keyword within your SQL to separate batches.
+It can be used with a <code>ConnectionString</code>.</p>
+<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SMOConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;));
+SqlTask.ExecuteNonQuery(&quot;SQL with GO keyword&quot;, &quot;CREATE SCHEMA TEST; GO; SELECT 1&quot;);
+</code></pre>
+<h3 id="sql-server-odbc-connections">Sql Server ODBC Connections</h3>
+<p>The <code>DBSource</code> and <code>DBDestination</code> also works with ODBC connection to Sql Server. .
+You will still use the underlying ADO.NET, but it allows you to connect to SQL Server via ODBC.</p>
+<pre><code class="lang-C#">DBSource source = DBSource (
+    new SqlODBCConnectionManager(new ODBCConnectionString(&quot;&quot;Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes&quot;)),
+    &quot;SourceTable&quot;
+);
+</code></pre>
+<p><em>Warning</em>: ODBC does not support bulk inserts like in &quot;native&quot; connections.
+The <code>DBDestination</code> will do a bulk insert by creating a sql insert statement that
+has multiple values: INSERT INTO (..) VALUES (..),(..),(..)</p>
+<h3 id="access-db-connections">Access DB Connections</h3>
+<p>The ODBC connection to Microsoft Access databases have some more restrictions. ETLBox is based .NET Core and will only
+support 64bit ODBC connections. You need also have Microsoft Access 64 bit installed. (The corresponding 64bit ODBC driver for Access can be download
+Microsoft: <a href="https://www.microsoft.com/en-us/download/details.aspx?id=13255">Microsoft Access Database Engine 2010 Redistributable</a>
+To create a connection to an Access Database, use the <code>AccessOdbcConnectionManager</code> and an <code>OdbcConnectionString</code>.</p>
+<pre><code class="lang-C#">DBDestination dest = DBDestination (
+    new AccessOdbcConnectionManager(new OdbcConnectionString(&quot;Driver={Microsoft Access Driver (*.mdb, *.accdb)}DBQ=C:\DB\Test.mdb&quot;)),
+    &quot;DestinationTable&quot;
+);
+</code></pre>
+<p><em>Warning</em>: The <code>DBDestination</code> will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.</p>
+<p><em>Note</em>: Please note that the AccessOdbcConnectionManager will create a &quot;temporary&quot; dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. This was necessary to simulate a bulk insert with Access-like Sql.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_db_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

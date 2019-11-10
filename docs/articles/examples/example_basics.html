@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ETLBox video </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="ETLBox video ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="etlbox-video">ETLBox video</h1>
+
+<p>This example will give you a brief overview of the basic concepts of ETLBox.</p>
+<h2 id="see-the-video">See the video</h2>
+<p><a href="https://www.youtube.com/watch?v=CsWZuRpl6PA">There is also a video demonstrating this example</a>.</p>
+<h3 id="environment">Environment</h3>
+<p>For this demo you can use Visual Studio for Mac and Sql Server for linux running in a docker image. An User interface for managing sql server on Mac would be the Azure Data Studio.</p>
+<p>First, we need to start a docker image running sql server on ubuntu. Run the following command line statement in the terminal to
+start up the container.</p>
+<pre><code class="lang-bash">docker run -d --name sql_server_demo -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=reallyStrongPwd123' -p  1433:1433 microsoft/mssql-server-linux
+</code></pre>
+<p>With the command <code>docker ps</code> we can see the container is up and running.</p>
+<p>Now create a new dotnet core console application. Do this either with your GUI or execute the following command:</p>
+<p><code>dotnet new console</code></p>
+<p>Add the current version of ETLBox as a package to your project.</p>
+<pre><code class="lang-bash">dotnet add package ETLBox
+</code></pre>
+<p>Now you will be able to use the full set of tools coming with ETLBox</p>
+<h3 id="start-coding">Start coding</h3>
+<p>Now we are in the static main method.</p>
+<p>We need to store a connection string in the static Control Flow object.</p>
+<pre><code class="lang-C#"> ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
+            (&quot;Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;));
+</code></pre>
+<p>With CreateDatabaseTask we will create a new Database.</p>
+<pre><code class="lang-C#">CreateDatabaseTask.Create(&quot;demo&quot;);
+</code></pre>
+<p>Also we would like to change the connection to the database we just created and create a table in there using the CreateTableTask.</p>
+<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
+(&quot;Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123;Initial Catalog=demo&quot;));
+
+            CreateTableTask.Create(&quot;Table1&quot;, new List&lt;TableColumn&gt;()
+            {
+                new TableColumn(&quot;ID&quot;,&quot;INT&quot;,allowNulls:false, isPrimaryKey:true, isIdentity:true),
+                new TableColumn(&quot;Col1&quot;,&quot;NVARCHAR(100)&quot;,allowNulls:true),
+                new TableColumn(&quot;Col2&quot;,&quot;SMALLINT&quot;,allowNulls:true)
+            });
+</code></pre>
+<h3 id="adding-nlogconfig">Adding nlog.config</h3>
+<p>Before we test our demo project, we want to have some logging output displayed. ETLBox logging is build on nlog. On the etlbox website you will find examples how to configure logging with nlog. Add the following lines as nlog.config to your project root.
+Make sure it is copied into the output directory.</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt; 
+  &lt;rules&gt;
+    &lt;logger name=&quot;*&quot; minlevel=&quot;Debug&quot; writeTo=&quot;console&quot; /&gt;
+  &lt;/rules&gt;
+  &lt;targets&gt;
+    &lt;target name=&quot;console&quot; xsi:type=&quot;Console&quot; /&gt;     
+  &lt;/targets&gt;
+&lt;/nlog&gt;
+</code></pre>
+<h3 id="running-the-project">Running the project</h3>
+<p>Now build and run the project.
+A terminal window will pop up and display the logging output. As the logging level is set to debug, you will see all SQL code which is executed against the database.
+Check if the database and the table was created.</p>
+<h3 id="a-simple-etl-pipeline">A simple etl pipeline</h3>
+<p>Next we want to create a simple etl pipeline. First we create a demo csv file named <code>input.csv</code>. The input file contains header information and some value. Also we need to copy it into the output directory.</p>
+<pre><code class="lang-csv">Col1,Col2
+Value,1
+Value2,2
+Value3,3
+</code></pre>
+<p>Now we create a CSVSource pointing to the newly created input file.</p>
+<pre><code class="lang-C#">CSVSource source = new CSVSource(&quot;input.csv&quot;);
+</code></pre>
+<p>Before we continue, we will need an object that can hold our data. Let's call it MyData.</p>
+<pre><code class="lang-C#">public class MyData
+{
+    public string Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+</code></pre>
+<p>Now we add a row transformation. The row transformation will receive a string array from the source and transform it
+in our Mydata object.</p>
+<pre><code class="lang-C#">RowTransformation&lt;string[], MyData&gt; row = new RowTransformation&lt;string[], MyData&gt;
+(
+    input =&gt; new MyData() 
+    { Col1 = input[0], Col2 = input[1] }
+);
+</code></pre>
+<p>Next we add a database destination pointing to our table.</p>
+<pre><code class="lang-C#">DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(&quot;Table1&quot;);
+</code></pre>
+<p>Now we need to link the components of our dataflow.</p>
+<pre><code class="lang-C#">source.LinkTo(row);
+row.LinkTo(dest);
+</code></pre>
+<p>After linking the components, we want to have the source reading the input data.
+The destination should wait until it received all data.</p>
+<pre><code class="lang-C#">source.Execute();
+dest.Wait();
+</code></pre>
+<p>Finlly, we check if the data was successfully loaded into the table and write it into the console output. We use the SQLTask for this.</p>
+<pre><code class="lang-C#">SqlTask.ExecuteReader(&quot;Read all data from Table1&quot;,
+    &quot;select Col1, Col2 from Table1&quot;,
+    col1 =&gt; Console.WriteLine(col1.ToString() + &quot;,&quot;),
+    col2 =&gt; Console.WriteLine(col2.ToString())
+);
+</code></pre>
+<h3 id="run-again">Run again</h3>
+<p>Let's run the project again and see the output.</p>
+<p>You'll see that the data was successfully copied into the database table.</p>
+<h2 id="whole-code">Whole code</h2>
+<p>Here is the whole example code.</p>
+<p>File Program.cs</p>
+<pre><code class="lang-C#">using System;
+using System.Collections.Generic;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+
+namespace Demo
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine(&quot;Hello World!&quot;);
+            ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
+            (&quot;Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;));
+            CreateDatabaseTask.Create(&quot;demo&quot;);
+            ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
+(&quot;Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123;Initial Catalog=demo&quot;));
+
+            CreateTableTask.Create(&quot;Table1&quot;, new List&lt;TableColumn&gt;()
+            {
+                new TableColumn(&quot;ID&quot;,&quot;int&quot;,allowNulls:false, isPrimaryKey:true, isIdentity:true),
+                new TableColumn(&quot;Col1&quot;,&quot;nvarchar(100)&quot;,allowNulls:true),
+                new TableColumn(&quot;Col2&quot;,&quot;smallint&quot;,allowNulls:true)
+            });
+
+            CSVSource source = new CSVSource(&quot;input.csv&quot;);
+            RowTransformation&lt;string[], MyData&gt; row = new RowTransformation&lt;string[], MyData&gt;(
+            input =&gt; new MyData() { Col1 = input[0], Col2 = input[1] });
+            DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(&quot;Table1&quot;);
+
+            source.LinkTo(row);
+            row.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            SqlTask.ExecuteReader(&quot;Read all data from table1&quot;,
+            &quot;select Col1, Col2 from Table1&quot;,
+                col1 =&gt; Console.WriteLine(col1.ToString() + &quot;,&quot;),
+                col2 =&gt; Console.WriteLine(col2.ToString()));
+
+        }
+
+        public class MyData
+        {
+            public string Col1 { get; set; }
+            public string Col2 { get; set; }
+        }
+    }
+}
+</code></pre>
+<p>nlog.config</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt; 
+  &lt;rules&gt;
+    &lt;logger name=&quot;*&quot; minlevel=&quot;Debug&quot; writeTo=&quot;console&quot; /&gt;
+  &lt;/rules&gt;
+  &lt;targets&gt;
+    &lt;target name=&quot;console&quot; xsi:type=&quot;Console&quot; /&gt;     
+  &lt;/targets&gt;
+&lt;/nlog&gt;
+</code></pre>
+<p>input.csv</p>
+<pre><code class="lang-csv">Col1,Col2
+Value,1
+Value2,2
+Value3,3
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/examples/example_basics.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

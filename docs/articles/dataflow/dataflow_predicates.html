@@ -14,17 +14,17 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>API Documentation </title>
+    <title>Predicates </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="API Documentation ">
+    <meta name="title" content="Predicates ">
     <meta name="generator" content="docfx 2.44.0.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -43,8 +43,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -81,23 +81,41 @@
 					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
 					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
 				</div>
-<h1 id="api-documentation">API Documentation</h1>
+<h1 id="predicates">Predicates</h1>
 
-<h2 id="welcome">Welcome</h2>
-<p>Welcome to the API documentation of ETLBox. This will give you access to all class and interface definitions that come with ETLBox.
-Check the <a href="https://github.com/roadrunnerlenny/etlbox">Github page</a> to see the full source code.</p>
-<h2 id="net-standard-app">.NET Standard App</h2>
-<p>ETLBox is .NET Standard app (.NET Standard 2.0 or higher).</p>
-<h2 id="namespaces">Namespaces</h2>
-<p>ETLBox is divided in several namepsace.</p>
-<p>The important ones are the namespace for the Control Flow <code>ALE.ETLBox.ControlFlow</code> where the Control Flow Tasks reside.
-All Data Flow Tasks (sometimes referred as components) can be found in the namespace <code>ALE.ETLBox.DataFlow</code>.
-You'll find tasks related to logging in the namespace <code>ALE.ETLBox.Logging</code>.
-Classes with helpful (mostly static) methods are in the namespace <code>ALE.ETLBox.Helper</code>.
-To establish connection to a database, file or Analysis Services you'll need a connection manager from the <code>ALE.ETLBox.ConnectionManager</code> namespace.
-Everything else like generic classes or definitions are in the namespace <code>ALE.ETLBox</code>.</p>
-<h2 id="docfx">Docfx</h2>
-<p>The API documentation was created with <a href="https://dotnet.github.io/docfx/">DocFX</a>.</p>
+<h2 id="predicates-1">Predicates</h2>
+<p>Whenever you link components in a dataflow, you can add a filter expression to the link -
+this is called a predicate for the link.
+The filter expression is evaluated for every row that goes through the link.
+If the evaluated expression is true, data will pass into the linked component.
+If evaluated to false, the dataflow will try the next link to send its data through.</p>
+<p><strong>Note:</strong> Data will be send only into one of the connected links. If there is more than one link,
+the first link that either has no predicate or which predicate returns true is used.</p>
+<p>If you need data send into two ore more connected components, you can use the Multicast:</p>
+<pre><code class="lang-C#">source.LinkTo(multicast);
+multicast.LinkTo(dest1, row =&gt; row.Value2 &lt;= 2);
+multicast.LinkTo(dest2,  row =&gt; row.Value2 &gt; 2);
+source.Execute();
+dest1.Wait();
+dest2.Wait();
+</code></pre>
+<h2 id="voiddestination">VoidDestination</h2>
+<p>Whenever you use predicates, sometime you end up with data which you don't want to write into a destination.
+Unfortunately, your DataFlow won't finish until all rows where written into any destination block. That's why
+there is a <code>VoidDestination</code> in ETLBox. Use this destination for all records for that you don't wish any futher processing.</p>
+<pre><code class="lang-C#">VoidDestination voidDest = new VoidDestination(); 
+source.LinkTo(dest, row =&gt; row.Value &gt; 0);
+souce.Link(voidDest, row =&gt; row.Value &lt;= 0);
+</code></pre>
+<h3 id="implicit-use-of-voiddestination">Implicit use of VoidDestination</h3>
+<p>You don't have to define the <code>VoidDestinatin</code> explicitly. Assuming that we have a Database Source
+that we want to link to a database destination. But we only want to let data pass throught where the
+a column is greater than 0. The rest we want to ignore. Normally, we would need to link the data twice like in
+the example above. But there is a short way to write it:</p>
+<pre><code class="lang-C#">source.LinkTo(dest, row =&gt; row.Value &gt; 0,  row =&gt; row.Value &lt;= 0);
+</code></pre>
+<p>Internally, this will create a <code>VoidDestination</code> when linking the components, but you don't have to deal with anymore.
+At the end, only records where the Value column is greate 0 will be written into the destination.</p>
 </article>
           </div>
           
@@ -106,7 +124,7 @@ Everything else like generic classes or definitions are in the namespace <code>A
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/api/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_predicates.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
@@ -133,8 +151,8 @@ Everything else like generic classes or definitions are in the namespace <code>A
       </footer>
     </div>
     
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Example: Mutlicast to split data </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Example: Mutlicast to split data ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="example-mutlicast-to-split-data">Example: Mutlicast to split data</h1>
+
+<h2 id="purpose">Purpose</h2>
+<p>The following examples shows how to use a Multicast to split data. We receive data from one flat file
+and we want to split up the data into two tables, each containing only a part of the data.</p>
+<h2 id="creating-the-flat-file">Creating the flat file</h2>
+<p>For this example we have a flat file containing a small example data set</p>
+<pre><code class="lang-CSV">Value1;Value2;Value3;Value4
+one;two;three;four
+five;six;seven;eight
+</code></pre>
+<h2 id="creating-the-pocos">Creating the POCOs</h2>
+<pre><code class="lang-C#">internal class TestPoco
+{
+    public string Value1 { get; set; }
+    public string Value2 { get; set; }
+    public string Value3 { get; set; }
+    public string Value4 { get; set; }
+}
+
+internal class TestEntity1
+{
+    public string Col1 { get; set; }
+    public string Col3 { get; set; }
+}
+
+internal class TestEntity2
+{
+    public string Col2 { get; set; }
+    public string Col4 { get; set; }
+}
+</code></pre>
+<h2 id="creating-the-destination-tables">Creating the destination tables</h2>
+<p>Now we create the destination tables.</p>
+<pre><code class="lang-C#">    private TableDefinition CreateTable(string tablename)
+    {
+        var def = new TableDefinition(tablename, new List&lt;TableColumn&gt;
+        {
+        new TableColumn(&quot;Col1&quot;, &quot;nvarchar(100)&quot;, true),
+        new TableColumn(&quot;Col2&quot;, &quot;nvarchar(100)&quot;, true),
+        new TableColumn(&quot;Col3&quot;, &quot;nvarchar(100)&quot;, true),
+        new TableColumn(&quot;Col4&quot;, &quot;nvarchar(100)&quot;, true)
+        });
+        def.CreateTable();
+        return def;
+    }
+</code></pre>
+<h2 id="creating-the-dataflow">Creating the dataflow</h2>
+<p>Now we create a dataflow that reads from the source and splits the data into Table1 and Table2.</p>
+<pre><code class="lang-C#">var tableDestination1 = this.CreateTable(&quot;test.Table1&quot;);
+var tableDestination2 = this.CreateTable(&quot;test.Table2&quot;);
+
+var row1 = new RowTransformation&lt;TestPoco, TestEntity1&gt;(input =&gt; {
+    return new TestEntity1
+    {
+        Col1 = input.Value1,
+        Col3 = input.Value3
+    };
+});
+var row2 = new RowTransformation&lt;TestPoco, TestEntity2&gt;(input =&gt; {
+    return new TestEntity2
+    {
+        Col2 = input.Value2,
+        Col4 = input.Value4
+    };
+});
+
+var source = new CSVSource&lt;TestPoco&gt;(&quot;src/DataFlowExamples/Issue5.csv&quot;) {
+    Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
+};
+var multicast = new Multicast&lt;TestPoco&gt;();
+var destination1 = new DBDestination&lt;TestEntity1&gt;(&quot;test.Table1&quot;);
+var destination2 = new DBDestination&lt;TestEntity2&gt;(&quot;test.Table2&quot;);
+
+source.LinkTo(multicast);
+multicast.LinkTo(row1);
+multicast.LinkTo(row2);
+
+row1.LinkTo(destination1);
+row2.LinkTo(destination2);
+
+source.Execute();
+destination1.Wait();
+destination2.Wait();
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/examples/example_multicast.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

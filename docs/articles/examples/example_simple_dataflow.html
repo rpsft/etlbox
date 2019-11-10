@@ -14,17 +14,17 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>API Documentation </title>
+    <title>A simple dataflow </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="API Documentation ">
+    <meta name="title" content="A simple dataflow ">
     <meta name="generator" content="docfx 2.44.0.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -43,8 +43,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -81,23 +81,43 @@
 					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
 					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
 				</div>
-<h1 id="api-documentation">API Documentation</h1>
+<h1 id="a-simple-dataflow">A simple dataflow</h1>
 
-<h2 id="welcome">Welcome</h2>
-<p>Welcome to the API documentation of ETLBox. This will give you access to all class and interface definitions that come with ETLBox.
-Check the <a href="https://github.com/roadrunnerlenny/etlbox">Github page</a> to see the full source code.</p>
-<h2 id="net-standard-app">.NET Standard App</h2>
-<p>ETLBox is .NET Standard app (.NET Standard 2.0 or higher).</p>
-<h2 id="namespaces">Namespaces</h2>
-<p>ETLBox is divided in several namepsace.</p>
-<p>The important ones are the namespace for the Control Flow <code>ALE.ETLBox.ControlFlow</code> where the Control Flow Tasks reside.
-All Data Flow Tasks (sometimes referred as components) can be found in the namespace <code>ALE.ETLBox.DataFlow</code>.
-You'll find tasks related to logging in the namespace <code>ALE.ETLBox.Logging</code>.
-Classes with helpful (mostly static) methods are in the namespace <code>ALE.ETLBox.Helper</code>.
-To establish connection to a database, file or Analysis Services you'll need a connection manager from the <code>ALE.ETLBox.ConnectionManager</code> namespace.
-Everything else like generic classes or definitions are in the namespace <code>ALE.ETLBox</code>.</p>
-<h2 id="docfx">Docfx</h2>
-<p>The API documentation was created with <a href="https://dotnet.github.io/docfx/">DocFX</a>.</p>
+<p>Let's look at a simple dataflow like this:</p>
+<p>CSV File (Source) --&gt; Row transformation --&gt; DB destination.</p>
+<h2 id="setting-up-the-connection">Setting up the connection</h2>
+<p>As the Data Flow Tasks are based on the same foundament like the Control Flow Tasks, you first should set up a connection like you do for
+a Control Flow Task.</p>
+<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;&quot;));
+</code></pre>
+<h2 id="creating-the-source">Creating the source</h2>
+<p>Now we need to create a source, in this example it could contain order data. This will look like this:</p>
+<pre><code class="lang-C#">CSVSource sourceOrderData = new CSVSource(&quot;demodata.csv&quot;);
+</code></pre>
+<h2 id="creating-the-row-transformation">Creating the row transformation</h2>
+<p>We now add a row transformation. The default output format of a <code>CSVSource</code> is an string array. In this example, we will convert the csv string array into an <code>Order</code> object.</p>
+<pre><code class="lang-C#">RowTransformation&lt;string[], Order&gt; rowTrans = new RowTransformation&lt;string[], Order&gt;(
+  row =&gt; new Order(row)
+);    
+</code></pre>
+<h2 id="creating-the-destination">Creating the destination</h2>
+<p>Now we need to create a destination. Notice that the destination is typed with the <code>Order</code> object.</p>
+<pre><code class="lang-C#">DBDestination&lt;Order&gt; dest = new DBDestination&lt;Order&gt;(&quot;dbo.OrderTable&quot;);
+</code></pre>
+<h2 id="linking-all-together">Linking all together</h2>
+<p>Until now we have only created the components, but we didn't define the Data Flow pipe. Let's do this now:</p>
+<pre><code class="lang-C#">sourceOrderData.LinkTo(rowTrans);
+rowTrans.LinkTo(dest);
+</code></pre>
+<p>This will create a data  flow pipe CSVSource -&gt; RowTransformation -&gt; DBDestination</p>
+<h2 id="starting-the-dataflow">Starting the dataflow</h2>
+<p>Now we will give the source the command to start reading data.</p>
+<pre><code class="lang-C#">  source.Execute();
+</code></pre>
+<p>This code will execute as an asynchronous task. If you want to wait for the Data Flow pipeline to finish, add this line to your code</p>
+<pre><code class="lang-C#">dest.Wait();
+</code></pre>
+<p>When <code>dest.Wait()</code> returns, all data was read from the source and written into the database table.</p>
 </article>
           </div>
           
@@ -106,7 +126,7 @@ Everything else like generic classes or definitions are in the namespace <code>A
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/api/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/examples/example_simple_dataflow.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
@@ -133,8 +153,8 @@ Everything else like generic classes or definitions are in the namespace <code>A
       </footer>
     </div>
     
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

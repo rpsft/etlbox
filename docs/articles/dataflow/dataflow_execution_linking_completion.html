@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Exceution, Linking and Completion </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Exceution, Linking and Completion ">
+    <meta name="generator" content="docfx 2.44.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+				<div class="buttons-unit">
+					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
+					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
+					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
+				</div>
+<h1 id="exceution-linking-and-completion">Exceution, Linking and Completion</h1>
+
+<h2 id="linking-components">Linking components</h2>
+<p>Before you can execute a data flow, you need to link your source, transformation and destinations.
+The linking is quite easy - every source component and every transformation offers a LinkTo() method.
+This method accepts a target, which either is another transformation or a destination.</p>
+<p>Example of Linking a <code>DBSource</code> to a <code>RowTransformation</code> and the to a <code>DBDestination</code>.</p>
+<pre><code>//Create the components
+DBSource source = new DBSource(&quot;SourceTable&quot;);
+RowTransformation rowTrans = new RowTransformation( row =&gt; row );
+DBDestination dest = new DBDestination(&quot;DestTable&quot;);
+
+//Link the components
+source.LinkTo(row);
+row.LinkTo(dest);
+</code></pre>
+<p>This will result in a flow which looks like this:</p>
+<p>DBSource --&gt; RowTransformation --&gt; DBDestination</p>
+<h3 id="fluent-notation">Fluent notation</h3>
+<p>There is also a chained notation available, which give you the same result:</p>
+<pre><code class="lang-C#">//Link the components
+source.LinkTo(row).LinkTo(dest);
+</code></pre>
+<p>This notation can be used most of the time - please note that it won't work with <code>Multicast</code> or <code>MergeJoin</code>.</p>
+<h2 id="synchronous-execution">Synchronous Execution</h2>
+<p>The easiest way to execute a dataflow is synchrounous. That means that execution of your program is paused
+until all data was read from sources and written into all destinations. Using the synchronous execution also makes
+debugging a lot easier, as you don't have to deal with async programming and the specialities of exception
+handling with tasks.</p>
+<p>Please note: In the background, the Dataflow is always executed asynchrounous! The underlying dataflow engine
+is based on <code>Microsoft.TPL.Dataflow</code>. ETLBox will wrap this behaviour into synchronous methods.</p>
+<h3 id="example-sync-execution">Example sync execution</h3>
+<pre><code class="lang-C#">//Prepare the flow
+DBSource source = new DBSource(&quot;SourceTable&quot;);
+RowTransformation rowTrans = new RowTransformation( row =&gt; row );
+DBDestination dest = new DBDestination(&quot;DestTable&quot;);
+source.LinkTo(row);
+
+//Execute the source 
+source.Execute();
+
+//Wait for the destination
+dest.Wait(); 
+</code></pre>
+<p>The Execute() method on the source will block execution until data is read from the source and posted into the dataflow.</p>
+<p>The Wait() method on the destination will block execution until all data arrived at the destination. Under the hood,
+this method will call the Wait() method of the Task from the underlying dataflow.</p>
+<h2 id="asynchronous-execution">Asynchronous execution</h2>
+<p>If you are familiar with async programming, you can also execute the dataflow asynchronous. This means that
+execution of your program will continue while the data is read from the source and written into the destinations
+in seperate task(s) in the background.</p>
+<h3 id="example-async-execution">Example async execution</h3>
+<p>DBSource source = new DBSource(&quot;SourceTable&quot;);
+RowTransformation rowTrans = new RowTransformation( row =&gt; row );
+DBDestination dest = new DBDestination(&quot;DestTable&quot;);</p>
+<p>source.LinkTo(row).LinkTo(dest);</p>
+<p>Task sourceTask = source.ExecuteAsync();
+Task destTask = dest.Completion();
+try
+{
+sourceTask.Wait();
+destTask.Wait();
+} catch (Exception e)
+{
+throw e.InnerException;
+}</p>
+<p>The ExecuteAsync() method will return a Task which completes when all data is read from the source and posted in the dataflow.
+The Completion() method will return a Task which completes when all data has arrived at the destination.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_execution_linking_completion.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>(C) 2018 Andreas Lennartz<br>
+      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>
