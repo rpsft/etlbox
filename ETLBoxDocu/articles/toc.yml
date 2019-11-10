@@ -24,10 +24,9 @@
       href: dataflow/dataflow_splitting_merging.md
     - name: Syncing tables with Merge
       href: dataflow/dataflow_dbmerge.md
-    - name: Data flow across databases
     - name: Predicates
       href: dataflow/dataflow_predicates.md
-- name: ControlFlow and Logging Tutorial
+- name: ControlFlow and Logging
   items:
     - name: ControlFlow Overview
       href: overview_controlflow.md
@@ -39,8 +38,6 @@
       href: examples/example_logging.md
 - name: DataFlow Examples
   items:
-    - name: Simple Data Flow
-      href: examples/example_simple_dataflow.md
     - name: Different Databases
       href: examples/example_different_dbs.md
     - name: WebService as Source

@@ -104,6 +104,15 @@ ETLBox already comes with NLog as dependency - so the necessary packages will be
 <p>After adding a file with this configuration, you will already get some logging output to your debugger output.</p>
 <h2 id="logging-to-database">Logging to database</h2>
 <p>But there is more. If you want to have logging tables in your database, ETLBox comes with some handy stuff that helps you to do this.</p>
+<h3 id="logging-tasks-and-configuration">Logging tasks and configuration</h3>
+<p>Additionally to the traditional nlog setup where log information can be send to any target,
+ETLBox comes with a set of Tasks and a recommended nlog configuration.
+This will allow you to have a more advanced logging into your database.
+E.g., you can create log tables and stored procudures useful for logging in SQL with the <code>CreateLogTablesTask</code>.</p>
+<p>It will basically create two log tables - the table etl.Log for the &quot;normal&quot; log and a table etl.LoadProcess to store information about your ETL run.
+Whenever you use a Control Flow or Data Flow task, log information then is written into the etl.Log table.
+Additionally, you can use tasks like <code>StartLoadProcessTask</code> or <code>EndLoadProcessTask</code> which will write information about the current
+ETL process into the etl.LoadProcess table.</p>
 <h3 id="extend-the-nlogconfig">Extend the nlog.config</h3>
 <p>As a first step to have nlog log into your database, you must exend your nlog configuration. It should then look like this:</p>
 <pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
@@ -208,6 +217,27 @@ LogTask.Warn(&quot;Some text!&quot;);
 LogTask.Error(&quot;Some text!&quot;);
 LogTask.Fatal(&quot;Some text!&quot;);
 </code></pre>
+<h2 id="debugging-logging-issues">Debugging logging issues</h2>
+<p>NLog normally behaves very &quot;fault-tolerant&quot;. By default, if something is not setup properly or does not work
+when NLog tries to log, it just &quot;stops&quot; working without throwing an exception or stopping the execution.
+This behaviour is very desirable in a production environment, but hard to debug.</p>
+<p>If you need to debug Nlog, you can change the nlog root-element of the nlog.config  into:</p>
+<pre><code class="lang-xml">&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      throwConfigExceptions=&quot;true&quot;
+      autoReload=&quot;true&quot;
+      internalLogFile=&quot;console-example-internal.log&quot;
+      internalLogLevel=&quot;Info&quot;&gt;
+</code></pre>
+<p>With this configuration it will raise an exception and also log it into a file.</p>
+<h2 id="etlbox-logviewer">ETLBox Logviewer</h2>
+<p>Once you have data in these log tables, you can use the <a href="https://github.com/roadrunnerlenny/etlboxlogviewer">ETLBox LogViewer</a> to easily access and analyze your logs.</p>
+<span>
+    <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen1.png" width="350" alt="Process Overview of ETLBox LogViewer">
+    <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen2.png" width="350" alt="Process Details of ETLBox LogViewer">
+</span>
+<p>This log viewer is still in &quot;beta&quot;. Any support to improve this tool is highly appreciated.</p>
 </article>
           </div>
           
@@ -216,7 +246,7 @@ LogTask.Fatal(&quot;Some text!&quot;);
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/overview_logging.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBoxDocu/articles/overview_logging.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

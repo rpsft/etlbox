@@ -30,6 +30,18 @@ After adding a file with this configuration, you will already get some logging o
 
 But there is more. If you want to have logging tables in your database, ETLBox comes with some handy stuff that helps you to do this. 
 
+### Logging tasks and configuration
+
+Additionally to the traditional nlog setup where log information can be send to any target, 
+ETLBox comes with a set of Tasks and a recommended nlog configuration. 
+This will allow you to have a more advanced logging into your database. 
+E.g., you can create log tables and stored procudures useful for logging in SQL with the `CreateLogTablesTask`.
+
+It will basically create two log tables - the table etl.Log for the "normal" log and a table etl.LoadProcess to store information about your ETL run. 
+Whenever you use a Control Flow or Data Flow task, log information then is written into the etl.Log table. 
+Additionally, you can use tasks like `StartLoadProcessTask` or `EndLoadProcessTask` which will write information about the current 
+ETL process into the etl.LoadProcess table. 
+
 ### Extend the nlog.config
 
 As a first step to have nlog log into your database, you must exend your nlog configuration. It should then look like this:
@@ -171,3 +183,34 @@ LogTask.Warn("Some text!");
 LogTask.Error("Some text!");
 LogTask.Fatal("Some text!");
 ```
+
+## Debugging logging issues
+
+NLog normally behaves very "fault-tolerant". By default, if something is not setup properly or does not work
+when NLog tries to log, it just "stops" working without throwing an exception or stopping the execution.
+This behaviour is very desirable in a production environment, but hard to debug. 
+
+If you need to debug Nlog, you can change the nlog root-element of the nlog.config  into:
+
+```xml
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xsi:schemaLocation="NLog NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      throwConfigExceptions="true"
+      autoReload="true"
+      internalLogFile="console-example-internal.log"
+      internalLogLevel="Info">
+```
+
+With this configuration it will raise an exception and also log it into a file.
+
+## ETLBox Logviewer
+
+Once you have data in these log tables, you can use the [ETLBox LogViewer](https://github.com/roadrunnerlenny/etlboxlogviewer) to easily access and analyze your logs.
+
+<span>
+    <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen1.png" width=350 alt="Process Overview of ETLBox LogViewer" />
+    <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen2.png" width=350 alt="Process Details of ETLBox LogViewer" />
+</span>
+
+This log viewer is still in "beta". Any support to improve this tool is highly appreciated. 
