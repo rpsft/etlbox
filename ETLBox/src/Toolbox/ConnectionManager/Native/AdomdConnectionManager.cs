@@ -13,9 +13,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class AdomdConnectionManager : DbConnectionManager<AdomdConnection>
     {
-
         public AdomdConnectionManager() : base() { }
-
         public AdomdConnectionManager(ConnectionString connectionString) : base(connectionString) { }
         public AdomdConnectionManager(string connectionString) : base(new ConnectionString(connectionString)) { }
 
@@ -29,13 +27,12 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
+            if (LeaveOpen) return this;
             AdomdConnectionManager clone = new AdomdConnectionManager((ConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts
             };
             return clone;
-
         }
-
     }
 }

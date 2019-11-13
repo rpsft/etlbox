@@ -61,17 +61,6 @@ namespace ALE.ETLBox
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
 
-        //private static TableDefinition ReadTableDefinitionFromDataTable(string tableName, IConnectionManager connection)
-        //{
-        //    connection.Open();
-        //    var command = connection.CreateCommand($"SELECT * FROM {tableName} WHERE 1=2", null);
-        //    var reader = command.ExecuteReader(CommandBehavior.SingleRow);
-        //    DataTable dt = new DataTable();
-        //    dt.Load(reader);
-        //    connection.Close();
-        //    return null;
-        //}
-
         private static TableDefinition ReadTableDefinitionFromSqlServer(string tableName, IConnectionManager connection)
         {
             TableDefinition result = new TableDefinition(tableName);

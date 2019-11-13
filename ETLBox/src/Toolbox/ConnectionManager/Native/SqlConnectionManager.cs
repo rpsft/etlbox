@@ -74,6 +74,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
+            if (LeaveOpen) return this;
             SqlConnectionManager clone = new SqlConnectionManager((ConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts

@@ -27,6 +27,7 @@
 
         public override IConnectionManager Clone()
         {
+            if (LeaveOpen) return this;
             SqlOdbcConnectionManager clone = new SqlOdbcConnectionManager((OdbcConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts

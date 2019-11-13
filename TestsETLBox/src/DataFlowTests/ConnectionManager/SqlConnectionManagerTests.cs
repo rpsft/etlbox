@@ -102,5 +102,19 @@ namespace ALE.ETLBoxTests.DataFlowTests
             SqlConnection.ClearAllPools();
             AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
+
+
+        [Fact]
+        public void TestCloningConnection()
+        {
+            //Arrange
+            SqlConnectionManager con = new SqlConnectionManager(ConnectionStringParameter);
+
+            //Act
+            IConnectionManager clone = con.Clone();
+
+            //Assert
+            Assert.NotEqual(clone, con);
+        }
     }
 }

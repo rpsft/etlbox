@@ -9,10 +9,12 @@ namespace ALE.ETLBox.ConnectionManager
         where Connection : class, IDbConnection, new()
     {
         public int MaxLoginAttempts { get; set; } = 3;
+        public bool LeaveOpen { get; set; } = false;
 
         public IDbConnectionString ConnectionString { get; set; }
 
         internal Connection DbConnection { get; set; }
+        public ConnectionState? State => DbConnection?.State;
 
         public DbConnectionManager() { }
 
@@ -23,11 +25,32 @@ namespace ALE.ETLBox.ConnectionManager
 
         public void Open()
         {
-            DbConnection?.Close();
-            DbConnection = new Connection
+            if (LeaveOpen)
             {
-                ConnectionString = ConnectionString.Value
-            };
+                if (DbConnection == null)
+                {
+                    DbConnection = new Connection
+                    {
+                        ConnectionString = ConnectionString.Value
+                    };
+                }
+            }
+            else
+            {
+                DbConnection?.Close();
+                DbConnection = new Connection
+                {
+                    ConnectionString = ConnectionString.Value
+                };
+            }
+            if (DbConnection.State != ConnectionState.Open)
+            {
+                TryOpenConnectionXTimes();
+            }
+        }
+
+        private void TryOpenConnectionXTimes()
+        {
             bool successfullyConnected = false;
             Exception lastException = null;
             for (int i = 1; i <= MaxLoginAttempts; i++)
@@ -99,17 +122,14 @@ namespace ALE.ETLBox.ConnectionManager
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
                     if (DbConnection != null)
-                    {
                         DbConnection.Close();
-                    }
-
                     DbConnection = null;
                 }
                 disposedValue = true;

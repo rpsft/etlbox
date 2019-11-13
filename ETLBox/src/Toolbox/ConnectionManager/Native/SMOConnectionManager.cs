@@ -19,7 +19,7 @@ namespace ALE.ETLBox.ConnectionManager
     {
         public IDbConnectionString ConnectionString { get; set; }
         public bool IsConnectionOpen => SqlConnectionManager.DbConnection?.State == ConnectionState.Open;
-
+        public bool LeaveOpen { get; set; }
         public SMOConnectionManager(ConnectionString connectionString)
         {
             ConnectionString = connectionString;
@@ -73,7 +73,7 @@ namespace ALE.ETLBox.ConnectionManager
 
 
         private bool disposedValue = false; // To detect redundant calls
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
@@ -94,13 +94,9 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IConnectionManager Clone()
         {
-            SMOConnectionManager clone = new SMOConnectionManager((ConnectionString)ConnectionString) { };
+            if (LeaveOpen) return this;
+            SMOConnectionManager clone = new SMOConnectionManager((ConnectionString)ConnectionString) {};
             return clone;
         }
-
-
     }
-
-
-
 }

@@ -39,8 +39,6 @@
         /// </summary>
         public string DummyTableName { get; set; } = "etlboxdummydeleteme";
 
-        public bool AlwaysUseSameConnection { get; set; }
-
         public override void BulkInsert(ITableData data, string tableName)
         {
             BulkInsertSql bulkInsert = new BulkInsertSql()
@@ -90,16 +88,12 @@
 
         public override IConnectionManager Clone()
         {
-            if (AlwaysUseSameConnection)
-                return this;
-            else
+            if (LeaveOpen) return this;
+            AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager((OdbcConnectionString)ConnectionString)
             {
-                AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager((OdbcConnectionString)ConnectionString)
-                {
-                    MaxLoginAttempts = this.MaxLoginAttempts
-                };
-                return clone;
-            }
+                MaxLoginAttempts = this.MaxLoginAttempts
+            };
+            return clone;
         }
 
 

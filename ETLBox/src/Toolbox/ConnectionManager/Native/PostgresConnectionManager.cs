@@ -61,7 +61,7 @@ FROM STDIN (FORMAT BINARY)"))
 
         public override void BeforeBulkInsert(string tableName)
         {
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(tableName, this.Clone());
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(tableName, this);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {
@@ -75,6 +75,7 @@ FROM STDIN (FORMAT BINARY)"))
 
         public override IConnectionManager Clone()
         {
+            if (LeaveOpen) return this;
             PostgresConnectionManager clone = new PostgresConnectionManager((PostgresConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts

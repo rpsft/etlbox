@@ -17,6 +17,7 @@ namespace ALE.ETLBox.ConnectionManager
         void BeforeBulkInsert(string tableName);
         void AfterBulkInsert(string tableName);
         IConnectionManager Clone();
+        bool LeaveOpen { get; set; }
 
     }
 }

@@ -95,12 +95,18 @@ namespace ALE.ETLBox.ControlFlow
         /* Public methods */
         public int ExecuteNonQuery()
         {
-            using (var conn = DbConnectionManager.Clone())
+            var conn = DbConnectionManager.Clone();
+            try
             {
                 conn.Open();
                 QueryStart();
                 RowsAffected = DoSkipSql ? 0 : conn.ExecuteNonQuery(Command, _Parameter);//DbConnectionManager.ExecuteNonQuery(Command);
                 QueryFinish(LogType.Rows);
+            }
+            finally
+            {
+                if (!conn.LeaveOpen)
+                    conn.Close();
             }
             return RowsAffected ?? 0;
         }
@@ -108,12 +114,18 @@ namespace ALE.ETLBox.ControlFlow
         public object ExecuteScalar()
         {
             object result = null;
-            using (var conn = DbConnectionManager.Clone())
+            var conn = DbConnectionManager.Clone();
+            try
             {
                 conn.Open();
                 QueryStart();
                 result = conn.ExecuteScalar(Command, _Parameter);
                 QueryFinish();
+            }
+            finally
+            {
+                if (!conn.LeaveOpen)
+                    conn.Close();
             }
             return result;
         }
@@ -149,7 +161,8 @@ namespace ALE.ETLBox.ControlFlow
 
         public void ExecuteReader()
         {
-            using (var conn = DbConnectionManager.Clone())
+            var conn = DbConnectionManager.Clone();
+            try
             {
                 conn.Open();
                 QueryStart();
@@ -181,6 +194,11 @@ namespace ALE.ETLBox.ControlFlow
                 }
                 reader.Close();
                 QueryFinish();
+            }
+            finally
+            {
+                if (!conn.LeaveOpen)
+                    conn.Close();
             }
         }
 
@@ -240,7 +258,8 @@ namespace ALE.ETLBox.ControlFlow
 
         public void BulkInsert(ITableData data, string tableName)
         {
-            using (var conn = DbConnectionManager.Clone())
+            var conn = DbConnectionManager.Clone();
+            try
             {
                 conn.Open();
                 QueryStart(LogType.Bulk);
@@ -249,6 +268,11 @@ namespace ALE.ETLBox.ControlFlow
                 conn.AfterBulkInsert(tableName);
                 RowsAffected = data.RecordsAffected;
                 QueryFinish(LogType.Bulk);
+            }
+            finally
+            {
+                if (!conn.LeaveOpen)
+                    conn.Close();
             }
         }
 

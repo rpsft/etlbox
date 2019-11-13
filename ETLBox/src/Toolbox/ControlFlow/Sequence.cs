@@ -12,9 +12,7 @@ namespace ALE.ETLBox.ControlFlow
         public Action Tasks { get; set; }
 
         public Sequence()
-        {
-
-        }
+        { }
 
         public Sequence(string name) : this()
         {
@@ -34,9 +32,7 @@ namespace ALE.ETLBox.ControlFlow
         public T Parent { get; set; }
         public new Action<T> Tasks { get; set; }
         public Sequence() : base()
-        {
-
-        }
+        { }
 
         public Sequence(string name) : base(name) { }
         public Sequence(string name, Action<T> tasks, T parent) : base(name)
@@ -45,7 +41,7 @@ namespace ALE.ETLBox.ControlFlow
             this.Parent = parent;
         }
 
-        public void Execute() => new CustomTask(TaskName).Execute(Tasks, Parent);
+        public new void Execute() => new CustomTask(TaskName) { TaskType = this.TaskType, TaskHash = this.TaskHash }.Execute(Tasks, Parent);
 
         public static void Execute(string name, Action<T> tasks, T parent) => new Sequence<T>(name, tasks, parent).Execute();
     }

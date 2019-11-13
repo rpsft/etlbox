@@ -91,6 +91,7 @@ VALUES ({String.Join(",", sourceColumnValues)})
 
         public override IConnectionManager Clone()
         {
+            if (LeaveOpen) return this;
             SQLiteConnectionManager clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts
