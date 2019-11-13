@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsETLBox", "TestsETLBox\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsNonParallel", "TestsNonParallel\TestsNonParallel.csproj", "{F5CF5138-7901-44B9-ABCC-8320717F6739}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsBigData", "TestsBigData\TestsBigData.csproj", "{6A90A684-BAFE-4E1A-A952-92B68396060A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsPerformance", "TestsPerformance\TestsPerformance.csproj", "{6A90A684-BAFE-4E1A-A952-92B68396060A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

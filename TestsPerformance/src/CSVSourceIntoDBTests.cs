@@ -13,8 +13,8 @@ using Xunit;
 
 namespace ALE.ETLBoxTests.BigData
 {
-    [Collection("Big Data")]
-    public class CSVSourceIntoDBTests : IDisposable
+    [Collection("Performance")]
+    public class CSVSourceIntoDBTests
     {
         public static IEnumerable<object[]> Connections(int value1, int value2) => new[] {
             new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("BigData") , value1, value2},
@@ -23,10 +23,6 @@ namespace ALE.ETLBoxTests.BigData
         };
 
         public CSVSourceIntoDBTests(BigDataDatabaseFixture dbFixture)
-        {
-
-        }
-        public void Dispose()
         {
 
         }

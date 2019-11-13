@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ALE.ETLBoxTests.BigData
 {
-    [CollectionDefinition("Big Data")]
+    [CollectionDefinition("Performance")]
     public class BigDataCollectionClass : ICollectionFixture<BigDataDatabaseFixture> { }
 
     public class BigDataDatabaseFixture
