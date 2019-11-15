@@ -57,19 +57,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AfterBulkInsert
   nameWithType: AccessOdbcConnectionManager.AfterBulkInsert
-- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AlwaysUseSameConnection
-  name: AlwaysUseSameConnection
-  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_AlwaysUseSameConnection
-  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AlwaysUseSameConnection
-  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AlwaysUseSameConnection
-  nameWithType: AccessOdbcConnectionManager.AlwaysUseSameConnection
-- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AlwaysUseSameConnection*
-  name: AlwaysUseSameConnection
-  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_AlwaysUseSameConnection_
-  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AlwaysUseSameConnection
-  isSpec: "True"
-  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.AlwaysUseSameConnection
-  nameWithType: AccessOdbcConnectionManager.AlwaysUseSameConnection
 - uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.BeforeBulkInsert(System.String)
   name: BeforeBulkInsert(String)
   href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_BeforeBulkInsert_System_String_
@@ -694,6 +681,23 @@ references:
   fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).ExecuteScalar
   nameWithType: DbConnectionManager<Connection>.ExecuteScalar
   nameWithType.vb: DbConnectionManager(Of Connection).ExecuteScalar
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.LeaveOpen
+  name: LeaveOpen
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_LeaveOpen
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.LeaveOpen
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.LeaveOpen
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).LeaveOpen
+  nameWithType: DbConnectionManager<Connection>.LeaveOpen
+  nameWithType.vb: DbConnectionManager(Of Connection).LeaveOpen
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.LeaveOpen*
+  name: LeaveOpen
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_LeaveOpen_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.LeaveOpen
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.LeaveOpen
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).LeaveOpen
+  nameWithType: DbConnectionManager<Connection>.LeaveOpen
+  nameWithType.vb: DbConnectionManager(Of Connection).LeaveOpen
 - uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.MaxLoginAttempts
   name: MaxLoginAttempts
   href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_MaxLoginAttempts
@@ -728,6 +732,23 @@ references:
   fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).Open
   nameWithType: DbConnectionManager<Connection>.Open
   nameWithType.vb: DbConnectionManager(Of Connection).Open
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.State
+  name: State
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_State
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.State
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.State
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).State
+  nameWithType: DbConnectionManager<Connection>.State
+  nameWithType.vb: DbConnectionManager(Of Connection).State
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.State*
+  name: State
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_State_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.State
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.State
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).State
+  nameWithType: DbConnectionManager<Connection>.State
+  nameWithType.vb: DbConnectionManager(Of Connection).State
 - uid: ALE.ETLBox.ConnectionManager.FileConnectionManager
   name: FileConnectionManager
   href: api/ALE.ETLBox.ConnectionManager.FileConnectionManager.html
@@ -914,6 +935,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.ExecuteScalar
   nameWithType: IConnectionManager.ExecuteScalar
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.LeaveOpen
+  name: LeaveOpen
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_LeaveOpen
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.LeaveOpen
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.LeaveOpen
+  nameWithType: IConnectionManager.LeaveOpen
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.LeaveOpen*
+  name: LeaveOpen
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_LeaveOpen_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.LeaveOpen
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.LeaveOpen
+  nameWithType: IConnectionManager.LeaveOpen
 - uid: ALE.ETLBox.ConnectionManager.IConnectionManager.Open
   name: Open()
   href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_Open
@@ -1356,6 +1390,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SMOConnectionManager.IsConnectionOpen
   nameWithType: SMOConnectionManager.IsConnectionOpen
+- uid: ALE.ETLBox.ConnectionManager.SMOConnectionManager.LeaveOpen
+  name: LeaveOpen
+  href: api/ALE.ETLBox.ConnectionManager.SMOConnectionManager.html#ALE_ETLBox_ConnectionManager_SMOConnectionManager_LeaveOpen
+  commentId: P:ALE.ETLBox.ConnectionManager.SMOConnectionManager.LeaveOpen
+  fullName: ALE.ETLBox.ConnectionManager.SMOConnectionManager.LeaveOpen
+  nameWithType: SMOConnectionManager.LeaveOpen
+- uid: ALE.ETLBox.ConnectionManager.SMOConnectionManager.LeaveOpen*
+  name: LeaveOpen
+  href: api/ALE.ETLBox.ConnectionManager.SMOConnectionManager.html#ALE_ETLBox_ConnectionManager_SMOConnectionManager_LeaveOpen_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SMOConnectionManager.LeaveOpen
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SMOConnectionManager.LeaveOpen
+  nameWithType: SMOConnectionManager.LeaveOpen
 - uid: ALE.ETLBox.ConnectionManager.SMOConnectionManager.Open
   name: Open()
   href: api/ALE.ETLBox.ConnectionManager.SMOConnectionManager.html#ALE_ETLBox_ConnectionManager_SMOConnectionManager_Open
@@ -9258,6 +9305,213 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).TaskName
   nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.TaskName
   nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).TaskName
+- uid: ALE.ETLBox.DataFlow.MemoryDestination
+  name: MemoryDestination
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination.html
+  commentId: T:ALE.ETLBox.DataFlow.MemoryDestination
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination
+  nameWithType: MemoryDestination
+- uid: ALE.ETLBox.DataFlow.MemoryDestination.#ctor
+  name: MemoryDestination()
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination.html#ALE_ETLBox_DataFlow_MemoryDestination__ctor
+  commentId: M:ALE.ETLBox.DataFlow.MemoryDestination.#ctor
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination.MemoryDestination()
+  nameWithType: MemoryDestination.MemoryDestination()
+- uid: ALE.ETLBox.DataFlow.MemoryDestination.#ctor(System.Int32)
+  name: MemoryDestination(Int32)
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination.html#ALE_ETLBox_DataFlow_MemoryDestination__ctor_System_Int32_
+  commentId: M:ALE.ETLBox.DataFlow.MemoryDestination.#ctor(System.Int32)
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination.MemoryDestination(System.Int32)
+  nameWithType: MemoryDestination.MemoryDestination(Int32)
+- uid: ALE.ETLBox.DataFlow.MemoryDestination.#ctor*
+  name: MemoryDestination
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination.html#ALE_ETLBox_DataFlow_MemoryDestination__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemoryDestination.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination.MemoryDestination
+  nameWithType: MemoryDestination.MemoryDestination
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1
+  name: MemoryDestination<TInput>
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html
+  commentId: T:ALE.ETLBox.DataFlow.MemoryDestination`1
+  name.vb: MemoryDestination(Of TInput)
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput)
+  nameWithType: MemoryDestination<TInput>
+  nameWithType.vb: MemoryDestination(Of TInput)
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.#ctor
+  name: MemoryDestination()
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1__ctor
+  commentId: M:ALE.ETLBox.DataFlow.MemoryDestination`1.#ctor
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.MemoryDestination()
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).MemoryDestination()
+  nameWithType: MemoryDestination<TInput>.MemoryDestination()
+  nameWithType.vb: MemoryDestination(Of TInput).MemoryDestination()
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.#ctor(System.Int32)
+  name: MemoryDestination(Int32)
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1__ctor_System_Int32_
+  commentId: M:ALE.ETLBox.DataFlow.MemoryDestination`1.#ctor(System.Int32)
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.MemoryDestination(System.Int32)
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).MemoryDestination(System.Int32)
+  nameWithType: MemoryDestination<TInput>.MemoryDestination(Int32)
+  nameWithType.vb: MemoryDestination(Of TInput).MemoryDestination(Int32)
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.#ctor*
+  name: MemoryDestination
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemoryDestination`1.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.MemoryDestination
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).MemoryDestination
+  nameWithType: MemoryDestination<TInput>.MemoryDestination
+  nameWithType.vb: MemoryDestination(Of TInput).MemoryDestination
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.Data
+  name: Data
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_Data
+  commentId: P:ALE.ETLBox.DataFlow.MemoryDestination`1.Data
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.Data
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).Data
+  nameWithType: MemoryDestination<TInput>.Data
+  nameWithType.vb: MemoryDestination(Of TInput).Data
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.Data*
+  name: Data
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_Data_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemoryDestination`1.Data
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.Data
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).Data
+  nameWithType: MemoryDestination<TInput>.Data
+  nameWithType.vb: MemoryDestination(Of TInput).Data
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.TaskName
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_TaskName
+  commentId: P:ALE.ETLBox.DataFlow.MemoryDestination`1.TaskName
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).TaskName
+  nameWithType: MemoryDestination<TInput>.TaskName
+  nameWithType.vb: MemoryDestination(Of TInput).TaskName
+- uid: ALE.ETLBox.DataFlow.MemoryDestination`1.TaskName*
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_TaskName_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemoryDestination`1.TaskName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemoryDestination<TInput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.MemoryDestination(Of TInput).TaskName
+  nameWithType: MemoryDestination<TInput>.TaskName
+  nameWithType.vb: MemoryDestination(Of TInput).TaskName
+- uid: ALE.ETLBox.DataFlow.MemorySource
+  name: MemorySource
+  href: api/ALE.ETLBox.DataFlow.MemorySource.html
+  commentId: T:ALE.ETLBox.DataFlow.MemorySource
+  fullName: ALE.ETLBox.DataFlow.MemorySource
+  nameWithType: MemorySource
+- uid: ALE.ETLBox.DataFlow.MemorySource.#ctor
+  name: MemorySource()
+  href: api/ALE.ETLBox.DataFlow.MemorySource.html#ALE_ETLBox_DataFlow_MemorySource__ctor
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource.#ctor
+  fullName: ALE.ETLBox.DataFlow.MemorySource.MemorySource()
+  nameWithType: MemorySource.MemorySource()
+- uid: ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.List{System.String[]})
+  name: MemorySource(List<String[]>)
+  href: api/ALE.ETLBox.DataFlow.MemorySource.html#ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_List_System_String____
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.List{System.String[]})
+  name.vb: MemorySource(List(Of String()))
+  fullName: ALE.ETLBox.DataFlow.MemorySource.MemorySource(System.Collections.Generic.List<System.String[]>)
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource.MemorySource(System.Collections.Generic.List(Of System.String()))
+  nameWithType: MemorySource.MemorySource(List<String[]>)
+  nameWithType.vb: MemorySource.MemorySource(List(Of String()))
+- uid: ALE.ETLBox.DataFlow.MemorySource.#ctor*
+  name: MemorySource
+  href: api/ALE.ETLBox.DataFlow.MemorySource.html#ALE_ETLBox_DataFlow_MemorySource__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemorySource.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemorySource.MemorySource
+  nameWithType: MemorySource.MemorySource
+- uid: ALE.ETLBox.DataFlow.MemorySource`1
+  name: MemorySource<TOutput>
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html
+  commentId: T:ALE.ETLBox.DataFlow.MemorySource`1
+  name.vb: MemorySource(Of TOutput)
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput)
+  nameWithType: MemorySource<TOutput>
+  nameWithType.vb: MemorySource(Of TOutput)
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.#ctor
+  name: MemorySource()
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1__ctor
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource`1.#ctor
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.MemorySource()
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).MemorySource()
+  nameWithType: MemorySource<TOutput>.MemorySource()
+  nameWithType.vb: MemorySource(Of TOutput).MemorySource()
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.#ctor(System.Collections.Generic.List{`0})
+  name: MemorySource(List<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1__ctor_System_Collections_Generic_List__0__
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource`1.#ctor(System.Collections.Generic.List{`0})
+  name.vb: MemorySource(List(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.MemorySource(System.Collections.Generic.List<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).MemorySource(System.Collections.Generic.List(Of TOutput))
+  nameWithType: MemorySource<TOutput>.MemorySource(List<TOutput>)
+  nameWithType.vb: MemorySource(Of TOutput).MemorySource(List(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.#ctor*
+  name: MemorySource
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemorySource`1.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.MemorySource
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).MemorySource
+  nameWithType: MemorySource<TOutput>.MemorySource
+  nameWithType.vb: MemorySource(Of TOutput).MemorySource
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.Data
+  name: Data
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Data
+  commentId: P:ALE.ETLBox.DataFlow.MemorySource`1.Data
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.Data
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).Data
+  nameWithType: MemorySource<TOutput>.Data
+  nameWithType.vb: MemorySource(Of TOutput).Data
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.Data*
+  name: Data
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Data_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemorySource`1.Data
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.Data
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).Data
+  nameWithType: MemorySource<TOutput>.Data
+  nameWithType.vb: MemorySource(Of TOutput).Data
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.Execute
+  name: Execute()
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Execute
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource`1.Execute
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.Execute()
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).Execute()
+  nameWithType: MemorySource<TOutput>.Execute()
+  nameWithType.vb: MemorySource(Of TOutput).Execute()
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.Execute*
+  name: Execute
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Execute_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemorySource`1.Execute
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.Execute
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).Execute
+  nameWithType: MemorySource<TOutput>.Execute
+  nameWithType.vb: MemorySource(Of TOutput).Execute
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.TaskName
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_TaskName
+  commentId: P:ALE.ETLBox.DataFlow.MemorySource`1.TaskName
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).TaskName
+  nameWithType: MemorySource<TOutput>.TaskName
+  nameWithType.vb: MemorySource(Of TOutput).TaskName
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.TaskName*
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_TaskName_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemorySource`1.TaskName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).TaskName
+  nameWithType: MemorySource<TOutput>.TaskName
+  nameWithType.vb: MemorySource(Of TOutput).TaskName
 - uid: ALE.ETLBox.DataFlow.MergeIdColumnName
   name: MergeIdColumnName
   href: api/ALE.ETLBox.DataFlow.MergeIdColumnName.html

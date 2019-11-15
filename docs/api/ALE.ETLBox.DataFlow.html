@@ -15,10 +15,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Namespace ALE.ETLBox.DataFlow
-   </title>
+   | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace ALE.ETLBox.DataFlow
-   ">
+   | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.44.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -78,11 +78,6 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow">
-				<div class="buttons-unit">
-					<a href="https://github.com/roadrunnerlenny/etlbox" class="button"><i class="glyphicon glyphicon-eye-open"></i> View on Github</a>
-					<a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i> Download on Nuget</a>
-					<a href="https://www.youtube.com/watch?v=CsWZuRpl6PA" class="button"><i class="glyphicon glyphicon-play-circle"></i> See the video</a>
-				</div>
   
   <h1 id="ALE_ETLBox_DataFlow" data-uid="ALE.ETLBox.DataFlow" class="text-break">Namespace ALE.ETLBox.DataFlow
   </h1>
@@ -202,6 +197,22 @@ always returns a list of string array.</p>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup-3.html">Lookup&lt;TTransformationInput, TTransformationOutput, TSourceOutput&gt;</a></h4>
       <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source. The result is then posted into the output.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination.html">MemoryDestination</a></h4>
+      <section><p>A destination in memory - it will store all you data in a list. Inserts are done in batches.
+The MemoryDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html">MemoryDestination&lt;TInput&gt;</a></h4>
+      <section><p>A destination in memory - it will store all you data in a list. Inserts are done in batches.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemorySource.html">MemorySource</a></h4>
+      <section><p>Reads data from a memory source. While reading the data from the file, data is also asnychronously posted into the targets.
+MemorySource as a nongeneric type always return a string array as output. If you need typed output, use
+the MemorySource&lt;TOutput&gt; object instead.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html">MemorySource&lt;TOutput&gt;</a></h4>
+      <section><p>Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.
+Data is read a as string from the source and dynamically converted into the corresponding data format.</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeIdColumnName.html">MergeIdColumnName</a></h4>
       <section><p>This attribute defines a the Id column name used for the DBMerge
 If you do not provide this attribute on the UniqueId property (used by the IMergable interface),
@@ -291,9 +302,9 @@ Every records needs to be transferred to a destination to have a dataflow comple
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
+            <span>(C) 2019 Andreas Lennartz<br>
+<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
             
-            <span>(C) 2018 Andreas Lennartz<br>
-      		<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
           </div>
         </div>
       </footer>
