@@ -111,15 +111,18 @@ pre code {
     .hero {
         /*height: 500px;*/
         margin-top: -70px;
-        margin-left: -40px;
-        margin-right: -40px;
-        width: 120%;
+        margin-left: -15px;
+        margin-right: 0px;
+        width: calc(100% + 30px);
     }
 
         .hero .button {
             /*display: block;*/
             margin: 12px;
         }
+    .buttons-unit {
+        display: inline-grid;
+    }
 }
 
 
