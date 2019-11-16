@@ -1,30 +1,30 @@
 /*!
  Overwriting vendor styles
  */
-.navbar-inverse
-{
+.navbar-inverse {
     background-color: #666 !important;
     border-color: #aaa !important;
 }
 
-.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
-    background-color: #666 !important;
-}
+    .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
+        background-color: #666 !important;
+    }
 
-.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
-    background-color: #777 !important;
-}
+    .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
+        background-color: #777 !important;
+    }
 
 
-.navbar-inverse .navbar-nav > li > a {
-    font-size: 16px;
-}
+    .navbar-inverse .navbar-nav > li > a {
+        font-size: 16px;
+    }
 
 
 @media (max-width:767px) {
-        .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {
+    .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {
         border-color: #aaa !important
     }
+
     .navbar-inverse .navbar-nav .open .dropdown-menu .divider {
         background-color: #aaa !important
     }
@@ -37,18 +37,116 @@ pre code {
 
 /* Buttons on start page */
 .buttons-unit {
-    display: flex;
-    flex-wrap: wrap;
+    margin-top: 30px;
+    /*display: flex;
+    flex-wrap: wrap;*/
 }
 
-.buttons-unit .button {
+    .buttons-unit .button {
+        font-size: 16px;
+        border-radius: 4px;
+        padding: 8px 16px;
+        margin: 0 12px;
+        box-shadow: 1px 3px 3px rgba(0,0,0,0.3);
+        color: #fff;
+        background: #808080;
+        text-decoration: none;
+    }
+
+
+/* Index page */
+.hero {
+    color: #BBB;
+    background-color: #AAA;
+    background-image: -webkit-gradient(linear,left bottom,right top,color-stop(0%,#000),color-stop(100%,#AAA));
+    background-image: -webkit-linear-gradient(45deg,#000 0,#AAA 100%);
+    background-image: -moz-linear-gradient(45deg,#000 0,#AAA 100%);
+    background-image: -o-linear-gradient(45deg,#000 0,#AAA 100%);
+    background-image: linear-gradient(45deg,#000 0,#AAA 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000', endColorstr='#AAA', GradientType=1);
+    text-align: center;
+    height: 350px;
+    margin-top: -70px;
+    margin-left: -500px;
+    margin-right: -500px;
+    width: 225%;
+    padding-top: 50px;
+    font-weight: 300;
+    text-align: center;
+}
+
+    .hero strong {
+        color: #e7e7e7;
+    }
+
+    .hero strong {
+        font-weight: 400;
+        font-family: Rockwell;
+    }
+
+    .hero .text {
+        font-size: 64px;
+        text-align: center;
+    }
+
+    .hero .minitext {
+        font-size: 20px;
+        text-align: center;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+.buttons-unit-small {
     font-size: 16px;
-    border-radius: 4px;
-    padding: 8px 16px;
-    margin: 0 12px;
-    box-shadow: 1px 3px 3px rgba(0,0,0,0.3);
-    color: #fff;
-    background: #808080;
-    text-decoration: none
 }
 
+
+@media only screen and (max-width: 1200px) {
+    .hero {
+        width: 250%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .hero {
+        /*height: 500px;*/
+        margin-top: -70px;
+        margin-left: -40px;
+        margin-right: -40px;
+        width: 120%;
+    }
+
+        .hero .button {
+            /*display: block;*/
+            margin: 12px;
+        }
+}
+
+
+.key-section {
+    padding: 30px 0;
+}
+
+    .key-section .glyphicon, .counter-key-section .glyphicon {
+        font-size: 4em;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+.glyphicon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.key-section section, .counter-key-section section {
+    display: table-cell;
+    padding-left: 20px;
+}
+
+    .key-section section p, .counter-key-section section p {
+        text-align: initial;
+    }
+
+.counter-key-section {
+    padding: 30px 0;
+}

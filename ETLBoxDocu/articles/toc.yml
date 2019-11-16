@@ -1,5 +1,7 @@
 - name: Introduction
   items:
+    - name: What is ETLBox
+      href: overview.md
     - name: Getting started
       href: getting_started.md
     - name: Basic example
