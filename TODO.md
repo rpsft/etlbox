@@ -16,8 +16,6 @@
 
 ### DF - New features
 
-- Mapping to objects has some kind of implicit data type checks - there should be a dataflow task which explicitly type check on data? This would mean that if data is typeof object, information is extracted via reflection..
-
 ### DF - Code cleanup
 
 - create test for logging on Dataflow - especially also for the `DataFlow.LoggingThresholdRows = 2;`
@@ -28,4 +26,6 @@
 
 ### CF - New features
 
+- TableDefinition: Get "dynamic" class object from TableDefintion that can be used as type object for the flow
+- CreateTableTask.CreateOrAlter(): add functionality to alter a table (with migration if there is data in the table).
 - CreateTableTask: Function for adding test data into table (depending on table definition)
