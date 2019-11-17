@@ -11,13 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Improving fluent notation when data types changes.</PackageReleaseNotes>
-    <Version>1.6.3</Version>
-    <PackageIconUrl>https://raw.githubusercontent.com/roadrunnerlenny/etlbox/master/docs/images/logo_bw.ico</PackageIconUrl>
+    <PackageReleaseNotes>Adding option to re-use already opened connections. Also added new MemorySource &amp; MemoryDestination - now data can be read from or written into a in-memory list object.</PackageReleaseNotes>
+    <Version>1.6.4</Version>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.6.3.0</AssemblyVersion>
-    <FileVersion>1.6.3.0</FileVersion>
+    <AssemblyVersion>1.6.4.0</AssemblyVersion>
+    <FileVersion>1.6.4.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -38,6 +39,12 @@
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.10.0" />
     <PackageReference Include="TSQL.Parser" Version="1.2.8" />
     <PackageReference Include="Unofficial.Microsoft.AnalysisServices.AdomdClientNetCore" Version="15.3.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="img\logo_bw.png" Pack="true" PackagePath="">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
