@@ -60,7 +60,7 @@
         "postProcessors": [],
         "globalMetadata": {
             "_appTitle": "ETLBox - It's all in the box",
-            "_appFooter": "<span>(C) Created with &lt;3 in Berlin<br/>\r\n<a href=\"https://etlbox.net/articles/imprint.html\">Contact & legal information</a></span>",
+            "_appFooter": "<span>Crafted with &lt;3 in Berlin<br/>\r\n<a href=\"https://etlbox.net/articles/imprint.html\">Contact & legal information</a></span>",
             "_gitContribute": {
                 "branch": "dev"
             }
