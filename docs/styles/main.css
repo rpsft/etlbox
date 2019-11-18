@@ -100,13 +100,6 @@ pre code {
     font-size: 16px;
 }
 
-
-/*@media only screen and (max-width: 1200px) {
-    .hero {
-        width:
-    }
-}*/
-
 @media only screen and (max-width: 768px) {
     .hero {
         /*height: 500px;*/
@@ -164,4 +157,13 @@ pre code {
     -o-border-image-source: -o-linear-gradient(90deg, rgba(0, 0, 0, 0), #385361 50%, rgba(0, 0, 0, 0));
     border-image-source: linear-gradient(90deg, rgba(0, 0, 0, 0), #385361 50%, rgba(0, 0, 0, 0));
     border-image-slice: 1;
+}
+
+
+/* Hide content of readme.md */
+
+.hideOnWebsite {
+    visibility: collapse;
+    height: 0px;
+    margin-top: -20px;
 }

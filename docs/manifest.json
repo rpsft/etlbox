@@ -2180,7 +2180,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/getting_started.html",
-          "hash": "8NWeU31bCpettAG2HohE4A=="
+          "hash": "u+bz9x8rt256z6LseOxyQw=="
         }
       },
       "is_incremental": false,
@@ -2200,23 +2200,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/more_help.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/more_help.html",
-          "hash": "BOGvehzXMgi7rjUfqzR8ow=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
       "source_relative_path": "articles/overview.md",
       "output": {
         ".html": {
           "relative_path": "articles/overview.html",
-          "hash": "UFhUVqnMXKfPCUe+wAA0UQ=="
+          "hash": "m9eMNCrAMziqK8OiS6sOKg=="
         }
       },
       "is_incremental": false,
@@ -2259,12 +2247,24 @@
       "version": ""
     },
     {
+      "type": "Conceptual",
+      "source_relative_path": "articles/support_us.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/support_us.html",
+          "hash": "lsS5E5nlvPkdLOS+Jp33TA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Toc",
       "source_relative_path": "articles/toc.yml",
       "output": {
         ".html": {
           "relative_path": "articles/toc.html",
-          "hash": "5Jra0niyPbriisJrfG2ngw=="
+          "hash": "bA0KZynvbJZ7HY5UUZ13uw=="
         }
       },
       "is_incremental": false,
@@ -2354,7 +2354,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "JOZV3cU3jpNOChbhFuOFsA=="
+          "hash": "1CyJOcQiH45hnuQxUX4HKg=="
         }
       },
       "is_incremental": false,
@@ -2372,9 +2372,9 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
-        "TocDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
@@ -2384,18 +2384,18 @@
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
-          "skipped_file_count": 0
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 27,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 160,
+          "skipped_file_count": 0
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 27,
           "skipped_file_count": 0
         }
       }

@@ -1,23 +1,29 @@
-﻿# Getting help
+﻿# Support us
 
 ## Open Source
 
-ETLBox was designed by me as an open source project and licensed under the MIT license. Therefore, it is completely
+ETLBox was created and designed by my as an open source project and licensed under the MIT license. It is completely
 free of charge to use in any of your projects, doesn't matter if they are personal or commercial. In fact,
 I think the personal use of an ETL framework is very limited, and I hope this tool can help you in your day-to-day business
 problems.
 
-## Getting more help
+### Improving this software
+
+Feel free to send me suggestions how to improve this software. If you find a bug, ćame up with a new feature
+or have any other question, please contact me directly or raise a new issue on the [GitHub page](https://github.com/roadrunnerlenny/etlbox).
+
+## Getting professional help
 
 I started to create this toolbox about 2 years ago and I'm still happy to improve and maintain it. 
 Though I did put a lot of effort in it, I still think of it as my favourite project and enjoy to add new code
-and functionalities to it
+and functionalities to it.
 
 I am a software developer with focus on C# and Sql, working more than 10 years in BI and ETL environments.
-If you like this toolbox, and are looking for some freelancer that give you either training or other support with this
-piece of software, I would be happy to help you. Feel free to contact me.
+All effort I put into this toolbox so far was done in my spare time - I still need to earn money doing other things. 
 
-## Contact information
+If you like this toolbox, and really want to support it,  please have a chat with me about some training sessions
+or other data integration issues that you would like to have solved with ETLBox. I would be happy to do this
+ on a professional basis.
 
 Just send me an e-mail to (andreas.lennartz@gmail.com). 
 You can find my full contact information in the [imprint](imprint.md).
@@ -32,5 +38,6 @@ If you are interested in clean coding, you should read the "bible" on that topic
 
 ### Books written by me
 
-If you are able to understand and read german, I recommend you mein own book: 
+If you are able to understand and read german, I recommend you my own book: 
 [Mehr als Clean Code - Gedanken zur Softwareentwicklung](https://www.amazon.de/gp/product/3735736513/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=3735736513&linkCode=as2&tag=andreaslennar-21&linkId=D6HR6S6YAQ65Q3S6)
+Purchasing it wóuld also be a small contribution to this project.

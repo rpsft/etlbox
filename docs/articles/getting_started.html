@@ -78,35 +78,70 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="getting-started">Getting started</h1>
 
-<p>Welcome to the getting started pages of ETLBox. This artice will give you a brief overview how ETLBox is organized.</p>
-<h2 id="etlbox-components">ETLBox Components</h2>
-<p>ETLBox is split into two main components: <strong>Data Flow Tasks</strong> and <strong>Control Flow Tasks</strong> . Some tasks in the Control Flow part are for logging purposes only.
-As there are advanced logging capabilities in ETLBox, logging itself is treated in separate articles.</p>
-<h2 id="overview-data-flow-tasks">Overview Data Flow Tasks</h2>
+<h2 id="etlbox-core-concepts">ETLBox core concepts</h2>
+<p>ETBlox is a data processing engine based on .NET Core.
+This engine runs inside your applications, APIs, and jobs to filter, transform, and migrate data on-the-fly.
+ETLBox speeds up your development by providing an easy-to-use toolbox for integrating your data from
+different sources within your app.</p>
+<pre><code>Sql Server  --|
+MySql       --|                                                         
+Postgres    --|     |-------------------Your app ---------------|    |-- Sql Server
+SQLite      --|---&gt; Transform -&gt; Validate -&gt; Harmonize -&gt; Clean ---&gt; |-- CSV
+CSV         --|     |-------------------------------------------|    |-- &amp; ... 
+Excel       --|
+Json        --| 
+Custom      --|
+</code></pre>
+<h3 id="what-you-can-do-with-etlbox">What you can do with ETLBox</h3>
+<p>Here are a few things you can do with ETLBox:</p>
+<ul>
+<li>Convert incoming data to a common format.</li>
+<li>Prepare data for analysis and visualization.</li>
+<li>Migrate between databases.</li>
+<li>Share data processing logic across web apps, batch jobs, and APIs.</li>
+<li>Power your data ingestion and integration tools.</li>
+<li>Consume large CSV, Excel or Json files</li>
+</ul>
+<h3 id="common-data-api">Common data API</h3>
+<p>ETLBox provides you with a single API for working with data.
+The API treats all data the same regardless of their source.
+By developing your applications against a single API, you can use the same components to process data
+regardless of whether they're coming from a database, Excel file, or 3rd-party API.</p>
+<h3 id="embed-inside-your-app">Embed inside your App</h3>
+<p>ETLBox fits well within your applications and services. It is a very lightweight library and has a very small footprint.
+It's also complication free -  requiring no servers, installation, or config files.
+You just add it as a package reference into your app and start using it.</p>
+<h3 id="in-flight-processing">In-flight Processing</h3>
+<p>ETLBox can run completely in-memory. In most cases, there's no need to store intermediate results
+in temporary databases or files on disk. Processing data in-memory, while it moves through the pipeline,
+can be more than 100 times faster than storing it to disk to query or process later.</p>
+<h3 id="flexible-componentens">Flexible componentens</h3>
+<p>ETLBox comes with a set of components and tasks that simplify to read  data from various source,
+transform it on the fly and write it into different destinations. But all components offer you the ability
+to add your own logic in C# - and you can benefit here from the full power of the .NET framework. Even if
+your own data source or destination is not supported out of the box, you can easily add it yourself by extending
+the <code>CustomSource</code> or <code>CustomDestination</code> components.</p>
+<h3 id="100-net">100% .NET</h3>
+<p>ETLBox is built on .NET Core and .NET Standard and runs with the latest version of .NET. You write data flows and transformations
+in C# or any of the other .NET languages you know (e.g. VisualBasic or F#).
+You can also use your existing tools, IDEs, containers, and libraries.
+Being built on .NET Core means it can run on all servers, operating systems, and environments.</p>
+<h2 id="continue-learning">Continue learning</h2>
+<h3 id="more-about-data-flows">More about data flows</h3>
 <p>All components in the Data Flow allow you to create your ETL (Extract, Transform, Load) pipeline -
 where data is extracted from the source(s), asynchrounously transformed and then loaded into your destinations.
-Plese read the <a href="overview_dataflow.html">Overview Data Flow</a> to get started. <a href="examples/example_basics.html">There is also an Example Data Flow</a>.
-To understand the dataflow components, you can also visit the API reference and look at the description and details of each dataflow component.</p>
-<h2 id="overview-control-flow-tasks">Overview Control Flow Tasks</h2>
-<p>You will find an introduction into the Control Flow Tasks <a href="overview_controlflow.html">in the article Overview Control Flow</a>.
-This will give you all the basics you need to understand how the Control Flow tasks are designed.
-If you want to dig deeper, please see the API reference for detailled information about the tasks.
-If you are in need of some examples of how to use Control Flow tasks, <a href="examples/example_controlflow.html">see the Example Control Flow</a></p>
-<h2 id="overview-logging">Overview Logging</h2>
+Plese read the <a href="overview_dataflow.html">Overview Data Flow</a> to get started.</p>
+<h3 id="more-about-control-flows">More about control flows</h3>
+<p>ControlFlow tasks are designed to simplify the way how you run common tasks on the database. E.g., ControlFlow tasks allow
+you to run a Sql query with a single line or having objects to create or alter tables, views, procedures etc. on the database.
+You will find an introduction into the Control Flow Tasks <a href="overview_controlflow.html">in the article Overview Control Flow</a>.</p>
+<h3 id="more-about-logging">More about logging</h3>
+<p>Some tasks in the Control Flow part are for logging purposes only.
+As there are advanced logging capabilities in ETLBox, logging itself is treated in separate articles.</p>
 <p>All Control Flow and Data Flow Tasks come with the ability to produce log.
 There are also some special task that enables you to create or query the log tables easily.
 To get an introduction into logging, <a href="overview_logging.html">please have a look at the Overview Logging</a>
-To see a simple and working example of ETL code producing some log information, <a href="examples/example_logging.html">see the Example for Logging</a>.
 All logging capabilites are based on nlog. You can <a href="https://nlog-project.org">visit the NLog homepage</a> if you are interested in more details how to set up and configure NLog.</p>
-<h2 id="see-the-video">See the video</h2>
-<p>To get a quick overview and a basic introduction into ETLBox, you can <a href="https://www.youtube.com/watch?v=CsWZuRpl6PA">watch the video on Youtube.</a>
-You'll find the <a href="examples/example_basics.html">full code of the video in the basic example</a>.</p>
-<h1 id="api-reference">API Reference</h1>
-<p>If you are in doubt how to use a certain task, you can have a look at the API reference. All property and method names should be self explanatory and
-already give you a quite good understanding of the code.</p>
-<h2 id="creating-your-own-task">Creating your own task</h2>
-<p>It is possible to create your own tasks. If you are in need for further details, please give me some feedback via github (open an issue) and
-I will happily give you detailled instructions how to do so.</p>
 </article>
           </div>
           
