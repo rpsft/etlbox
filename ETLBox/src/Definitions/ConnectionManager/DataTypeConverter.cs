@@ -77,17 +77,18 @@ namespace ALE.ETLBox.ConnectionManager
                 case "decimal":
                 case "number":
                 case "money":
+                case "smallmoney":
                 case "numeric":
                     return "System.Decimal";
                 case "real":
                 case "float":
                 case "float4":
                 case "float8":
-                    return "System.Float";
                 case "double":
                     return "System.Double";
                 case "date":
                 case "datetime":
+                case "smalldatetime":
                 case "datetime2":
                 case "time":
                 case "timetz":

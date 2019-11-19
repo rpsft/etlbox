@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -106,8 +107,8 @@ ORDER BY cols.column_id
             , type_name => curCol.DataType = type_name.ToString()
             , is_nullable => curCol.AllowNulls = (bool)is_nullable
             , is_identity => curCol.IsIdentity = (bool)is_identity
-            , seed_value => curCol.IdentitySeed = (int?)seed_value
-            , increment_value => curCol.IdentityIncrement = (int?)increment_value
+            , seed_value => curCol.IdentitySeed = (int?)(Convert.ToInt32(seed_value))
+            , increment_value => curCol.IdentityIncrement = (int?)(Convert.ToInt32(increment_value))
             , primary_key => curCol.IsPrimaryKey = (bool)primary_key
             , default_value =>
                     curCol.DefaultValue = default_value?.ToString().Substring(2, (default_value.ToString().Length) - 4)
