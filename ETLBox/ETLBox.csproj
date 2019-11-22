@@ -11,14 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Adding option to re-use already opened connections. Also added new MemorySource &amp; MemoryDestination - now data can be read from or written into a in-memory list object.</PackageReleaseNotes>
-    <Version>1.6.4</Version>
+    <PackageReleaseNotes>Fix issue when trying to create a DBSource on a table that has a BIGINT identity column (Sql Server only). MemoryDestination now has a BlockedCollection as memory storage object to have it thread-safe.</PackageReleaseNotes>
+    <Version>1.6.5</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.6.4.0</AssemblyVersion>
-    <FileVersion>1.6.4.0</FileVersion>
+    <AssemblyVersion>1.6.5.0</AssemblyVersion>
+    <FileVersion>1.6.5.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

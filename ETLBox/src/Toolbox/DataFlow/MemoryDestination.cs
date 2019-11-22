@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 
@@ -16,7 +17,7 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => $"Dataflow: Write Data batchwise into memory";
 
         internal const int DEFAULT_BATCH_SIZE = 1000;
-        public List<TInput> Data { get; set; }
+        public BlockingCollection<TInput> Data { get; set; }
 
         public MemoryDestination()
         {
@@ -36,10 +37,22 @@ namespace ALE.ETLBox.DataFlow
 
         internal override void WriteBatch(ref TInput[] data)
         {
-            if (Data == null) Data = new List<TInput>(BatchSize);
+            if (Data == null) InitMemoryCollection();
             base.WriteBatch(ref data);
-            Data.AddRange(data);
+            foreach (TInput record in data)
+                Data.Add(record);
             LogProgress(data.Length);
+        }
+
+        private void InitMemoryCollection()
+        {
+            Data = new BlockingCollection<TInput>(BatchSize);
+            this.CloseStreamsAction = CloseStream;
+        }
+
+        private void CloseStream()
+        {
+            Data?.CompleteAdding();
         }
     }
 
