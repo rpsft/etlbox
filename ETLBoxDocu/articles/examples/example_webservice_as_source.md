@@ -1,10 +1,16 @@
-# Example: Use Web Service as data source
+# Example: Use Custom source to consume web service
+
+## JsonSource
+
+If you would like to use a WebAPI or REST service as data source, you should first check 
+if the [current implementation of `JsonSource`](../dataflow/dataflow_web_services.md) is not already satisfying your needs. 
 
 ## Purpose
-If you would like to use a WebAPI or REST service as data source, this can be done with ETLBox.
-There is currently no particular DataFlow source to achive this. The `CustomSource` can be simply modified.
+
+The example shows how the `CustomSource` can be used to query any kind of web service.
 
 ## Test web service 
+
 In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
 See [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com) for more details.
 

@@ -16,17 +16,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonSourceNonGenericTests : IDisposable
+    public class JsonSourceNonGenericTests
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
         public JsonSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
         {
         }
-
-        public void Dispose()
-        {
-        }
-
 
         [Fact]
         public void SimpleFlowWithStringArray()
@@ -36,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination dest = new DBDestination(Connection, "JsonSource2ColsNonGen");
 
             //Act
-            JsonSource source = new JsonSource("res/JsonSource/TwoColumnsStringArray.json");
+            JsonSource source = new JsonSource("res/JsonSource/TwoColumnsStringArray.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -44,6 +39,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
     }
 }

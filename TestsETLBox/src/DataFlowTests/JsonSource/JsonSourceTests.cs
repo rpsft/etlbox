@@ -57,7 +57,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void JsonFromWebService()
         {
             //Arrange
-            List<Todo> result = new List<Todo>();
             MemoryDestination<Todo> dest = new MemoryDestination<Todo>(200);
 
             //Act

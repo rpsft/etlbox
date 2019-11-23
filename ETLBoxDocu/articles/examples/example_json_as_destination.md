@@ -1,6 +1,12 @@
 # Example: Writing into a json file
 
+## JsonDestination
+
+If you would like to write data into a json file, you should first see 
+if the [current implementation of `JsonDestination`](../dataflow/dataflow_file_sources_destinations.md) is not already satisfying your needs. 
+
 ## Purpose
+
 Sometimes you want to extract data and store it into a json file or use the json to send it to an Rest API. 
 This example shows you how to use the `CustomDestination` to create a json. 
 

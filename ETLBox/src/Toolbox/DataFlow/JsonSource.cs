@@ -136,6 +136,7 @@ namespace ALE.ETLBox.DataFlow
     public class JsonSource : JsonSource<string[]>
     {
         public JsonSource() : base() { }
-        public JsonSource(string fileName) : base(fileName) { }
+        public JsonSource(string uri) : base(uri) { }
+        public JsonSource(string uri, ResourceType resourceType) : base(uri, resourceType) { }
     }
 }

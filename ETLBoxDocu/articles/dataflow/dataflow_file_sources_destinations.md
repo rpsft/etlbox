@@ -87,7 +87,7 @@ public class MySimpleRow
     public string Col2 { get; set; }
 }
 
-JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("file.json");
+JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("file.json", ResourceType.File);
 ```
 
 ## JsonDestination

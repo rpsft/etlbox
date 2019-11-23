@@ -18,6 +18,8 @@
       href: dataflow/dataflow_file_sources_destinations.md
     - name: Custom sources and destinations
       href: dataflow/dataflow_custom_sources_destinations.md
+    - name: Web services and http requests
+      href: dataflow/dataflow_web_services.md
     - name: Transformations
       href: dataflow/dataflow_transformations.md
     - name: Linking and Parallelism
@@ -28,6 +30,8 @@
       href: dataflow/dataflow_dbmerge.md
     - name: Predicates
       href: dataflow/dataflow_predicates.md
+    - name: Memory sources and destinations
+      href: dataflow/dataflow_memory_sources_destinations.md
 - name: ControlFlow
   items:
     - name: ControlFlow Overview
@@ -44,9 +48,9 @@
   items:
     - name: Different Databases
       href: examples/example_different_dbs.md
-    - name: WebService as Source
+    - name: CustomSource with WebService
       href: examples/example_webservice_as_source.md
-    - name: Json as Destination
+    - name: CustomDestination creating Json
       href: examples/example_json_as_destination.md
     - name: Multicast to split data
       href: examples/example_multicast.md
