@@ -4,21 +4,21 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>It's all in the box! Run all your ETL or ELT jobs with this C# class library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. files, Excel or databases. ETLbox currently supports SqlServer, SQLite, MySql and Postgres (and limited support for Access and SSAS). Furthermore, ETLBox offers control flow tasks that wraps sql in easy-to-use C# objects.</Description>
+    <Description>It's all in the box! Run all your ETL  jobs with this handy C# library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. databases, flat files or web services. ETLbox supports any custom made source and offers out-of-the box functionalities for SqlServer, SQLite, MySql, Postgres, Json, CSV, Excel, Access &amp; much more.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fix issue when trying to create a DBSource on a table that has a BIGINT identity column (Sql Server only). MemoryDestination now has a BlockedCollection as memory storage object to have it thread-safe.</PackageReleaseNotes>
-    <Version>1.6.5</Version>
+    <PackageReleaseNotes>JsonSource now can do http requests directly by just passing the url. ETLBox now covers the most common scenarios for data integration.</PackageReleaseNotes>
+    <Version>1.7.0</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.6.5.0</AssemblyVersion>
-    <FileVersion>1.6.5.0</FileVersion>
+    <AssemblyVersion>1.7.0.0</AssemblyVersion>
+    <FileVersion>1.7.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

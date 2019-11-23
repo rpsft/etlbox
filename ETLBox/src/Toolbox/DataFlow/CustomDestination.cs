@@ -45,7 +45,7 @@ namespace ALE.ETLBox.DataFlow
             WriteAction = writeAction;
         }
 
-        public CustomDestination(ITask task, Action<TInput> writeAction) : this(writeAction)
+        internal CustomDestination(ITask task, Action<TInput> writeAction) : this(writeAction)
         {
             CopyTaskProperties(task);
         }

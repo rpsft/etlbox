@@ -67,7 +67,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void Open()
         {
-            StreamReader = new StreamReader(FileName, Configuration.Encoding ?? Encoding.UTF8);
+            StreamReader = new StreamReader(FileName, Configuration.Encoding ?? Encoding.UTF8, true);
             SkipFirstRows();
             CsvReader = new CsvReader(StreamReader, Configuration);
         }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -8,25 +9,38 @@ using System.Threading.Tasks.Dataflow;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.
+    /// Reads data from a json source. This can be any http resource or a file.
+    /// By default, data is pulled via httpclient. Use the ResourceType property to read data from a file.
     /// </summary>
     /// <example>
     /// <code>
-    /// JsonSource&lt;POCO&gt; source = new JsonSource&lt;POCO&gt;("Demo.json");
+    /// JsonSource&lt;POCO&gt; source = new JsonSource&lt;POCO&gt;("https://jsonplaceholder.typicode.com/todos");
     /// </code>
     /// </example>
     public class JsonSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Read Json source data from file {FileName}";
+        public override string TaskName => $"Dataflow: Read Json source data from {Uri}";
 
         /* Public properties */
-        public string FileName { get; set; }
+        /// <summary>
+        /// The Url of the webservice (e.g. https://test.com/foo) or the file name (relative or absolute)
+        /// </summary>
+        public string Uri { get; set; }
+        /// <summary>
+        /// Specifies the resourc type. By default requests are made with HttpClient.
+        /// Specify ResourceType.File if you want to read from a json file.
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// The Newtonsoft.Json.JsonSerializer used to deserialize the json into the used data type.
+        /// </summary>
         public JsonSerializer JsonSerializer { get; set; }
 
         /* Private stuff */
         JsonTextReader JsonTextReader { get; set; }
         StreamReader StreamReader { get; set; }
+        HttpClient HttpClient { get; set; }
 
         public JsonSource() : base()
         {
@@ -34,10 +48,16 @@ namespace ALE.ETLBox.DataFlow
             JsonSerializer = new JsonSerializer();
         }
 
-        public JsonSource(string fileName) : this()
+        public JsonSource(string uri) : this()
         {
-            FileName = fileName;
+            Uri = uri;
         }
+
+        public JsonSource(string uri, ResourceType resourceType) : this(uri)
+        {
+            ResourceType = resourceType;
+        }
+
 
         public override void Execute()
         {
@@ -61,7 +81,15 @@ namespace ALE.ETLBox.DataFlow
 
         private void Open()
         {
-            StreamReader = new StreamReader(FileName, Encoding.UTF8);
+            if (ResourceType == ResourceType.File)
+            {
+                StreamReader = new StreamReader(Uri, true);
+            }
+            else
+            {
+                HttpClient = new HttpClient();
+                StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(Uri)).Result);
+            }
             JsonTextReader = new JsonTextReader(StreamReader);
         }
 
@@ -88,6 +116,7 @@ namespace ALE.ETLBox.DataFlow
         {
             JsonTextReader?.Close();
             StreamReader?.Dispose();
+            HttpClient?.Dispose();
         }
     }
 
