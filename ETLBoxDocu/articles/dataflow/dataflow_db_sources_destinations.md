@@ -64,10 +64,20 @@ source.Execute();
 dest.Wait()
 ```
 
+## Connection types
+
 ### Sql Server Connections
 
 The `DBSource` and `DBDestination` can be used to connect via ADO.NET to a sql server. 
-Use the `ConnectionString` object and a `SqlConnectionManger` to create a regular ADO.NET connection. 
+You can directly pass a connection string and the name of the source table. 
+```C#
+DBSource source = DBSource (
+    new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;")
+    , "SourceTable"
+);
+```
+
+Additionally, for all connection managers you can pass a `ConnectionString` object which wraps the connection string. 
 
 ```C#
 DBSource source = DBSource (
@@ -76,14 +86,15 @@ DBSource source = DBSource (
 );
 ```
 
+
 ### MySql Connections
 
 The `DBSource` and `DBDestination` can be used to connect to a MySql database via the MySql ADO.NET provider.
-Use the `MySqlConnectionString` object and a `MySqlConnectionManger`. 
+Either use the raw connection string or a `MySqlConnectionString` object and a `MySqlConnectionManger`. 
 
 ```C#
 DBSource source = DBSource (
-    new MySqlConnectionManager(new MySqlConnectionString("Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;")),
+    new MySqlConnectionManager("Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;"),
     "SourceTable"
 );
 ```
@@ -91,11 +102,11 @@ DBSource source = DBSource (
 ### Postgres Connections
 
 The `DBSource` and `DBDestination` can be used to connect to a Postgres database via the Postgres ADO.NET provider.
-Use the `PostgresConnectionString` object and a `PostgresConnectionManger`. 
+Either use the raw connection string or a use the `PostgresConnectionString` object and a `PostgresConnectionManger`. 
 
 ```C#
 DBDestination dest = DBDestination (
-    new PostgresConnectionManager(new PostgresConnectionString(""Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;")),
+    new PostgresConnectionManager("Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;"),
     "DestinationTable"
 );
 ```
@@ -103,11 +114,11 @@ DBDestination dest = DBDestination (
 ### SQLite Connections
 
 The `DBSource` and `DBDestination` can be used to connect to a SQLite database via the SQLite ADO.NET provider.
-Use the `SQLiteConnectionString` object and a `SQLiteConnectionManger`. 
+Either use the raw connection string or a use the `SQLiteConnectionString` object and a `SQLiteConnectionManger`. 
 
 ```C#
 DBSource source = DBSource (
-    new SQLiteConnectionManager(new SQLiteConnectionString("Data Source=.\\db\\SQLiteControlFlow.db;Version=3;")),
+    new SQLiteConnectionManager("Data Source=.\\db\\SQLiteControlFlow.db;Version=3;"),
     "SourceTable"
 );
 ```
@@ -156,3 +167,34 @@ DBDestination dest = DBDestination (
 *Warning*: The `DBDestination` will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.
 
 *Note*: Please note that the AccessOdbcConnectionManager will create a "temporary" dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. This was necessary to simulate a bulk insert with Access-like Sql. 
+
+### ConnectionStrings
+
+When you create a new connection manager, you have the choice to either pass the connection string directly or you
+ create a `ConnectionString` object from the connection string before you pass it to the connection manager.
+ The `ConnectionString` does exist for every database type (e.g. for MySql it is `MySqlConnectionString`). The ConnectionString
+ wraps the raw database connection string into the appropriate `ConnectionStringBuilder` object and also offers some more
+ functionalities, e.g. like getting a connection string for the database storing system information. 
+
+## Connection Pooling
+
+The implementation of all connection managers is based on Microsoft ADO.NET and makes use of the underlying 
+connection pooling. [Please see here for more details of connection pooling.](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-connection-pooling)
+This means that this actually can increase your performance, and in most scenarios you never have more 
+connections open that you actually need for your application.
+
+You don't need to explicitly open a connection. ETLBox will call the `Open()` method on a connection manager whenever
+needed - where it relies on the underlying ADO.NET connection pooling that either creates a new connection 
+or re-uses an existing one. Whenever the work of a component or task is done, the connection manager will return the connection back to 
+the pool so that it can be reused by other components or tasks when needed.
+
+Please note that the connection pooling only works for the same connection strings. For every connection string that differs there
+is going to be a sepearate pool 
+
+This behaviour - returning connections back to the pool when the work is done - does work very well in a scenario 
+with concurrent tasks. There may be a use-case where you don't won't to query your database in parallel and you 
+want to leave the connection open, avoiding the pooling. [For this scenario you can use the `LeaveOpen` property
+on the connection managers.](https://github.com/roadrunnerlenny/etlbox/issues/39)
+
+
+

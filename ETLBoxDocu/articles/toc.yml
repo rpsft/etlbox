@@ -8,16 +8,16 @@
       href: examples/example_basics.md
 - name: DataFlow Tutorial
   items:
-    - name: Data Flow
+    - name: Overview
       href: overview_dataflow.md
     - name: A Simple Data Flow
       href: examples/example_simple_dataflow.md
-    - name: Database sources and destinations
+    - name: Database integration
       href: dataflow/dataflow_db_sources_destinations.md
-    - name: File sources and destinations
+    - name: Flat file integration
       href: dataflow/dataflow_file_sources_destinations.md
-    - name: Custom sources and destinations
-      href: dataflow/dataflow_custom_sources_destinations.md
+    - name: Other sources and destinations
+      href: dataflow/dataflow_other_sources_destinations.md
     - name: Web services and http requests
       href: dataflow/dataflow_web_services.md
     - name: Transformations
@@ -30,8 +30,6 @@
       href: dataflow/dataflow_dbmerge.md
     - name: Predicates
       href: dataflow/dataflow_predicates.md
-    - name: Memory sources and destinations
-      href: dataflow/dataflow_memory_sources_destinations.md
 - name: ControlFlow
   items:
     - name: ControlFlow Overview
