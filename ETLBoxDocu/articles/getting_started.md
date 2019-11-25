@@ -1,11 +1,33 @@
 # Getting started
 
+## What is ETL
+
+ETL is the foundation of modern Business Intelligence application. 
+It separates the analysis part from everything that comes before it. ETL stands for extract, transform 
+and load, and describes a three-step process:
+
+```
+Source Systems --> Extract, Transform, Load --> Data Warehouse
+```
+
+*Extracting* data is about acquiring it from a particular source and doing so in a way that all relevant data 
+is collected. For ETL to work well, data needs to come directly from the source and in its rawest form.
+
+*Transforming* data requires it to be stripped of its various formats, cleaned and harmonized. 
+Put differently, it needs to become easy for the end user to read. 
+Ensuring the highest possible data quality is crucial during this process, 
+including detecting and removing duplicates and sorting the data into relevant, predetermined categories.
+
+In the end, your ETL tool will help harmonize your data and *load* it into a target location, 
+which essentially is a business intelligence (BI) or database tool of choice. 
+There you can find it ready for your analysis.
+
 ## ETLBox core concepts
 
-ETBlox is a data processing engine based on .NET Core. 
-This engine runs inside your applications, APIs, and jobs to filter, transform, and migrate data on-the-fly.
+ETLBox is a data processing engine based on .NET Core, giving you the power to create your own ETL processes. 
+This engine runs inside your applications, APIs, and jobs to extract, filter, transform, migrate data on-the-fly.
 ETLBox speeds up your development by providing an easy-to-use toolbox for integrating your data from 
-different sources within your app. 
+different sources within your app and load them into any target you like. 
 
 ```
 Sql Server  --|

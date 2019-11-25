@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Splitting and merging data | ETLBox - It's all in the box </title>
+    <title>Other Sources and Destinations | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Splitting and merging data | ETLBox - It's all in the box ">
-    <meta name="generator" content="docfx 2.44.0.0">
+    <meta name="title" content="Other Sources and Destinations | ETLBox - It's all in the box ">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -76,63 +76,79 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="splitting-and-merging-data">Splitting and merging data</h1>
+<h1 id="other-sources-and-destinations">Other Sources and Destinations</h1>
 
-<h2 id="splitting-data">Splitting data</h2>
-<p>In some of your data flow you may want to split the data and have it processed differently in the further flow.
-E.g. your data comes from one source and you want parts of it written into one destination and parts of it
-written into another. Or you like to split up data based on some conditions. For this purpose you can use the Multicast</p>
-<h2 id="multicast">Multicast</h2>
-<p>The <code>Multicast</code> is a component which basically duplicates your data. It has one input and two or more outputs.
-(Technically, it could also be used with only one output, but then it wouldn't do much.)</p>
-<p>The following code demonstrate a simple example where data would be duplicated and copied into two destinations -
-a database table and a Json file.</p>
-<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
+<h2 id="custom-integration">Custom integration</h2>
+<h3 id="custom-source">Custom Source</h3>
+<p>A custom source can generate any type of of output you describe in a Function. There is a function that describe how the records
+are generated and a function that returns true if you reached the end of your data.</p>
+<pre><code class="lang-C#">List&lt;string&gt; Data = new List&lt;string&gt;() { &quot;Test1&quot;, &quot;Test2&quot;, &quot;Test3&quot; };
+int _readIndex = 0;
+Func&lt;MySimpleRow&gt; ReadData = () =&gt;
+{
+    var result = new MySimpleRow()
+    {
+        Col1 = _readIndex + 1,
+        Col2 = Data[_readIndex]
+    };
+    _readIndex++;
+    return result;
+};
 
-var multicast = new Multicast();
-var destination1 = new JsonDestination(&quot;test.json&quot;);
-var destination2 = new DBDestination(&quot;TestTable&quot;);
-
-source.LinkTo(multicast);
-multicast.LinkTo(destination1);
-multicast.LinkTo(destination2);
-</code></pre>
-<p>If you want to split data, you can use <a href="dataflow_predicates.html">Predicates</a>.
-Predicates allow you to let only certain data pass.
-E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be
-copied into Table2.</p>
-<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
-
-var multicast = new Multicast();
-var destination1 = new DBDestination(&quot;Table1&quot;);
-var destination2 = new DBDestination(&quot;Table2&quot;);
-
-source.LinkTo(multicast);
-multicast.LinkTo(destination1, row =&gt; row[0] &gt; 0);
-multicast.LinkTo(destination2, row =&gt; row[0] &lt; 0);
-</code></pre>
-<p>Please note: Make sure when using predicate that always all rows arrive at a destination. Use a <code>VoidDestination</code>
-for records that you don't want to keep. See more about this in the <a href="dataflow_predicates.html">article about Predicates</a>.</p>
-<h2 id="merging-data">Merging data</h2>
-<p>If you want to merge data in your dataflow, you can use the <code>MergeJoin</code>.</p>
-<p>The MergeJoin accepts two inputs and has one output. E.g. you can link two sources with the MergeJoin, define
-a method how to combine these records and produce a new merged output. The data types of inputs and output can be
-different.</p>
-<pre><code class="lang-C#">DBSource&lt;MyInputRowType1&gt; source1 = new DBSource&lt;MyInputRowType1&gt;(Connection, &quot;MergeJoinSource1&quot;);
-DBSource&lt;MyInputRowType2&gt; source2 = new DBSource&lt;MyInputRowType2&gt;(Connection, &quot;MergeJoinSource2&quot;);
-DBDestination&lt;MyOutputRowType&gt; dest = new DBDestination&lt;MyOutputRowType&gt;(Connection, &quot;MergeJoinDestination&quot;);
+Func&lt;bool&gt; EndOfData = () =&gt; _readIndex &gt;= Data.Count;
 
 //Act
-MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt; join = new MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt;(
-    (inputRow1, inputRow2) =&gt; {
-        return new MyOutputRowType() {
-            Value = inputRow1.Value + inputRow2.Value
-        };
-    });
-source1.LinkTo(join.Target1);
-source2.LinkTo(join.Target2);
-join.LinkTo(dest);
+CustomSource&lt;MySimpleRow&gt; source = new CustomSource&lt;MySimpleRow&gt;(ReadData, EndOfData);
 </code></pre>
+<h3 id="custom-destination">Custom Destination</h3>
+<p>A custom destination calls the given action for every received record in the destination.</p>
+<pre><code class="lang-C#">CustomDestination&lt;MySimpleRow&gt; dest = new CustomDestination&lt;MySimpleRow&gt;(
+    row =&gt; {
+        SqlTask.ExecuteNonQuery(Connection, &quot;Insert row&quot;,
+            $&quot;INSERT INTO dbo.CustomDestination VALUES({row.Col1},'{row.Col2}')&quot;);
+    }
+);
+</code></pre>
+<h2 id="integrate-from-memory">Integrate from memory</h2>
+<h3 id="memory-source">Memory Source</h3>
+<p>A Memory source is a simple source comnponents that accepts a list. Use this component
+within your dataflow if you already have you collection or records available in memory.
+When you execute the flow, the memory destination will iterate throught the list and
+asynchronusly post record by record into the flow.</p>
+<p>Example code:</p>
+<pre><code class="lang-C#"> TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(&quot;MemoryDestination&quot;);
+MemorySource&lt;MySimpleRow&gt; source = new MemorySource&lt;MySimpleRow&gt;();
+DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestination&quot;);
+       
+source.Data = new List&lt;MySimpleRow&gt;()
+{
+    new MySimpleRow() { Col1 = 1, Col2 = &quot;Test1&quot; },
+    new MySimpleRow() { Col1 = 2, Col2 = &quot;Test2&quot; },
+    new MySimpleRow() { Col1 = 3, Col2 = &quot;Test3&quot; }
+};
+source.LinkTo(dest);
+source.Execute();
+dest.Wait();
+</code></pre>
+<h3 id="memorydestination">MemoryDestination</h3>
+<p>A memory destination is a component that store the incoming data within a <a href="https://docs.microsoft.com/de-de/dotnet/api/system.collections.concurrent.blockingcollection-1?view=netframework-4.8">BlockingCollection</a>.
+It stores the data within the <code>Data</code> property.
+Data can be read from this collection as soon as it arrives.</p>
+<p>Example:</p>
+<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestinationSource&quot;);
+MemoryDestination&lt;MySimpleRow&gt; dest = new MemoryDestination&lt;MySimpleRow&gt;();
+
+source.LinkTo(dest);
+Task st = source.ExecuteAsync();
+Task dt = dest.Completion();
+
+// data is acessable in dest.Data
+</code></pre>
+<p>When starting the data flow asynchronous, you should wait until the tasks complete. The source task will complete when
+all data was posted into the data flow, and the destination task completes when all data has arrived in the destination.</p>
+<h2 id="voiddestination">VoidDestination</h2>
+<p>A <code>VoidDestination</code> is a destination where all incoming data is ignored. This can be helpful if you work with Predicates.
+For more details <a href="dataflow_predicates.html">see the article about Predicates</a>.</p>
 </article>
           </div>
           
@@ -141,7 +157,7 @@ join.LinkTo(dest);
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_splitting_merging.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_other_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

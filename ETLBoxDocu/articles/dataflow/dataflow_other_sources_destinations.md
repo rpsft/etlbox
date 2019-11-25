@@ -88,3 +88,8 @@ Task dt = dest.Completion();
 
 When starting the data flow asynchronous, you should wait until the tasks complete. The source task will complete when 
 all data was posted into the data flow, and the destination task completes when all data has arrived in the destination. 
+
+## VoidDestination
+
+A `VoidDestination` is a destination where all incoming data is ignored. This can be helpful if you work with Predicates.
+For more details [see the article about Predicates](dataflow_predicates.md). 

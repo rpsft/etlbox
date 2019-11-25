@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Overview Data Flwo Transformations | ETLBox - It's all in the box </title>
+    <title>Transformations | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Overview Data Flwo Transformations | ETLBox - It's all in the box ">
-    <meta name="generator" content="docfx 2.44.0.0">
+    <meta name="title" content="Transformations | ETLBox - It's all in the box ">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -76,17 +76,17 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="overview-data-flwo-transformations">Overview Data Flwo Transformations</h1>
+<h1 id="transformations">Transformations</h1>
 
 <p>Transformations always have at least one input and one output. Inputs can be connected either to other transformations or sources, and the output can also connect to other transformations
 or to destinations.
 The purpose of a transformation component is to take the data from its input(s) and post the transformed data to its outputs. This is done on a row-by-row basis.
 As soon as there is any data in the input, the transformation will start and post the result to the output.</p>
-<h3 id="buffering">Buffering</h3>
+<h2 id="buffering">Buffering</h2>
 <p>Every transformation will come with an input. If the components connected to the input post data faster than the transformation
 can process it, the buffer will hold this data until the transformation can continue with the next item. This allows a source to read as fast as possible,
 allowing the already read data to be buffered in the memory - so the transformation will always have some data ready to process.</p>
-<h3 id="non-blocking-and-blocking-transformations">Non-Blocking and Blocking transformations</h3>
+<h2 id="non-blocking-and-blocking-transformations">Non-Blocking and Blocking transformations</h2>
 <p>Transformation can be either blocking or non-blocking.</p>
 <p>Non-Blocking transformations will start to process data as soon as it finds something in its input buffer.
 In the moment where it discovers data in there, it will  start to transform it and send the data to registered output components.</p>
@@ -143,49 +143,67 @@ Lookup&lt;MyInputDataRow, MyOutputDataRow, MyLookupRow&gt; lookup = new Lookup&l
     , LookupTableData
 );
 </code></pre>
-<h3 id="multicast">Multicast</h3>
-<p>A multicast split the input into two or more outputs. So basically you duplicate you data.</p>
-<p>An example would look like this:</p>
-<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(Connection, &quot;Source&quot;);
-DBDestination&lt;MySimpleRow&gt; dest1 = new DBDestination&lt;MySimpleRow&gt;(Connection, &quot;Destination1&quot;);
-DBDestination&lt;MySimpleRow&gt; dest2 = new DBDestination&lt;MySimpleRow&gt;(Connection, &quot;Destination2&quot;);
-DBDestination&lt;MySimpleRow&gt; dest3 = new DBDestination&lt;MySimpleRow&gt;(Connection, &quot;Destination3&quot;);
+<h3 id="splitting-data">Splitting data</h3>
+<p>In some of your data flow you may want to split the data and have it processed differently in the further flow.
+E.g. your data comes from one source and you want parts of it written into one destination and parts of it
+written into another. Or you like to split up data based on some conditions. For this purpose you can use the Multicast</p>
+<h4 id="multicast">Multicast</h4>
+<p>The <code>Multicast</code> is a component which basically duplicates your data. It has one input and two or more outputs.
+(Technically, it could also be used with only one output, but then it wouldn't do much.)
+Multicast is a non-blocking operation.</p>
+<p>The following code demonstrate a simple example where data would be duplicated and copied into two destinations -
+a database table and a Json file.</p>
+<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
 
-Multicast&lt;MySimpleRow&gt; multicast = new Multicast&lt;MySimpleRow&gt;();
+var multicast = new Multicast();
+var destination1 = new JsonDestination(&quot;test.json&quot;);
+var destination2 = new DBDestination(&quot;TestTable&quot;);
+
 source.LinkTo(multicast);
-multicast.LinkTo(dest1);
-multicast.LinkTo(dest2);
-multicast.LinkTo(dest3);
-source.Execute();
-dest1.Wait();
-dest2.Wait();
-dest3.Wait();
+multicast.LinkTo(destination1);
+multicast.LinkTo(destination2);
 </code></pre>
-<h3 id="mergejoin">MergeJoin</h3>
-<p>A merge join combines two inputs into one output. A function describes how the two inputs are combined into one output. The type of the
+<p>If you want to split data, you can use <a href="dataflow_predicates.html">Predicates</a>.
+Predicates allow you to let only certain data pass.
+E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be
+copied into Table2.</p>
+<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
+
+var multicast = new Multicast();
+var destination1 = new DBDestination(&quot;Table1&quot;);
+var destination2 = new DBDestination(&quot;Table2&quot;);
+
+source.LinkTo(multicast);
+multicast.LinkTo(destination1, row =&gt; row[0] &gt; 0);
+multicast.LinkTo(destination2, row =&gt; row[0] &lt; 0);
+</code></pre>
+<p>Please note: Make sure when using predicate that always all rows arrive at a destination. Use a <code>VoidDestination</code>
+for records that you don't want to keep. See more about this in the <a href="dataflow_predicates.html">article about Predicates</a>.</p>
+<h3 id="merging-data">Merging data</h3>
+<p>If you want to merge data in your dataflow, you can use the <code>MergeJoin</code>. This basically joins the outcome
+of two sources or transfomrations into one data record.</p>
+<h4 id="mergejoin">MergeJoin</h4>
+<p>The MergeJoin accepts two inputs and has one output. A function describes how the two inputs are combined into one output.
+E.g. you can link two sources with the MergeJoin, define
+a method how to combine these records and produce a new merged output. The data type of the
 output and the inputs can be different, as long as you handle it in the join function.
 MergeJoin is a non blocking transformation.</p>
-<p>Example:</p>
-<pre><code>DBSource&lt;MySimpleRow&gt; source1 = new DBSource&lt;MySimpleRow&gt;(Connection, &quot;MergeJoinSource1&quot;);
-DBSource&lt;MySimpleRow&gt; source2 = new DBSource&lt;MySimpleRow&gt;(Connection, &quot;MergeJoinSource2&quot;);
-DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(Connection, &quot;MergeJoinDestination&quot;);
+<pre><code class="lang-C#">DBSource&lt;MyInputRowType1&gt; source1 = new DBSource&lt;MyInputRowType1&gt;(Connection, &quot;MergeJoinSource1&quot;);
+DBSource&lt;MyInputRowType2&gt; source2 = new DBSource&lt;MyInputRowType2&gt;(Connection, &quot;MergeJoinSource2&quot;);
+DBDestination&lt;MyOutputRowType&gt; dest = new DBDestination&lt;MyOutputRowType&gt;(Connection, &quot;MergeJoinDestination&quot;);
 
-//Act
-MergeJoin&lt;MySimpleRow, MySimpleRow, MySimpleRow&gt; join = new MergeJoin&lt;MySimpleRow, MySimpleRow, MySimpleRow&gt;(
+MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt; join = new MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt;(
     (inputRow1, inputRow2) =&gt; {
-        inputRow1.Col1 += inputRow2.Col1;
-        inputRow1.Col2 += inputRow2.Col2;
-        return inputRow1;
+        return new MyOutputRowType() {
+            Value = inputRow1.Value + inputRow2.Value
+        };
     });
 source1.LinkTo(join.Target1);
 source2.LinkTo(join.Target2);
 join.LinkTo(dest);
-source1.Execute();
-source2.Execute();
-dest.Wait();
 </code></pre>
 <h2 id="blocking-transformations">Blocking Transformations</h2>
-<h2 id="blocktransformation">BlockTransformation</h2>
+<h3 id="blocktransformation">BlockTransformation</h3>
 <p>A BlockTransformation waits until all data is received at the BlockTranformation - then it will be available in a List object and you can do modifications
 on your whole data set. Keep in mind that this tranformation will need as much memory as the amount of data you loaded.</p>
 <pre><code class="lang-C#">BlockTransformation&lt;MySimpleRow&gt; block = new BlockTransformation&lt;MySimpleRow&gt;(
@@ -195,7 +213,7 @@ on your whole data set. Keep in mind that this tranformation will need as much m
         return inputData;
     });
 </code></pre>
-<h2 id="sort">Sort</h2>
+<h3 id="sort">Sort</h3>
 <p>A sort will wait for all data to arrive and then sort the data based on the given sort method.</p>
 <pre><code class="lang-C#">Comparison&lt;MySimpleRow&gt; comp = new Comparison&lt;MySimpleRow&gt;(
         (x, y) =&gt; y.Col1 - x.Col1

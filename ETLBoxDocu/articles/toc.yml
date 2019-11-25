@@ -22,10 +22,10 @@
       href: dataflow/dataflow_web_services.md
     - name: Transformations
       href: dataflow/dataflow_transformations.md
+    - name: Working with data types
+      href: dataflow/dataflow_generic_nongeneric.md
     - name: Linking and Parallelism
       href: dataflow/dataflow_execution_linking_completion.md
-    - name: Splitting and Merging data
-      href: dataflow/dataflow_splitting_merging.md
     - name: Syncing tables with Merge
       href: dataflow/dataflow_dbmerge.md
     - name: Predicates

@@ -1,6 +1,7 @@
-﻿# Overview Database source and destination
+﻿# Overview database source and destination
 
-This overview will give you a description of all the sources and destination reading and writing from databases
+There a numerours database sources and destinations that come with ETLBox. In short, you can extract data 
+from and load data into the following databases: Sql Server, MySql, Postgres, SQLite. (And limited support for Access)
 
 ## DBSource
 
@@ -8,45 +9,21 @@ The DBSource is the most common data source for a data flow. It basically connec
 While ADO.NET is reading from the source, data is simutaneously posted into the dataflow pipe.
 To initialize a DBSource, you can either hand over a `TableDefinition`, a SQL-statement or a tablename. 
 The DBSource also accepts a connection manager. If no connection manager is specified, the "default" connection manager is used 
-(which is stored in `ControlFlow.CurrentDbConnection`)
+(which is stored in `ControlFlow.CurrentDbConnection`).
 
-### Generic approach
-
-The DBSource can be defined with a POCO that matches the data types of the data. 
-By default, the mapping of column names to properties is resolved by the property name itself. E.g. a column named Value1 
-would stored in the property with the same name. If you use the `ColumnMap` attribute, you can add what column name will be mapped 
-to the property. If there is no match, the column will be ignored.
-
-Usage example:
+The following code would read all data from the table `SourceTable` and use the default connection manager:
 
 ```C#
-public class MySimpleRow {
-    [ColumnMap("Value1")]
-    public string Col1 { get; set; }
-    public int Value2 { get; set; }
-}
-
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(
-    $@"select Value1, Value2 from dbo.Test"
-);
+DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("SourceTable");
 ```
 
-### Non generic approach
+For the `DBSource`, you can also specifiy some Sql code to retrieve your data:
 
-Instead of parsing your source data into a object, you can just read all your data in to string array. This is equivalent to `DBSource<string[]>`.
-E.g.:
-
+```C#
+DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() {
+    Sql = "SELECT * FROM SourceTable"
+};
 ```
-DBSource source = new DBSource($@"select Value1, Value2 from dbo.Test");
-RowTransformation row = new RowTransformation( 
-    row => {
-        string value1 = row[0];
-        string value2 = row[1];
-        }
-);
-```
-
-would have all data from column "Value1" accesable at the first position of the string array and "Value2" at the second position. 
 
 ## DBDestination
 
@@ -64,12 +41,14 @@ source.Execute();
 dest.Wait()
 ```
 
-## Connection types
+## Connection manager
 
-### Sql Server Connections
+### Database Connections
 
-The `DBSource` and `DBDestination` can be used to connect via ADO.NET to a sql server. 
-You can directly pass a connection string and the name of the source table. 
+The `DBSource` and `DBDestination` can be used to connect via ADO.NET to a database server. 
+To do so, it will need the correct connection manager and either a raw connection string or a `ConnectionString` object. 
+The easiest way would be to directly pass a raw connection string and connection manager.  
+
 ```C#
 DBSource source = DBSource (
     new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;")
@@ -86,8 +65,7 @@ DBSource source = DBSource (
 );
 ```
 
-
-### MySql Connections
+#### MySql Connections
 
 The `DBSource` and `DBDestination` can be used to connect to a MySql database via the MySql ADO.NET provider.
 Either use the raw connection string or a `MySqlConnectionString` object and a `MySqlConnectionManger`. 
@@ -99,7 +77,7 @@ DBSource source = DBSource (
 );
 ```
 
-### Postgres Connections
+#### Postgres Connections
 
 The `DBSource` and `DBDestination` can be used to connect to a Postgres database via the Postgres ADO.NET provider.
 Either use the raw connection string or a use the `PostgresConnectionString` object and a `PostgresConnectionManger`. 
@@ -111,7 +89,7 @@ DBDestination dest = DBDestination (
 );
 ```
 
-### SQLite Connections
+#### SQLite Connections
 
 The `DBSource` and `DBDestination` can be used to connect to a SQLite database via the SQLite ADO.NET provider.
 Either use the raw connection string or a use the `SQLiteConnectionString` object and a `SQLiteConnectionManger`. 
@@ -123,7 +101,7 @@ DBSource source = DBSource (
 );
 ```
 
-### SMO Connection Manager
+#### SMO Connection Manager
 
 The `SMOConnectionManager` uses Sql Server Managed Objects to connect to a Sql Server. It allow the use of the GO keyword within your SQL to separate batches. 
 It can be used with a `ConnectionString`.
@@ -133,7 +111,7 @@ ControlFlow.CurrentDbConnection = new SMOConnectionManager(new ConnectionString(
 SqlTask.ExecuteNonQuery("SQL with GO keyword", "CREATE SCHEMA TEST; GO; SELECT 1");
 ```
 
-### Sql Server ODBC Connections
+#### Sql Server ODBC Connections
 
 The `DBSource` and `DBDestination` also works with ODBC connection to Sql Server. . 
 You will still use the underlying ADO.NET, but it allows you to connect to SQL Server via ODBC. 
@@ -150,7 +128,7 @@ The `DBDestination` will do a bulk insert by creating a sql insert statement tha
 has multiple values: INSERT INTO (..) VALUES (..),(..),(..)
 
 
-### Access DB Connections
+#### Access DB Connections
 
 The ODBC connection to Microsoft Access databases have some more restrictions. ETLBox is based .NET Core and will only
 support 64bit ODBC connections. You need also have Microsoft Access 64 bit installed. (The corresponding 64bit ODBC driver for Access can be download 
@@ -176,7 +154,7 @@ When you create a new connection manager, you have the choice to either pass the
  wraps the raw database connection string into the appropriate `ConnectionStringBuilder` object and also offers some more
  functionalities, e.g. like getting a connection string for the database storing system information. 
 
-## Connection Pooling
+### Connection Pooling
 
 The implementation of all connection managers is based on Microsoft ADO.NET and makes use of the underlying 
 connection pooling. [Please see here for more details of connection pooling.](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-connection-pooling)
@@ -197,4 +175,24 @@ want to leave the connection open, avoiding the pooling. [For this scenario you 
 on the connection managers.](https://github.com/roadrunnerlenny/etlbox/issues/39)
 
 
+## Table Definitions
 
+If you pass a Tablename to a `DBsource` or `DBDestination` (or a Sql statement to a `DBSource`), the meta data
+of the table is automatically derived from that table or sql statement. If you don't want ETLBox to read this information
+from the table, or if you want to provide your own meta information, you can pass a `TableDefinition` instead.
+
+This could look like this:
+
+```
+var TableDefinition = new TableDefinition("tableName"
+    , new List<TableColumn>() {
+    new TableColumn("Id", "BIGINT", allowNulls:false,  isPrimaryKey: true, isIdentity:true)),
+    new TableColumn("OtherCol", "NVARCHAR(100)", allowNulls: true)
+});
+
+var DBSource<type> = new DBSource<type>() {  
+  SourceTableDefinition = TableDefinition
+}
+```
+
+ETLBox will use this Metadata instead to connect with the table. 

@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace ALE.ETLBox.DataFlow
    | ETLBox - It's all in the box ">
-    <meta name="generator" content="docfx 2.44.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -187,7 +187,8 @@ JsonSource as a nongeneric type always return a string array as output. If you n
 the JsonSource&lt;TOutput&gt; object instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html">JsonSource&lt;TOutput&gt;</a></h4>
-      <section><p>Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.</p>
+      <section><p>Reads data from a json source. This can be any http resource or a file.
+By default, data is pulled via httpclient. Use the ResourceType property to read data from a file.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup.html">Lookup</a></h4>
       <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source.
@@ -277,6 +278,10 @@ Every records needs to be transferred to a destination to have a dataflow comple
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.IMergable.html">IMergable</a></h4>
+      <section></section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.ResourceType.html">ResourceType</a></h4>
       <section></section>
 </article>
           </div>

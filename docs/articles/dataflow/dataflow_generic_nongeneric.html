@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Custom Sources and Destinations | ETLBox - It's all in the box </title>
+    <title>Generic and non-generic approach | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Custom Sources and Destinations | ETLBox - It's all in the box ">
-    <meta name="generator" content="docfx 2.44.0.0">
+    <meta name="title" content="Generic and non-generic approach | ETLBox - It's all in the box ">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -76,38 +76,37 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="custom-sources-and-destinations">Custom Sources and Destinations</h1>
+<h1 id="generic-and-non-generic-approach">Generic and non-generic approach</h1>
 
-<h2 id="custom-source">Custom Source</h2>
-<p>A custom source can generate any type of of output you describe in a Function. There is a function that describe how the records
-are generated and a function that returns true if you reached the end of your data.</p>
-<pre><code class="lang-C#">List&lt;string&gt; Data = new List&lt;string&gt;() { &quot;Test1&quot;, &quot;Test2&quot;, &quot;Test3&quot; };
-int _readIndex = 0;
-Func&lt;MySimpleRow&gt; ReadData = () =&gt;
-{
-    var result = new MySimpleRow()
-    {
-        Col1 = _readIndex + 1,
-        Col2 = Data[_readIndex]
-    };
-    _readIndex++;
-    return result;
-};
+<h2 id="generic-approach">Generic approach</h2>
+<p>Almost all components in ETLBox can be defined with a POCO that matches the data types of the data.
+By default, the mapping of column names to properties is resolved by the property name itself. E.g. a column named Value1
+would stored in the property with the same name. If you use the <code>ColumnMap</code> attribute, you can add what column name will be mapped
+to the property. If there is no match, the column will be ignored.</p>
+<p>Usage example:</p>
+<pre><code class="lang-C#">public class MySimpleRow {
+    [ColumnMap(&quot;Value1&quot;)]
+    public string Col1 { get; set; }
+    public int Value2 { get; set; }
+}
 
-Func&lt;bool&gt; EndOfData = () =&gt; _readIndex &gt;= Data.Count;
-
-//Act
-CustomSource&lt;MySimpleRow&gt; source = new CustomSource&lt;MySimpleRow&gt;(ReadData, EndOfData);
-</code></pre>
-<h3 id="custom-destination">Custom Destination</h3>
-<p>A custom destination calls the given action for every received record in the destination.</p>
-<pre><code class="lang-C#">CustomDestination&lt;MySimpleRow&gt; dest = new CustomDestination&lt;MySimpleRow&gt;(
-    row =&gt; {
-        SqlTask.ExecuteNonQuery(Connection, &quot;Insert row&quot;,
-            $&quot;INSERT INTO dbo.CustomDestination VALUES({row.Col1},'{row.Col2}')&quot;);
-    }
+DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(
+    $@&quot;select Value1, Value2 from dbo.Test&quot;
 );
 </code></pre>
+<h2 id="non-generic-approach">Non generic approach</h2>
+<p>Instead of parsing your source data into a object, you can just read all your data in to string array. This is equivalent to
+<code>DBSource&lt;string[]&gt;</code>.</p>
+<p>E.g.:</p>
+<pre><code>DBSource source = new DBSource($@&quot;select Value1, Value2 from dbo.Test&quot;);
+RowTransformation row = new RowTransformation( 
+    row =&gt; {
+        string value1 = row[0];
+        string value2 = row[1];
+        }
+);
+</code></pre>
+<p>would have all data from column &quot;Value1&quot; accesable at the first position of the string array and &quot;Value2&quot; at the second position.</p>
 </article>
           </div>
           
@@ -116,7 +115,7 @@ CustomSource&lt;MySimpleRow&gt; source = new CustomSource&lt;MySimpleRow&gt;(Rea
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_custom_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/dataflow_generic_nongeneric.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

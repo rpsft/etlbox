@@ -17,7 +17,7 @@
     <title>Overview File source and destination | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Overview File source and destination | ETLBox - It's all in the box ">
-    <meta name="generator" content="docfx 2.44.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -140,7 +140,7 @@ CSVDestination&lt;MySimpleRow&gt; dest = new CSVDestination&lt;MySimpleRow&gt;(&
     public string Col2 { get; set; }
 }
 
-JsonSource&lt;MySimpleRow&gt; source = new JsonSource&lt;MySimpleRow&gt;(&quot;file.json&quot;);
+JsonSource&lt;MySimpleRow&gt; source = new JsonSource&lt;MySimpleRow&gt;(&quot;file.json&quot;, ResourceType.File);
 </code></pre>
 <h2 id="jsondestination">JsonDestination</h2>
 <p>To get your data outputted as json, you can use the <code>JSonDestination</code>:</p>

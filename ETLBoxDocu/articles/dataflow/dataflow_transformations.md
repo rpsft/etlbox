@@ -1,17 +1,17 @@
-﻿# Overview Data Flwo Transformations
+﻿# Transformations
 
 Transformations always have at least one input and one output. Inputs can be connected either to other transformations or sources, and the output can also connect to other transformations
 or to destinations. 
 The purpose of a transformation component is to take the data from its input(s) and post the transformed data to its outputs. This is done on a row-by-row basis.
 As soon as there is any data in the input, the transformation will start and post the result to the output. 
 
-### Buffering
+## Buffering
 
 Every transformation will come with an input. If the components connected to the input post data faster than the transformation
 can process it, the buffer will hold this data until the transformation can continue with the next item. This allows a source to read as fast as possible,
 allowing the already read data to be buffered in the memory - so the transformation will always have some data ready to process.
 
-### Non-Blocking and Blocking transformations
+## Non-Blocking and Blocking transformations
 
 Transformation can be either blocking or non-blocking. 
 
@@ -23,7 +23,6 @@ all sources in the pipe connected to the transformation have read all data from 
 When all data was read from the connected sources and transformations further down the pipe, the blocking transformation will start the transformation. In a transformation
 of a blocking transformation, you will therefore have access to all data buffered within the memory. For instance, the sort component is a blocking transformation. 
 It will wait until all data has reached the transformation block - then it will sort it and post the sorted data to its output. 
-
 
 ## Non blocking tranformations
 
@@ -83,60 +82,85 @@ Lookup<MyInputDataRow, MyOutputDataRow, MyLookupRow> lookup = new Lookup<MyInput
 );
 ```
 
-### Multicast
+### Splitting data
 
-A multicast split the input into two or more outputs. So basically you duplicate you data.
+In some of your data flow you may want to split the data and have it processed differently in the further flow.
+E.g. your data comes from one source and you want parts of it written into one destination and parts of it
+written into another. Or you like to split up data based on some conditions. For this purpose you can use the Multicast
 
-An example would look like this:
+#### Multicast
+
+The `Multicast` is a component which basically duplicates your data. It has one input and two or more outputs.
+(Technically, it could also be used with only one output, but then it wouldn't do much.)
+Multicast is a non-blocking operation. 
+
+The following code demonstrate a simple example where data would be duplicated and copied into two destinations - 
+a database table and a Json file. 
 
 ```C#
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(Connection, "Source");
-DBDestination<MySimpleRow> dest1 = new DBDestination<MySimpleRow>(Connection, "Destination1");
-DBDestination<MySimpleRow> dest2 = new DBDestination<MySimpleRow>(Connection, "Destination2");
-DBDestination<MySimpleRow> dest3 = new DBDestination<MySimpleRow>(Connection, "Destination3");
+var source = new CSVSource("test.csv");
 
-Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
+var multicast = new Multicast();
+var destination1 = new JsonDestination("test.json");
+var destination2 = new DBDestination("TestTable");
+
 source.LinkTo(multicast);
-multicast.LinkTo(dest1);
-multicast.LinkTo(dest2);
-multicast.LinkTo(dest3);
-source.Execute();
-dest1.Wait();
-dest2.Wait();
-dest3.Wait();
+multicast.LinkTo(destination1);
+multicast.LinkTo(destination2);
 ```
 
-### MergeJoin
+If you want to split data, you can use [Predicates](dataflow_predicates.md).
+Predicates allow you to let only certain data pass. 
+E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be 
+copied into Table2.
 
-A merge join combines two inputs into one output. A function describes how the two inputs are combined into one output. The type of the 
+```C#
+var source = new CSVSource("test.csv");
+
+var multicast = new Multicast();
+var destination1 = new DBDestination("Table1");
+var destination2 = new DBDestination("Table2");
+
+source.LinkTo(multicast);
+multicast.LinkTo(destination1, row => row[0] > 0);
+multicast.LinkTo(destination2, row => row[0] < 0);
+```
+
+Please note: Make sure when using predicate that always all rows arrive at a destination. Use a `VoidDestination`
+for records that you don't want to keep. See more about this in the [article about Predicates](dataflow_predicates.md).
+
+### Merging data
+
+If you want to merge data in your dataflow, you can use the `MergeJoin`. This basically joins the outcome
+ of two sources or transfomrations into one data record.
+
+#### MergeJoin
+
+The MergeJoin accepts two inputs and has one output. A function describes how the two inputs are combined into one output. 
+E.g. you can link two sources with the MergeJoin, define 
+a method how to combine these records and produce a new merged output. The data type of the 
 output and the inputs can be different, as long as you handle it in the join function.
 MergeJoin is a non blocking transformation. 
 
-Example: 
+```C#
+DBSource<MyInputRowType1> source1 = new DBSource<MyInputRowType1>(Connection, "MergeJoinSource1");
+DBSource<MyInputRowType2> source2 = new DBSource<MyInputRowType2>(Connection, "MergeJoinSource2");
+DBDestination<MyOutputRowType> dest = new DBDestination<MyOutputRowType>(Connection, "MergeJoinDestination");
 
-```
-DBSource<MySimpleRow> source1 = new DBSource<MySimpleRow>(Connection, "MergeJoinSource1");
-DBSource<MySimpleRow> source2 = new DBSource<MySimpleRow>(Connection, "MergeJoinSource2");
-DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "MergeJoinDestination");
-
-//Act
-MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow> join = new MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow>(
+MergeJoin<MyInputRowType1, MyInputRowType2, MyOutputRowType> join = new MergeJoin<MyInputRowType1, MyInputRowType2, MyOutputRowType>(
     (inputRow1, inputRow2) => {
-        inputRow1.Col1 += inputRow2.Col1;
-        inputRow1.Col2 += inputRow2.Col2;
-        return inputRow1;
+        return new MyOutputRowType() {
+            Value = inputRow1.Value + inputRow2.Value
+        };
     });
 source1.LinkTo(join.Target1);
 source2.LinkTo(join.Target2);
 join.LinkTo(dest);
-source1.Execute();
-source2.Execute();
-dest.Wait();
 ```
 
 ## Blocking Transformations
 
-## BlockTransformation
+### BlockTransformation
 
 A BlockTransformation waits until all data is received at the BlockTranformation - then it will be available in a List object and you can do modifications
 on your whole data set. Keep in mind that this tranformation will need as much memory as the amount of data you loaded. 
@@ -150,7 +174,7 @@ BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
     });
 ```
 
-## Sort
+### Sort
 
 A sort will wait for all data to arrive and then sort the data based on the given sort method. 
 

@@ -4,6 +4,7 @@
     <div class="sidefilter">
       <form class="toc-filter">
         <span class="glyphicon glyphicon-filter filter-icon"></span>
+        <span class="glyphicon glyphicon-remove clear-icon" id="toc_filter_clear"></span>
         <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
       </form>
     </div>
@@ -33,28 +34,31 @@
                     
                     <ul class="nav level2">
                           <li>
-                              <a href="overview_dataflow.html" name="" title="Data Flow">Data Flow</a>
+                              <a href="overview_dataflow.html" name="" title="Overview">Overview</a>
                           </li>
                           <li>
                               <a href="examples/example_simple_dataflow.html" name="" title="A Simple Data Flow">A Simple Data Flow</a>
                           </li>
                           <li>
-                              <a href="dataflow/dataflow_db_sources_destinations.html" name="" title="Database sources and destinations">Database sources and destinations</a>
+                              <a href="dataflow/dataflow_db_sources_destinations.html" name="" title="Database integration">Database integration</a>
                           </li>
                           <li>
-                              <a href="dataflow/dataflow_file_sources_destinations.html" name="" title="File sources and destinations">File sources and destinations</a>
+                              <a href="dataflow/dataflow_file_sources_destinations.html" name="" title="Flat file integration">Flat file integration</a>
                           </li>
                           <li>
-                              <a href="dataflow/dataflow_custom_sources_destinations.html" name="" title="Custom sources and destinations">Custom sources and destinations</a>
+                              <a href="dataflow/dataflow_other_sources_destinations.html" name="" title="Other sources and destinations">Other sources and destinations</a>
+                          </li>
+                          <li>
+                              <a href="dataflow/dataflow_web_services.html" name="" title="Web services and http requests">Web services and http requests</a>
                           </li>
                           <li>
                               <a href="dataflow/dataflow_transformations.html" name="" title="Transformations">Transformations</a>
                           </li>
                           <li>
-                              <a href="dataflow/dataflow_execution_linking_completion.html" name="" title="Linking and Parallelism">Linking and Parallelism</a>
+                              <a href="dataflow/dataflow_generic_nongeneric.html" name="" title="Working with data types">Working with data types</a>
                           </li>
                           <li>
-                              <a href="dataflow/dataflow_splitting_merging.html" name="" title="Splitting and Merging data">Splitting and Merging data</a>
+                              <a href="dataflow/dataflow_execution_linking_completion.html" name="" title="Linking and Parallelism">Linking and Parallelism</a>
                           </li>
                           <li>
                               <a href="dataflow/dataflow_dbmerge.html" name="" title="Syncing tables with Merge">Syncing tables with Merge</a>
@@ -99,10 +103,10 @@
                               <a href="examples/example_different_dbs.html" name="" title="Different Databases">Different Databases</a>
                           </li>
                           <li>
-                              <a href="examples/example_webservice_as_source.html" name="" title="WebService as Source">WebService as Source</a>
+                              <a href="examples/example_webservice_as_source.html" name="" title="CustomSource with WebService">CustomSource with WebService</a>
                           </li>
                           <li>
-                              <a href="examples/example_json_as_destination.html" name="" title="Json as Destination">Json as Destination</a>
+                              <a href="examples/example_json_as_destination.html" name="" title="CustomDestination creating Json">CustomDestination creating Json</a>
                           </li>
                           <li>
                               <a href="examples/example_multicast.html" name="" title="Multicast to split data">Multicast to split data</a>

@@ -6677,15 +6677,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CustomDestination(Of TInput).CustomDestination()
   nameWithType: CustomDestination<TInput>.CustomDestination()
   nameWithType.vb: CustomDestination(Of TInput).CustomDestination()
-- uid: ALE.ETLBox.DataFlow.CustomDestination`1.#ctor(ALE.ETLBox.ITask,System.Action{`0})
-  name: CustomDestination(ITask, Action<TInput>)
-  href: api/ALE.ETLBox.DataFlow.CustomDestination-1.html#ALE_ETLBox_DataFlow_CustomDestination_1__ctor_ALE_ETLBox_ITask_System_Action__0__
-  commentId: M:ALE.ETLBox.DataFlow.CustomDestination`1.#ctor(ALE.ETLBox.ITask,System.Action{`0})
-  name.vb: CustomDestination(ITask, Action(Of TInput))
-  fullName: ALE.ETLBox.DataFlow.CustomDestination<TInput>.CustomDestination(ALE.ETLBox.ITask, System.Action<TInput>)
-  fullName.vb: ALE.ETLBox.DataFlow.CustomDestination(Of TInput).CustomDestination(ALE.ETLBox.ITask, System.Action(Of TInput))
-  nameWithType: CustomDestination<TInput>.CustomDestination(ITask, Action<TInput>)
-  nameWithType.vb: CustomDestination(Of TInput).CustomDestination(ITask, Action(Of TInput))
 - uid: ALE.ETLBox.DataFlow.CustomDestination`1.#ctor(System.Action{`0})
   name: CustomDestination(Action<TInput>)
   href: api/ALE.ETLBox.DataFlow.CustomDestination-1.html#ALE_ETLBox_DataFlow_CustomDestination_1__ctor_System_Action__0__
@@ -8967,6 +8958,12 @@ references:
   commentId: M:ALE.ETLBox.DataFlow.JsonSource.#ctor(System.String)
   fullName: ALE.ETLBox.DataFlow.JsonSource.JsonSource(System.String)
   nameWithType: JsonSource.JsonSource(String)
+- uid: ALE.ETLBox.DataFlow.JsonSource.#ctor(System.String,ALE.ETLBox.DataFlow.ResourceType)
+  name: JsonSource(String, ResourceType)
+  href: api/ALE.ETLBox.DataFlow.JsonSource.html#ALE_ETLBox_DataFlow_JsonSource__ctor_System_String_ALE_ETLBox_DataFlow_ResourceType_
+  commentId: M:ALE.ETLBox.DataFlow.JsonSource.#ctor(System.String,ALE.ETLBox.DataFlow.ResourceType)
+  fullName: ALE.ETLBox.DataFlow.JsonSource.JsonSource(System.String, ALE.ETLBox.DataFlow.ResourceType)
+  nameWithType: JsonSource.JsonSource(String, ResourceType)
 - uid: ALE.ETLBox.DataFlow.JsonSource.#ctor*
   name: JsonSource
   href: api/ALE.ETLBox.DataFlow.JsonSource.html#ALE_ETLBox_DataFlow_JsonSource__ctor_
@@ -8999,6 +8996,14 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).JsonSource(System.String)
   nameWithType: JsonSource<TOutput>.JsonSource(String)
   nameWithType.vb: JsonSource(Of TOutput).JsonSource(String)
+- uid: ALE.ETLBox.DataFlow.JsonSource`1.#ctor(System.String,ALE.ETLBox.DataFlow.ResourceType)
+  name: JsonSource(String, ResourceType)
+  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1__ctor_System_String_ALE_ETLBox_DataFlow_ResourceType_
+  commentId: M:ALE.ETLBox.DataFlow.JsonSource`1.#ctor(System.String,ALE.ETLBox.DataFlow.ResourceType)
+  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.JsonSource(System.String, ALE.ETLBox.DataFlow.ResourceType)
+  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).JsonSource(System.String, ALE.ETLBox.DataFlow.ResourceType)
+  nameWithType: JsonSource<TOutput>.JsonSource(String, ResourceType)
+  nameWithType.vb: JsonSource(Of TOutput).JsonSource(String, ResourceType)
 - uid: ALE.ETLBox.DataFlow.JsonSource`1.#ctor*
   name: JsonSource
   href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1__ctor_
@@ -9025,23 +9030,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).Execute
   nameWithType: JsonSource<TOutput>.Execute
   nameWithType.vb: JsonSource(Of TOutput).Execute
-- uid: ALE.ETLBox.DataFlow.JsonSource`1.FileName
-  name: FileName
-  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_FileName
-  commentId: P:ALE.ETLBox.DataFlow.JsonSource`1.FileName
-  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.FileName
-  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).FileName
-  nameWithType: JsonSource<TOutput>.FileName
-  nameWithType.vb: JsonSource(Of TOutput).FileName
-- uid: ALE.ETLBox.DataFlow.JsonSource`1.FileName*
-  name: FileName
-  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_FileName_
-  commentId: Overload:ALE.ETLBox.DataFlow.JsonSource`1.FileName
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.FileName
-  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).FileName
-  nameWithType: JsonSource<TOutput>.FileName
-  nameWithType.vb: JsonSource(Of TOutput).FileName
 - uid: ALE.ETLBox.DataFlow.JsonSource`1.JsonSerializer
   name: JsonSerializer
   href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_JsonSerializer
@@ -9059,6 +9047,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).JsonSerializer
   nameWithType: JsonSource<TOutput>.JsonSerializer
   nameWithType.vb: JsonSource(Of TOutput).JsonSerializer
+- uid: ALE.ETLBox.DataFlow.JsonSource`1.ResourceType
+  name: ResourceType
+  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_ResourceType
+  commentId: P:ALE.ETLBox.DataFlow.JsonSource`1.ResourceType
+  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.ResourceType
+  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).ResourceType
+  nameWithType: JsonSource<TOutput>.ResourceType
+  nameWithType.vb: JsonSource(Of TOutput).ResourceType
+- uid: ALE.ETLBox.DataFlow.JsonSource`1.ResourceType*
+  name: ResourceType
+  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_ResourceType_
+  commentId: Overload:ALE.ETLBox.DataFlow.JsonSource`1.ResourceType
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.ResourceType
+  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).ResourceType
+  nameWithType: JsonSource<TOutput>.ResourceType
+  nameWithType.vb: JsonSource(Of TOutput).ResourceType
 - uid: ALE.ETLBox.DataFlow.JsonSource`1.TaskName
   name: TaskName
   href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_TaskName
@@ -9076,6 +9081,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).TaskName
   nameWithType: JsonSource<TOutput>.TaskName
   nameWithType.vb: JsonSource(Of TOutput).TaskName
+- uid: ALE.ETLBox.DataFlow.JsonSource`1.Uri
+  name: Uri
+  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_Uri
+  commentId: P:ALE.ETLBox.DataFlow.JsonSource`1.Uri
+  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.Uri
+  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).Uri
+  nameWithType: JsonSource<TOutput>.Uri
+  nameWithType.vb: JsonSource(Of TOutput).Uri
+- uid: ALE.ETLBox.DataFlow.JsonSource`1.Uri*
+  name: Uri
+  href: api/ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_Uri_
+  commentId: Overload:ALE.ETLBox.DataFlow.JsonSource`1.Uri
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.JsonSource<TOutput>.Uri
+  fullName.vb: ALE.ETLBox.DataFlow.JsonSource(Of TOutput).Uri
+  nameWithType: JsonSource<TOutput>.Uri
+  nameWithType.vb: JsonSource(Of TOutput).Uri
 - uid: ALE.ETLBox.DataFlow.Lookup
   name: Lookup
   href: api/ALE.ETLBox.DataFlow.Lookup.html
@@ -10020,6 +10042,30 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Multicast(Of TInput).TaskName
   nameWithType: Multicast<TInput>.TaskName
   nameWithType.vb: Multicast(Of TInput).TaskName
+- uid: ALE.ETLBox.DataFlow.ResourceType
+  name: ResourceType
+  href: api/ALE.ETLBox.DataFlow.ResourceType.html
+  commentId: T:ALE.ETLBox.DataFlow.ResourceType
+  fullName: ALE.ETLBox.DataFlow.ResourceType
+  nameWithType: ResourceType
+- uid: ALE.ETLBox.DataFlow.ResourceType.File
+  name: File
+  href: api/ALE.ETLBox.DataFlow.ResourceType.html#ALE_ETLBox_DataFlow_ResourceType_File
+  commentId: F:ALE.ETLBox.DataFlow.ResourceType.File
+  fullName: ALE.ETLBox.DataFlow.ResourceType.File
+  nameWithType: ResourceType.File
+- uid: ALE.ETLBox.DataFlow.ResourceType.Http
+  name: Http
+  href: api/ALE.ETLBox.DataFlow.ResourceType.html#ALE_ETLBox_DataFlow_ResourceType_Http
+  commentId: F:ALE.ETLBox.DataFlow.ResourceType.Http
+  fullName: ALE.ETLBox.DataFlow.ResourceType.Http
+  nameWithType: ResourceType.Http
+- uid: ALE.ETLBox.DataFlow.ResourceType.Unspecified
+  name: Unspecified
+  href: api/ALE.ETLBox.DataFlow.ResourceType.html#ALE_ETLBox_DataFlow_ResourceType_Unspecified
+  commentId: F:ALE.ETLBox.DataFlow.ResourceType.Unspecified
+  fullName: ALE.ETLBox.DataFlow.ResourceType.Unspecified
+  nameWithType: ResourceType.Unspecified
 - uid: ALE.ETLBox.DataFlow.RowTransformation
   name: RowTransformation
   href: api/ALE.ETLBox.DataFlow.RowTransformation.html
