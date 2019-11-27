@@ -12,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
         internal Dictionary<string, int> PropertyIndex { get; set; }
         internal Dictionary<string, string> ColumnMap2Property { get; set; }
         internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; }
-        internal string MergeIdColumnName { get; set; }
+        internal List<string> MergeIdColumnNames { get; set; }
         internal int PropertyLength { get; set; }
         internal bool IsArray { get; set; } = true;
         internal int ArrayLength { get; set; }
@@ -68,7 +68,7 @@ namespace ALE.ETLBox.DataFlow
         {
             var attr = propInfo.GetCustomAttribute(typeof(MergeIdColumnName)) as MergeIdColumnName;
             if (attr != null)
-                MergeIdColumnName = attr.IdColumnName;
+                MergeIdColumnNames = attr.IdColumnNames;
         }
 
         internal static object CastPropertyValue(PropertyInfo property, string value)

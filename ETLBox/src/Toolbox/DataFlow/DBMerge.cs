@@ -41,8 +41,8 @@ namespace ALE.ETLBox.DataFlow
         List<TInput> InputData { get; set; } = new List<TInput>();
         CustomSource<TInput> OutputSource { get; set; }
         bool WasDeletionExecuted { get; set; }
-        string MergeIdColumnName { get; set; }
-        bool UseTruncateMethod => String.IsNullOrWhiteSpace(MergeIdColumnName);
+        List<string> MergeIdColumnNames { get; set; }
+        bool UseTruncateMethod => MergeIdColumnNames == null || MergeIdColumnNames?.Count == 0;// String.IsNullOrWhiteSpace(MergeIdColumnName);
 
         public DBMerge(string tableName)
         {
@@ -82,7 +82,7 @@ namespace ALE.ETLBox.DataFlow
         private void GetIdColumName()
         {
             TypeInfo typeInfo = new TypeInfo(typeof(TInput));
-            MergeIdColumnName = typeInfo.MergeIdColumnName;
+            MergeIdColumnNames = typeInfo.MergeIdColumnNames;
         }
 
 
@@ -100,7 +100,10 @@ namespace ALE.ETLBox.DataFlow
                 DeltaTable.AddRange(batch);
                 if (!UseTruncateMethod)
                     SqlDeleteIds(batch.Where(row => row.ChangeAction != "I" && row.ChangeAction != "E"));
-                return batch.Where(row => row.ChangeAction == "I" || row.ChangeAction == "U").ToArray();
+                if (UseTruncateMethod)
+                    return batch.Where(row => row.ChangeAction == "I" || row.ChangeAction == "U" || row.ChangeAction == "E").ToArray();
+                else
+                    return batch.Where(row => row.ChangeAction == "I" || row.ChangeAction == "U").ToArray();
             };
 
             Lookup.LinkTo(DestinationTable);
@@ -115,7 +118,6 @@ namespace ALE.ETLBox.DataFlow
             }, () => x >= DeltaTable.Count);
 
             DestinationTable.OnCompletion = () => OutputSource.Execute();
-            //OutputSource.LinkTo(new VoidDestination<TInput>());
         }
 
         private TInput UpdateRowWithDeltaInfo(TInput row)
@@ -144,21 +146,21 @@ namespace ALE.ETLBox.DataFlow
 
         void DeleteMissingEntriesOnce()
         {
+            if (WasDeletionExecuted == true) return;
+            WasDeletionExecuted = true;
+            if (DisableDeletion == true) return;
             var deletions = InputData.Where(row => String.IsNullOrEmpty(row.ChangeAction));
-            if (DisableDeletion == false && WasDeletionExecuted == false)
-            {
-                if (UseTruncateMethod)
-                    TruncateTableTask.Truncate(this.ConnectionManager, TableName);
-                else
-                    SqlDeleteIds(deletions);
-            }
+            if (UseTruncateMethod)
+                TruncateTableTask.Truncate(this.ConnectionManager, TableName);
+            else
+                SqlDeleteIds(deletions);
             DeltaTable.AddRange(deletions);
             DeltaTable.ForEach(row =>
             {
                 row.ChangeAction = "D";
                 row.ChangeDate = DateTime.Now;
             });
-            WasDeletionExecuted = true;
+
         }
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
@@ -166,9 +168,14 @@ namespace ALE.ETLBox.DataFlow
             var idsToDelete = rowsToDelete.Select(row => $"'{row.UniqueId}'");
             if (idsToDelete.Count() > 0)
             {
+                string idNames = $"{QB}{MergeIdColumnNames.First()}{QE}";
+                if (MergeIdColumnNames.Count > 1)
+                    idNames = $"CONCAT({string.Join(",", MergeIdColumnNames.Select(cn => $"{QB}{cn}{QE}"))}";
+                //"CONCAT({ QB}
+                // ColKey1{ QE}, ColKey2)";"
                 new SqlTask(this, $@"
             DELETE FROM {TN.QuotatedFullName} 
-            WHERE {QB}{MergeIdColumnName}{QE} IN (
+            WHERE {idNames} IN (
             {String.Join(",", idsToDelete)}
             )")
                 {

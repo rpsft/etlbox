@@ -53,6 +53,9 @@ column which you would like to use to as identifier. This should be a unique col
 The property decorated with the attribute should return a unique value as well - if both match, 
 the record is identified as a match. 
 
+If you have a composite key, you can pass more than one column name to the `MergeIdColumnName`, 
+e.g. `[MergeIdColumnName("KeyCol1", "KeyCol2")] would use the two columns as a composite key column. 
+
 If a match occurs, the record does exist in the destination and the source. Now all column will be compared used
 the `Equals(object other)` method - if they differ, the record will be marked to be updated. 
 If they do not differ, they will be marked as already existing.
@@ -76,11 +79,11 @@ you need to disable the deletions - in that case, deletions need to be handled m
 ## Example code 
 
 ```C#
-
 public class MyMergeRow : IMergable
 {
     [ColumnMap("Col1")]
-    public long Key { get; set; }
+    public int Key { get; set; }
+
     [ColumnMap("Col2")]
     public string Value { get; set; }
 
@@ -99,24 +102,38 @@ public class MyMergeRow : IMergable
     }
 }
 
-[Theory, MemberData(nameof(Connections))]
+/* 
+The source table would contains the following data 
+Col1   Col2
+1      Test - Insert
+2      Test - Update
+3      Test - Exists
+And the destination table looks like this:
+Col1   Col2
+2      XXX
+3      Test - Exists
+4      Test - Deleted
+*/
+
 public void SimpleMerge(IConnectionManager connection)
 {
-    //Arrange
-    TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "DBMergeSource");
-    s2c.InsertTestData();
-    s2c.InsertTestDataSet2();
-    TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
-    d2c.InsertTestDataSet3();
     DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "DBMergeSource");
-
-    //Act
     DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(connection, "DBMergeDestination");
     source.LinkTo(dest);
     source.Execute();
     dest.Wait();
+}
 
-    //Assert
+/* 
+The destination table now looks like this:
+Col1   Col2
+1      Test - Insert
+2      Test - Update
+3      Test - Exists
+
+The property dest.
+*/
+
     Assert.Equal(6, RowCountTask.Count(connection, "DBMergeDestination", $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"));
     Assert.True(dest.DeltaTable.Count == 7);
     Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "U").Count() == 2);
@@ -125,3 +142,7 @@ public void SimpleMerge(IConnectionManager connection)
     Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "E" && row.Key == 1).Count() == 1);
 }
 ```
+
+The property `dest.DeltaTable` now contains information about the what delta operations where made on the destiantion
+table. In this example, it would contain the information, that 1 row was inserted (#1), 1 was updated (#2), one
+column wasn't changed (#3) and one column was deleted (#4).

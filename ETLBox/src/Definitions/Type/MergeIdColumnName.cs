@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -20,10 +22,10 @@ namespace ALE.ETLBox.DataFlow
     [AttributeUsage(AttributeTargets.Property)]
     public class MergeIdColumnName : Attribute
     {
-        public string IdColumnName { get; set; }
-        public MergeIdColumnName(string idColumnName)
+        public List<string> IdColumnNames { get; set; }
+        public MergeIdColumnName(params string[] idColumnNames)
         {
-            IdColumnName = idColumnName;
+            IdColumnNames = idColumnNames.ToList();
         }
     }
 }
