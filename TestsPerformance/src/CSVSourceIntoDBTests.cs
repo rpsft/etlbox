@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.BigData
+namespace ALE.ETLBoxTests.Performance
 {
     [Collection("Performance")]
     public class CSVSourceIntoDBTests

@@ -20,24 +20,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
+
         public DBMergeCompositeKeysTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
-        public class MyMergeRow : IMergable
+        public class MyMergeRow : MergeableRow
         {
+            [IdColumn]
             public long ColKey1 { get; set; }
+
+            [IdColumn]
             public string ColKey2 { get; set; }
+
             public string ColValue1 { get; set; }
             public string ColValue2 { get; set; }
 
-            /* IMergable interface */
-            public DateTime ChangeDate { get; set; }
-            public string ChangeAction { get; set; }
-
-            [MergeIdColumnName("ColKey1","ColKey2")]
-            public string UniqueId => $"{ColKey1}{ColKey2}";
-
+ 
             public override bool Equals(object other)
             {
                 var msr = other as MyMergeRow;
@@ -61,7 +60,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
 
-        void InsertSourceData(IConnectionManager connection, TableNameDescriptor TN) {
+        void InsertSourceData(IConnectionManager connection, TableNameDescriptor TN)
+        {
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'I','Insert', 'Test1')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
@@ -99,9 +99,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(3, RowCountTask.Count(SqlConnection, "DBMergeDestination"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination","ColKey2 = 'E' and ColValue2 = 'Test3'"));
+            Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination", "ColKey2 = 'E' and ColValue2 = 'Test3'"));
             Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination", "ColKey2 = 'U' and ColValue2 = 'Test2'"));
             Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination", "ColKey2 = 'I' and ColValue2 = 'Test1'"));
         }
+
+
     }
 }

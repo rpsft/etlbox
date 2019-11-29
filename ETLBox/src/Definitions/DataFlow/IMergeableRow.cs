@@ -2,7 +2,7 @@
 
 namespace ALE.ETLBox.DataFlow
 {
-    public interface IMergable
+    public interface IMergeableRow
     {
         DateTime ChangeDate { get; set; }
         string ChangeAction { get; set; }

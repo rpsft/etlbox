@@ -20,12 +20,10 @@ namespace ALE.ETLBox.DataFlow
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class MergeIdColumnName : Attribute
+    public class IdColumn : Attribute
     {
-        public List<string> IdColumnNames { get; set; }
-        public MergeIdColumnName(params string[] idColumnNames)
+        public IdColumn()
         {
-            IdColumnNames = idColumnNames.ToList();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ALE.ETLBoxTests.BigData
+namespace ALE.ETLBoxTests.Performance
 {
     [CollectionDefinition("Performance")]
     public class BigDataCollectionClass : ICollectionFixture<BigDataDatabaseFixture> { }
