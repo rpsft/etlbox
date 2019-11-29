@@ -25,18 +25,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MyMergeRow : MergeableRow
         {
-            [ColumnMap("Col1")]
             [IdColumn]
+            [ColumnMap("Col1")]
             public long Key { get; set; }
+
+            [CompareColumn]
             [ColumnMap("Col2")]
             public string Value { get; set; }
-
-            public override bool Equals(object other)
-            {
-                var msr = other as MyMergeRow;
-                if (other == null) return false;
-                return msr.Value == this.Value;
-            }
         }
 
         [Theory, MemberData(nameof(Connections))]

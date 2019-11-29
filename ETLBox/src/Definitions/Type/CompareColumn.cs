@@ -5,23 +5,24 @@ using System.Linq;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// This attribute defines if the column is used as an Id for the DBMerge. It it supposed
-    /// to use with an object that either inherits from MergeableRow or implements the IMergeable interface.
-    /// If you do not provide this attribute, you need to override the UniqueId property
-    /// if you inherit from MergeableRow.
+    /// This attribute defines if the column is included in the comparison to identify
+    /// object that exists and needs to be updated. It it supposed
+    /// to use with an object that either inherits from MergeableRow.
+    /// If you implement the IMergeable interface, you need to override the Equals-method instead.
     /// </summary>
     /// <example>
     ///  public class MyPoco : MergeableRow
     /// {
     ///     [IdColumn]
     ///     public int Key { get; set; }
+    ///     [CompareColumn]
     ///     public string Value {get;set; }
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class IdColumn : Attribute
+    public class CompareColumn : Attribute
     {
-        public IdColumn()
+        public CompareColumn()
         {
         }
     }

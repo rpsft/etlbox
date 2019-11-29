@@ -33,16 +33,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             [IdColumn]
             public string ColKey2 { get; set; }
 
+            [CompareColumn]
             public string ColValue1 { get; set; }
+
+            [CompareColumn]
             public string ColValue2 { get; set; }
 
- 
-            public override bool Equals(object other)
-            {
-                var msr = other as MyMergeRow;
-                if (other == null) return false;
-                return msr.ColValue1 == this.ColValue1 && msr.ColValue2 == this.ColValue2;
-            }
         }
 
         void ReCreateTable(IConnectionManager connection, TableNameDescriptor TN)

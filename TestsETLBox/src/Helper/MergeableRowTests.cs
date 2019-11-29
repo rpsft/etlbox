@@ -23,8 +23,10 @@ namespace ALE.ETLBoxTests
             public int ColKey1 { get; set; }
             [IdColumn]
             public string ColKey2 { get; set; }
+            [CompareColumn]
             public string ColValue1 { get; set; }
-            public string ColValue2 { get; set; }
+            [CompareColumn]
+            public double ColValue2 { get; set; }
         }
 
         [Fact]
@@ -36,7 +38,7 @@ namespace ALE.ETLBoxTests
                 ColKey1 = 1,
                 ColKey2 = "A",
                 ColValue1 = "X",
-                ColValue2 = "Y"
+                ColValue2 = 3.0
             };
 
             //Act
@@ -60,7 +62,7 @@ namespace ALE.ETLBoxTests
                         ColKey1 = number,
                         ColKey2 = "",
                         ColValue1 = "X",
-                        ColValue2 = "Y"
+                        ColValue2 = 3.0
                     };
                     //Act
                     ids.Add(int.Parse(row.UniqueId));
@@ -69,6 +71,61 @@ namespace ALE.ETLBoxTests
             //Assert
             Assert.All(ids, id => Assert.True(id >= 1 && id <= 8));
         }
+
+        [Fact]
+        public void CheckIfObjectsAreEqual()
+        {
+            //Arrange
+            MergeableTestRow row = new MergeableTestRow()
+            {
+                ColKey1 = 1,
+                ColKey2 = "A",
+                ColValue1 = "X",
+                ColValue2 = 3.0
+            };
+
+            MergeableTestRow other = new MergeableTestRow()
+            {
+                ColKey1 = 2,
+                ColKey2 = "B",
+                ColValue1 = "X",
+                ColValue2 = 3.0
+            };
+
+            //Act
+            bool isEqual = row.Equals(other);
+
+            //Assert
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void CheckIfObjectsAreNotEqual()
+        {
+            //Arrange
+            MergeableTestRow row = new MergeableTestRow()
+            {
+                ColKey1 = 1,
+                ColKey2 = "A",
+                ColValue1 = "X",
+                ColValue2 = 3.0
+            };
+
+            MergeableTestRow other = new MergeableTestRow()
+            {
+                ColKey1 = 2,
+                ColKey2 = "B",
+                ColValue1 = "X2",
+                ColValue2 = 3.0
+            };
+
+            //Act
+            bool isEqual = row.Equals(other);
+
+            //Assert
+            Assert.False(isEqual);
+        }
+
 
     }
 }

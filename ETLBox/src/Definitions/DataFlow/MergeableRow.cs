@@ -8,26 +8,28 @@ namespace ALE.ETLBox.DataFlow
 {
     public class MergeableRow : IMergeableRow
     {
-        private static ConcurrentDictionary<Type, List<PropertyInfo>> IdAttributeProps { get; }
-            = new ConcurrentDictionary<Type, List<PropertyInfo>>();
+        private static ConcurrentDictionary<Type,AttributeProperties> AttributePropDict { get; }
+            = new ConcurrentDictionary<Type, AttributeProperties>();
 
         public MergeableRow()
         {
             Type curType = this.GetType();
-            List<PropertyInfo> curIdAttributeProps;
-
-            if (!IdAttributeProps.TryGetValue(curType, out curIdAttributeProps))
+            AttributeProperties curAttrProps;
+            if (!AttributePropDict.TryGetValue(curType, out curAttrProps))
             {
                 lock (this)
                 {
-                    curIdAttributeProps = new List<PropertyInfo>();
+                    curAttrProps = new AttributeProperties();
                     foreach (PropertyInfo propInfo in curType.GetProperties())
                     {
-                        var attr = propInfo.GetCustomAttribute(typeof(IdColumn)) as IdColumn;
-                        if (attr != null)
-                            curIdAttributeProps.Add(propInfo);
+                        var idAttr = propInfo.GetCustomAttribute(typeof(IdColumn)) as IdColumn;
+                        if (idAttr != null)
+                            curAttrProps.IdAttributeProps.Add(propInfo);
+                        var compAttr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
+                        if (compAttr != null)
+                            curAttrProps.CompareAttributeProps.Add(propInfo);
                     }
-                    IdAttributeProps.TryAdd(curType, curIdAttributeProps);
+                    AttributePropDict.TryAdd(curType, curAttrProps);
                 }
             }
         }
@@ -38,12 +40,28 @@ namespace ALE.ETLBox.DataFlow
         {
             get
             {
-                List<PropertyInfo> idAttributes = IdAttributeProps[this.GetType()];
+                AttributeProperties attrProps = AttributePropDict[this.GetType()];
                 string result = "";
-                foreach (var propInfo in idAttributes)
+                foreach (var propInfo in attrProps.IdAttributeProps)
                     result += propInfo?.GetValue(this);
                 return result;
             }
         }
+
+        public override bool Equals(object other)
+        {
+            if (other == null) return false;
+            AttributeProperties attrProps = AttributePropDict[this.GetType()];
+            bool result = true;
+            foreach (var propInfo in attrProps.CompareAttributeProps)
+                result &= (propInfo?.GetValue(this)).Equals(propInfo?.GetValue(other));
+            return result;
+        }
+    }
+
+    public class AttributeProperties
+    {
+        public List<PropertyInfo> IdAttributeProps { get; } = new List<PropertyInfo>();
+        public List<PropertyInfo> CompareAttributeProps { get; } = new List<PropertyInfo>();
     }
 }
