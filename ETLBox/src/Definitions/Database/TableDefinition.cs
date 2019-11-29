@@ -68,14 +68,14 @@ namespace ALE.ETLBox
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
-$@" 
+$@"
 SELECT  cols.name
      , UPPER(tpes.name) AS type_name
      , cols.is_nullable
      , cols.is_identity
      , ident.seed_value
-     , ident.increment_value   
-     , CONVERT (BIT, CASE WHEN pkconstr.type IS NULL THEN 0 ELSE 1 END ) AS primary_key
+     , ident.increment_value
+     , CONVERT (BIT, CASE WHEN pkidxcols.index_column_id IS NOT NULL THEN 1 ELSE 0 END ) AS primary_key
      , defconstr.definition AS default_value
      , cols.collation_name
      , compCol.definition AS computed_column_definition
@@ -88,9 +88,12 @@ INNER JOIN sys.systypes tpes
     ON tpes.xtype = cols.system_type_id
 LEFT JOIN sys.identity_columns ident
     ON ident.object_id = cols.object_id
-LEFT JOIN sys.key_constraints pkconstr
-    ON pkconstr.parent_object_id = cols.object_id
-    AND ISNULL(pkconstr.type,'') = 'PK'
+LEFT JOIN sys.indexes pkidx
+    ON pkidx.object_id = cols.object_id
+    AND pkidx.is_primary_key = 1
+LEFT JOIN sys.index_columns pkidxcols
+    on pkidxcols.object_id = cols.object_id
+    AND pkidxcols.column_id = cols.column_id
 LEFT JOIN sys.default_constraints defconstr
     ON defconstr.parent_object_id = cols.object_id
     AND defconstr.parent_column_id = cols.column_id
@@ -136,7 +139,7 @@ ORDER BY cols.column_id
             , type => curCol.DataType = type.ToString()
             , notnull => curCol.AllowNulls = (long)notnull == 1 ? true : false
             , dftl_value => curCol.DefaultValue = dftl_value?.ToString()
-            , pk => curCol.IsPrimaryKey = (long)pk == 1 ? true : false
+            , pk => curCol.IsPrimaryKey = (long)pk >= 1 ? true : false
              )
             {
                 DisableLogging = true,

@@ -43,6 +43,7 @@ namespace ALE.ETLBox.ControlFlow
                 return
 $@"CREATE TABLE {TN.QuotatedFullName} (
 {ColumnsDefinitionSql}
+{PrimaryKeySql}
 )
 ";
             }
@@ -71,8 +72,10 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
         public static void Create(IConnectionManager connectionManager, string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns.Cast<ITableColumn>().ToList()) { ConnectionManager = connectionManager }.Execute();
         public static void Create(IConnectionManager connectionManager, TableDefinition tableDefinition) => new CreateTableTask(tableDefinition) { ConnectionManager = connectionManager }.Execute();
 
-        string ColumnsDefinitionSql => String.Join("  , " + Environment.NewLine, Columns?.Select(col => CreateTableDefinition(col)));
+        string ColumnsDefinitionSql
+            => String.Join("  , " + Environment.NewLine, Columns?.Select(col => CreateTableDefinition(col)));
 
+        string PrimaryKeySql => CreatePrimaryKeyConstraint();
         string CreateTableDefinition(ITableColumn col)
         {
             string dataType = string.Empty;
@@ -82,11 +85,10 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                                     ? $"COLLATE {col.Collation}"
                                     : string.Empty;
             string nullSql = CreateNotNullSql(col);
-            string primarySql = CreatePrimaryKeyConstraint(col);
             string defaultSql = CreateDefaultSql(col);
             string computedColumnSql = CreateComputedColumnSql(col);
             return
-$@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {primarySql} {defaultSql} {computedColumnSql}";
+$@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {defaultSql} {computedColumnSql}";
         }
 
 
@@ -132,17 +134,18 @@ $@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {primary
             return nullSql;
         }
 
-        private string CreatePrimaryKeyConstraint(ITableColumn col)
+        private string CreatePrimaryKeyConstraint()
         {
-            if (col.IsPrimaryKey)
+            string result = string.Empty;
+            if (Columns?.Any(col => col.IsPrimaryKey) ?? false)
             {
-                string pkConst = $" CONSTRAINT {QB}pk_{TN.Table}_{col.Name}{QE} PRIMARY KEY ";
-                if (ConnectionType != ConnectionManagerType.SQLite)
-                    pkConst = $"," + pkConst + $"({QB}{ col.Name}{QE}) ";
+                var pkCols = Columns.Where(col => col.IsPrimaryKey);
+                string constraint = $"CONSTRAINT {QB}pk_{TN.Table}_{string.Join("_",pkCols.Select(col=>col.Name))}{QE}";
+                if (ConnectionType == ConnectionManagerType.SQLite) constraint = "";
+                    string pkConst = $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
                 return pkConst;
             }
-            else
-                return String.Empty;
+            return result;
         }
 
         private string CreateDefaultSql(ITableColumn col)

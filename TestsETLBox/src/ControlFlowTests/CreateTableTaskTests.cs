@@ -74,8 +74,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable4"));
             var td = TableDefinition.GetDefinitionFromTableName("CreateTable4", connection);
-            Assert.Contains(td.Columns, col => col.IsPrimaryKey);
+            Assert.True(td.Columns.Where(col => col.IsPrimaryKey && col.Name.Equals("Id")).Count() == 1);
+        }
 
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithCompositePrimaryKey(IConnectionManager connection)
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>() {
+                new TableColumn("Id1", "INT",allowNulls:false,isPrimaryKey:true),
+                new TableColumn("Id2", "INT",allowNulls:false,isPrimaryKey:true),
+                new TableColumn("value", "DATE", allowNulls:true)
+            };
+
+            //Act
+            CreateTableTask.Create(connection, "CreateTable41", columns);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable41"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTable41", connection);
+            Assert.True(td.Columns.Where(col=>col.IsPrimaryKey && col.Name.StartsWith("Id")).Count() == 2);
         }
 
         [Theory, MemberData(nameof(Connections))]

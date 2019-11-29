@@ -45,14 +45,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             DropTableTask.DropIfExists(connection, TN.FullName);
 
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data",
-                $@"CREATE TABLE {TN.QuotatedFullName} (
-                    ColKey1 INT NOT NULL,
-                    ColKey2 CHAR(1) NOT NULL,
-                    ColValue1 NVARCHAR(100) NULL,
-                    ColValue2 NVARCHAR(100) NULL
-                    PRIMARY KEY (ColKey1, ColKey2)
-                  )");
+            CreateTableTask.Create(connection, TN.FullName,
+                new List<TableColumn>()
+                {
+                    new TableColumn("ColKey1", "INT", allowNulls:false, isPrimaryKey:true),
+                    new TableColumn("ColKey2", "CHAR(1)", allowNulls:false, isPrimaryKey:true),
+                    new TableColumn("ColValue1", "NVARCHAR(100)", allowNulls:true, isPrimaryKey:false),
+                    new TableColumn("ColValue2", "NVARCHAR(100)", allowNulls:true, isPrimaryKey:false),
+                });
         }
 
 
@@ -76,30 +76,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'D','Delete', 'Test4')");
         }
 
-        [Fact]
-        public void MergeWithCompositeKey()
+
+        [Theory, MemberData(nameof(Connections))]
+        public void MergeWithCompositeKey(IConnectionManager connection)
         {
             //Arrange
-            TableNameDescriptor TNS = new TableNameDescriptor("DBMergeSource", SqlConnection);
-            TableNameDescriptor TND = new TableNameDescriptor("DBMergeDestination", SqlConnection);
-            ReCreateTable(SqlConnection, TNS);
-            ReCreateTable(SqlConnection, TND);
-            InsertSourceData(SqlConnection, TNS);
-            InsertDestinationData(SqlConnection, TND);
+            TableNameDescriptor TNS = new TableNameDescriptor("DBMergeSource", connection);
+            TableNameDescriptor TND = new TableNameDescriptor("DBMergeDestination", connection);
+            ReCreateTable(connection, TNS);
+            ReCreateTable(connection, TND);
+            InsertSourceData(connection, TNS);
+            InsertDestinationData(connection, TND);
             //Act
-            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(SqlConnection, "DBMergeSource");
-            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(SqlConnection, "DBMergeDestination");
+            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "DBMergeSource");
+            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(SqlConnection, "DBMergeDestination"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination", "ColKey2 = 'E' and ColValue2 = 'Test3'"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination", "ColKey2 = 'U' and ColValue2 = 'Test2'"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "DBMergeDestination", "ColKey2 = 'I' and ColValue2 = 'Test1'"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDestination"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DBMergeDestination", $"{TND.QB}ColKey2{TND.QE} = 'E' and {TND.QB}ColValue2{TND.QE} = 'Test3'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DBMergeDestination", $"{TND.QB}ColKey2{TND.QE} = 'U' and {TND.QB}ColValue2{TND.QE} = 'Test2'"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DBMergeDestination", $"{TND.QB}ColKey2{TND.QE} = 'I' and {TND.QB}ColValue2{TND.QE} = 'Test1'"));
         }
-
-
     }
 }

@@ -181,7 +181,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 string idNames = $"{QB}{MergeIdColumnNames.First()}{QE}";
                 if (MergeIdColumnNames.Count > 1)
-                    idNames = $"CONCAT( {string.Join(",", MergeIdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
+                    idNames = CreateConcatSqlForNames();
                 new SqlTask(this, $@"
             DELETE FROM {TN.QuotatedFullName} 
             WHERE {idNames} IN (
@@ -192,6 +192,14 @@ namespace ALE.ETLBox.DataFlow
                     DisableExtension = true,
                 }.ExecuteNonQuery();
             }
+        }
+
+        private string CreateConcatSqlForNames()
+        {
+            string result =  $"CONCAT( {string.Join(",", MergeIdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
+            if (this.ConnectionType == ConnectionManagerType.SQLite)
+                result = $" {string.Join("||", MergeIdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
+            return result;
         }
 
         public void Wait() => DestinationTable.Wait();
