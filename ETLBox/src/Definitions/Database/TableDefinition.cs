@@ -209,7 +209,7 @@ SELECT cols.column_name
 , cols.data_type
 , CASE WHEN cols.is_nullable = 'NO' THEN 0 ELSE 1 END AS ""is_nullable""
 , CASE WHEN cols.column_default IS NOT NULL AND substring(cols.column_default,0,8) = 'nextval' THEN 1 ELSE 0 END AS ""serial""
-, CASE WHEN k.constraint_name IS NULL THEN 0 ELSE 1 END AS ""primary_key""
+, CASE WHEN tccu.column_name IS NULL THEN 0 ELSE 1 END AS ""primary_key""
 , cols.column_default
 , cols.collation_name
 , cols.generation_expression
@@ -218,11 +218,19 @@ INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
     AND cols.table_schema = tbl.table_schema
     AND cols.table_catalog = tbl.table_catalog
-LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
-    ON cols.table_name = k.table_name
-    AND cols.table_schema = k.table_schema
-    AND cols.table_catalog = k.table_catalog
-    AND cols.column_name = k.column_name
+LEFT JOIN INFORMATION_SCHEMA.table_constraints tc
+    ON cols.table_name = tc.table_name
+    AND cols.table_schema = tc.table_schema
+    AND cols.table_catalog = tc.table_catalog
+    AND tc.constraint_type = 'PRIMARY KEY'
+LEFT JOIN information_schema.constraint_column_usage tccu
+    ON cols.table_name = tccu.table_name
+    AND cols.table_schema = tccu.table_schema
+    AND cols.table_catalog = tccu.table_catalog
+    AND tccu.constraint_name = tc.constraint_name
+    AND tccu.constraint_schema = tc.constraint_schema
+    AND tccu.constraint_catalog = tc.constraint_catalog
+    AND cols.column_name = tccu.column_name
 WHERE(cols.table_name = '{tableName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tableName}')
     AND cols.table_catalog = CURRENT_DATABASE()
 ORDER BY cols.ordinal_position
