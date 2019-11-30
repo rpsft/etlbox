@@ -135,17 +135,19 @@ for holding a value:</p>
     public string Value { get; set; }
 }
 </code></pre>
-<p>In our scenario we have a source table that would look like this:
-Key|Value
-1|Test - Insert
-2|Test - Update
-3|Test - Exists</p>
-<p>And the destination table would like this:
-Key|Value
-2|XXX
-3|Test - Exists
-4|Test - Deleted</p>
-<h3 id="setting-up-the-data-flow">Setting up the data flow</h3>
+<p>In our scenario we have a source table that would look like this:</p>
+<p>+----+-------------+
+|Key |Value        |
+|1   |Test - Insert|
+|2   |Test - Update|
+|3   |Test - Exists|</p>
+<p>And the destination table would like this:</p>
+<p>+----+--------------+
+|Key |Value         |
+|2   |XXX           |
+|3   |Test - Exists |
+|4   |Test - Deleted|</p>
+<h4 id="setting-up-the-data-flow">Setting up the data flow</h4>
 <p>No we can already set up a data flow. It would look like this:</p>
 <pre><code class="lang-C#">
 DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
@@ -161,10 +163,10 @@ will identify:</p>
 <li>which records need to inserted (ChangeAction: I)</li>
 <li>which records need to be updated (ChangeAction: U)</li>
 <li>which records exists and doesn't need to be updated (ChangeAction: E)</li>
-<li>which record needs to be deleted (ChangeAction: D), if deletions are allowed
-To identiy these different options, the <code>IdColumn</code> is used. In our example the id column is a unique primary key,
-and it is recommended to only use unique columns for that.</li>
+<li>which record needs to be deleted (ChangeAction: D), if deletions are allowed</li>
 </ul>
+<p>To identiy these different options, the <code>IdColumn</code> is used. In our example the id column is a unique primary key,
+and it is recommended to only use unique columns for that.</p>
 <p>As you can see, there is a difference between an update and an existing records that doesn't need to be updated.
 All records where the IdColumns match will be examined based on their value. All properties
 marked with the <code>CompareColumn</code> attirbute are compared (using the underlying Equals() implementation).
@@ -175,14 +177,16 @@ First, it will delete all records marked as 'D' (Deleted) or 'U' (Updated) from 
 Then it will write the updated records 'I' and 'U' back into the destination table. (As you can see, updates are done
 by deleting and inserting the record again). Records that doesn't need to be udpated are left in the destination table.</p>
 <p>In our example after doing the <code>DBMerge</code>, our destination table now looks like this:</p>
-<p>Key|Value
-1|Test - Insert
-2|Test - Update
-3|Test - Exists</p>
+<p>+----+--------------+
+|Key |Value         |
+|1   |Test - Insert |
+|2   |Test - Update |
+|3   |Test - Exists |</p>
 <p>Please note that if you connect the DBMerge to a source that provide you with delta information only,
 you need to disable the deletions - in that case, deletions need to be handled manually. If we would have
 deletions disable, there would be an additional row in our destination table:</p>
-<p>4|Test - Deleted</p>
+<p>+----+--------------+
+|4   |Test - Deleted|</p>
 <h4 id="delta-table">Delta table</h4>
 <p>The DBMerge has a property <code>DeltaTable</code> which is a List containing additionally information what records
 where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding
@@ -201,13 +205,15 @@ source.Execute();
 merge.Wait();
 delta.Wait();
 </code></pre>
-<p>The DeltaTable now could look like this:</p>
-<p>Key|ChangeDate|ChangeAction
-1|2019-01-01 12:00:01|I
-2|2019-01-01 12:00:02|U
-3|2019-01-01 12:00:02|E
-4|2019-01-01 12:00:03|D</p>
-<h3 id="truncate-instead-delete">Truncate instead delete</h3>
+<p>The DeltaTable now will look like this:</p>
+<p>+----+-------------------+------------+
+|Key |ChangeDate         |ChangeAction|
+|1   |2019-01-01 12:00:01|I           |
+|2   |2019-01-01 12:00:02|U           |
+|3   |2019-01-01 12:00:02|E           |
+|4   |2019-01-01 12:00:03|D           |</p>
+<h3 id="additional-configurations">Additional configurations</h3>
+<h4 id="truncate-instead-delete">Truncate instead delete</h4>
 <p>Because the DBMerge does delete records that need to be deleted or updated using a <code>DELETE</code> sql statement,
 this method can sometimes be a performance bottleneck if you expect a lot of deletions  to happen. The
 <code>DBMerge</code> does support a Truncate-approach by setting the property <code>UseTruncateMethod</code> to true.
@@ -216,7 +222,7 @@ truncate the destination table and then write all changes back into the database
 if you expect a lot of deletions, but you will always read all data from the destination table and write it back.
 Unfortunately, there is no general recommendation when to use this approach.</p>
 <p>Also, if you don't specify any Id columns with teh <code>IdColumn</code> attribute, the DbMerge will use the truncate method automatically.</p>
-<h3 id="columnmap-attribute">ColumnMap attribute</h3>
+<h4 id="columnmap-attribute">ColumnMap attribute</h4>
 <p>If the columns have different names than our property, we need to add the <code>ColumnMap</code> attibute to have them
 mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:</p>
 <pre><code class="lang-C#">public class MyMergeRow : MergeableRow
@@ -230,7 +236,7 @@ mapped correctly. If the columns would be named Col1 for the Key and Col2 for th
     public string Value { get; set; }
 }
 </code></pre>
-<h3 id="composite-keys">Composite Keys</h3>
+<h4 id="composite-keys">Composite Keys</h4>
 <p>Composite keys are supported: just flag all the columns that you want to use as composite unique key with the
 <code>IdColumn</code> attribute. Internally, all properties are concatenated to a string by using the ToString() method of the properties.
 This concatenated string is then used as identifier for each record.</p>
@@ -251,23 +257,24 @@ This concatenated string is then used as identifier for each record.</p>
 </code></pre>
 <p>As you can see, you can also use the <code>CompareColumn</code> attribute on each property that you want to use for identifing
 existing records.</p>
-<h3 id="using-the-imergaberow-interface">Using the IMergabeRow interface</h3>
+<h4 id="using-the-imergaberow-interface">Using the IMergabeRow interface</h4>
 <p>Sometimes, you want't do the implementation of the IMergeableRow interface yourself. Here is an example implementation:</p>
-<p>public class MySimpleRow : IMergeableRow
+<pre><code class="lang-C#">public class MySimpleRow : IMergeableRow
 {
-[IdColumn]
-public long Key { get; set; }
-public string Value { get; set; }
-public DateTime ChangeDate { get; set; }
-public string ChangeAction { get; set; }
-public string UniqueId =&gt; Key.ToString();
-public new bool Equals(object other)
-{
-var o = other as MySimpleRow;
-if (o == null) return false;
-return Value == o.Value;
+    [IdColumn]
+    public long Key { get; set; }
+    public string Value { get; set; }
+    public DateTime ChangeDate { get; set; }
+    public string ChangeAction { get; set; }
+    public string UniqueId =&gt; Key.ToString();
+    public new bool Equals(object other)
+    {
+        var o = other as MySimpleRow;
+        if (o == null) return false;
+        return Value == o.Value;
+    }
 }
-}</p>
+</code></pre>
 <p>Overwriting the Equals method and using the IdColumn attribute is optional. If no IdColumn
 is passed, the trunate method is used to merge the data.</p>
 </article>

@@ -77,19 +77,23 @@ public class MyMergeRow : MergeableRow
 ```
 
 In our scenario we have a source table that would look like this:
-Key|Value
-1|Test - Insert
-2|Test - Update
-3|Test - Exists
+
++----+-------------+
+|Key |Value        |
+|1   |Test - Insert|
+|2   |Test - Update|
+|3   |Test - Exists|
 
 And the destination table would like this:
-Key|Value
-2|XXX
-3|Test - Exists
-4|Test - Deleted
+
++----+--------------+
+|Key |Value         |
+|2   |XXX           |
+|3   |Test - Exists |
+|4   |Test - Deleted|
 
 
-### Setting up the data flow
+#### Setting up the data flow
 
 No we can already set up a data flow. It would look like this: 
 
@@ -105,10 +109,12 @@ merge.Wait();
 Now what happens if we let this flow run? First of all, all records will be loaded from the destination
 into a memory object and compared with the source data. Within the memory object, the DBMerge 
 will identify:
+
 - which records need to inserted (ChangeAction: I)
 - which records need to be updated (ChangeAction: U)
 - which records exists and doesn't need to be updated (ChangeAction: E)
 - which record needs to be deleted (ChangeAction: D), if deletions are allowed
+
 To identiy these different options, the `IdColumn` is used. In our example the id column is a unique primary key, 
 and it is recommended to only use unique columns for that.
 
@@ -125,16 +131,18 @@ by deleting and inserting the record again). Records that doesn't need to be udp
 
 In our example after doing the `DBMerge`, our destination table now looks like this:
 
-Key|Value
-1|Test - Insert
-2|Test - Update
-3|Test - Exists
++----+--------------+
+|Key |Value         |
+|1   |Test - Insert |
+|2   |Test - Update |
+|3   |Test - Exists |
 
 Please note that if you connect the DBMerge to a source that provide you with delta information only, 
 you need to disable the deletions - in that case, deletions need to be handled manually. If we would have
 deletions disable, there would be an additional row in our destination table:
 
-4|Test - Deleted
++----+--------------+
+|4   |Test - Deleted|
 
 #### Delta table
 
@@ -160,15 +168,18 @@ merge.Wait();
 delta.Wait();
 ```
 
-The DeltaTable now could look like this:
+The DeltaTable now will look like this:
 
-Key|ChangeDate|ChangeAction
-1|2019-01-01 12:00:01|I
-2|2019-01-01 12:00:02|U
-3|2019-01-01 12:00:02|E
-4|2019-01-01 12:00:03|D
++----+-------------------+------------+
+|Key |ChangeDate         |ChangeAction|
+|1   |2019-01-01 12:00:01|I           |
+|2   |2019-01-01 12:00:02|U           |
+|3   |2019-01-01 12:00:02|E           |
+|4   |2019-01-01 12:00:03|D           |
 
-### Truncate instead delete
+### Additional configurations 
+
+#### Truncate instead delete
 
 Because the DBMerge does delete records that need to be deleted or updated using a `DELETE` sql statement, 
 this method can sometimes be a performance bottleneck if you expect a lot of deletions  to happen. The 
@@ -180,7 +191,7 @@ Unfortunately, there is no general recommendation when to use this approach.
 
 Also, if you don't specify any Id columns with teh `IdColumn` attribute, the DbMerge will use the truncate method automatically. 
 
-### ColumnMap attribute
+#### ColumnMap attribute
 
 If the columns have different names than our property, we need to add the `ColumnMap` attibute to have them
 mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:
@@ -198,7 +209,7 @@ public class MyMergeRow : MergeableRow
 }
 ```
 
-### Composite Keys
+#### Composite Keys
 
 Composite keys are supported: just flag all the columns that you want to use as composite unique key with the 
 `IdColumn` attribute. Internally, all properties are concatenated to a string by using the ToString() method of the properties.
@@ -224,10 +235,11 @@ public class MyMergeRow : MergeableRow
 As you can see, you can also use the `CompareColumn` attribute on each property that you want to use for identifing
 existing records. 
 
-### Using the IMergabeRow interface
+#### Using the IMergabeRow interface
 
 Sometimes, you want't do the implementation of the IMergeableRow interface yourself. Here is an example implementation:
 
+```C#
 public class MySimpleRow : IMergeableRow
 {
     [IdColumn]
@@ -243,6 +255,7 @@ public class MySimpleRow : IMergeableRow
         return Value == o.Value;
     }
 }
+```
 
 Overwriting the Equals method and using the IdColumn attribute is optional. If no IdColumn
 is passed, the trunate method is used to merge the data. 
