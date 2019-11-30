@@ -84,105 +84,192 @@ A very common use case here is to keep a source and destination tables &quot;in 
 The following article describes how you can use the data from your data flow to insert
 new data in a destination table, update existing or delete removed records.</p>
 <p>Please note that for the sake of simplification we use a Database table as source which we want to
-sync with a destination Database table. But of course the source doesn’t necessarily needs to be a tables -
-every data that comes from a source or transformation in your data flow can be used as source for syncing.</p>
+sync with a destination Database table. But of course the source doesn’t necessarily needs to be a table -
+every data that comes from any source or transformation in your data flow can be used as source for syncing.</p>
 <h2 id="full-or-delta">Full or Delta</h2>
-<p>First, we need to differentiate 2 scenarios.</p>
+<p>First, let's differentiate 2 scenarios.</p>
 <p>Scenario 1: The source table does not have any information about its changes.
-So no delta information is provided by the source.</p>
+So no delta information is provided by the source. The source is delivering data always in &quot;full&quot;.</p>
 <p>Scenario 2: The source table has information about its changes.
-This can be e.g. a timestamp indicating when the record was inserted or updated.
-One thing which is problematic here is how deletions are handled.
-There could be an extra flag saying that a record was deleted (including the deletion time).
+This can be e.g. a timestamp indicating when the record was inserted or updated. The source contains information
+about it's changes, which is called &quot;delta&quot;.</p>
+<p>Scenario 2 is a little bit more tricky when it comes to deletions. In scenario 1 we always know which objects are currently
+existing and what data they have. In the Delta scenario the handling of deletions are more problematic. There is
+no straight-forward solution how to manage deleted records here. One way could be an extra flag indicating that
+the record was deleted (including the deletion time as &quot;update&quot; timestamp).
 Or it could be that deletions are not transferred at all, either because they don't happen or for other reasons.</p>
 <h2 id="dbmerge">DBMerge</h2>
-<p>Both scenarios are supported with ETLBox.</p>
-<p>The <code>DBMerge</code> component can be used to tackle this problem</p>
-<p>The <code>DBMerge</code> is created on a destination table in your dataflow.
+<p>Both scenarios are supported with ETLBox. The <code>DBMerge</code> component can be used to tackle this problem</p>
+<p>The <code>DBMerge</code> is a destination component and is created on a destination table in your dataflow.
 It will wait for all data from the flow to arrive, and then either insert,
-update or delete the data in the detstination table.
+update or delete the data in the destination table.
 Deletion is optional (by default turned on) , and can be disabled with the property
 <code>DisableDeletion</code> set to true.</p>
-<p>The DBMergewas designed for scenario 1, but also  works for scenario 2 except deletions.</p>
-<p>To implement a sync between two tables you will  need a <code>DBSource</code> pointing to your source table.
-In our case we just use a table name for the source, but you could also define a sql query
+<p>The DBMerge was designed for scenario 1, but also  works for scenario 2 except for deletions.</p>
+<h3 id="example">Example</h3>
+<h4 id="data-and-object-definition">Data and object definition</h4>
+<p>To implement an example sync between two tables, we will  need a <code>DBSource</code> pointing to our source table.
+In our case we just pass a table name for the source table, but you could also define a sql query
 (e.g. which gives you only the delta records).</p>
 <p>The source is then connected to the DBMerge, and data from the source will then be inserted,
-updated or deleted in the destination.
-The DBMerge  is a generic object and expect as type an object that implements the interface IMergeable.
-This interface needs to have a ChangeDate and ChangeAction defines on your object.
-It is used to store in the record if it needs to be inserted, updated or delete, and when this happened.</p>
-<p>Optionally (but highly recommended) you should add the attribute <code>[MergeIdColumnName(...)]</code> to one of your
-properties of your object. It has two purposes: on the one hand, you pass a parameter the name of your database
-column which you would like to use to as identifier. This should be a unique column, e.g. a primary key.
-The property decorated with the attribute should return a unique value as well - if both match,
-the record is identified as a match.</p>
-<p>If a match occurs, the record does exist in the destination and the source. Now all column will be compared used
-the <code>Equals(object other)</code> method - if they differ, the record will be marked to be updated.
-If they do not differ, they will be marked as already existing.
-Records who exists in the source will be marked as instertions.
-Records missing in the source will be deleted from the destination (if <code>DisableDeletions = false</code>)</p>
-<p>When the DBMerge is executed, it first will compare the source and destination and check what records
-needs to inserted, updated (if different), needs no change or needs to be deleted (if enabled).
-Then, it will delete all records from the source that are either missing or need to be updated.
-After this, it will insert the new and updated records into the destination.</p>
-<p>The DBMerge has a property <code>DeltaTable</code> which is a List containing additionally information what records
-where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding
-<code>ChangeDate</code>/ <code>ChangeAction</code> properties.
-This information can be used as a source for further processing in the data flow,
-simple by connecting the DBMerge to a transformation or another Destination.</p>
-<p>Please note that if you connect the DBMerge to a source that provide you with delta information only,
-you need to disable the deletions - in that case, deletions need to be handled manually.</p>
-<h2 id="example-code">Example code</h2>
-<pre><code class="lang-C#">
-public class MyMergeRow : IMergable
+updated or deleted in the destination.</p>
+<p>The DBMerge  is a generic object and expect as type an object that implements the interface <code>IMergeableRow</code>.
+This interface needs to have a ChangeDate and ChangeAction defines on your object, as well a UniqueId property
+to describe how objects are compared.</p>
+<p>The easiest (and recommended) way to implement is the interface is to inherit from the class <code>MergeableRow</code>.
+You will automatically have all the necessary implementation details to pass the object to a <code>DBMerge</code>.
+Only two things are left to do here:</p>
+<ol>
+<li>You need to flag the properties that identify the unique Id columns with the attribute <code>IdColumn</code></li>
+<li>You need to flag the properties used when comparing the values of a record to decide if it really needs to be updated
+with the attribute <code>CompareColumn</code></li>
+</ol>
+<p>Let's start with a simple object, that has a property that should contain the key column (the id) and one property
+for holding a value:</p>
+<pre><code class="lang-C#">public class MyMergeRow : MergeableRow
 {
-    [ColumnMap(&quot;Col1&quot;)]
-    public long Key { get; set; }
-    [ColumnMap(&quot;Col2&quot;)]
+    [IdColumn]
+    public int Key { get; set; }
+
+    [CompareColumn]
     public string Value { get; set; }
-
-    /* IMergable interface */
-    public DateTime ChangeDate { get; set; }
-    public string ChangeAction { get; set; }
-
-    [MergeIdColumnName(&quot;Col1&quot;)]
-    public string UniqueId =&gt; Key.ToString();
-
-    public override bool Equals(object other)
-    {
-        var msr = other as MyMergeRow;
-        if (other == null) return false;
-        return msr.Value == this.Value;
-    }
-}
-
-[Theory, MemberData(nameof(Connections))]
-public void SimpleMerge(IConnectionManager connection)
-{
-    //Arrange
-    TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, &quot;DBMergeSource&quot;);
-    s2c.InsertTestData();
-    s2c.InsertTestDataSet2();
-    TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, &quot;DBMergeDestination&quot;);
-    d2c.InsertTestDataSet3();
-    DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;DBMergeSource&quot;);
-
-    //Act
-    DBMerge&lt;MyMergeRow&gt; dest = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DBMergeDestination&quot;);
-    source.LinkTo(dest);
-    source.Execute();
-    dest.Wait();
-
-    //Assert
-    Assert.Equal(6, RowCountTask.Count(connection, &quot;DBMergeDestination&quot;, $&quot;{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'&quot;));
-    Assert.True(dest.DeltaTable.Count == 7);
-    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;U&quot;).Count() == 2);
-    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;D&quot; &amp;&amp; row.Key == 10).Count() == 1);
-    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;I&quot;).Count() == 3);
-    Assert.True(dest.DeltaTable.Where(row =&gt; row.ChangeAction == &quot;E&quot; &amp;&amp; row.Key == 1).Count() == 1);
 }
 </code></pre>
+<p>In our scenario we have a source table that would look like this:
+Key|Value
+1|Test - Insert
+2|Test - Update
+3|Test - Exists</p>
+<p>And the destination table would like this:
+Key|Value
+2|XXX
+3|Test - Exists
+4|Test - Deleted</p>
+<h3 id="setting-up-the-data-flow">Setting up the data flow</h3>
+<p>No we can already set up a data flow. It would look like this:</p>
+<pre><code class="lang-C#">
+DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
+DBMerge&lt;MyMergeRow&gt; merge = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
+source.LinkTo(dest);
+source.Execute();
+merge.Wait();
+</code></pre>
+<p>Now what happens if we let this flow run? First of all, all records will be loaded from the destination
+into a memory object and compared with the source data. Within the memory object, the DBMerge
+will identify:</p>
+<ul>
+<li>which records need to inserted (ChangeAction: I)</li>
+<li>which records need to be updated (ChangeAction: U)</li>
+<li>which records exists and doesn't need to be updated (ChangeAction: E)</li>
+<li>which record needs to be deleted (ChangeAction: D), if deletions are allowed
+To identiy these different options, the <code>IdColumn</code> is used. In our example the id column is a unique primary key,
+and it is recommended to only use unique columns for that.</li>
+</ul>
+<p>As you can see, there is a difference between an update and an existing records that doesn't need to be updated.
+All records where the IdColumns match will be examined based on their value. All properties
+marked with the <code>CompareColumn</code> attirbute are compared (using the underlying Equals() implementation).
+If one property/columns differs, the record will be marked to be updated. If they are all equal, the record
+won't be touched on the database and marked as 'E' (Existing).</p>
+<p>After this comparison is done, it will start to write the changes into the databases (in batches)
+First, it will delete all records marked as 'D' (Deleted) or 'U' (Updated) from the database.
+Then it will write the updated records 'I' and 'U' back into the destination table. (As you can see, updates are done
+by deleting and inserting the record again). Records that doesn't need to be udpated are left in the destination table.</p>
+<p>In our example after doing the <code>DBMerge</code>, our destination table now looks like this:</p>
+<p>Key|Value
+1|Test - Insert
+2|Test - Update
+3|Test - Exists</p>
+<p>Please note that if you connect the DBMerge to a source that provide you with delta information only,
+you need to disable the deletions - in that case, deletions need to be handled manually. If we would have
+deletions disable, there would be an additional row in our destination table:</p>
+<p>4|Test - Deleted</p>
+<h4 id="delta-table">Delta table</h4>
+<p>The DBMerge has a property <code>DeltaTable</code> which is a List containing additionally information what records
+where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding
+<code>ChangeDate</code>/ <code>ChangeAction</code> properties.</p>
+<p>In our example, the property <code>dest.DeltaTable</code> now contains information about the what delta operations where made on the destiantion
+table. In this example, it would contain the information, that 1 row was inserted (Key: 1)
+, 1 was updated (Key: 2), one column wasn't changed (Key:3) and one column was deleted (Key: 4).</p>
+<p>This information can be used as a source for further processing in the data flow,
+simple by connecting the DBMerge to a transformation or another Destination. So our complete flow could look like this:</p>
+<pre><code class="lang-C#">DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
+DBMerge&lt;MyMergeRow&gt; merge = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
+DBDestination&lt;MyMergeRow&gt; delta = new DBDestination&lt;MyMergeRow&gt;(connection, &quot;DeltaTable&quot;);
+source.LinkTo(merge);
+merge.LinkTo(delta);
+source.Execute();
+merge.Wait();
+delta.Wait();
+</code></pre>
+<p>The DeltaTable now could look like this:</p>
+<p>Key|ChangeDate|ChangeAction
+1|2019-01-01 12:00:01|I
+2|2019-01-01 12:00:02|U
+3|2019-01-01 12:00:02|E
+4|2019-01-01 12:00:03|D</p>
+<h3 id="truncate-instead-delete">Truncate instead delete</h3>
+<p>Because the DBMerge does delete records that need to be deleted or updated using a <code>DELETE</code> sql statement,
+this method can sometimes be a performance bottleneck if you expect a lot of deletions  to happen. The
+<code>DBMerge</code> does support a Truncate-approach by setting the property <code>UseTruncateMethod</code> to true.
+It will then read all existing data from the destination into the memory, identify the changes,
+truncate the destination table and then write all changes back into the database. This approach can be much faster
+if you expect a lot of deletions, but you will always read all data from the destination table and write it back.
+Unfortunately, there is no general recommendation when to use this approach.</p>
+<p>Also, if you don't specify any Id columns with teh <code>IdColumn</code> attribute, the DbMerge will use the truncate method automatically.</p>
+<h3 id="columnmap-attribute">ColumnMap attribute</h3>
+<p>If the columns have different names than our property, we need to add the <code>ColumnMap</code> attibute to have them
+mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:</p>
+<pre><code class="lang-C#">public class MyMergeRow : MergeableRow
+{
+    [IdColumn]
+    [ColumnMap(&quot;Col1&quot;)]
+    public int Key { get; set; }
+
+    [CompareColumn]
+    [ColumnMap(&quot;Col1&quot;)]
+    public string Value { get; set; }
+}
+</code></pre>
+<h3 id="composite-keys">Composite Keys</h3>
+<p>Composite keys are supported: just flag all the columns that you want to use as composite unique key with the
+<code>IdColumn</code> attribute. Internally, all properties are concatenated to a string by using the ToString() method of the properties.
+This concatenated string is then used as identifier for each record.</p>
+<pre><code class="lang-C#">public class MyMergeRow : MergeableRow
+{
+    [IdColumn]
+    public long ColKey1 { get; set; }
+
+    [IdColumn]
+    public string ColKey2 { get; set; }
+
+    [CompareColumn]
+    public string ColValue1 { get; set; }
+
+    [CompareColumn]
+    public string ColValue2 { get; set; }
+}
+</code></pre>
+<p>As you can see, you can also use the <code>CompareColumn</code> attribute on each property that you want to use for identifing
+existing records.</p>
+<h3 id="using-the-imergaberow-interface">Using the IMergabeRow interface</h3>
+<p>Sometimes, you want't do the implementation of the IMergeableRow interface yourself. Here is an example implementation:</p>
+<p>public class MySimpleRow : IMergeableRow
+{
+[IdColumn]
+public long Key { get; set; }
+public string Value { get; set; }
+public DateTime ChangeDate { get; set; }
+public string ChangeAction { get; set; }
+public string UniqueId =&gt; Key.ToString();
+public new bool Equals(object other)
+{
+var o = other as MySimpleRow;
+if (o == null) return false;
+return Value == o.Value;
+}
+}</p>
+<p>Overwriting the Equals method and using the IdColumn attribute is optional. If no IdColumn
+is passed, the trunate method is used to merge the data.</p>
 </article>
           </div>
           

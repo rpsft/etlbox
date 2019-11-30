@@ -86,6 +86,8 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.AttributeProperties.html">AttributeProperties</a></h4>
+      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation.html">BlockTransformation</a></h4>
       <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
 is execution and the result posted into the targets.
@@ -104,6 +106,12 @@ is execution and the result posted into the targets.</p>
 from a database.
 By default, when reading from a database source the mapping which property stores data of which column
 is resolved by the property names. Using this attribute, you can specify the column name that maps to a propety.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CompareColumn.html">CompareColumn</a></h4>
+      <section><p>This attribute defines if the column is included in the comparison to identify
+object that exists and needs to be updated. It it supposed
+to use with an object that either inherits from MergeableRow.
+If you implement the IMergeable interface, you need to override the Equals-method instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination.html">CSVDestination</a></h4>
       <section><p>A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
@@ -174,6 +182,12 @@ The index starts at 0.</p>
 You can define a sheet name and a range - only the data in the specified sheet and range is read. Otherwise, all data
 in all sheets will be processed.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IdColumn.html">IdColumn</a></h4>
+      <section><p>This attribute defines if the column is used as an Id for the DBMerge. It it supposed
+to use with an object that either inherits from MergeableRow or implements the IMergeable interface.
+If you do not provide this attribute, you need to override the UniqueId property
+if you inherit from MergeableRow.</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination.html">JsonDestination</a></h4>
       <section><p>A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
 The JsonDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
@@ -214,11 +228,10 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
       <section><p>Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.
 Data is read a as string from the source and dynamically converted into the corresponding data format.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeIdColumnName.html">MergeIdColumnName</a></h4>
-      <section><p>This attribute defines a the Id column name used for the DBMerge
-If you do not provide this attribute on the UniqueId property (used by the IMergable interface),
-the default is that the table data is read into the memory and before rewriting the data back the
-table will be truncated.</p>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeableRow.html">MergeableRow</a></h4>
+      <section><p>Inherit from this class if you want to use your data object with a DBMerge.
+This implementation needs that you have flagged the id properties with the IdColumn attribute
+and the properties use to identify equal object flagged with the CompareColumn attribute.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin.html">MergeJoin</a></h4>
       <section><p>Will join data from the two inputs into one output - on a row by row base.
@@ -277,7 +290,7 @@ Every records needs to be transferred to a destination to have a dataflow comple
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IMergable.html">IMergable</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.IMergeableRow.html">IMergeableRow</a></h4>
       <section></section>
     <h3 id="enums">Enums
   </h3>

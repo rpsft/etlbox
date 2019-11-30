@@ -284,7 +284,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateTableTask.html",
-          "hash": "IVqvWmQy8ohOhGoX6GUVRA=="
+          "hash": "aUbSjC1FTk07yniGY7TiRA=="
         }
       },
       "is_incremental": false,
@@ -676,6 +676,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.AttributeProperties.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.AttributeProperties.html",
+          "hash": "WV64aH2bnqoIJ07KlUo1Jw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ALE.ETLBox.DataFlow.BlockTransformation-1.yml",
       "output": {
         ".html": {
@@ -772,6 +784,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.CompareColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.CompareColumn.html",
+          "hash": "+t2swzlxbxNXPPVHHryH2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ALE.ETLBox.DataFlow.CustomDestination-1.yml",
       "output": {
         ".html": {
@@ -848,7 +872,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DBMerge-1.html",
-          "hash": "FLcZ3inCJzYj2PDHUBmScw=="
+          "hash": "B9aaCxYczZF2MXPhaWhiBQ=="
         }
       },
       "is_incremental": false,
@@ -1024,11 +1048,23 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/ALE.ETLBox.DataFlow.IMergable.yml",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.IMergeableRow.yml",
       "output": {
         ".html": {
-          "relative_path": "api/ALE.ETLBox.DataFlow.IMergable.html",
-          "hash": "qam8zpvEc0gZIUcEgtURIQ=="
+          "relative_path": "api/ALE.ETLBox.DataFlow.IMergeableRow.html",
+          "hash": "BRs94RJektTF9bfRZvly1A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.IdColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.IdColumn.html",
+          "hash": "XAlIutsRIQpShIN23yeqcw=="
         }
       },
       "is_incremental": false,
@@ -1156,18 +1192,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/ALE.ETLBox.DataFlow.MergeIdColumnName.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/ALE.ETLBox.DataFlow.MergeIdColumnName.html",
-          "hash": "alH51UP7NR6Yn1oztgkxww=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/ALE.ETLBox.DataFlow.MergeJoin-3.yml",
       "output": {
         ".html": {
@@ -1197,6 +1221,18 @@
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MergeJoinTarget-1.html",
           "hash": "Wp60+H3UVOl045FVM5o6qA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.MergeableRow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.MergeableRow.html",
+          "hash": "wYe+NklN/7RDGim8ZdYitA=="
         }
       },
       "is_incremental": false,
@@ -1328,7 +1364,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.html",
-          "hash": "gy1AaaqjwKliq1WoDnztwg=="
+          "hash": "wil7q54lAdODlghPa0aOfw=="
         }
       },
       "is_incremental": false,
@@ -1964,7 +2000,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "idvPR0b362I5VX+vsmJd0A=="
+          "hash": "Qa19aRawdOgeTmKZl53jkw=="
         }
       },
       "is_incremental": false,
@@ -2000,7 +2036,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_dbmerge.html",
-          "hash": "IWzmRV5CQUqKpGeH6ZjwIw=="
+          "hash": "uIltysT0VZTam1M+Q+29hg=="
         }
       },
       "is_incremental": false,
@@ -2396,9 +2432,9 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
-        "TocDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
@@ -2412,12 +2448,12 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 161,
+          "total_file_count": 164,
           "skipped_file_count": 0
         },
-        "ResourceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0

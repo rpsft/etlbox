@@ -166,7 +166,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_DBMerge_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DBMerge&lt;TInput&gt; : DataFlowTask, ITask, IDataFlowLinkTarget&lt;TInput&gt;, IDataFlowSource&lt;TInput&gt;, IDataFlowLinkSource&lt;TInput&gt; where TInput : IMergable, new()</code></pre>
+    <pre><code class="lang-csharp hljs">public class DBMerge&lt;TInput&gt; : DataFlowTask, ITask, IDataFlowLinkTarget&lt;TInput&gt;, IDataFlowSource&lt;TInput&gt;, IDataFlowLinkSource&lt;TInput&gt; where TInput : IMergeableRow, new()</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -194,7 +194,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.%23ctor(ALE.ETLBox.ConnectionManager.IConnectionManager%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L55">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L67">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)">DBMerge(IConnectionManager, String)</h4>
@@ -231,7 +231,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1__ctor_ALE_ETLBox_TableDefinition_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.%23ctor(ALE.ETLBox.TableDefinition)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L64">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L76">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1__ctor_ALE_ETLBox_TableDefinition_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.#ctor(ALE.ETLBox.TableDefinition)">DBMerge(TableDefinition)</h4>
@@ -263,7 +263,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L47">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L59">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.#ctor(System.String)">DBMerge(String)</h4>
@@ -447,7 +447,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L202">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L226">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.SourceBlock*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_SourceBlock" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.SourceBlock">SourceBlock</h4>
@@ -594,6 +594,36 @@
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_UseTruncateMethod.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.UseTruncateMethod%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L36">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlow_DBMerge_1_UseTruncateMethod_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.UseTruncateMethod*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_UseTruncateMethod" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.UseTruncateMethod">UseTruncateMethod</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool UseTruncateMethod { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -601,7 +631,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_Completion.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.Completion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L182">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L206">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_Completion_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.Completion*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_Completion" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.Completion">Completion()</h4>
@@ -676,7 +706,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L184">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L208">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})">LinkTo(IDataFlowLinkTarget&lt;TInput&gt;)</h4>
@@ -723,7 +753,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L187">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L211">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})">LinkTo(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;)</h4>
@@ -775,7 +805,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L190">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L214">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})">LinkTo(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</h4>
@@ -832,7 +862,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L193">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L217">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;)</h4>
@@ -894,7 +924,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L196">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L220">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;)</h4>
@@ -961,7 +991,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L199">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L223">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</h4>
@@ -1033,7 +1063,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DBMerge_1_Wait.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DBMerge%601.Wait%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L181">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DBMerge.cs/#L205">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DBMerge_1_Wait_" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.Wait*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DBMerge_1_Wait" data-uid="ALE.ETLBox.DataFlow.DBMerge`1.Wait">Wait()</h4>

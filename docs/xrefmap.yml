@@ -5981,6 +5981,38 @@ references:
   commentId: N:ALE.ETLBox.DataFlow
   fullName: ALE.ETLBox.DataFlow
   nameWithType: ALE.ETLBox.DataFlow
+- uid: ALE.ETLBox.DataFlow.AttributeProperties
+  name: AttributeProperties
+  href: api/ALE.ETLBox.DataFlow.AttributeProperties.html
+  commentId: T:ALE.ETLBox.DataFlow.AttributeProperties
+  fullName: ALE.ETLBox.DataFlow.AttributeProperties
+  nameWithType: AttributeProperties
+- uid: ALE.ETLBox.DataFlow.AttributeProperties.CompareAttributeProps
+  name: CompareAttributeProps
+  href: api/ALE.ETLBox.DataFlow.AttributeProperties.html#ALE_ETLBox_DataFlow_AttributeProperties_CompareAttributeProps
+  commentId: P:ALE.ETLBox.DataFlow.AttributeProperties.CompareAttributeProps
+  fullName: ALE.ETLBox.DataFlow.AttributeProperties.CompareAttributeProps
+  nameWithType: AttributeProperties.CompareAttributeProps
+- uid: ALE.ETLBox.DataFlow.AttributeProperties.CompareAttributeProps*
+  name: CompareAttributeProps
+  href: api/ALE.ETLBox.DataFlow.AttributeProperties.html#ALE_ETLBox_DataFlow_AttributeProperties_CompareAttributeProps_
+  commentId: Overload:ALE.ETLBox.DataFlow.AttributeProperties.CompareAttributeProps
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.AttributeProperties.CompareAttributeProps
+  nameWithType: AttributeProperties.CompareAttributeProps
+- uid: ALE.ETLBox.DataFlow.AttributeProperties.IdAttributeProps
+  name: IdAttributeProps
+  href: api/ALE.ETLBox.DataFlow.AttributeProperties.html#ALE_ETLBox_DataFlow_AttributeProperties_IdAttributeProps
+  commentId: P:ALE.ETLBox.DataFlow.AttributeProperties.IdAttributeProps
+  fullName: ALE.ETLBox.DataFlow.AttributeProperties.IdAttributeProps
+  nameWithType: AttributeProperties.IdAttributeProps
+- uid: ALE.ETLBox.DataFlow.AttributeProperties.IdAttributeProps*
+  name: IdAttributeProps
+  href: api/ALE.ETLBox.DataFlow.AttributeProperties.html#ALE_ETLBox_DataFlow_AttributeProperties_IdAttributeProps_
+  commentId: Overload:ALE.ETLBox.DataFlow.AttributeProperties.IdAttributeProps
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.AttributeProperties.IdAttributeProps
+  nameWithType: AttributeProperties.IdAttributeProps
 - uid: ALE.ETLBox.DataFlow.BlockTransformation
   name: BlockTransformation
   href: api/ALE.ETLBox.DataFlow.BlockTransformation.html
@@ -6282,6 +6314,25 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.DataFlow.ColumnMap.ColumnName
   nameWithType: ColumnMap.ColumnName
+- uid: ALE.ETLBox.DataFlow.CompareColumn
+  name: CompareColumn
+  href: api/ALE.ETLBox.DataFlow.CompareColumn.html
+  commentId: T:ALE.ETLBox.DataFlow.CompareColumn
+  fullName: ALE.ETLBox.DataFlow.CompareColumn
+  nameWithType: CompareColumn
+- uid: ALE.ETLBox.DataFlow.CompareColumn.#ctor
+  name: CompareColumn()
+  href: api/ALE.ETLBox.DataFlow.CompareColumn.html#ALE_ETLBox_DataFlow_CompareColumn__ctor
+  commentId: M:ALE.ETLBox.DataFlow.CompareColumn.#ctor
+  fullName: ALE.ETLBox.DataFlow.CompareColumn.CompareColumn()
+  nameWithType: CompareColumn.CompareColumn()
+- uid: ALE.ETLBox.DataFlow.CompareColumn.#ctor*
+  name: CompareColumn
+  href: api/ALE.ETLBox.DataFlow.CompareColumn.html#ALE_ETLBox_DataFlow_CompareColumn__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.CompareColumn.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CompareColumn.CompareColumn
+  nameWithType: CompareColumn.CompareColumn
 - uid: ALE.ETLBox.DataFlow.CSVDestination
   name: CSVDestination
   href: api/ALE.ETLBox.DataFlow.CSVDestination.html
@@ -7909,6 +7960,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).TN
   nameWithType: DBMerge<TInput>.TN
   nameWithType.vb: DBMerge(Of TInput).TN
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.UseTruncateMethod
+  name: UseTruncateMethod
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_UseTruncateMethod
+  commentId: P:ALE.ETLBox.DataFlow.DBMerge`1.UseTruncateMethod
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.UseTruncateMethod
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).UseTruncateMethod
+  nameWithType: DBMerge<TInput>.UseTruncateMethod
+  nameWithType.vb: DBMerge(Of TInput).UseTruncateMethod
+- uid: ALE.ETLBox.DataFlow.DBMerge`1.UseTruncateMethod*
+  name: UseTruncateMethod
+  href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_UseTruncateMethod_
+  commentId: Overload:ALE.ETLBox.DataFlow.DBMerge`1.UseTruncateMethod
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DBMerge<TInput>.UseTruncateMethod
+  fullName.vb: ALE.ETLBox.DataFlow.DBMerge(Of TInput).UseTruncateMethod
+  nameWithType: DBMerge<TInput>.UseTruncateMethod
+  nameWithType.vb: DBMerge(Of TInput).UseTruncateMethod
 - uid: ALE.ETLBox.DataFlow.DBMerge`1.Wait
   name: Wait()
   href: api/ALE.ETLBox.DataFlow.DBMerge-1.html#ALE_ETLBox_DataFlow_DBMerge_1_Wait
@@ -8723,51 +8791,70 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.IDataFlowTransformation(Of TInput, TOutput)
   nameWithType: IDataFlowTransformation<TInput, TOutput>
   nameWithType.vb: IDataFlowTransformation(Of TInput, TOutput)
-- uid: ALE.ETLBox.DataFlow.IMergable
-  name: IMergable
-  href: api/ALE.ETLBox.DataFlow.IMergable.html
-  commentId: T:ALE.ETLBox.DataFlow.IMergable
-  fullName: ALE.ETLBox.DataFlow.IMergable
-  nameWithType: IMergable
-- uid: ALE.ETLBox.DataFlow.IMergable.ChangeAction
+- uid: ALE.ETLBox.DataFlow.IdColumn
+  name: IdColumn
+  href: api/ALE.ETLBox.DataFlow.IdColumn.html
+  commentId: T:ALE.ETLBox.DataFlow.IdColumn
+  fullName: ALE.ETLBox.DataFlow.IdColumn
+  nameWithType: IdColumn
+- uid: ALE.ETLBox.DataFlow.IdColumn.#ctor
+  name: IdColumn()
+  href: api/ALE.ETLBox.DataFlow.IdColumn.html#ALE_ETLBox_DataFlow_IdColumn__ctor
+  commentId: M:ALE.ETLBox.DataFlow.IdColumn.#ctor
+  fullName: ALE.ETLBox.DataFlow.IdColumn.IdColumn()
+  nameWithType: IdColumn.IdColumn()
+- uid: ALE.ETLBox.DataFlow.IdColumn.#ctor*
+  name: IdColumn
+  href: api/ALE.ETLBox.DataFlow.IdColumn.html#ALE_ETLBox_DataFlow_IdColumn__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.IdColumn.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.IdColumn.IdColumn
+  nameWithType: IdColumn.IdColumn
+- uid: ALE.ETLBox.DataFlow.IMergeableRow
+  name: IMergeableRow
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html
+  commentId: T:ALE.ETLBox.DataFlow.IMergeableRow
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow
+  nameWithType: IMergeableRow
+- uid: ALE.ETLBox.DataFlow.IMergeableRow.ChangeAction
   name: ChangeAction
-  href: api/ALE.ETLBox.DataFlow.IMergable.html#ALE_ETLBox_DataFlow_IMergable_ChangeAction
-  commentId: P:ALE.ETLBox.DataFlow.IMergable.ChangeAction
-  fullName: ALE.ETLBox.DataFlow.IMergable.ChangeAction
-  nameWithType: IMergable.ChangeAction
-- uid: ALE.ETLBox.DataFlow.IMergable.ChangeAction*
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html#ALE_ETLBox_DataFlow_IMergeableRow_ChangeAction
+  commentId: P:ALE.ETLBox.DataFlow.IMergeableRow.ChangeAction
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow.ChangeAction
+  nameWithType: IMergeableRow.ChangeAction
+- uid: ALE.ETLBox.DataFlow.IMergeableRow.ChangeAction*
   name: ChangeAction
-  href: api/ALE.ETLBox.DataFlow.IMergable.html#ALE_ETLBox_DataFlow_IMergable_ChangeAction_
-  commentId: Overload:ALE.ETLBox.DataFlow.IMergable.ChangeAction
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html#ALE_ETLBox_DataFlow_IMergeableRow_ChangeAction_
+  commentId: Overload:ALE.ETLBox.DataFlow.IMergeableRow.ChangeAction
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.IMergable.ChangeAction
-  nameWithType: IMergable.ChangeAction
-- uid: ALE.ETLBox.DataFlow.IMergable.ChangeDate
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow.ChangeAction
+  nameWithType: IMergeableRow.ChangeAction
+- uid: ALE.ETLBox.DataFlow.IMergeableRow.ChangeDate
   name: ChangeDate
-  href: api/ALE.ETLBox.DataFlow.IMergable.html#ALE_ETLBox_DataFlow_IMergable_ChangeDate
-  commentId: P:ALE.ETLBox.DataFlow.IMergable.ChangeDate
-  fullName: ALE.ETLBox.DataFlow.IMergable.ChangeDate
-  nameWithType: IMergable.ChangeDate
-- uid: ALE.ETLBox.DataFlow.IMergable.ChangeDate*
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html#ALE_ETLBox_DataFlow_IMergeableRow_ChangeDate
+  commentId: P:ALE.ETLBox.DataFlow.IMergeableRow.ChangeDate
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow.ChangeDate
+  nameWithType: IMergeableRow.ChangeDate
+- uid: ALE.ETLBox.DataFlow.IMergeableRow.ChangeDate*
   name: ChangeDate
-  href: api/ALE.ETLBox.DataFlow.IMergable.html#ALE_ETLBox_DataFlow_IMergable_ChangeDate_
-  commentId: Overload:ALE.ETLBox.DataFlow.IMergable.ChangeDate
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html#ALE_ETLBox_DataFlow_IMergeableRow_ChangeDate_
+  commentId: Overload:ALE.ETLBox.DataFlow.IMergeableRow.ChangeDate
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.IMergable.ChangeDate
-  nameWithType: IMergable.ChangeDate
-- uid: ALE.ETLBox.DataFlow.IMergable.UniqueId
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow.ChangeDate
+  nameWithType: IMergeableRow.ChangeDate
+- uid: ALE.ETLBox.DataFlow.IMergeableRow.UniqueId
   name: UniqueId
-  href: api/ALE.ETLBox.DataFlow.IMergable.html#ALE_ETLBox_DataFlow_IMergable_UniqueId
-  commentId: P:ALE.ETLBox.DataFlow.IMergable.UniqueId
-  fullName: ALE.ETLBox.DataFlow.IMergable.UniqueId
-  nameWithType: IMergable.UniqueId
-- uid: ALE.ETLBox.DataFlow.IMergable.UniqueId*
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html#ALE_ETLBox_DataFlow_IMergeableRow_UniqueId
+  commentId: P:ALE.ETLBox.DataFlow.IMergeableRow.UniqueId
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow.UniqueId
+  nameWithType: IMergeableRow.UniqueId
+- uid: ALE.ETLBox.DataFlow.IMergeableRow.UniqueId*
   name: UniqueId
-  href: api/ALE.ETLBox.DataFlow.IMergable.html#ALE_ETLBox_DataFlow_IMergable_UniqueId_
-  commentId: Overload:ALE.ETLBox.DataFlow.IMergable.UniqueId
+  href: api/ALE.ETLBox.DataFlow.IMergeableRow.html#ALE_ETLBox_DataFlow_IMergeableRow_UniqueId_
+  commentId: Overload:ALE.ETLBox.DataFlow.IMergeableRow.UniqueId
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.IMergable.UniqueId
-  nameWithType: IMergable.UniqueId
+  fullName: ALE.ETLBox.DataFlow.IMergeableRow.UniqueId
+  nameWithType: IMergeableRow.UniqueId
 - uid: ALE.ETLBox.DataFlow.JsonDestination
   name: JsonDestination
   href: api/ALE.ETLBox.DataFlow.JsonDestination.html
@@ -9534,38 +9621,90 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).TaskName
   nameWithType: MemorySource<TOutput>.TaskName
   nameWithType.vb: MemorySource(Of TOutput).TaskName
-- uid: ALE.ETLBox.DataFlow.MergeIdColumnName
-  name: MergeIdColumnName
-  href: api/ALE.ETLBox.DataFlow.MergeIdColumnName.html
-  commentId: T:ALE.ETLBox.DataFlow.MergeIdColumnName
-  fullName: ALE.ETLBox.DataFlow.MergeIdColumnName
-  nameWithType: MergeIdColumnName
-- uid: ALE.ETLBox.DataFlow.MergeIdColumnName.#ctor(System.String)
-  name: MergeIdColumnName(String)
-  href: api/ALE.ETLBox.DataFlow.MergeIdColumnName.html#ALE_ETLBox_DataFlow_MergeIdColumnName__ctor_System_String_
-  commentId: M:ALE.ETLBox.DataFlow.MergeIdColumnName.#ctor(System.String)
-  fullName: ALE.ETLBox.DataFlow.MergeIdColumnName.MergeIdColumnName(System.String)
-  nameWithType: MergeIdColumnName.MergeIdColumnName(String)
-- uid: ALE.ETLBox.DataFlow.MergeIdColumnName.#ctor*
-  name: MergeIdColumnName
-  href: api/ALE.ETLBox.DataFlow.MergeIdColumnName.html#ALE_ETLBox_DataFlow_MergeIdColumnName__ctor_
-  commentId: Overload:ALE.ETLBox.DataFlow.MergeIdColumnName.#ctor
+- uid: ALE.ETLBox.DataFlow.MergeableRow
+  name: MergeableRow
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html
+  commentId: T:ALE.ETLBox.DataFlow.MergeableRow
+  fullName: ALE.ETLBox.DataFlow.MergeableRow
+  nameWithType: MergeableRow
+- uid: ALE.ETLBox.DataFlow.MergeableRow.#ctor
+  name: MergeableRow()
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow__ctor
+  commentId: M:ALE.ETLBox.DataFlow.MergeableRow.#ctor
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.MergeableRow()
+  nameWithType: MergeableRow.MergeableRow()
+- uid: ALE.ETLBox.DataFlow.MergeableRow.#ctor*
+  name: MergeableRow
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeableRow.#ctor
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.MergeIdColumnName.MergeIdColumnName
-  nameWithType: MergeIdColumnName.MergeIdColumnName
-- uid: ALE.ETLBox.DataFlow.MergeIdColumnName.IdColumnName
-  name: IdColumnName
-  href: api/ALE.ETLBox.DataFlow.MergeIdColumnName.html#ALE_ETLBox_DataFlow_MergeIdColumnName_IdColumnName
-  commentId: P:ALE.ETLBox.DataFlow.MergeIdColumnName.IdColumnName
-  fullName: ALE.ETLBox.DataFlow.MergeIdColumnName.IdColumnName
-  nameWithType: MergeIdColumnName.IdColumnName
-- uid: ALE.ETLBox.DataFlow.MergeIdColumnName.IdColumnName*
-  name: IdColumnName
-  href: api/ALE.ETLBox.DataFlow.MergeIdColumnName.html#ALE_ETLBox_DataFlow_MergeIdColumnName_IdColumnName_
-  commentId: Overload:ALE.ETLBox.DataFlow.MergeIdColumnName.IdColumnName
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.MergeableRow
+  nameWithType: MergeableRow.MergeableRow
+- uid: ALE.ETLBox.DataFlow.MergeableRow.ChangeAction
+  name: ChangeAction
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_ChangeAction
+  commentId: P:ALE.ETLBox.DataFlow.MergeableRow.ChangeAction
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.ChangeAction
+  nameWithType: MergeableRow.ChangeAction
+- uid: ALE.ETLBox.DataFlow.MergeableRow.ChangeAction*
+  name: ChangeAction
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_ChangeAction_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeableRow.ChangeAction
   isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.MergeIdColumnName.IdColumnName
-  nameWithType: MergeIdColumnName.IdColumnName
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.ChangeAction
+  nameWithType: MergeableRow.ChangeAction
+- uid: ALE.ETLBox.DataFlow.MergeableRow.ChangeDate
+  name: ChangeDate
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_ChangeDate
+  commentId: P:ALE.ETLBox.DataFlow.MergeableRow.ChangeDate
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.ChangeDate
+  nameWithType: MergeableRow.ChangeDate
+- uid: ALE.ETLBox.DataFlow.MergeableRow.ChangeDate*
+  name: ChangeDate
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_ChangeDate_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeableRow.ChangeDate
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.ChangeDate
+  nameWithType: MergeableRow.ChangeDate
+- uid: ALE.ETLBox.DataFlow.MergeableRow.Equals(System.Object)
+  name: Equals(Object)
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_Equals_System_Object_
+  commentId: M:ALE.ETLBox.DataFlow.MergeableRow.Equals(System.Object)
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.Equals(System.Object)
+  nameWithType: MergeableRow.Equals(Object)
+- uid: ALE.ETLBox.DataFlow.MergeableRow.Equals*
+  name: Equals
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_Equals_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeableRow.Equals
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.Equals
+  nameWithType: MergeableRow.Equals
+- uid: ALE.ETLBox.DataFlow.MergeableRow.GetHashCode
+  name: GetHashCode()
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_GetHashCode
+  commentId: M:ALE.ETLBox.DataFlow.MergeableRow.GetHashCode
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.GetHashCode()
+  nameWithType: MergeableRow.GetHashCode()
+- uid: ALE.ETLBox.DataFlow.MergeableRow.GetHashCode*
+  name: GetHashCode
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_GetHashCode_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeableRow.GetHashCode
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.GetHashCode
+  nameWithType: MergeableRow.GetHashCode
+- uid: ALE.ETLBox.DataFlow.MergeableRow.UniqueId
+  name: UniqueId
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_UniqueId
+  commentId: P:ALE.ETLBox.DataFlow.MergeableRow.UniqueId
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.UniqueId
+  nameWithType: MergeableRow.UniqueId
+- uid: ALE.ETLBox.DataFlow.MergeableRow.UniqueId*
+  name: UniqueId
+  href: api/ALE.ETLBox.DataFlow.MergeableRow.html#ALE_ETLBox_DataFlow_MergeableRow_UniqueId_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeableRow.UniqueId
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MergeableRow.UniqueId
+  nameWithType: MergeableRow.UniqueId
 - uid: ALE.ETLBox.DataFlow.MergeJoin
   name: MergeJoin
   href: api/ALE.ETLBox.DataFlow.MergeJoin.html

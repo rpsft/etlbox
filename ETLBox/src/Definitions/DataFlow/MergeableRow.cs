@@ -6,7 +6,14 @@ using System.Reflection;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public class MergeableRow : IMergeableRow
+    /// <summary>
+    /// Inherit from this class if you want to use your data object with a DBMerge.
+    /// This implementation needs that you have flagged the id properties with the IdColumn attribute
+    /// and the properties use to identify equal object flagged with the CompareColumn attribute.
+    /// </summary>
+    /// <see cref="CompareColumn"/>
+    /// <see cref="IdColumn"/>
+    public abstract class MergeableRow : IMergeableRow
     {
         private static ConcurrentDictionary<Type,AttributeProperties> AttributePropDict { get; }
             = new ConcurrentDictionary<Type, AttributeProperties>();
@@ -34,8 +41,23 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+        /// <summary>
+        /// Date and time when the object was considered for merging.
+        /// </summary>
         public DateTime ChangeDate { get; set; }
+
+        /// <summary>
+        /// The result of a merge operation - this is either 'I' for Insertion,
+        /// 'U' for Updates, 'E' for existing records (no change), and 'D' for deleted records.
+        /// </summary>
         public string ChangeAction { get; set; }
+
+        /// <summary>
+        /// The UniqueId of the object. This is a concatenation evaluated from the properties
+        /// which have the IdColumn attribute. if using an object as type, it is converted into a string
+        /// using the ToString() method of the object.
+        /// </summary>
+        /// <see cref="IdColumn"/>
         public string UniqueId
         {
             get
@@ -43,11 +65,18 @@ namespace ALE.ETLBox.DataFlow
                 AttributeProperties attrProps = AttributePropDict[this.GetType()];
                 string result = "";
                 foreach (var propInfo in attrProps.IdAttributeProps)
-                    result += propInfo?.GetValue(this);
+                    result += propInfo?.GetValue(this).ToString();
                 return result;
             }
         }
 
+        /// <summary>
+        /// Overriding the Equals implementation. The Equals function is used identify records
+        /// that don't need to be updated. Only properties marked with the CompareColumn attribute
+        /// are considered for the comparison. If the property is of type object, the Equals() method of the object is used.
+        /// </summary>
+        /// <param name="other">Object to compare with. Should be of the same type.</param>
+        /// <returns>True if all properties marked with CompareColumn attribute are equal.</returns>
         public override bool Equals(object other)
         {
             if (other == null) return false;
@@ -56,6 +85,11 @@ namespace ALE.ETLBox.DataFlow
             foreach (var propInfo in attrProps.CompareAttributeProps)
                 result &= (propInfo?.GetValue(this)).Equals(propInfo?.GetValue(other));
             return result;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 

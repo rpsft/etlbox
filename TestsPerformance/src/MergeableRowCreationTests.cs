@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.Performance
             public string ColValue2 { get; set; }
         }
 
-        public class MergeableTestRowNoReflection : MergeableRow
+        public class MergeableTestHidingRefĺection : MergeableRow
         {
             [IdColumn]
             public long ColKey1 { get; set; }
@@ -44,10 +44,16 @@ namespace ALE.ETLBoxTests.Performance
             public string ColValue1 { get; set; }
             public string ColValue2 { get; set; }
             public new string UniqueId => $"{ColKey1}{ColKey2}-hidesPropThatUsesReflection";
+            public new bool Equals(object other)
+            {
+                var o = other as MergeableTestHidingRefĺection;
+                if (o == null) return false;
+                return ColValue1 == o.ColValue1 && ColValue2 == o.ColValue2;
+            }
         }
 
         [Theory]
-        [InlineData(1000000, 0.20)]
+        [InlineData(2000000, 0.20)]
         public void CompareWithHiddenReflection(int objectsToCreate, double deviation)
         {
             //Arrange
@@ -66,7 +72,8 @@ namespace ALE.ETLBoxTests.Performance
                          ColValue2 = "T1" + i
                      };
                      string id = row.UniqueId;
-                     LogTask.Trace(id);
+                     bool isequal = row.Equals(row);
+                     LogTask.Trace("Id:" + id + " Equals:" + isequal.ToString());
                  };
              });
             output.WriteLine("Elapsed " + timeWithReflection.TotalSeconds + " seconds for creation with reflection.");
@@ -76,7 +83,7 @@ namespace ALE.ETLBoxTests.Performance
              {
                  for (int i = 0; i < objectsToCreate; i++)
                  {
-                     MergeableTestRowNoReflection row = new MergeableTestRowNoReflection()
+                     MergeableTestHidingRefĺection row = new MergeableTestHidingRefĺection()
                      {
                          ColKey1 = i,
                          ColKey2 = "Test",
@@ -84,7 +91,8 @@ namespace ALE.ETLBoxTests.Performance
                          ColValue2 = "T2" + i
                      };
                      string id = row.UniqueId;
-                     LogTask.Trace(id);
+                     bool isequal = row.Equals(row);
+                     LogTask.Trace("Id:" + id + " Equals:" + isequal.ToString());
                  }
              });
             output.WriteLine("Elapsed " + timeWithoutReflection.TotalSeconds + " seconds for creation without reflection.");
