@@ -136,17 +136,19 @@ for holding a value:</p>
 }
 </code></pre>
 <p>In our scenario we have a source table that would look like this:</p>
-<p>+----+-------------+
+<pre><code>+----+-------------+
 |Key |Value        |
 |1   |Test - Insert|
 |2   |Test - Update|
-|3   |Test - Exists|</p>
+|3   |Test - Exists|
+</code></pre>
 <p>And the destination table would like this:</p>
-<p>+----+--------------+
+<pre><code>+----+--------------+
 |Key |Value         |
 |2   |XXX           |
 |3   |Test - Exists |
-|4   |Test - Deleted|</p>
+|4   |Test - Deleted|
+</code></pre>
 <h4 id="setting-up-the-data-flow">Setting up the data flow</h4>
 <p>No we can already set up a data flow. It would look like this:</p>
 <pre><code class="lang-C#">
@@ -177,16 +179,18 @@ First, it will delete all records marked as 'D' (Deleted) or 'U' (Updated) from 
 Then it will write the updated records 'I' and 'U' back into the destination table. (As you can see, updates are done
 by deleting and inserting the record again). Records that doesn't need to be udpated are left in the destination table.</p>
 <p>In our example after doing the <code>DBMerge</code>, our destination table now looks like this:</p>
-<p>+----+--------------+
+<pre><code>+----+--------------+
 |Key |Value         |
 |1   |Test - Insert |
 |2   |Test - Update |
-|3   |Test - Exists |</p>
+|3   |Test - Exists |
+</code></pre>
 <p>Please note that if you connect the DBMerge to a source that provide you with delta information only,
 you need to disable the deletions - in that case, deletions need to be handled manually. If we would have
 deletions disable, there would be an additional row in our destination table:</p>
-<p>+----+--------------+
-|4   |Test - Deleted|</p>
+<pre><code>+----+--------------+
+|4   |Test - Deleted|
+</code></pre>
 <h4 id="delta-table">Delta table</h4>
 <p>The DBMerge has a property <code>DeltaTable</code> which is a List containing additionally information what records
 where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding
@@ -206,12 +210,13 @@ merge.Wait();
 delta.Wait();
 </code></pre>
 <p>The DeltaTable now will look like this:</p>
-<p>+----+-------------------+------------+
+<pre><code>+----+-------------------+------------+
 |Key |ChangeDate         |ChangeAction|
 |1   |2019-01-01 12:00:01|I           |
 |2   |2019-01-01 12:00:02|U           |
 |3   |2019-01-01 12:00:02|E           |
-|4   |2019-01-01 12:00:03|D           |</p>
+|4   |2019-01-01 12:00:03|D           |
+</code></pre>
 <h3 id="additional-configurations">Additional configurations</h3>
 <h4 id="truncate-instead-delete">Truncate instead delete</h4>
 <p>Because the DBMerge does delete records that need to be deleted or updated using a <code>DELETE</code> sql statement,

@@ -78,20 +78,23 @@ public class MyMergeRow : MergeableRow
 
 In our scenario we have a source table that would look like this:
 
+```
 +----+-------------+
 |Key |Value        |
 |1   |Test - Insert|
 |2   |Test - Update|
 |3   |Test - Exists|
+```
 
 And the destination table would like this:
 
+```
 +----+--------------+
 |Key |Value         |
 |2   |XXX           |
 |3   |Test - Exists |
 |4   |Test - Deleted|
-
+```
 
 #### Setting up the data flow
 
@@ -131,18 +134,22 @@ by deleting and inserting the record again). Records that doesn't need to be udp
 
 In our example after doing the `DBMerge`, our destination table now looks like this:
 
+```
 +----+--------------+
 |Key |Value         |
 |1   |Test - Insert |
 |2   |Test - Update |
 |3   |Test - Exists |
+```
 
 Please note that if you connect the DBMerge to a source that provide you with delta information only, 
 you need to disable the deletions - in that case, deletions need to be handled manually. If we would have
 deletions disable, there would be an additional row in our destination table:
 
+```
 +----+--------------+
 |4   |Test - Deleted|
+```
 
 #### Delta table
 
@@ -170,12 +177,14 @@ delta.Wait();
 
 The DeltaTable now will look like this:
 
+```
 +----+-------------------+------------+
 |Key |ChangeDate         |ChangeAction|
 |1   |2019-01-01 12:00:01|I           |
 |2   |2019-01-01 12:00:02|U           |
 |3   |2019-01-01 12:00:02|E           |
 |4   |2019-01-01 12:00:03|D           |
+```
 
 ### Additional configurations 
 
