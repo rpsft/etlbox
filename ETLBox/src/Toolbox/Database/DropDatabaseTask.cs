@@ -33,7 +33,7 @@ DROP DATABASE [{ObjectName}]
             }
             else
             {
-                return $@"DROP DATABASE {QB}{ObjectName}{QE}";
+                return $@"DROP DATABASE {ON.QuotatedObjectName}";
             }
         }
 

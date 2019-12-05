@@ -7,22 +7,20 @@ namespace ALE.ETLBox.ControlFlow
     /// </summary>
     public class IfIndexExistsTask : IfExistsTask, ITask
     {
-
-        public string TableName => OnObjectName;
         /* ITask Interface */
         internal override string GetSql()
         {
             if (this.ConnectionType == ConnectionManagerType.SQLite)
             {
                 return $@"
-SELECT 1 FROM sqlite_master WHERE name='{ObjectName}' AND type='index';
+SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotatedObjectName}' AND type='index';
 ";
             }
             else if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return
     $@"
-IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}' AND object_id = OBJECT_ID('{TableName}'))
+IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ON.UnquotatedObjectName}' AND object_id = OBJECT_ID('{OON.QuotatedFullName}'))
     SELECT 1
 ";
             }
@@ -32,9 +30,9 @@ IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ObjectName}' AND object_id =
 SELECT 1
 FROM information_schema.statistics 
 WHERE table_schema = DATABASE()
-  AND ( table_name = '{TableName}' 
-  OR CONCAT(table_name,'.',table_catalog) = '{TableName}')
-  AND index_name = '{ObjectName}'
+  AND ( table_name = '{OON.UnquotatedFullName}' 
+  OR CONCAT(table_name,'.',table_catalog) = '{OON.UnquotatedFullName}')
+  AND index_name = '{ON.UnquotatedObjectName}'
 GROUP BY index_name
 ";
             }
@@ -43,9 +41,9 @@ GROUP BY index_name
                 return $@"
 SELECT     1
 FROM       pg_indexes
-WHERE     ( CONCAT(schemaname,'.',tablename) = '{TableName}'
-            OR tablename = '{TableName}' )
-            AND indexname = '{ObjectName}'
+WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotatedFullName}'
+            OR tablename = '{OON.UnquotatedFullName}' )
+            AND indexname = '{ON.UnquotatedObjectName}'
 ";
             }
             else

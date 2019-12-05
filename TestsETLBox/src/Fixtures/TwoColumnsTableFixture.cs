@@ -15,7 +15,7 @@ namespace ALE.ETLBoxTests.Fixtures
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
 
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, Connection);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, Connection);
         public string QB => TN.QB;
         public string QE => TN.QE;
 

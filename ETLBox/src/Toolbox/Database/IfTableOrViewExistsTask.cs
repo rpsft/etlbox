@@ -11,11 +11,11 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (this.ConnectionType == ConnectionManagerType.SQLite)
             {
-                return $@"SELECT 1 FROM sqlite_master WHERE name='{ObjectName}';";
+                return $@"SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotatedObjectName}';";
             }
             else if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
-                return $@"IF ( OBJECT_ID('{ObjectName}', 'U') IS NOT NULL OR OBJECT_ID('{ObjectName}', 'V') IS NOT NULL)
+                return $@"IF ( OBJECT_ID('{ON.QuotatedFullName}', 'U') IS NOT NULL OR OBJECT_ID('{ON.QuotatedFullName}', 'V') IS NOT NULL)
     SELECT 1";
             }
             else if (this.ConnectionType == ConnectionManagerType.MySql)
@@ -24,7 +24,7 @@ namespace ALE.ETLBox.ControlFlow
     SELECT table_name
     FROM information_schema.tables
     WHERE table_schema = DATABASE()
-    AND ( table_name = '{ObjectName}' OR CONCAT(table_catalog, '.', table_name) = '{ObjectName}')
+    AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_catalog, '.', table_name) = '{ON.UnquotatedFullName}')
 ) AS 'DoesExist'";
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
@@ -33,7 +33,7 @@ namespace ALE.ETLBox.ControlFlow
     SELECT table_name
     FROM information_schema.tables
     WHERE table_catalog = CURRENT_DATABASE()
-    AND ( table_name = '{ObjectName}' OR CONCAT(table_schema, '.', table_name) = '{ObjectName}')
+    AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotatedFullName}')
 )";
             }
             else

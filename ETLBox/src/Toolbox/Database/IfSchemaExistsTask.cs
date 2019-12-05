@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 return
     $@"
-IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{ObjectName}')
+IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{ON.UnquotatedObjectName}')
     SELECT 1
 ";
             }
@@ -28,7 +28,7 @@ IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(sche
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {
-                return $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ObjectName}';
+                return $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ON.UnquotatedObjectName}';
 ";
             }
             else

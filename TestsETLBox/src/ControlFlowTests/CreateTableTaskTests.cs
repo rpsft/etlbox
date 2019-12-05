@@ -205,5 +205,32 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                       Assert.Contains(td.Columns, col => col.ComputedColumn == "(`value1` * `value2`)");
             }
         }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void SpecialCharsInTableName(IConnectionManager connection)
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>() {
+                new TableColumn("Id1", "INT",allowNulls:false,isPrimaryKey:true),
+                new TableColumn("Id2", "INT",allowNulls:false,isPrimaryKey:true),
+                new TableColumn("value", "DATE", allowNulls:true)
+            };
+            string tableName = "";
+            if (connection.GetType() == typeof(SqlConnectionManager))
+                tableName = @"[dbo].[ T""D"" 1 ]";
+            else if (connection.GetType() == typeof(PostgresConnectionManager))
+                tableName = @"""public""."" T [D] 1 """;
+            else
+                tableName = @""" T [D] 1 """;
+            CreateTableTask.Create(connection, tableName, columns);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, tableName));
+            //TODO Swap tablename and connection !!!
+            //TODO Rename TableNameDescriptor to ObjectNameDescriptor
+            // Adjust ExistsTableTasks and DropTableTask if applicable...
+            var td = TableDefinition.GetDefinitionFromTableName(tableName, connection);
+            Assert.True(td.Columns.Where(col => col.IsPrimaryKey && col.Name.StartsWith("Id")).Count() == 2);
+        }
     }
 }

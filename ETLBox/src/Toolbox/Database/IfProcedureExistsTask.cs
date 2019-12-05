@@ -17,7 +17,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 return
     $@"
-IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ObjectName}'))
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ON.QuotatedFullName}'))
     SELECT 1
 ";
             }
@@ -27,8 +27,8 @@ IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id(
  SELECT 1 
 FROM information_schema.routines 
 WHERE routine_schema = DATABASE()
-   AND ( routine_name = '{ObjectName}' OR
-        CONCAT(routine_catalog, '.', routine_name) = '{ObjectName}' )  
+   AND ( routine_name = '{ON.UnquotatedFullName}' OR
+        CONCAT(routine_catalog, '.', routine_name) = '{ON.UnquotatedFullName}' )  
 ";
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
@@ -38,8 +38,8 @@ SELECT 1
 FROM pg_catalog.pg_proc
 JOIN pg_namespace 
   ON pg_catalog.pg_proc.pronamespace = pg_namespace.oid
-WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ObjectName}'
-            OR proname = '{ObjectName}' )
+WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ON.UnquotatedFullName}'
+            OR proname = '{ON.UnquotatedFullName}' )
 ";
             }
             else

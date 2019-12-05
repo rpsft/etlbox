@@ -28,7 +28,7 @@ namespace ALE.ETLBox.ConnectionManager
         internal ConnectionManagerType ConnectionType { get; set; }
         internal string QB => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
         internal string QE => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         internal string TableName { get; set; }
         private int ParameterNameCount { get; set; }
 

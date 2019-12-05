@@ -12,15 +12,15 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
-                return $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ObjectName}'";
+                return $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ON.UnquotatedObjectName}'";
             }
             else if (this.ConnectionType == ConnectionManagerType.MySql)
             {
-                return $@"SELECT COUNT(*)  FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{ObjectName}'";
+                return $@"SELECT COUNT(*)  FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{ON.UnquotatedObjectName}'";
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {
-                return $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ObjectName}'";
+                return $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ON.UnquotatedObjectName}'";
             }
             else if (this.ConnectionType == ConnectionManagerType.SQLite)
             {

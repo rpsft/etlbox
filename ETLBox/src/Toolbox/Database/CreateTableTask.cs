@@ -32,7 +32,7 @@ namespace ALE.ETLBox.ControlFlow
         /* Public properties */
         public void Create() => Execute();
         public string TableName { get; set; }
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         public IList<ITableColumn> Columns { get; set; }
         public bool ThrowErrorIfTableExists { get; set; }
 
@@ -140,7 +140,7 @@ $@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {default
             if (Columns?.Any(col => col.IsPrimaryKey) ?? false)
             {
                 var pkCols = Columns.Where(col => col.IsPrimaryKey);
-                string constraint = $"CONSTRAINT {QB}pk_{TN.Table}_{string.Join("_",pkCols.Select(col=>col.Name))}{QE}";
+                string constraint = $"CONSTRAINT {QB}pk_{TN.UnquotatedFullName}_{string.Join("_",pkCols.Select(col=>col.Name))}{QE}";
                 if (ConnectionType == ConnectionManagerType.SQLite) constraint = "";
                     string pkConst = $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
                 return pkConst;

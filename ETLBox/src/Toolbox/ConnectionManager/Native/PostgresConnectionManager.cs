@@ -26,7 +26,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            var TN = new TableNameDescriptor(tableName, ConnectionManagerType.Postgres);
+            var TN = new ObjectNameDescriptor(tableName, ConnectionManagerType.Postgres);
             var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
             var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
             var quotedDestColumns = destColumnNames.Select(col => TN.QB + col + TN.QE);

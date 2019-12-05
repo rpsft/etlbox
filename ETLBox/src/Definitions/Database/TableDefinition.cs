@@ -49,25 +49,26 @@ namespace ALE.ETLBox
         {
             IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = ConnectionManagerSpecifics.GetType(connection);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connectionType);
 
             if (connectionType == ConnectionManagerType.SqlServer)
-                return ReadTableDefinitionFromSqlServer(tableName, connection);
+                return ReadTableDefinitionFromSqlServer(TN, connection);
             else if (connectionType == ConnectionManagerType.SQLite)
-                return ReadTableDefinitionFromSQLite(tableName, connection);
+                return ReadTableDefinitionFromSQLite(TN, connection);
             else if (connectionType == ConnectionManagerType.MySql)
-                return ReadTableDefinitionFromMySqlServer(tableName, connection);
+                return ReadTableDefinitionFromMySqlServer(TN, connection);
             else if (connectionType == ConnectionManagerType.Postgres)
-                return ReadTableDefinitionFromPostgres(tableName, connection);
+                return ReadTableDefinitionFromPostgres(TN, connection);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
 
-        private static TableDefinition ReadTableDefinitionFromSqlServer(string tableName, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromSqlServer(ObjectNameDescriptor TN, IConnectionManager connection)
         {
-            TableDefinition result = new TableDefinition(tableName);
+            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
-            var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
+            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@"
 SELECT  cols.name
      , UPPER(tpes.name) AS type_name
@@ -99,7 +100,7 @@ LEFT JOIN sys.default_constraints defconstr
     AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
     ON compCol.object_id = cols.object_id
-WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tableName}' OR  tbl.name = '{tableName}' )
+WHERE ( CONCAt (sc.name,'.',tbl.name) ='{TN.UnquotatedFullName}' OR  tbl.name = '{TN.UnquotatedFullName}' )
     AND tbl.type = 'U'
     AND tpes.name <> 'sysname'
 ORDER BY cols.column_id
@@ -126,12 +127,12 @@ ORDER BY cols.column_id
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromSQLite(string tableName, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromSQLite(ObjectNameDescriptor TN, IConnectionManager connection)
         {
-            TableDefinition result = new TableDefinition(tableName);
+            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
-            var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
-        $@"PRAGMA table_info(""{tableName}"")"
+            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
+        $@"PRAGMA table_info(""{TN.UnquotatedFullName}"")"
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
             , cid => {; }
@@ -149,12 +150,12 @@ ORDER BY cols.column_id
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromMySqlServer(string tableName, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromMySqlServer(ObjectNameDescriptor TN, IConnectionManager connection)
         {
-            TableDefinition result = new TableDefinition(tableName);
+            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
-            var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
+            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@" 
 SELECT cols.column_name
   , cols.data_type
@@ -175,7 +176,7 @@ LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
     AND cols.table_catalog = k.table_catalog
     AND cols.column_name = k.column_name
     AND k.constraint_name = 'PRIMARY'
-WHERE ( cols.table_name = '{tableName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{tableName}')
+WHERE ( cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{TN.UnquotatedFullName}')
     AND cols.table_schema = DATABASE()
 ORDER BY cols.ordinal_position
 "
@@ -198,12 +199,12 @@ ORDER BY cols.ordinal_position
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromPostgres(string tableName, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromPostgres(ObjectNameDescriptor TN, IConnectionManager connection)
         {
-            TableDefinition result = new TableDefinition(tableName);
+            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
-            var readMetaSql = new SqlTask($"Read column meta data for table {tableName}",
+            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@" 
 SELECT cols.column_name
 , cols.data_type
@@ -231,7 +232,7 @@ LEFT JOIN information_schema.constraint_column_usage tccu
     AND tccu.constraint_schema = tc.constraint_schema
     AND tccu.constraint_catalog = tc.constraint_catalog
     AND cols.column_name = tccu.column_name
-WHERE(cols.table_name = '{tableName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tableName}')
+WHERE(cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{TN.UnquotatedFullName}')
     AND cols.table_catalog = CURRENT_DATABASE()
 ORDER BY cols.ordinal_position
 "

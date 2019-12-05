@@ -47,7 +47,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!HasSourceTableDefinition)
                         LoadTableDefinition();
-                    var TN = new TableNameDescriptor(SourceTableDefinition.Name, ConnectionType);
+                    var TN = new ObjectNameDescriptor(SourceTableDefinition.Name, ConnectionType);
                     return $@"SELECT {SourceTableDefinition.Columns.AsString("", QB, QE)} FROM {TN.QuotatedFullName}";
                 }
 

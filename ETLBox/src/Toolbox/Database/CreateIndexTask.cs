@@ -28,9 +28,9 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public string IndexName { get; set; }
-        public TableNameDescriptor IN => new TableNameDescriptor(IndexName, ConnectionType);
+        public ObjectNameDescriptor IN => new ObjectNameDescriptor(IndexName, ConnectionType);
         public string TableName { get; set; }
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         public IList<string> IndexColumns { get; set; }
         public IList<string> IncludeColumns { get; set; }
         public bool IsUnique { get; set; }

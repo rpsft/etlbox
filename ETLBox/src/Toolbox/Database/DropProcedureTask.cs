@@ -11,7 +11,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            return $@"DROP PROCEDURE {QB}{ObjectName}{QE}";
+            return $@"DROP PROCEDURE {ON.QuotatedFullName}";
         }
 
         public DropProcedureTask()

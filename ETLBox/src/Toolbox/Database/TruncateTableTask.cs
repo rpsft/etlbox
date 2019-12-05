@@ -21,7 +21,7 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public string TableName { get; set; }
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         public string Sql
         {
             get

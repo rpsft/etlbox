@@ -30,7 +30,7 @@ namespace ALE.ETLBox.DataFlow
         public TableDefinition DestinationTableDefinition { get; set; }
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         public string TableName { get; set; }
-        public TableNameDescriptor TN => new TableNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         public List<TInput> DeltaTable { get; set; } = new List<TInput>();
         public bool UseTruncateMethod

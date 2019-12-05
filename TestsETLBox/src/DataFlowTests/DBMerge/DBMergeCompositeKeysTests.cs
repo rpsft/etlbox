@@ -41,11 +41,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         }
 
-        void ReCreateTable(IConnectionManager connection, TableNameDescriptor TN)
+        void ReCreateTable(IConnectionManager connection, ObjectNameDescriptor TN)
         {
-            DropTableTask.DropIfExists(connection, TN.FullName);
+            DropTableTask.DropIfExists(connection, TN.ObjectName);
 
-            CreateTableTask.Create(connection, TN.FullName,
+            CreateTableTask.Create(connection, TN.ObjectName,
                 new List<TableColumn>()
                 {
                     new TableColumn("ColKey1", "INT", allowNulls:false, isPrimaryKey:true),
@@ -56,7 +56,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
 
-        void InsertSourceData(IConnectionManager connection, TableNameDescriptor TN)
+        void InsertSourceData(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'I','Insert', 'Test1')");
@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                  , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'E','NoChange', 'Test3')");
         }
 
-        void InsertDestinationData(IConnectionManager connection, TableNameDescriptor TN)
+        void InsertDestinationData(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'U','Update', 'XXX')");
@@ -81,8 +81,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MergeWithCompositeKey(IConnectionManager connection)
         {
             //Arrange
-            TableNameDescriptor TNS = new TableNameDescriptor("DBMergeSource", connection);
-            TableNameDescriptor TND = new TableNameDescriptor("DBMergeDestination", connection);
+            ObjectNameDescriptor TNS = new ObjectNameDescriptor("DBMergeSource", connection);
+            ObjectNameDescriptor TND = new ObjectNameDescriptor("DBMergeDestination", connection);
             ReCreateTable(connection, TNS);
             ReCreateTable(connection, TND);
             InsertSourceData(connection, TNS);
