@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.HelperTests
+namespace ALE.ETLBoxTests
 {
     public class StringExtensionTests
     {

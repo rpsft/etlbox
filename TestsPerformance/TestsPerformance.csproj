@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>ALE.ETLBoxTestsBigData</AssemblyName>
+    <AssemblyName>ALE.ETLBoxTestsPerformance</AssemblyName>
 
     <RootNamespace>ALE.ETLBoxTests.BigData</RootNamespace>
   </PropertyGroup>
@@ -24,7 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="db\AccessBigData.mdb">
+    <None Update="db\AccessPerformance.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="db\SQLitePerformance.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="default.config.json">

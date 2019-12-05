@@ -73,6 +73,7 @@ in seperate task(s) in the background.
 
 ### Example async execution
 
+```
 DBSource source = new DBSource("SourceTable");
 RowTransformation rowTrans = new RowTransformation( row => row );
 DBDestination dest = new DBDestination("DestTable");
@@ -89,8 +90,9 @@ try
 {
     throw e.InnerException;
 }
+```
 
-The ExecuteAsync() method will return a Task which completes when all data is read from the source and posted in the dataflow.
-The Completion() method will return a Task which completes when all data has arrived at the destination.
+The `ExecuteAsync()` method will return a Task which completes when all data is read from the source and posted in the dataflow.
+The `Completion()` method will return a Task which completes when all data has arrived at the destination.
 
 

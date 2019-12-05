@@ -40,10 +40,10 @@ Perhaps you are looking for an alternative to Sql Server Integrations Services (
 
 The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox.
 
-**Please note: You can *always* inegrate any other database, file or source not listed here by using a `CustomSource` or `CustomDestination`.**
+**Please note: You can *always* integrate any other database, file or source not listed here by using a `CustomSource` or `CustomDestination`.**
 
 Source or Destination type|Supported by ETLBox|
----------------------------|-------------------
+--------------------------|--------------------
 Sql Server|Full support
 Postgres|Full support
 SQLite|Full support
@@ -157,5 +157,7 @@ ETLBox is open source.Feel free to make changes or to fix bugs. Every particiati
 To dig deeper into it, have a look at the test projects. There is a test for (almost) everything that you can do with ETLBox.
 
 <span class="hideOnWebsite">
+
 [See the ETLBox Project website](https://etlbox.net) for [introductional articles](https://etlbox.net/articles/getting_started.html) and examples for [Data Flow Tasks](https://etlbox.net/articles/overview_dataflow.html), [Control Flow Tasks](https://etlbox.net/articles/overview_controlflow.html) and [Logging](https://etlbox.net/articles/overview_logging.html). There is also a [complete API documentation](https://etlbox.net/api/index.html). Enjoy!
+
 </span>

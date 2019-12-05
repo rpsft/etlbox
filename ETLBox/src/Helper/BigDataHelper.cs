@@ -39,7 +39,7 @@ namespace ALE.ETLBox.Helper
             watch.Start();
             action.Invoke();
             watch.Stop();
-            LogTask.Warn($"Stopping: {name} -- Time elapsed: {watch.Elapsed.TotalMinutes} minutes.");
+            LogTask.Warn($"Stopping: {name} -- Time elapsed: {watch.Elapsed.TotalSeconds} seconds.");
             return watch.Elapsed;
         }
     }

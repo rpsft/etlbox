@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.Performance
     {
         private readonly ITestOutputHelper output;
 
-        public MergeableRowCreationTests(BigDataDatabaseFixture dbFixture, ITestOutputHelper output)
+        public MergeableRowCreationTests(PerformanceDatabaseFixture dbFixture, ITestOutputHelper output)
         {
             this.output = output;
         }
