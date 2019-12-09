@@ -29,7 +29,22 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 //Assert
                 Assert.True(IfSchemaExistsTask.IsExisting(connection, schemaName));
             }
+        }
 
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateSchemaWithSpecialChar(IConnectionManager connection)
+        {
+            if (connection.GetType() != typeof(MySqlConnectionManager))
+            {
+                string QB = ConnectionManagerSpecifics.GetBeginQuotation(connection);
+                string QE = ConnectionManagerSpecifics.GetEndQuotation(connection);
+                //Arrange
+                string schemaName = $"{QB} s#!/ {QE}";
+                //Act
+                CreateSchemaTask.Create(connection, schemaName);
+                //Assert
+                Assert.True(IfSchemaExistsTask.IsExisting(connection, schemaName));
+            }
         }
     }
 }

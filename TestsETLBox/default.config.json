@@ -14,7 +14,8 @@
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlow.db;Version=3;",
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.mdb",
         "MySqlConnectionString": "Server=10.37.128.2;Database=ETLBox_DataFlow;Uid=etlbox;Pwd=etlboxpassword;",
-        "PostgresConnectionString": "Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;"
+        "PostgresConnectionString": "Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;",
+        "AzureSqlConnectionString": "Server=tcp:etlbox.database.windows.net,1433;Initial Catalog=etlbox;Persist Security Info=False;User ID=etlboxadmin;Password=ETLBoxPassw0rd!;"
     },
     "DataFlowSource": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_DataFlowSource",

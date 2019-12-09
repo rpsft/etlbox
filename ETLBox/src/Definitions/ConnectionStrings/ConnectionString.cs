@@ -1,6 +1,6 @@
 ﻿// for string extensions
 using ALE.ETLBox.Helper;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace ALE.ETLBox
 {
@@ -18,9 +18,11 @@ namespace ALE.ETLBox
             get
             {
                 return _builder?.ConnectionString.ReplaceIgnoreCase("Integrated Security=true", "Integrated Security=SSPI");
+
             }
             set
             {
+
                 _builder = new SqlConnectionStringBuilder(value);
             }
         }
