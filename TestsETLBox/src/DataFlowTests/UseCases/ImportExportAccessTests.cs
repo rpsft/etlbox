@@ -49,7 +49,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         //Download and configure Odbc driver for access first! This test points to access file on local path
-        //Odbc driver needs to be 64bit!
+        //Odbc driver needs to be 64bit if using 64bit .NET core and 32bit if using 32bit version of .NET Core!
+        //(Visual Studio 2019 16.4 changed default behvaiour for xunit Tests - they now run with .NET Core 32bit versions
         //https://www.microsoft.com/en-us/download/details.aspx?id=13255
         [Fact]
         public void CSVIntoAccess()

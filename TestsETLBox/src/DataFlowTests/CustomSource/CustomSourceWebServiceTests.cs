@@ -35,10 +35,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             SqlTask.ExecuteNonQuery(Connection, "Create test table",
-                @"CREATE TABLE dbo.WebServcieDestination 
+                @"CREATE TABLE dbo.WebServiceDestination 
                 ( Id INT NOT NULL, UserId INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
             );
-            DBDestination<Todo> dest = new DBDestination<Todo>(Connection, "dbo.WebServcieDestination");
+            DBDestination<Todo> dest = new DBDestination<Todo>(Connection, "dbo.WebServiceDestination");
             WebserviceReader wsreader = new WebserviceReader();
 
             //Act
@@ -48,7 +48,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(5, RowCountTask.Count(Connection, "dbo.WebServcieDestination"));
+            Assert.Equal(5, RowCountTask.Count(Connection, "dbo.WebServiceDestination"));
 
         }
 

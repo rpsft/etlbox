@@ -5,7 +5,6 @@
         public static ConnectionManagerType GetType(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(SqlConnectionManager) ||
-                        //connection.GetType() == typeof(SMOConnectionManager) ||
                         connection.GetType() == typeof(SqlOdbcConnectionManager)
                         )
                 return ConnectionManagerType.SqlServer;
