@@ -36,6 +36,13 @@ namespace ALE.ETLBox.ControlFlow
     AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotatedFullName}')
 )";
             }
+            else if (this.ConnectionType == ConnectionManagerType.Access)
+            {
+                var connMan = this.ConnectionManager as AccessOdbcConnectionManager;
+                DoesExist = connMan?.CheckIfTableExists(ON.UnquotatedFullName) ?? false;
+                return string.Empty;
+                //return $@"SELECT * FROM MSysObjects WHERE Type=1 AND Flags=0  AND Name = '{ON.UnquotatedFullName}'";
+            }
             else
             {
                 return string.Empty;

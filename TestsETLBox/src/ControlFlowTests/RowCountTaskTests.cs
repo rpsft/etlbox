@@ -15,11 +15,12 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
-
+        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
         public RowCountTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory//, MemberData(nameof(Connections))
+            , MemberData(nameof(Access))]
         public void NormalCount(IConnectionManager connection)
         {
             //Arrange

@@ -129,7 +129,9 @@ namespace ALE.ETLBox.ConnectionManager
             var typeName = dbSpecificTypeName.Trim().ToUpper();
             if (connectionType == ConnectionManagerType.Access)
             {
-                if (IsCharTypeDefinition(typeName))
+                if (typeName == "INT")
+                    return "INTEGER";
+                else if (IsCharTypeDefinition(typeName))
                 {
                     if (typeName.StartsWith("N"))
                         typeName = typeName.Substring(1);

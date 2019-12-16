@@ -86,6 +86,10 @@ namespace ALE.ETLBox.Helper
                     new object[] { (IConnectionManager)AccessOdbcConnection.ConnectionManager(section) }
         };
 
+        public static IEnumerable<object[]> AccessConnection(string section) => new[] {
+                    new object[] { (IConnectionManager)AccessOdbcConnection.ConnectionManager(section) }
+        };
+
         static IConfigurationRoot _defaultConfigFile;
         public static IConfigurationRoot DefaultConfigFile
         {

@@ -125,8 +125,8 @@ $@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {default
         private string CreateNotNullSql(ITableColumn col)
         {
             string nullSql = string.Empty;
-            if (ConnectionType == ConnectionManagerType.Postgres &&
-                col.IsIdentity) return string.Empty;
+            if (ConnectionType == ConnectionManagerType.Postgres && col.IsIdentity) return string.Empty;
+            if (ConnectionType == ConnectionManagerType.Access) return string.Empty;
             if (String.IsNullOrWhiteSpace(col.ComputedColumn))
                 nullSql = col.AllowNulls
                             ? "NULL"

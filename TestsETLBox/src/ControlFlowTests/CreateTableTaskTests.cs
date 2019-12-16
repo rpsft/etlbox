@@ -16,22 +16,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
-
+        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
         public CreateTableTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory , MemberData(nameof(Connections))
+                , MemberData(nameof(Access))]
         public void CreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "INT") };
+            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("Col1", "INT") };
+
             //Act
             CreateTableTask.Create(connection, "CreateTable1", columns);
+
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable1"));
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))
+               , MemberData(nameof(Access))]
         public void ReCreateTable(IConnectionManager connection)
         {
             //Arrange
@@ -226,9 +230,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, tableName));
-            //TODO Swap tablename and connection !!!
-            //TODO Rename TableNameDescriptor to ObjectNameDescriptor
-            // Adjust ExistsTableTasks and DropTableTask if applicable...
             var td = TableDefinition.GetDefinitionFromTableName(tableName, connection);
             Assert.True(td.Columns.Where(col => col.IsPrimaryKey && col.Name.StartsWith("Id")).Count() == 2);
         }

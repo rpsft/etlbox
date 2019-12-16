@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.ConnectionManager
+﻿using System;
+using System.Data;
+
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an ODBC connection to Acccess databases.
@@ -27,9 +30,7 @@
     /// </example>
     public class AccessOdbcConnectionManager : OdbcConnectionManager
     {
-
         public AccessOdbcConnectionManager() : base() { }
-
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
         public AccessOdbcConnectionManager(string connectionString) : base(new OdbcConnectionString(connectionString)) { }
 
@@ -52,6 +53,25 @@
             cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
+        }
+
+        public bool CheckIfTableExists(string unquotatedFullName)
+        {
+            this.Open();
+            try
+            {
+                string[] restrictions = new string[3];
+                restrictions[2] = unquotatedFullName;
+                var dt = DbConnection.GetSchema("Tables", restrictions);
+                if (dt.Rows.Count > 0)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public override void BeforeBulkInsert(string tableName)

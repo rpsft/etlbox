@@ -27,7 +27,7 @@ namespace ALE.ETLBox.ConnectionManager
         internal string AccessDummyTableName { get; set; }
         internal ConnectionManagerType ConnectionType { get; set; }
         internal string QB => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
-        internal string QE => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
+        internal string QE => ConnectionManagerSpecifics.GetEndQuotation(ConnectionType);
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         internal string TableName { get; set; }
         private int ParameterNameCount { get; set; }
@@ -77,19 +77,6 @@ namespace ALE.ETLBox.ConnectionManager
             if (UseParameterQuery)
             {
                 values.Add(CreateParameterWithValue(DBNull.Value));
-                //var par = new T();
-                //par.Value = DBNull.Value;
-                //Parameters.Add(par);
-                //if (UseNamedParameters)
-                //{
-                //    string parName = $"@P{ParameterNameCount++}";
-                //    values.Add(parName);
-                //    par.ParameterName = parName;
-                //}
-                //else
-                //{
-                //    values.Add("?");
-                //}
             }
             else
             {

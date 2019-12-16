@@ -75,8 +75,43 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class Data
         {
+            [ColumnMap("Col1")]
             public Double Field1 { get; set; }
             public string Field2 { get; set; }
+            [ColumnMap("Col2")]
+            public string Field2Trimmed => Field2.Trim();
+        }
+
+        [Fact]
+        public void AccessIntoDBWithTableDefinition()
+        {
+            //Arrange
+            TableDefinition testTable = RecreateAccessTestTable();
+            InsertTestData();
+            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTableWTD");
+
+            //Act
+            DBSource<Data> source = new DBSource<Data>(AccessOdbcConnection)
+            {
+                SourceTableDefinition = testTable
+            };
+            DBDestination<Data> dest = new DBDestination<Data>(SqlConnection, "dbo.AccessTargetTableWTD");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            destTable.AssertTestData();
+        }
+
+        private void InsertTestData()
+        {
+            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
+                "INSERT INTO TestTable (Field1, Field2) VALUES (1,'Test1');");
+            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
+                "INSERT INTO TestTable (Field1, Field2) VALUES (2,'Test2');");
+            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
+                "INSERT INTO TestTable (Field1, Field2) VALUES (3,'Test3');");
         }
 
         [Fact]
@@ -84,25 +119,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TableDefinition testTable = RecreateAccessTestTable();
-
-            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (1,'Test1');");
-            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (2,'Test2');");
-            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (3,'Test3');");
-
-            new SqlTask("Create Target Table", $@"CREATE TABLE dbo.AccessTargetTable (
-        Field1 DECIMAL not null, Field2 NVARCHAR(1000) not null)")
-            {
-                ConnectionManager = SqlConnection
-            }.ExecuteNonQuery();
+            InsertTestData();
 
             //Act
-            DBSource<Data> source = new DBSource<Data>(AccessOdbcConnection)
-            {
-                SourceTableDefinition = testTable
-            };
+            DBSource<Data> source = new DBSource<Data>(AccessOdbcConnection, "TestTable");
             DBDestination<Data> dest = new DBDestination<Data>(SqlConnection, "dbo.AccessTargetTable");
             source.LinkTo(dest);
             source.Execute();
@@ -111,7 +131,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             Assert.Equal(3, RowCountTask.Count(SqlConnection, $"dbo.AccessTargetTable"));
         }
-
 
 
     }

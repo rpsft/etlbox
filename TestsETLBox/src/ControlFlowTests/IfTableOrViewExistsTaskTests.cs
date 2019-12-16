@@ -14,16 +14,19 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class IfTableOrViewExistsTaskTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
 
         public IfTableOrViewExistsTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))
+               , MemberData(nameof(Access))]
         public void IfTableExists(IConnectionManager connection)
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(connection,"Drop table if exists"
-               , $@"DROP TABLE IF EXISTS existtable_test");
+            if (connection.GetType() != typeof(AccessOdbcConnectionManager))
+                SqlTask.ExecuteNonQuery(connection,"Drop table if exists"
+                   , $@"DROP TABLE IF EXISTS existtable_test");
 
             //Act
             var existsBefore = IfTableOrViewExistsTask.IsExisting(connection, "existtable_test");

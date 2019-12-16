@@ -23,7 +23,7 @@
 
         public static string GetBeginQuotation(ConnectionManagerType type)
         {
-            if (type == ConnectionManagerType.SqlServer)
+            if (type == ConnectionManagerType.SqlServer || type == ConnectionManagerType.Access)
                 return @"[";
             else if (type == ConnectionManagerType.MySql)
                 return @"`";
@@ -35,7 +35,7 @@
 
         public static string GetEndQuotation(ConnectionManagerType type)
         {
-            if (type == ConnectionManagerType.SqlServer)
+            if (type == ConnectionManagerType.SqlServer || type == ConnectionManagerType.Access)
                 return @"]";
             else
                 return GetBeginQuotation(type);
