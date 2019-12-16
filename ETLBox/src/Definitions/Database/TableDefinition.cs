@@ -208,6 +208,13 @@ ORDER BY cols.ordinal_position
 $@" 
 SELECT cols.column_name
 , cols.data_type
+,CASE 
+    WHEN cols.domain_name IS NOT NULL THEN domain_name
+    WHEN cols.data_type='character varying' THEN 'varchar('||character_maximum_length||')'
+    WHEN cols.data_type='numeric' THEN 'numeric('||numeric_precision||','||numeric_scale||')'
+    WHEN LEFT(cols.data_type,4) = 'time' THEN REPLACE(REPLACE(REPLACE(cols.data_type,'without time zone',''), 'with time zone', 'tz'),' ','')
+    ELSE cols.data_type
+END AS ""datatype""
 , CASE WHEN cols.is_nullable = 'NO' THEN 0 ELSE 1 END AS ""is_nullable""
 , CASE WHEN cols.column_default IS NOT NULL AND substring(cols.column_default,0,8) = 'nextval' THEN 1 ELSE 0 END AS ""serial""
 , CASE WHEN tccu.column_name IS NULL THEN 0 ELSE 1 END AS ""primary_key""
@@ -239,6 +246,7 @@ ORDER BY cols.ordinal_position
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
             , column_name => curCol.Name = column_name.ToString()
+            , internal_type_name => curCol.InternalDataType = internal_type_name.ToString()
             , data_type => curCol.DataType = data_type.ToString()
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false

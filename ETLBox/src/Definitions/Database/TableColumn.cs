@@ -11,6 +11,7 @@ namespace ALE.ETLBox
 
         public string Name { get; set; }
         public string DataType { get; set; }
+        internal string InternalDataType { get; set; }
         public bool AllowNulls { get; set; }
         public bool IsIdentity { get; set; }
         public int? IdentitySeed { get; set; }

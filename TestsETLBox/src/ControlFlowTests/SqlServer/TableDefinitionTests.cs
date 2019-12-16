@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 {
     [Collection("ControlFlow")]
     public class TableDefinitionTests
@@ -25,7 +25,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Arrange
             SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
 CREATE TABLE BigIntIdentity (
-    Id BIGINT NOT NULL PRIMARY KEY IDENTITY(1,1)
+    Id BIGINT NOT NULL PRIMARY KEY IDENTITY(100,10)
 )"
             );
 
@@ -33,7 +33,14 @@ CREATE TABLE BigIntIdentity (
             var result = TableDefinition.GetDefinitionFromTableName("BigIntIdentity", SqlConnection);
 
             //Assert
-            Assert.True(true);
+            Assert.Collection(result.Columns,
+                           tc => Assert.True(tc.DataType == "BIGINT"
+                           && tc.NETDataType == typeof(Int64)
+                           && tc.IsIdentity == true
+                           && tc.IdentityIncrement == 10
+                           && tc.IdentitySeed == 100
+                           )
+                       );
         }
 
         [Fact]

@@ -94,6 +94,10 @@ namespace ALE.ETLBox.ConnectionManager
                 case "timetz":
                 case "timestamp":
                 case "timestamptz":
+                //case "timestamp with time zone":
+                //case "timestamp without time zone":
+                //case "time with time zone":
+                //case "time without time zone":
                     return "System.DateTime";
                 case "uniqueidentifier":
                 case "uuid":

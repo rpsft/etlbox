@@ -46,7 +46,7 @@ FROM STDIN (FORMAT BINARY)"))
                         if (val != null)
                         {
                             object convertedVal = System.Convert.ChangeType(data.GetValue(ordinal), colDef.NETDataType);
-                            writer.Write(convertedVal, colDef.DataType);
+                            writer.Write(convertedVal, colDef.InternalDataType);
 
                         }
                         else
