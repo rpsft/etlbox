@@ -120,6 +120,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TableDefinition testTable = RecreateAccessTestTable();
             InsertTestData();
+            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTable");
 
             //Act
             DBSource<Data> source = new DBSource<Data>(AccessOdbcConnection, "TestTable");
@@ -129,7 +130,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(SqlConnection, $"dbo.AccessTargetTable"));
+            destTable.AssertTestData();
         }
 
 

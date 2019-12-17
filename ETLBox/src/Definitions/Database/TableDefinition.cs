@@ -59,6 +59,8 @@ namespace ALE.ETLBox
                 return ReadTableDefinitionFromMySqlServer(TN, connection);
             else if (connectionType == ConnectionManagerType.Postgres)
                 return ReadTableDefinitionFromPostgres(TN, connection);
+            else if (connectionType == ConnectionManagerType.Access)
+                return ReadTableDefinitionFromAccess(TN, connection);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
@@ -261,6 +263,12 @@ ORDER BY cols.ordinal_position
             };
             readMetaSql.ExecuteReader();
             return result;
+        }
+
+        private static TableDefinition ReadTableDefinitionFromAccess(ObjectNameDescriptor TN, IConnectionManager connection)
+        {
+            var accessConnection = connection as AccessOdbcConnectionManager;
+            return accessConnection?.ReadTableDefinition(TN);
         }
     }
 }

@@ -57,13 +57,10 @@ namespace ALE.ETLBox.ConnectionManager
 
         public bool CheckIfTableExists(string unquotatedFullName)
         {
-            this.Open();
             try
             {
-                string[] restrictions = new string[3];
-                restrictions[2] = unquotatedFullName;
-                var dt = DbConnection.GetSchema("Tables", restrictions);
-                if (dt.Rows.Count > 0)
+                DataTable schemaTable = GetSchemaDataTable(unquotatedFullName, "Tables");
+                if (schemaTable.Rows.Count > 0)
                     return true;
                 else
                     return false;
@@ -72,6 +69,35 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 return false;
             }
+        }
+
+        private DataTable GetSchemaDataTable(string unquotatedFullName, string schemaInfo)
+        {
+            this.Open();
+            string[] restrictions = new string[3];
+            restrictions[2] = unquotatedFullName;
+            DataTable schemaTable = DbConnection.GetSchema(schemaInfo, restrictions);
+            return schemaTable;
+        }
+
+        internal TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
+        {
+            TableDefinition result = new TableDefinition(TN.ObjectName);
+            DataTable schemaTable = GetSchemaDataTable(TN.UnquotatedFullName, "Columns");
+
+            foreach (var row in schemaTable.Rows)
+            {
+                DataRow dr = row as DataRow;
+                TableColumn col = new TableColumn()
+                {
+                    Name = dr[schemaTable.Columns["COLUMN_NAME"]].ToString(),
+                    DataType = dr[schemaTable.Columns["TYPE_NAME"]].ToString(),
+                    AllowNulls = dr[schemaTable.Columns["IS_NULLABLE"]].ToString() == "YES" ? true : false
+                };
+                result.Columns.Add(col);
+            }
+
+            return result;
         }
 
         public override void BeforeBulkInsert(string tableName)
