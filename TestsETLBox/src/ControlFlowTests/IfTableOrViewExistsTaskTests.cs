@@ -25,7 +25,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             if (connection.GetType() != typeof(AccessOdbcConnectionManager))
-                SqlTask.ExecuteNonQuery(connection,"Drop table if exists"
+                SqlTask.ExecuteNonQuery(connection, "Drop table if exists"
                    , $@"DROP TABLE IF EXISTS existtable_test");
 
             //Act
@@ -40,12 +40,14 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.True(existsAfter);
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))
+            , MemberData(nameof(Access))]
         public void IfViewExists(IConnectionManager connection)
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(connection, "Drop view if exists"
-               , $@"DROP VIEW IF EXISTS existview_test");
+            if (connection.GetType() != typeof(AccessOdbcConnectionManager))
+                SqlTask.ExecuteNonQuery(connection, "Drop view if exists"
+                , $@"DROP VIEW IF EXISTS existview_test");
 
             //Act
             var existsBefore = IfTableOrViewExistsTask.IsExisting(connection, "existview_test");

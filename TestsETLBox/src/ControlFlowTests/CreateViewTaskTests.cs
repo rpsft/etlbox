@@ -14,11 +14,13 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class CreateViewTaskTests
     {
        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
 
         public CreateViewTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))
+              , MemberData(nameof(Access))]
         public void CreateView(IConnectionManager connection)
         {
             //Arrange

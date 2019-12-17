@@ -16,13 +16,14 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> ConnectionsWithValue(int value)
             => Config.AllSqlConnectionsWithValue("ControlFlow", value);
-
+        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
 
         public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))
+               , MemberData(nameof(Access))]
 
         public void StringArray(IConnectionManager connection)
         {

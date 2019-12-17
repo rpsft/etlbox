@@ -55,15 +55,19 @@ namespace ALE.ETLBox.ConnectionManager
             cmd.ExecuteNonQuery();
         }
 
-        public bool CheckIfTableExists(string unquotatedFullName)
+        public bool CheckIfTableOrViewExists(string unquotatedFullName)
         {
             try
             {
-                DataTable schemaTable = GetSchemaDataTable(unquotatedFullName, "Tables");
-                if (schemaTable.Rows.Count > 0)
+                DataTable schemaTables = GetSchemaDataTable(unquotatedFullName, "Tables");
+                if (schemaTables.Rows.Count > 0)
                     return true;
-                else
-                    return false;
+                else {
+                    DataTable schemaViews = GetSchemaDataTable(unquotatedFullName, "Views");
+                    if (schemaViews.Rows.Count > 0)
+                        return true;
+                }
+                return false;
             }
             catch (Exception e)
             {

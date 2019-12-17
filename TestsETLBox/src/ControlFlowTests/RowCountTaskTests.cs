@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public RowCountTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        [Theory//, MemberData(nameof(Connections))
+        [Theory, MemberData(nameof(Connections))
             , MemberData(nameof(Access))]
         public void NormalCount(IConnectionManager connection)
         {
@@ -32,7 +32,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal(3, actual);
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))
+            , MemberData(nameof(Access))]
         public void CountWithCondition(IConnectionManager connection)
         {
             //Arrange
