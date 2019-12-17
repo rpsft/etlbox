@@ -11,14 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixed bugs when table or other object names contained special characters or included schema name. Verified reading, writing and merging into Azure Sql Databases. Upgraded library to .NET Standard 2.1. Fixed bug when using timestamp datatype in postgres.</PackageReleaseNotes>
-    <Version>1.7.2</Version>
+    <PackageReleaseNotes>Now almost full support for Access (except DROP tasks). Improved logging output for Dataflow task linking.</PackageReleaseNotes>
+    <Version>1.7.3</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.7.2.0</AssemblyVersion>
-    <FileVersion>1.7.2.0</FileVersion>
+    <AssemblyVersion>1.7.3.0</AssemblyVersion>
+    <FileVersion>1.7.3.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
