@@ -50,6 +50,11 @@ namespace ALE.ETLBox.DataFlow
             CopyTaskProperties(task);
         }
 
+        public CustomDestination(string taskName, Action<TInput> writeAction) : this(writeAction)
+        {
+            this.TaskName = taskName;
+        }
+
         private void CopyTaskProperties(ITask task)
         {
             this.TaskHash = task.TaskHash;
