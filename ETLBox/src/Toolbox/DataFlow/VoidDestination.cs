@@ -13,7 +13,7 @@ namespace ALE.ETLBox.DataFlow
     {
 
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Ignore data";
+        public override string TaskName => $"Void destination - Ignore data";
 
         /* Public properties */
         public ITargetBlock<TInput> TargetBlock => _voidDestination?.TargetBlock;

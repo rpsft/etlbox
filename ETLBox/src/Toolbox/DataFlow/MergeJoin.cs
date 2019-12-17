@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
         private Func<TInput1, TInput2, TOutput> _mergeJoinFunc;
 
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Mergejoin";
+        public override string TaskName { get; set; } = "Merge and join data";
 
         /* Public Properties */
         public MergeJoinTarget<TInput1> Target1 { get; set; }
@@ -52,8 +52,8 @@ namespace ALE.ETLBox.DataFlow
         {
             Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
             JoinBlock = new JoinBlock<TInput1, TInput2>();
-            Target1 = new MergeJoinTarget<TInput1>(JoinBlock.Target1);
-            Target2 = new MergeJoinTarget<TInput2>(JoinBlock.Target2);
+            Target1 = new MergeJoinTarget<TInput1>(this, JoinBlock.Target1);
+            Target2 = new MergeJoinTarget<TInput2>(this, JoinBlock.Target2);
         }
 
         public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc) : this()
@@ -85,7 +85,7 @@ namespace ALE.ETLBox.DataFlow
             => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
     }
 
-    public class MergeJoinTarget<TInput> : IDataFlowDestination<TInput>
+    public class MergeJoinTarget<TInput> : GenericTask, IDataFlowDestination<TInput>
     {
         public ITargetBlock<TInput> TargetBlock { get; set; }
 
@@ -99,10 +99,13 @@ namespace ALE.ETLBox.DataFlow
             await TargetBlock.Completion;
         }
 
-        public MergeJoinTarget(ITargetBlock<TInput> joinTarget)
+        public MergeJoinTarget(ITask parent, ITargetBlock<TInput> joinTarget)
         {
             TargetBlock = joinTarget;
+            GenericTask.CopyTaskProperties(this, parent);
+
         }
+
     }
 
     /// <summary>

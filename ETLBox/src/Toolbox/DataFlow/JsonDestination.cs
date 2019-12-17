@@ -18,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     public class JsonDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Write Data batchwise into file {FileName}";
+        public override string TaskName => $"Write Json into file {FileName ?? ""}";
 
         public string FileName { get; set; }
         public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);

@@ -11,7 +11,7 @@ namespace ALE.ETLBox.DataFlow
     public class CustomSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Custom source";
+        public override string TaskName => $"Read data from custom source";
 
 
         /* Public properties */

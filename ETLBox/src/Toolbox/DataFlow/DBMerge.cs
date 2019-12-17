@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     public class DBMerge<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowSource<TInput> where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Insert, Upsert or delete in destination";
+        public override string TaskName { get; set; } = "Insert, Upsert or delete in destination";
 
         public async Task ExecuteAsync() => await OutputSource.ExecuteAsync();
         public void Execute() => OutputSource.Execute();

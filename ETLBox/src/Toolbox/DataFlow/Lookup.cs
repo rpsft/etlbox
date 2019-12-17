@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
     {
 
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Lookup";
+        public override string TaskName { get; set; } = "Lookup";
 
         public List<TSourceOutput> LookupList { get; set; }
         ActionBlock<TSourceOutput> LookupBuffer { get; set; }
