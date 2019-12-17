@@ -71,13 +71,13 @@ namespace ALE.ETLBox
         public GenericTask()
         { }
 
-        public GenericTask(ITask callingTask)
+        public static void CopyTaskProperties(ITask currentTask, ITask otherTask)
         {
-            TaskName = callingTask.TaskName;
-            TaskHash = callingTask.TaskHash;
-            ConnectionManager = callingTask.ConnectionManager;
-            TaskType = callingTask.TaskType;
-            DisableLogging = callingTask.DisableLogging;
+            currentTask.TaskName = otherTask.TaskName;
+            currentTask.TaskHash = otherTask.TaskHash;
+            currentTask.TaskType = otherTask.TaskType;
+            currentTask.ConnectionManager = otherTask.ConnectionManager;
+            currentTask.DisableLogging = otherTask.DisableLogging;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace ALE.ETLBox.DataFlow
     public class RowTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Row Transformation";
+        public override string TaskName { get; set; } = "Row Transformation";
 
         /* Public Properties */
         public Func<TInput, TOutput> RowTransformationFunc
@@ -69,23 +69,13 @@ namespace ALE.ETLBox.DataFlow
 
         public RowTransformation(ITask task) : this()
         {
-            CopyTaskProperties(task);
+            GenericTask.CopyTaskProperties(this, task);
         }
 
         public RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
         {
-            CopyTaskProperties(task);
+            GenericTask.CopyTaskProperties(this, task);
         }
-
-        private void CopyTaskProperties(ITask task)
-        {
-            this.TaskHash = task.TaskHash;
-            this.TaskName = task.TaskName;
-            this.TaskType = task.TaskType;
-            this.DisableLogging = task.DisableLogging;
-        }
-
-
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
             => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target);

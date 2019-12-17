@@ -69,9 +69,10 @@ namespace ALE.ETLBox.ControlFlow
             this.Sql = sql;
         }
 
-        public DbTask(ITask callingTask, string sql) : base(callingTask)
+        public DbTask(ITask callingTask, string sql) 
         {
             this.Sql = sql;
+            GenericTask.CopyTaskProperties(this, callingTask);
         }
 
         public DbTask(string name, string sql, params Action<object>[] actions) : this(name, sql)

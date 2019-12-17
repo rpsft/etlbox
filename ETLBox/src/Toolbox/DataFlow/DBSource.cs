@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
     public class DBSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Read DB data from {SourceDescription}";
+        public override string TaskName => $"Read data from {SourceDescription}";
 
         /* Public Properties */
         public TableDefinition SourceTableDefinition { get; set; }
@@ -98,7 +98,7 @@ namespace ALE.ETLBox.DataFlow
         {
             ConnectionManager = connectionManager;
         }
-        
+
         public override void Execute()
         {
             NLogStart();

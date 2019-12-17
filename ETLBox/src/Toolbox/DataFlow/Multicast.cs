@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     public class Multicast<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Multicast";
+        public override string TaskName { get; set; } = "Multicast - duplicate data";
 
         /* Public Properties */
         public ISourceBlock<TInput> SourceBlock => BroadcastBlock;

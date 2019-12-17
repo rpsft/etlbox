@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
     public class Sort<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Sort";
+        public override string TaskName { get; set; } = "Sort";
 
         /* Public Properties */
 

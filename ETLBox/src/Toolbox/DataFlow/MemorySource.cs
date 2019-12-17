@@ -17,7 +17,7 @@ namespace ALE.ETLBox.DataFlow
     public class MemorySource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Dataflow: Read CSV Source data from memory";
+        public override string TaskName => $"Read data from memory";
 
         /* Public properties */
         public List<TOutput> Data { get; set; }

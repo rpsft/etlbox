@@ -12,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
     {
 
         /* ITask Interface */
-        public override string TaskName { get; set; } = $"Dataflow: Write Data into custom target";
+        public override string TaskName { get; set; } = $"Write data into custom target";
 
         /* Public properties */
         public ITargetBlock<TInput> TargetBlock => TargetActionBlock;
@@ -45,19 +45,15 @@ namespace ALE.ETLBox.DataFlow
             WriteAction = writeAction;
         }
 
-        internal CustomDestination(ITask task, Action<TInput> writeAction) : this(writeAction)
+        internal CustomDestination(ITask callingTask, Action<TInput> writeAction) : this(writeAction)
         {
-            CopyTaskProperties(task);
+            GenericTask.CopyTaskProperties(this, callingTask);
         }
 
-        private void CopyTaskProperties(ITask task)
+        public CustomDestination(string taskName, Action<TInput> writeAction) : this(writeAction)
         {
-            this.TaskHash = task.TaskHash;
-            this.TaskName = task.TaskName;
-            this.TaskType = task.TaskType;
-            this.DisableLogging = task.DisableLogging;
+            this.TaskName = taskName;
         }
-
 
         public void Wait()
         {

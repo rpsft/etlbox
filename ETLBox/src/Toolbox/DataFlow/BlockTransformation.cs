@@ -23,7 +23,7 @@ namespace ALE.ETLBox.DataFlow
     public class BlockTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Dataflow: Block Transformation";
+        public override string TaskName { get; set; } = "Block Transformation";
 
         /* Public Properties */
         public Func<List<TInput>, List<TOutput>> BlockTransformationFunc
@@ -102,8 +102,8 @@ namespace ALE.ETLBox.DataFlow
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
             => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target, rowsToKeep, rowsIntoVoid);
-        
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target) 
+
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target)
             => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target);
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
