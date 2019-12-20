@@ -92,4 +92,4 @@ all data was posted into the data flow, and the destination task completes when 
 ## VoidDestination
 
 A `VoidDestination` is a destination where all incoming data is ignored. This can be helpful if you work with Predicates.
-For more details [see the article about Predicates](dataflow_predicates.md). 
+For more details [see the article about Predicates](dataflow_linking_execution.md). 

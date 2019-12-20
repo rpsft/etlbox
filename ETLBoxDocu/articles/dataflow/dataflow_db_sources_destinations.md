@@ -1,7 +1,7 @@
-﻿# Overview database source and destination
+﻿# Database integration
 
-There a numerours database sources and destinations that come with ETLBox. In short, you can extract data 
-from and load data into the following databases: Sql Server, MySql, Postgres, SQLite. (And limited support for Access)
+There a numerous database sources and destinations that come with ETLBox. In short, you can extract data 
+from and load data into the following databases: Sql Server, MySql, Postgres, SQLite and Microsoft Access.
 
 ## DBSource
 
@@ -130,9 +130,15 @@ has multiple values: INSERT INTO (..) VALUES (..),(..),(..)
 
 #### Access DB Connections
 
-The ODBC connection to Microsoft Access databases have some more restrictions. ETLBox is based .NET Core and will only
-support 64bit ODBC connections. You need also have Microsoft Access 64 bit installed. (The corresponding 64bit ODBC driver for Access can be download 
+The ODBC connection to Microsoft Access databases have more restrictions. ETLBox is based .NET Core and will run in your application as dependency.
+It now depends if you compile your application with 32bit or 64bit (some version of .NET Core only support 64bit). You will need
+the right Microsoft Access driver installed - either 32bit or 64bit. You can only install the 32bit driver
+if you have a 32bit Access installed, and vice versa. Also, make sure to set up the correct ODBC connection (again, there is 
+64bit ODBC connection manager tool in windows and a 32bit). 
+
+The corresponding 64bit ODBC driver for Access can be download 
 Microsoft: [Microsoft Access Database Engine 2010 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=13255)
+
 To create a connection to an Access Database, use the `AccessOdbcConnectionManager` and an `OdbcConnectionString`.
 
 ```C#
@@ -141,7 +147,6 @@ DBDestination dest = DBDestination (
     "DestinationTable"
 );
 ```
-
 *Warning*: The `DBDestination` will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.
 
 *Note*: Please note that the AccessOdbcConnectionManager will create a "temporary" dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. This was necessary to simulate a bulk insert with Access-like Sql. 

@@ -163,7 +163,7 @@ source.LinkTo(multicast);
 multicast.LinkTo(destination1);
 multicast.LinkTo(destination2);
 </code></pre>
-<p>If you want to split data, you can use <a href="dataflow_predicates.html">Predicates</a>.
+<p>If you want to split data, you can use Predicates.
 Predicates allow you to let only certain data pass.
 E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be
 copied into Table2.</p>
@@ -178,7 +178,7 @@ multicast.LinkTo(destination1, row =&gt; row[0] &gt; 0);
 multicast.LinkTo(destination2, row =&gt; row[0] &lt; 0);
 </code></pre>
 <p>Please note: Make sure when using predicate that always all rows arrive at a destination. Use a <code>VoidDestination</code>
-for records that you don't want to keep. See more about this in the <a href="dataflow_predicates.html">article about Predicates</a>.</p>
+for records that you don't want to keep. See more about this in the <a href="dataflow_linking_execution.html">article about Predicates</a>.</p>
 <h3 id="merging-data">Merging data</h3>
 <p>If you want to merge data in your dataflow, you can use the <code>MergeJoin</code>. This basically joins the outcome
 of two sources or transfomrations into one data record.</p>

@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Overview database source and destination | ETLBox - It's all in the box </title>
+    <title>Database integration | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Overview database source and destination | ETLBox - It's all in the box ">
+    <meta name="title" content="Database integration | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -76,10 +76,10 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="overview-database-source-and-destination">Overview database source and destination</h1>
+<h1 id="database-integration">Database integration</h1>
 
-<p>There a numerours database sources and destinations that come with ETLBox. In short, you can extract data
-from and load data into the following databases: Sql Server, MySql, Postgres, SQLite. (And limited support for Access)</p>
+<p>There a numerous database sources and destinations that come with ETLBox. In short, you can extract data
+from and load data into the following databases: Sql Server, MySql, Postgres, SQLite and Microsoft Access.</p>
 <h2 id="dbsource">DBSource</h2>
 <p>The DBSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data.
 While ADO.NET is reading from the source, data is simutaneously posted into the dataflow pipe.
@@ -163,10 +163,14 @@ You will still use the underlying ADO.NET, but it allows you to connect to SQL S
 The <code>DBDestination</code> will do a bulk insert by creating a sql insert statement that
 has multiple values: INSERT INTO (..) VALUES (..),(..),(..)</p>
 <h4 id="access-db-connections">Access DB Connections</h4>
-<p>The ODBC connection to Microsoft Access databases have some more restrictions. ETLBox is based .NET Core and will only
-support 64bit ODBC connections. You need also have Microsoft Access 64 bit installed. (The corresponding 64bit ODBC driver for Access can be download
-Microsoft: <a href="https://www.microsoft.com/en-us/download/details.aspx?id=13255">Microsoft Access Database Engine 2010 Redistributable</a>
-To create a connection to an Access Database, use the <code>AccessOdbcConnectionManager</code> and an <code>OdbcConnectionString</code>.</p>
+<p>The ODBC connection to Microsoft Access databases have more restrictions. ETLBox is based .NET Core and will run in your application as dependency.
+It now depends if you compile your application with 32bit or 64bit (some version of .NET Core only support 64bit). You will need
+the right Microsoft Access driver installed - either 32bit or 64bit. You can only install the 32bit driver
+if you have a 32bit Access installed, and vice versa. Also, make sure to set up the correct ODBC connection (again, there is
+64bit ODBC connection manager tool in windows and a 32bit).</p>
+<p>The corresponding 64bit ODBC driver for Access can be download
+Microsoft: <a href="https://www.microsoft.com/en-us/download/details.aspx?id=13255">Microsoft Access Database Engine 2010 Redistributable</a></p>
+<p>To create a connection to an Access Database, use the <code>AccessOdbcConnectionManager</code> and an <code>OdbcConnectionString</code>.</p>
 <pre><code class="lang-C#">DBDestination dest = DBDestination (
     new AccessOdbcConnectionManager(new OdbcConnectionString(&quot;Driver={Microsoft Access Driver (*.mdb, *.accdb)}DBQ=C:\DB\Test.mdb&quot;)),
     &quot;DestinationTable&quot;

@@ -109,7 +109,7 @@ multicast.LinkTo(destination1);
 multicast.LinkTo(destination2);
 ```
 
-If you want to split data, you can use [Predicates](dataflow_predicates.md).
+If you want to split data, you can use Predicates.
 Predicates allow you to let only certain data pass. 
 E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be 
 copied into Table2.
@@ -127,7 +127,7 @@ multicast.LinkTo(destination2, row => row[0] < 0);
 ```
 
 Please note: Make sure when using predicate that always all rows arrive at a destination. Use a `VoidDestination`
-for records that you don't want to keep. See more about this in the [article about Predicates](dataflow_predicates.md).
+for records that you don't want to keep. See more about this in the [article about Predicates](dataflow_linking_execution.md).
 
 ### Merging data
 

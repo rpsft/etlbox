@@ -1,4 +1,4 @@
-# ETLBox video 
+# A basic example
 
 This example will give you a brief overview of the basic concepts of ETLBox. 
 

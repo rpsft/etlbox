@@ -8,10 +8,8 @@
       href: examples/example_basics.md
 - name: DataFlow Tutorial
   items:
-    - name: Overview
-      href: overview_dataflow.md
-    - name: A Simple Data Flow
-      href: examples/example_simple_dataflow.md
+    - name: A simple data flow
+      href: dataflow/overview_dataflow.md
     - name: Database integration
       href: dataflow/dataflow_db_sources_destinations.md
     - name: Flat file integration
@@ -24,12 +22,10 @@
       href: dataflow/dataflow_transformations.md
     - name: Working with data types
       href: dataflow/dataflow_generic_nongeneric.md
-    - name: Linking and Parallelism
-      href: dataflow/dataflow_execution_linking_completion.md
+    - name: Linking and execution
+      href: dataflow/dataflow_linking_execution.md
     - name: Syncing tables with Merge
       href: dataflow/dataflow_dbmerge.md
-    - name: Predicates
-      href: dataflow/dataflow_predicates.md
 - name: DataFlow Examples
   items:
     - name: Different Databases
@@ -45,9 +41,9 @@
 - name: ControlFlow and Logging
   items:
     - name: ControlFlow Overview
-      href: overview_controlflow.md
+      href: controlflow/overview_controlflow.md
     - name: Logging
-      href: overview_logging.md
+      href: controlflow/overview_logging.md
     - name: Example Control Flow
       href: examples/example_controlflow.md
     - name: Example Logging

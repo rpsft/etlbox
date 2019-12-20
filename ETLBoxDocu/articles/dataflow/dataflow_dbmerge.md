@@ -78,13 +78,11 @@ public class MyMergeRow : MergeableRow
 
 In our scenario we have a source table that would look like this:
 
-```
-+----+-------------+
-|Key |Value        |
-|1   |Test - Insert|
-|2   |Test - Update|
-|3   |Test - Exists|
-```
+Key |Value        |
+----|--------------
+1   |Test - Insert
+2   |Test - Update
+3   |Test - Exists
 
 And the destination table would like this:
 

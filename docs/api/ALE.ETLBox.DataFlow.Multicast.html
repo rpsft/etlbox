@@ -96,10 +96,10 @@ excepct a string array as input and has two output with the copies of the incomi
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -173,6 +173,9 @@ excepct a string array as input and has two output with the copies of the incomi
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskHash">GenericTask.TaskHash</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_CopyTaskProperties_ALE_ETLBox_ITask_ALE_ETLBox_ITask_">GenericTask.CopyTaskProperties(ITask, ITask)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -198,7 +201,7 @@ excepct a string array as input and has two output with the copies of the incomi
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_Multicast_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Multicast : Multicast&lt;string[]&gt;, ITask, IDataFlowTransformation&lt;string[], string[]&gt;, IDataFlowLinkSource&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Multicast : Multicast&lt;string[]&gt;, IDataFlowTransformation&lt;string[], string[]&gt;, IDataFlowLinkSource&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;, ITask</code></pre>
   </div>
   <h5 id="ALE_ETLBox_DataFlow_Multicast_examples"><strong>Examples</strong></h5>
   <pre><code>//Non generic Multicast works with string[] as input and output
@@ -213,7 +216,7 @@ multicast.LinkTo(dest2);</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Multicast__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Multicast.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBox/src/Toolbox/DataFlow/Multicast.cs/#L106">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Multicast.cs/#L106">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Multicast__ctor_" data-uid="ALE.ETLBox.DataFlow.Multicast.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Multicast__ctor" data-uid="ALE.ETLBox.DataFlow.Multicast.#ctor">Multicast()</h4>
@@ -228,7 +231,7 @@ multicast.LinkTo(dest2);</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Multicast__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Multicast.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBox/src/Toolbox/DataFlow/Multicast.cs/#L108">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Multicast.cs/#L108">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Multicast__ctor_" data-uid="ALE.ETLBox.DataFlow.Multicast.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Multicast__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.Multicast.#ctor(System.String)">Multicast(String)</h4>
@@ -257,9 +260,6 @@ multicast.LinkTo(dest2);</code></pre>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
-  </div>
-  <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a>
   </div>
   <div>
@@ -267,6 +267,9 @@ multicast.LinkTo(dest2);</code></pre>
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
   </div>
 </article>
           </div>
@@ -279,7 +282,7 @@ multicast.LinkTo(dest2);</code></pre>
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Multicast.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Multicast%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/master/ETLBox/src/Toolbox/DataFlow/Multicast.cs/#L104" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Multicast.cs/#L104" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

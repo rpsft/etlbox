@@ -88,22 +88,24 @@ Being built on .NET Core means it can run on all servers, operating systems, and
 
 All components in the Data Flow allow you to create your ETL (Extract, Transform, Load) pipeline - 
 where data is extracted from the source(s), asynchrounously transformed and then loaded into your destinations.
-Plese read the [Overview Data Flow](overview_dataflow.md) to get started. 
+Plese read the [Overview Data Flow](dataflow/overview_dataflow.md) to get started. 
+This is the main component of ETLBox, hence you'll find the most examples and articles about this topic. 
 
 ### More about control flows
 
 ControlFlow tasks are designed to simplify the way how you run common tasks on the database. E.g., ControlFlow tasks allow
 you to run a Sql query with a single line or having objects to create or alter tables, views, procedures etc. on the database. 
-You will find an introduction into the Control Flow Tasks [in the article Overview Control Flow](overview_controlflow.md).
+You will find an introduction into the Control Flow Tasks [in the article Overview Control Flow](controlflow/overview_controlflow.md).
+ControlFlow tasks can be very useful when you want to create some database independent tests or you just want to avoid all the ADO.NET boilerplate
+code when accessing the database. 
 
 ### More about logging
 
 Some tasks in the Control Flow part are for logging purposes only. 
-As there are advanced logging capabilities in ETLBox, logging itself is treated in separate articles.
-
+As there are advanced logging capabilities in ETLBox, logging itself is treated in separate articles. 
 All Control Flow and Data Flow Tasks come with the ability to produce log. 
 There are also some special task that enables you to create or query the log tables easily. 
-To get an introduction into logging, [please have a look at the Overview Logging](overview_logging.md)
+To get an introduction into logging, [please have a look at the Overview Logging](controlflow/overview_logging.md)
 All logging capabilites are based on nlog. You can [visit the NLog homepage](https://nlog-project.org) if you are interested in more details how to set up and configure NLog.
 
 
