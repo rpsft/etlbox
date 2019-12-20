@@ -78,7 +78,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable4"));
             var td = TableDefinition.GetDefinitionFromTableName("CreateTable4", connection);
-            Assert.True(td.Columns.Where(col => col.IsPrimaryKey && col.Name.Equals("Id")).Count() == 1);
+            Assert.True(td.Columns.Where(col => col.IsPrimaryKey).Count() == 1);
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithPrimaryKeyAndIndex(IConnectionManager connection)
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>() {
+                new TableColumn("Id", "INT",allowNulls:false,isPrimaryKey:true),
+                new TableColumn("value2", "DATE", allowNulls:true)
+            };            
+            //Act
+            CreateTableTask.Create(connection, "CreateTablePKWithIDX", columns);
+            CreateIndexTask.CreateOrRecreate(connection, "testidx", "CreateTablePKWithIDX", new List<string>() { "value2" });
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTablePKWithIDX"));
+            Assert.True(IfIndexExistsTask.IsExisting(connection, "testidx", "CreateTablePKWithIDX"));
+            var td = TableDefinition.GetDefinitionFromTableName("CreateTablePKWithIDX", connection);
+            Assert.True(td.Columns.Where(col => col.IsPrimaryKey).Count() == 1);
         }
 
         [Theory, MemberData(nameof(Connections))]

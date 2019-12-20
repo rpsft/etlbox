@@ -97,6 +97,7 @@ LEFT JOIN sys.indexes pkidx
 LEFT JOIN sys.index_columns pkidxcols
     on pkidxcols.object_id = cols.object_id
     AND pkidxcols.column_id = cols.column_id
+    AND pkidxcols.index_id = pkidx.index_id
 LEFT JOIN sys.default_constraints defconstr
     ON defconstr.parent_object_id = cols.object_id
     AND defconstr.parent_column_id = cols.column_id
