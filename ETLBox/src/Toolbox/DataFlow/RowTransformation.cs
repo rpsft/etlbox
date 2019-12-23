@@ -69,12 +69,12 @@ namespace ALE.ETLBox.DataFlow
 
         public RowTransformation(ITask task) : this()
         {
-            GenericTask.CopyTaskProperties(this, task);
+            CopyTaskProperties(task);
         }
 
         public RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
         {
-            GenericTask.CopyTaskProperties(this, task);
+            CopyTaskProperties(task);
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)

@@ -102,7 +102,7 @@ namespace ALE.ETLBox.DataFlow
         public MergeJoinTarget(ITask parent, ITargetBlock<TInput> joinTarget)
         {
             TargetBlock = joinTarget;
-            GenericTask.CopyTaskProperties(this, parent);
+            CopyTaskProperties(parent);
 
         }
 
