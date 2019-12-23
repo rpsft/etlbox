@@ -10,9 +10,9 @@
         }
 
         public string ObjectName { get; set; }
-        public ObjectNameDescriptor ON => new ObjectNameDescriptor(ObjectName, this.ConnectionManager);
+        public ObjectNameDescriptor ON => new ObjectNameDescriptor(ObjectName, this.ConnectionType);
         internal string OnObjectName { get; set; }
-        public ObjectNameDescriptor OON => new ObjectNameDescriptor(OnObjectName, this.ConnectionManager);
+        public ObjectNameDescriptor OON => new ObjectNameDescriptor(OnObjectName, this.ConnectionType);
         public bool DoesExist { get; internal set; }
 
         public string Sql

@@ -27,7 +27,7 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public string SchemaName { get; set; }
-        public ObjectNameDescriptor ON => new ObjectNameDescriptor(SchemaName, ConnectionManager);
+        public ObjectNameDescriptor ON => new ObjectNameDescriptor(SchemaName, ConnectionType);
         public string Sql => $@"CREATE SCHEMA {ON.QuotatedObjectName}";
 
         public CreateSchemaTask()
