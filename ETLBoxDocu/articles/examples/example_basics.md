@@ -1,30 +1,40 @@
 # A basic example
 
-This example will give you a brief overview of the basic concepts of ETLBox. 
-
-## See the video
-
+This purpose of this example is to give you a brief overview of the basic concepts of ETLBox.
+It demonstrates the basic idea of a very simple data flow and shows how to use the ControlFlow objects
+to manage your database metadata. 
 [There is also a video demonstrating this example](https://www.youtube.com/watch?v=CsWZuRpl6PA).
 
-### Environment
+## Setup the environment
 
-For this demo you can use Visual Studio for Mac and Sql Server for linux running in a docker image. An User interface for managing sql server on Mac would be the Azure Data Studio.
+This example is written in C#, based on the current .NET Core. You can use your IDE of your choice -
+most will probably go with Visual Studio or Visual Studio Code. 
+The database used in this example is Sql Server. You can either you set up a standalone installation of Sql Server,
+or use a docker image. Also, Azure Sql could be an alternative which is easy to setup. 
+To access your database, Azure Data Studio or Sql Server Management Studio is recommended.
 
-First, we need to start a docker image running sql server on ubuntu. Run the following command line statement in the terminal to 
-start up the container. 
+### Setting up a docker container
+
+If you want to use docker to set up a sql server database, please install Docker for your OS first.
+Then you can start a docker image running sql server on ubuntu. 
+Simply run the following command line statement in a command line tool:
 
 ```bash
 docker run -d --name sql_server_demo -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=reallyStrongPwd123' -p  1433:1433 microsoft/mssql-server-linux
 ```
 
-With the command ```docker ps``` we can see the container is up and running.
+With the command ```docker ps``` you can see the container is up and running. 
 
+### Setting up your project
 
-Now create a new dotnet core console application. Do this either with your GUI or execute the following command:
+Now we need to create a new dotnet core console application. 
+You can do this either with your IDE or just execute the following command:
 
 ```dotnet new console```
 
-Add the current version of ETLBox as a package to your project. 
+If this doesn't work, make sure you have the latest version of .NET Core installed. 
+
+Now, add the current version of ETLBox as a package to your project. 
 
 ```bash
 dotnet add package ETLBox
@@ -34,36 +44,39 @@ Now you will be able to use the full set of tools coming with ETLBox
 
 
 ### Start coding
-Now we are in the static main method. 
 
-We need to store a connection string in the static Control Flow object.
+Now open your project and go into the main method of your program.
+
+First, define a connection manager for Sql Server that holds the connection string 
+
 ```C#
- ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
-            ("Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123"));
+ var masterConnection = new SqlConnectionManager("Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123");
 ```
 
-With CreateDatabaseTask we will create a new Database. 
+No you can use the `CreateDatabaseTask` to create a new Database. 
 
 ```C#
-CreateDatabaseTask.Create("demo");
+CreateDatabaseTask.Create(masterConnection, "demo");
 ```
 
-Also we would like to change the connection to the database we just created and create a table in there using the CreateTableTask. 
+Also we would like to change the connection to the database we just created and 
+create a table in there using the `CreateTableTask`. 
 
 ```C#
-ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
-("Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123;Initial Catalog=demo"));
+var dbConnection = new SqlConnectionManager("Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123");
 
-            CreateTableTask.Create("Table1", new List<TableColumn>()
-            {
-                new TableColumn("ID","INT",allowNulls:false, isPrimaryKey:true, isIdentity:true),
-                new TableColumn("Col1","NVARCHAR(100)",allowNulls:true),
-                new TableColumn("Col2","SMALLINT",allowNulls:true)
-            });
+CreateTableTask.Create(dbConnection, "Table1", new List<TableColumn>()
+{
+    new TableColumn("ID","INT",allowNulls:false, isPrimaryKey:true, isIdentity:true),
+    new TableColumn("Col1","NVARCHAR(100)",allowNulls:true),
+    new TableColumn("Col2","SMALLINT",allowNulls:true)
+});
 ```
 
 ### Adding nlog.config
-Before we test our demo project, we want to have some logging output displayed. ETLBox logging is build on nlog. On the etlbox website you will find examples how to configure logging with nlog. Add the following lines as nlog.config to your project root.
+
+Before we test our demo project, we want to have some logging output displayed. ETLBox logging is build on nlog. 
+Add the following lines as nlog.config to your project root.
 Make sure it is copied into the output directory.
 
 ```xml
@@ -83,12 +96,17 @@ Make sure it is copied into the output directory.
 ### Running the project
 
 Now build and run the project.
-A terminal window will pop up and display the logging output. As the logging level is set to debug, you will see all SQL code which is executed against the database.
+
+A terminal window will pop up and display the logging output. As the logging level is set to debug, 
+you will see all SQL code which is executed against the database.
 Check if the database and the table was created.
 
 ### A simple etl pipeline
 
-Next we want to create a simple etl pipeline. First we create a demo csv file named ```input.csv```. The input file contains header information and some value. Also we need to copy it into the output directory.
+Next we want to create a simple etl pipeline. 
+First we create a demo csv file named ```input.csv```. 
+The input file contains header information and some value. 
+Also we need to copy it into the output directory.
 
 ```csv
 Col1,Col2
@@ -113,8 +131,8 @@ public class MyData
 }
 ```
 
-Now we add a row transformation. The row transformation will receive a string array from the source and transform it 
-in our Mydata object.
+Now we add a row transformation. The row transformation will receive a string array from the source and 
+transform it in our Mydata object. 
 
 ```C#
 RowTransformation<string[], MyData> row = new RowTransformation<string[], MyData>
@@ -124,10 +142,14 @@ RowTransformation<string[], MyData> row = new RowTransformation<string[], MyData
 );
 ```
 
+Actually, this transformation wouldn't been necessary - the CSVSource could have automatically converted the
+incoming data into the `MyData` object. But it shows how a transformation can be used to execute any 
+C# code you like. 
+
 Next we add a database destination pointing to our table.
 
 ```C#
-DBDestination<MyData> dest = new DBDestination<MyData>("Table1");
+DBDestination<MyData> dest = new DBDestination<MyData>(dbConnection, "Table1");
 ```
 
 Now we need to link the components of our dataflow.
@@ -145,7 +167,8 @@ source.Execute();
 dest.Wait();
 ```
 
-Finlly, we check if the data was successfully loaded into the table and write it into the console output. We use the SQLTask for this.
+Finlly, we check if the data was successfully loaded into the table and write it into the console output. 
+We use the SQLTask for this and write the result into the output. 
 
 ```C#
 SqlTask.ExecuteReader("Read all data from Table1",
@@ -156,6 +179,7 @@ SqlTask.ExecuteReader("Read all data from Table1",
 ```
 
 ### Run again 
+
 Let's run the project again and see the output.
 
 You'll see that the data was successfully copied into the database table.
@@ -164,7 +188,7 @@ You'll see that the data was successfully copied into the database table.
 
 Here is the whole example code.
 
-File Program.cs
+**Program.cs**
 
 ```C#
 using System;
@@ -181,13 +205,14 @@ namespace Demo
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
-            ("Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123"));
-            CreateDatabaseTask.Create("demo");
-            ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString
-("Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123;Initial Catalog=demo"));
+            var masterConnection = new SqlConnectionManager("Data Source=.;Integrated Security=false;User=sa;password=reallyStrongPwd123");
 
-            CreateTableTask.Create("Table1", new List<TableColumn>()
+            //DropDatabaseTask.DropIfExists(masterConnection, "demo");
+            CreateDatabaseTask.Create(masterConnection, "demo");
+
+            var dbConnection = new SqlConnectionManager("Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123");
+
+            CreateTableTask.Create(dbConnection, "Table1", new List<TableColumn>()
             {
                 new TableColumn("ID","int",allowNulls:false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("Col1","nvarchar(100)",allowNulls:true),
@@ -197,18 +222,17 @@ namespace Demo
             CSVSource source = new CSVSource("input.csv");
             RowTransformation<string[], MyData> row = new RowTransformation<string[], MyData>(
             input => new MyData() { Col1 = input[0], Col2 = input[1] });
-            DBDestination<MyData> dest = new DBDestination<MyData>("Table1");
+            DBDestination<MyData> dest = new DBDestination<MyData>(dbConnection, "Table1");
 
             source.LinkTo(row);
             row.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
-            SqlTask.ExecuteReader("Read all data from table1",
+            SqlTask.ExecuteReader(dbConnection, "Read all data from table1",
             "select Col1, Col2 from Table1",
                 col1 => Console.WriteLine(col1.ToString() + ","),
                 col2 => Console.WriteLine(col2.ToString()));
-
         }
 
         public class MyData
@@ -220,7 +244,7 @@ namespace Demo
 }
 ```
 
-nlog.config
+**nlog.config**
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -236,7 +260,8 @@ nlog.config
 </nlog>
 ```
 
-input.csv
+**input.csv**
+
 ```csv
 Col1,Col2
 Value,1
