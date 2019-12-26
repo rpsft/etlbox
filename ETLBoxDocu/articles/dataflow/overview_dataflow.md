@@ -55,40 +55,50 @@ Let's look at a simple dataflow like this:
 
 CSV File (Source) --> Row transformation --> DB destination.
 
-### Setting up the connection
+### Creating the components 
 
-As the Data Flow Tasks are based on the same foundament like the Control Flow Tasks, you first should set up a connection like you do for
-a Control Flow Task.
+First, we need a connection manager that stores the connections string and provides native ADO.NET to the database.
+Always use the right connection manager for you database - e.g., the SqlConnectionManager will connect with 
+a Sql Server (and expectes a sql server connection string). There are also other connection managers
+(e.g. `SQLiteConnectionManager` for SQLite, `PostgresConnectionManager` for Postgres or `MySqlConnectionManager`
+for MySql).
 
 ```C#
-ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;Integrated Security=SSPI;"));
+SqlConnectionManager connMan = new SqlConnectionManager("Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123");
 ```
-
-### Creating the source 
 
 Now we need to create a source, in this example it could contain order data. This will look like this:
 
 ```C#
-CSVSource sourceOrderData = new CSVSource("demodata.csv");
+CSVSource source = new CSVSource("demodata.csv");
 ```
 
-### Creating the row transformation
-
-We now add a row transformation. The default output format of a `CSVSource` is an string array. In this example, we will convert the csv string array into an `Order` object.
+We now add a row transformation. The default output format of a `CSVSource` is an string array. In this example, 
+we will convert the csv string array into an `Order` object and adding some logic while the transformation.
 
 ```C#
 RowTransformation<string[], Order> rowTrans = new RowTransformation<string[], Order>(
-  row => new Order(row)
-);    
+    row => new Order()
+    {
+        Id = int.Parse(row[0]),
+        Item = row[1],
+        Quantity = int.Parse(row[2]) + int.Parse(row[3]),
+        Price = double.Parse(row[4]) * 100
+    });
 ```
 
-### Creating the destination 
+*Please note that the `CSVSource` could be directly created as `CSVSource<OrderFile>`. Data type conversions 
+(like `int.Parse()`) would then have beend handled internally by the CSVSource.*
 
-Now we need to create a destination. Notice that the destination is typed with the `Order` object.
+Now we need to create a destination. Notice that the destination is typed with the `Order` object. We also
+need to pass the connection manager to the DBDestination so that connection to our Sql Server can be used. 
 
 ```C#
-DBDestination<Order> dest = new DBDestination<Order>("dbo.OrderTable");
+DBDestination<Order> dest = new DBDestination<Order>(connMan, "OrderTable");
 ```
+
+**If you don't want to pass the connection manager object over and over again to the your DataFlow or ControlFlow objects,
+you can store a default connection in the static property `ControlFlow.CurrentDbConnection`.**
 
 ### Linking all together
 
@@ -101,7 +111,7 @@ rowTrans.LinkTo(dest);
 
 This will create a data  flow pipe CSVSource -> RowTransformation -> DBDestination
 
-### Starting the dataflow
+### Executing the dataflow
 
 Now we will give the source the command to start reading data. 
 
@@ -116,3 +126,7 @@ dest.Wait();
 ```
 
 When `dest.Wait()` returns, all data was read from the source and written into the database table. 
+
+### View the full code
+
+This demo code is available online  - [view the full code on github](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/SimpeFlow).

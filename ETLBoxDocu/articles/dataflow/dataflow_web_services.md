@@ -1,11 +1,11 @@
-﻿# Web service and http requests
+﻿# Json and web services
 
-## Test web service 
+## Loading json from a web service
 
 In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
 See [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com) for more details.
 
-## JsonSource
+### JsonSource
 
 You can directly query web services or REST APIs using the `JsonSource`. There are some minor restrictions 
 1) The http or https service has to send back a Json response
@@ -64,7 +64,47 @@ dest.Wait();
 
 The property `Data` (which is a snychronized list) will now contain all items from the web service. 
 
-### JsonPath
+## Json as file
+
+### Read json from file
+
+Let's consider we have a json file like this as our data input:
+
+```
+[
+  {
+    "Col1": 1,
+    "Col2": "Test1"    
+  },
+  {
+    "Col1": 2,
+    "Col2": "Test2"    
+  }
+]
+```
+
+This can be read into a dataflow using the `JsonSource` and the following code:
+
+```C#
+public class MySimpleRow
+{
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("file.json", ResourceType.File);
+```
+
+### Write into json file
+
+To get your data outputted as json, you can use the `JSonDestination`:
+
+```C#
+JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("file.json");
+```
+
+
+## Using JsonPath
 
 Sometimes, you don't want to create a full C# Poco (Plain old component object).
 If you leave out some properties, you will see that the Json Deserializer just will ignore these properties. 
@@ -88,7 +128,7 @@ Also, this example does not have the properties `Completed` and `UserId` anymore
 Deserialization is completely based on The [Newtonsoft.Json.JsonSerializer](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializer.htm).
 There is also a property `JsonSerializer` that can be overwritten with your own JsonSerializer.
 
-### String array
+### Json with String array
 
 If you don't want to use objects, you can use the Non-generic version of `JsonSource`. Your code would look like this:
 

@@ -10,18 +10,16 @@
   items:
     - name: A simple data flow
       href: dataflow/overview_dataflow.md
-    - name: Database integration
+    - name: Integrate databases
       href: dataflow/dataflow_db_sources_destinations.md
-    - name: Flat file integration
+    - name: Flat files and other sources and destinations
       href: dataflow/dataflow_file_sources_destinations.md
-    - name: Other sources and destinations
-      href: dataflow/dataflow_other_sources_destinations.md
-    - name: Web services and http requests
-      href: dataflow/dataflow_web_services.md
     - name: Transformations
       href: dataflow/dataflow_transformations.md
     - name: Working with data types
       href: dataflow/dataflow_generic_nongeneric.md
+    - name: Json and web service integration
+      href: dataflow/dataflow_web_services.md
     - name: Linking and execution
       href: dataflow/dataflow_linking_execution.md
     - name: Syncing tables with Merge
