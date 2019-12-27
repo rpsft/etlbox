@@ -15,16 +15,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationSpecialCharacterTests : IDisposable
+    public class DBDestinationSpecialCharacterTests
     {
         public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnections("DataFlow");
         public static IEnumerable<object[]> SqlConnections => Config.AllSqlConnections("DataFlow");
 
         public DBDestinationSpecialCharacterTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 

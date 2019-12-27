@@ -72,7 +72,7 @@ namespace ALE.ETLBox.ControlFlow
                 DisableLogging = true
             }.Exists();
             if (!tableExists)
-                throw new ETLBoxException($"An table {tableName} does not exists in the database!");
+                throw new ETLBoxException($"A table {tableName} does not exists in the database!");
         }
     }
 }

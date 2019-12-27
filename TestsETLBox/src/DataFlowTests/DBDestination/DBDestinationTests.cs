@@ -15,17 +15,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationTests : IDisposable
+    public class DBDestinationTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
         public DBDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
-
-        public void Dispose()
-        {
-        }
-
 
         public class MyExtendedRow
         {

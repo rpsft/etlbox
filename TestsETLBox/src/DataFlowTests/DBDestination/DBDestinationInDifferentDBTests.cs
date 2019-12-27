@@ -15,7 +15,7 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow Source and Destination")]
-    public class DBDestinationDifferentDBTests : IDisposable
+    public class DBDestinationDifferentDBTests
     {
         public static IEnumerable<object[]> MixedSourceDestinations() => new[] {
             //Same DB
@@ -56,10 +56,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
         };
 
         public DBDestinationDifferentDBTests(DatabaseSourceDestinationFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 
