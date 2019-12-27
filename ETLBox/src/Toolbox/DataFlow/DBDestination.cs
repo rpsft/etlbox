@@ -106,6 +106,7 @@ namespace ALE.ETLBox.DataFlow
             List<object[]> result = new List<object[]>();
             foreach (var CurrentRow in data)
             {
+                if (CurrentRow == null) continue;
                 object[] rowResult;
                 if (TypeInfo.IsArray)
                 {

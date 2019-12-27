@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -35,7 +36,38 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _rowTransformationFunc = value;
-                TransformBlock = new TransformBlock<TInput, TOutput>(row => InvokeRowTransformationFunc(row));
+                TransformBlock = new TransformBlock<TInput, TOutput>(
+                    row =>
+                    {
+                        if (HasErrorBuffer)
+                        {
+                            try
+                            {
+                                return InvokeRowTransformationFunc(row);
+                            }
+                            catch (Exception e)
+                            {
+                                string rowAsJson = JsonConvert.SerializeObject(row, new JsonSerializerSettings()
+                                {
+                                    NullValueHandling = NullValueHandling.Ignore,
+                                    Formatting = Formatting.Indented
+                                });
+                                ErrorBuffer.Post(new ETLBoxError()
+                                {
+                                    Exception = e,
+                                    ErrorText = e.ToString(),
+                                    ReportTime = DateTime.Now,
+                                    RecordAsJson = rowAsJson
+                                });
+                                return default(TOutput);
+                            }
+                        }
+                        else
+                        {
+                            return InvokeRowTransformationFunc(row);
+                        }
+                    }
+                );
             }
         }
         public Action InitAction { get; set; }
@@ -75,6 +107,18 @@ namespace ALE.ETLBox.DataFlow
         public RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
         {
             CopyTaskProperties(task);
+        }
+
+        public ISourceBlock<ETLBoxError> ErrorSourceBlock => ErrorBuffer;
+        internal BufferBlock<ETLBoxError> ErrorBuffer { get; set; }
+        internal bool HasErrorBuffer => ErrorBuffer != null;
+
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
+        {
+            ErrorBuffer = new BufferBlock<ETLBoxError>();
+            ErrorSourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            var t = TransformBlock.Completion;
+            t.ContinueWith(t => ErrorBuffer.Complete());
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
