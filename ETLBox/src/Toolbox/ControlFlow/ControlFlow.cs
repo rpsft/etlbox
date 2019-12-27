@@ -22,7 +22,15 @@ namespace ALE.ETLBox.ControlFlow
         /// </summary>
         public static IConnectionManager CurrentDbConnection
         {
-            get => _currentDbConnection;
+            get
+            {
+                if (_currentDbConnection == null)
+                    throw new ETLBoxException("No connection manager found! The component or task you are " +
+                        "using expected a  connection manager to connect to the database." +
+                        "Either pass a connection manager or set a default connection manager within the " +
+                        "ControlFlow.CurrentDbConnection property!");
+                return _currentDbConnection;
+            }
             set
             {
                 _currentDbConnection = value;

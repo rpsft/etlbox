@@ -40,7 +40,7 @@ Perhaps you are looking for an alternative to Sql Server Integrations Services (
 
 The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox.
 
-**Please note: You can *always* integrate any other database, file or source not listed here by using a `CustomSource` or `CustomDestination`. Even if it is supported not "out-of-the-box".**
+**Please note: You can *always* integrate any other source or destination not listed here by using a `CustomSource` or `CustomDestination` - though it is not supported "out-of-the-box".**
 
 Source or Destination type|Supported by ETLBox|
 --------------------------|--------------------
@@ -50,7 +50,7 @@ SQLite|Full support
 MySql|Full support
 CSV|Full support
 Json|Full support
-MS Access|Full support
+Microsoft Access|Full support
 Excel|Limited support - only as Source
 SSAS|Limited support - only XMLA
 Oracle|Currently not supported
