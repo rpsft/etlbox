@@ -44,14 +44,7 @@ namespace ALE.ETLBox.DataFlow
                 Source.SourceBlock.LinkTo(LookupBuffer, new DataflowLinkOptions() { PropagateCompletion = true });
             }
         }
-
-        /* Private stuff */
-        RowTransformation<TTransformationInput, TTransformationOutput> RowTransformation { get; set; }
-
-        private Func<TTransformationInput, TTransformationOutput> _rowTransformationFunc;
-        private IDataFlowSource<TSourceOutput> _source;
-
-        Func<TTransformationInput, TTransformationOutput> RowTransformationFunc
+        public Func<TTransformationInput, TTransformationOutput> RowTransformationFunc
         {
             get
             {
@@ -64,6 +57,13 @@ namespace ALE.ETLBox.DataFlow
                 RowTransformation.InitAction = LoadLookupData;
             }
         }
+
+        /* Private stuff */
+        private RowTransformation<TTransformationInput, TTransformationOutput> RowTransformation { get; set; }
+        private Func<TTransformationInput, TTransformationOutput> _rowTransformationFunc;
+        private IDataFlowSource<TSourceOutput> _source;
+
+
         public Lookup()
         {
             LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
@@ -81,7 +81,6 @@ namespace ALE.ETLBox.DataFlow
             Source = source;
             LookupList = lookupList;
         }
-
 
         private void LoadLookupData()
         {
@@ -120,6 +119,32 @@ namespace ALE.ETLBox.DataFlow
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> rowsToKeep, Predicate<TTransformationOutput> rowsIntoVoid)
             => RowTransformation.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+    }
+
+    /// <summary>
+    /// A lookup task - data from the input can be enriched with data retrieved from the lookup source. The result is then posted into the output.
+    /// </summary>
+    /// <typeparam name="TTransformationInput">Type of data input and output</typeparam>
+    /// <typeparam name="TSourceOutput">Type of lookup data</typeparam>
+    /// <example>
+    /// <code>
+    /// Lookup&lt;MyInputDataRow, MyLookupRow&gt; lookup = new Lookup&lt;MyInputDataRow,MyLookupRow&gt;(
+    ///     testClass.TestTransformationFunc, lookupSource, testClass.LookupData
+    /// );
+    /// </code>
+    /// </example>
+    public class Lookup<TTransformationInput, TSourceOutput> : Lookup<TTransformationInput, TTransformationInput, TSourceOutput>
+    {
+        public Lookup() : base()
+        { }
+
+        public Lookup(Func<TTransformationInput, TTransformationInput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source)
+            : base(rowTransformationFunc, source)
+        { }
+
+        public Lookup(Func<TTransformationInput, TTransformationInput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source, List<TSourceOutput> lookupList)
+            : base(rowTransformationFunc, source, lookupList)
+        { }
     }
 
     /// <summary>

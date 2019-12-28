@@ -55,14 +55,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleLookupFromDB(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceSimple");
             source2Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"Destination");
-            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection,"Lookup");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "DestinationSimple");
+            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection, "LookupSimple");
             lookup4Columns.InsertTestData();
 
-            DBSource<MyInputDataRow> source = new DBSource<MyInputDataRow>(connection, "Source");
-            DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>(connection, "Lookup");
+            DBSource<MyInputDataRow> source = new DBSource<MyInputDataRow>(connection, "SourceSimple");
+            DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>(connection, "LookupSimple");
 
             //Act
             List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
@@ -81,7 +81,42 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 , lookupSource
                 , LookupTableData
             );
-            DBDestination<MyOutputDataRow> dest = new DBDestination<MyOutputDataRow>(connection, "Destination");
+            DBDestination<MyOutputDataRow> dest = new DBDestination<MyOutputDataRow>(connection, "DestinationSimple");
+            source.LinkTo(lookup);
+            lookup.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest4Columns.AssertTestData();
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void InputTypeSameAsOutput(IConnectionManager connection)
+        {
+            //Arrange
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "SourceLookupSameType");
+            source4Columns.InsertTestData();
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "DestinationLookupSameType");
+            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection, "LookupSameType");
+            lookup4Columns.InsertTestData();
+
+            DBSource<MyOutputDataRow> source = new DBSource<MyOutputDataRow>(connection, "SourceLookupSameType");
+            DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>(connection, "LookupSameType");
+
+            var lookup = new ETLBox.DataFlow.Lookup<MyOutputDataRow, MyLookupRow>();
+            lookup.RowTransformationFunc =
+                row =>
+                {
+
+                    row.Col1 = row.Col1;
+                    row.Col2 = row.Col2;
+                    row.Col3 = lookup.LookupList.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue1).FirstOrDefault();
+                    row.Col4 = lookup.LookupList.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue2).FirstOrDefault();
+                    return row;
+                };
+            lookup.Source = lookupSource;
+            DBDestination<MyOutputDataRow> dest = new DBDestination<MyOutputDataRow>(connection, "DestinationLookupSameType");
             source.LinkTo(lookup);
             lookup.LinkTo(dest);
             source.Execute();
