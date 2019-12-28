@@ -1,24 +1,17 @@
 # TODO
 
-## General
-
-### Known Issues
-
-- throw exception when no connection manager is passed (e.g. use the Generic Task to check if Connectionmanager or DBConnectionManager is not null)
-
 ## Data Flow
 
 ### DF - Known Issues
 
 - If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes.
-- DBMerge will only properly work if the constructors are used. If not, e.g. the Connectionmanager is set via assignment, the underlying DBSource and DBDestination won't get updated.
+- Check if DBMerge works properly if the constructors are not used. E.g. if the Connectionmanager is set via assignment, the underlying DBSource and DBDestination needs to be  updated.
 - BeforeBulkInsert / AfterBulkInsert in connection managers is executed before *every* bulk. There should be a "ExecuteOnceBeforeBulkInsert" function, where e.g. server side settings could be set once before every bulk operation
 
 ### DF - New features
 
-### DF - Code cleanup
-
-- create test for logging on Dataflow - especially also for the `DataFlow.LoggingThresholdRows = 2;`
+- Based on the BlockTransformation (but without storing all data in memory), there could be predefined components that do a Sum / Min / Max / Avg or other
+aggregation calculation. E.g. an Aggregation component which could be used to do such operations.
 
 ## Control Flow
 
