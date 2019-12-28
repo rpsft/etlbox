@@ -28,10 +28,6 @@
   items:
     - name: Different Databases
       href: examples/example_different_dbs.md
-    - name: CustomSource with WebService
-      href: examples/example_webservice_as_source.md
-    - name: CustomDestination creating Json
-      href: examples/example_json_as_destination.md
     - name: Multicast to split data
       href: examples/example_multicast.md
     - name: Complex Data Flow
