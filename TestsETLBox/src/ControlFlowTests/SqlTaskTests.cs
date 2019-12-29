@@ -72,7 +72,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             {
                 //Arrange
                 //Act
-                double result = (double)(SqlTask.ExecuteScalar(connection,
+                double result = (double)(SqlTask.ExecuteScalar<double>(connection,
                     "Test execute scalar with datatype",
                     $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
                 //Assert

@@ -34,12 +34,10 @@
       href: examples/example_complex_dataflow.md
 - name: ControlFlow and Logging
   items:
-    - name: ControlFlow Overview
+    - name: Overview ControlFlow tasks
       href: controlflow/overview_controlflow.md
     - name: Logging
       href: controlflow/overview_logging.md
-    - name: Example Control Flow
-      href: examples/example_controlflow.md
     - name: Example Logging
       href: examples/example_logging.md
 

@@ -236,3 +236,7 @@ Id | FullName |
 You have successfully transfered table data from a Postgres database into a Sql Server database and transformed it 
 on-the-fly. This is one simple example of an ETL process (Extract, Transform, Load).
 
+## Code on Github
+
+[The whole code for this example is available on GitHub](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/DifferentSourcesDestinations). 
+

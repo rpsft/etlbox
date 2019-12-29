@@ -88,7 +88,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             List<TableColumn> columns = new List<TableColumn>() {
                 new TableColumn("Id", "INT",allowNulls:false,isPrimaryKey:true),
                 new TableColumn("value2", "DATE", allowNulls:true)
-            };            
+            };
             //Act
             CreateTableTask.Create(connection, "CreateTablePKWithIDX", columns);
             CreateIndexTask.CreateOrRecreate(connection, "testidx", "CreateTablePKWithIDX", new List<string>() { "value2" });
