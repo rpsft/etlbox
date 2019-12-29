@@ -17,7 +17,7 @@ based on the total amount of purchases in a customer_rating table.
 ## Preqrequisites
 
 In order to recreate this demo, you need an empty database. This example will run on any supported database - 
-though every database comes with some database specific particularies. The following code was optimized for Sql Server.
+though every database comes with some database specific particularities. The following code was optimized for Sql Server.
 
 You need an empty database and a connection string to connect with this database.
 
@@ -120,7 +120,7 @@ OrderNumber;OrderItem;OrderAmount;CustomerName
 
 We add a row transformation - and connect it with source. 
 Data will be read from the source and moved into the row transformation. 
-A row transformation will go through each row and modificates it by a given function. 
+A row transformation will go through each row and modifies it by a given function. 
 Furthermore, a row transformation can change the object type of the input into something different - 
 we use this to transform our string array into our POCO. 
 
@@ -212,7 +212,7 @@ private List<Rating> BlockTransformOrders(List<Order> allOrders) {
 }
 ```
 
-Now we want to store the calcualted Rating in the table `customer_rating`. So we create another destination
+Now we want to store the calculated Rating in the table `customer_rating`. So we create another destination
 for this table and link it to our BlockTransformation.
 
 ```C#

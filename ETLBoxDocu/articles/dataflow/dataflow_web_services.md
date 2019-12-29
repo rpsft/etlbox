@@ -2,7 +2,7 @@
 
 ## Loading json from a web service
 
-In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
+In this example, I will use the JSONPlaceHolder project. It is a fake online REST API for Testing and Prototyping.
 See [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com) for more details.
 
 ### JsonSource

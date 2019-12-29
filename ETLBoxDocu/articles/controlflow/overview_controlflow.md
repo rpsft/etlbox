@@ -1,6 +1,6 @@
 ﻿# Overview Control flow tasks
 
-To get aquainted with ETLBox, you should start with the Control Flow tasks. 
+To get acquainted with ETLBox, you should start with the Control Flow tasks. 
 
 ## Namespace
 
@@ -57,13 +57,13 @@ The result is return from the RowCountTask.
 <For every Control Flow Tasks, there are static accessors to simplify the use of the tasks. In order to have access to all functionalities of a task, sometime you 
 have to create a new instance of the task object.>
 
-If you want to do a rowcount with an instance instead of the static accessor, it would look like this:
+If you want to do a row count with an instance instead of the static accessors, it would look like this:
 ```C#
 RowCountTask task = new RowCountTask("dbo.tbl");
 int count = task.Count().Rows;
 ```
 
-So whenever you don't find a static accessor satisfing your needs, try to create an instance and check the properties and methods of the object.
+So whenever you don't find a static accessor satisfying your needs, try to create an instance and check the properties and methods of the object.
 
 
 ## Why not Entitiy Framework
@@ -71,7 +71,7 @@ So whenever you don't find a static accessor satisfing your needs, try to create
 ETLBox was designed to be used as an ETL object library. Therefore, the user normally deals with big data, some kind of datawarehouse structures and is used to
 have full control over the database. With the underlying power of ADO.NET - which is used by ETLBox - you have full access to the database and basically can do anything 
 you are used to do with sql on the server. As EF (Entity Framework) is a high sophisticated ORM tool, it comes with the downside that you can only do things on a database that
-EF allows you to do. But as EF does not incorporate all the possibilites that you can do with SQL and ADO.NET on a Sql Server, Entitity Framework normally isn't a 
+EF allows you to do. But as EF does not incorporate all the possibilities that you can do with SQL and ADO.NET on a Sql Server, Entitity Framework normally isn't a 
 good choice for creating ETL jobs. This is also true for other ORM tools.
 
 
@@ -86,7 +86,7 @@ RowCountTask task = new RowCountTask("dbo.tbl")
 int count = task.Count().Rows;
 ```
 
-This would give you the same result, but insteal of doing a `select count(*) from dbo.tbl` the following sql is fired on the database
+This would give you the same result, but instead of doing a `select count(*) from dbo.tbl` the following sql is fired on the database
 ```sql
 select cast(sum([rows]) as int) from sys.partitions where [object_id] = object_id(N'dbo.tbl') and index_id in (0,1)
 ```

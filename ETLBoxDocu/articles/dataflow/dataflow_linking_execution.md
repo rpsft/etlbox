@@ -60,7 +60,7 @@ dest2.Wait();
 
 Whenever you use predicates, sometime you end up with data which you don't want to write into a destination.
 Unfortunately, your DataFlow won't finish until all rows where written into any destination block. That's why 
-there is a `VoidDestination` in ETLBox. Use this destination for all records for that you don't wish any futher processing. 
+there is a `VoidDestination` in ETLBox. Use this destination for all records for that you don't wish any further processing. 
 
 ```C#
 VoidDestination voidDest = new VoidDestination(); 
@@ -71,7 +71,7 @@ souce.Link(voidDest, row => row.Value <= 0);
 #### Implicit use of VoidDestination
 
 You don't have to define the `VoidDestinatin` explicitly. Assuming that we have a Database Source 
-that we want to link to a database destination. But we only want to let data pass throught where the 
+that we want to link to a database destination. But we only want to let data pass through where the 
 a column is greater than 0. The rest we want to ignore. Normally, we would need to link the data twice like in 
 the example above. But there is a short way to write it: 
 
@@ -80,18 +80,18 @@ source.LinkTo(dest, row => row.Value > 0,  row => row.Value <= 0);
 ```
 
 Internally, this will create a `VoidDestination` when linking the components, but you don't have to deal with anymore.
-At the end, only records where the Value column is greate 0 will be written into the destination.
+At the end, only records where the Value column is greater 0 will be written into the destination.
 
 
 ## Synchronous Execution
 
-The easiest way to execute a dataflow is synchrounous. That means that execution of your program is paused
+The easiest way to execute a dataflow is synchronous. That means that execution of your program is paused
 until all data was read from sources and written into all destinations. Using the synchronous execution also makes
-debugging a lot easier, as you don't have to deal with async programming and the specialities of exception
+debugging a lot easier, as you don't have to deal with async programming and the specialties of exception
 handling with tasks.
 
-Please note: In the background, the Dataflow is always executed asynchrounous! The underlying dataflow engine
-is based on `Microsoft.TPL.Dataflow`. ETLBox will wrap this behaviour into synchronous methods. 
+Please note: In the background, the dataflow is always executed asynchronous! The underlying dataflow engine
+is based on `Microsoft.TPL.Dataflow`. ETLBox will wrap this behavior into synchronous methods. 
 
 ### Example sync execution
 
@@ -118,7 +118,7 @@ this method will call the Wait() method of the Task from the underlying dataflow
 
 If you are familiar with async programming, you can also execute the dataflow asynchronous. This means that
 execution of your program will continue while the data is read from the source and written into the destinations 
-in seperate task(s) in the background. 
+in separate task(s) in the background. 
 
 ### Example async execution
 

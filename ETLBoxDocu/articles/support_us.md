@@ -15,7 +15,7 @@ or have any other question, please contact me directly or raise a new issue on t
 ## Getting professional help
 
 I started to create this toolbox about 2 years ago and I'm still happy to improve and maintain it. 
-Though I did put a lot of effort in it, I still think of it as my favourite project and enjoy to add new code
+Though I did put a lot of effort in it, I still think of it as my favorite project and enjoy to add new code
 and functionalities to it.
 
 I am a software developer with focus on C# and Sql, working more than 10 years in BI and ETL environments.
@@ -30,7 +30,7 @@ You can find my full contact information in the [imprint](imprint.md).
 
 ## Clean coding
 
-At first glance, it can look like that some of the taks are not really adding big value to your project. But in accordance to clean coding, 
+At first glance, it can look like that some of the task are not really adding big value to your project. But in accordance to clean coding, 
 having written everything in a format which is easy-to-read and easy-to-understand, you are able to produce code that is easier to maintain. Having your code "clean" 
 allows you to focus on the important parts of your logic and not be distracted by code lines that your brain need to "unravel" every time you go over them.
 If you are interested in clean coding, you should read the "bible" on that topic, written by 
@@ -40,4 +40,4 @@ If you are interested in clean coding, you should read the "bible" on that topic
 
 If you are able to understand and read german, I recommend you my own book: 
 [Mehr als Clean Code - Gedanken zur Softwareentwicklung](https://www.amazon.de/gp/product/3735736513/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=3735736513&linkCode=as2&tag=andreaslennar-21&linkId=D6HR6S6YAQ65Q3S6)
-Purchasing it wóuld also be a small contribution to this project.
+Purchasing it would also be a small contribution to this project.

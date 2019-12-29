@@ -6,8 +6,8 @@ from and load data into the following databases: Sql Server, MySql, Postgres, SQ
 ## DBSource
 
 The DBSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data. 
-While ADO.NET is reading from the source, data is simutaneously posted into the dataflow pipe.
-To initialize a DBSource, you can either hand over a `TableDefinition`, a SQL-statement or a tablename. 
+While ADO.NET is reading from the source, data is simultaneously posted into the dataflow pipe.
+To initialize a DBSource, you can either hand over a `TableDefinition`, a SQL-statement or a table name. 
 The DBSource also accepts a connection manager. If no connection manager is specified, the "default" connection manager is used 
 (which is stored in `ControlFlow.CurrentDbConnection`).
 
@@ -17,7 +17,7 @@ The following code would read all data from the table `SourceTable` and use the 
 DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("SourceTable");
 ```
 
-For the `DBSource`, you can also specifiy some Sql code to retrieve your data:
+For the `DBSource`, you can also specify some Sql code to retrieve your data:
 
 ```C#
 DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() {
@@ -27,7 +27,7 @@ DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() {
 
 ## DBDestination
 
-Like the `DBSource`, the `DBDestination` is the common component for sending data into a database. It is initalized with a table name or a `TableDefinition`.
+Like the `DBSource`, the `DBDestination` is the common component for sending data into a database. It is initialized with a table name or a `TableDefinition`.
 
 The following example would transfer data from the destination to the source, using all the same connection manager (derived from `ControlFlow.CurrentDbConnection`):
 
@@ -45,8 +45,8 @@ dest.Wait()
 
 ### Connection string
 
-To connnect to your database of choice, you will need a string that contains all information needed to connect
-to your database (e.g., the network address of the database, username and password). The specific connection string syntax 
+To connect to your database of choice, you will need a string that contains all information needed to connect
+to your database (e.g., the network address of the database, user name and password). The specific connection string syntax 
 for each provider is defined by the ADO.NET framework. If you need assistance
 to create such a connection string, <a href="https://www.connectionstrings.com" target="_blank">have a look at this website that 
 provide example string for almost every database</a>.
@@ -169,7 +169,7 @@ When you create a new connection manager, you have the choice to either pass the
 
 ### Default ConnectionManager
 
-Every copmonent or task related to a database operation needs to have a connection managers set in order
+Every component or task related to a database operation needs to have a connection managers set in order
 to connect to the right database. Sometimes it can be cumbersome to pass the same connection manager over and over
 again. To avoid this, there is a static `ControlFlow` class that contains the property `CurrentDbConnection`.
 If you define a connection manager here, this will always be used as a fallback value if no other connection manager property was defined.
@@ -193,9 +193,9 @@ or re-uses an existing one. Whenever the work of a component or task is done, th
 the pool so that it can be reused by other components or tasks when needed.
 
 Please note that the connection pooling only works for the same connection strings. For every connection string that differs there
-is going to be a sepearate pool 
+is going to be a separate pool 
 
-This behaviour - returning connections back to the pool when the work is done - does work very well in a scenario 
+This behavior - returning connections back to the pool when the work is done - does work very well in a scenario 
 with concurrent tasks. There may be a use-case where you don't won't to query your database in parallel and you 
 want to leave the connection open, avoiding the pooling. [For this scenario you can use the `LeaveOpen` property
 on the connection managers.](https://github.com/roadrunnerlenny/etlbox/issues/39)
@@ -203,7 +203,7 @@ on the connection managers.](https://github.com/roadrunnerlenny/etlbox/issues/39
 
 ## Table Definitions
 
-If you pass a Tablename to a `DBsource` or `DBDestination` (or a Sql statement to a `DBSource`), the meta data
+If you pass a table name to a `DBsource` or `DBDestination` (or a Sql statement to a `DBSource`), the meta data
 of the table is automatically derived from that table or sql statement. If you don't want ETLBox to read this information
 from the table, or if you want to provide your own meta information, you can pass a `TableDefinition` instead.
 
@@ -221,4 +221,4 @@ var DBSource<type> = new DBSource<type>() {
 }
 ```
 
-ETLBox will use this Metadata instead to connect with the table. 
+ETLBox will use this meta data instead to connect with the table. 

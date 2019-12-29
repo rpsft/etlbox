@@ -17,7 +17,7 @@ See [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com) for mor
 
 ### Create necessary POCO
 
-In order to store the data from the webservice, we need a POCO (Plain old Compononent object) to store an element in there. 
+In order to store the data from the webservice, we need a POCO (Plain old Component object) to store an element in there. 
 For this example, we create a representation for a Todo item.
 
 ```C#
@@ -79,7 +79,7 @@ SqlTask.ExecuteNonQuery("Create test table",
 
 Now we create a dataflow that calls the webservices and stores the result in the database.
 We use the `CustomSource` for this - a custom source accepts a `Func` that is called to 
-retrieve data and post it into the dataflow - it is called until the seconed `Func` is evaluated as true. 
+retrieve data and post it into the dataflow - it is called until the second `Func` is evaluated as true. 
 
 ```C#
 WebserviceReader wsreader = new WebserviceReader();

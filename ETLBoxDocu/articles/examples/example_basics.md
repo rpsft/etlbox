@@ -167,7 +167,7 @@ source.Execute();
 dest.Wait();
 ```
 
-Finlly, we check if the data was successfully loaded into the table and write it into the console output. 
+Finally, we check if the data was successfully loaded into the table and write it into the console output. 
 We use the SQLTask for this and write the result into the output. 
 
 ```C#

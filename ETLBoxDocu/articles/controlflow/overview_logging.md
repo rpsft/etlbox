@@ -1,6 +1,6 @@
 # Logging 
 
-By default, ETLBox uses NLog. NLog already comes with different log targets that be configured either via your app.config or programatically. 
+By default, ETLBox uses NLog. NLog already comes with different log targets that be configured either via your app.config or programmatically. 
 Please see the NLog-documentation for a full reference. [https://nlog-project.org/](https://nlog-project.org/)
 ETLBox already comes with NLog as dependency - so the necessary packages will be retrieved from nuget automatically through your package manager. 
 
@@ -35,7 +35,7 @@ But there is more. If you want to have logging tables in your database, ETLBox c
 Additionally to the traditional nlog setup where log information can be send to any target, 
 ETLBox comes with a set of Tasks and a recommended nlog configuration. 
 This will allow you to have a more advanced logging into your database. 
-E.g., you can create log tables and stored procudures useful for logging in SQL with the `CreateLogTablesTask`.
+E.g., you can create log tables and stored procedures useful for logging in SQL with the `CreateLogTablesTask`.
 
 It will basically create two log tables - the table etl.Log for the "normal" log and a table etl.LoadProcess to store information about your ETL run. 
 Whenever you use a Control Flow or Data Flow task, log information then is written into the etl.Log table. 
@@ -44,7 +44,7 @@ ETL process into the etl.LoadProcess table.
 
 ### Extend the nlog.config
 
-As a first step to have nlog log into your database, you must exend your nlog configuration. It should then look like this:
+As a first step to have nlog log into your database, you must extend your nlog configuration. It should then look like this:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -113,7 +113,7 @@ CreateLogTablesTask.CreateLog();
 
 ### LoadProcess table
 
-The table etl.LoadProcess contains information about the etl processes that you started programatically with the `StartLoadProcessTask`.
+The table etl.LoadProcess contains information about the ETL processes that you started programmatically with the `StartLoadProcessTask`.
 To end or abort a process, you can use the `EndLoadProcessTask` or `AbortLoadProcessTask`. To set the TransferCompletedDate in this table, use
 the `TransferCompletedForLoadProcessTask`
 
@@ -134,7 +134,7 @@ else
 
 The etl.Log table will store all log message generated from any control flow or data flow task. 
 You can even use your own LogTask to create your own log message in there.
-The following example with create 6 rows in your `etl.Log` table. Everytime a Control Flow Tasks starts, it will create a log entry with an action
+The following example with create 6 rows in your `etl.Log` table. Every time a Control Flow Tasks starts, it will create a log entry with an action
 'START'. When it's done with its execution, it will create another log entry with action type 'END'
 
 ```C#
@@ -188,7 +188,7 @@ LogTask.Fatal("Some text!");
 
 NLog normally behaves very "fault-tolerant". By default, if something is not setup properly or does not work
 when NLog tries to log, it just "stops" working without throwing an exception or stopping the execution.
-This behaviour is very desirable in a production environment, but hard to debug. 
+This behavior is very desirable in a production environment, but hard to debug. 
 
 If you need to debug Nlog, you can change the nlog root-element of the nlog.config  into:
 

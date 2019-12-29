@@ -12,8 +12,8 @@ This example shows you how to use the `CustomDestination` to create a json.
 
 ## Create necessary POCO
 
-In this example we will receceive some demo data from a database table. The table has two columns - `Col1` and `Col2`. 
-In order to store the data from table, we first create a POCO (Plain old Compononent object) to use in the dataflow. 
+In this example we will receive some demo data from a database table. The table has two columns - `Col1` and `Col2`. 
+In order to store the data from table, we first create a POCO (Plain old Component object) to use in the dataflow. 
 
 ```C#
 public class MySimpleRow {

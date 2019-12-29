@@ -53,7 +53,7 @@ ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(
 CreateLogTablesTask.CreateLog();
 ```
 
-This will create two tables (etl.Log and etl.LoadProcess) and some stored procedures to acess these tables. 
+This will create two tables (etl.Log and etl.LoadProcess) and some stored procedures to access these tables. 
 
 ## LoadProcess table
 

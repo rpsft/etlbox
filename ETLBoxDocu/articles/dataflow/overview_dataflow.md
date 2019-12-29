@@ -10,7 +10,7 @@ All Data Flow taks reside in the 'ALE.ETLBox.DataFlow' namespace.
 You have some data somewhere - stored in some files, a table or somewhere else. 
 Now you want to define a pipeline which takes this data, transforms it "on the fly" and writes it into a target 
 (this could be again a database, a file or somewhere else). 
-This is the pure essence of an ETL process (extracting, transformig, loading).
+This is the pure essence of an ETL process (extracting, transforming, loading).
 The building block to define such a data flow in ETLBox are source components for extracting, transformations
 and destination components for loading.
 
@@ -20,17 +20,17 @@ and destination components for loading.
 
 All dataflow pipelines will need at least one or more sources. Sources are basically everything that can read data from someplace 
 (e.g. CSV file or a database table) and then post this data into the pipeline. All sources should be able to read data asynchronously. 
-That means, while the component reads data from the source, it simultanously sends the already processed data to components that are connected to source.
+That means, while the component reads data from the source, it simultaneously sends the already processed data to components that are connected to source.
 There are different build-in data sources, e.g.: `CSVSource`, `DBSource` or `ExelSource`. If you are in need of another source component, you can either extend the 
 `CustomSource`. Or you [open an issue in github](https://github.com/roadrunnerlenny/etlbox/issues) describing your needs. 
 
-Once a source starts reading data, it will start sending data to its connected components. These could be either a Transoformation or Destination.
-Posting data is always done asynchrounously, even if you use the blocking Execute() method on the source.  
+Once a source starts reading data, it will start sending data to its connected components. These could be either a Transformation or Destination.
+Posting data is always done asynchronously, even if you use the blocking Execute() method on the source.  
 
 ### Transformations
 
 Transformations always have at least one input and one output. Inputs can be connected either to other transformations or 
-sources, and the output can also connect to other transformationsor to destinations. 
+sources, and the output can also connect to other transformations or to destinations. 
 The purpose of a transformation component is to take the data from its input(s) and post the transformed data to its outputs. 
 This is done on a row-by-row basis for non-blocking transformation, or on a complete set for blocking transformations.
 As soon as there is any data in the input, the transformation will start and post the result to the output. 
@@ -59,7 +59,7 @@ CSV File (Source) --> Row transformation --> DB destination.
 
 First, we need a connection manager that stores the connections string and provides native ADO.NET to the database.
 Always use the right connection manager for you database - e.g., the SqlConnectionManager will connect with 
-a Sql Server (and expectes a sql server connection string). There are also other connection managers
+a Sql Server (and expects a sql server connection string). There are also other connection managers
 (e.g. `SQLiteConnectionManager` for SQLite, `PostgresConnectionManager` for Postgres or `MySqlConnectionManager`
 for MySql).
 
@@ -88,7 +88,7 @@ RowTransformation<string[], Order> rowTrans = new RowTransformation<string[], Or
 ```
 
 *Please note that the `CSVSource` could be directly created as `CSVSource<OrderFile>`. Data type conversions 
-(like `int.Parse()`) would then have beend handled internally by the CSVSource.*
+(like `int.Parse()`) would then have been handled internally by the CSVSource.*
 
 Now we need to create a destination. Notice that the destination is typed with the `Order` object. We also
 need to pass the connection manager to the DBDestination so that connection to our Sql Server can be used. 
@@ -129,4 +129,4 @@ When `dest.Wait()` returns, all data was read from the source and written into t
 
 ### View the full code
 
-This demo code is available online  - [view the full code on github](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/SimpeFlow).
+This demo code is available online - [view the full code on github](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/SimpeFlow).

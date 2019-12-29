@@ -3,10 +3,10 @@
 ## Purpose
 
 Sometimes you are in need to transfer data across databases on different server or to integrate flat
-files. ETLBox is an excelent tool of choice for integrating data from different sources. 
+files. ETLBox is an excellent tool of choice for integrating data from different sources. 
 This example will guide you through the most common scenarios. 
 
-### Prerequisties 
+### Prerequisites 
 
 The example code will not go into the details of the sql code to create the necessary table or files. 
 It will focus on how to move the data from the source to the destinations. If you are interest how you can create
@@ -28,7 +28,7 @@ string PostgresConnectionString = @"Server=.;Database=demodataflow;User Id=postg
 PostgresConnectionManager conMan = new PostgresConnectionManager(PostgresConnectionString);
 ```
 
-No we need to create the comnponents for the CSV source and the database destination.
+No we need to create the components for the CSV source and the database destination.
 
 ```C#
 //Import CSV

@@ -113,19 +113,19 @@ will identify:
 - which records exists and doesn't need to be updated (ChangeAction: E)
 - which record needs to be deleted (ChangeAction: D), if deletions are allowed
 
-To identiy these different options, the `IdColumn` is used. In our example the id column is a unique primary key, 
+To identify these different options, the `IdColumn` is used. In our example the id column is a unique primary key, 
 and it is recommended to only use unique columns for that.
 
 As you can see, there is a difference between an update and an existing records that doesn't need to be updated. 
 All records where the IdColumns match will be examined based on their value. All properties
-marked with the `CompareColumn` attirbute are compared (using the underlying Equals() implementation). 
+marked with the `CompareColumn` attribute are compared (using the underlying Equals() implementation). 
 If one property/columns differs, the record will be marked to be updated. If they are all equal, the record
 won't be touched on the database and marked as 'E' (Existing).
 
 After this comparison is done, it will start to write the changes into the databases (in batches)
 First, it will delete all records marked as 'D' (Deleted) or 'U' (Updated) from the database. 
 Then it will write the updated records 'I' and 'U' back into the destination table. (As you can see, updates are done
-by deleting and inserting the record again). Records that doesn't need to be udpated are left in the destination table.
+by deleting and inserting the record again). Records that doesn't need to be updated are left in the destination table.
 
 In our example after doing the `DBMerge`, our destination table now looks like this:
 
@@ -149,7 +149,7 @@ The DBMerge has a property `DeltaTable` which is a List containing additionally 
 where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding 
 `ChangeDate`/ `ChangeAction` properties.
 
-In our example, the property `dest.DeltaTable` now contains information about the what delta operations where made on the destiantion
+In our example, the property `dest.DeltaTable` now contains information about the what delta operations where made on the destination
 table. In this example, it would contain the information, that 1 row was inserted (Key: 1)
 , 1 was updated (Key: 2), one column wasn't changed (Key:3) and one column was deleted (Key: 4).
 
@@ -192,7 +192,7 @@ Also, if you don't specify any Id columns with teh `IdColumn` attribute, the DbM
 
 #### ColumnMap attribute
 
-If the columns have different names than our property, we need to add the `ColumnMap` attibute to have them
+If the columns have different names than our property, we need to add the `ColumnMap` attribute to have them
 mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:
 
 ```C#
@@ -231,12 +231,12 @@ public class MyMergeRow : MergeableRow
 }
 ```
 
-As you can see, you can also use the `CompareColumn` attribute on each property that you want to use for identifing
+As you can see, you can also use the `CompareColumn` attribute on each property that you want to use for identifying
 existing records. 
 
 #### Using the IMergabeRow interface
 
-Sometimes, you want't do the implementation of the IMergeableRow interface yourself. Here is an example implementation:
+Sometimes, you want do the implementation of the IMergeableRow interface yourself. Here is an example implementation:
 
 ```C#
 public class MySimpleRow : IMergeableRow
@@ -257,4 +257,4 @@ public class MySimpleRow : IMergeableRow
 ```
 
 Overwriting the Equals method and using the IdColumn attribute is optional. If no IdColumn
-is passed, the trunate method is used to merge the data. 
+is passed, the truncate method is used to merge the data. 

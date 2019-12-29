@@ -55,7 +55,7 @@ There is a ```TableColumn``` object that helps you to define columns in the tabl
 
 ## Running sql on the database
 
-The most powerful and comman task that you want to run against a database is sql. It will use the underlying ADO.NET connection manager, which allows you to do almost everything on the database, without the "overhead" and boilerplate code that ADO.NET brings with it. 
+The most powerful and common task that you want to run against a database is sql. It will use the underlying ADO.NET connection manager, which allows you to do almost everything on the database, without the "overhead" and boilerplate code that ADO.NET brings with it. 
 
 ```C#
 SqlTask.ExecuteNonQuery("Insert data",
@@ -66,7 +66,7 @@ SqlTask.ExecuteNonQuery("Insert data",
 
 There are quite a lot of different control flow tasks that ETLBox comes with. 
 
-A simple example is the RowCountTask, which unsuprisingly count the rows in a table.
+A simple example is the RowCountTask, which unsurprisingly count the rows in a table.
 
 ```C#
 int count = RowCountTask.Count("demo.table1");

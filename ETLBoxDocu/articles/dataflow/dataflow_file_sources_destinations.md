@@ -7,7 +7,7 @@ The default output data type of the CSVReader is a string array. You can either 
 the generic implementation CSVSource.
 
 ```C#
-//Returns string[] as output type for other compoments
+//Returns string[] as output type for other components
 CSVSource source = new CSVSource("Demo.csv") {
     Delimiter = ";",
     SourceCommentRows = 2
@@ -20,9 +20,9 @@ CSVSource<CSVData> source = new CSVSource<CSVData>("Demo.csv");
 
 ## CSVDestination
 
-A csv destination will create a file containing the data in the desired CSV format. It is based on the 3rd party library `CSVHelper`.
+A CSV destination will create a file containing the data in the desired CSV format. It is based on the 3rd party library `CSVHelper`.
 
-There is a generic and non-generic class avaiable. The generic approach will create a csv file including a header column - the header name is derived 
+There is a generic and non-generic class available. The generic approach will create a csv file including a header column - the header name is derived 
 from the property names or the CSVHelper attributes.
 
 E.g.
@@ -66,7 +66,7 @@ CSVSource source = new CSVSource("res/CSVSource/OneColumn.csv")
 
 An Excel source reads data from a xls or xlsx file. It uses the 3rd party library `ExcelDataReader`. 
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range 
-to restrict this behaviour. Additionally, you have to use the Attribute `ExcelColumn` to define the column index
+to restrict this behavior. Additionally, you have to use the Attribute `ExcelColumn` to define the column index
 for each property. The first column would be 0, the 2nd column 1, ...
 
 Usage example:
@@ -133,10 +133,10 @@ CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
 
 #### Memory Source
 
-A Memory source is a simple source comnponents that accepts a list. Use this component
+A Memory source is a simple source components that accepts a list. Use this component
 within your dataflow if you already have you collection or records available in memory.
-When you execute the flow, the memory destination will iterate throught the list and 
-asynchronusly post record by record into the flow.
+When you execute the flow, the memory destination will iterate through the list and 
+asynchronously post record by record into the flow.
 
 Example code:
 
@@ -172,7 +172,7 @@ source.LinkTo(dest);
 Task st = source.ExecuteAsync();
 Task dt = dest.Completion();
 
-// data is acessable in dest.Data
+// data is accessible in dest.Data
 ```
 
 When starting the data flow asynchronous, you should wait until the tasks complete. The source task will complete when 

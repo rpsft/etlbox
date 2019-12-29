@@ -28,7 +28,7 @@ a database source, it will tell the reader which database column name is mapped 
 the setter - method. When writing into a database destination, the attribute will tell in which database column the property data is written into. 
 Here the getter - method is used to get data from the property.
 
-For examle, if you have a property `Key`, and you add the `ColumnMap` Attribute to it: 
+For example, if you have a property `Key`, and you add the `ColumnMap` Attribute to it: 
 
 ```C#
 [ColumnMap("Id")]
@@ -55,7 +55,7 @@ public string HashValue => HashHelper.Encrypt_Char40(this.Key);
 When you write into a database table that has a column named "Hash", the column mappings will map the result of the HashValue -property
 to this column. Every record is then stored in the table as an encrypted hash value of the property "Key". 
 
-You can use this mapping behaviour for some basic data type transformations. If transformations become more complex, you should have a look at 
+You can use this mapping behavior for some basic data type transformations. If transformations become more complex, you should have a look at 
 the [existing transformations](dataflow_transformations.md) to modify your data. 
 
 ## Non generic approach
@@ -75,7 +75,7 @@ RowTransformation row = new RowTransformation(
 );
 ```
 
-would have all data from column "Value1" accesable at the first position of the string array and "Value2" at the second position. 
+would have all data from column "Value1" accessible at the first position of the string array and "Value2" at the second position. 
 All your data will be automatically converted into a string data type. 
 
 This approach is very useful when reading from a source where you get only string data, e.g. CSV or Json. 

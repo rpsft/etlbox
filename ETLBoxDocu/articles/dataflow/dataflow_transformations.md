@@ -32,7 +32,7 @@ The RowTransformation is the simplest but most powerful transformation in ETLBox
 - the type of the input data and the type of the output data. When creating a RowTransformation, you pass a delegate
 describing how each record in the dataflow is transformed. Here you can add any C# code that you like. 
 
-The RowTransformation is a non blocking transformation, so it won't use up much memory even for high amoutns of data.
+The RowTransformation is a non blocking transformation, so it won't use up much memory even for high amounts of data.
 
 Here is an example that convert a string array into a `MySimpleRow` object.
 
@@ -57,7 +57,7 @@ RowTransformation&lt;string[], MySimpleRow&gt; trans = new RowTransformation&lt;
 ### Lookup
 
 The lookup is a row transformation, but before it starts processing any rows it will load all data from the given LookupSource into memory 
-and will make it accessable as a List object.
+and will make it accessible as a List object.
 Though the lookup is non-blocking, it will take as much memory as the lookup table needs to be loaded fully into memory. 
 
 Here is an example:
@@ -132,7 +132,7 @@ for records that you don't want to keep. See more about this in the [article abo
 ### Merging data
 
 If you want to merge data in your dataflow, you can use the `MergeJoin`. This basically joins the outcome
- of two sources or transfomrations into one data record.
+ of two sources or transformations into one data record.
 
 #### MergeJoin
 
@@ -163,7 +163,7 @@ join.LinkTo(dest);
 ### BlockTransformation
 
 A BlockTransformation waits until all data is received at the BlockTranformation - then it will be available in a List object and you can do modifications
-on your whole data set. Keep in mind that this tranformation will need as much memory as the amount of data you loaded. 
+on your whole data set. Keep in mind that this transformation will need as much memory as the amount of data you loaded. 
 
 ```C#
 BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
