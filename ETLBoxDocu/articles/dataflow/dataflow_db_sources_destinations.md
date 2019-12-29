@@ -43,6 +43,14 @@ dest.Wait()
 
 ## Connection manager
 
+### Connection string
+
+To connnect to your database of choice, you will need a string that contains all information needed to connect
+to your database (e.g., the network address of the database, username and password). The specific connection string syntax 
+for each provider is defined by the ADO.NET framework. If you need assistance
+to create such a connection string, <a href="https://www.connectionstrings.com" target="_blank">have a look at this website that 
+provide example string for almost every database</a>.
+
 ### Database Connections
 
 The `DBSource` and `DBDestination` can be used to connect via ADO.NET to a database server. 
@@ -151,13 +159,26 @@ DBDestination dest = DBDestination (
 
 *Note*: Please note that the AccessOdbcConnectionManager will create a "temporary" dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. This was necessary to simulate a bulk insert with Access-like Sql. 
 
-### ConnectionStrings
+### Connection String wrapper
 
 When you create a new connection manager, you have the choice to either pass the connection string directly or you
  create a `ConnectionString` object from the connection string before you pass it to the connection manager.
  The `ConnectionString` does exist for every database type (e.g. for MySql it is `MySqlConnectionString`). The ConnectionString
  wraps the raw database connection string into the appropriate `ConnectionStringBuilder` object and also offers some more
  functionalities, e.g. like getting a connection string for the database storing system information. 
+
+### Default ConnectionManager
+
+Every copmonent or task related to a database operation needs to have a connection managers set in order
+to connect to the right database. Sometimes it can be cumbersome to pass the same connection manager over and over
+again. To avoid this, there is a static `ControlFlow` class that contains the property `CurrentDbConnection`.
+If you define a connection manager here, this will always be used as a fallback value if no other connection manager property was defined.
+
+```
+ControlFlow.CurrentDbConnection = new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
+//Now you can just create a DBSource like this
+var source = new DBSource("SourceTable");
+```
 
 ### Connection Pooling
 

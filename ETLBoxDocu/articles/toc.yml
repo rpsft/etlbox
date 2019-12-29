@@ -26,8 +26,8 @@
       href: dataflow/dataflow_dbmerge.md
 - name: DataFlow Examples
   items:
-    - name: Different Databases
-      href: examples/example_different_dbs.md
+    - name: Different Sources and Destinations
+      href: examples/example_different_sources_destinations.md
     - name: Multicast to split data
       href: examples/example_multicast.md
     - name: Complex Data Flow

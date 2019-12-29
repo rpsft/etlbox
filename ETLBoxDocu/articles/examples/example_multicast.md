@@ -1,4 +1,4 @@
-# Example: Mutlicast to split data
+# Example: Multicast to split data
 
 ## Purpose
 

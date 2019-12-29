@@ -6,9 +6,9 @@ It's all in the box! Run all your ETL or ELT jobs with this .NET class library. 
 
 ## ETLBox.net
 
-For a full documenetation, please visit the project homepage: [etlbox.net](https://etlbox.net) contains all the information you need about ETLBox. There is a whole set of [introductional articles](https://etlbox.net/articles/getting_started.html), [tons of examples how to create data flows](https://etlbox.net/articles/examples/example_basics.html) and a [complete API documentation](https://etlbox.net/api/index.html).
+For a full documenetation, please visit the project homepage: [etlbox.net](https://etlbox.net) contains all the information you need about ETLBox. There is a whole set of [introductional articles](https://etlbox.net/articles/getting_started.html), a lot of examples how to create data flows and a complete API documentation.
 
-### See the video
+**See the video**
 
 Watch a short video that introduces you into the basic concepts of ETLBox and how to create your own ETL process. [See the video on Youtube!](https://www.youtube.com/watch?v=CsWZuRpl6PA)
 
@@ -30,11 +30,9 @@ Perhaps you are looking for an alternative to Sql Server Integrations Services (
 
 **Process In-Memory**: ETLBox comes with dataflow components that allow in-memory processing which is much faster than storing data on disk and processing later.
 
-**Know your errors**: When exceptions are raised you get the exact line of code where your ETL stopped, including a hands-on description of the error.
-
 **Manage Change**: Track you changes with git (or other source controls), code review your etl logic, and use your existing CI/CD processes.
 
-**Data integration**: While supporting different databases, flat files and web services, you can use ETLBox as a foundation for your custom made Data Integregation platform. 
+**Data integration**: While supporting different databases, flat files and web services, you can use ETLBox as a foundation for your custom made Data Integregation platform.
 
 ### Out-of-the-box supported sources and destinations
 
@@ -51,8 +49,8 @@ MySql|Full support
 CSV|Full support
 Json|Full support
 Microsoft Access|Full support
-Excel|Limited support - only as Source
-SSAS|Limited support - only XMLA
+Excel|Supported as Source
+SSAS|Only XMLA statements
 Oracle|Currently not supported
 
 ## ETLBox capabilities
@@ -106,6 +104,19 @@ source.Execute();
 dest.Wait();
 ```
 
+#### Data Flow components
+
+There are a lot of data flow components that you can choose from to create a data flow that suits all your needs. 
+
+You can choose between different sources and destination components. `DBSource` and `DBDestination` will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). `CSVSource`, `CSVDestination` give you support for flat files - [based on CSVHelper](https://joshclose.github.io/CsvHelper/). `ExcelSource` allows you to read data from an excel sheet. `JsonSource` and `JsonDestination` let you read and write json from files or web service request. `MemorySource`, `MemoryDestinatiation` as well as `CustomSource` and `CustomDestination` will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.
+
+Once your data goes throug your data flow, it will be processed in-memory (either row-by-row or in batches), and there a lot of transformations you can choose from to transform your data. On a row-by-row basis, you can use the `RowTransformation` to modify each record with your custom written code. Data can be split within the flow by using a `Multicast` or joined with a `Mergejoin`. There is `Lookup` component to enrich your data with your existing master data.  You can sort your data using the `Sort`. 
+For operations that need to access your incoming data in whole there is the `BlockTransformation`.
+
+#### Designed for big data
+
+ETLBox was designed for performance and is able to deal with big amounts of data. All destinations do support Bulk or Batch operations. By default, every component comes with an input and/or output buffer. You can design your data flow that only batches or your data is stored in memory, which are kept in different buffers for every component to increase throughput. All operations can be execute asynchrounously, so that your processing will run only within separate threads.
+
 ### Control Flow - overview
 
 Control Flow Tasks gives you control over your database: They allow you to create or delete databases, tables, procedures, schemas or other objects in your database. With these tasks you also can truncate your tables, count rows or execute *any* sql you like. Anything you can script in sql can be done here - but with only one line of easy-to-read C# code. This improves the readability of your code a lot, and gives you more time to focus on your business logic. But Control Flow tasks are not restricted to databases only: e.g. you can run an XMLA on your Sql Server Analysis Service.
@@ -147,17 +158,17 @@ Clone the repository:
 git clone https://github.com/roadrunnerlenny/etlbox.git
 ```
 
-Then, open the downloaded solution file ETLBox.sln with Visual Studio 2015 or higher.
+Then, open the downloaded solution file ETLBox.sln with Visual Studio 2019 or higher.
 Now you can build the solution, and use it as a reference in other projects.
 
 ## Going further
 
-ETLBox is open source.Feel free to make changes or to fix bugs. Every particiation in this open source project is appreciated.
+ETLBox is open source. Feel free to make changes or to fix bugs. Every particiation in this open source project is appreciated.
 
 To dig deeper into it, have a look at the test projects. There is a test for (almost) everything that you can do with ETLBox.
 
 <span class="hideOnWebsite">
 
-[See the ETLBox Project website](https://etlbox.net) for [introductional articles](https://etlbox.net/articles/getting_started.html) and examples for [Data Flow Tasks](https://etlbox.net/articles/overview_dataflow.html), [Control Flow Tasks](https://etlbox.net/articles/overview_controlflow.html) and [Logging](https://etlbox.net/articles/overview_logging.html). There is also a [complete API documentation](https://etlbox.net/api/index.html). Enjoy!
+[See the ETLBox Project website](https://etlbox.net) for [introductional articles](https://etlbox.net/articles/getting_started.html) and a [complete API documentation](https://etlbox.net/api/index.html). Enjoy!
 
 </span>
