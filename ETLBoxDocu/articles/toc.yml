@@ -24,22 +24,19 @@
       href: dataflow/dataflow_linking_execution.md
     - name: Syncing tables with Merge
       href: dataflow/dataflow_dbmerge.md
-- name: DataFlow Examples
-  items:
-    - name: Different Sources and Destinations
-      href: examples/example_different_sources_destinations.md
-    - name: Multicast to split data
-      href: examples/example_multicast.md
-    - name: Complex Data Flow
-      href: examples/example_complex_dataflow.md
 - name: ControlFlow and Logging
   items:
     - name: Overview ControlFlow tasks
       href: controlflow/overview_controlflow.md
     - name: Logging
       href: controlflow/overview_logging.md
-    - name: Example Logging
-      href: examples/example_logging.md
+- name: Examples
+  items:
+    - name: Different Sources and Destinations
+      href: examples/example_different_sources_destinations.md
+    - name: Complex Data Flow
+      href: examples/example_complex_dataflow.md
+
 
 
 
