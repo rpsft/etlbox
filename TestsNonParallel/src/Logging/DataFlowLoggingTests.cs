@@ -18,7 +18,7 @@ namespace ALE.ETLBoxTests.Logging
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
         public DataFlowLoggingTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(SqlConnection);
+            CreateLogTablesTask.CreateLog(SqlConnection, "Log");
         }
 
         public void Dispose()

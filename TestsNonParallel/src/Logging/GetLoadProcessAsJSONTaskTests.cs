@@ -17,7 +17,7 @@ namespace ALE.ETLBoxTests.Logging
         public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
         public GetLoadProcessAsJSONTaskTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(Connection);
+            CreateLogTablesTask.CreateLog(Connection, "Log");
         }
 
         public void Dispose()

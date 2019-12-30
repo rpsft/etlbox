@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             RemoveLogTablesTask.Remove(Connection);
-            CreateLogTablesTask.CreateLog(Connection);
+            CreateLogTablesTask.CreateLog(Connection, "Log");
             //Act
             RemoveLogTablesTask.Remove(Connection);
             //Assert

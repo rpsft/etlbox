@@ -63,6 +63,7 @@ namespace ALE.ETLBox.ControlFlow
                 if (dbTarget != null)
                 {
                     dbTarget.ConnectionString = connection.ConnectionString.Value; //?? CurrentDbConnection.ConnectionString.Value; //""; Parameter.DWHConnection?.Value;
+                
                 }
             }
             catch

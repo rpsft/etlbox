@@ -13,69 +13,86 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"Create log tables";
+        public string LogTableName { get; set; }
+        public string ProcessTableName { get; set; }
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(LogTableName, this.ConnectionType);
+        public ObjectNameDescriptor PN => new ObjectNameDescriptor(ProcessTableName, this.ConnectionType);
+        public string QB => TN.QB;
+        public string QE => TN.QE;
         public void Execute()
         {
-            ExecuteTasks();
+            List<ITableColumn> columns = new List<ITableColumn>() {
+                new TableColumn("id","INT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
+                new TableColumn("log_date","DATETIME", allowNulls: false),
+                new TableColumn("level","NVARCHAR(10)", allowNulls: true),
+                new TableColumn("stage","NVARCHAR(20)", allowNulls: true),
+                new TableColumn("message","NVARCHAR(4000)", allowNulls: true),
+                new TableColumn("task_type","NVARCHAR(200)", allowNulls: true),
+                new TableColumn("task_action","NVARCHAR(5)", allowNulls: true),
+                new TableColumn("task_hash","CHAR(40)", allowNulls: true),
+                new TableColumn("source","NVARCHAR(20)", allowNulls: true),
+                new TableColumn("load_process_id","INT", allowNulls: true)
+            };
+            LogTable = new CreateTableTask(LogTableName, columns)
+            { ConnectionManager = this.ConnectionManager, DisableLogging = true };
+            LogTable.Create();
+
+            //CreateETLLogTable();
+            ////CreateLoadProcessTable();
+            //ExecuteTasks();
         }
 
-        public CreateLogTablesTask()
+        public CreateLogTablesTask(string logTableName)
         {
-            CreateETLSchema();
-            CreateETLLogTable();
-            CreateLoadProcessTable();
-            CreateStartProcessProcedure();
-            CreateTransferCompletedProcedure();
-            CreateEndProcessProcedure();
-            CreateAbortProcessProcedure();
+            this.LogTableName = logTableName;
+            //CreateStartProcessProcedure();
+            //CreateTransferCompletedProcedure();
+            //CreateEndProcessProcedure();
+            //CreateAbortProcessProcedure();
         }
 
-        public CreateLogTablesTask(IConnectionManager connectionManager) : this()
+        public CreateLogTablesTask(IConnectionManager connectionManager, string logTableName) : this(logTableName)
         {
             this.ConnectionManager = connectionManager;
-        }
-
-        private void CreateETLSchema()
-        {
-            EtlSchema = new CreateSchemaTask("etl") { DisableLogging = true };
         }
 
         private void CreateETLLogTable()
         {
             List<ITableColumn> columns = new List<ITableColumn>() {
-                new TableColumn("LogKey","int", allowNulls: false, isPrimaryKey: true, isIdentity:true),
-                new TableColumn("LogDate","datetime", allowNulls: false),
-                new TableColumn("Level","nvarchar(10)", allowNulls: true),
-                new TableColumn("Stage","nvarchar(20)", allowNulls: true),
-                new TableColumn("Message","nvarchar(4000)", allowNulls: true),
-                new TableColumn("TaskType","nvarchar(200)", allowNulls: true),
-                new TableColumn("TaskAction","nvarchar(5)", allowNulls: true),
-                new TableColumn("TaskHash","char(40)", allowNulls: true),
-                new TableColumn("Source","nvarchar(20)", allowNulls: true),
-                new TableColumn("LoadProcessKey","int", allowNulls: true)
+                new TableColumn("LogKey","INT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
+                new TableColumn("LogDate","DATETIME", allowNulls: false),
+                new TableColumn("Level","NVARCHAR(10)", allowNulls: true),
+                new TableColumn("Stage","NVARCHAR(20)", allowNulls: true),
+                new TableColumn("Message","NVARCHAR(4000)", allowNulls: true),
+                new TableColumn("TaskType","NVARCHAR(200)", allowNulls: true),
+                new TableColumn("TaskAction","NVARCHAR(5)", allowNulls: true),
+                new TableColumn("TaskHash","CHAR(40)", allowNulls: true),
+                new TableColumn("Source","NVARCHAR(20)", allowNulls: true),
+                new TableColumn("LoadProcessKey","INT", allowNulls: true)
             };
-            LogTable = new CreateTableTask("etl.Log", columns) { DisableLogging = true };
+            LogTable = new CreateTableTask(LogTableName, columns) { DisableLogging = true };
         }
 
         private void CreateLoadProcessTable()
         {
             List<ITableColumn> lpColumns = new List<ITableColumn>() {
-                new TableColumn("LoadProcessKey","int", allowNulls: false, isPrimaryKey: true, isIdentity:true),
-                new TableColumn("StartDate","datetime", allowNulls: false),
-                new TableColumn("TransferCompletedDate","datetime", allowNulls: true),
-                new TableColumn("EndDate","datetime", allowNulls: true),
-                new TableColumn("Source","nvarchar(20)", allowNulls: true),
-                new TableColumn("ProcessName","nvarchar(100)", allowNulls: false) { DefaultValue = "N/A" },
-                new TableColumn("StartMessage","nvarchar(4000)", allowNulls: true)  ,
-                new TableColumn("IsRunning","bit", allowNulls: false) { DefaultValue = "1" },
-                new TableColumn("EndMessage","nvarchar(4000)", allowNulls: true)  ,
-                new TableColumn("WasSuccessful","bit", allowNulls: false) { DefaultValue = "0" },
-                new TableColumn("AbortMessage","nvarchar(4000)", allowNulls: true) ,
-                new TableColumn("WasAborted","bit", allowNulls: false) { DefaultValue = "0" },
-                new TableColumn() { Name= "IsFinished", ComputedColumn = "case when EndDate is not null then cast(1 as bit) else cast(0 as bit) end" },
-                new TableColumn() { Name= "IsTransferCompleted", ComputedColumn = "case when TransferCompletedDate is not null then cast(1 as bit) else cast(0 as bit) end" },
+                new TableColumn("LoadProcessKey","INT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
+                new TableColumn("StartDate","DATETIME", allowNulls: false),
+                new TableColumn("TransferCompletedDate","DATETIME", allowNulls: true),
+                new TableColumn("EndDate","DATETIME", allowNulls: true),
+                new TableColumn("Source","NVARCHAR(20)", allowNulls: true),
+                new TableColumn("ProcessName","NVARCHAR(100)", allowNulls: false) { DefaultValue = "N/A" },
+                new TableColumn("StartMessage","NVARCHAR(4000)", allowNulls: true)  ,
+                new TableColumn("IsRunning","BIT", allowNulls: false) { DefaultValue = "1" },
+                new TableColumn("EndMessage","NVARCHAR(4000)", allowNulls: true)  ,
+                new TableColumn("WasSuccessful","BIT", allowNulls: false) { DefaultValue = "0" },
+                new TableColumn("AbortMessage","NVARCHAR(4000)", allowNulls: true) ,
+                new TableColumn("WasAborted","BIT", allowNulls: false) { DefaultValue = "0" },
+                new TableColumn() { Name= "IsFinished", ComputedColumn = $"CASE WHEN {QB}EndDate{QE} IS NOT NULL THEN CAST(1 as bit) ELSE CAST(0 as bit) END" },
+                new TableColumn() { Name= "IsTransferCompleted", ComputedColumn = $"CASE WHEN {QB}TransferCompletedDate{QE} IS NOT NULL THEN CAST(1 as bit) ELSE CAST(0 as bit) END" },
 
             };
-            LoadProcessTable = new CreateTableTask("etl.LoadProcess", lpColumns) { DisableLogging = true };
+            LoadProcessTable = new CreateTableTask(ProcessTableName, lpColumns) { DisableLogging = true };
         }
 
         private void CreateStartProcessProcedure()
@@ -143,9 +160,9 @@ namespace ALE.ETLBox.Logging
         }
 
 
-        public static void CreateLog() => new CreateLogTablesTask().Execute();
-        public static void CreateLog(IConnectionManager connectionManager) => new CreateLogTablesTask(connectionManager).Execute();
-        public string Sql => EtlSchema.Sql + Environment.NewLine +
+        public static void CreateLog(string logTableName) => new CreateLogTablesTask(logTableName).Execute();
+        public static void CreateLog(IConnectionManager connectionManager, string logTableName) => new CreateLogTablesTask(connectionManager, logTableName).Execute();
+        public string Sql => //EtlSchema.Sql + Environment.NewLine +
                              LoadProcessTable.Sql + Environment.NewLine +
                              LogTable.Sql + Environment.NewLine +
                              StartProcess.Sql + Environment.NewLine +
@@ -156,25 +173,24 @@ namespace ALE.ETLBox.Logging
 
         private void ExecuteTasks()
         {
-            EtlSchema.ConnectionManager = this.ConnectionManager;
+            //EtlSchema.ConnectionManager = this.ConnectionManager;
             LogTable.ConnectionManager = this.ConnectionManager;
             LoadProcessTable.ConnectionManager = this.ConnectionManager;
-            StartProcess.ConnectionManager = this.ConnectionManager;
-            EndProcess.ConnectionManager = this.ConnectionManager;
-            AbortProcess.ConnectionManager = this.ConnectionManager;
-            TransferCompletedForProcess.ConnectionManager = this.ConnectionManager;
-            EtlSchema.Execute();
+            //StartProcess.ConnectionManager = this.ConnectionManager;
+            //EndProcess.ConnectionManager = this.ConnectionManager;
+            //AbortProcess.ConnectionManager = this.ConnectionManager;
+            //TransferCompletedForProcess.ConnectionManager = this.ConnectionManager;
+            //EtlSchema.Execute();
             LogTable.Execute();
             LoadProcessTable.Execute();
-            StartProcess.Execute();
-            EndProcess.Execute();
-            AbortProcess.Execute();
-            TransferCompletedForProcess.Execute();
+            //StartProcess.Execute();
+            //EndProcess.Execute();
+            //AbortProcess.Execute();
+            //TransferCompletedForProcess.Execute();
         }
 
         CreateTableTask LogTable { get; set; }
         CreateTableTask LoadProcessTable { get; set; }
-        CreateSchemaTask EtlSchema { get; set; }
         CreateProcedureTask StartProcess { get; set; }
         CreateProcedureTask EndProcess { get; set; }
         CreateProcedureTask AbortProcess { get; set; }

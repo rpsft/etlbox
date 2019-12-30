@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             ControlFlow.ClearSettings();
             ControlFlow.CurrentDbConnection = NoLogConnection;
-            CreateLogTablesTask.CreateLog(LoggingConnection);
+            CreateLogTablesTask.CreateLog(LoggingConnection, "Log");
         }
 
         public void Dispose()
