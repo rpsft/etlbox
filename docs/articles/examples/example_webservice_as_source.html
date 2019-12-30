@@ -87,7 +87,7 @@ if the <a href="../dataflow/dataflow_web_services.html">current implementation o
 <p>In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
 See <a href="https://jsonplaceholder.typicode.com">jsonplaceholder.typicode.com</a> for more details.</p>
 <h3 id="create-necessary-poco">Create necessary POCO</h3>
-<p>In order to store the data from the webservice, we need a POCO (Plain old Compononent object) to store an element in there.
+<p>In order to store the data from the webservice, we need a POCO (Plain old Component object) to store an element in there.
 For this example, we create a representation for a Todo item.</p>
 <pre><code class="lang-C#">public class Todo
 {
@@ -137,7 +137,7 @@ SqlTask.ExecuteNonQuery(&quot;Create test table&quot;,
 <h2 id="linking-it-all-together">Linking it all together</h2>
 <p>Now we create a dataflow that calls the webservices and stores the result in the database.
 We use the <code>CustomSource</code> for this - a custom source accepts a <code>Func</code> that is called to
-retrieve data and post it into the dataflow - it is called until the seconed <code>Func</code> is evaluated as true.</p>
+retrieve data and post it into the dataflow - it is called until the second <code>Func</code> is evaluated as true.</p>
 <pre><code class="lang-C#">WebserviceReader wsreader = new WebserviceReader();
 CustomSource&lt;Todo&gt; source = new CustomSource&lt;Todo&gt;(wsreader.ReadTodo, wsreader.EndOfData);
 DBDestination&lt;Todo&gt; dest = new DBDestination&lt;Todo&gt;(&quot;dbo.ws_dest&quot;);

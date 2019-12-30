@@ -81,8 +81,8 @@
 <p>It's all in the box! Run all your ETL or ELT jobs with this .NET class library. Create your own dataflow, send your data from any source to any target and transform it on-the-fly. Data can be read from or written into various sources, e.g. Flat Files, Webservices or Databases. ETLBox currently supports: SqlServer, SQLite, MySql, Postgres, CSV, Json, Excel (and limited support for Access and SSAS). Furthermore, ETLBox offers control flow tasks that wrap Sql in easy-to-use objects and offers an enhanced logging functionality.</p>
 <div class="hideOnWebsite">
 <h2 id="etlboxnet">ETLBox.net</h2>
-<p>For a full documenetation, please visit the project homepage: <a href="https://etlbox.net">etlbox.net</a> contains all the information you need about ETLBox. There is a whole set of <a href="https://etlbox.net/articles/getting_started.html">introductional articles</a>, <a href="https://etlbox.net/articles/examples/example_basics.html">tons of examples how to create data flows</a> and a <a href="https://etlbox.net/api/index.html">complete API documentation</a>.</p>
-<h3 id="see-the-video">See the video</h3>
+<p>For a full documenetation, please visit the project homepage: <a href="https://etlbox.net">etlbox.net</a> contains all the information you need about ETLBox. There is a whole set of <a href="https://etlbox.net/articles/getting_started.html">introductional articles</a>, a lot of examples how to create data flows and a complete API documentation.</p>
+<p><strong>See the video</strong></p>
 <p>Watch a short video that introduces you into the basic concepts of ETLBox and how to create your own ETL process. <a href="https://www.youtube.com/watch?v=CsWZuRpl6PA">See the video on Youtube!</a></p>
 </div>
 <h2 id="why-etlbox">Why ETLBox</h2>
@@ -93,12 +93,11 @@
 <p><strong>Runs everywhere</strong>: ETLBox runs on Linux, macOS, and Windows. It is written in the current .NET Standard and successfully tested with the latest versions of .NET Core &amp; .NET.</p>
 <p><strong>Run locally</strong>: Develop and test your ETL code locally on your desktop using your existing development &amp; debugging tools.</p>
 <p><strong>Process In-Memory</strong>: ETLBox comes with dataflow components that allow in-memory processing which is much faster than storing data on disk and processing later.</p>
-<p><strong>Know your errors</strong>: When exceptions are raised you get the exact line of code where your ETL stopped, including a hands-on description of the error.</p>
 <p><strong>Manage Change</strong>: Track you changes with git (or other source controls), code review your etl logic, and use your existing CI/CD processes.</p>
 <p><strong>Data integration</strong>: While supporting different databases, flat files and web services, you can use ETLBox as a foundation for your custom made Data Integregation platform.</p>
 <h3 id="out-of-the-box-supported-sources-and-destinations">Out-of-the-box supported sources and destinations</h3>
 <p>The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox.</p>
-<p><strong>Please note: You can <em>always</em> integrate any other database, file or source not listed here by using a <code>CustomSource</code> or <code>CustomDestination</code>. Even if it is supported not &quot;out-of-the-box&quot;.</strong></p>
+<p><strong>Please note: You can <em>always</em> integrate any other source or destination not listed here by using a <code>CustomSource</code> or <code>CustomDestination</code> - though it is not supported &quot;out-of-the-box&quot;.</strong></p>
 <table>
 <thead>
 <tr>
@@ -132,16 +131,16 @@
 <td>Full support</td>
 </tr>
 <tr>
-<td>MS Access</td>
+<td>Microsoft Access</td>
 <td>Full support</td>
 </tr>
 <tr>
 <td>Excel</td>
-<td>Limited support - only as Source</td>
+<td>Supported as Source</td>
 </tr>
 <tr>
 <td>SSAS</td>
-<td>Limited support - only XMLA</td>
+<td>Only XMLA statements</td>
 </tr>
 <tr>
 <td>Oracle</td>
@@ -183,6 +182,13 @@ trans.LinkTo(dest);
 <pre><code class="lang-C#">source.Execute();
 dest.Wait();
 </code></pre>
+<h4 id="data-flow-components">Data Flow components</h4>
+<p>There are a lot of data flow components that you can choose from to create a data flow that suits all your needs.</p>
+<p>You can choose between different sources and destination components. <code>DBSource</code> and <code>DBDestination</code> will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). <code>CSVSource</code>, <code>CSVDestination</code> give you support for flat files - <a href="https://joshclose.github.io/CsvHelper/">based on CSVHelper</a>. <code>ExcelSource</code> allows you to read data from an excel sheet. <code>JsonSource</code> and <code>JsonDestination</code> let you read and write json from files or web service request. <code>MemorySource</code>, <code>MemoryDestinatiation</code> as well as <code>CustomSource</code> and <code>CustomDestination</code> will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.</p>
+<p>Once your data goes throug your data flow, it will be processed in-memory (either row-by-row or in batches), and there a lot of transformations you can choose from to transform your data. On a row-by-row basis, you can use the <code>RowTransformation</code> to modify each record with your custom written code. Data can be split within the flow by using a <code>Multicast</code> or joined with a <code>Mergejoin</code>. There is <code>Lookup</code> component to enrich your data with your existing master data.  You can sort your data using the <code>Sort</code>.
+For operations that need to access your incoming data in whole there is the <code>BlockTransformation</code>.</p>
+<h4 id="designed-for-big-data">Designed for big data</h4>
+<p>ETLBox was designed for performance and is able to deal with big amounts of data. All destinations do support Bulk or Batch operations. By default, every component comes with an input and/or output buffer. You can design your data flow that only batches or your data is stored in memory, which are kept in different buffers for every component to increase throughput. All operations can be execute asynchrounously, so that your processing will run only within separate threads.</p>
 <h3 id="control-flow---overview">Control Flow - overview</h3>
 <p>Control Flow Tasks gives you control over your database: They allow you to create or delete databases, tables, procedures, schemas or other objects in your database. With these tasks you also can truncate your tables, count rows or execute <em>any</em> sql you like. Anything you can script in sql can be done here - but with only one line of easy-to-read C# code. This improves the readability of your code a lot, and gives you more time to focus on your business logic. But Control Flow tasks are not restricted to databases only: e.g. you can run an XMLA on your Sql Server Analysis Service.</p>
 <h4 id="control-flow-quick-example">Control Flow quick example</h4>
@@ -208,13 +214,13 @@ CreateTableTask.Create(conn, &quot;Table1&quot;, new List&lt;TableColumn&gt;() {
 <p>Clone the repository:</p>
 <pre><code class="lang-bash">git clone https://github.com/roadrunnerlenny/etlbox.git
 </code></pre>
-<p>Then, open the downloaded solution file ETLBox.sln with Visual Studio 2015 or higher.
+<p>Then, open the downloaded solution file ETLBox.sln with Visual Studio 2019 or higher.
 Now you can build the solution, and use it as a reference in other projects.</p>
 <h2 id="going-further">Going further</h2>
-<p>ETLBox is open source.Feel free to make changes or to fix bugs. Every particiation in this open source project is appreciated.</p>
+<p>ETLBox is open source. Feel free to make changes or to fix bugs. Every particiation in this open source project is appreciated.</p>
 <p>To dig deeper into it, have a look at the test projects. There is a test for (almost) everything that you can do with ETLBox.</p>
 <span class="hideOnWebsite">
-<p><a href="https://etlbox.net">See the ETLBox Project website</a> for <a href="https://etlbox.net/articles/getting_started.html">introductional articles</a> and examples for <a href="https://etlbox.net/articles/overview_dataflow.html">Data Flow Tasks</a>, <a href="https://etlbox.net/articles/overview_controlflow.html">Control Flow Tasks</a> and <a href="https://etlbox.net/articles/overview_logging.html">Logging</a>. There is also a <a href="https://etlbox.net/api/index.html">complete API documentation</a>. Enjoy!</p>
+<p><a href="https://etlbox.net">See the ETLBox Project website</a> for <a href="https://etlbox.net/articles/getting_started.html">introductional articles</a> and a <a href="https://etlbox.net/api/index.html">complete API documentation</a>. Enjoy!</p>
 </span>
 </article>
           </div>

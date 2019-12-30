@@ -9045,6 +9045,50 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.DataFlow.Lookup.Lookup
   nameWithType: Lookup.Lookup
+- uid: ALE.ETLBox.DataFlow.Lookup`2
+  name: Lookup<TTransformationInput, TSourceOutput>
+  href: api/ALE.ETLBox.DataFlow.Lookup-2.html
+  commentId: T:ALE.ETLBox.DataFlow.Lookup`2
+  name.vb: Lookup(Of TTransformationInput, TSourceOutput)
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TSourceOutput>
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TSourceOutput)
+  nameWithType: Lookup<TTransformationInput, TSourceOutput>
+  nameWithType.vb: Lookup(Of TTransformationInput, TSourceOutput)
+- uid: ALE.ETLBox.DataFlow.Lookup`2.#ctor
+  name: Lookup()
+  href: api/ALE.ETLBox.DataFlow.Lookup-2.html#ALE_ETLBox_DataFlow_Lookup_2__ctor
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`2.#ctor
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TSourceOutput>.Lookup()
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TSourceOutput).Lookup()
+  nameWithType: Lookup<TTransformationInput, TSourceOutput>.Lookup()
+  nameWithType.vb: Lookup(Of TTransformationInput, TSourceOutput).Lookup()
+- uid: ALE.ETLBox.DataFlow.Lookup`2.#ctor(System.Func{`0,`0},ALE.ETLBox.DataFlow.IDataFlowSource{`1})
+  name: Lookup(Func<TTransformationInput, TTransformationInput>, IDataFlowSource<TSourceOutput>)
+  href: api/ALE.ETLBox.DataFlow.Lookup-2.html#ALE_ETLBox_DataFlow_Lookup_2__ctor_System_Func__0__0__ALE_ETLBox_DataFlow_IDataFlowSource__1__
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`2.#ctor(System.Func{`0,`0},ALE.ETLBox.DataFlow.IDataFlowSource{`1})
+  name.vb: Lookup(Func(Of TTransformationInput, TTransformationInput), IDataFlowSource(Of TSourceOutput))
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TSourceOutput>.Lookup(System.Func<TTransformationInput, TTransformationInput>, ALE.ETLBox.DataFlow.IDataFlowSource<TSourceOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TSourceOutput).Lookup(System.Func(Of TTransformationInput, TTransformationInput), ALE.ETLBox.DataFlow.IDataFlowSource(Of TSourceOutput))
+  nameWithType: Lookup<TTransformationInput, TSourceOutput>.Lookup(Func<TTransformationInput, TTransformationInput>, IDataFlowSource<TSourceOutput>)
+  nameWithType.vb: Lookup(Of TTransformationInput, TSourceOutput).Lookup(Func(Of TTransformationInput, TTransformationInput), IDataFlowSource(Of TSourceOutput))
+- uid: ALE.ETLBox.DataFlow.Lookup`2.#ctor(System.Func{`0,`0},ALE.ETLBox.DataFlow.IDataFlowSource{`1},System.Collections.Generic.List{`1})
+  name: Lookup(Func<TTransformationInput, TTransformationInput>, IDataFlowSource<TSourceOutput>, List<TSourceOutput>)
+  href: api/ALE.ETLBox.DataFlow.Lookup-2.html#ALE_ETLBox_DataFlow_Lookup_2__ctor_System_Func__0__0__ALE_ETLBox_DataFlow_IDataFlowSource__1__System_Collections_Generic_List__1__
+  commentId: M:ALE.ETLBox.DataFlow.Lookup`2.#ctor(System.Func{`0,`0},ALE.ETLBox.DataFlow.IDataFlowSource{`1},System.Collections.Generic.List{`1})
+  name.vb: Lookup(Func(Of TTransformationInput, TTransformationInput), IDataFlowSource(Of TSourceOutput), List(Of TSourceOutput))
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TSourceOutput>.Lookup(System.Func<TTransformationInput, TTransformationInput>, ALE.ETLBox.DataFlow.IDataFlowSource<TSourceOutput>, System.Collections.Generic.List<TSourceOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TSourceOutput).Lookup(System.Func(Of TTransformationInput, TTransformationInput), ALE.ETLBox.DataFlow.IDataFlowSource(Of TSourceOutput), System.Collections.Generic.List(Of TSourceOutput))
+  nameWithType: Lookup<TTransformationInput, TSourceOutput>.Lookup(Func<TTransformationInput, TTransformationInput>, IDataFlowSource<TSourceOutput>, List<TSourceOutput>)
+  nameWithType.vb: Lookup(Of TTransformationInput, TSourceOutput).Lookup(Func(Of TTransformationInput, TTransformationInput), IDataFlowSource(Of TSourceOutput), List(Of TSourceOutput))
+- uid: ALE.ETLBox.DataFlow.Lookup`2.#ctor*
+  name: Lookup
+  href: api/ALE.ETLBox.DataFlow.Lookup-2.html#ALE_ETLBox_DataFlow_Lookup_2__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.Lookup`2.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TSourceOutput>.Lookup
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TSourceOutput).Lookup
+  nameWithType: Lookup<TTransformationInput, TSourceOutput>.Lookup
+  nameWithType.vb: Lookup(Of TTransformationInput, TSourceOutput).Lookup
 - uid: ALE.ETLBox.DataFlow.Lookup`3
   name: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>
   href: api/ALE.ETLBox.DataFlow.Lookup-3.html
@@ -9169,6 +9213,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LookupList
   nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.LookupList
   nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).LookupList
+- uid: ALE.ETLBox.DataFlow.Lookup`3.RowTransformationFunc
+  name: RowTransformationFunc
+  href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_RowTransformationFunc
+  commentId: P:ALE.ETLBox.DataFlow.Lookup`3.RowTransformationFunc
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.RowTransformationFunc
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).RowTransformationFunc
+  nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.RowTransformationFunc
+  nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).RowTransformationFunc
+- uid: ALE.ETLBox.DataFlow.Lookup`3.RowTransformationFunc*
+  name: RowTransformationFunc
+  href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_RowTransformationFunc_
+  commentId: Overload:ALE.ETLBox.DataFlow.Lookup`3.RowTransformationFunc
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.RowTransformationFunc
+  fullName.vb: ALE.ETLBox.DataFlow.Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).RowTransformationFunc
+  nameWithType: Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>.RowTransformationFunc
+  nameWithType.vb: Lookup(Of TTransformationInput, TTransformationOutput, TSourceOutput).RowTransformationFunc
 - uid: ALE.ETLBox.DataFlow.Lookup`3.Source
   name: Source
   href: api/ALE.ETLBox.DataFlow.Lookup-3.html#ALE_ETLBox_DataFlow_Lookup_3_Source
@@ -11113,12 +11174,12 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.GenericTask.ConnectionType
   nameWithType: GenericTask.ConnectionType
-- uid: ALE.ETLBox.GenericTask.CopyTaskProperties(ALE.ETLBox.ITask,ALE.ETLBox.ITask)
-  name: CopyTaskProperties(ITask, ITask)
-  href: api/ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_CopyTaskProperties_ALE_ETLBox_ITask_ALE_ETLBox_ITask_
-  commentId: M:ALE.ETLBox.GenericTask.CopyTaskProperties(ALE.ETLBox.ITask,ALE.ETLBox.ITask)
-  fullName: ALE.ETLBox.GenericTask.CopyTaskProperties(ALE.ETLBox.ITask, ALE.ETLBox.ITask)
-  nameWithType: GenericTask.CopyTaskProperties(ITask, ITask)
+- uid: ALE.ETLBox.GenericTask.CopyTaskProperties(ALE.ETLBox.ITask)
+  name: CopyTaskProperties(ITask)
+  href: api/ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_CopyTaskProperties_ALE_ETLBox_ITask_
+  commentId: M:ALE.ETLBox.GenericTask.CopyTaskProperties(ALE.ETLBox.ITask)
+  fullName: ALE.ETLBox.GenericTask.CopyTaskProperties(ALE.ETLBox.ITask)
+  nameWithType: GenericTask.CopyTaskProperties(ITask)
 - uid: ALE.ETLBox.GenericTask.CopyTaskProperties*
   name: CopyTaskProperties
   href: api/ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_CopyTaskProperties_

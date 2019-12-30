@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Web service and http requests | ETLBox - It's all in the box </title>
+    <title>Json and web services | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Web service and http requests | ETLBox - It's all in the box ">
+    <meta name="title" content="Json and web services | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -76,12 +76,12 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="web-service-and-http-requests">Web service and http requests</h1>
+<h1 id="json-and-web-services">Json and web services</h1>
 
-<h2 id="test-web-service">Test web service</h2>
-<p>In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
+<h2 id="loading-json-from-a-web-service">Loading json from a web service</h2>
+<p>In this example, I will use the JSONPlaceHolder project. It is a fake online REST API for Testing and Prototyping.
 See <a href="https://jsonplaceholder.typicode.com">jsonplaceholder.typicode.com</a> for more details.</p>
-<h2 id="jsonsource">JsonSource</h2>
+<h3 id="jsonsource">JsonSource</h3>
 <p>You can directly query web services or REST APIs using the <code>JsonSource</code>. There are some minor restrictions</p>
 <ol>
 <li>The http or https service has to send back a Json response</li>
@@ -124,7 +124,34 @@ dest.Wait();
 //dest.Data will now contain all items from the web service
 </code></pre>
 <p>The property <code>Data</code> (which is a snychronized list) will now contain all items from the web service.</p>
-<h3 id="jsonpath">JsonPath</h3>
+<h2 id="json-as-file">Json as file</h2>
+<h3 id="read-json-from-file">Read json from file</h3>
+<p>Let's consider we have a json file like this as our data input:</p>
+<pre><code>[
+  {
+    &quot;Col1&quot;: 1,
+    &quot;Col2&quot;: &quot;Test1&quot;    
+  },
+  {
+    &quot;Col1&quot;: 2,
+    &quot;Col2&quot;: &quot;Test2&quot;    
+  }
+]
+</code></pre>
+<p>This can be read into a dataflow using the <code>JsonSource</code> and the following code:</p>
+<pre><code class="lang-C#">public class MySimpleRow
+{
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+JsonSource&lt;MySimpleRow&gt; source = new JsonSource&lt;MySimpleRow&gt;(&quot;file.json&quot;, ResourceType.File);
+</code></pre>
+<h3 id="write-into-json-file">Write into json file</h3>
+<p>To get your data outputted as json, you can use the <code>JSonDestination</code>:</p>
+<pre><code class="lang-C#">JsonDestination&lt;MySimpleRow&gt; dest = new JsonDestination&lt;MySimpleRow&gt;(&quot;file.json&quot;);
+</code></pre>
+<h2 id="using-jsonpath">Using JsonPath</h2>
 <p>Sometimes, you don't want to create a full C# Poco (Plain old component object).
 If you leave out some properties, you will see that the Json Deserializer just will ignore these properties.</p>
 <p>You can even use the JsonProperty attribute to add specific JsonPath expressions that the JsonDeserializer uses
@@ -140,7 +167,7 @@ to map the right json records into the object.</p>
 <p>Also, this example does not have the properties <code>Completed</code> and <code>UserId</code> anymore - they will be ignored in the data flow</p>
 <p>Deserialization is completely based on The <a href="https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializer.htm">Newtonsoft.Json.JsonSerializer</a>.
 There is also a property <code>JsonSerializer</code> that can be overwritten with your own JsonSerializer.</p>
-<h3 id="string-array">String array</h3>
+<h3 id="json-with-string-array">Json with String array</h3>
 <p>If you don't want to use objects, you can use the Non-generic version of <code>JsonSource</code>. Your code would look like this:</p>
 <pre><code class="lang-C#">JsonSource source = new JsonSource(&quot;https://jsonplaceholder.typicode.com/todos&quot;);
 MemoryDestination dest = new MemoryDestination();

@@ -81,16 +81,23 @@
 <h2 id="purpose">Purpose</h2>
 <p>This example demonstrates how the different data flow components can be used together, simulating a
 real-life scenario.</p>
-<h2 id="preparations">Preparations</h2>
-<p>First, you need to set up a database. You can use the Controlflow Tasks to do this.</p>
-<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;&quot;));
-DropDatabaseTask.Delete(&quot;DemoDB&quot;); 
-CreateDatabaseTask.Create(&quot;DemoDB&quot;);
-ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=DemoDB&quot;));
-CreateSchemaTask.Create(&quot;demo&quot;);
-</code></pre>
-<p>Now, we need some tables to have some source and destination for our data flow.</p>
-<pre><code class="lang-C#">TableDefinition OrderDataTableDef = new TableDefinition(&quot;demo.Orders&quot;,
+<p>In this scenario, we want to read some orders from a csv file,  transform them into an Orders object
+and lookup the customer key for the customer name from a customer table.
+Subsequently, we want to do 2 things: Write the orders into an orders table and store a customer rating
+based on the total amount of purchases in a customer_rating table.</p>
+<h3 id="schematic-overview">Schematic overview</h3>
+<p><img src="../../images/complex_flow.png" alt="Complex flow overview"></p>
+<h2 id="preqrequisites">Preqrequisites</h2>
+<p>In order to recreate this demo, you need an empty database. This example will run on any supported database -
+though every database comes with some database specific particularities. The following code was optimized for Sql Server.</p>
+<p>You need an empty database and a connection string to connect with this database.</p>
+<h3 id="preparation">Preparation</h3>
+<p>We need to create the destination table <code>orders</code> and customer_rating as empty table. Also
+we want a <code>customer</code> table that hold a customer key for our customer names.
+We could do this manually, or we can use the following ControlFlow Tasks to create these tables:</p>
+<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;);
+
+TableDefinition OrderDataTableDef = new TableDefinition(&quot;orders&quot;,
     new List&lt;TableColumn&gt;() {
         new TableColumn(&quot;OrderKey&quot;, &quot;int&quot;,allowNulls: false, isPrimaryKey:true, isIdentity:true),
         new TableColumn(&quot;Number&quot;,&quot;nvarchar(100)&quot;, allowNulls: false),
@@ -99,53 +106,64 @@ CreateSchemaTask.Create(&quot;demo&quot;);
         new TableColumn(&quot;CustomerKey&quot;,&quot;int&quot;, allowNulls: false)
     });
 
-TableDefinition CustomerTableDef = new TableDefinition(&quot;demo.Customer&quot;,
+TableDefinition CustomerTableDef = new TableDefinition(&quot;customer&quot;,
     new List&lt;TableColumn&gt;() {
         new TableColumn(&quot;CustomerKey&quot;, &quot;int&quot;,allowNulls: false, isPrimaryKey:true, isIdentity:true),
-        new TableColumn(&quot;Name&quot;,&quot;nvarchar(200)&quot;, allowNulls: false),                
+        new TableColumn(&quot;Name&quot;,&quot;nvarchar(200)&quot;, allowNulls: false),
     });
 
-TableDefinition CustomerRatingTableDef = new TableDefinition(&quot;demo.CustomerRating&quot;,
+TableDefinition CustomerRatingTableDef = new TableDefinition(&quot;customer_rating&quot;,
     new List&lt;TableColumn&gt;() {
         new TableColumn(&quot;RatingKey&quot;, &quot;int&quot;,allowNulls: false, isPrimaryKey:true, isIdentity:true),
         new TableColumn(&quot;CustomerKey&quot;, &quot;int&quot;,allowNulls: false),
         new TableColumn(&quot;TotalAmount&quot;,&quot;decimal(10,2)&quot;, allowNulls: false),
-        new TableColumn(&quot;Rating&quot;,&quot;nvarchar(3)&quot;, allowNulls: false)                
+        new TableColumn(&quot;Rating&quot;,&quot;nvarchar(3)&quot;, allowNulls: false)
     });
 
 OrderDataTableDef.CreateTable();
 CustomerTableDef.CreateTable();
 CustomerRatingTableDef.CreateTable();
-SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO demo.Customer values('Sandra Kettler')&quot;);
-SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO demo.Customer values('Nick Thiemann')&quot;);
-SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO demo.Customer values('Zoe Rehbein')&quot;);
-SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO demo.Customer values('Margit Gries')&quot;);
+
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Sandra Kettler')&quot;);
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Nick Thiemann')&quot;);
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Zoe Rehbein')&quot;);
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Margit Gries')&quot;);
 </code></pre>
-<p>Let us define some POCOs (Plain old component objects), so we have something to describe our data that goes into our pipeline.</p>
-<pre><code class="lang-C#">public class Order {            
+<p>Let's define some POCOs (Plain old component objects) that can hold the data when it goes through
+the data flow pipeline.</p>
+<pre><code class="lang-C#">public class Order
+{
     public string Number { get; set; }
     public string Item { get; set; }
-    public decimal Amount { get; set; }            
+    public decimal Amount { get; set; }
     public int CustomerKey { get; set; }
-    public string CustomerName { get; set; }            
-    public CustomerRating Rating { get; set; }
+    public string CustomerName { get; set; }
 }
 
-public class Customer {
+public class Customer
+{
     public int CustomerKey { get; set; }
-    public string CustomerName { get; set; }            
+    [ColumnMap(&quot;Name&quot;)]
+    public string CustomerName { get; set; }
 }
 
-public class CustomerRating {
+public class Rating
+{
     public int CustomerKey { get; set; }
     public decimal TotalAmount { get; set; }
-    public string Rating { get; set; }
+    [ColumnMap(&quot;Rating&quot;)]
+    public string RatingValue { get; set; }
 }
 </code></pre>
-<h2 id="build-the-pipeline">Build the pipeline</h2>
+<p>Not the <code>ColumnMap</code> attribute above the properties <code>CustomerName</code> and <code>RatingValue</code>. These attributes will
+map the table columns <code>Name</code> in the customer table and the column <code>Rating</code> in the <code>customer_rating</code> table with
+corresponding property. Normally, ETLBox maps columns and properties by the same name - unless the <code>ColumnMap</code> attribute
+is there.</p>
+<h3 id="build-the-pipeline">Build the pipeline</h3>
 <p>Now we can construct a pipeline. Let's start with the source</p>
-<pre><code class="lang-C#">CSVSource sourceOrderData = new CSVSource(&quot;DataFlow/DemoData.csv&quot;);
-sourceOrderData.Delimiter = &quot;;&quot;;
+<pre><code class="lang-C#">//Read data from csv file
+CSVSource sourceOrderData = new CSVSource(&quot;DemoData.csv&quot;);
+sourceOrderData.Configuration.Delimiter = &quot;;&quot;;
 </code></pre>
 <p>Source data will look like this:</p>
 <pre><code class="lang-csv">OrderNumber;OrderItem;OrderAmount;CustomerName
@@ -155,9 +173,13 @@ sourceOrderData.Delimiter = &quot;;&quot;;
 4714;White Jeans;29.99$;Margit Gries
 4807;Green Shoes;32.00$;Margit Gries
 </code></pre>
-<p>...</p>
-<p>We add a row transformation - and connect it with source. Data will be read from the source and moved into the row transformation. A row transformation will go through each row and modificates it by a given function. Furthermore, a row transformation can change the object type of the input into something different - we use this to transform our string array into our POCO.</p>
-<pre><code class="lang-C#">RowTransformation&lt;string[], Order&gt; transIntoObject = new RowTransformation&lt;string[], Order&gt;(CSVIntoObject);    sourceOrderData.LinkTo(transIntoObject);
+<p>We add a row transformation - and connect it with source.
+Data will be read from the source and moved into the row transformation.
+A row transformation will go through each row and modifies it by a given function.
+Furthermore, a row transformation can change the object type of the input into something different -
+we use this to transform our string array into our POCO.</p>
+<pre><code class="lang-C#">//Transform into Order object
+RowTransformation&lt;string[], Order&gt; transIntoObject = new RowTransformation&lt;string[], Order&gt;(CSVIntoObject);
 
 private Order CSVIntoObject(string[] csvLine) {
     return new Order() {
@@ -167,70 +189,87 @@ private Order CSVIntoObject(string[] csvLine) {
         CustomerName = csvLine[3]
     };
 }
+
+//Link the components
+sourceOrderData.LinkTo(transIntoObject);
 </code></pre>
-<p>No we define another source from the database - we need this for our Lookup. A Lookup will use a third source to enrich the data in the flow, e.g. to add some kind of classification to the data.</p>
-<pre><code class="lang-C#">DBSource&lt;Customer&gt; sourceCustomerData = new DBSource&lt;Customer&gt;(CustomerTableDef);
+<p>No we define another source from the database - the customer table we need this for our lookup.
+A lookup will use a third source to enrich the data in the flow, in our case to retrieve a customer key
+from the customer name.</p>
+<pre><code class="lang-C#">//Find corresponding customer id if customer exists in Customer table
+DBSource&lt;Customer&gt; sourceCustomerData = new DBSource&lt;Customer&gt;(&quot;customer&quot;);
 LookupCustomerKey lookupCustKeyClass = new LookupCustomerKey();
 Lookup&lt;Order, Order, Customer&gt; lookupCustomerKey = new Lookup&lt;Order, Order, Customer&gt;(
-        lookupCustKeyClass.FindKey, sourceCustomerData, lookupCustKeyClass.LookupData);            
-transIntoObject.LinkTo(lookupCustomerKey);
+    lookupCustKeyClass.FindKey, sourceCustomerData, lookupCustKeyClass.LookupData);
 
-public class LookupCustomerKey {
-
+public class LookupCustomerKey
+{
     public List&lt;Customer&gt; LookupData { get; set; } = new List&lt;Customer&gt;();
 
-    public Order FindKey(Order orderRow) {
+    public Order FindKey(Order orderRow)
+    {
         var customer = LookupData.Where(cust =&gt; cust.CustomerName == orderRow.CustomerName).FirstOrDefault();
         orderRow.CustomerKey = customer?.CustomerKey ?? 0;
         return orderRow;
     }
 }
+
+transIntoObject.LinkTo(lookupCustomerKey);
 </code></pre>
-<p>Now we add a multicast - a multicast &quot;double&quot; the input into 2 same outputs with the exact same data. This is useful if you want to have additional destination populated with data based on your input.</p>
-<pre><code class="lang-C#">Multicast&lt;Order&gt; multiCast = new Multicast&lt;Order&gt;();
+<p>Now we add a multicast - a multicast &quot;double&quot; the input into 2 same outputs with the exact same data.
+This is useful if you want to have additional destination populated with data based on your input.
+In our scenario we need this to because we do not only want to store the orders in a order table, but also
+we want to create some customer rating based on the orders.</p>
+<pre><code class="lang-C#">//Split data
+Multicast&lt;Order&gt; multiCast = new Multicast&lt;Order&gt;();
 lookupCustomerKey.LinkTo(multiCast);
 </code></pre>
-<p>One output of the multicast will end up in a database destination.</p>
-<pre><code class="lang-C#">DBDestination&lt;Order&gt; destOrderTable = new DBDestination&lt;Order&gt;(OrderDataTableDef);
+<p>As mentioned before, one output of the multicast will end up in a database destination.</p>
+<pre><code class="lang-C#">//Store Order in Orders table
+DBDestination&lt;Order&gt; destOrderTable = new DBDestination&lt;Order&gt;(&quot;orders&quot;);
 multiCast.LinkTo(destOrderTable);
 </code></pre>
-<p>The other output will go into a block transformation. A Block Transformation is a blocking pipeline element - it will wait until all input data arrived at the block transformation. Then it will apply the given function on all items in the element. When done, it will continue to hand over the data to the next element in the pipeline.</p>
-<pre><code class="lang-C#">BlockTransformation&lt;Order&gt; blockOrders = new BlockTransformation&lt;Order&gt;(BlockTransformOrders);
+<p>The other output will go into a block transformation. A Block Transformation is a blocking pipeline element -
+it will wait until all input data arrived at the block transformation. Then it will apply the given
+function on all items in the element. When done, it will continue to hand over the data to the next element
+in the pipeline.
+Our code will calculate a rating &quot;A&quot; or &quot;F&quot; based on the total amount of orders - if the total amount is higher
+than 50, it will be an &quot;A&quot;, otherwise &quot;F&quot;.</p>
+<pre><code class="lang-C#">//Create rating for existing customers based total of order amount
+BlockTransformation&lt;Order,Rating&gt; blockOrders = new BlockTransformation&lt;Order,Rating&gt;(BlockTransformOrders);
 multiCast.LinkTo(blockOrders);
 
-private List&lt;Order&gt; BlockTransformOrders(List&lt;Order&gt; allOrders) {
+private List&lt;Rating&gt; BlockTransformOrders(List&lt;Order&gt; allOrders) {
     List&lt;int&gt; allCustomerKeys = allOrders.Select(ord =&gt; ord.CustomerKey).Distinct().ToList();
+    List&lt;Rating&gt; result = new List&lt;Rating&gt;();
     foreach (int custKey in allCustomerKeys) {
-        var firstOrder = allOrders.Where(ord =&gt; ord.CustomerKey == custKey).FirstOrDefault();
-        firstOrder.Rating = new CustomerRating();
-        firstOrder.Rating.CustomerKey = custKey;
-        firstOrder.Rating.TotalAmount = allOrders.Where(ord =&gt; ord.CustomerKey == custKey).Sum(ord =&gt; ord.Amount);
-        firstOrder.Rating.Rating = firstOrder.Rating.TotalAmount &gt; 50 ? &quot;A&quot; : &quot;F&quot;;                    
+        Rating newRating = new Rating();
+        newRating.CustomerKey = custKey;
+        newRating.TotalAmount = allOrders.Where(ord =&gt; ord.CustomerKey == custKey).Sum(ord =&gt; ord.Amount);
+        newRating.RatingValue = newRating.TotalAmount &gt; 50 ? &quot;A&quot; : &quot;F&quot;;
+        result.Add(newRating);
     }
-    return allOrders;
+    return result;
 }
 </code></pre>
-<p>Now we want to transform this data from the Block transformation into another object type - we use a RowTransformation for this. But this will only happen for particular data - depending if the Rating could be calculated. If the Rating was found to be invalid (null), we write the data somewhere else (without storing it).</p>
-<pre><code class="lang-C#">DBDestination&lt;CustomerRating&gt; destRating = new DBDestination&lt;CustomerRating&gt;(CustomerRatingTableDef);
-RowTransformation&lt;Order, CustomerRating&gt; transOrderIntoCust = new RowTransformation&lt;Order, CustomerRating&gt;(OrderIntoRating);
-CustomDestination&lt;Order&gt; destSink = new CustomDestination&lt;Order&gt;(row =&gt; {; });
-blockOrders.LinkTo(transOrderIntoCust, ord =&gt; ord.Rating != null);
-blockOrders.LinkTo(destSink, ord =&gt; ord.Rating == null);
-transOrderIntoCust.LinkTo(destRating);
-
-private CustomerRating OrderIntoRating(Order orderRow) {
-    return new CustomerRating() {
-        CustomerKey = orderRow.CustomerKey,
-        TotalAmount = orderRow.Rating.TotalAmount,
-        Rating = orderRow.Rating.Rating
-    };
-}
+<p>Now we want to store the calculated Rating in the table <code>customer_rating</code>. So we create another destination
+for this table and link it to our BlockTransformation.</p>
+<pre><code class="lang-C#">DBDestination&lt;Rating&gt; destRating = new DBDestination&lt;Rating&gt;(&quot;customer_rating&quot;);
+blockOrders.LinkTo(destRating);
 </code></pre>
-<p>Finally, we need to start the data flow. All sources need to be started, and then we wait until all destinations got the completion message from the source.</p>
-<pre><code class="lang-C#">sourceOrderData.ExecuteAsync();
+<p>No we are all set.
+To have data read from the source, we need to start the data flow.
+All sources need to be started with the <code>Execute()</code> or <code>ExecuteAsync()</code> method,
+and then we can use the <code>Wait()</code> or <code>Completion()</code> method to wait until all destinations
+got all data and the completion message from the source.
+The easiest way is to call the execution synchronous:</p>
+<pre><code class="lang-C#">//Execute the data flow synchronous
+sourceOrderData.Execute();
 destOrderTable.Wait();
 destRating.Wait();
 </code></pre>
+<h2 id="demo-on-github">Demo on Github</h2>
+<p><a href="https://github.com/roadrunnerlenny/etlboxdemo/tree/master/ComplexFlow">The whole demo code is available on GitHub</a>.</p>
 </article>
           </div>
           

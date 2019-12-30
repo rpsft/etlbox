@@ -99,7 +99,7 @@ DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(
 a database source, it will tell the reader which database column name is mapped to the property. It will then write the data into the property via
 the setter - method. When writing into a database destination, the attribute will tell in which database column the property data is written into.
 Here the getter - method is used to get data from the property.</p>
-<p>For examle, if you have a property <code>Key</code>, and you add the <code>ColumnMap</code> Attribute to it:</p>
+<p>For example, if you have a property <code>Key</code>, and you add the <code>ColumnMap</code> Attribute to it:</p>
 <pre><code class="lang-C#">[ColumnMap(&quot;Id&quot;)]
 public string Key { 
     get {
@@ -118,7 +118,7 @@ public string HashValue =&gt; HashHelper.Encrypt_Char40(this.Key);
 </code></pre>
 <p>When you write into a database table that has a column named &quot;Hash&quot;, the column mappings will map the result of the HashValue -property
 to this column. Every record is then stored in the table as an encrypted hash value of the property &quot;Key&quot;.</p>
-<p>You can use this mapping behaviour for some basic data type transformations. If transformations become more complex, you should have a look at
+<p>You can use this mapping behavior for some basic data type transformations. If transformations become more complex, you should have a look at
 the <a href="dataflow_transformations.html">existing transformations</a> to modify your data.</p>
 <h2 id="non-generic-approach">Non generic approach</h2>
 <p>Instead of parsing your source data into a object, you can just read all your data in to string array. This is equivalent to
@@ -132,7 +132,7 @@ RowTransformation row = new RowTransformation(
         }
 );
 </code></pre>
-<p>would have all data from column &quot;Value1&quot; accesable at the first position of the string array and &quot;Value2&quot; at the second position.
+<p>would have all data from column &quot;Value1&quot; accessible at the first position of the string array and &quot;Value2&quot; at the second position.
 All your data will be automatically converted into a string data type.</p>
 <p>This approach is very useful when reading from a source where you get only string data, e.g. CSV or Json.
 You can use a <code>RowTransformation</code> if you want to convert your string array into an object.</p>

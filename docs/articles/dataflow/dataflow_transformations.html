@@ -102,7 +102,7 @@ It will wait until all data has reached the transformation block - then it will 
 <li>the type of the input data and the type of the output data. When creating a RowTransformation, you pass a delegate
 describing how each record in the dataflow is transformed. Here you can add any C# code that you like.</li>
 </ul>
-<p>The RowTransformation is a non blocking transformation, so it won't use up much memory even for high amoutns of data.</p>
+<p>The RowTransformation is a non blocking transformation, so it won't use up much memory even for high amounts of data.</p>
 <p>Here is an example that convert a string array into a <code>MySimpleRow</code> object.</p>
 <pre><code class="lang-C#">public class MySimpleRow
 {
@@ -122,7 +122,7 @@ RowTransformation&amp;lt;string[], MySimpleRow&amp;gt; trans = new RowTransforma
 </code></pre>
 <h3 id="lookup">Lookup</h3>
 <p>The lookup is a row transformation, but before it starts processing any rows it will load all data from the given LookupSource into memory
-and will make it accessable as a List object.
+and will make it accessible as a List object.
 Though the lookup is non-blocking, it will take as much memory as the lookup table needs to be loaded fully into memory.</p>
 <p>Here is an example:</p>
 <pre><code class="lang-C#">DBSource&lt;MyLookupRow&gt; lookupSource = new DBSource&lt;MyLookupRow&gt;(connection, &quot;Lookup&quot;);
@@ -181,7 +181,7 @@ multicast.LinkTo(destination2, row =&gt; row[0] &lt; 0);
 for records that you don't want to keep. See more about this in the <a href="dataflow_linking_execution.html">article about Predicates</a>.</p>
 <h3 id="merging-data">Merging data</h3>
 <p>If you want to merge data in your dataflow, you can use the <code>MergeJoin</code>. This basically joins the outcome
-of two sources or transfomrations into one data record.</p>
+of two sources or transformations into one data record.</p>
 <h4 id="mergejoin">MergeJoin</h4>
 <p>The MergeJoin accepts two inputs and has one output. A function describes how the two inputs are combined into one output.
 E.g. you can link two sources with the MergeJoin, define
@@ -205,7 +205,7 @@ join.LinkTo(dest);
 <h2 id="blocking-transformations">Blocking Transformations</h2>
 <h3 id="blocktransformation">BlockTransformation</h3>
 <p>A BlockTransformation waits until all data is received at the BlockTranformation - then it will be available in a List object and you can do modifications
-on your whole data set. Keep in mind that this tranformation will need as much memory as the amount of data you loaded.</p>
+on your whole data set. Keep in mind that this transformation will need as much memory as the amount of data you loaded.</p>
 <pre><code class="lang-C#">BlockTransformation&lt;MySimpleRow&gt; block = new BlockTransformation&lt;MySimpleRow&gt;(
     inputData =&gt; {
         inputData.RemoveRange(1, 2);

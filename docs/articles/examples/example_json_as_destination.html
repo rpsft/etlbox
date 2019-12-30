@@ -85,8 +85,8 @@ if the <a href="../dataflow/dataflow_file_sources_destinations.html">current imp
 <p>Sometimes you want to extract data and store it into a json file or use the json to send it to an Rest API.
 This example shows you how to use the <code>CustomDestination</code> to create a json.</p>
 <h2 id="create-necessary-poco">Create necessary POCO</h2>
-<p>In this example we will receceive some demo data from a database table. The table has two columns - <code>Col1</code> and <code>Col2</code>.
-In order to store the data from table, we first create a POCO (Plain old Compononent object) to use in the dataflow.</p>
+<p>In this example we will receive some demo data from a database table. The table has two columns - <code>Col1</code> and <code>Col2</code>.
+In order to store the data from table, we first create a POCO (Plain old Component object) to use in the dataflow.</p>
 <pre><code class="lang-C#">public class MySimpleRow {
     public string Col1 { get; set; }
     public int Col2 { get; set; }
