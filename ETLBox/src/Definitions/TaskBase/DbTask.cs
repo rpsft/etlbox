@@ -3,6 +3,7 @@ using ALE.ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 
 namespace ALE.ETLBox.ControlFlow
@@ -236,6 +237,12 @@ namespace ALE.ETLBox.ControlFlow
                 {
                     if (typeInfo.HasPropertyOrColumnMapping(colName))
                         Actions.Add(colValue => typeInfo.GetInfoByPropertyNameOrColumnMapping(colName).SetValue(row, colValue));
+                    else if (typeInfo.IsDynamic)
+                        Actions.Add(colValue =>
+                        {
+                            dynamic r = row as ExpandoObject;
+                            ((IDictionary<String, Object>)r).Add(colName, colValue);
+                        });
                     else
                         Actions.Add(col => { });
                 }

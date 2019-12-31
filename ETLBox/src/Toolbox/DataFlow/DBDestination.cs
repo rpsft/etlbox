@@ -72,8 +72,8 @@ namespace ALE.ETLBox.DataFlow
 
             base.WriteBatch(ref data);
 
-            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
-            td.Rows = ConvertRows(data);
+            TableData<TInput> td = CreateTableDataObject(ref data);
+
             new SqlTask(this, $"Execute Bulk insert into {DestinationTableDefinition.Name}")
             {
                 DisableLogging = true
@@ -91,7 +91,17 @@ namespace ALE.ETLBox.DataFlow
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
 
-        private List<object[]> ConvertRows(TInput[] data)
+        private TableData<TInput> CreateTableDataObject(ref TInput[] data)
+        {
+            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
+            td.Rows = ConvertRows(ref data);
+            if (TypeInfo.IsDynamic && data.Length > 0)
+                foreach (var column in (IDictionary<string, object>)data[0])
+                    td.DynamicColumnNames.Add(column.Key);
+            return td;
+        }
+
+        private List<object[]> ConvertRows(ref TInput[] data)
         {
             List<object[]> result = new List<object[]>();
             foreach (var CurrentRow in data)
@@ -100,6 +110,17 @@ namespace ALE.ETLBox.DataFlow
                 if (TypeInfo.IsArray)
                 {
                     rowResult = CurrentRow as object[];
+                }
+                else if (TypeInfo.IsDynamic)
+                {
+                    IDictionary<string, object> propertyValues = (IDictionary<string, object>)CurrentRow;
+                    rowResult = new object[propertyValues.Count];
+                    int index = 0;
+                    foreach (var prop in propertyValues)
+                    {
+                        rowResult[index] = prop.Value;
+                        index++;
+                    }
                 }
                 else
                 {

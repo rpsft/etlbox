@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
     <PackageReleaseNotes>Added and improved error messages if component or task runs into an exception.</PackageReleaseNotes>
-    <Version>1.7.3</Version>
+    <Version>1.7.4-alpha</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>

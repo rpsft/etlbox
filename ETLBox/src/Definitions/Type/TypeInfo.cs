@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
@@ -15,6 +16,7 @@ namespace ALE.ETLBox.DataFlow
         internal List<string> IdColumnNames { get; set; }
         internal int PropertyLength { get; set; }
         internal bool IsArray { get; set; } = true;
+        internal bool IsDynamic { get; set; }
         internal int ArrayLength { get; set; }
 
         internal TypeInfo(Type typ)
@@ -29,7 +31,9 @@ namespace ALE.ETLBox.DataFlow
         private void GatherTypeInfos(Type typ)
         {
             IsArray = typ.IsArray;
-            if (!typ.IsArray)
+            if (typ == typeof(ExpandoObject))
+                IsDynamic = true;
+            if (!IsArray && !IsDynamic)
             {
                 Properties = typ.GetProperties();
                 PropertyLength = Properties.Length;
@@ -44,7 +48,7 @@ namespace ALE.ETLBox.DataFlow
                     index++;
                 }
             }
-            else
+            else if (IsArray)
             {
                 ArrayLength = typ.GetArrayRank();
             }

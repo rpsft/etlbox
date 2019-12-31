@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
-
 namespace ALE.ETLBox
 {
     public class TableData : TableData<object[]>
@@ -33,9 +32,14 @@ namespace ALE.ETLBox
             foreach (var col in Definition.Columns)
                 if (!col.IsIdentity)
                 {
-                    if (TypeInfo != null && !TypeInfo.IsArray)
+                    if (TypeInfo != null && !TypeInfo.IsDynamic && !TypeInfo.IsArray)
                     {
                         if (TypeInfo.HasPropertyOrColumnMapping(col.Name))
+                            mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
+                    }
+                    else if (TypeInfo.IsDynamic)
+                    {
+                        if (DynamicColumnNames.Contains(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
                     }
                     else
@@ -48,6 +52,7 @@ namespace ALE.ETLBox
 
         public List<object[]> Rows { get; set; }
         public object[] CurrentRow { get; set; }
+        public List<string> DynamicColumnNames { get; set; } = new List<string>();
         int ReadIndex { get; set; }
         TableDefinition Definition { get; set; }
         public bool HasDefinition => Definition != null;
@@ -109,6 +114,14 @@ namespace ALE.ETLBox
             if (TypeInfo == null || TypeInfo.IsArray)
             {
                 return Definition.Columns.FindIndex(col => col.Name == name);
+            }
+            else if (TypeInfo.IsDynamic)
+            {
+                int ix = DynamicColumnNames.FindIndex(n =>  n == name);
+                if (HasIDColumnIndex)
+                    if (ix >= IDColumnIndex) ix++;
+                return ix;
+
             }
             else
             {

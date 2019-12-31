@@ -98,6 +98,11 @@ namespace ALE.ETLBox.DataFlow
                 string[] line = CsvReader.Context.Record;
                 Buffer.Post((TOutput)(object)line);
             }
+            else if (TypeInfo.IsDynamic)
+            {
+                TOutput bufferObject = CsvReader.GetRecord<dynamic>();
+                Buffer.Post(bufferObject);
+            }
             else
             {
                 TOutput bufferObject = CsvReader.GetRecord<TOutput>();

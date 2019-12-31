@@ -64,6 +64,12 @@
     <None Update="res\CSVSource\ThreeColumns.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\CSVSource\FourColumnsForDynamic.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\CSVSource\TwoColumnsForDynamic.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\CSVSource\TwoColumnsSkipRows.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
