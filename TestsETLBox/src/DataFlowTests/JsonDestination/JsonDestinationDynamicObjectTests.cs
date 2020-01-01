@@ -10,6 +10,7 @@ using CsvHelper.Configuration.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -17,37 +18,32 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonDestinationNonGenericTests : IDisposable
+    public class JsonDestinationDynamicObjectTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public JsonDestinationNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public JsonDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
-
-        public void Dispose()
-        {
-        }
-
 
         [Fact]
-        public void SimpleNonGeneric()
+        public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestSimpleNonGeneric");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestDynamic");
             s2C.InsertTestDataSet3();
-            DBSource source = new DBSource(SqlConnection, "JsonDestSimpleNonGeneric");
+            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(SqlConnection, "JsonDestDynamic");
 
             //Act
-            JsonDestination dest = new JsonDestination("./SimpleNonGeneric.json");
+            JsonDestination<ExpandoObject> dest = new JsonDestination<ExpandoObject>("./SimpleWithDynamicObject.json");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3StringArray.json")
-                , File.ReadAllText("./SimpleNonGeneric.json"));
+            //Null values can't be ignored:
+            //https://github.com/JamesNK/Newtonsoft.Json/issues/1466
+            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3DynamicObject.json"),
+                File.ReadAllText("./SimpleWithDynamicObject.json"));
         }
-
-
     }
 }

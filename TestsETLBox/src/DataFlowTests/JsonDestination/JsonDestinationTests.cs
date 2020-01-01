@@ -49,8 +49,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("./SimpleWithObject.json"),
-                File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json"));
+            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json")
+                , File.ReadAllText("./SimpleWithObject.json"));
         }
 
         [Fact]
@@ -68,8 +68,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("./ObjectWithBatchWrite.json"),
-                File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json"));
+            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json"),
+                File.ReadAllText("./ObjectWithBatchWrite.json"));
         }
     }
 }

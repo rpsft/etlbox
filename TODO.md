@@ -30,3 +30,4 @@ does comply with the new ExpandoObject approach
 ## v2.0.0
 - switch method parameters for GetTableDefinitionFromSource(string tablanme, IConnectionManager manager) - IConnectionManager is always first
 - Add documentation for ETLBox Core: add a description that ETL is needed for snowflake, and snowflake is needed for reports, and reports could be created with PowerBI
+- make ExpanoObject as default type instead string[] (update docu, perhaps some tests)
