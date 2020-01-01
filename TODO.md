@@ -4,7 +4,7 @@
 
 ### DF - Known Issues
 
-- If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes.
+- If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes. Write some tests!
 - Check if DBMerge works properly if the constructors are not used. E.g. if the Connectionmanager is set via assignment, the underlying DBSource and DBDestination needs to be  updated.
 - BeforeBulkInsert / AfterBulkInsert in connection managers is executed before *every* bulk. There should be a "ExecuteOnceBeforeBulkInsert" function, where e.g. server side settings could be set once before every bulk operation
 
@@ -12,6 +12,9 @@
 
 - Based on the BlockTransformation (but without storing all data in memory), there could be predefined components that do a Sum / Min / Max / Avg or other
 aggregation calculation. E.g. an Aggregation component which could be used to do such operations.
+- Every DBSource reads all the data from the source. For development purposes it would be benefical if only the first X rows are read from the source. A property 
+`public int Limit` could be introduced, so that only the first X rows are read for a DBSource/CSVSource/JsonSource/...
+- Add documentation for the new ExpandoObject/dynamic approach
 
 ## Control Flow
 
@@ -19,6 +22,11 @@ aggregation calculation. E.g. an Aggregation component which could be used to do
 
 ### CF - New features
 
-- TableDefinition: Get "dynamic" class object from TableDefintion that can be used as type object for the flow
+- TableDefinition: Get "dynamic" class object from TableDefintion that can be used as type object for the flow - make sure this 
+does comply with the new ExpandoObject approach
 - CreateTableTask.CreateOrAlter(): add functionality to alter a table (with migration if there is data in the table).
 - CreateTableTask: Function for adding test data into table (depending on table definition)
+
+## v2.0.0
+- switch method parameters for GetTableDefinitionFromSource(string tablanme, IConnectionManager manager) - IConnectionManager is always first
+- Add documentation for ETLBox Core: add a description that ETL is needed for snowflake, and snowflake is needed for reports, and reports could be created with PowerBI
