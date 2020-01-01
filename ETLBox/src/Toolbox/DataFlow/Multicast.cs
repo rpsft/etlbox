@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 
@@ -66,6 +68,15 @@ namespace ALE.ETLBox.DataFlow
                 clone = (TInput)Activator.CreateInstance(typeof(TInput), new object[] { source.Length });
                 Array dest = clone as Array;
                 Array.Copy(source, dest, source.Length);
+            }
+            else if(TypeInfo.IsDynamic) {
+                    clone = (TInput)Activator.CreateInstance(typeof(TInput));//new ExpandoObject();
+
+                    var _original = (IDictionary<string, object>)row;
+                    var _clone = (IDictionary<string, object>)clone;
+
+                    foreach (var kvp in _original)
+                        _clone.Add(kvp);
             }
             else
             {

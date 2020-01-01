@@ -32,19 +32,19 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleLookupWithoutObject(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"SourceNonGenericLookup");
             source2Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"Destination", -1);
-            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection,"Lookup");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"DestinationNonGenericLookup", -1);
+            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection,"LookupNonGeneric");
             lookup4Columns.InsertTestData();
 
-            DBSource source = new DBSource(connection, "Source");
-            DBDestination dest = new DBDestination(connection, "Destination");
+            DBSource source = new DBSource(connection, "SourceNonGenericLookup");
+            DBDestination dest = new DBDestination(connection, "DestinationNonGenericLookup");
 
             //Act
             List<string[]> lookupList = new List<string[]>();
 
-            DBSource lookupSource = new DBSource(connection, "Lookup");
+            DBSource lookupSource = new DBSource(connection, "LookupNonGeneric");
             Lookup lookup = new Lookup(
                 row =>
                 {

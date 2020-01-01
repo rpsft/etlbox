@@ -109,6 +109,9 @@
     <None Update="res\JsonSource\TwoColumnsStringArray.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\Lookup\LookupSource.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\Multicast\CSVSourceToSplit.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
