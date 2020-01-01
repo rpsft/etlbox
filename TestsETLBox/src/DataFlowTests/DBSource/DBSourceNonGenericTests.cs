@@ -127,6 +127,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
+        public void WithAdditionalNullableCol(IConnectionManager connection)
+        {
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "source_additionalnullcol");
+            s2c.InsertTestData();
+            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE destination_additionalnullcol
+                (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NULL)");
+
+            //Act
+            DBSource source = new DBSource(connection, "source_additionalnullcol");
+            DBDestination dest = new DBDestination(connection, "destination_additionalnullcol");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            s2c.AssertTestData();
+        }
+
+        [Theory, MemberData(nameof(Connections))]
         public void WithAdditionalNotNullCol(IConnectionManager connection)
         {
             //Arrange
