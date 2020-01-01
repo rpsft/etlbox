@@ -49,6 +49,9 @@
     <None Update="res\CSVDestination\DateTimeSerialization.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\CSVDestination\TwoColumnsSet3DynamicObject.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\CSVDestination\TwoColumnsSet3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

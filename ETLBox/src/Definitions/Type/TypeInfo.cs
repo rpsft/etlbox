@@ -31,7 +31,7 @@ namespace ALE.ETLBox.DataFlow
         private void GatherTypeInfos(Type typ)
         {
             IsArray = typ.IsArray;
-            if (typ == typeof(ExpandoObject))
+            if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(typ))
                 IsDynamic = true;
             if (!IsArray && !IsDynamic)
             {

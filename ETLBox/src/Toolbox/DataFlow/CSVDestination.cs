@@ -70,14 +70,16 @@ namespace ALE.ETLBox.DataFlow
             if (CsvWriter == null) InitCsvWriter();
             base.WriteBatch(ref data);
             if (TypeInfo.IsArray)
-                WriteArray(data);
+                WriteArray(ref data);
+            else if (TypeInfo.IsDynamic)
+                WriteDynamicObject(ref data);
             else
                 CsvWriter.WriteRecords(data);
 
             LogProgress(data.Length);
         }
 
-        private void WriteArray(TInput[] data)
+        private void WriteArray(ref TInput[] data)
         {
             foreach (var record in data)
             {
@@ -87,6 +89,15 @@ namespace ALE.ETLBox.DataFlow
                     CsvWriter.WriteField(field);
                 }
 
+                CsvWriter.NextRecord();
+            }
+        }
+
+        private void WriteDynamicObject(ref TInput[] data)
+        {
+            foreach (var record in data)
+            {
+                CsvWriter.WriteRecord(record);
                 CsvWriter.NextRecord();
             }
         }
