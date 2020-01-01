@@ -27,12 +27,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSourceNonGeneric");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSourceDynamic");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDestNonGeneric");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDestDynamic");
 
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(SqlConnection, "BlockTransSourceNonGeneric");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(SqlConnection, "BlockTransDestNonGeneric");
+            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(SqlConnection, "BlockTransSourceDynamic");
+            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(SqlConnection, "BlockTransDestDynamic");
 
             //Act
             BlockTransformation<ExpandoObject> block = new BlockTransformation<ExpandoObject>(
@@ -50,9 +50,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(2, RowCountTask.Count(SqlConnection, "BlockTransDestNonGeneric"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "BlockTransDestNonGeneric", "Col1 = 1 AND Col2='Test1'"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "BlockTransDestNonGeneric", "Col1 = 4 AND Col2='Test4'"));
+            Assert.Equal(2, RowCountTask.Count(SqlConnection, "BlockTransDestDynamic"));
+            Assert.Equal(1, RowCountTask.Count(SqlConnection, "BlockTransDestDynamic", "Col1 = 1 AND Col2='Test1'"));
+            Assert.Equal(1, RowCountTask.Count(SqlConnection, "BlockTransDestDynamic", "Col1 = 4 AND Col2='Test4'"));
         }
     }
 }

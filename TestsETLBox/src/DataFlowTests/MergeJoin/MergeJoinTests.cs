@@ -14,14 +14,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class MergeJoinTests : IDisposable
+    public class MergeJoinTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public MergeJoinTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 
@@ -66,18 +62,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Equal(1, RowCountTask.Count(Connection, "MergeJoinDestination", "Col1 = 9 AND Col2='Test3Test6'"));
         }
 
-        internal TableDefinition CreateTableForInput1(string tableName)
-        {
-            TableDefinition def = new TableDefinition(tableName, new List<TableColumn>() {
-                new TableColumn("Col1", "nvarchar(100)", allowNulls: true),
-                new TableColumn("Col2", "int", allowNulls: true)
-            });
-            def.CreateTable();
-            SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test1',1)");
-            SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test2',2)");
-            SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test3',3)");
-
-            return def;
-        }
     }
 }

@@ -61,7 +61,7 @@ namespace ALE.ETLBox.DataFlow
             MergeJoinFunc = mergeJoinFunc;
         }
 
-        public MergeJoin(string name) : this()
+        public MergeJoin(string name, Func<TInput1, TInput2, TOutput> mergeJoinFunc) : this(mergeJoinFunc)
         {
             this.TaskName = name;
         }
@@ -109,6 +109,30 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
+    /// Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.
+    /// </summary>
+    /// <typeparam name="TInput">Type of data for both inputs and output.</typeparam>
+    /// <example>
+    /// <code>
+    /// MergeJoin&lt;MyDataRow&gt; join = new MergeJoin&lt;MyDataRow&gt;(mergeJoinFunc);
+    /// source1.LinkTo(join.Target1);;
+    /// source2.LinkTo(join.Target2);;
+    /// join.LinkTo(dest);
+    /// </code>
+    /// </example>
+    public class MergeJoin<TInput> : MergeJoin<TInput, TInput, TInput>
+    {
+        public MergeJoin() : base()
+        { }
+
+        public MergeJoin(Func<TInput, TInput, TInput> mergeJoinFunc) : base(mergeJoinFunc)
+        { }
+
+        public MergeJoin(string name, Func<TInput, TInput, TInput> mergeJoinFunc) : base(name, mergeJoinFunc)
+        { }
+    }
+
+    /// <summary>
     /// Will join data from the two inputs into one output - on a row by row base.
     /// Make sure both inputs are sorted or in the right order. The non generic implementation deals with
     /// string array as inputs and merged output.
@@ -121,7 +145,7 @@ namespace ALE.ETLBox.DataFlow
         public MergeJoin(Func<string[], string[], string[]> mergeJoinFunc) : base(mergeJoinFunc)
         { }
 
-        public MergeJoin(string name) : base(name)
+        public MergeJoin(string name,Func<string[], string[], string[]> mergeJoinFunc) : base(name, mergeJoinFunc)
         { }
     }
 }
