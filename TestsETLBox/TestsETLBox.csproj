@@ -58,6 +58,9 @@
     <None Update="res\CSVDestination\TwoColumnsSet3NoHeader.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\CSVSource\FourColumns.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\CSVSource\OneColumn.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
