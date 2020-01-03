@@ -81,9 +81,12 @@ namespace ALE.ETLBox.DataFlow
 
         private void ReadAll()
         {
-            CsvReader.Read();
-            CsvReader.ReadHeader();
-            FieldHeaders = CsvReader.Context.HeaderRecord;
+            if (Configuration.HasHeaderRecord == true)
+            {
+                CsvReader.Read();
+                CsvReader.ReadHeader();
+                FieldHeaders = CsvReader.Context.HeaderRecord;
+            }
             while (CsvReader.Read())
             {
                 ReadLineAndSendIntoBuffer();

@@ -58,7 +58,7 @@
     <None Update="res\CSVDestination\TwoColumnsSet3NoHeader.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="res\CSVSource\FourColumns.csv">
+    <None Update="res\CSVSource\FourColumnsInvalidHeader.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="res\CSVSource\OneColumn.csv">

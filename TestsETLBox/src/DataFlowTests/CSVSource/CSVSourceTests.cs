@@ -16,14 +16,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceTests : IDisposable
+    public class CSVSourceTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public CSVSourceTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 

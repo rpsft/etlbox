@@ -80,21 +80,31 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
 
         [Fact]
-        public void ExtendedFlowUsingClassMap()
+        public void UsingClassMapAndNoHeader()
         {
             //Arrange
             FourColumnsTableFixture d4c = new FourColumnsTableFixture("CSVDestination4ColumnsClassMap");
             DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(Connection, "CSVDestination4ColumnsClassMap");
 
             //Act
-            CSVSource<MyExtendedRow> source = new CSVSource<MyExtendedRow>("res/CSVSource/FourColumns.csv");
+            CSVSource<MyExtendedRow> source = new CSVSource<MyExtendedRow>("res/CSVSource/FourColumnsInvalidHeader.csv");
             source.Configuration.RegisterClassMap<ExtendedClassMap>();
+            source.Configuration.HasHeaderRecord = false;
+            source.Configuration.ShouldSkipRecord = ShouldSkipRecordDelegate;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
             d4c.AssertTestData();
+        }
+
+        private bool ShouldSkipRecordDelegate(string[] row)
+        {
+            if (row[0].Contains(".csv"))
+                return true;
+            else
+                return false;
         }
     }
 }
