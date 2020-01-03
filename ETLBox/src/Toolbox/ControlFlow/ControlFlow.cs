@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Logging;
 using NLog;
+using NLog.Targets;
 using System.Linq;
 
 namespace ALE.ETLBox.ControlFlow
@@ -34,37 +35,49 @@ namespace ALE.ETLBox.ControlFlow
             set
             {
                 _currentDbConnection = value;
-                if (value != null)
-                {
-                    SetLoggingDatabase(value);
-                }
+                //if (value != null)
+                //{
+                //    SetLoggingDatabase(value);
+                //}
             }
         }
 
         /// <summary>
-        /// If you used the logging task StartLoadProces (and created the logging tables with CreateLogTablesTask) then this Property will hold the current load process information.
+        /// If you used the logging task StartLoadProces (and created the corresponding load process table before)
+        /// then this Property will hold the current load process information.
         /// </summary>
         public static LoadProcess CurrentLoadProcess { get; internal set; }
 
         /// <summary>
-        /// If set to true, nothing will be logged by any task. When switched back to false, task will continue to log.
+        /// If set to true, nothing will be logged by any control flow task or data flow component.
+        /// When switched back to false, all tasks and components will continue to log.
         /// </summary>
         public static bool DisableAllLogging { get; set; }
 
         /// <summary>
-        /// By default, the logging database is derived from the CurrentDBConnection property. If you need to manually change the logging database, you can change it with this method
+        /// TableName of the current load process logging table
         /// </summary>
-        /// <param name="connection">The new logging database connection</param>
-        public static void SetLoggingDatabase(IConnectionManager connection)
+        public static string CurrentLoadProcessTable { get; internal set; }
+
+        /// <summary>
+        /// TableName of the current log process logging table
+        /// </summary>
+        public static string CurrentLogTable { get; internal set; }
+
+        public static void SetLoggingDatabase(IConnectionManager connection) => SetLoggingDatabase(connection, LogLevel.Info);
+
+        /// <summary>
+        /// You can also set the logging database in the nlog.config file.
+        /// If you want to programmatically change the logging database,  use this method.
+        /// </summary>
+        /// <param name="connection">The new logging database connection manager</param>
+        public static void SetLoggingDatabase(IConnectionManager connection, LogLevel minLogLevel, string logTableName = "etlbox_log")
         {
+
             try
             {
-                var dbTarget = LogManager.Configuration?.ConfiguredNamedTargets?.Where(t => t.GetType() == typeof(NLog.Targets.DatabaseTarget)).FirstOrDefault() as NLog.Targets.DatabaseTarget;
-                if (dbTarget != null)
-                {
-                    dbTarget.ConnectionString = connection.ConnectionString.Value; //?? CurrentDbConnection.ConnectionString.Value; //""; Parameter.DWHConnection?.Value;
-                
-                }
+                var newTarget = new CreateDatabaseTarget(connection, logTableName).GetNLogDatabaseTarget();
+                NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(newTarget, minLogLevel);
             }
             catch
             {
@@ -91,6 +104,8 @@ namespace ALE.ETLBox.ControlFlow
             CurrentDbConnection = null;
             CurrentLoadProcess = null;
             DisableAllLogging = false;
+            CurrentLoadProcessTable = null;
+            CurrentLogTable = null;
         }
 
     }

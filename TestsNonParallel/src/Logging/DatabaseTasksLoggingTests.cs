@@ -16,12 +16,12 @@ namespace ALE.ETLBoxTests.Logging
         public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
         public DatabaseTasksLoggingTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(Connection, "Log") ;
+            CreateLogTableTask.Create(Connection, "Log") ;
         }
 
         public void Dispose()
         {
-            RemoveLogTablesTask.Remove(Connection);
+            DropTableTask.Drop(Connection, "etlbox_log");
         }
 
         private int? CountLogEntries(string taskname)

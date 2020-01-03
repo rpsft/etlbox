@@ -17,13 +17,13 @@ namespace ALE.ETLBoxTests.Logging
         public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
         public DefaultDbConnectionTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(Connection, "Log");
+            CreateLogTableTask.Create(Connection, "Log");
             ControlFlow.CurrentDbConnection = Connection;
         }
 
         public void Dispose()
         {
-            RemoveLogTablesTask.Remove(Connection);
+            DropTableTask.Drop(Connection, "etlbox_log");
             ControlFlow.ClearSettings();
         }
 

@@ -58,6 +58,10 @@ namespace ALE.ETLBox.ControlFlow
             ObjectName = tableName;
         }
 
+        public IfTableOrViewExistsTask(IConnectionManager connectionManager, string tableName) : this(tableName)
+        {
+            this.ConnectionManager = connectionManager;
+        }
 
         public static bool IsExisting(string objectName) => new IfTableOrViewExistsTask(objectName).Exists();
         public static bool IsExisting(IConnectionManager connectionManager, string objectName)

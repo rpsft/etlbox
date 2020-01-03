@@ -47,12 +47,13 @@ namespace ALE.ETLBox.ControlFlow
                     throw new Exception("Empty command");
             }
         }
+        public IEnumerable<QueryParameter> Parameter { get; set; }
 
         /* Internal/Private properties */
         internal bool DoSkipSql { get; private set; }
         bool HasSql => !(String.IsNullOrWhiteSpace(Sql));
         bool HasFileConnection => FileConnection != null;
-        internal IEnumerable<QueryParameter> _Parameter { get; set; }
+
 
         /* Some constructors */
         public DbTask()
@@ -102,7 +103,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 QueryStart();
-                RowsAffected = DoSkipSql ? 0 : conn.ExecuteNonQuery(Command, _Parameter);//DbConnectionManager.ExecuteNonQuery(Command);
+                RowsAffected = DoSkipSql ? 0 : conn.ExecuteNonQuery(Command, Parameter);
                 QueryFinish(LogType.Rows);
             }
             finally
@@ -121,7 +122,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 QueryStart();
-                result = conn.ExecuteScalar(Command, _Parameter);
+                result = conn.ExecuteScalar(Command, Parameter);
                 QueryFinish();
             }
             finally
@@ -168,7 +169,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 QueryStart();
-                IDataReader reader = conn.ExecuteReader(Command, _Parameter) as IDataReader;
+                IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader;
                 for (int rowNr = 0; rowNr < ReadTopX; rowNr++)
                 {
                     if (reader.Read())

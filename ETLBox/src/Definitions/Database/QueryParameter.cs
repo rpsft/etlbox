@@ -1,4 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Data;
 
 namespace ALE.ETLBox
@@ -15,7 +16,7 @@ namespace ALE.ETLBox
         {
             Name = name;
             Type = type;
-            Value = value;
+            Value = value ?? DBNull.Value;
         }
     }
 }

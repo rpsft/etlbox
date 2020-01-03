@@ -1,6 +1,8 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using System;
+using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging
 {
@@ -13,10 +15,13 @@ namespace ALE.ETLBox.Logging
         public override string TaskName => $"Start load process {ProcessName}";
         public void Execute()
         {
+            QueryParameter pn = new QueryParameter("ProcessName", "VARCHAR(100)", ProcessName);
+            QueryParameter sm = new QueryParameter("StartMessage", "VARCHAR(4000)", StartMessage);
+            QueryParameter so = new QueryParameter("Source", "VARCHAR(20)", Source);
             LoadProcessKey = new SqlTask(this, Sql)
             {
+                Parameter = new List<QueryParameter>() { pn, sm, so},
                 DisableLogging = true,
-                ConnectionManager = this.ConnectionManager
             }.ExecuteScalar<int>();
             var rlp = new ReadLoadProcessTableTask(LoadProcessKey)
             {
@@ -32,7 +37,7 @@ namespace ALE.ETLBox.Logging
         /* Public properties */
         public string ProcessName { get; set; } = "N/A";
         public string StartMessage { get; set; }
-        public string Source { get; set; }
+        public string Source { get; set; } = "ETL";
 
         public int? _loadProcessKey;
         public int? LoadProcessKey
@@ -48,13 +53,8 @@ namespace ALE.ETLBox.Logging
         }
 
         public string Sql => $@"
- DECLARE @LoadProcessKey INT  
- EXECUTE etl.StartLoadProcess
-	 @ProcessName = '{ProcessName}',
-	 @StartMessage = {StartMessage.NullOrSqlString()},
-     @Source = {Source.NullOrSqlString()},
-     @LoadProcessKey = @LoadProcessKey OUTPUT
- SELECT	@LoadProcessKey";
+ INSERT INTO etl.LoadProcess( start_date, process_name, start_message, source, is_running)
+ SELECT GETDATE(),@ProcessName, @StartMessage,@Source, 1 as IsRunning";
 
 
         public StartLoadProcessTask()

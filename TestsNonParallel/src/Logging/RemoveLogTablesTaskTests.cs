@@ -29,10 +29,10 @@ namespace ALE.ETLBoxTests.Logging
         public void RemoveLogTables()
         {
             //Arrange
-            RemoveLogTablesTask.Remove(Connection);
-            CreateLogTablesTask.CreateLog(Connection, "Log");
+            DropTableTask.Drop(Connection, "etlbox_log");
+            CreateLogTableTask.Create(Connection, "Log");
             //Act
-            RemoveLogTablesTask.Remove(Connection);
+            DropTableTask.Drop(Connection, "etlbox_log");
             //Assert
             Assert.True(SqlTask.ExecuteScalarAsBool(Connection, "Check if tables are deleted",
                 "SELECT CASE WHEN object_id('etl.LoadProcess') IS NULL THEN 1 ELSE 0 END"));

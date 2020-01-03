@@ -18,7 +18,6 @@ namespace ALE.ETLBoxTests.Logging
             DatabaseHelper.RecreateSqlDatabase("Logging");
             DatabaseHelper.RecreateMySqlDatabase("Logging");
             DatabaseHelper.RecreatePostgresDatabase("Logging");
-            ControlFlow.SetLoggingDatabase(Config.SqlConnectionManager("Logging"));
         }
     }
 }

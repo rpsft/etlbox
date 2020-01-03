@@ -17,7 +17,6 @@ namespace ALE.ETLBox.ControlFlow
     {
         public override string TaskName { get; set; } = "Run some sql";
         public void Execute() => ExecuteNonQuery();
-        public IEnumerable<QueryParameter> ParameterList => _Parameter;
 
         public SqlTask() { }
 
@@ -29,29 +28,29 @@ namespace ALE.ETLBox.ControlFlow
 
         public SqlTask(string name, string sql) : base(name, sql) { }
 
-        public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameterList) : base(name, sql)
+        public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameter) : base(name, sql)
         {
-            _Parameter = parameterList;
+            Parameter = parameter;
         }
 
-        public SqlTask(string name, FileConnectionManager fileConnection, IEnumerable<QueryParameter> parameterList) : base(name, fileConnection)
+        public SqlTask(string name, FileConnectionManager fileConnection, IEnumerable<QueryParameter> parameter) : base(name, fileConnection)
         {
-            _Parameter = parameterList;
+            Parameter = parameter;
         }
 
         public SqlTask(string name, string sql, params Action<object>[] actions) : base(name, sql, actions) { }
 
         public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) : base(name, sql, actions)
         {
-            _Parameter = parameterList;
+            Parameter = parameterList;
         }
 
         public SqlTask(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions)
             : base(name, sql, beforeRowReadAction, afterRowReadAction, actions) { }
 
-        public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameterList, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(name, sql, beforeRowReadAction, afterRowReadAction, actions)
+        public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameter, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(name, sql, beforeRowReadAction, afterRowReadAction, actions)
         {
-            _Parameter = parameterList;
+            Parameter = parameter;
         }
 
         /* Static methods for convenience */

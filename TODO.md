@@ -32,3 +32,5 @@ does comply with the new ExpandoObject approach
 - Add documentation for ETLBox Core: add a description that ETL is needed for snowflake, and snowflake is needed for reports, and reports could be created with PowerBI
 - get rid of the ExpandoObject in the definitions and only use it internally - from the outside, only use "dynamic" as type
 - make dynamic as default type instead string[] (update docu, perhaps some tests)
+- remove Extension handling
+- remove "name" parameter from SqlTask

@@ -31,12 +31,12 @@ namespace ALE.ETLBoxTests.Logging
         {
             ControlFlow.ClearSettings();
             ControlFlow.CurrentDbConnection = NoLogConnection;
-            CreateLogTablesTask.CreateLog(LoggingConnection, "Log");
+            CreateLogTableTask.Create(LoggingConnection, "Log");
         }
 
         public void Dispose()
         {
-            RemoveLogTablesTask.Remove(LoggingConnection);
+            DropTableTask.Drop(LoggingConnection, "etlbox_log");
             ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }

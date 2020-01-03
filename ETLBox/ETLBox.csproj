@@ -20,6 +20,7 @@
     <AssemblyVersion>1.7.5.0</AssemblyVersion>
     <FileVersion>1.7.5.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

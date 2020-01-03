@@ -49,7 +49,7 @@ WHERE sch.name = '{schemaName}'")
         public void CleanupETLLogTablesWhileLogging()
         {
             //Arrange
-            CreateLogTablesTask.CreateLog(Connection);
+            CreateLogTableTask.Create(Connection);
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.tables",
                 $"type = 'U' AND name = 'Log' AND schema_id('etl') = schema_id"));
             Assert.Equal(1, RowCountTask.Count(Connection, "sys.tables",

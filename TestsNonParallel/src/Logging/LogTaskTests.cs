@@ -12,30 +12,43 @@ using Xunit;
 namespace ALE.ETLBoxTests.Logging
 {
     [Collection("Logging")]
-    public class LogTaskTests : IDisposable
+    public class LogTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
         public LogTaskTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(Connection, "Log");
+
         }
 
-        public void Dispose()
-        {
-            RemoveLogTablesTask.Remove(Connection);
-        }
 
-        [Fact]
-        public void TestErrorLogging()
+        [Theory, MemberData(nameof(Connections))]
+        public void TestErrorLogging(IConnectionManager connection)
         {
             //Arrange
+            CreateLogTableTask.Create(connection, "test_log");
+            ControlFlow.SetLoggingDatabase(connection,NLog.LogLevel.Trace, "test_log");
             //Act
-            LogTask.Error(Connection, "Error");
-            LogTask.Warn(Connection, "Warn");
-            LogTask.Info(Connection, "Info");
+            LogTask.Error(connection, "Error!");
+            LogTask.Warn(connection, "Warn!");
+            LogTask.Info(connection, "Info!");
+            LogTask.Debug(connection, "Debug!");
+            LogTask.Trace(connection, "Trace!");
+            LogTask.Fatal(connection, "Fatal!");
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "etl.Log",
-                "Message in ('Error','Warn','Info')"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+                "message = 'Error!' AND level = 'Error' and task_action = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+                "message = 'Warn!' AND level = 'Warn' and task_action = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+                "message = 'Info!' AND level = 'Info' and task_action = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+                "message = 'Debug!' AND level = 'Debug' and task_action = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+                "message = 'Trace!' AND level = 'Trace' and task_action = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+                "message = 'Fatal!' AND level = 'Fatal' and task_action = 'LOG'"));
+
+            DropTableTask.Drop(connection, ControlFlow.CurrentLogTable);
         }
     }
 }

@@ -287,7 +287,37 @@ easily access and analyze your logs.
 
 
 
+```
 
-
+/*
+ *     <target xsi:type="Database" name="database" keepConnection="true">
+<commandText>
+INSERT INTO log (log_date, level, stage, message, task_type, task_action, task_hash, source, load_process_id)
+SELECT CAST(@LogDate AS TIMESTAMP)
+, @Level
+, CAST(@Stage as VARCHAR(20))
+, CAST(@Message as VARCHAR(4000))
+, CAST(@Type as VARCHAR(40))
+, @Action
+, @Hash
+, CAST(@Logger as VARCHAR(20))
+, CAST( ( CASE WHEN @LoadProcessKey IS NULL
+                    OR @LoadProcessKey = ''
+                    OR @LoadProcessKey = '0'
+               THEN NULL
+               ELSE @LoadProcessKey END ) AS INT )
+</commandText>
+<parameter name="@LogDate" layout="${date:format=yyyy-MM-dd HH\:mm\:ss.fff}" />
+<parameter name="@Level" layout="${level}" />
+<parameter name="@Stage" layout="${etllog:LogType=Stage}" />
+<parameter name="@Message" layout="${etllog}" />
+<parameter name="@Type" layout="${etllog:LogType=Type}" />
+<parameter name="@Action" layout="${etllog:LogType=Action}" />
+<parameter name="@Hash" layout="${etllog:LogType=Hash}" />
+<parameter name="@LoadProcessKey" layout="${etllog:LogType=LoadProcessKey}" />
+<parameter name="@Logger" layout="${logger}" />
+</target>
+*/
+```
 
 

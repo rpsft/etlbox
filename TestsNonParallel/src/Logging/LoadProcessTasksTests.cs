@@ -15,46 +15,41 @@ namespace ALE.ETLBoxTests.Logging
     [Collection("Logging")]
     public class LoadProcessTasksTests : IDisposable
     {
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
         public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
+
         public LoadProcessTasksTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTablesTask.CreateLog(Connection, "Log");
-            ControlFlow.CurrentDbConnection = Connection;
+            //CreateLoadProcessTableTask.Create(Connection, "Log");
+            //ControlFlow.CurrentDbConnection = Connection;
         }
 
         public void Dispose()
         {
-            RemoveLogTablesTask.Remove(Connection);
-            ControlFlow.ClearSettings();
+            //DropTableTask.Drop(Connection, "etlbox_log");
+            //ControlFlow.ClearSettings();
         }
 
-        [Fact]
-        public void StartLoadProcess()
+        [Theory, MemberData(nameof(Connections))]
+        public void StartLoadProcess(IConnectionManager connection)
         {
             //Arrange
+            CreateLoadProcessTableTask.Create(connection, "test_load_process");
             DateTime beforeTask = DateTime.Now;
             Task.Delay(10).Wait(); //Sql Server datetime is not that exact
 
             //Act
-            StartLoadProcessTask.Start("Test process 1");
+            StartLoadProcessTask.Start(connection, "Test process 1");
 
             //Assert
             DateTime afterTask = DateTime.Now;
             Assert.True(ControlFlow.CurrentLoadProcess != null);
             Assert.Equal("Test process 1", ControlFlow.CurrentLoadProcess.ProcessName);
             Assert.True(ControlFlow.CurrentLoadProcess.StartDate <= afterTask && ControlFlow.CurrentLoadProcess.StartDate >= beforeTask);
-            Assert.False(new RowCountTask("etl.Log") { DisableLogging = true }.Count().HasRows);
-            Assert.Equal(1, new RowCountTask("etl.LoadProcess",
-                "StartMessage is null and EndMessage is null and AbortMessage is null")
-            {
-                DisableLogging = true,
-            }.Count().Rows);
-            Assert.Equal(1, new RowCountTask("etl.LoadProcess",
-                "IsRunning=1 and WasSuccessful=0 and WasAborted=0")
-            {
-                DisableLogging = true,
-            }.Count().Rows);
-
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLoadProcessTable,
+                "StartMessage IS NULL and EndMessage IS NULL and AbortMessage IS NULL"));
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLoadProcessTable,
+                "IsRunning=1 and WasSuccessful=0 and WasAborted=0"));
         }
 
         [Fact]
@@ -127,28 +122,6 @@ namespace ALE.ETLBoxTests.Logging
                 DisableLogging = true
             }.Count().Rows);
 
-        }
-
-        [Fact]
-        public void IsTransferCompletedForLoadProcess()
-        {
-            //Arrange
-            StartLoadProcessTask.Start("Test process 4");
-            Assert.True(ControlFlow.CurrentLoadProcess.IsRunning == true);
-            DateTime beforeTask = DateTime.Now;
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
-
-            //Act
-            TransferCompletedForLoadProcessTask.Complete(ControlFlow.CurrentLoadProcess.LoadProcessKey);
-
-            //Assert
-            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType='TransferCompletedForLoadProcessTask'")
-            {
-                DisableLogging = true
-            }.Count().Rows);
-            DateTime afterTask = DateTime.Now;
-            Assert.True(ControlFlow.CurrentLoadProcess.IsRunning == true);
-            Assert.True(ControlFlow.CurrentLoadProcess.TransferCompletedDate <= afterTask && ControlFlow.CurrentLoadProcess.TransferCompletedDate >= beforeTask);
         }
 
         [Fact]
