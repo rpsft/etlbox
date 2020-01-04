@@ -39,12 +39,12 @@ namespace ALE.ETLBox.Logging
         }
 
         /* Public properties */
-        public int? _loadProcessKey;
-        public int? LoadProcessKey
+        public long? _loadProcessKey;
+        public long? LoadProcessKey
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
+                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
@@ -70,16 +70,16 @@ namespace ALE.ETLBox.Logging
 
         }
 
-        public ReadLogTableTask(int? loadProcessKey) : this()
+        public ReadLogTableTask(long? loadProcessKey) : this()
         {
             this.LoadProcessKey = loadProcessKey;
         }
 
         public static List<LogEntry> Read() => new ReadLogTableTask().ReadLog().LogEntries;
-        public static List<LogEntry> Read(int? loadProcessKey) => new ReadLogTableTask(loadProcessKey).ReadLog().LogEntries;
+        public static List<LogEntry> Read(long? loadProcessKey) => new ReadLogTableTask(loadProcessKey).ReadLog().LogEntries;
         public static List<LogEntry> Read(IConnectionManager connectionManager)
             => new ReadLogTableTask() { ConnectionManager = connectionManager }.ReadLog().LogEntries;
-        public static List<LogEntry> Read(IConnectionManager connectionManager, int? loadProcessKey)
+        public static List<LogEntry> Read(IConnectionManager connectionManager, long? loadProcessKey)
             => new ReadLogTableTask(loadProcessKey) { ConnectionManager = connectionManager }.ReadLog().LogEntries;
 
     }

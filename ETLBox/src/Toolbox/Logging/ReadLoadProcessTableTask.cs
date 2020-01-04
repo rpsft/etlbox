@@ -1,38 +1,35 @@
-﻿using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging
 {
     /// <summary>
-    /// Reads data from the etl.LoadProcessTable.
+    /// Read load processes by Id, all processes or last finished/successful/aborted.
     /// </summary>
     public class ReadLoadProcessTableTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskName => $"Read process with Key ({LoadProcessKey}) or without";
+        public override string TaskName => $"Read load processes by Id, all processes or last finished/successful/aborted.";
         public void Execute()
         {
             LoadProcess = new LoadProcess();
             var sql = new SqlTask(this, Sql)
             {
                 DisableLogging = true,
-                DisableExtension = true,
-                ConnectionManager = this.ConnectionManager,
                 Actions = new List<Action<object>>() {
-                col => LoadProcess.LoadProcessKey = (int)col,
+                col => LoadProcess.Id = Convert.ToInt64(col),
                 col => LoadProcess.StartDate = (DateTime)col,
-                col => LoadProcess.TransferCompletedDate = (DateTime?)col,
                 col => LoadProcess.EndDate = (DateTime?)col,
+                col => LoadProcess.Source = (string)col,
                 col => LoadProcess.ProcessName = (string)col,
                 col => LoadProcess.StartMessage = (string)col,
-                col => LoadProcess.IsRunning = (bool)col,
+                col => LoadProcess.IsRunning = Convert.ToInt16(col) > 0 ? true : false,
                 col => LoadProcess.EndMessage = (string)col,
-                col => LoadProcess.WasSuccessful = (bool)col,
+                col => LoadProcess.WasSuccessful = Convert.ToInt16(col) > 0 ? true : false,
                 col => LoadProcess.AbortMessage = (string)col,
-                col => LoadProcess.WasAborted= (bool)col,
-                col => LoadProcess.IsFinished= (bool)col,
-                col => LoadProcess.IsTransferCompleted= (bool)col
+                col => LoadProcess.WasAborted= Convert.ToInt16(col) > 0 ? true : false,
                 }
             };
             if (ReadOption == ReadOptions.ReadAllProcesses)
@@ -44,16 +41,16 @@ namespace ALE.ETLBox.Logging
         }
 
         /* Public properties */
-        public int? _loadProcessKey;
-        public int? LoadProcessKey
+        public long? _loadProcessId;
+        public long? LoadProcessId
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
+                return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
-                _loadProcessKey = value;
+                _loadProcessId = value;
             }
         }
         public LoadProcess LoadProcess { get; private set; }
@@ -67,42 +64,73 @@ namespace ALE.ETLBox.Logging
         {
             get
             {
-                string top1 = "";
-                if (ReadOption != ReadOptions.ReadAllProcesses)
-                    top1 = "top 1";
                 string sql = $@"
-SELECT {top1} LoadProcessKey, StartDate, TransferCompletedDate, EndDate, ProcessName, StartMessage, IsRunning, EndMessage, WasSuccessful, AbortMessage, WasAborted, IsFinished, IsTransferCompleted
-FROM etl.LoadProcess ";
+SELECT {Top1Sql} {QB}id{QE}, {QB}start_date{QE}, {QB}end_date{QE}, {QB}source{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}is_running{QE}, {QB}end_message{QE}, {QB}was_successful{QE}, {QB}abort_message{QE}, {QB}was_aborted{QE}
+FROM {TN.QuotatedFullName}";
                 if (ReadOption == ReadOptions.ReadSingleProcess)
-                    sql += $@"WHERE LoadProcessKey = {LoadProcessKey}";
+                    sql += $@"WHERE id = {LoadProcessId}";
                 else if (ReadOption == ReadOptions.ReadLastFinishedProcess)
-                    sql += $@"WHERE IsFinished = 1
-ORDER BY EndDate desc, LoadProcessKey DESC";
+                    sql += $@"WHERE was_successful = 1 || was_aborted = 1
+ORDER BY end_date desc, id DESC";
                 else if (ReadOption == ReadOptions.ReadLastSuccessful)
-                    sql += $@"WHERE WasSuccessful = 1
-ORDER BY EndDate desc, LoadProcessKey DESC";
+                    sql += $@"WHERE was_successful = 1
+ORDER BY end_date desc, id DESC";
                 else if (ReadOption == ReadOptions.ReadLastAborted)
-                    sql += $@"WHERE WasAborted = 1
-ORDER BY EndDate desc, LoadProcessKey DESC";
-                else if (ReadOption == ReadOptions.ReadLastTransferedProcess)
-                    sql += $@"WHERE IsTransferCompleted = 1
-ORDER BY TransferCompletedDate DESC,
-LoadProcessKey DESC";
-
+                    sql += $@"WHERE was_aborted = 1
+ORDER BY end_date desc, id DESC";
+                sql += Environment.NewLine + Limit1Sql;
                 return sql;
             }
         }
 
+        private string Top1Sql
+        {
+            get
+            {
+                if (ReadOption == ReadOptions.ReadAllProcesses)
+                    return string.Empty;
+                else
+                {
+                    if (ConnectionType == ConnectionManagerType.SqlServer)
+                        return "TOP 1";
+                    else
+                        return string.Empty;
+                }
+            }
+        }
+
+        private string Limit1Sql
+        {
+            get
+            {
+                if (ReadOption == ReadOptions.ReadAllProcesses)
+                    return string.Empty;
+                else
+                {
+                    if (ConnectionType == ConnectionManagerType.Postgres)
+                        return "LIMIT 1";
+                    else
+                        return string.Empty;
+                }
+            }
+        }
+
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.CurrentLoadProcessTable, this.ConnectionType);
         public ReadLoadProcessTableTask()
         {
 
         }
-        public ReadLoadProcessTableTask(int? loadProcessKey) : this()
+        public ReadLoadProcessTableTask(long? loadProcessKey) : this()
         {
-            this.LoadProcessKey = loadProcessKey;
+            this.LoadProcessId = loadProcessKey;
         }
 
-        public static LoadProcess Read(int? loadProcessKey)
+        public ReadLoadProcessTableTask(ITask callingTask, long? loadProcessKey) : this(loadProcessKey)
+        {
+            this.CopyTaskProperties(callingTask);
+        }
+
+        public static LoadProcess Read(long? loadProcessKey)
         {
             var sql = new ReadLoadProcessTableTask(loadProcessKey);
             sql.Execute();
@@ -128,7 +156,6 @@ LoadProcessKey DESC";
         ReadSingleProcess,
         ReadAllProcesses,
         ReadLastFinishedProcess,
-        ReadLastTransferedProcess,
         ReadLastSuccessful,
         ReadLastAborted
     }

@@ -30,12 +30,12 @@ namespace ALE.ETLBox.Logging
         }
 
         /* Public properties */
-        public int? _loadProcessKey;
-        public int? LoadProcessKey
+        public long? _loadProcessKey;
+        public long? LoadProcessKey
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
+                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
@@ -54,19 +54,19 @@ namespace ALE.ETLBox.Logging
 
         }
 
-        public EndLoadProcessTask(int? loadProcessKey) : this()
+        public EndLoadProcessTask(long? loadProcessKey) : this()
         {
             this.LoadProcessKey = loadProcessKey;
         }
-        public EndLoadProcessTask(int? loadProcessKey, string endMessage) : this(loadProcessKey)
+        public EndLoadProcessTask(long? loadProcessKey, string endMessage) : this(loadProcessKey)
         {
             this.EndMessage = endMessage;
         }
         public EndLoadProcessTask(string endMessage) : this(null, endMessage) { }
 
         public static void End() => new EndLoadProcessTask().Execute();
-        public static void End(int? loadProcessKey) => new EndLoadProcessTask(loadProcessKey).Execute();
-        public static void End(int? loadProcessKey, string endMessage) => new EndLoadProcessTask(loadProcessKey, endMessage).Execute();
+        public static void End(long? loadProcessKey) => new EndLoadProcessTask(loadProcessKey).Execute();
+        public static void End(long? loadProcessKey, string endMessage) => new EndLoadProcessTask(loadProcessKey, endMessage).Execute();
         public static void End(string endMessage) => new EndLoadProcessTask(null, endMessage).Execute();
         public static void End(IConnectionManager connectionManager)
             => new EndLoadProcessTask() { ConnectionManager = connectionManager }.Execute();

@@ -155,7 +155,7 @@ namespace ALE.ETLBox.ConnectionManager
                         return typeName.Substring(1);
                 }
                 if (typeName == "DATETIME")
-                    return "DATE";
+                    return "TIMESTAMP";
                 return dbSpecificTypeName;
             }
             else

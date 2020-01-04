@@ -30,12 +30,12 @@ namespace ALE.ETLBox.Logging
         }
 
         /* Public properties */
-        public int? _loadProcessKey;
-        public int? LoadProcessKey
+        public long? _loadProcessKey;
+        public long? LoadProcessKey
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
+                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
@@ -46,7 +46,7 @@ namespace ALE.ETLBox.Logging
 
 
         public string Sql => $@"EXECUTE etl.AbortLoadProcess
-	 @LoadProcessKey = '{LoadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess.LoadProcessKey}',
+	 @LoadProcessKey = '{LoadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess.Id}',
 	 @AbortMessage = {AbortMessage.NullOrSqlString()}";
 
         public AbortLoadProcessTask()
@@ -54,11 +54,11 @@ namespace ALE.ETLBox.Logging
 
         }
 
-        public AbortLoadProcessTask(int? loadProcessKey) : this()
+        public AbortLoadProcessTask(long? loadProcessKey) : this()
         {
             this.LoadProcessKey = loadProcessKey;
         }
-        public AbortLoadProcessTask(int? loadProcessKey, string abortMessage) : this(loadProcessKey)
+        public AbortLoadProcessTask(long? loadProcessKey, string abortMessage) : this(loadProcessKey)
         {
             this.AbortMessage = abortMessage;
         }
@@ -69,9 +69,9 @@ namespace ALE.ETLBox.Logging
         }
 
         public static void Abort() => new AbortLoadProcessTask().Execute();
-        public static void Abort(int? loadProcessKey) => new AbortLoadProcessTask(loadProcessKey).Execute();
+        public static void Abort(long? loadProcessKey) => new AbortLoadProcessTask(loadProcessKey).Execute();
         public static void Abort(string abortMessage) => new AbortLoadProcessTask(abortMessage).Execute();
-        public static void Abort(int? loadProcessKey, string abortMessage) => new AbortLoadProcessTask(loadProcessKey, abortMessage).Execute();
+        public static void Abort(long? loadProcessKey, string abortMessage) => new AbortLoadProcessTask(loadProcessKey, abortMessage).Execute();
         public static void Abort(IConnectionManager connectionManager)
             => new AbortLoadProcessTask() { ConnectionManager = connectionManager }.Execute();
         public static void Abort(IConnectionManager connectionManager, int? loadProcessKey)

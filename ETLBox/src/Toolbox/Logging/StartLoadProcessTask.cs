@@ -15,20 +15,18 @@ namespace ALE.ETLBox.Logging
         public override string TaskName => $"Start load process {ProcessName}";
         public void Execute()
         {
+            QueryParameter cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
             QueryParameter pn = new QueryParameter("ProcessName", "VARCHAR(100)", ProcessName);
             QueryParameter sm = new QueryParameter("StartMessage", "VARCHAR(4000)", StartMessage);
             QueryParameter so = new QueryParameter("Source", "VARCHAR(20)", Source);
             LoadProcessKey = new SqlTask(this, Sql)
             {
-                Parameter = new List<QueryParameter>() { pn, sm, so},
+                Parameter = new List<QueryParameter>() { cd, pn, sm, so },
                 DisableLogging = true,
-            }.ExecuteScalar<int>();
-            var rlp = new ReadLoadProcessTableTask(LoadProcessKey)
+            }.ExecuteScalar<long>();
+            var rlp = new ReadLoadProcessTableTask(this, LoadProcessKey)
             {
-                TaskType = this.TaskType,
-                TaskHash = this.TaskHash,
-                DisableLogging = true,
-                ConnectionManager = this.ConnectionManager
+                DisableLogging = true
             };
             rlp.Execute();
             ControlFlow.ControlFlow.CurrentLoadProcess = rlp.LoadProcess;
@@ -39,12 +37,12 @@ namespace ALE.ETLBox.Logging
         public string StartMessage { get; set; }
         public string Source { get; set; } = "ETL";
 
-        public int? _loadProcessKey;
-        public int? LoadProcessKey
+        public long? _loadProcessKey;
+        public long? LoadProcessKey
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
+                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
@@ -53,9 +51,26 @@ namespace ALE.ETLBox.Logging
         }
 
         public string Sql => $@"
- INSERT INTO etl.LoadProcess( start_date, process_name, start_message, source, is_running)
- SELECT GETDATE(),@ProcessName, @StartMessage,@Source, 1 as IsRunning";
+ INSERT INTO { TN.QuotatedFullName } 
+( {QB}start_date{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}source{QE}, {QB}is_running{QE})
+ VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 ) 
+{LastIdSql}";
 
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.CurrentLoadProcessTable, this.ConnectionType);
+        string LastIdSql
+        {
+            get
+            {
+                if (ConnectionType == ConnectionManagerType.Postgres)
+                    return "RETURNING id";
+                else if (ConnectionType == ConnectionManagerType.SqlServer)
+                    return "SELECT CAST ( SCOPE_IDENTITY() AS BIGINT)";
+                //else if (ConnectionType == ConnectionManagerType.MySql)
+                //    return "; SELECT LAST_INSERT_ID();";
+                else
+                    return $"; SELECT MAX({QB}id{QE}) FROM {TN.QuotatedFullName}";
+            }
+        }
 
         public StartLoadProcessTask()
         {

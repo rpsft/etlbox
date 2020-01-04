@@ -30,13 +30,30 @@ namespace ALE.ETLBoxTests.Logging
             //ControlFlow.ClearSettings();
         }
 
+
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateLoadProcessTable(IConnectionManager connection)
+        {
+            //Arrange
+            //Act
+            CreateLoadProcessTableTask.Create(connection, "etlbox_testloadprocess");
+
+            //Assert
+            IfTableOrViewExistsTask.IsExisting(connection, "etlbox_testloadprocess");
+            var td = TableDefinition.GetDefinitionFromTableName("etlbox_testloadprocess", connection);
+            Assert.True(td.Columns.Count == 11);
+
+            //Cleanup
+            DropTableTask.Drop(connection, "etlbox_testloadprocess");
+        }
+
         [Theory, MemberData(nameof(Connections))]
         public void StartLoadProcess(IConnectionManager connection)
         {
             //Arrange
             CreateLoadProcessTableTask.Create(connection, "test_load_process");
             DateTime beforeTask = DateTime.Now;
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
+            Task.Delay(100).Wait(); //Sql Server datetime is not that exact
 
             //Act
             StartLoadProcessTask.Start(connection, "Test process 1");
@@ -47,9 +64,9 @@ namespace ALE.ETLBoxTests.Logging
             Assert.Equal("Test process 1", ControlFlow.CurrentLoadProcess.ProcessName);
             Assert.True(ControlFlow.CurrentLoadProcess.StartDate <= afterTask && ControlFlow.CurrentLoadProcess.StartDate >= beforeTask);
             Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLoadProcessTable,
-                "StartMessage IS NULL and EndMessage IS NULL and AbortMessage IS NULL"));
+                "start_message IS NULL and end_message IS NULL and abort_message IS NULL"));
             Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLoadProcessTable,
-                "IsRunning=1 and WasSuccessful=0 and WasAborted=0"));
+                "is_running = 1 and was_successful=0 and was_aborted=0"));
         }
 
         [Fact]
@@ -108,7 +125,7 @@ namespace ALE.ETLBoxTests.Logging
             Task.Delay(10).Wait(); //Sql Server datetime is not that exact
 
             //Act
-            AbortLoadProcessTask.Abort(ControlFlow.CurrentLoadProcess.LoadProcessKey, "AbortMessage");
+            AbortLoadProcessTask.Abort(ControlFlow.CurrentLoadProcess.Id, "AbortMessage");
 
             //Assert
             DateTime afterTask = DateTime.Now;
@@ -135,7 +152,7 @@ namespace ALE.ETLBoxTests.Logging
 
             //Assert
             Assert.Equal(2, new RowCountTask("etl.Log",
-                $"Message='Test Task' and LoadProcessKey = {ControlFlow.CurrentLoadProcess.LoadProcessKey}")
+                $"Message='Test Task' and LoadProcessKey = {ControlFlow.CurrentLoadProcess.Id}")
             {
                 DisableLogging = true
             }.Count().Rows);
@@ -215,14 +232,14 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             StartLoadProcessTask.Start("Test process 13");
-            int? processKey1 = ControlFlow.CurrentLoadProcess.LoadProcessKey;
+            long? processKey1 = ControlFlow.CurrentLoadProcess.Id;
             SqlTask.ExecuteNonQuery("Test Task", "Select 1 as test");
             Assert.Equal(2, new RowCountTask("etl.Log", $"Message='Test Task' AND LoadProcessKey = {processKey1}")
             { DisableLogging = true }.Count().Rows);
 
             //Act
             StartLoadProcessTask.Start("Test process 14");
-            int? processKey2 = ControlFlow.CurrentLoadProcess.LoadProcessKey;
+            long? processKey2 = ControlFlow.CurrentLoadProcess.Id;
 
             //Assert
             Assert.NotEqual(processKey1, processKey2);
@@ -236,7 +253,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             StartLoadProcessTask.Start("Test process 15");
-            int? processKey1 = ControlFlow.CurrentLoadProcess.LoadProcessKey;
+            long? processKey1 = ControlFlow.CurrentLoadProcess.Id;
             //Act
             LogTask.Error("Test1");
             LogTask.Warn("Test2");

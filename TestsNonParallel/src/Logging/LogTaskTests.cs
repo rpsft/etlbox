@@ -20,6 +20,21 @@ namespace ALE.ETLBoxTests.Logging
 
         }
 
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateLogTable(IConnectionManager connection)
+        {
+            //Arrange
+            //Act
+            CreateLogTableTask.Create(connection, "etlbox_testlog");
+
+            //Assert
+            IfTableOrViewExistsTask.IsExisting(connection, "etlbox_testlog");
+            var td = TableDefinition.GetDefinitionFromTableName("etlbox_testlog", connection);
+            Assert.True(td.Columns.Count == 10);
+            //Cleanup
+            DropTableTask.Drop(connection, "etlbox_testlog");
+        }
+
 
         [Theory, MemberData(nameof(Connections))]
         public void TestErrorLogging(IConnectionManager connection)

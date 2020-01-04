@@ -67,12 +67,12 @@ namespace ALE.ETLBox.Logging
         /* Public properties */
         public List<string> ContainerTypes => new List<string>() { "sequence", "subpackage", "package" };
 
-        public int? _loadProcessKey;
-        public int? LoadProcessKey
+        public long? _loadProcessKey;
+        public long? LoadProcessKey
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.LoadProcessKey;
+                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
@@ -95,13 +95,13 @@ namespace ALE.ETLBox.Logging
 
         }
 
-        public GetLogAsJSONTask(int? loadProcessKey) : this()
+        public GetLogAsJSONTask(long? loadProcessKey) : this()
         {
             this.LoadProcessKey = loadProcessKey;
         }
 
         public static string GetJSON() => new GetLogAsJSONTask().Create().JSON;
-        public static string GetJSON(int? loadProcessKey) => new GetLogAsJSONTask(loadProcessKey).Create().JSON;
+        public static string GetJSON(long? loadProcessKey) => new GetLogAsJSONTask(loadProcessKey).Create().JSON;
         public static string GetJSON(IConnectionManager connectionManager)
             => new GetLogAsJSONTask() { ConnectionManager = connectionManager }.Create().JSON;
         public static string GetJSON(IConnectionManager connectionManager, int? loadProcessKey)

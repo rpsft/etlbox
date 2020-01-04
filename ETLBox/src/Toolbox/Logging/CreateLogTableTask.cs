@@ -39,7 +39,7 @@ namespace ALE.ETLBox.Logging
         private void InitCreateTableTask()
         {
             List<ITableColumn> columns = new List<ITableColumn>() {
-                new TableColumn("id","INT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
+                new TableColumn("id","BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
                 new TableColumn("log_date","DATETIME", allowNulls: false),
                 new TableColumn("level","VARCHAR(10)", allowNulls: true),
                 new TableColumn("stage","VARCHAR(20)", allowNulls: true),
@@ -48,7 +48,7 @@ namespace ALE.ETLBox.Logging
                 new TableColumn("task_action","VARCHAR(5)", allowNulls: true),
                 new TableColumn("task_hash","CHAR(40)", allowNulls: true),
                 new TableColumn("source","VARCHAR(20)", allowNulls: true),
-                new TableColumn("load_process_id","INT", allowNulls: true)
+                new TableColumn("load_process_id","BIGINT", allowNulls: true)
             };
             LogTable = new CreateTableTask(LogTableName, columns);
         }

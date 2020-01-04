@@ -42,7 +42,7 @@ namespace ALE.ETLBox.Logging
         private void InitCreateTableTask()
         {
             List<ITableColumn> lpColumns = new List<ITableColumn>() {
-                    new TableColumn("load_process_id","INT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
+                    new TableColumn("id","BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
                     new TableColumn("start_date","DATETIME", allowNulls: false),
                     new TableColumn("end_date","DATETIME", allowNulls: true),
                     new TableColumn("source","NVARCHAR(20)", allowNulls: true),
