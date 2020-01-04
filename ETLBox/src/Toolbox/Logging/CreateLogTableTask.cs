@@ -22,7 +22,7 @@ namespace ALE.ETLBox.Logging
         {
             LogTable.CopyTaskProperties(this);
             LogTable.Create();
-            ControlFlow.ControlFlow.CurrentLogTable = LogTableName;
+            ControlFlow.ControlFlow.LogTable = LogTableName;
         }
 
         public CreateLogTableTask(string logTableName)

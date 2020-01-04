@@ -19,12 +19,12 @@ namespace ALE.ETLBox.Logging
             QueryParameter pn = new QueryParameter("ProcessName", "VARCHAR(100)", ProcessName);
             QueryParameter sm = new QueryParameter("StartMessage", "VARCHAR(4000)", StartMessage);
             QueryParameter so = new QueryParameter("Source", "VARCHAR(20)", Source);
-            LoadProcessKey = new SqlTask(this, Sql)
+            LoadProcessId = new SqlTask(this, Sql)
             {
                 Parameter = new List<QueryParameter>() { cd, pn, sm, so },
                 DisableLogging = true,
             }.ExecuteScalar<long>();
-            var rlp = new ReadLoadProcessTableTask(this, LoadProcessKey)
+            var rlp = new ReadLoadProcessTableTask(this, LoadProcessId)
             {
                 DisableLogging = true
             };
@@ -37,16 +37,16 @@ namespace ALE.ETLBox.Logging
         public string StartMessage { get; set; }
         public string Source { get; set; } = "ETL";
 
-        public long? _loadProcessKey;
-        public long? LoadProcessKey
+        public long? _loadProcessId;
+        public long? LoadProcessId
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
+                return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
-                _loadProcessKey = value;
+                _loadProcessId = value;
             }
         }
 
@@ -56,7 +56,7 @@ namespace ALE.ETLBox.Logging
  VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 ) 
 {LastIdSql}";
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.CurrentLoadProcessTable, this.ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
         string LastIdSql
         {
             get

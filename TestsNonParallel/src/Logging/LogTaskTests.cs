@@ -12,12 +12,19 @@ using Xunit;
 namespace ALE.ETLBoxTests.Logging
 {
     [Collection("Logging")]
-    public class LogTaskTests
+    public class LogTaskTests : IDisposable
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
+
         public LogTaskTests(LoggingDatabaseFixture dbFixture)
         {
 
+        }
+
+        public void Dispose()
+        {
+            ControlFlow.ClearSettings();
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -41,7 +48,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             CreateLogTableTask.Create(connection, "test_log");
-            ControlFlow.SetLoggingDatabase(connection,NLog.LogLevel.Trace, "test_log");
+            ControlFlow.AddLoggingDatabaseToConfig(connection,NLog.LogLevel.Trace, "test_log");
             //Act
             LogTask.Error(connection, "Error!");
             LogTask.Warn(connection, "Warn!");
@@ -50,20 +57,67 @@ namespace ALE.ETLBoxTests.Logging
             LogTask.Trace(connection, "Trace!");
             LogTask.Fatal(connection, "Fatal!");
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
                 "message = 'Error!' AND level = 'Error' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
                 "message = 'Warn!' AND level = 'Warn' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
                 "message = 'Info!' AND level = 'Info' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
                 "message = 'Debug!' AND level = 'Debug' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
                 "message = 'Trace!' AND level = 'Trace' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.CurrentLogTable,
+            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
                 "message = 'Fatal!' AND level = 'Fatal' and task_action = 'LOG'"));
 
-            DropTableTask.Drop(connection, ControlFlow.CurrentLogTable);
+            //Cleanup
+            DropTableTask.Drop(connection, ControlFlow.LogTable);
+        }
+
+        [Fact]
+        public void IsControlFlowStageLogged()
+        {
+            //Arrange
+            CreateLogTableTask.Create(SqlConnection, "test_log_stage");
+            ControlFlow.AddLoggingDatabaseToConfig(SqlConnection, NLog.LogLevel.Debug, "test_log_stage");
+
+            //Act
+            ControlFlow.STAGE = "SETUP";
+            SqlTask.ExecuteNonQuery(SqlConnection, "Test Task", "Select 1 as test");
+
+            //Assert
+            Assert.Equal(2, new RowCountTask("test_log_stage",
+                           $"message='Test Task' and stage = 'SETUP'")
+            {
+                DisableLogging = true,
+                ConnectionManager = SqlConnection
+            }.Count().Rows);
+
+            //Cleanup
+            DropTableTask.Drop(SqlConnection, ControlFlow.LogTable);
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void LogCleanup(IConnectionManager connection)
+        {
+            //Arrange
+            CreateLogTableTask.Create(connection, "test_cleanup_log");
+            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Trace, "test_cleanup_log");
+            //Arrange
+            LogTask.Error("Error");
+            LogTask.Warn("Warn");
+            LogTask.Info("Info");
+            //Act
+            CleanUpLogTask.CleanUp(connection, 0);
+            //Assert
+            Assert.Equal(0, new RowCountTask("test_cleanup_log")
+            {
+                DisableLogging = true,
+                ConnectionManager = connection
+            }.Count().Rows);
+
+            //Cleanup
+            DropTableTask.Drop(connection, ControlFlow.LogTable);
         }
     }
 }

@@ -18,25 +18,23 @@ namespace ALE.ETLBoxTests.Logging
         public OtherDBFixture()
         {
             DatabaseHelper.RecreateSqlDatabase("NoLog");
-            ControlFlow.SetLoggingDatabase(Config.SqlConnectionManager("NoLog"));
         }
     }
 
     [Collection("Logging")]
     public class DifferentLoggingDBTests : IDisposable, IClassFixture<OtherDBFixture>
     {
-        public SqlConnectionManager LoggingConnection => Config.SqlConnectionManager("Logging");
-        public SqlConnectionManager NoLogConnection => Config.SqlConnectionManager("NoLog");
+        public SqlConnectionManager LoggingConnection => Config.SqlConnection.ConnectionManager("Logging");
+        public SqlConnectionManager NoLogConnection => Config.SqlConnection.ConnectionManager("NoLog");
         public DifferentLoggingDBTests(LoggingDatabaseFixture dbFixture, OtherDBFixture odbFixture)
         {
-            ControlFlow.ClearSettings();
-            ControlFlow.CurrentDbConnection = NoLogConnection;
-            CreateLogTableTask.Create(LoggingConnection, "Log");
+            CreateLogTableTask.Create(LoggingConnection);
+            ControlFlow.AddLoggingDatabaseToConfig(LoggingConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(LoggingConnection, "etlbox_log");
+            DropTableTask.Drop(LoggingConnection, ControlFlow.LogTable);
             ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
@@ -47,18 +45,15 @@ namespace ALE.ETLBoxTests.Logging
             //Arrange
 
             //Act
-            ControlFlow.CurrentDbConnection = NoLogConnection;
-            SqlTask.ExecuteNonQuery("Create source table", @"CREATE TABLE CFLogSource
+            SqlTask.ExecuteNonQuery(NoLogConnection, "Create source table", @"CREATE TABLE CFLogSource
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
+
+            ControlFlow.DefaultDbConnection = NoLogConnection;
+
             SqlTask.ExecuteNonQuery("Insert demo data", "INSERT INTO CFLogSource VALUES(1,'Test1')");
 
-            ControlFlow.CurrentDbConnection = LoggingConnection;
-
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Insert demo data", "INSERT INTO CFLogSource VALUES(2,'Test2')");
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Insert demo data", "INSERT INTO CFLogSource VALUES(3,'Test3')");
-
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'SqlTask' ")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'SqlTask' ")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection
@@ -83,18 +78,17 @@ namespace ALE.ETLBoxTests.Logging
             DBDestination dest = new DBDestination(LoggingConnection, "DFLogDestination");
 
             //Act
-            ControlFlow.CurrentDbConnection = LoggingConnection;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBSource'")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DBSource'")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection
             }.Count().Rows);
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DBDestination'")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection

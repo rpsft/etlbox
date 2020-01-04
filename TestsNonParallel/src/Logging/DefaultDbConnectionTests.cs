@@ -14,16 +14,18 @@ namespace ALE.ETLBoxTests.Logging
     [Collection("Logging")]
     public class DefaultDbConnectionTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
+        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("Logging");
+
         public DefaultDbConnectionTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTableTask.Create(Connection, "Log");
-            ControlFlow.CurrentDbConnection = Connection;
+            CreateLogTableTask.Create(SqlConnection);
+            ControlFlow.DefaultDbConnection = SqlConnection;
+            ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(Connection, "etlbox_log");
+            DropTableTask.Drop(SqlConnection, ControlFlow.LogTable);
             ControlFlow.ClearSettings();
         }
 

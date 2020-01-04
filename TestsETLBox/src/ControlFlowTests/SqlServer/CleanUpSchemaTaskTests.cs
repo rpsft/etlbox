@@ -46,26 +46,6 @@ WHERE sch.name = '{schemaName}'")
         }
 
         [Fact]
-        public void CleanupETLLogTablesWhileLogging()
-        {
-            //Arrange
-            CreateLogTableTask.Create(Connection);
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.tables",
-                $"type = 'U' AND name = 'Log' AND schema_id('etl') = schema_id"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "sys.tables",
-                $"type = 'U' AND name = 'LoadProcess' AND schema_id('etl') = schema_id"));
-
-            //Act
-            CleanUpSchemaTask.CleanUp(Connection, "etl");
-
-            //Assert
-            Assert.Equal(0, RowCountTask.Count(Connection, "sys.tables",
-               $"type = 'U' AND name = 'Log' AND schema_id('etl') = schema_id"));
-            Assert.Equal(0, RowCountTask.Count(Connection, "sys.tables",
-                $"type = 'U' AND name = 'LoadProcess' AND schema_id('etl') = schema_id"));
-        }
-
-        [Fact]
         public void NotSupportedWithOtherDBs()
         {
             Assert.Throws<ETLBoxNotSupportedException>(

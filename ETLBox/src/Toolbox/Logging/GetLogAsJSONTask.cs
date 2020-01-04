@@ -31,7 +31,7 @@ namespace ALE.ETLBox.Logging
         {
             foreach (var startEntry in logEntries.Where(entry => entry.TaskAction == "START"))
             {
-                var endEntry = logEntries.Where(entry => entry.TaskAction == "END" && entry.TaskHash == startEntry.TaskHash && entry.LogKey > startEntry.LogKey).FirstOrDefault();
+                var endEntry = logEntries.Where(entry => entry.TaskAction == "END" && entry.TaskHash == startEntry.TaskHash && entry.Id > startEntry.Id).FirstOrDefault();
                 startEntry.EndDate = endEntry.LogDate;
             }
         }

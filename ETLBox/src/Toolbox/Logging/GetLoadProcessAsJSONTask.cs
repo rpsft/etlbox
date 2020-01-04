@@ -15,7 +15,6 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            //TODO umschreiben in eine Zeile?
             var read = new ReadLoadProcessTableTask()
             {
                 ReadOption = ReadOptions.ReadAllProcesses,

@@ -14,22 +14,26 @@ namespace ALE.ETLBoxTests.Logging
     public class DatabaseTasksLoggingTests : IDisposable
     {
         public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
+
         public DatabaseTasksLoggingTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTableTask.Create(Connection, "Log") ;
+            CreateSchemaTask.Create(Connection, "etl");
+            CreateLogTableTask.Create(Connection);
+            ControlFlow.AddLoggingDatabaseToConfig(Connection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(Connection, "etlbox_log");
+            DropTableTask.Drop(Connection, ControlFlow.LogTable);
+            ControlFlow.ClearSettings();
         }
 
         private int? CountLogEntries(string taskname)
         {
             return new SqlTask("Find log entry", $@"
-SELECT COUNT(*) FROM etl.Log
-WHERE TaskType='{taskname}'
-GROUP BY TaskHash")
+SELECT COUNT(*) FROM etlbox_log
+WHERE task_type='{taskname}'
+GROUP BY task_hash")
             {
                 DisableLogging = true,
                 ConnectionManager = Connection
@@ -54,7 +58,6 @@ SELECT * FROM
             }.ExecuteNonQuery();
         }
 
-
         [Fact]
         public void RowCountLogging()
         {
@@ -65,6 +68,7 @@ SELECT * FROM
             //Assert
             Assert.Equal(2, CountLogEntries("RowCountTask"));
         }
+
         [Fact]
         public void RowCountWithConditionLogging()
         {
@@ -75,10 +79,10 @@ SELECT * FROM
             //Assert
             Assert.Equal(2, new SqlTask("Find log entry",
                @"
-SELECT COUNT(*) FROM etl.Log 
-WHERE TaskType='RowCountTask' 
-AND Message LIKE '%with condition%' 
-GROUP BY TaskHash")
+SELECT COUNT(*) FROM etlbox_log
+WHERE task_type='RowCountTask' 
+AND message LIKE '%with condition%' 
+GROUP BY task_hash")
             { DisableLogging = true, ConnectionManager = Connection }.ExecuteScalar<int>());
         }
 
@@ -199,7 +203,7 @@ GROUP BY TaskHash")
             SqlTask.ExecuteNonQuery(Connection, "Test Task - same name", "Select 2 as test");
             //Assert
             Assert.Equal(4, new SqlTask("Check if hash are equal",
-                $@"select count(*) from etl.Log group by TaskHash")
+                $@"SELECT COUNT(*) from etlbox_log GROUP BY task_hash")
             {
                 DisableLogging = true,
                 ConnectionManager = Connection

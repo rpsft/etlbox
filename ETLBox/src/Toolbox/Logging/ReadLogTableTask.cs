@@ -11,7 +11,7 @@ namespace ALE.ETLBox.Logging
     public class ReadLogTableTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskName => $"Read all log entries for {LoadProcessKey ?? 0 }";
+        public override string TaskName => $"Read all log entries for {LoadProcessId ?? 0 }";
         public void Execute()
         {
             LogEntries = new List<LogEntry>();
@@ -24,7 +24,7 @@ namespace ALE.ETLBox.Logging
                 BeforeRowReadAction = () => current = new LogEntry(),
                 AfterRowReadAction = () => LogEntries.Add(current),
                 Actions = new List<Action<object>>() {
-                    col => current.LogKey = (int)col,
+                    col => current.Id = (long)col,
                     col => current.LogDate = (DateTime)col,
                     col => current.Level = (string)col,
                     col => current.Message = (string)col,
@@ -33,22 +33,22 @@ namespace ALE.ETLBox.Logging
                     col => current.TaskHash = (string)col,
                     col => current.Stage = (string)col,
                     col => current.Source = (string)col,
-                    col => current.LoadProcessKey = (int?)col,
+                    col => current.LoadProcessId = (long?)col,
                 }
             }.ExecuteReader();
         }
 
         /* Public properties */
-        public long? _loadProcessKey;
-        public long? LoadProcessKey
+        public long? _loadProcessId;
+        public long? LoadProcessId
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
+                return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
-                _loadProcessKey = value;
+                _loadProcessId = value;
             }
         }
 
@@ -60,10 +60,13 @@ namespace ALE.ETLBox.Logging
 
         public List<LogEntry> LogEntries { get; private set; }
 
-        public string Sql => $@"SELECT LogKey, LogDate, Level, Message, TaskType, TaskAction, TaskHash, Stage, Source, LoadProcessKey
-    FROM etl.Log" +
-            (LoadProcessKey != null ? $@" WHERE LoadProcessKey = {LoadProcessKey}"
+        public string Sql => $@"
+SELECT {QB}id{QE}, {QB}log_date{QE}, {QB}level{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}stage{QE}, {QB}source{QE}, {QB}load_process_id{QE}
+FROM { TN.QuotatedFullName}" +
+            (LoadProcessId != null ? $@" WHERE LoadProcessKey = {LoadProcessId}"
             : "");
+
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
 
         public ReadLogTableTask()
         {
@@ -72,15 +75,15 @@ namespace ALE.ETLBox.Logging
 
         public ReadLogTableTask(long? loadProcessKey) : this()
         {
-            this.LoadProcessKey = loadProcessKey;
+            this.LoadProcessId = loadProcessKey;
         }
 
         public static List<LogEntry> Read() => new ReadLogTableTask().ReadLog().LogEntries;
-        public static List<LogEntry> Read(long? loadProcessKey) => new ReadLogTableTask(loadProcessKey).ReadLog().LogEntries;
+        public static List<LogEntry> Read(long? loadProcessId) => new ReadLogTableTask(loadProcessId).ReadLog().LogEntries;
         public static List<LogEntry> Read(IConnectionManager connectionManager)
             => new ReadLogTableTask() { ConnectionManager = connectionManager }.ReadLog().LogEntries;
-        public static List<LogEntry> Read(IConnectionManager connectionManager, long? loadProcessKey)
-            => new ReadLogTableTask(loadProcessKey) { ConnectionManager = connectionManager }.ReadLog().LogEntries;
+        public static List<LogEntry> Read(IConnectionManager connectionManager, long? loadProcessId)
+            => new ReadLogTableTask(loadProcessId) { ConnectionManager = connectionManager }.ReadLog().LogEntries;
 
     }
 }

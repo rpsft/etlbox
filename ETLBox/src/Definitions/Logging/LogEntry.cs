@@ -8,7 +8,7 @@ namespace ALE.ETLBox.Logging
     [DebuggerDisplay("#{LogKey} {TaskType} - {TaskAction} {LogDate}")]
     public class LogEntry
     {
-        public int LogKey { get; set; }
+        public long Id { get; set; }
         public DateTime LogDate { get; set; }
         public DateTime StartDate => LogDate;
         public DateTime? EndDate { get; set; }
@@ -19,7 +19,7 @@ namespace ALE.ETLBox.Logging
         public string TaskHash { get; set; }
         public string Stage { get; set; }
         public string Source { get; set; }
-        public int? LoadProcessKey { get; set; }
+        public long? LoadProcessId { get; set; }
     }
 
     [DebuggerDisplay("#{LogKey} {TaskType} {Message} - {TaskAction} {LogDate}")]
@@ -34,7 +34,7 @@ namespace ALE.ETLBox.Logging
         }
         public LogHierarchyEntry(LogEntry entry) : this()
         {
-            this.LogKey = entry.LogKey;
+            this.Id = entry.Id;
             this.LogDate = entry.LogDate;
             this.EndDate = entry.EndDate;
             this.Level = entry.Level;
@@ -44,7 +44,7 @@ namespace ALE.ETLBox.Logging
             this.TaskHash = entry.TaskHash;
             this.Stage = entry.Stage;
             this.Source = entry.Source;
-            this.LoadProcessKey = entry.LoadProcessKey;
+            this.LoadProcessId = entry.LoadProcessId;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using System;
+using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging
 {
@@ -10,55 +12,64 @@ namespace ALE.ETLBox.Logging
     public class AbortLoadProcessTask : GenericTask, ITask
     {
         /* ITask Interface */
-        public override string TaskName => $"Abort process with key {LoadProcessKey}";
+        public override string TaskName => $"Abort process with key {LoadProcessId}";
         public void Execute()
         {
+            QueryParameter cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
+            QueryParameter em = new QueryParameter("AbortMessage", "VARCHAR(100)", AbortMessage);
+            QueryParameter lpk = new QueryParameter("LoadProcessId", "BIGINT", LoadProcessId);
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,
-                ConnectionManager = this.ConnectionManager
+                Parameter = new List<QueryParameter>() { cd, em, lpk },
             }.ExecuteNonQuery();
-            var rlp = new ReadLoadProcessTableTask(LoadProcessKey)
+            var rlp = new ReadLoadProcessTableTask(this, LoadProcessId)
             {
-                TaskType = this.TaskType,
-                TaskHash = this.TaskHash,
                 DisableLogging = true,
-                ConnectionManager = this.ConnectionManager
             };
             rlp.Execute();
             ControlFlow.ControlFlow.CurrentLoadProcess = rlp.LoadProcess;
         }
 
         /* Public properties */
-        public long? _loadProcessKey;
-        public long? LoadProcessKey
+        public long? _loadProcessId;
+        public long? LoadProcessId
         {
             get
             {
-                return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
+                return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
             }
             set
             {
-                _loadProcessKey = value;
+                _loadProcessId = value;
             }
         }
         public string AbortMessage { get; set; }
 
 
-        public string Sql => $@"EXECUTE etl.AbortLoadProcess
-	 @LoadProcessKey = '{LoadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess.Id}',
-	 @AbortMessage = {AbortMessage.NullOrSqlString()}";
+        public string Sql => $@"
+ UPDATE { TN.QuotatedFullName } 
+  SET end_date = @CurrentDate
+  , is_running = 0
+  , was_successful = 0
+  , was_aborted = 1
+  , abort_message = @AbortMessage
+  WHERE id = @LoadProcessId
+";
+
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
+
 
         public AbortLoadProcessTask()
         {
 
         }
 
-        public AbortLoadProcessTask(long? loadProcessKey) : this()
+        public AbortLoadProcessTask(long? loadProcessId) : this()
         {
-            this.LoadProcessKey = loadProcessKey;
+            this.LoadProcessId = loadProcessId;
         }
-        public AbortLoadProcessTask(long? loadProcessKey, string abortMessage) : this(loadProcessKey)
+        public AbortLoadProcessTask(long? loadProcessId, string abortMessage) : this(loadProcessId)
         {
             this.AbortMessage = abortMessage;
         }
@@ -69,17 +80,17 @@ namespace ALE.ETLBox.Logging
         }
 
         public static void Abort() => new AbortLoadProcessTask().Execute();
-        public static void Abort(long? loadProcessKey) => new AbortLoadProcessTask(loadProcessKey).Execute();
+        public static void Abort(long? loadProcessId) => new AbortLoadProcessTask(loadProcessId).Execute();
         public static void Abort(string abortMessage) => new AbortLoadProcessTask(abortMessage).Execute();
-        public static void Abort(long? loadProcessKey, string abortMessage) => new AbortLoadProcessTask(loadProcessKey, abortMessage).Execute();
+        public static void Abort(long? loadProcessId, string abortMessage) => new AbortLoadProcessTask(loadProcessId, abortMessage).Execute();
         public static void Abort(IConnectionManager connectionManager)
             => new AbortLoadProcessTask() { ConnectionManager = connectionManager }.Execute();
-        public static void Abort(IConnectionManager connectionManager, int? loadProcessKey)
-            => new AbortLoadProcessTask(loadProcessKey) { ConnectionManager = connectionManager }.Execute();
+        public static void Abort(IConnectionManager connectionManager, long? loadProcessId)
+            => new AbortLoadProcessTask(loadProcessId) { ConnectionManager = connectionManager }.Execute();
         public static void Abort(IConnectionManager connectionManager, string abortMessage)
             => new AbortLoadProcessTask(abortMessage) { ConnectionManager = connectionManager }.Execute();
-        public static void Abort(IConnectionManager connectionManager, int? loadProcessKey, string abortMessage)
-            => new AbortLoadProcessTask(loadProcessKey, abortMessage) { ConnectionManager = connectionManager }.Execute();
+        public static void Abort(IConnectionManager connectionManager, long? loadProcessId, string abortMessage)
+            => new AbortLoadProcessTask(loadProcessId, abortMessage) { ConnectionManager = connectionManager }.Execute();
 
 
     }

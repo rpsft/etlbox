@@ -1,5 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using System;
+using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging
 {
@@ -12,16 +14,24 @@ namespace ALE.ETLBox.Logging
         public override string TaskName => $"Clean up log tables";
         public void Execute()
         {
-            new SqlTask(this, Sql) { DisableLogging = true, DisableExtension = true }.ExecuteNonQuery();
+            QueryParameter par = new QueryParameter("DeleteAfter", "DATETIME", DeleteAfter);
+            new SqlTask(this, Sql)
+            {
+                Parameter = new List<QueryParameter>() { par },
+                DisableLogging = true,
+            }.ExecuteNonQuery();
         }
 
         public int DaysToKeep { get; set; }
+        public DateTime DeleteAfter => new DateTime(DateTime.Now.Year
+                                , DateTime.Now.Month, DateTime.Now.Day).AddDays((DaysToKeep * -1));
 
         /* Public properties */
         public string Sql => $@"
-DELETE FROM etl.Log
- WHERE LogDate < Dateadd(day,-{DaysToKeep},GETDATE())
+DELETE FROM {TN.QuotatedFullName} WHERE {QB}log_date{QE} < @DeleteAfter
 ";
+
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LogTable, this.ConnectionType);
 
         public CleanUpLogTask() { }
 

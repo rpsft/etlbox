@@ -21,7 +21,7 @@ namespace ALE.ETLBox.ControlFlow
         /// <summary>
         /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
         /// </summary>
-        public static IConnectionManager CurrentDbConnection
+        public static IConnectionManager DefaultDbConnection
         {
             get
             {
@@ -35,10 +35,6 @@ namespace ALE.ETLBox.ControlFlow
             set
             {
                 _currentDbConnection = value;
-                //if (value != null)
-                //{
-                //    SetLoggingDatabase(value);
-                //}
             }
         }
 
@@ -57,21 +53,21 @@ namespace ALE.ETLBox.ControlFlow
         /// <summary>
         /// TableName of the current load process logging table
         /// </summary>
-        public static string CurrentLoadProcessTable { get; internal set; }
+        public static string LoadProcessTable { get; set; }
 
         /// <summary>
         /// TableName of the current log process logging table
         /// </summary>
-        public static string CurrentLogTable { get; internal set; }
+        public static string LogTable { get; set; }
 
-        public static void SetLoggingDatabase(IConnectionManager connection) => SetLoggingDatabase(connection, LogLevel.Info);
+        public static void AddLoggingDatabaseToConfig(IConnectionManager connection) => AddLoggingDatabaseToConfig(connection, LogLevel.Info);
 
         /// <summary>
         /// You can also set the logging database in the nlog.config file.
         /// If you want to programmatically change the logging database,  use this method.
         /// </summary>
         /// <param name="connection">The new logging database connection manager</param>
-        public static void SetLoggingDatabase(IConnectionManager connection, LogLevel minLogLevel, string logTableName = "etlbox_log")
+        public static void AddLoggingDatabaseToConfig(IConnectionManager connection, LogLevel minLogLevel, string logTableName = "etlbox_log")
         {
 
             try
@@ -101,11 +97,12 @@ namespace ALE.ETLBox.ControlFlow
         /// </summary>
         public static void ClearSettings()
         {
-            CurrentDbConnection = null;
+            DefaultDbConnection = null;
             CurrentLoadProcess = null;
             DisableAllLogging = false;
-            CurrentLoadProcessTable = null;
-            CurrentLogTable = null;
+            LoadProcessTable = null;
+            LogTable = null;
+            STAGE = null;
         }
 
     }

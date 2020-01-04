@@ -2,7 +2,7 @@
 {
     public static class StringExtension
     {
-        public static string NullOrSqlString(this string s) => s == null ? "null" : $"'{s.Replace("'", "''")}'";
+        public static string NullOrSqlString(this string s) => s == null ? "NULL" : $"'{s.Replace("'", "''")}'";
 
         /// <summary>
         ///		This replicates the functionality of case-insensitive functionality built into Replace in .Net Core.

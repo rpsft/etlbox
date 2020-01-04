@@ -25,7 +25,7 @@ namespace ALE.ETLBox.Logging
         {
             LoadProcessTable.CopyTaskProperties(this);
             LoadProcessTable.Create();
-            ControlFlow.ControlFlow.CurrentLoadProcessTable = LoadProcessTableName;
+            ControlFlow.ControlFlow.LoadProcessTable = LoadProcessTableName;
         }
 
         public CreateLoadProcessTableTask(string loadProcessTableName)

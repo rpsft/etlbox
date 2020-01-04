@@ -94,10 +94,6 @@ namespace ALE.ETLBox.ConnectionManager
                 case "timetz":
                 case "timestamp":
                 case "timestamptz":
-                //case "timestamp with time zone":
-                //case "timestamp without time zone":
-                //case "time with time zone":
-                //case "time without time zone":
                     return "System.DateTime";
                 case "uniqueidentifier":
                 case "uuid":
@@ -143,7 +139,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
             else if (connectionType == ConnectionManagerType.SQLite)
             {
-                if (typeName == "INT")
+                if (typeName == "INT" ||typeName == "BIGINT")
                     return "INTEGER";
                 return dbSpecificTypeName;
             }
@@ -154,8 +150,16 @@ namespace ALE.ETLBox.ConnectionManager
                     if (typeName.StartsWith("N"))
                         return typeName.Substring(1);
                 }
-                if (typeName == "DATETIME")
-                    return "TIMESTAMP";
+                else if (typeName == "DATETIME")
+                    return "timestamp";
+                else if (typeName == "TIMESTAMP WITH TIME ZONE")
+                    return "timestamptz";
+                else if (typeName == "TIMESTAMP WITHOUT TIME ZONE")
+                    return "timestamp";
+                else if (typeName == "TIME WITH TIME ZONE")
+                    return "timetz";
+                else if (typeName == "TIME WITHOUT TIME ZONE")
+                    return "time";
                 return dbSpecificTypeName;
             }
             else

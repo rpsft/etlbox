@@ -18,12 +18,13 @@ namespace ALE.ETLBoxTests.Logging
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
         public DataFlowLoggingTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTableTask.Create(SqlConnection, "Log");
+            CreateLogTableTask.Create(SqlConnection);
+            ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, "etlbox_log");
+            DropTableTask.Drop(SqlConnection, ControlFlow.LogTable);
             ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
@@ -67,19 +68,19 @@ namespace ALE.ETLBoxTests.Logging
             DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
-            StartLoadProcessTask.Start(SqlConnection, "Test");
             DataFlow.LoggingThresholdRows = 3;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBSource' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
+            Assert.Equal(4, new RowCountTask("etlbox_log",
+                "task_type = 'DBSource' AND task_action = 'LOG'")
             {
                 DisableLogging = true,
                 ConnectionManager = SqlConnection
             }.Count().Rows);
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'DBDestination' AND TaskAction = 'LOG' AND LoadProcessKey IS NOT NULL")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DBDestination' AND task_action = 'LOG'")
             {
                 DisableLogging = true,
                 ConnectionManager = SqlConnection
@@ -105,9 +106,9 @@ namespace ALE.ETLBoxTests.Logging
 
             //Assert
 
-            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DBSource'")
-                { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
-            Assert.Equal(2, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
+            Assert.Equal(2, new RowCountTask("etlbox_log", "task_type = 'DBSource'")
+            { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
+            Assert.Equal(2, new RowCountTask("etlbox_log", "task_type = 'DBDestination'")
             { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
         }
 
@@ -130,12 +131,12 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'RowTransformation' AND TaskAction = 'LOG'")
+            Assert.Equal(3, new RowCountTask("etlbox_log", "task_type = 'RowTransformation' AND task_action = 'LOG'")
             {
                 DisableLogging = true,
                 ConnectionManager = SqlConnection
             }.Count().Rows);
-         }
+        }
 
         [Fact]
         public void LoggingInCSVSource()
@@ -152,7 +153,7 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etl.Log", "TaskType = 'CSVSource' ")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'CSVSource' ")
             {
                 DisableLogging = true,
                 ConnectionManager = SqlConnection
@@ -189,9 +190,9 @@ namespace ALE.ETLBoxTests.Logging
             destT.Wait();
 
             //Assert
-            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'CustomSource'")
+            Assert.Equal(3, new RowCountTask("etlbox_log", "task_type = 'CustomSource'")
             { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
-            Assert.Equal(3, new RowCountTask("etl.Log", "TaskType = 'DBDestination'")
+            Assert.Equal(3, new RowCountTask("etlbox_log", "task_type = 'DBDestination'")
             { ConnectionManager = SqlConnection, DisableLogging = true }.Count().Rows);
 
         }

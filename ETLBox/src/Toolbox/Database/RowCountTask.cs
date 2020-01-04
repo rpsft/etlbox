@@ -5,10 +5,8 @@ using System;
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables)
-    /// For Sql Server, you can set the QuickQueryMode to true. This will query the sys.partition table which can be much faster.
-    /// NoLock does a normal COUNT(*) using the nolock - option which avoid tables locks when reading from the table (but while counting the tables
-    /// new data could be inserted, which could lead to wrong results).
+    /// Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables).
+    /// You can pass a a filter condition for the count.
     /// </summary>
     /// <example>
     /// <code>
@@ -21,11 +19,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Count Rows for {TableName}" + (HasCondition ? $" with condition {Condition}" : "");
         public void Execute()
         {
-            if (this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.SqlServer
-                || this.ConnectionType == ETLBox.ConnectionManager.ConnectionManagerType.Access)
-                Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
-            else
-                Rows = (int)new SqlTask(this, Sql).ExecuteScalar<long>();
+            Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
         }
 
         public string TableName { get; set; }
@@ -34,14 +28,23 @@ namespace ALE.ETLBox.ControlFlow
         public bool HasCondition => !String.IsNullOrWhiteSpace(Condition);
         public int? Rows { get; private set; }
         public bool? HasRows => Rows > 0;
+
+        /// <summary>
+        /// For Sql Server, you can set the QuickQueryMode to true. This will query the sys.partition table which can be much faster.
+        /// </summary>
         public bool QuickQueryMode { get; set; }
+
+        /// <summary>
+        /// NoLock does a normal COUNT(*) using the nolock - option which avoid tables locks when reading from the table
+        /// (but while counting the tables new data could be inserted, which could lead to wrong results).
+        /// </summary>
         public bool NoLock { get; set; }
         public string Sql
         {
             get
             {
                 return QuickQueryMode && !HasCondition ? $@"
-SELECT CAST ( SUM ( [rows]) AS INT) 
+SELECT SUM ([rows]) 
 FROM [sys].[partitions] 
 WHERE [object_id] = object_id(N'{TableName}') 
   AND [index_id] IN (0,1)" :

@@ -12,33 +12,41 @@ using Xunit;
 namespace ALE.ETLBoxTests.Logging
 {
     [Collection("Logging")]
-    public class CleanUpLogTaskTests : IDisposable
+    public class CleanupLogTaskTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("Logging");
-        public CleanUpLogTaskTests(LoggingDatabaseFixture dbFixture)
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
+
+        public CleanupLogTaskTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTableTask.Create(Connection, "Log");
+
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(Connection, "etlbox_log");
+            ControlFlow.ClearSettings();
         }
 
-        [Fact]
-        public void LogCleanup()
+        [Theory, MemberData(nameof(Connections))]
+        public void CompleteCleanup(IConnectionManager connection)
         {
+            //Arrange
+            CreateLogTableTask.Create(connection, "test_cleanup_log");
+            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Trace, "test_cleanup_log");
             //Arrange
             LogTask.Error("Error");
             LogTask.Warn("Warn");
             LogTask.Info("Info");
             //Act
-            CleanUpLogTask.CleanUp(Connection, 0);
+            CleanUpLogTask.CleanUp(connection, 0);
             //Assert
-            Assert.Equal(0, new RowCountTask("etl.Log ") {
+            Assert.Equal(0, new RowCountTask("test_cleanup_log")
+            {
                 DisableLogging = true,
-                ConnectionManager = Connection
+                ConnectionManager = connection
             }.Count().Rows);
+
+            //Cleanup
+            DropTableTask.Drop(connection, ControlFlow.LogTable);
         }
     }
 }

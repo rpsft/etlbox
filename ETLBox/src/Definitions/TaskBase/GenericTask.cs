@@ -23,7 +23,7 @@ namespace ALE.ETLBox
             get
             {
                 if (ConnectionManager == null)
-                    return (IConnectionManager)ControlFlow.ControlFlow.CurrentDbConnection;
+                    return (IConnectionManager)ControlFlow.ControlFlow.DefaultDbConnection;
                 else
                     return (IConnectionManager)ConnectionManager;
             }

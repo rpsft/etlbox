@@ -115,24 +115,24 @@ ORDER BY end_date desc, id DESC";
             }
         }
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.CurrentLoadProcessTable, this.ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
         public ReadLoadProcessTableTask()
         {
 
         }
-        public ReadLoadProcessTableTask(long? loadProcessKey) : this()
+        public ReadLoadProcessTableTask(long? loadProcessId) : this()
         {
-            this.LoadProcessId = loadProcessKey;
+            this.LoadProcessId = loadProcessId;
         }
 
-        public ReadLoadProcessTableTask(ITask callingTask, long? loadProcessKey) : this(loadProcessKey)
+        public ReadLoadProcessTableTask(ITask callingTask, long? loadProcessId) : this(loadProcessId)
         {
             this.CopyTaskProperties(callingTask);
         }
 
-        public static LoadProcess Read(long? loadProcessKey)
+        public static LoadProcess Read(long? loadProcessId)
         {
-            var sql = new ReadLoadProcessTableTask(loadProcessKey);
+            var sql = new ReadLoadProcessTableTask(loadProcessId);
             sql.Execute();
             return sql.LoadProcess;
         }
