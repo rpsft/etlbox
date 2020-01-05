@@ -21,6 +21,7 @@ namespace ALE.ETLBox.Logging
         public void Execute()
         {
             LogTable.CopyTaskProperties(this);
+            LogTable.DisableLogging = true;
             LogTable.Create();
             ControlFlow.ControlFlow.LogTable = LogTableName;
         }

@@ -19,8 +19,8 @@ namespace ALE.ETLBoxTests.Logging
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
         public GetLogAsJsonTests(LoggingDatabaseFixture dbFixture)
         {
-            CreateLogTableTask.Create(SqlConnection);
             CreateLoadProcessTableTask.Create(SqlConnection);
+            CreateLogTableTask.Create(SqlConnection);
             ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
             ControlFlow.DefaultDbConnection = SqlConnection;
         }
