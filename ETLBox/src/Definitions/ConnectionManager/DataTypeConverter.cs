@@ -85,6 +85,7 @@ namespace ALE.ETLBox.ConnectionManager
                 case "float4":
                 case "float8":
                 case "double":
+                case "double precision":
                     return "System.Double";
                 case "date":
                 case "datetime":
@@ -151,15 +152,7 @@ namespace ALE.ETLBox.ConnectionManager
                         return typeName.Substring(1);
                 }
                 else if (typeName == "DATETIME")
-                    return "timestamp";
-                else if (typeName == "TIMESTAMP WITH TIME ZONE")
-                    return "timestamptz";
-                else if (typeName == "TIMESTAMP WITHOUT TIME ZONE")
-                    return "timestamp";
-                else if (typeName == "TIME WITH TIME ZONE")
-                    return "timetz";
-                else if (typeName == "TIME WITHOUT TIME ZONE")
-                    return "time";
+                    return "TIMESTAMP";
                 return dbSpecificTypeName;
             }
             else

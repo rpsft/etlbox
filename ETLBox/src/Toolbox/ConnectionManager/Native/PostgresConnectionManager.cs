@@ -46,9 +46,7 @@ FROM STDIN (FORMAT BINARY)"))
                         if (val != null)
                         {
                             object convertedVal = System.Convert.ChangeType(data.GetValue(ordinal), colDef.NETDataType);
-                            string dt = DataTypeConverter.TryGetDBSpecificType(colDef.InternalDataType, ConnectionManagerType.Postgres);
-                            writer.Write(convertedVal, dt);
-
+                            writer.Write(convertedVal, colDef.InternalDataType.ToLower());
                         }
                         else
                         {

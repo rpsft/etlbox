@@ -11,8 +11,8 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixing bug if csv file has no header record.</PackageReleaseNotes>
-    <Version>1.7.5-alpha</Version>
+    <PackageReleaseNotes>Fixing bug if csv file has no header record. Bulk inserts using the DBDestinations with postgres had problems with timestamp data type - this is solved. All log tasks have been improved, and now they will work with all supported databases.</PackageReleaseNotes>
+    <Version>1.7.5</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>

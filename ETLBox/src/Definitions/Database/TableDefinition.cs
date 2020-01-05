@@ -210,8 +210,11 @@ ORDER BY cols.ordinal_position
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@" 
 SELECT cols.column_name
-, cols.data_type
 ,CASE 
+   WHEN LEFT(cols.data_type,4) = 'time' THEN REPLACE(REPLACE(REPLACE(cols.data_type,'without time zone',''), 'with time zone', 'tz'),' ','')
+   ELSE cols.data_type
+END AS ""internaldatatype""
+,CASE
     WHEN cols.domain_name IS NOT NULL THEN domain_name
     WHEN cols.data_type='character varying' THEN 'varchar('||character_maximum_length||')'
     WHEN cols.data_type='numeric' THEN 'numeric('||numeric_precision||','||numeric_scale||')'

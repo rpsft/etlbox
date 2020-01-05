@@ -73,6 +73,9 @@
     <None Update="res\CSVSource\FourColumnsForDynamic.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\CSVSource\TwoColumnsNoHeader.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\CSVSource\TwoColumnsForDynamic.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
