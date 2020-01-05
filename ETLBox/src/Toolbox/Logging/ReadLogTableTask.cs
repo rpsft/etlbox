@@ -63,10 +63,10 @@ namespace ALE.ETLBox.Logging
         public string Sql => $@"
 SELECT {QB}id{QE}, {QB}log_date{QE}, {QB}level{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}stage{QE}, {QB}source{QE}, {QB}load_process_id{QE}
 FROM { TN.QuotatedFullName}" +
-            (LoadProcessId != null ? $@" WHERE LoadProcessKey = {LoadProcessId}"
+            (LoadProcessId != null ? $@" WHERE {QB}LoadProcessKey{QE} = {LoadProcessId}"
             : "");
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LogTable, this.ConnectionType);
 
         public ReadLogTableTask()
         {
