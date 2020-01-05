@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace ALE.ETLBox.Logging
 {
-    [DebuggerDisplay("#{LogKey} {TaskType} - {TaskAction} {LogDate}")]
+    [DebuggerDisplay("#{Id} {TaskType} - {TaskAction} {LogDate}")]
     public class LogEntry
     {
         public long Id { get; set; }
@@ -22,7 +22,7 @@ namespace ALE.ETLBox.Logging
         public long? LoadProcessId { get; set; }
     }
 
-    [DebuggerDisplay("#{LogKey} {TaskType} {Message} - {TaskAction} {LogDate}")]
+    [DebuggerDisplay("#{ID} {TaskType} - {TaskAction} {LogDate}")]
     public class LogHierarchyEntry : LogEntry
     {
         public List<LogHierarchyEntry> Children { get; set; }

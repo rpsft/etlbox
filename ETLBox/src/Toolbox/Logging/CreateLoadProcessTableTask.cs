@@ -18,7 +18,7 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"Create default etlbox load process table";
-        public string LoadProcessTableName { get; set; } = "etlbox_load_process";
+        public string LoadProcessTableName { get; set; } = ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME;
         public string Sql => LoadProcessTable.Sql;
         public CreateTableTask LoadProcessTable { get; private set; }
         public void Execute()
@@ -57,9 +57,9 @@ namespace ALE.ETLBox.Logging
             LoadProcessTable = new CreateTableTask(LoadProcessTableName, lpColumns) { DisableLogging = true };
         }
 
-        public static void Create(string loadProcessTableName = "etlbox_load_process")
+        public static void Create(string loadProcessTableName = ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME)
             => new CreateLoadProcessTableTask(loadProcessTableName).Execute();
-        public static void Create(IConnectionManager connectionManager, string loadProcessTableName = "etlbox_load_process")
+        public static void Create(IConnectionManager connectionManager, string loadProcessTableName = ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME)
             => new CreateLoadProcessTableTask(connectionManager, loadProcessTableName).Execute();
 
     }

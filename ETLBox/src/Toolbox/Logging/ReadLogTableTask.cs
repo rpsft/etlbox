@@ -24,7 +24,7 @@ namespace ALE.ETLBox.Logging
                 BeforeRowReadAction = () => current = new LogEntry(),
                 AfterRowReadAction = () => LogEntries.Add(current),
                 Actions = new List<Action<object>>() {
-                    col => current.Id = (long)col,
+                    col => current.Id = Convert.ToInt64(col),
                     col => current.LogDate = (DateTime)col,
                     col => current.Level = (string)col,
                     col => current.Message = (string)col,
@@ -33,7 +33,7 @@ namespace ALE.ETLBox.Logging
                     col => current.TaskHash = (string)col,
                     col => current.Stage = (string)col,
                     col => current.Source = (string)col,
-                    col => current.LoadProcessId = (long?)col,
+                    col => current.LoadProcessId = Convert.ToInt64(col),
                 }
             }.ExecuteReader();
         }

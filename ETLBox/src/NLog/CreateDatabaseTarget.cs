@@ -15,7 +15,7 @@ namespace ALE.ETLBox.Logging
         public string CommandText => $@"
 INSERT INTO {TN.QuotatedFullName}
     ( {QB}log_date{QE}, {QB}level{QE}, {QB}stage{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}source{QE}, {QB}load_process_id{QE})
-SELECT CAST(@LogDate AS {DATETIME} )
+SELECT {LogDate}
     , @Level
     , CAST(@Stage as {VARCHAR}(20))
     , CAST(@Message as {VARCHAR}(4000))
@@ -27,7 +27,18 @@ SELECT CAST(@LogDate AS {DATETIME} )
            THEN NULL
            ELSE CAST(@LoadProcessKey AS {INT}) END 
 ";
-        public string DATETIME => this.ConnectionType == ConnectionManagerType.Postgres ? "TIMESTAMP" : "DATETIME";
+        public string LogDate
+        {
+            get
+            {
+                if (ConnectionType == ConnectionManagerType.SqlServer || ConnectionType == ConnectionManagerType.MySql)
+                    return "CAST(@LogDate AS DATETIME)";
+                else if (ConnectionType == ConnectionManagerType.Postgres)
+                    return "CAST(@LogDate AS TIMESTAMP)";
+                else
+                    return "@LogDate";
+            }
+        }
         public string VARCHAR => this.ConnectionType == ConnectionManagerType.MySql ? "CHAR" : "VARCHAR";
         public string INT => this.ConnectionType == ConnectionManagerType.MySql ? "UNSIGNED" : "INT";
 

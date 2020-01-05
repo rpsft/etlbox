@@ -12,11 +12,6 @@ namespace ALE.ETLBox.ControlFlow
     /// </summary>
     public static class ControlFlow
     {
-        /// <summary>
-        /// For logging purposes only. If the stage is set, you can access the stage value in the logging configuration.
-        /// </summary>
-        public static string STAGE { get; set; }
-
         private static IConnectionManager _currentDbConnection;
         /// <summary>
         /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
@@ -39,26 +34,34 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         /// <summary>
-        /// If you used the logging task StartLoadProces (and created the corresponding load process table before)
-        /// then this Property will hold the current load process information.
-        /// </summary>
-        public static LoadProcess CurrentLoadProcess { get; internal set; }
-
-        /// <summary>
         /// If set to true, nothing will be logged by any control flow task or data flow component.
         /// When switched back to false, all tasks and components will continue to log.
         /// </summary>
         public static bool DisableAllLogging { get; set; }
 
         /// <summary>
+        /// For logging purposes only. If the stage is set, you can access the stage value in the logging configuration.
+        /// </summary>
+        public static string STAGE { get; set; }
+
+        /// <summary>
+        /// If you used the logging task StartLoadProces (and created the corresponding load process table before)
+        /// then this Property will hold the current load process information.
+        /// </summary>
+        public static LoadProcess CurrentLoadProcess { get; internal set; }
+
+        public const string DEFAULTLOADPROCESSTABLENAME = "etlbox_loadprocess";
+        /// <summary>
         /// TableName of the current load process logging table
         /// </summary>
-        public static string LoadProcessTable { get; set; }
+        public static string LoadProcessTable { get; set; } = DEFAULTLOADPROCESSTABLENAME;
+
+        public const string DEFAULTLOGTABLENAME = "etlbox_log";
 
         /// <summary>
         /// TableName of the current log process logging table
         /// </summary>
-        public static string LogTable { get; set; }
+        public static string LogTable { get; set; } = DEFAULTLOGTABLENAME;
 
         public static void AddLoggingDatabaseToConfig(IConnectionManager connection) => AddLoggingDatabaseToConfig(connection, LogLevel.Info);
 
@@ -67,7 +70,7 @@ namespace ALE.ETLBox.ControlFlow
         /// If you want to programmatically change the logging database,  use this method.
         /// </summary>
         /// <param name="connection">The new logging database connection manager</param>
-        public static void AddLoggingDatabaseToConfig(IConnectionManager connection, LogLevel minLogLevel, string logTableName = "etlbox_log")
+        public static void AddLoggingDatabaseToConfig(IConnectionManager connection, LogLevel minLogLevel, string logTableName = DEFAULTLOGTABLENAME)
         {
 
             try
@@ -100,11 +103,10 @@ namespace ALE.ETLBox.ControlFlow
             DefaultDbConnection = null;
             CurrentLoadProcess = null;
             DisableAllLogging = false;
-            LoadProcessTable = null;
-            LogTable = null;
+            LoadProcessTable = DEFAULTLOADPROCESSTABLENAME;
+            LogTable = DEFAULTLOGTABLENAME;
             STAGE = null;
         }
-
     }
 
 

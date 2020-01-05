@@ -6,7 +6,8 @@ using System.Collections.Generic;
 namespace ALE.ETLBox.Logging
 {
     /// <summary>
-    /// Returns the content of the etl.LoadProcess table as JSON.
+    /// Returns the content of the LoadProcess table as JSON.
+    /// The table name is read from `ControlFlow.LoadProcessTable`. The default table name is etlbox_log.
     /// </summary>
     public class GetLoadProcessAsJSONTask : GenericTask, ITask
     {

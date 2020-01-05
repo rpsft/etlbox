@@ -14,10 +14,10 @@ using System.Text.RegularExpressions;
 namespace ALE.ETLBoxTests.Logging
 {
     [Collection("Logging")]
-    public class DemoLogTests : IDisposable
+    public class GetLogAsJsonTests : IDisposable
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
-        public DemoLogTests(LoggingDatabaseFixture dbFixture)
+        public GetLogAsJsonTests(LoggingDatabaseFixture dbFixture)
         {
             CreateLogTableTask.Create(SqlConnection);
             CreateLoadProcessTableTask.Create(SqlConnection);

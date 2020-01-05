@@ -15,7 +15,7 @@ namespace ALE.ETLBox.Logging
     {
         /* ITask Interface */
         public override string TaskName => $"Create default etlbox log table";
-        public string LogTableName { get; set; } = "etlbox_log";
+        public string LogTableName { get; set; } = ControlFlow.ControlFlow.DEFAULTLOGTABLENAME;
         public string Sql => LogTable.Sql;
         public CreateTableTask LogTable { get; private set; }
         public void Execute()
@@ -53,8 +53,8 @@ namespace ALE.ETLBox.Logging
             LogTable = new CreateTableTask(LogTableName, columns);
         }
 
-        public static void Create(string logTableName = "etlbox_log") => new CreateLogTableTask(logTableName).Execute();
-        public static void Create(IConnectionManager connectionManager, string logTableName = "etlbox_log") => new CreateLogTableTask(connectionManager, logTableName).Execute();
+        public static void Create(string logTableName = ControlFlow.ControlFlow.DEFAULTLOGTABLENAME) => new CreateLogTableTask(logTableName).Execute();
+        public static void Create(IConnectionManager connectionManager, string logTableName = ControlFlow.ControlFlow.DEFAULTLOGTABLENAME) => new CreateLogTableTask(connectionManager, logTableName).Execute();
 
     }
 }

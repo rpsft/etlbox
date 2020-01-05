@@ -98,23 +98,21 @@ namespace ALE.ETLBoxTests.Logging
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void LogCleanup(IConnectionManager connection)
+        public void TestReadLogTask(IConnectionManager connection)
         {
             //Arrange
-            CreateLogTableTask.Create(connection, "test_cleanup_log");
-            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Trace, "test_cleanup_log");
-            //Arrange
-            LogTask.Error("Error");
-            LogTask.Warn("Warn");
-            LogTask.Info("Info");
+            CreateLogTableTask.Create(connection, "test_readlog");
+            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Info, "test_readlog");
+            SqlTask.ExecuteNonQuery(connection, "Test Task", "Select 1 as test");
+
             //Act
-            CleanUpLogTask.CleanUp(connection, 0);
+            List<LogEntry> entries = ReadLogTableTask.Read(connection);
+
             //Assert
-            Assert.Equal(0, new RowCountTask("test_cleanup_log")
-            {
-                DisableLogging = true,
-                ConnectionManager = connection
-            }.Count().Rows);
+            Assert.Collection<LogEntry>(entries,
+                 l => Assert.True(l.Message == "Test Task" && l.TaskAction == "START" && l.TaskType == "SqlTask"),
+                 l => Assert.True(l.Message == "Test Task" && l.TaskAction == "END" && l.TaskType == "SqlTask")
+                 ) ;
 
             //Cleanup
             DropTableTask.Drop(connection, ControlFlow.LogTable);
