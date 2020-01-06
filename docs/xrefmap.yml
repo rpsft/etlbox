@@ -1574,6 +1574,25 @@ references:
   commentId: T:ALE.ETLBox.ControlFlow.ControlFlow
   fullName: ALE.ETLBox.ControlFlow.ControlFlow
   nameWithType: ControlFlow
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(ALE.ETLBox.ConnectionManager.IConnectionManager)
+  name: AddLoggingDatabaseToConfig(IConnectionManager)
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_AddLoggingDatabaseToConfig_ALE_ETLBox_ConnectionManager_IConnectionManager_
+  commentId: M:ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(ALE.ETLBox.ConnectionManager.IConnectionManager)
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(ALE.ETLBox.ConnectionManager.IConnectionManager)
+  nameWithType: ControlFlow.AddLoggingDatabaseToConfig(IConnectionManager)
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(ALE.ETLBox.ConnectionManager.IConnectionManager,NLog.LogLevel,System.String)
+  name: AddLoggingDatabaseToConfig(IConnectionManager, LogLevel, String)
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_AddLoggingDatabaseToConfig_ALE_ETLBox_ConnectionManager_IConnectionManager_NLog_LogLevel_System_String_
+  commentId: M:ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(ALE.ETLBox.ConnectionManager.IConnectionManager,NLog.LogLevel,System.String)
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(ALE.ETLBox.ConnectionManager.IConnectionManager, NLog.LogLevel, System.String)
+  nameWithType: ControlFlow.AddLoggingDatabaseToConfig(IConnectionManager, LogLevel, String)
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig*
+  name: AddLoggingDatabaseToConfig
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_AddLoggingDatabaseToConfig_
+  commentId: Overload:ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig
+  isSpec: "True"
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig
+  nameWithType: ControlFlow.AddLoggingDatabaseToConfig
 - uid: ALE.ETLBox.ControlFlow.ControlFlow.ClearSettings
   name: ClearSettings()
   href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_ClearSettings
@@ -1587,19 +1606,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.ControlFlow.ClearSettings
   nameWithType: ControlFlow.ClearSettings
-- uid: ALE.ETLBox.ControlFlow.ControlFlow.CurrentDbConnection
-  name: CurrentDbConnection
-  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_CurrentDbConnection
-  commentId: P:ALE.ETLBox.ControlFlow.ControlFlow.CurrentDbConnection
-  fullName: ALE.ETLBox.ControlFlow.ControlFlow.CurrentDbConnection
-  nameWithType: ControlFlow.CurrentDbConnection
-- uid: ALE.ETLBox.ControlFlow.ControlFlow.CurrentDbConnection*
-  name: CurrentDbConnection
-  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_CurrentDbConnection_
-  commentId: Overload:ALE.ETLBox.ControlFlow.ControlFlow.CurrentDbConnection
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.ControlFlow.CurrentDbConnection
-  nameWithType: ControlFlow.CurrentDbConnection
 - uid: ALE.ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess
   name: CurrentLoadProcess
   href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_CurrentLoadProcess
@@ -1613,6 +1619,31 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess
   nameWithType: ControlFlow.CurrentLoadProcess
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection
+  name: DefaultDbConnection
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_DefaultDbConnection
+  commentId: P:ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection
+  nameWithType: ControlFlow.DefaultDbConnection
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection*
+  name: DefaultDbConnection
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_DefaultDbConnection_
+  commentId: Overload:ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection
+  isSpec: "True"
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection
+  nameWithType: ControlFlow.DefaultDbConnection
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME
+  name: DEFAULTLOADPROCESSTABLENAME
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_DEFAULTLOADPROCESSTABLENAME
+  commentId: F:ALE.ETLBox.ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME
+  nameWithType: ControlFlow.DEFAULTLOADPROCESSTABLENAME
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.DEFAULTLOGTABLENAME
+  name: DEFAULTLOGTABLENAME
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_DEFAULTLOGTABLENAME
+  commentId: F:ALE.ETLBox.ControlFlow.ControlFlow.DEFAULTLOGTABLENAME
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.DEFAULTLOGTABLENAME
+  nameWithType: ControlFlow.DEFAULTLOGTABLENAME
 - uid: ALE.ETLBox.ControlFlow.ControlFlow.DisableAllLogging
   name: DisableAllLogging
   href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_DisableAllLogging
@@ -1639,19 +1670,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.ControlFlow.GetLogger
   nameWithType: ControlFlow.GetLogger
-- uid: ALE.ETLBox.ControlFlow.ControlFlow.SetLoggingDatabase(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: SetLoggingDatabase(IConnectionManager)
-  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_SetLoggingDatabase_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.ControlFlow.ControlFlow.SetLoggingDatabase(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.ControlFlow.ControlFlow.SetLoggingDatabase(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: ControlFlow.SetLoggingDatabase(IConnectionManager)
-- uid: ALE.ETLBox.ControlFlow.ControlFlow.SetLoggingDatabase*
-  name: SetLoggingDatabase
-  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_SetLoggingDatabase_
-  commentId: Overload:ALE.ETLBox.ControlFlow.ControlFlow.SetLoggingDatabase
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable
+  name: LoadProcessTable
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_LoadProcessTable
+  commentId: P:ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable
+  nameWithType: ControlFlow.LoadProcessTable
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable*
+  name: LoadProcessTable
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_LoadProcessTable_
+  commentId: Overload:ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable
   isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.ControlFlow.SetLoggingDatabase
-  nameWithType: ControlFlow.SetLoggingDatabase
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable
+  nameWithType: ControlFlow.LoadProcessTable
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.LogTable
+  name: LogTable
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_LogTable
+  commentId: P:ALE.ETLBox.ControlFlow.ControlFlow.LogTable
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.LogTable
+  nameWithType: ControlFlow.LogTable
+- uid: ALE.ETLBox.ControlFlow.ControlFlow.LogTable*
+  name: LogTable
+  href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_LogTable_
+  commentId: Overload:ALE.ETLBox.ControlFlow.ControlFlow.LogTable
+  isSpec: "True"
+  fullName: ALE.ETLBox.ControlFlow.ControlFlow.LogTable
+  nameWithType: ControlFlow.LogTable
 - uid: ALE.ETLBox.ControlFlow.ControlFlow.STAGE
   name: STAGE
   href: api/ALE.ETLBox.ControlFlow.ControlFlow.html#ALE_ETLBox_ControlFlow_ControlFlow_STAGE
@@ -2989,6 +3033,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.DbTask.IsOdbcConnection
   nameWithType: DbTask.IsOdbcConnection
+- uid: ALE.ETLBox.ControlFlow.DbTask.Parameter
+  name: Parameter
+  href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Parameter
+  commentId: P:ALE.ETLBox.ControlFlow.DbTask.Parameter
+  fullName: ALE.ETLBox.ControlFlow.DbTask.Parameter
+  nameWithType: DbTask.Parameter
+- uid: ALE.ETLBox.ControlFlow.DbTask.Parameter*
+  name: Parameter
+  href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_Parameter_
+  commentId: Overload:ALE.ETLBox.ControlFlow.DbTask.Parameter
+  isSpec: "True"
+  fullName: ALE.ETLBox.ControlFlow.DbTask.Parameter
+  nameWithType: DbTask.Parameter
 - uid: ALE.ETLBox.ControlFlow.DbTask.ReadTopX
   name: ReadTopX
   href: api/ALE.ETLBox.ControlFlow.DbTask.html#ALE_ETLBox_ControlFlow_DbTask_ReadTopX
@@ -3961,6 +4018,12 @@ references:
   commentId: M:ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.#ctor
   fullName: ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.IfTableOrViewExistsTask()
   nameWithType: IfTableOrViewExistsTask.IfTableOrViewExistsTask()
+- uid: ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  name: IfTableOrViewExistsTask(IConnectionManager, String)
+  href: api/ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.html#ALE_ETLBox_ControlFlow_IfTableOrViewExistsTask__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
+  commentId: M:ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  fullName: ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.IfTableOrViewExistsTask(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
+  nameWithType: IfTableOrViewExistsTask.IfTableOrViewExistsTask(IConnectionManager, String)
 - uid: ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.#ctor(System.String)
   name: IfTableOrViewExistsTask(String)
   href: api/ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.html#ALE_ETLBox_ControlFlow_IfTableOrViewExistsTask__ctor_System_String_
@@ -5537,6 +5600,24 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReader
   nameWithType: SqlTask.ExecuteReader
+- uid: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String,System.Action{System.Object}[])
+  name: ExecuteReaderSingleLine(IConnectionManager, String, String, Action<Object>[])
+  href: api/ALE.ETLBox.ControlFlow.SqlTask.html#ALE_ETLBox_ControlFlow_SqlTask_ExecuteReaderSingleLine_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_String_System_Action_System_Object____
+  commentId: M:ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String,System.Action{System.Object}[])
+  name.vb: ExecuteReaderSingleLine(IConnectionManager, String, String, Action(Of Object)())
+  fullName: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.String, System.Action<System.Object>[])
+  fullName.vb: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.String, System.Action(Of System.Object)())
+  nameWithType: SqlTask.ExecuteReaderSingleLine(IConnectionManager, String, String, Action<Object>[])
+  nameWithType.vb: SqlTask.ExecuteReaderSingleLine(IConnectionManager, String, String, Action(Of Object)())
+- uid: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter},System.Action{System.Object}[])
+  name: ExecuteReaderSingleLine(IConnectionManager, String, String, IEnumerable<QueryParameter>, Action<Object>[])
+  href: api/ALE.ETLBox.ControlFlow.SqlTask.html#ALE_ETLBox_ControlFlow_SqlTask_ExecuteReaderSingleLine_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__System_Action_System_Object____
+  commentId: M:ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String,System.Collections.Generic.IEnumerable{ALE.ETLBox.QueryParameter},System.Action{System.Object}[])
+  name.vb: ExecuteReaderSingleLine(IConnectionManager, String, String, IEnumerable(Of QueryParameter), Action(Of Object)())
+  fullName: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.String, System.Collections.Generic.IEnumerable<ALE.ETLBox.QueryParameter>, System.Action<System.Object>[])
+  fullName.vb: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.String, System.Collections.Generic.IEnumerable(Of ALE.ETLBox.QueryParameter), System.Action(Of System.Object)())
+  nameWithType: SqlTask.ExecuteReaderSingleLine(IConnectionManager, String, String, IEnumerable<QueryParameter>, Action<Object>[])
+  nameWithType.vb: SqlTask.ExecuteReaderSingleLine(IConnectionManager, String, String, IEnumerable(Of QueryParameter), Action(Of Object)())
 - uid: ALE.ETLBox.ControlFlow.SqlTask.ExecuteReaderSingleLine(System.String,System.String,System.Action{System.Object}[])
   name: ExecuteReaderSingleLine(String, String, Action<Object>[])
   href: api/ALE.ETLBox.ControlFlow.SqlTask.html#ALE_ETLBox_ControlFlow_SqlTask_ExecuteReaderSingleLine_System_String_System_String_System_Action_System_Object____
@@ -5654,19 +5735,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.SqlTask.ExecuteScalarAsBool
   nameWithType: SqlTask.ExecuteScalarAsBool
-- uid: ALE.ETLBox.ControlFlow.SqlTask.ParameterList
-  name: ParameterList
-  href: api/ALE.ETLBox.ControlFlow.SqlTask.html#ALE_ETLBox_ControlFlow_SqlTask_ParameterList
-  commentId: P:ALE.ETLBox.ControlFlow.SqlTask.ParameterList
-  fullName: ALE.ETLBox.ControlFlow.SqlTask.ParameterList
-  nameWithType: SqlTask.ParameterList
-- uid: ALE.ETLBox.ControlFlow.SqlTask.ParameterList*
-  name: ParameterList
-  href: api/ALE.ETLBox.ControlFlow.SqlTask.html#ALE_ETLBox_ControlFlow_SqlTask_ParameterList_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlTask.ParameterList
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlTask.ParameterList
-  nameWithType: SqlTask.ParameterList
 - uid: ALE.ETLBox.ControlFlow.SqlTask.TaskName
   name: TaskName
   href: api/ALE.ETLBox.ControlFlow.SqlTask.html#ALE_ETLBox_ControlFlow_SqlTask_TaskName
@@ -9610,12 +9678,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MergeJoin.MergeJoin(System.Func(Of System.String(), System.String(), System.String()))
   nameWithType: MergeJoin.MergeJoin(Func<String[], String[], String[]>)
   nameWithType.vb: MergeJoin.MergeJoin(Func(Of String(), String(), String()))
-- uid: ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.String)
-  name: MergeJoin(String)
-  href: api/ALE.ETLBox.DataFlow.MergeJoin.html#ALE_ETLBox_DataFlow_MergeJoin__ctor_System_String_
-  commentId: M:ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.String)
-  fullName: ALE.ETLBox.DataFlow.MergeJoin.MergeJoin(System.String)
-  nameWithType: MergeJoin.MergeJoin(String)
+- uid: ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.String,System.Func{System.String[],System.String[],System.String[]})
+  name: MergeJoin(String, Func<String[], String[], String[]>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin.html#ALE_ETLBox_DataFlow_MergeJoin__ctor_System_String_System_Func_System_String___System_String___System_String____
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.String,System.Func{System.String[],System.String[],System.String[]})
+  name.vb: MergeJoin(String, Func(Of String(), String(), String()))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin.MergeJoin(System.String, System.Func<System.String[], System.String[], System.String[]>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin.MergeJoin(System.String, System.Func(Of System.String(), System.String(), System.String()))
+  nameWithType: MergeJoin.MergeJoin(String, Func<String[], String[], String[]>)
+  nameWithType.vb: MergeJoin.MergeJoin(String, Func(Of String(), String(), String()))
 - uid: ALE.ETLBox.DataFlow.MergeJoin.#ctor*
   name: MergeJoin
   href: api/ALE.ETLBox.DataFlow.MergeJoin.html#ALE_ETLBox_DataFlow_MergeJoin__ctor_
@@ -9623,6 +9694,50 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.DataFlow.MergeJoin.MergeJoin
   nameWithType: MergeJoin.MergeJoin
+- uid: ALE.ETLBox.DataFlow.MergeJoin`1
+  name: MergeJoin<TInput>
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-1.html
+  commentId: T:ALE.ETLBox.DataFlow.MergeJoin`1
+  name.vb: MergeJoin(Of TInput)
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput>
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput)
+  nameWithType: MergeJoin<TInput>
+  nameWithType.vb: MergeJoin(Of TInput)
+- uid: ALE.ETLBox.DataFlow.MergeJoin`1.#ctor
+  name: MergeJoin()
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-1.html#ALE_ETLBox_DataFlow_MergeJoin_1__ctor
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`1.#ctor
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput>.MergeJoin()
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput).MergeJoin()
+  nameWithType: MergeJoin<TInput>.MergeJoin()
+  nameWithType.vb: MergeJoin(Of TInput).MergeJoin()
+- uid: ALE.ETLBox.DataFlow.MergeJoin`1.#ctor(System.Func{`0,`0,`0})
+  name: MergeJoin(Func<TInput, TInput, TInput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-1.html#ALE_ETLBox_DataFlow_MergeJoin_1__ctor_System_Func__0__0__0__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`1.#ctor(System.Func{`0,`0,`0})
+  name.vb: MergeJoin(Func(Of TInput, TInput, TInput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput>.MergeJoin(System.Func<TInput, TInput, TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput).MergeJoin(System.Func(Of TInput, TInput, TInput))
+  nameWithType: MergeJoin<TInput>.MergeJoin(Func<TInput, TInput, TInput>)
+  nameWithType.vb: MergeJoin(Of TInput).MergeJoin(Func(Of TInput, TInput, TInput))
+- uid: ALE.ETLBox.DataFlow.MergeJoin`1.#ctor(System.String,System.Func{`0,`0,`0})
+  name: MergeJoin(String, Func<TInput, TInput, TInput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-1.html#ALE_ETLBox_DataFlow_MergeJoin_1__ctor_System_String_System_Func__0__0__0__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`1.#ctor(System.String,System.Func{`0,`0,`0})
+  name.vb: MergeJoin(String, Func(Of TInput, TInput, TInput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput>.MergeJoin(System.String, System.Func<TInput, TInput, TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput).MergeJoin(System.String, System.Func(Of TInput, TInput, TInput))
+  nameWithType: MergeJoin<TInput>.MergeJoin(String, Func<TInput, TInput, TInput>)
+  nameWithType.vb: MergeJoin(Of TInput).MergeJoin(String, Func(Of TInput, TInput, TInput))
+- uid: ALE.ETLBox.DataFlow.MergeJoin`1.#ctor*
+  name: MergeJoin
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-1.html#ALE_ETLBox_DataFlow_MergeJoin_1__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.MergeJoin`1.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput>.MergeJoin
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput).MergeJoin
+  nameWithType: MergeJoin<TInput>.MergeJoin
+  nameWithType.vb: MergeJoin(Of TInput).MergeJoin
 - uid: ALE.ETLBox.DataFlow.MergeJoin`3
   name: MergeJoin<TInput1, TInput2, TOutput>
   href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html
@@ -9649,14 +9764,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).MergeJoin(System.Func(Of TInput1, TInput2, TOutput))
   nameWithType: MergeJoin<TInput1, TInput2, TOutput>.MergeJoin(Func<TInput1, TInput2, TOutput>)
   nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).MergeJoin(Func(Of TInput1, TInput2, TOutput))
-- uid: ALE.ETLBox.DataFlow.MergeJoin`3.#ctor(System.String)
-  name: MergeJoin(String)
-  href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3__ctor_System_String_
-  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`3.#ctor(System.String)
-  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput1, TInput2, TOutput>.MergeJoin(System.String)
-  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).MergeJoin(System.String)
-  nameWithType: MergeJoin<TInput1, TInput2, TOutput>.MergeJoin(String)
-  nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).MergeJoin(String)
+- uid: ALE.ETLBox.DataFlow.MergeJoin`3.#ctor(System.String,System.Func{`0,`1,`2})
+  name: MergeJoin(String, Func<TInput1, TInput2, TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3__ctor_System_String_System_Func__0__1__2__
+  commentId: M:ALE.ETLBox.DataFlow.MergeJoin`3.#ctor(System.String,System.Func{`0,`1,`2})
+  name.vb: MergeJoin(String, Func(Of TInput1, TInput2, TOutput))
+  fullName: ALE.ETLBox.DataFlow.MergeJoin<TInput1, TInput2, TOutput>.MergeJoin(System.String, System.Func<TInput1, TInput2, TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MergeJoin(Of TInput1, TInput2, TOutput).MergeJoin(System.String, System.Func(Of TInput1, TInput2, TOutput))
+  nameWithType: MergeJoin<TInput1, TInput2, TOutput>.MergeJoin(String, Func<TInput1, TInput2, TOutput>)
+  nameWithType.vb: MergeJoin(Of TInput1, TInput2, TOutput).MergeJoin(String, Func(Of TInput1, TInput2, TOutput))
 - uid: ALE.ETLBox.DataFlow.MergeJoin`3.#ctor*
   name: MergeJoin
   href: api/ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3__ctor_
@@ -12242,24 +12358,24 @@ references:
   commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor
   fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask()
   nameWithType: AbortLoadProcessTask.AbortLoadProcessTask()
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int32})
-  name: AbortLoadProcessTask(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__ctor_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int32})
-  name.vb: AbortLoadProcessTask(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable(Of System.Int32))
-  nameWithType: AbortLoadProcessTask.AbortLoadProcessTask(Nullable<Int32>)
-  nameWithType.vb: AbortLoadProcessTask.AbortLoadProcessTask(Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int32},System.String)
-  name: AbortLoadProcessTask(Nullable<Int32>, String)
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__ctor_System_Nullable_System_Int32__System_String_
-  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int32},System.String)
-  name.vb: AbortLoadProcessTask(Nullable(Of Int32), String)
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable<System.Int32>, System.String)
-  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable(Of System.Int32), System.String)
-  nameWithType: AbortLoadProcessTask.AbortLoadProcessTask(Nullable<Int32>, String)
-  nameWithType.vb: AbortLoadProcessTask.AbortLoadProcessTask(Nullable(Of Int32), String)
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int64})
+  name: AbortLoadProcessTask(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__ctor_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int64})
+  name.vb: AbortLoadProcessTask(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable(Of System.Int64))
+  nameWithType: AbortLoadProcessTask.AbortLoadProcessTask(Nullable<Int64>)
+  nameWithType.vb: AbortLoadProcessTask.AbortLoadProcessTask(Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int64},System.String)
+  name: AbortLoadProcessTask(Nullable<Int64>, String)
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__ctor_System_Nullable_System_Int64__System_String_
+  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.Nullable{System.Int64},System.String)
+  name.vb: AbortLoadProcessTask(Nullable(Of Int64), String)
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable<System.Int64>, System.String)
+  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask(System.Nullable(Of System.Int64), System.String)
+  nameWithType: AbortLoadProcessTask.AbortLoadProcessTask(Nullable<Int64>, String)
+  nameWithType.vb: AbortLoadProcessTask.AbortLoadProcessTask(Nullable(Of Int64), String)
 - uid: ALE.ETLBox.Logging.AbortLoadProcessTask.#ctor(System.String)
   name: AbortLoadProcessTask(String)
   href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__ctor_System_String_
@@ -12273,12 +12389,12 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.AbortLoadProcessTask
   nameWithType: AbortLoadProcessTask.AbortLoadProcessTask
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask._loadProcessKey
-  name: _loadProcessKey
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__loadProcessKey
-  commentId: F:ALE.ETLBox.Logging.AbortLoadProcessTask._loadProcessKey
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask._loadProcessKey
-  nameWithType: AbortLoadProcessTask._loadProcessKey
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask._loadProcessId
+  name: _loadProcessId
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask__loadProcessId
+  commentId: F:ALE.ETLBox.Logging.AbortLoadProcessTask._loadProcessId
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask._loadProcessId
+  nameWithType: AbortLoadProcessTask._loadProcessId
 - uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort
   name: Abort()
   href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort
@@ -12291,48 +12407,48 @@ references:
   commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager)
   fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager)
   nameWithType: AbortLoadProcessTask.Abort(IConnectionManager)
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name: Abort(IConnectionManager, Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name.vb: Abort(IConnectionManager, Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32))
-  nameWithType: AbortLoadProcessTask.Abort(IConnectionManager, Nullable<Int32>)
-  nameWithType.vb: AbortLoadProcessTask.Abort(IConnectionManager, Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32},System.String)
-  name: Abort(IConnectionManager, Nullable<Int32>, String)
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int32__System_String_
-  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32},System.String)
-  name.vb: Abort(IConnectionManager, Nullable(Of Int32), String)
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int32>, System.String)
-  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32), System.String)
-  nameWithType: AbortLoadProcessTask.Abort(IConnectionManager, Nullable<Int32>, String)
-  nameWithType.vb: AbortLoadProcessTask.Abort(IConnectionManager, Nullable(Of Int32), String)
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64})
+  name: Abort(IConnectionManager, Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64})
+  name.vb: Abort(IConnectionManager, Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int64))
+  nameWithType: AbortLoadProcessTask.Abort(IConnectionManager, Nullable<Int64>)
+  nameWithType.vb: AbortLoadProcessTask.Abort(IConnectionManager, Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64},System.String)
+  name: Abort(IConnectionManager, Nullable<Int64>, String)
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int64__System_String_
+  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64},System.String)
+  name.vb: Abort(IConnectionManager, Nullable(Of Int64), String)
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int64>, System.String)
+  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int64), System.String)
+  nameWithType: AbortLoadProcessTask.Abort(IConnectionManager, Nullable<Int64>, String)
+  nameWithType.vb: AbortLoadProcessTask.Abort(IConnectionManager, Nullable(Of Int64), String)
 - uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
   name: Abort(IConnectionManager, String)
   href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
   commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
   fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
   nameWithType: AbortLoadProcessTask.Abort(IConnectionManager, String)
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int32})
-  name: Abort(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int32})
-  name.vb: Abort(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable(Of System.Int32))
-  nameWithType: AbortLoadProcessTask.Abort(Nullable<Int32>)
-  nameWithType.vb: AbortLoadProcessTask.Abort(Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int32},System.String)
-  name: Abort(Nullable<Int32>, String)
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_System_Nullable_System_Int32__System_String_
-  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int32},System.String)
-  name.vb: Abort(Nullable(Of Int32), String)
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable<System.Int32>, System.String)
-  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable(Of System.Int32), System.String)
-  nameWithType: AbortLoadProcessTask.Abort(Nullable<Int32>, String)
-  nameWithType.vb: AbortLoadProcessTask.Abort(Nullable(Of Int32), String)
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int64})
+  name: Abort(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int64})
+  name.vb: Abort(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable(Of System.Int64))
+  nameWithType: AbortLoadProcessTask.Abort(Nullable<Int64>)
+  nameWithType.vb: AbortLoadProcessTask.Abort(Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int64},System.String)
+  name: Abort(Nullable<Int64>, String)
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_System_Nullable_System_Int64__System_String_
+  commentId: M:ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable{System.Int64},System.String)
+  name.vb: Abort(Nullable(Of Int64), String)
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable<System.Int64>, System.String)
+  fullName.vb: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.Nullable(Of System.Int64), System.String)
+  nameWithType: AbortLoadProcessTask.Abort(Nullable<Int64>, String)
+  nameWithType.vb: AbortLoadProcessTask.Abort(Nullable(Of Int64), String)
 - uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Abort(System.String)
   name: Abort(String)
   href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Abort_System_String_
@@ -12372,19 +12488,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.Execute
   nameWithType: AbortLoadProcessTask.Execute
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessKey
-  nameWithType: AbortLoadProcessTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessKey
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessId
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_LoadProcessId
+  commentId: P:ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessId
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessId
+  nameWithType: AbortLoadProcessTask.LoadProcessId
+- uid: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessId*
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_LoadProcessId_
+  commentId: Overload:ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessId
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessKey
-  nameWithType: AbortLoadProcessTask.LoadProcessKey
+  fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.LoadProcessId
+  nameWithType: AbortLoadProcessTask.LoadProcessId
 - uid: ALE.ETLBox.Logging.AbortLoadProcessTask.Sql
   name: Sql
   href: api/ALE.ETLBox.Logging.AbortLoadProcessTask.html#ALE_ETLBox_Logging_AbortLoadProcessTask_Sql
@@ -12411,185 +12527,386 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.AbortLoadProcessTask.TaskName
   nameWithType: AbortLoadProcessTask.TaskName
-- uid: ALE.ETLBox.Logging.CleanUpLogTask
-  name: CleanUpLogTask
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html
-  commentId: T:ALE.ETLBox.Logging.CleanUpLogTask
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask
-  nameWithType: CleanUpLogTask
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.#ctor
-  name: CleanUpLogTask()
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask__ctor
-  commentId: M:ALE.ETLBox.Logging.CleanUpLogTask.#ctor
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.CleanUpLogTask()
-  nameWithType: CleanUpLogTask.CleanUpLogTask()
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.#ctor(System.Int32)
-  name: CleanUpLogTask(Int32)
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask__ctor_System_Int32_
-  commentId: M:ALE.ETLBox.Logging.CleanUpLogTask.#ctor(System.Int32)
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.CleanUpLogTask(System.Int32)
-  nameWithType: CleanUpLogTask.CleanUpLogTask(Int32)
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.#ctor*
-  name: CleanUpLogTask
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask__ctor_
-  commentId: Overload:ALE.ETLBox.Logging.CleanUpLogTask.#ctor
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget
+  name: CreateDatabaseTarget
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html
+  commentId: T:ALE.ETLBox.Logging.CreateDatabaseTarget
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget
+  nameWithType: CreateDatabaseTarget
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  name: CreateDatabaseTarget(IConnectionManager, String)
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateDatabaseTarget.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.CreateDatabaseTarget(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
+  nameWithType: CreateDatabaseTarget.CreateDatabaseTarget(IConnectionManager, String)
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.#ctor*
+  name: CreateDatabaseTarget
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget__ctor_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.#ctor
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.CleanUpLogTask
-  nameWithType: CleanUpLogTask.CleanUpLogTask
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.CleanUp(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Int32)
-  name: CleanUp(IConnectionManager, Int32)
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_CleanUp_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Int32_
-  commentId: M:ALE.ETLBox.Logging.CleanUpLogTask.CleanUp(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Int32)
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.CleanUp(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Int32)
-  nameWithType: CleanUpLogTask.CleanUp(IConnectionManager, Int32)
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.CleanUp(System.Int32)
-  name: CleanUp(Int32)
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_CleanUp_System_Int32_
-  commentId: M:ALE.ETLBox.Logging.CleanUpLogTask.CleanUp(System.Int32)
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.CleanUp(System.Int32)
-  nameWithType: CleanUpLogTask.CleanUp(Int32)
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.CleanUp*
-  name: CleanUp
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_CleanUp_
-  commentId: Overload:ALE.ETLBox.Logging.CleanUpLogTask.CleanUp
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.CreateDatabaseTarget
+  nameWithType: CreateDatabaseTarget.CreateDatabaseTarget
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.CommandText
+  name: CommandText
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_CommandText
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.CommandText
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.CommandText
+  nameWithType: CreateDatabaseTarget.CommandText
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.CommandText*
+  name: CommandText
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_CommandText_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.CommandText
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.CleanUp
-  nameWithType: CleanUpLogTask.CleanUp
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.DaysToKeep
-  name: DaysToKeep
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_DaysToKeep
-  commentId: P:ALE.ETLBox.Logging.CleanUpLogTask.DaysToKeep
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.DaysToKeep
-  nameWithType: CleanUpLogTask.DaysToKeep
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.DaysToKeep*
-  name: DaysToKeep
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_DaysToKeep_
-  commentId: Overload:ALE.ETLBox.Logging.CleanUpLogTask.DaysToKeep
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.CommandText
+  nameWithType: CreateDatabaseTarget.CommandText
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
+  name: ConnectionManager
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_ConnectionManager
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
+  nameWithType: CreateDatabaseTarget.ConnectionManager
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager*
+  name: ConnectionManager
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_ConnectionManager_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.DaysToKeep
-  nameWithType: CleanUpLogTask.DaysToKeep
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.Execute
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
+  nameWithType: CreateDatabaseTarget.ConnectionManager
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
+  name: ConnectionType
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_ConnectionType
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
+  nameWithType: CreateDatabaseTarget.ConnectionType
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType*
+  name: ConnectionType
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_ConnectionType_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
+  nameWithType: CreateDatabaseTarget.ConnectionType
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget
+  name: GetNLogDatabaseTarget()
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_GetNLogDatabaseTarget
+  commentId: M:ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget()
+  nameWithType: CreateDatabaseTarget.GetNLogDatabaseTarget()
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget*
+  name: GetNLogDatabaseTarget
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_GetNLogDatabaseTarget_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget
+  nameWithType: CreateDatabaseTarget.GetNLogDatabaseTarget
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.INT
+  name: INT
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_INT
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.INT
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.INT
+  nameWithType: CreateDatabaseTarget.INT
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.INT*
+  name: INT
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_INT_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.INT
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.INT
+  nameWithType: CreateDatabaseTarget.INT
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.LogDate
+  name: LogDate
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_LogDate
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.LogDate
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.LogDate
+  nameWithType: CreateDatabaseTarget.LogDate
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.LogDate*
+  name: LogDate
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_LogDate_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.LogDate
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.LogDate
+  nameWithType: CreateDatabaseTarget.LogDate
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.LogTableName
+  name: LogTableName
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_LogTableName
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.LogTableName
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.LogTableName
+  nameWithType: CreateDatabaseTarget.LogTableName
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.LogTableName*
+  name: LogTableName
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_LogTableName_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.LogTableName
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.LogTableName
+  nameWithType: CreateDatabaseTarget.LogTableName
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.QB
+  name: QB
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_QB
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.QB
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.QB
+  nameWithType: CreateDatabaseTarget.QB
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.QB*
+  name: QB
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_QB_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.QB
+  nameWithType: CreateDatabaseTarget.QB
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.QE
+  name: QE
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_QE
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.QE
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.QE
+  nameWithType: CreateDatabaseTarget.QE
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.QE*
+  name: QE
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_QE_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.QE
+  nameWithType: CreateDatabaseTarget.QE
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.TN
+  name: TN
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_TN
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.TN
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.TN
+  nameWithType: CreateDatabaseTarget.TN
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.TN*
+  name: TN
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_TN_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.TN
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.TN
+  nameWithType: CreateDatabaseTarget.TN
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.VARCHAR
+  name: VARCHAR
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_VARCHAR
+  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.VARCHAR
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.VARCHAR
+  nameWithType: CreateDatabaseTarget.VARCHAR
+- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.VARCHAR*
+  name: VARCHAR
+  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_VARCHAR_
+  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.VARCHAR
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.VARCHAR
+  nameWithType: CreateDatabaseTarget.VARCHAR
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask
+  name: CreateLoadProcessTableTask
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html
+  commentId: T:ALE.ETLBox.Logging.CreateLoadProcessTableTask
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask
+  nameWithType: CreateLoadProcessTableTask
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  name: CreateLoadProcessTableTask(IConnectionManager, String)
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLoadProcessTableTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.CreateLoadProcessTableTask(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
+  nameWithType: CreateLoadProcessTableTask.CreateLoadProcessTableTask(IConnectionManager, String)
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.#ctor(System.String)
+  name: CreateLoadProcessTableTask(String)
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask__ctor_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLoadProcessTableTask.#ctor(System.String)
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.CreateLoadProcessTableTask(System.String)
+  nameWithType: CreateLoadProcessTableTask.CreateLoadProcessTableTask(String)
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.#ctor*
+  name: CreateLoadProcessTableTask
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask__ctor_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.CreateLoadProcessTableTask
+  nameWithType: CreateLoadProcessTableTask.CreateLoadProcessTableTask
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  name: Create(IConnectionManager, String)
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Create_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
+  nameWithType: CreateLoadProcessTableTask.Create(IConnectionManager, String)
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create(System.String)
+  name: Create(String)
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Create_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create(System.String)
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create(System.String)
+  nameWithType: CreateLoadProcessTableTask.Create(String)
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create*
+  name: Create
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Create_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Create
+  nameWithType: CreateLoadProcessTableTask.Create
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Execute
   name: Execute()
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_Execute
-  commentId: M:ALE.ETLBox.Logging.CleanUpLogTask.Execute
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.Execute()
-  nameWithType: CleanUpLogTask.Execute()
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.Execute*
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Execute
+  commentId: M:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Execute
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Execute()
+  nameWithType: CreateLoadProcessTableTask.Execute()
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Execute*
   name: Execute
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_Execute_
-  commentId: Overload:ALE.ETLBox.Logging.CleanUpLogTask.Execute
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Execute_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Execute
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.Execute
-  nameWithType: CleanUpLogTask.Execute
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.Sql
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Execute
+  nameWithType: CreateLoadProcessTableTask.Execute
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTable
+  name: LoadProcessTable
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_LoadProcessTable
+  commentId: P:ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTable
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTable
+  nameWithType: CreateLoadProcessTableTask.LoadProcessTable
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTable*
+  name: LoadProcessTable
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_LoadProcessTable_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTable
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTable
+  nameWithType: CreateLoadProcessTableTask.LoadProcessTable
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTableName
+  name: LoadProcessTableName
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_LoadProcessTableName
+  commentId: P:ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTableName
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTableName
+  nameWithType: CreateLoadProcessTableTask.LoadProcessTableName
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTableName*
+  name: LoadProcessTableName
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_LoadProcessTableName_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTableName
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.LoadProcessTableName
+  nameWithType: CreateLoadProcessTableTask.LoadProcessTableName
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Sql
   name: Sql
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_Sql
-  commentId: P:ALE.ETLBox.Logging.CleanUpLogTask.Sql
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.Sql
-  nameWithType: CleanUpLogTask.Sql
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.Sql*
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Sql
+  commentId: P:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Sql
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Sql
+  nameWithType: CreateLoadProcessTableTask.Sql
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Sql*
   name: Sql
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_Sql_
-  commentId: Overload:ALE.ETLBox.Logging.CleanUpLogTask.Sql
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_Sql_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.Sql
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.Sql
-  nameWithType: CleanUpLogTask.Sql
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.TaskName
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.Sql
+  nameWithType: CreateLoadProcessTableTask.Sql
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.TaskName
   name: TaskName
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_TaskName
-  commentId: P:ALE.ETLBox.Logging.CleanUpLogTask.TaskName
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.TaskName
-  nameWithType: CleanUpLogTask.TaskName
-- uid: ALE.ETLBox.Logging.CleanUpLogTask.TaskName*
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_TaskName
+  commentId: P:ALE.ETLBox.Logging.CreateLoadProcessTableTask.TaskName
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.TaskName
+  nameWithType: CreateLoadProcessTableTask.TaskName
+- uid: ALE.ETLBox.Logging.CreateLoadProcessTableTask.TaskName*
   name: TaskName
-  href: api/ALE.ETLBox.Logging.CleanUpLogTask.html#ALE_ETLBox_Logging_CleanUpLogTask_TaskName_
-  commentId: Overload:ALE.ETLBox.Logging.CleanUpLogTask.TaskName
+  href: api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html#ALE_ETLBox_Logging_CreateLoadProcessTableTask_TaskName_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLoadProcessTableTask.TaskName
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CleanUpLogTask.TaskName
-  nameWithType: CleanUpLogTask.TaskName
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask
-  name: CreateLogTablesTask
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html
-  commentId: T:ALE.ETLBox.Logging.CreateLogTablesTask
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask
-  nameWithType: CreateLogTablesTask
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.#ctor
-  name: CreateLogTablesTask()
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask__ctor
-  commentId: M:ALE.ETLBox.Logging.CreateLogTablesTask.#ctor
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLogTablesTask()
-  nameWithType: CreateLogTablesTask.CreateLogTablesTask()
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: CreateLogTablesTask(IConnectionManager)
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.Logging.CreateLogTablesTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLogTablesTask(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: CreateLogTablesTask.CreateLogTablesTask(IConnectionManager)
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.#ctor*
-  name: CreateLogTablesTask
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask__ctor_
-  commentId: Overload:ALE.ETLBox.Logging.CreateLogTablesTask.#ctor
+  fullName: ALE.ETLBox.Logging.CreateLoadProcessTableTask.TaskName
+  nameWithType: CreateLoadProcessTableTask.TaskName
+- uid: ALE.ETLBox.Logging.CreateLogTableTask
+  name: CreateLogTableTask
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html
+  commentId: T:ALE.ETLBox.Logging.CreateLogTableTask
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask
+  nameWithType: CreateLogTableTask
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  name: CreateLogTableTask(IConnectionManager, String)
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLogTableTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.CreateLogTableTask(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
+  nameWithType: CreateLogTableTask.CreateLogTableTask(IConnectionManager, String)
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.#ctor(System.String)
+  name: CreateLogTableTask(String)
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask__ctor_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLogTableTask.#ctor(System.String)
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.CreateLogTableTask(System.String)
+  nameWithType: CreateLogTableTask.CreateLogTableTask(String)
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.#ctor*
+  name: CreateLogTableTask
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask__ctor_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.#ctor
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLogTablesTask
-  nameWithType: CreateLogTablesTask.CreateLogTablesTask
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog
-  name: CreateLog()
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_CreateLog
-  commentId: M:ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog()
-  nameWithType: CreateLogTablesTask.CreateLog()
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: CreateLog(IConnectionManager)
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_CreateLog_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: CreateLogTablesTask.CreateLog(IConnectionManager)
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog*
-  name: CreateLog
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_CreateLog_
-  commentId: Overload:ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.CreateLogTableTask
+  nameWithType: CreateLogTableTask.CreateLogTableTask
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  name: Create(IConnectionManager, String)
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Create_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLogTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
+  nameWithType: CreateLogTableTask.Create(IConnectionManager, String)
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Create(System.String)
+  name: Create(String)
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Create_System_String_
+  commentId: M:ALE.ETLBox.Logging.CreateLogTableTask.Create(System.String)
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Create(System.String)
+  nameWithType: CreateLogTableTask.Create(String)
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Create*
+  name: Create
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Create_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.Create
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.CreateLog
-  nameWithType: CreateLogTablesTask.CreateLog
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.Execute
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Create
+  nameWithType: CreateLogTableTask.Create
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Execute
   name: Execute()
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_Execute
-  commentId: M:ALE.ETLBox.Logging.CreateLogTablesTask.Execute
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.Execute()
-  nameWithType: CreateLogTablesTask.Execute()
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.Execute*
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Execute
+  commentId: M:ALE.ETLBox.Logging.CreateLogTableTask.Execute
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Execute()
+  nameWithType: CreateLogTableTask.Execute()
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Execute*
   name: Execute
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_Execute_
-  commentId: Overload:ALE.ETLBox.Logging.CreateLogTablesTask.Execute
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Execute_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.Execute
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.Execute
-  nameWithType: CreateLogTablesTask.Execute
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.Sql
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Execute
+  nameWithType: CreateLogTableTask.Execute
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.LogTable
+  name: LogTable
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_LogTable
+  commentId: P:ALE.ETLBox.Logging.CreateLogTableTask.LogTable
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.LogTable
+  nameWithType: CreateLogTableTask.LogTable
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.LogTable*
+  name: LogTable
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_LogTable_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.LogTable
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.LogTable
+  nameWithType: CreateLogTableTask.LogTable
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.LogTableName
+  name: LogTableName
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_LogTableName
+  commentId: P:ALE.ETLBox.Logging.CreateLogTableTask.LogTableName
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.LogTableName
+  nameWithType: CreateLogTableTask.LogTableName
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.LogTableName*
+  name: LogTableName
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_LogTableName_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.LogTableName
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.LogTableName
+  nameWithType: CreateLogTableTask.LogTableName
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Sql
   name: Sql
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_Sql
-  commentId: P:ALE.ETLBox.Logging.CreateLogTablesTask.Sql
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.Sql
-  nameWithType: CreateLogTablesTask.Sql
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.Sql*
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Sql
+  commentId: P:ALE.ETLBox.Logging.CreateLogTableTask.Sql
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Sql
+  nameWithType: CreateLogTableTask.Sql
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.Sql*
   name: Sql
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_Sql_
-  commentId: Overload:ALE.ETLBox.Logging.CreateLogTablesTask.Sql
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_Sql_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.Sql
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.Sql
-  nameWithType: CreateLogTablesTask.Sql
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.TaskName
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.Sql
+  nameWithType: CreateLogTableTask.Sql
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.TaskName
   name: TaskName
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_TaskName
-  commentId: P:ALE.ETLBox.Logging.CreateLogTablesTask.TaskName
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.TaskName
-  nameWithType: CreateLogTablesTask.TaskName
-- uid: ALE.ETLBox.Logging.CreateLogTablesTask.TaskName*
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_TaskName
+  commentId: P:ALE.ETLBox.Logging.CreateLogTableTask.TaskName
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.TaskName
+  nameWithType: CreateLogTableTask.TaskName
+- uid: ALE.ETLBox.Logging.CreateLogTableTask.TaskName*
   name: TaskName
-  href: api/ALE.ETLBox.Logging.CreateLogTablesTask.html#ALE_ETLBox_Logging_CreateLogTablesTask_TaskName_
-  commentId: Overload:ALE.ETLBox.Logging.CreateLogTablesTask.TaskName
+  href: api/ALE.ETLBox.Logging.CreateLogTableTask.html#ALE_ETLBox_Logging_CreateLogTableTask_TaskName_
+  commentId: Overload:ALE.ETLBox.Logging.CreateLogTableTask.TaskName
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CreateLogTablesTask.TaskName
-  nameWithType: CreateLogTablesTask.TaskName
+  fullName: ALE.ETLBox.Logging.CreateLogTableTask.TaskName
+  nameWithType: CreateLogTableTask.TaskName
 - uid: ALE.ETLBox.Logging.EndLoadProcessTask
   name: EndLoadProcessTask
   href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html
@@ -12602,24 +12919,24 @@ references:
   commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.#ctor
   fullName: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask()
   nameWithType: EndLoadProcessTask.EndLoadProcessTask()
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int32})
-  name: EndLoadProcessTask(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__ctor_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int32})
-  name.vb: EndLoadProcessTask(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable(Of System.Int32))
-  nameWithType: EndLoadProcessTask.EndLoadProcessTask(Nullable<Int32>)
-  nameWithType.vb: EndLoadProcessTask.EndLoadProcessTask(Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int32},System.String)
-  name: EndLoadProcessTask(Nullable<Int32>, String)
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__ctor_System_Nullable_System_Int32__System_String_
-  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int32},System.String)
-  name.vb: EndLoadProcessTask(Nullable(Of Int32), String)
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable<System.Int32>, System.String)
-  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable(Of System.Int32), System.String)
-  nameWithType: EndLoadProcessTask.EndLoadProcessTask(Nullable<Int32>, String)
-  nameWithType.vb: EndLoadProcessTask.EndLoadProcessTask(Nullable(Of Int32), String)
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int64})
+  name: EndLoadProcessTask(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__ctor_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int64})
+  name.vb: EndLoadProcessTask(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable(Of System.Int64))
+  nameWithType: EndLoadProcessTask.EndLoadProcessTask(Nullable<Int64>)
+  nameWithType.vb: EndLoadProcessTask.EndLoadProcessTask(Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int64},System.String)
+  name: EndLoadProcessTask(Nullable<Int64>, String)
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__ctor_System_Nullable_System_Int64__System_String_
+  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.Nullable{System.Int64},System.String)
+  name.vb: EndLoadProcessTask(Nullable(Of Int64), String)
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable<System.Int64>, System.String)
+  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask(System.Nullable(Of System.Int64), System.String)
+  nameWithType: EndLoadProcessTask.EndLoadProcessTask(Nullable<Int64>, String)
+  nameWithType.vb: EndLoadProcessTask.EndLoadProcessTask(Nullable(Of Int64), String)
 - uid: ALE.ETLBox.Logging.EndLoadProcessTask.#ctor(System.String)
   name: EndLoadProcessTask(String)
   href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__ctor_System_String_
@@ -12633,12 +12950,12 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.EndLoadProcessTask.EndLoadProcessTask
   nameWithType: EndLoadProcessTask.EndLoadProcessTask
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask._loadProcessKey
-  name: _loadProcessKey
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__loadProcessKey
-  commentId: F:ALE.ETLBox.Logging.EndLoadProcessTask._loadProcessKey
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask._loadProcessKey
-  nameWithType: EndLoadProcessTask._loadProcessKey
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask._loadProcessId
+  name: _loadProcessId
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask__loadProcessId
+  commentId: F:ALE.ETLBox.Logging.EndLoadProcessTask._loadProcessId
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask._loadProcessId
+  nameWithType: EndLoadProcessTask._loadProcessId
 - uid: ALE.ETLBox.Logging.EndLoadProcessTask.End
   name: End()
   href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End
@@ -12651,48 +12968,48 @@ references:
   commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager)
   fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager)
   nameWithType: EndLoadProcessTask.End(IConnectionManager)
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name: End(IConnectionManager, Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name.vb: End(IConnectionManager, Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32))
-  nameWithType: EndLoadProcessTask.End(IConnectionManager, Nullable<Int32>)
-  nameWithType.vb: EndLoadProcessTask.End(IConnectionManager, Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32},System.String)
-  name: End(IConnectionManager, Nullable<Int32>, String)
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int32__System_String_
-  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32},System.String)
-  name.vb: End(IConnectionManager, Nullable(Of Int32), String)
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int32>, System.String)
-  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32), System.String)
-  nameWithType: EndLoadProcessTask.End(IConnectionManager, Nullable<Int32>, String)
-  nameWithType.vb: EndLoadProcessTask.End(IConnectionManager, Nullable(Of Int32), String)
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64})
+  name: End(IConnectionManager, Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64})
+  name.vb: End(IConnectionManager, Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int64))
+  nameWithType: EndLoadProcessTask.End(IConnectionManager, Nullable<Int64>)
+  nameWithType.vb: EndLoadProcessTask.End(IConnectionManager, Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64},System.String)
+  name: End(IConnectionManager, Nullable<Int64>, String)
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int64__System_String_
+  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64},System.String)
+  name.vb: End(IConnectionManager, Nullable(Of Int64), String)
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int64>, System.String)
+  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int64), System.String)
+  nameWithType: EndLoadProcessTask.End(IConnectionManager, Nullable<Int64>, String)
+  nameWithType.vb: EndLoadProcessTask.End(IConnectionManager, Nullable(Of Int64), String)
 - uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
   name: End(IConnectionManager, String)
   href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_
   commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)
   fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
   nameWithType: EndLoadProcessTask.End(IConnectionManager, String)
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int32})
-  name: End(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int32})
-  name.vb: End(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable(Of System.Int32))
-  nameWithType: EndLoadProcessTask.End(Nullable<Int32>)
-  nameWithType.vb: EndLoadProcessTask.End(Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int32},System.String)
-  name: End(Nullable<Int32>, String)
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_System_Nullable_System_Int32__System_String_
-  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int32},System.String)
-  name.vb: End(Nullable(Of Int32), String)
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable<System.Int32>, System.String)
-  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable(Of System.Int32), System.String)
-  nameWithType: EndLoadProcessTask.End(Nullable<Int32>, String)
-  nameWithType.vb: EndLoadProcessTask.End(Nullable(Of Int32), String)
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int64})
+  name: End(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int64})
+  name.vb: End(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable(Of System.Int64))
+  nameWithType: EndLoadProcessTask.End(Nullable<Int64>)
+  nameWithType.vb: EndLoadProcessTask.End(Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int64},System.String)
+  name: End(Nullable<Int64>, String)
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_System_Nullable_System_Int64__System_String_
+  commentId: M:ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable{System.Int64},System.String)
+  name.vb: End(Nullable(Of Int64), String)
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable<System.Int64>, System.String)
+  fullName.vb: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.Nullable(Of System.Int64), System.String)
+  nameWithType: EndLoadProcessTask.End(Nullable<Int64>, String)
+  nameWithType.vb: EndLoadProcessTask.End(Nullable(Of Int64), String)
 - uid: ALE.ETLBox.Logging.EndLoadProcessTask.End(System.String)
   name: End(String)
   href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_End_System_String_
@@ -12732,19 +13049,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.EndLoadProcessTask.Execute
   nameWithType: EndLoadProcessTask.Execute
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessKey
-  nameWithType: EndLoadProcessTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessKey
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessId
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_LoadProcessId
+  commentId: P:ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessId
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessId
+  nameWithType: EndLoadProcessTask.LoadProcessId
+- uid: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessId*
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_LoadProcessId_
+  commentId: Overload:ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessId
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessKey
-  nameWithType: EndLoadProcessTask.LoadProcessKey
+  fullName: ALE.ETLBox.Logging.EndLoadProcessTask.LoadProcessId
+  nameWithType: EndLoadProcessTask.LoadProcessId
 - uid: ALE.ETLBox.Logging.EndLoadProcessTask.Sql
   name: Sql
   href: api/ALE.ETLBox.Logging.EndLoadProcessTask.html#ALE_ETLBox_Logging_EndLoadProcessTask_Sql
@@ -12905,15 +13222,15 @@ references:
   commentId: M:ALE.ETLBox.Logging.GetLogAsJSONTask.#ctor
   fullName: ALE.ETLBox.Logging.GetLogAsJSONTask.GetLogAsJSONTask()
   nameWithType: GetLogAsJSONTask.GetLogAsJSONTask()
-- uid: ALE.ETLBox.Logging.GetLogAsJSONTask.#ctor(System.Nullable{System.Int32})
-  name: GetLogAsJSONTask(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.GetLogAsJSONTask.html#ALE_ETLBox_Logging_GetLogAsJSONTask__ctor_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.GetLogAsJSONTask.#ctor(System.Nullable{System.Int32})
-  name.vb: GetLogAsJSONTask(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.GetLogAsJSONTask.GetLogAsJSONTask(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.GetLogAsJSONTask.GetLogAsJSONTask(System.Nullable(Of System.Int32))
-  nameWithType: GetLogAsJSONTask.GetLogAsJSONTask(Nullable<Int32>)
-  nameWithType.vb: GetLogAsJSONTask.GetLogAsJSONTask(Nullable(Of Int32))
+- uid: ALE.ETLBox.Logging.GetLogAsJSONTask.#ctor(System.Nullable{System.Int64})
+  name: GetLogAsJSONTask(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.GetLogAsJSONTask.html#ALE_ETLBox_Logging_GetLogAsJSONTask__ctor_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.GetLogAsJSONTask.#ctor(System.Nullable{System.Int64})
+  name.vb: GetLogAsJSONTask(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.GetLogAsJSONTask.GetLogAsJSONTask(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.GetLogAsJSONTask.GetLogAsJSONTask(System.Nullable(Of System.Int64))
+  nameWithType: GetLogAsJSONTask.GetLogAsJSONTask(Nullable<Int64>)
+  nameWithType.vb: GetLogAsJSONTask.GetLogAsJSONTask(Nullable(Of Int64))
 - uid: ALE.ETLBox.Logging.GetLogAsJSONTask.#ctor*
   name: GetLogAsJSONTask
   href: api/ALE.ETLBox.Logging.GetLogAsJSONTask.html#ALE_ETLBox_Logging_GetLogAsJSONTask__ctor_
@@ -12987,15 +13304,15 @@ references:
   fullName.vb: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32))
   nameWithType: GetLogAsJSONTask.GetJSON(IConnectionManager, Nullable<Int32>)
   nameWithType.vb: GetLogAsJSONTask.GetJSON(IConnectionManager, Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable{System.Int32})
-  name: GetJSON(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.GetLogAsJSONTask.html#ALE_ETLBox_Logging_GetLogAsJSONTask_GetJSON_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable{System.Int32})
-  name.vb: GetJSON(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable(Of System.Int32))
-  nameWithType: GetLogAsJSONTask.GetJSON(Nullable<Int32>)
-  nameWithType.vb: GetLogAsJSONTask.GetJSON(Nullable(Of Int32))
+- uid: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable{System.Int64})
+  name: GetJSON(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.GetLogAsJSONTask.html#ALE_ETLBox_Logging_GetLogAsJSONTask_GetJSON_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable{System.Int64})
+  name.vb: GetJSON(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON(System.Nullable(Of System.Int64))
+  nameWithType: GetLogAsJSONTask.GetJSON(Nullable<Int64>)
+  nameWithType.vb: GetLogAsJSONTask.GetJSON(Nullable(Of Int64))
 - uid: ALE.ETLBox.Logging.GetLogAsJSONTask.GetJSON*
   name: GetJSON
   href: api/ALE.ETLBox.Logging.GetLogAsJSONTask.html#ALE_ETLBox_Logging_GetLogAsJSONTask_GetJSON_
@@ -13100,6 +13417,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LoadProcess.EndMessage
   nameWithType: LoadProcess.EndMessage
+- uid: ALE.ETLBox.Logging.LoadProcess.Id
+  name: Id
+  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_Id
+  commentId: P:ALE.ETLBox.Logging.LoadProcess.Id
+  fullName: ALE.ETLBox.Logging.LoadProcess.Id
+  nameWithType: LoadProcess.Id
+- uid: ALE.ETLBox.Logging.LoadProcess.Id*
+  name: Id
+  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_Id_
+  commentId: Overload:ALE.ETLBox.Logging.LoadProcess.Id
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.LoadProcess.Id
+  nameWithType: LoadProcess.Id
 - uid: ALE.ETLBox.Logging.LoadProcess.IsFinished
   name: IsFinished
   href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_IsFinished
@@ -13126,32 +13456,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LoadProcess.IsRunning
   nameWithType: LoadProcess.IsRunning
-- uid: ALE.ETLBox.Logging.LoadProcess.IsTransferCompleted
-  name: IsTransferCompleted
-  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_IsTransferCompleted
-  commentId: P:ALE.ETLBox.Logging.LoadProcess.IsTransferCompleted
-  fullName: ALE.ETLBox.Logging.LoadProcess.IsTransferCompleted
-  nameWithType: LoadProcess.IsTransferCompleted
-- uid: ALE.ETLBox.Logging.LoadProcess.IsTransferCompleted*
-  name: IsTransferCompleted
-  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_IsTransferCompleted_
-  commentId: Overload:ALE.ETLBox.Logging.LoadProcess.IsTransferCompleted
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.LoadProcess.IsTransferCompleted
-  nameWithType: LoadProcess.IsTransferCompleted
-- uid: ALE.ETLBox.Logging.LoadProcess.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.LoadProcess.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.LoadProcess.LoadProcessKey
-  nameWithType: LoadProcess.LoadProcessKey
-- uid: ALE.ETLBox.Logging.LoadProcess.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.LoadProcess.LoadProcessKey
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.LoadProcess.LoadProcessKey
-  nameWithType: LoadProcess.LoadProcessKey
 - uid: ALE.ETLBox.Logging.LoadProcess.ProcessName
   name: ProcessName
   href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_ProcessName
@@ -13165,6 +13469,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LoadProcess.ProcessName
   nameWithType: LoadProcess.ProcessName
+- uid: ALE.ETLBox.Logging.LoadProcess.Source
+  name: Source
+  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_Source
+  commentId: P:ALE.ETLBox.Logging.LoadProcess.Source
+  fullName: ALE.ETLBox.Logging.LoadProcess.Source
+  nameWithType: LoadProcess.Source
+- uid: ALE.ETLBox.Logging.LoadProcess.Source*
+  name: Source
+  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_Source_
+  commentId: Overload:ALE.ETLBox.Logging.LoadProcess.Source
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.LoadProcess.Source
+  nameWithType: LoadProcess.Source
 - uid: ALE.ETLBox.Logging.LoadProcess.StartDate
   name: StartDate
   href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_StartDate
@@ -13191,19 +13508,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LoadProcess.StartMessage
   nameWithType: LoadProcess.StartMessage
-- uid: ALE.ETLBox.Logging.LoadProcess.TransferCompletedDate
-  name: TransferCompletedDate
-  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_TransferCompletedDate
-  commentId: P:ALE.ETLBox.Logging.LoadProcess.TransferCompletedDate
-  fullName: ALE.ETLBox.Logging.LoadProcess.TransferCompletedDate
-  nameWithType: LoadProcess.TransferCompletedDate
-- uid: ALE.ETLBox.Logging.LoadProcess.TransferCompletedDate*
-  name: TransferCompletedDate
-  href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_TransferCompletedDate_
-  commentId: Overload:ALE.ETLBox.Logging.LoadProcess.TransferCompletedDate
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.LoadProcess.TransferCompletedDate
-  nameWithType: LoadProcess.TransferCompletedDate
 - uid: ALE.ETLBox.Logging.LoadProcess.WasAborted
   name: WasAborted
   href: api/ALE.ETLBox.Logging.LoadProcess.html#ALE_ETLBox_Logging_LoadProcess_WasAborted
@@ -13249,6 +13553,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LogEntry.EndDate
   nameWithType: LogEntry.EndDate
+- uid: ALE.ETLBox.Logging.LogEntry.Id
+  name: Id
+  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_Id
+  commentId: P:ALE.ETLBox.Logging.LogEntry.Id
+  fullName: ALE.ETLBox.Logging.LogEntry.Id
+  nameWithType: LogEntry.Id
+- uid: ALE.ETLBox.Logging.LogEntry.Id*
+  name: Id
+  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_Id_
+  commentId: Overload:ALE.ETLBox.Logging.LogEntry.Id
+  isSpec: "True"
+  fullName: ALE.ETLBox.Logging.LogEntry.Id
+  nameWithType: LogEntry.Id
 - uid: ALE.ETLBox.Logging.LogEntry.Level
   name: Level
   href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_Level
@@ -13262,19 +13579,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LogEntry.Level
   nameWithType: LogEntry.Level
-- uid: ALE.ETLBox.Logging.LogEntry.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.LogEntry.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.LogEntry.LoadProcessKey
-  nameWithType: LogEntry.LoadProcessKey
-- uid: ALE.ETLBox.Logging.LogEntry.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.LogEntry.LoadProcessKey
+- uid: ALE.ETLBox.Logging.LogEntry.LoadProcessId
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LoadProcessId
+  commentId: P:ALE.ETLBox.Logging.LogEntry.LoadProcessId
+  fullName: ALE.ETLBox.Logging.LogEntry.LoadProcessId
+  nameWithType: LogEntry.LoadProcessId
+- uid: ALE.ETLBox.Logging.LogEntry.LoadProcessId*
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LoadProcessId_
+  commentId: Overload:ALE.ETLBox.Logging.LogEntry.LoadProcessId
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.LogEntry.LoadProcessKey
-  nameWithType: LogEntry.LoadProcessKey
+  fullName: ALE.ETLBox.Logging.LogEntry.LoadProcessId
+  nameWithType: LogEntry.LoadProcessId
 - uid: ALE.ETLBox.Logging.LogEntry.LogDate
   name: LogDate
   href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LogDate
@@ -13288,19 +13605,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.LogEntry.LogDate
   nameWithType: LogEntry.LogDate
-- uid: ALE.ETLBox.Logging.LogEntry.LogKey
-  name: LogKey
-  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LogKey
-  commentId: P:ALE.ETLBox.Logging.LogEntry.LogKey
-  fullName: ALE.ETLBox.Logging.LogEntry.LogKey
-  nameWithType: LogEntry.LogKey
-- uid: ALE.ETLBox.Logging.LogEntry.LogKey*
-  name: LogKey
-  href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_LogKey_
-  commentId: Overload:ALE.ETLBox.Logging.LogEntry.LogKey
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.LogEntry.LogKey
-  nameWithType: LogEntry.LogKey
 - uid: ALE.ETLBox.Logging.LogEntry.Message
   name: Message
   href: api/ALE.ETLBox.Logging.LogEntry.html#ALE_ETLBox_Logging_LogEntry_Message
@@ -13669,15 +13973,24 @@ references:
   commentId: M:ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor
   fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask()
   nameWithType: ReadLoadProcessTableTask.ReadLoadProcessTableTask()
-- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor(System.Nullable{System.Int32})
-  name: ReadLoadProcessTableTask(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask__ctor_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor(System.Nullable{System.Int32})
-  name.vb: ReadLoadProcessTableTask(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask(System.Nullable(Of System.Int32))
-  nameWithType: ReadLoadProcessTableTask.ReadLoadProcessTableTask(Nullable<Int32>)
-  nameWithType.vb: ReadLoadProcessTableTask.ReadLoadProcessTableTask(Nullable(Of Int32))
+- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor(ALE.ETLBox.ITask,System.Nullable{System.Int64})
+  name: ReadLoadProcessTableTask(ITask, Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask__ctor_ALE_ETLBox_ITask_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor(ALE.ETLBox.ITask,System.Nullable{System.Int64})
+  name.vb: ReadLoadProcessTableTask(ITask, Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask(ALE.ETLBox.ITask, System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask(ALE.ETLBox.ITask, System.Nullable(Of System.Int64))
+  nameWithType: ReadLoadProcessTableTask.ReadLoadProcessTableTask(ITask, Nullable<Int64>)
+  nameWithType.vb: ReadLoadProcessTableTask.ReadLoadProcessTableTask(ITask, Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor(System.Nullable{System.Int64})
+  name: ReadLoadProcessTableTask(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask__ctor_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor(System.Nullable{System.Int64})
+  name.vb: ReadLoadProcessTableTask(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask(System.Nullable(Of System.Int64))
+  nameWithType: ReadLoadProcessTableTask.ReadLoadProcessTableTask(Nullable<Int64>)
+  nameWithType.vb: ReadLoadProcessTableTask.ReadLoadProcessTableTask(Nullable(Of Int64))
 - uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.#ctor*
   name: ReadLoadProcessTableTask
   href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask__ctor_
@@ -13685,12 +13998,12 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.ReadLoadProcessTableTask
   nameWithType: ReadLoadProcessTableTask.ReadLoadProcessTableTask
-- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask._loadProcessKey
-  name: _loadProcessKey
-  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask__loadProcessKey
-  commentId: F:ALE.ETLBox.Logging.ReadLoadProcessTableTask._loadProcessKey
-  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask._loadProcessKey
-  nameWithType: ReadLoadProcessTableTask._loadProcessKey
+- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask._loadProcessId
+  name: _loadProcessId
+  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask__loadProcessId
+  commentId: F:ALE.ETLBox.Logging.ReadLoadProcessTableTask._loadProcessId
+  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask._loadProcessId
+  nameWithType: ReadLoadProcessTableTask._loadProcessId
 - uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.AllLoadProcesses
   name: AllLoadProcesses
   href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_AllLoadProcesses
@@ -13756,28 +14069,28 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcess
   nameWithType: ReadLoadProcessTableTask.LoadProcess
-- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessKey
-  nameWithType: ReadLoadProcessTableTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessKey
+- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessId
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_LoadProcessId
+  commentId: P:ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessId
+  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessId
+  nameWithType: ReadLoadProcessTableTask.LoadProcessId
+- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessId*
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_LoadProcessId_
+  commentId: Overload:ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessId
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessKey
-  nameWithType: ReadLoadProcessTableTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable{System.Int32})
-  name: Read(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_Read_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable{System.Int32})
-  name.vb: Read(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable(Of System.Int32))
-  nameWithType: ReadLoadProcessTableTask.Read(Nullable<Int32>)
-  nameWithType.vb: ReadLoadProcessTableTask.Read(Nullable(Of Int32))
+  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.LoadProcessId
+  nameWithType: ReadLoadProcessTableTask.LoadProcessId
+- uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable{System.Int64})
+  name: Read(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_Read_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable{System.Int64})
+  name.vb: Read(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read(System.Nullable(Of System.Int64))
+  nameWithType: ReadLoadProcessTableTask.Read(Nullable<Int64>)
+  nameWithType.vb: ReadLoadProcessTableTask.Read(Nullable(Of Int64))
 - uid: ALE.ETLBox.Logging.ReadLoadProcessTableTask.Read*
   name: Read
   href: api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html#ALE_ETLBox_Logging_ReadLoadProcessTableTask_Read_
@@ -13862,15 +14175,15 @@ references:
   commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.#ctor
   fullName: ALE.ETLBox.Logging.ReadLogTableTask.ReadLogTableTask()
   nameWithType: ReadLogTableTask.ReadLogTableTask()
-- uid: ALE.ETLBox.Logging.ReadLogTableTask.#ctor(System.Nullable{System.Int32})
-  name: ReadLogTableTask(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask__ctor_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.#ctor(System.Nullable{System.Int32})
-  name.vb: ReadLogTableTask(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.ReadLogTableTask.ReadLogTableTask(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.ReadLogTableTask.ReadLogTableTask(System.Nullable(Of System.Int32))
-  nameWithType: ReadLogTableTask.ReadLogTableTask(Nullable<Int32>)
-  nameWithType.vb: ReadLogTableTask.ReadLogTableTask(Nullable(Of Int32))
+- uid: ALE.ETLBox.Logging.ReadLogTableTask.#ctor(System.Nullable{System.Int64})
+  name: ReadLogTableTask(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask__ctor_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.#ctor(System.Nullable{System.Int64})
+  name.vb: ReadLogTableTask(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.ReadLogTableTask.ReadLogTableTask(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.ReadLogTableTask.ReadLogTableTask(System.Nullable(Of System.Int64))
+  nameWithType: ReadLogTableTask.ReadLogTableTask(Nullable<Int64>)
+  nameWithType.vb: ReadLogTableTask.ReadLogTableTask(Nullable(Of Int64))
 - uid: ALE.ETLBox.Logging.ReadLogTableTask.#ctor*
   name: ReadLogTableTask
   href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask__ctor_
@@ -13878,12 +14191,12 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.ReadLogTableTask.ReadLogTableTask
   nameWithType: ReadLogTableTask.ReadLogTableTask
-- uid: ALE.ETLBox.Logging.ReadLogTableTask._loadProcessKey
-  name: _loadProcessKey
-  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask__loadProcessKey
-  commentId: F:ALE.ETLBox.Logging.ReadLogTableTask._loadProcessKey
-  fullName: ALE.ETLBox.Logging.ReadLogTableTask._loadProcessKey
-  nameWithType: ReadLogTableTask._loadProcessKey
+- uid: ALE.ETLBox.Logging.ReadLogTableTask._loadProcessId
+  name: _loadProcessId
+  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask__loadProcessId
+  commentId: F:ALE.ETLBox.Logging.ReadLogTableTask._loadProcessId
+  fullName: ALE.ETLBox.Logging.ReadLogTableTask._loadProcessId
+  nameWithType: ReadLogTableTask._loadProcessId
 - uid: ALE.ETLBox.Logging.ReadLogTableTask.Execute
   name: Execute()
   href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_Execute
@@ -13897,19 +14210,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.ReadLogTableTask.Execute
   nameWithType: ReadLogTableTask.Execute
-- uid: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessKey
-  nameWithType: ReadLogTableTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessKey
+- uid: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessId
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_LoadProcessId
+  commentId: P:ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessId
+  fullName: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessId
+  nameWithType: ReadLogTableTask.LoadProcessId
+- uid: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessId*
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_LoadProcessId_
+  commentId: Overload:ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessId
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessKey
-  nameWithType: ReadLogTableTask.LoadProcessKey
+  fullName: ALE.ETLBox.Logging.ReadLogTableTask.LoadProcessId
+  nameWithType: ReadLogTableTask.LoadProcessId
 - uid: ALE.ETLBox.Logging.ReadLogTableTask.LogEntries
   name: LogEntries
   href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_LogEntries
@@ -13935,24 +14248,24 @@ references:
   commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager)
   fullName: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager)
   nameWithType: ReadLogTableTask.Read(IConnectionManager)
-- uid: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name: Read(IConnectionManager, Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_Read_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name.vb: Read(IConnectionManager, Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32))
-  nameWithType: ReadLogTableTask.Read(IConnectionManager, Nullable<Int32>)
-  nameWithType.vb: ReadLogTableTask.Read(IConnectionManager, Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable{System.Int32})
-  name: Read(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_Read_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable{System.Int32})
-  name.vb: Read(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable(Of System.Int32))
-  nameWithType: ReadLogTableTask.Read(Nullable<Int32>)
-  nameWithType.vb: ReadLogTableTask.Read(Nullable(Of Int32))
+- uid: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64})
+  name: Read(IConnectionManager, Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_Read_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int64})
+  name.vb: Read(IConnectionManager, Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.ReadLogTableTask.Read(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int64))
+  nameWithType: ReadLogTableTask.Read(IConnectionManager, Nullable<Int64>)
+  nameWithType.vb: ReadLogTableTask.Read(IConnectionManager, Nullable(Of Int64))
+- uid: ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable{System.Int64})
+  name: Read(Nullable<Int64>)
+  href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_Read_System_Nullable_System_Int64__
+  commentId: M:ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable{System.Int64})
+  name.vb: Read(Nullable(Of Int64))
+  fullName: ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable<System.Int64>)
+  fullName.vb: ALE.ETLBox.Logging.ReadLogTableTask.Read(System.Nullable(Of System.Int64))
+  nameWithType: ReadLogTableTask.Read(Nullable<Int64>)
+  nameWithType.vb: ReadLogTableTask.Read(Nullable(Of Int64))
 - uid: ALE.ETLBox.Logging.ReadLogTableTask.Read*
   name: Read
   href: api/ALE.ETLBox.Logging.ReadLogTableTask.html#ALE_ETLBox_Logging_ReadLogTableTask_Read_
@@ -14029,101 +14342,12 @@ references:
   commentId: F:ALE.ETLBox.Logging.ReadOptions.ReadLastSuccessful
   fullName: ALE.ETLBox.Logging.ReadOptions.ReadLastSuccessful
   nameWithType: ReadOptions.ReadLastSuccessful
-- uid: ALE.ETLBox.Logging.ReadOptions.ReadLastTransferedProcess
-  name: ReadLastTransferedProcess
-  href: api/ALE.ETLBox.Logging.ReadOptions.html#ALE_ETLBox_Logging_ReadOptions_ReadLastTransferedProcess
-  commentId: F:ALE.ETLBox.Logging.ReadOptions.ReadLastTransferedProcess
-  fullName: ALE.ETLBox.Logging.ReadOptions.ReadLastTransferedProcess
-  nameWithType: ReadOptions.ReadLastTransferedProcess
 - uid: ALE.ETLBox.Logging.ReadOptions.ReadSingleProcess
   name: ReadSingleProcess
   href: api/ALE.ETLBox.Logging.ReadOptions.html#ALE_ETLBox_Logging_ReadOptions_ReadSingleProcess
   commentId: F:ALE.ETLBox.Logging.ReadOptions.ReadSingleProcess
   fullName: ALE.ETLBox.Logging.ReadOptions.ReadSingleProcess
   nameWithType: ReadOptions.ReadSingleProcess
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask
-  name: RemoveLogTablesTask
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html
-  commentId: T:ALE.ETLBox.Logging.RemoveLogTablesTask
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask
-  nameWithType: RemoveLogTablesTask
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.#ctor
-  name: RemoveLogTablesTask()
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask__ctor
-  commentId: M:ALE.ETLBox.Logging.RemoveLogTablesTask.#ctor
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.RemoveLogTablesTask()
-  nameWithType: RemoveLogTablesTask.RemoveLogTablesTask()
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: RemoveLogTablesTask(IConnectionManager)
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.Logging.RemoveLogTablesTask.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.RemoveLogTablesTask(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: RemoveLogTablesTask.RemoveLogTablesTask(IConnectionManager)
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.#ctor*
-  name: RemoveLogTablesTask
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask__ctor_
-  commentId: Overload:ALE.ETLBox.Logging.RemoveLogTablesTask.#ctor
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.RemoveLogTablesTask
-  nameWithType: RemoveLogTablesTask.RemoveLogTablesTask
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Execute
-  name: Execute()
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Execute
-  commentId: M:ALE.ETLBox.Logging.RemoveLogTablesTask.Execute
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Execute()
-  nameWithType: RemoveLogTablesTask.Execute()
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Execute*
-  name: Execute
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Execute_
-  commentId: Overload:ALE.ETLBox.Logging.RemoveLogTablesTask.Execute
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Execute
-  nameWithType: RemoveLogTablesTask.Execute
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Remove
-  name: Remove()
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Remove
-  commentId: M:ALE.ETLBox.Logging.RemoveLogTablesTask.Remove
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Remove()
-  nameWithType: RemoveLogTablesTask.Remove()
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Remove(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: Remove(IConnectionManager)
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Remove_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.Logging.RemoveLogTablesTask.Remove(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Remove(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: RemoveLogTablesTask.Remove(IConnectionManager)
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Remove*
-  name: Remove
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Remove_
-  commentId: Overload:ALE.ETLBox.Logging.RemoveLogTablesTask.Remove
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Remove
-  nameWithType: RemoveLogTablesTask.Remove
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Sql
-  name: Sql
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Sql
-  commentId: P:ALE.ETLBox.Logging.RemoveLogTablesTask.Sql
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Sql
-  nameWithType: RemoveLogTablesTask.Sql
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.Sql*
-  name: Sql
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_Sql_
-  commentId: Overload:ALE.ETLBox.Logging.RemoveLogTablesTask.Sql
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.Sql
-  nameWithType: RemoveLogTablesTask.Sql
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.TaskName
-  name: TaskName
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_TaskName
-  commentId: P:ALE.ETLBox.Logging.RemoveLogTablesTask.TaskName
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.TaskName
-  nameWithType: RemoveLogTablesTask.TaskName
-- uid: ALE.ETLBox.Logging.RemoveLogTablesTask.TaskName*
-  name: TaskName
-  href: api/ALE.ETLBox.Logging.RemoveLogTablesTask.html#ALE_ETLBox_Logging_RemoveLogTablesTask_TaskName_
-  commentId: Overload:ALE.ETLBox.Logging.RemoveLogTablesTask.TaskName
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.RemoveLogTablesTask.TaskName
-  nameWithType: RemoveLogTablesTask.TaskName
 - uid: ALE.ETLBox.Logging.StartLoadProcessTask
   name: StartLoadProcessTask
   href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html
@@ -14161,12 +14385,12 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.StartLoadProcessTask.StartLoadProcessTask
   nameWithType: StartLoadProcessTask.StartLoadProcessTask
-- uid: ALE.ETLBox.Logging.StartLoadProcessTask._loadProcessKey
-  name: _loadProcessKey
-  href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask__loadProcessKey
-  commentId: F:ALE.ETLBox.Logging.StartLoadProcessTask._loadProcessKey
-  fullName: ALE.ETLBox.Logging.StartLoadProcessTask._loadProcessKey
-  nameWithType: StartLoadProcessTask._loadProcessKey
+- uid: ALE.ETLBox.Logging.StartLoadProcessTask._loadProcessId
+  name: _loadProcessId
+  href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask__loadProcessId
+  commentId: F:ALE.ETLBox.Logging.StartLoadProcessTask._loadProcessId
+  fullName: ALE.ETLBox.Logging.StartLoadProcessTask._loadProcessId
+  nameWithType: StartLoadProcessTask._loadProcessId
 - uid: ALE.ETLBox.Logging.StartLoadProcessTask.Execute
   name: Execute()
   href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask_Execute
@@ -14180,19 +14404,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.StartLoadProcessTask.Execute
   nameWithType: StartLoadProcessTask.Execute
-- uid: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessKey
-  nameWithType: StartLoadProcessTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessKey
+- uid: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessId
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask_LoadProcessId
+  commentId: P:ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessId
+  fullName: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessId
+  nameWithType: StartLoadProcessTask.LoadProcessId
+- uid: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessId*
+  name: LoadProcessId
+  href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask_LoadProcessId_
+  commentId: Overload:ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessId
   isSpec: "True"
-  fullName: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessKey
-  nameWithType: StartLoadProcessTask.LoadProcessKey
+  fullName: ALE.ETLBox.Logging.StartLoadProcessTask.LoadProcessId
+  nameWithType: StartLoadProcessTask.LoadProcessId
 - uid: ALE.ETLBox.Logging.StartLoadProcessTask.ProcessName
   name: ProcessName
   href: api/ALE.ETLBox.Logging.StartLoadProcessTask.html#ALE_ETLBox_Logging_StartLoadProcessTask_ProcessName
@@ -14301,129 +14525,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.StartLoadProcessTask.TaskName
   nameWithType: StartLoadProcessTask.TaskName
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask
-  name: TransferCompletedForLoadProcessTask
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html
-  commentId: T:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask
-  nameWithType: TransferCompletedForLoadProcessTask
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.#ctor
-  name: TransferCompletedForLoadProcessTask()
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask__ctor
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.#ctor
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask()
-  nameWithType: TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask()
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.#ctor(System.Nullable{System.Int32})
-  name: TransferCompletedForLoadProcessTask(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask__ctor_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.#ctor(System.Nullable{System.Int32})
-  name.vb: TransferCompletedForLoadProcessTask(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask(System.Nullable(Of System.Int32))
-  nameWithType: TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask(Nullable<Int32>)
-  nameWithType.vb: TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask(Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.#ctor*
-  name: TransferCompletedForLoadProcessTask
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask__ctor_
-  commentId: Overload:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.#ctor
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask
-  nameWithType: TransferCompletedForLoadProcessTask.TransferCompletedForLoadProcessTask
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask._loadProcessKey
-  name: _loadProcessKey
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask__loadProcessKey
-  commentId: F:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask._loadProcessKey
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask._loadProcessKey
-  nameWithType: TransferCompletedForLoadProcessTask._loadProcessKey
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete
-  name: Complete()
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Complete
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete()
-  nameWithType: TransferCompletedForLoadProcessTask.Complete()
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: Complete(IConnectionManager)
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Complete_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: TransferCompletedForLoadProcessTask.Complete(IConnectionManager)
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name: Complete(IConnectionManager, Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Complete_ALE_ETLBox_ConnectionManager_IConnectionManager_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager,System.Nullable{System.Int32})
-  name.vb: Complete(IConnectionManager, Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(ALE.ETLBox.ConnectionManager.IConnectionManager, System.Nullable(Of System.Int32))
-  nameWithType: TransferCompletedForLoadProcessTask.Complete(IConnectionManager, Nullable<Int32>)
-  nameWithType.vb: TransferCompletedForLoadProcessTask.Complete(IConnectionManager, Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(System.Nullable{System.Int32})
-  name: Complete(Nullable<Int32>)
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Complete_System_Nullable_System_Int32__
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(System.Nullable{System.Int32})
-  name.vb: Complete(Nullable(Of Int32))
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(System.Nullable<System.Int32>)
-  fullName.vb: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete(System.Nullable(Of System.Int32))
-  nameWithType: TransferCompletedForLoadProcessTask.Complete(Nullable<Int32>)
-  nameWithType.vb: TransferCompletedForLoadProcessTask.Complete(Nullable(Of Int32))
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete*
-  name: Complete
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Complete_
-  commentId: Overload:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Complete
-  nameWithType: TransferCompletedForLoadProcessTask.Complete
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Execute
-  name: Execute()
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Execute
-  commentId: M:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Execute
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Execute()
-  nameWithType: TransferCompletedForLoadProcessTask.Execute()
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Execute*
-  name: Execute
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Execute_
-  commentId: Overload:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Execute
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Execute
-  nameWithType: TransferCompletedForLoadProcessTask.Execute
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.LoadProcessKey
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_LoadProcessKey
-  commentId: P:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.LoadProcessKey
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.LoadProcessKey
-  nameWithType: TransferCompletedForLoadProcessTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.LoadProcessKey*
-  name: LoadProcessKey
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_LoadProcessKey_
-  commentId: Overload:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.LoadProcessKey
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.LoadProcessKey
-  nameWithType: TransferCompletedForLoadProcessTask.LoadProcessKey
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Sql
-  name: Sql
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Sql
-  commentId: P:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Sql
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Sql
-  nameWithType: TransferCompletedForLoadProcessTask.Sql
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Sql*
-  name: Sql
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_Sql_
-  commentId: Overload:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Sql
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.Sql
-  nameWithType: TransferCompletedForLoadProcessTask.Sql
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TaskName
-  name: TaskName
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_TaskName
-  commentId: P:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TaskName
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TaskName
-  nameWithType: TransferCompletedForLoadProcessTask.TaskName
-- uid: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TaskName*
-  name: TaskName
-  href: api/ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html#ALE_ETLBox_Logging_TransferCompletedForLoadProcessTask_TaskName_
-  commentId: Overload:ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TaskName
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.TaskName
-  nameWithType: TransferCompletedForLoadProcessTask.TaskName
 - uid: ALE.ETLBox.MySqlConnectionString
   name: MySqlConnectionString
   href: api/ALE.ETLBox.MySqlConnectionString.html
@@ -15645,6 +15746,23 @@ references:
   fullName.vb: ALE.ETLBox.TableData(Of T).Dispose
   nameWithType: TableData<T>.Dispose
   nameWithType.vb: TableData(Of T).Dispose
+- uid: ALE.ETLBox.TableData`1.DynamicColumnNames
+  name: DynamicColumnNames
+  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_DynamicColumnNames
+  commentId: P:ALE.ETLBox.TableData`1.DynamicColumnNames
+  fullName: ALE.ETLBox.TableData<T>.DynamicColumnNames
+  fullName.vb: ALE.ETLBox.TableData(Of T).DynamicColumnNames
+  nameWithType: TableData<T>.DynamicColumnNames
+  nameWithType.vb: TableData(Of T).DynamicColumnNames
+- uid: ALE.ETLBox.TableData`1.DynamicColumnNames*
+  name: DynamicColumnNames
+  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_DynamicColumnNames_
+  commentId: Overload:ALE.ETLBox.TableData`1.DynamicColumnNames
+  isSpec: "True"
+  fullName: ALE.ETLBox.TableData<T>.DynamicColumnNames
+  fullName.vb: ALE.ETLBox.TableData(Of T).DynamicColumnNames
+  nameWithType: TableData<T>.DynamicColumnNames
+  nameWithType.vb: TableData(Of T).DynamicColumnNames
 - uid: ALE.ETLBox.TableData`1.EstimatedBatchSize
   name: EstimatedBatchSize
   href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_EstimatedBatchSize

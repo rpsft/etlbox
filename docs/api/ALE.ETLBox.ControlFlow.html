@@ -158,10 +158,8 @@ In MySql, this will return a list of all schemas.</p>
       <section><p>A package is a shortcute for custom task, but with the TaskType &quot;PACKAGE&quot;.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.RowCountTask.html">RowCountTask</a></h4>
-      <section><p>Count the row in a table. This task normally uses the  COUNT(<em>) method (could take some time on big tables)
-For Sql Server, you can set the QuickQueryMode to true. This will query the sys.partition table which can be much faster.
-NoLock does a normal COUNT(</em>) using the nolock - option which avoid tables locks when reading from the table (but while counting the tables
-new data could be inserted, which could lead to wrong results).</p>
+      <section><p>Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables).
+You can pass a a filter condition for the count.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.ControlFlow.Sequence.html">Sequence</a></h4>
       <section><p>A sequence is a shortcute for custom task, but with the TaskType &quot;SEQUENCE&quot;.</p>

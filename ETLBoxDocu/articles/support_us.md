@@ -22,7 +22,7 @@ I am a software developer with focus on C# and Sql, working more than 10 years i
 All effort I put into this toolbox so far was done in my spare time - I still need to earn money doing other things. 
 
 If you like this toolbox, and really want to support it,  please have a chat with me about some training sessions
-or other data integration issues that you would like to have solved with ETLBox. I would be happy to do this
+or other data integration issues that you would like to have solved with ETLBox. I would be happy to support you
  on a professional basis.
 
 Just send me an e-mail to (andreas.lennartz@gmail.com). 

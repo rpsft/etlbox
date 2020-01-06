@@ -79,21 +79,71 @@
 <h1 id="working-with-data-types">Working with data types</h1>
 
 <h2 id="generic-approach">Generic approach</h2>
-<p>Almost all components in ETLBox can be defined with a POCO that matches the data types of the data.
+<p>Almost all components in ETLBox can be defined with a POCO (Plain old component object), which is a very simple
+object describing your data and data types. This object can be used to store your data in your data flow.</p>
+<p>Almost all sources provide a column name for every data column. In a CSV file, you nomrally have a header at the top row
+with names for each column. In a database table, there is always a column name as well as a data tyep defined.</p>
+<p>If you define an object in C#, the name of the column in the source must be mapped to the right property in your object.
 By default, the mapping of column names to properties is resolved by the property name itself. E.g. a column named Value1
 would stored in the property with the same name. If you use the <code>ColumnMap</code> attribute, you can add what column name will be mapped
 to the property. If there is no match, the column will be ignored.</p>
 <p>Usage example:</p>
-<pre><code class="lang-C#">public class MySimpleRow {
-    [ColumnMap(&quot;Value1&quot;)]
-    public string Col1 { get; set; }
-    public int Value2 { get; set; }
+<pre><code class="lang-C#">//Prepare table
+SqlTask.ExecuteNonQuery(@&quot;CREATE TABLE demotable (
+  Value1 INT NULL,
+  Value2 VARCHAR(100) NULL
+ )&quot;);
+
+public class MySimpleRow {
+    public int Value1 { get; set; }
+    [ColumnMap(&quot;Value2&quot;)]
+    public string Col2 { get; set; }
 }
 
-DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(
-    $@&quot;select Value1, Value2 from dbo.Test&quot;
-);
+DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(&quot;demotable&quot;);
 </code></pre>
+<p>The table demotable has 2 column: Value1 with a INT data type and Value2 with an VARCHAR data type. The POCO <code>MySimpleRow</code>
+has two properties: Value1 and Value2 with a <code>ColumnMap(&quot;Value2&quot;)</code> attribute. The property Value1 is automatically mapped
+to the table column Value1 because of their matching names. The table column Value2 is matched to the property Col2 because
+of the ColumnMap attribute.</p>
+<h3 id="ignored-columns">Ignored columns</h3>
+<p>If you use a POCO to describe you data type, this object can have a different amount of properties. In our example above,
+we could define a POCO that contains an additional property (Let's call it AnotherValue) and leave out Col2. Our object
+would look like this:</p>
+<pre><code class="lang-C#">//Prepare table
+SqlTask.ExecuteNonQuery(@&quot;CREATE TABLE demotable (
+  Value1 INT NULL,
+  Value2 VARCHAR(100) NULL
+ )&quot;);
+
+public class MyNewRow {
+    public int Value1 { get; set; }
+    public string AnotherValue { get; set }
+}
+DBSource&lt;MyNewRow&gt; source = new DBSource&lt;MyNewRow&gt;(&quot;demotable&quot;);
+</code></pre>
+<p>If we would use this object to map with our source table, there would be only data read from Value1. Because the property
+AnotherValue doesn't have a match in the source, no data will be read from this column.</p>
+<h3 id="working-with-sql-statements">Working with Sql statements</h3>
+<p>If you don't pass a table name but a Sql statement to read data from a database table, the column name is derived from the statement.</p>
+<p>Let's look at this example:</p>
+<pre><code class="lang-C#">//Prepare table
+SqlTask.ExecuteNonQuery(@&quot;CREATE TABLE demotable (
+  Value1 INT NULL,
+  Value2 VARCHAR(100) NULL
+ )&quot;);
+
+public class MyNewRow {
+    public int Value1 { get; set; }
+    public string AnotherValue { get; set }
+}
+DBSource&lt;MyNewRow&gt; source = new DBSource&lt;MyNewRow&gt;() {
+    Sql = &quot;SELECT Value1, Value2 AS AnotherValue FROM demotable&quot;
+};
+</code></pre>
+<p>The Sql statement would produce 2 columns: Column 1 with the column name Value1 and column 2 with the column name &quot;AnotherValue&quot;.
+ETLBox now is able to map the first column to the property Value1 and the second column to the property AnotherValue.
+Of course, you still could use the <code>ColumnMap</code> Attribute.</p>
 <h3 id="columnmap-attribute">ColumnMap attribute</h3>
 <p>The <code>ColumnMap</code> attribute is used whenever data is read from a database source or written into a database destination. When reading from
 a database source, it will tell the reader which database column name is mapped to the property. It will then write the data into the property via
@@ -120,10 +170,64 @@ public string HashValue =&gt; HashHelper.Encrypt_Char40(this.Key);
 to this column. Every record is then stored in the table as an encrypted hash value of the property &quot;Key&quot;.</p>
 <p>You can use this mapping behavior for some basic data type transformations. If transformations become more complex, you should have a look at
 the <a href="dataflow_transformations.html">existing transformations</a> to modify your data.</p>
+<h3 id="automatic-data-type-conversion">Automatic data type conversion</h3>
+<p>Whenever you read data from any source (database, csv, json, ...) or you write into any destination, sometimes the data types
+in your object will be different than the ones your database table or your object.
+ETLBox will always try to convert the data into the right type: E.g. when you read data from a CSV file, by default the data
+comes as a string. But if your object defines a numeric data type like int or double, it will be automatically converted.
+Or if you write into a database table, there could be a DECIMAL column in your table, and your object could hold a string value.
+As long as the string in your object can be converted into a decimal value, ETLBox will automatically try to cast your data
+into the right type.</p>
+<h2 id="dynamic-object-approach">Dynamic object approach</h2>
+<p>Sometimes you don't want (or can) create an object during design-time for your data flow components. #
+You want the properties (and perhaps methods etc.) created during run-time. With .NET and .NET Core,
+there you can have dynamic objects, which basically means that you can define object where
+no type checks are executed when you compile you program. The keyword here is <code>dynamic</code>.</p>
+<h3 id="expandoobject">ExpandoObject</h3>
+<p>ETLBox offers support for dynamic objects, and relies on the <code>ExpandoObject</code>. The ExpandoObject can be cast into
+a dynamic, and after the cast properties can be created by simple assigned them a value.</p>
+<p>Here is a simple example of the <code>ExpandoObject</code></p>
+<pre><code class="lang-C#">dynamic sampleObject = new ExpandoObject();
+sampleObject.test = &quot;Dynamic Property&quot;;
+///Sample object now has a property &quot;test&quot; of type string with the value &quot;Dynamic Property&quot;
+</code></pre>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.dynamic.expandoobject?view=netframework-4.8">The Microsoft documentation gives you a good explanation of the possibilites of the ExpandoObject and also more details about
+the use of <code>dynamic</code>.</a></p>
+<h3 id="etlbox-support-for-expandoobject">ETLBox support for ExpandoObject</h3>
+<p>In order to use the ExpandoObject and dynmic objects with ETLBox, you simple type your data flow with this object.</p>
+<p>Let's say we have two tables.
+The table <code>sourceTable</code> has two columns: SourceCol1 and SourceCol2, both integer values.
+The table <code>destTable</code> has one column: DestColSum, also an integer value.</p>
+<p>We could now define the following data flow:</p>
+<pre><code class="lang-C#">DBSource&lt;ExpandoObject&gt; source = new DBSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
+
+//Act
+RowTransformation&lt;ExpandoObject&gt; trans = new RowTransformation&lt;ExpandoObject&gt;(
+    sourcedata =&gt;
+    {
+        dynamic c = sourcedata as ExpandoObject;
+        c.DestColSum = c.SourceCol1 + c.SourceCol2;
+        return c;
+    });
+DBDestination&lt;ExpandoObject&gt; dest = new DBDestination&lt;ExpandoObject&gt;(&quot;destTable&quot;);
+</code></pre>
+<p>In this example code, the data is read from a DBSource into an ExpandoObject. The properties SourceCol1 and SourceCol2
+are created automatically, because ETLBox will recognize that it is an ExpandoObject and add a property
+for each column in the source.
+In the RowTransformation, you can convert the ExpandoObject into a dynamic object first, so that you don't get any errros
+message when you compile your code. Now we can assign a new property to the (same) ExpandoObject - in this case, it's called
+DestColSum as a sum of the properties SourceCol1 and SourceCol2.
+Now when we write into the destination, ETLBox will see that there is one property on the ExpandoObject which name mathces
+with the destination column: &quot;DestColSum&quot;. The other two properties (SourceCol1 and SourceCol2) will be ignored, and data
+from DestColSum will be written into the target.</p>
+<p><em>Note</em>: Of course you could have create a new ExpandoObject in the RowTransformation, which would have contained the
+property DestColSum.</p>
 <h2 id="non-generic-approach">Non generic approach</h2>
-<p>Instead of parsing your source data into a object, you can just read all your data in to string array. This is equivalent to
-<code>DBSource&lt;string[]&gt;</code>.</p>
-<p>E.g.:</p>
+<p>As working with dynamic types can sometimes be a hazzle, ETLBox offers a third way to create your data flow without
+object types. Most data flow components in ETLBox exist as a &quot;non generic&quot; object - which means that you can choose if you want to use
+the object as a generic one with having an object type of without an object type. If you don't pass an object type, ETLBox
+will internally work with an string array. E.g., the use of <code>DBSource</code>  is equivalent to <code>DBSource&lt;string[]&gt;</code>.</p>
+<p>Here is an example for reading data from a database:</p>
 <pre><code class="lang-C#">DBSource source = new DBSource($@&quot;select Value1, Value2 from dbo.Test&quot;);
 RowTransformation row = new RowTransformation( 
     row =&gt; {
@@ -132,8 +236,11 @@ RowTransformation row = new RowTransformation(
         }
 );
 </code></pre>
-<p>would have all data from column &quot;Value1&quot; accessible at the first position of the string array and &quot;Value2&quot; at the second position.
-All your data will be automatically converted into a string data type.</p>
+<p>In this example, you would have all data from column &quot;Value1&quot; accessible at the first position of the string array
+and &quot;Value2&quot; at the second position. All your data will be automatically converted into a string data type.
+This will also work for a DBDestDetination - the string data will then automatically be converted into back into the
+right data type. Of course you will get an error if data types won't match (e.g. if you want to store the value &quot;xyz&quot; in
+an integer column).</p>
 <p>This approach is very useful when reading from a source where you get only string data, e.g. CSV or Json.
 You can use a <code>RowTransformation</code> if you want to convert your string array into an object.</p>
 <pre><code class="lang-C#">RowTransformation&lt;string[], MySimpleRow&gt; = new RowTransformation&lt;string[], MySimpleRow&gt;( 

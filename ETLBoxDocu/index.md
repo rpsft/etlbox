@@ -63,7 +63,7 @@
       </span><a class="github-link" href="https://github.com/roadrunnerlenny/etlbox"><i class="glyphicon glyphicon-file"></i>View in Github</a>
     </div>
     <div class="minitext">
-    A lightweight ETL (extract, transform, load) toolbox for .NET
+    A lightweight ETL (extract, transform, load) toolbox and data integration library for .NET
     </div>
     <div class="buttons-unit">
       <a href="articles/overview.md" class="button"><i class="glyphicon glyphicon-pencil"></i>Getting Started</a>
@@ -78,7 +78,7 @@
         <i class="glyphicon glyphicon-random"></i>
         <section>
           <h2>It's all in the box!</h2>
-          <p class="lead">Create sophisticated data flows - read and write data from flatfiles, databases 
+          <p class="lead">Create sophisticated data flows with .NET - read and write data from flatfiles, databases 
           (e.g. Sql Server, SQLite, MySql or Postgres) or webservices, process the data in-memory with your self-developed transformations 
           and write them into any destination. 
           </p>
@@ -123,9 +123,9 @@
         <i class="glyphicon glyphicon-home"></i>
         <section>
           <h2>Develop locally</h2>
-          <p class="lead">Develop and test your ETL flows locally with your favorite development and debugging tools.
+          <p class="lead">Develop and test your ETL and data integration flows locally with your favorite development and debugging tools.
           Use the toolset that your team is already familiar with. Track your changes with Git (or other source controls)
-          and connect your ETL with your existing CI/CD platform.</p>
+          and connect your job with your existing CI/CD platform.</p>
         </section>
       </div>
     </div>

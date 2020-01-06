@@ -79,12 +79,15 @@
 <h1 id="logging">Logging</h1>
 
 <p>By default, ETLBox uses NLog. NLog already comes with different log targets that be configured either via your app.config or programmatically.
-See the NLog-documentation for a full reference: <a href="https://nlog-project.org/">https://nlog-project.org/</a>
-ETLBox already comes with NLog as dependency - so the necessary packages will be retrieved from nuget automatically through your package manager.</p>
-<h2 id="simple-configuration-file">Simple Configuration File</h2>
-<p>In order to use logging, you have to create a <code>nlog.config</code> file (with exact this name) and put it into the root folder of your project.
-Make sure that it is copied into your output directory.</p>
-<p>A simple and very basic nlog.config could look like this</p>
+See the NLog-documentation for a full reference: <a href="https://nlog-project.org/">https://nlog-project.org/</a></p>
+<p>ETLBox already comes with NLog as dependency - so the necessary packages will be retrieved from nuget automatically
+through your package manager.</p>
+<p>On top of NLog, ETLBox offers you support to create a simple but still powerful database logging, which is simple to set up
+and eays to maintain.</p>
+<h2 id="a-simple-configuration-file">A simple Configuration File</h2>
+<p>In order to use logging, you have to create a <code>nlog.config</code> file (with this exact name) and put it into the root folder
+of your project. Make sure that it is copied into your output directory.</p>
+<p>A simple and very basic nlog.config would look like this</p>
 <pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
       xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
@@ -97,7 +100,32 @@ Make sure that it is copied into your output directory.</p>
   &lt;/targets&gt;
 &lt;/nlog&gt;
 </code></pre>
-<p>After adding a file with this configuration, you will already get some logging output to your console output.</p>
+<p>After adding a file with this configuration, you will already get some logging output to your console output when you
+trigger some ETLBox components.</p>
+<h3 id="copy-to-output-directory">Copy to output directory</h3>
+<p>Make sure the config file is copied into the output directory where you build executables are dropped.
+Your project configuration file .csproj should contain something like this:</p>
+<pre><code class="lang-C#">&lt;Itemgroup&gt;
+...
+  &lt;None Update=&quot;nlog.config&quot;&gt;
+    &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+  &lt;/None&gt;
+&lt;/Itemgroup&gt;
+</code></pre>
+<h3 id="debugging-logging-issues">Debugging logging issues</h3>
+<p>NLog normally behaves very &quot;fault-tolerant&quot;. By default, if something is not setup properly or does not work
+when NLog tries to log, it just &quot;stops&quot; working without throwing an exception or stopping the execution.
+This behavior is very desirable in a production environment, but hard to debug.</p>
+<p>If you need to debug Nlog, you can change the nlog root-element of the nlog.config  into:</p>
+<pre><code class="lang-xml">&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      throwConfigExceptions=&quot;true&quot;
+      autoReload=&quot;true&quot;
+      internalLogFile=&quot;console-example-internal.log&quot;
+      internalLogLevel=&quot;Info&quot;&gt;
+</code></pre>
+<p>With this configuration it will raise an exception and also log it into a file.</p>
 <h2 id="logging-into-files">Logging into files</h2>
 <p>Nlog can be easily configured to have your logging output stored in files. Here is an example for a simple configuration that will
 create a Log - folder within your application directory and have a file for every error level provided by Nlog.
@@ -120,7 +148,29 @@ create a Log - folder within your application directory and have a file for ever
   &lt;/rules&gt;
 &lt;/nlog&gt;
 </code></pre>
-<p>As you can see, the log output into the file is alreday formatted using particular ETLBox extensions provided by NLog.</p>
+<p>As you can see, the log output into the file is formatted using a particular NLog notation in the Layout attribute. NLog
+does provide some default LayoutRenderer here. Additionally, ETLBox will register also some layout renderer which can be used.
+These are:</p>
+<pre><code>//The default log message of the component or task:
+layout=&quot;${etllog}&quot; 
+
+//The current value defined in ControlFlow.Stage:
+layout=&quot;${etllog:LogType=Stage}&quot; 
+
+//The class name of the task or component that produces the log output:
+layout=&quot;${etllog:LogType=Type}&quot; 
+
+ //A component can can produce more than on log message.
+ //Actions can be 'START' (first log message), 'END' (component finished), 'RUN', 'LOG':
+ layout=&quot;${etllog:LogType=Action}
+
+ //The hash value of the specific task or component, derived from the type and the name
+ layout=&quot;${etllog:LogType=Hash}&quot;
+
+//If a load process was started, the load process id is in here
+layout=&quot;${etllog:LogType=LoadProcessKey}&quot; /&gt;
+</code></pre>
+<p>The details for each layout renderer will explained in more details in the following chapters.</p>
 <h3 id="setting-the-logging-stage">Setting the logging stage</h3>
 <p>One thing you perhaps want to know in your logging output is the current stage of your data processing. Think you this as a category
 for your log output - if things happen during the setup of your database, the Stage could be &quot;SETUP&quot; - if you are currently staging your
@@ -143,36 +193,21 @@ the property to true:</p>
 <h2 id="logging-to-database">Logging to database</h2>
 <p>Of course logging to console output or to a file is perhaps not sufficient. If you want to have logging tables in your database,
 ETLBox comes with some additions to the default logging mechanism provided by NLog.</p>
-<p>Additionally to the traditional nlog setup where log information can be send to any target by changing the configuration,
-ETLBox comes with a set of Tasks and a recommended nlog configuration.
-This will allow you to have a more advanced logging into your database.</p>
-<p>E.g, you can create log tables and stored procedures useful for logging in SQL with the <code>CreateLogTablesTask</code>.
-It will basically create two log tables - a table for the &quot;normal&quot; log and a table  to store information about your ETL process.
-Whenever you use a Control Flow or Data Flow task, log information then is written into the log table.
-Additionally, you can use tasks like <code>StartLoadProcessTask</code> or <code>EndLoadProcessTask</code> which will write information about the current
-ETL process into the ETL process table.</p>
-<h3 id="extend-the-nlogconfig">Extend the nlog.config</h3>
-<p>As a first step to have nlog log into your database, you must extend your nlog configuration and add the database as target.
-It should then look like this:</p>
+<h3 id="method-1-extend-the-nlogconfig">Method 1: Extend the nlog.config</h3>
+<p>One way to have logging into the database enabled is to extend the nlog configuration and add your database as target.
+This way is the most flexible one, but it involves some manual steps: You have to set up the logging table yourself,
+and define the database target in your nlog.config file.</p>
+<p>The modification to the nlog.config could  like this:</p>
 <pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
       xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
   &lt;targets&gt;
-    &lt;target name=&quot;console&quot; xsi:type=&quot;Console&quot; /&gt;  
     &lt;target xsi:type=&quot;Database&quot; name=&quot;database&quot;
        useTransactions=&quot;false&quot; keepConnection=&quot;true&quot;&gt;
       &lt;commandText&gt;
-        insert into etl.Log (LogDate, Level, Stage, Message, TaskType, TaskAction, TaskHash, Source, LoadProcessKey)
-        select @LogDate
-        , @Level
-        , cast(@Stage as nvarchar(20))
-        , cast(@Message as nvarchar(4000))
-        , cast(@Type as nvarchar(40))
-        , @Action
-        , @Hash
-        , cast(@Logger as nvarchar(20))
-        , case when @LoadProcessKey=0 then null else @LoadProcessKey end
+        INSERT INTO etllog (LogDate, Level, Stage, Message, TaskType, TaskAction, TaskHash, Source)
+        SELECT @LogDate, @Level, @Stage, @Message, @Type, @Action, @Hash, @Logger
       &lt;/commandText&gt;
       &lt;parameter name=&quot;@LogDate&quot; layout=&quot;${date:format=yyyy-MM-ddTHH\:mm\:ss.fff}&quot; /&gt;
       &lt;parameter name=&quot;@Level&quot; layout=&quot;${level}&quot; /&gt;
@@ -181,77 +216,113 @@ It should then look like this:</p>
       &lt;parameter name=&quot;@Type&quot; layout=&quot;${etllog:LogType=Type}&quot; /&gt;
       &lt;parameter name=&quot;@Action&quot; layout=&quot;${etllog:LogType=Action}&quot; /&gt;
       &lt;parameter name=&quot;@Hash&quot; layout=&quot;${etllog:LogType=Hash}&quot; /&gt;
-      &lt;parameter name=&quot;@LoadProcessKey&quot; layout=&quot;${etllog:LogType=LoadProcessKey}&quot; /&gt;
       &lt;parameter name=&quot;@Logger&quot; layout=&quot;${logger}&quot; /&gt;
     &lt;/target&gt;
   &lt;/targets&gt;
   &lt;rules&gt;
-    &lt;logger name=&quot;*&quot; minlevel=&quot;Debug&quot; writeTo=&quot;database&quot; /&gt;
-    &lt;logger name=&quot;*&quot; minlevel=&quot;Info&quot; writeTo=&quot;console&quot; /&gt;
+    &lt;logger name=&quot;*&quot; minlevel=&quot;Info&quot; writeTo=&quot;database&quot; /&gt;
   &lt;/rules&gt;
 &lt;/nlog&gt;
 </code></pre>
-<h3 id="copy-to-output-directory">Copy to output directory</h3>
-<p>Make sure the config file is copied into the output directory where you build executables are dropped.
-Your project configuration file .csproj should contain something like this:</p>
-<pre><code class="lang-C#">&lt;Itemgroup&gt;
-...
-  &lt;None Update=&quot;nlog.config&quot;&gt;
-    &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
-  &lt;/None&gt;
-&lt;/Itemgroup&gt;
+<h3 id="method-2-let-etlbox-do-the-work">Method 2: Let ETLBox do the work</h3>
+<p>Alternatively, you can use some pre-defined Logging tasks to update your nlog configuration and create the logging table.</p>
+<p>The following code snipped will do this for you:</p>
+<pre><code class="lang-C#">var SqlConnectionManager connection = new SqlConnectionManager(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_Logging&quot;);
+CreateLogTableTask.Create(connection);
+ControlFlow.AddLoggingDatabaseToConfig(connection);
 </code></pre>
-<h3 id="create-database-tables">Create database tables</h3>
-<p>Now you need some tables in the database to store your log information.
-You can use the task <code>CreateLogTables</code>. This task will create two tables:
-<code>etl.LoadProcess</code> and <code>etl.Log</code>.
-It will also create some stored procedure to access this tables. This can be useful if you want
-to log into these table in your sql code or stored procedures.</p>
-<p><strong>Note</strong>: Don't forget the setup the connection for the control flow.</p>
-<pre><code class="lang-C#">CreateLogTablesTask.CreateLog();
+<p>In this example, <code>CreateLogTableTask</code> will create a logging table. The table structure will look like this:</p>
+<table>
+<thead>
+<tr>
+<th>Column name</th>
+<th>Data type</th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Int64</td>
+<td>Identity</td>
+</tr>
+<tr>
+<td>log_date</td>
+<td>DateTime</td>
+<td></td>
+</tr>
+<tr>
+<td>level</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>stage</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>message</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>task_type</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>task_action</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>task_hash</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>source</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>load_process_id</td>
+<td>Int64</td>
+<td>Id of etlbox_loadproces table</td>
+</tr>
+</tbody>
+</table>
+<p>This will work on all supported database - the real data type will be reflected by the corresponding database specific type. E.g. Int64 is
+a BIGINT on SqlServer and INTEGER on SqlLite
+The id column is an Identity (or auto increment) column, and the only one not nullable.</p>
+<p>The <code>AddLoggingDatabaseToConfig</code> method will add the corresponding nlog database target to the nlog configuration.
+This happens to the configuration that Nlog keeps after reading the nlog.config file - the file itself will be untouched.</p>
+<p>Now, if you call any task or component that creates log output, it will automatically be logged to the newly create database table</p>
+<h4 id="log-table-name">Log table name</h4>
+<p>By default, the name for the logging table is &quot;etlbox_log&quot;. If you want to change that name, the <code>CreateLogTableTask</code>
+and <code>AddLoggingDatabaseToConfig</code> method do have a parameter logTableName that can be set to your specifig table name.
+If you use a different name, before you call <code>AddLoggingDatabaseToConfig</code> you have to set the table name in the static
+property LogTable of <code>ControlFlow</code> class.</p>
+<pre><code class="lang-C#">ControlFlow.LogTable = &quot;mylogtable&quot;;
+ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Debug, &quot;mylogtable&quot;);
 </code></pre>
-<h3 id="loadprocess-table">LoadProcess table</h3>
-<p>The table etl.LoadProcess contains information about the ETL processes that you started programmatically with the <code>StartLoadProcessTask</code>.
-To end or abort a process, you can use the <code>EndLoadProcessTask</code> or <code>AbortLoadProcessTask</code>. To set the TransferCompletedDate in this table, use
-the <code>TransferCompletedForLoadProcessTask</code></p>
-<p>This is an example for logging into the load process table.</p>
-<pre><code class="lang-C#">StartLoadProcessTask.Start(&quot;Process 1 started&quot;);
-/*..*/
-TransferCompletedForLoadProcessTask.Complete();
-/*..*/
-if (error)
-   AbortLoadProcessTask.Abort(&quot;This is the abort message&quot;);
-else 
-  EndLoadProcessTask.End(&quot;Process 1 ended successfully&quot;);
-</code></pre>
-<h3 id="log-table">Log Table</h3>
-<p>The etl.Log table will store all log message generated from any control flow or data flow task.
-You can even use your own LogTask to create your own log message in there.
-The following example will create 6 rows in your <code>etl.Log</code> table. Every time a Control Flow Tasks starts,
+<p>Also, when using the <code>AddLoggingDatabaseToConfig</code>, you can define a min log level at which Nlog start to produce log output. By default
+it is set to LogLevel &quot;Info&quot;.</p>
+<h3 id="log-output">Log output</h3>
+<p>After you added a log table (or all other nlog target like file or console output),
+all log message generated from any control flow task or data flow component will be redirected to this target.</p>
+<p>The following example will create 4 rows in your log table. Every time a tasks or component starts,
 it will create a log entry with an action 'START'. When it's done with its execution, it will create
 another log entry with action type 'END'</p>
 <pre><code class="lang-C#">SqlTask.ExecuteNonQuery(&quot;some sql&quot;, &quot;Select 1 as test&quot;);
 Sequence.Execute(&quot;some custom code&quot;, () =&gt; { });
-LogTask.Warn(&quot;Some warning!&quot;);
 </code></pre>
-<p>The sql task will produce two log entries - one entry when it started and one entry when it ended its execution.</p>
-<h3 id="further-log-tasks">Further log tasks</h3>
-<p>There are some more logging tasks that can be used to manage your log tables.</p>
-<h4 id="clean-up-or-remove-log-table">Clean up or remove log table</h4>
-<p>You can clean up your log with the CleanUpLogTask.</p>
-<pre><code class="lang-C#">CleanUpLogTask.Clean();
+<p>If you want to produce your own log output, you can use the <code>LogTask</code>. This will create only one row in your log output, with
+the TaskAction &quot;LOG&quot;. The message here would be &quot;Some warning!&quot;.</p>
+<pre><code class="lang-C#">LogTask.Warn(&quot;Some warning!&quot;);
 </code></pre>
-<p>Or you can remove the log tables and all its procedure from the database.</p>
-<pre><code class="lang-C#">RemoveLogTablesTask.Remove();
-</code></pre>
-<h4 id="get-log-and-loadprocess-table-in-json">Get log and loadprocess table in JSON</h4>
-<p>If you want to get the content of the etl.LoadProcess table or etl.Log in JSON-Format, there are two tasks for that:</p>
-<pre><code>GetLoadProcessAsJSONTask.GetJSON();
-GetLogAsJSONTask.GetJSON();
-</code></pre>
-<h4 id="custom-log-messages">Custom log messages</h4>
-<p>If you want to create an entry in the etl.Log table (just one entry, no START/END messages) you can do this using the LogTask.
-Also you can define the nlog level.</p>
+<p>Also you can define the nlog level with the log task. E.g.:_</p>
 <pre><code class="lang-C#">LogTask.Trace(&quot;Some text!&quot;);
 LogTask.Debug(&quot;Some text!&quot;);
 LogTask.Info(&quot;Some text!&quot;);
@@ -259,24 +330,138 @@ LogTask.Warn(&quot;Some text!&quot;);
 LogTask.Error(&quot;Some text!&quot;);
 LogTask.Fatal(&quot;Some text!&quot;);
 </code></pre>
-<h2 id="debugging-logging-issues">Debugging logging issues</h2>
-<p>NLog normally behaves very &quot;fault-tolerant&quot;. By default, if something is not setup properly or does not work
-when NLog tries to log, it just &quot;stops&quot; working without throwing an exception or stopping the execution.
-This behavior is very desirable in a production environment, but hard to debug.</p>
-<p>If you need to debug Nlog, you can change the nlog root-element of the nlog.config  into:</p>
-<pre><code class="lang-xml">&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
-      xsi:schemaLocation=&quot;NLog NLog.xsd&quot;
-      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-      throwConfigExceptions=&quot;true&quot;
-      autoReload=&quot;true&quot;
-      internalLogFile=&quot;console-example-internal.log&quot;
-      internalLogLevel=&quot;Info&quot;&gt;
+<h3 id="logging-of-load-processes">Logging of Load Processes</h3>
+<p>Additionally to the traditional nlog setup where log information is send to any target by changing the configuration,
+ETLBox comes with a set of Tasks to control your ETL processes - so called &quot;Load processes&quot;.</p>
+<p>The use case for a load process table is simple - if you have one log table, this table will store a log messages for an ETL job.
+If the job run agains, more or less the same log information is written in the log table - with different timestamps of course. If you
+need to identify which log entry relates to which job run, there are some information missing. This is where the load process table comes in.</p>
+<p>You can use the task <code>CreateLoadProcessTableTask</code> to have ETLBox created a load process table.</p>
+<pre><code class="lang-C#">CreateLoadProcessTableTask.Create(connection);
 </code></pre>
-<p>With this configuration it will raise an exception and also log it into a file.</p>
+<p>By default this will create a talbe &quot;etlbox_loadprocess&quot;. This table will look like this:</p>
+<table>
+<thead>
+<tr>
+<th>Column name</th>
+<th>Data type</th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Int64</td>
+<td>Identity</td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>DateTime</td>
+<td></td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>DateTime</td>
+<td></td>
+</tr>
+<tr>
+<td>source</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>process_name</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>start_message</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>is_running</td>
+<td>Int16</td>
+<td>0 or 1</td>
+</tr>
+<tr>
+<td>end_message</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>was_successful</td>
+<td>Int16</td>
+<td>0 or 1</td>
+</tr>
+<tr>
+<td>abort_message</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>was_aborted</td>
+<td>Int16</td>
+<td>0 or 1</td>
+</tr>
+</tbody>
+</table>
+<p>The table will contain information about the ETL processes that you started in your code with the <code>StartLoadProcessTask</code>.
+To end or abort a process, there is the <code>EndLoadProcessTask</code> or <code>AbortLoadProcessTask</code>.</p>
+<p>Let's look at the following  example for logging into the load process table.</p>
+<pre><code class="lang-C#">StartLoadProcessTask.Start(&quot;Process 1&quot;, &quot;Starting process&quot;);
+
+try {
+/* ... some tasks or data flow */
+   EndLoadProcessTask.End(&quot;The process ended successfully&quot;);
+} catch (Exception e) {
+   AbortLoadProcessTask.Abort(e.ToString());
+}
+</code></pre>
+<p>After calling the <code>StartLoadProcessTask</code> a new entry was created in the etlbox_loadprocess table. This entry had a start date and contained
+the process name &quot;Process 1&quot; and the start message &quot;Starting process&quot;. The column <code>is_running</code> is 0.
+Calling the <code>EndLoadProcessTask</code> will set an end date and change the columns <code>is_running</code> to 0 and was_successful to 1. Vice versa will
+<code>AbortLoadProcessTask</code> set <code>is_running</code> to 0 and <code>was_aborted</code> to 1. The abort message would contain the exception as string.</p>
+<p>When the load process entry is added to the table, a new id is created.
+All information about the load process (including the id) can be accessed via the static property CurrentLoadProcess in the ControlFlow class.
+Whenever a new log message for the log table is created, this entry will also contain the id of the current load process in the column load_process_id.</p>
+<pre><code>LogTask.Warn(&quot;This will create a log message&quot;)
+Console.WriteLine(&quot;The log message will contain the current load process id: ControlFlow.CurrentLoadProcess.Id&quot;);
+</code></pre>
+<p>Whenever you end a process and start a new one, the CurrentLoadProcess property will switch to the current load process.</p>
+<h4 id="load-process-table-name">Load process table name</h4>
+<p>When you create the load process table, and you don't pass a custom table name, by default the name of the table is &quot;etlbox_loadprocess&quot;.
+You can change this by passing the table name to the <code>CreateLoadProcessTableTask</code>. If the table is already created, you must specify the
+Table name in the static property LoadProcessTable of the ControlFlow class</p>
+<pre><code class="lang-C#">//Wil set the ControlFlow.CurrentLoadProcess property automatically:
+CreateLoadProcessTableTask.Create(SqlConnection, &quot;myloadprocesstable&quot;);
+ 
+//If CreateLoadProcessTableTask was not executed:
+ControlFlow.CurrentLoadProcess = &quot;myloadprocesstable&quot;;
+</code></pre>
+<h3 id="further-log-tasks">Further log tasks</h3>
+<p>There are some more logging tasks that can be used to manage your log tables.</p>
+<h4 id="get-log-and-loadprocess-table-in-json">Get log and loadprocess table in JSON</h4>
+<p>If you want to get the content of the etl.LoadProcess table or etl.Log in JSON-Format, there are two tasks for that:</p>
+<pre><code class="lang-C#">var jsonLoadProcesses = GetLoadProcessAsJSONTask.GetJSON();
+var jsonLog = GetLogAsJSONTask.GetJSON();
+</code></pre>
+<h4 id="reading-log-and-load-process-table-programmatically">Reading log and load process table programmatically</h4>
+<p>If you want to read the load process programmatically, you can use the <code>ReadLoadProcessTableTask</code>. For accessing the log table, there is
+the <code>ReadLogTableTask</code></p>
+<pre><code class="lang-C#">//Get last aborted load process and read log entries
+LoadProcess lastaborted = ReadLoadProcessTableTask.ReadWithOption(ReadOptions.ReadLastAborted);
+List&lt;LogEntry&gt; allLogEntrieForLoadProcess = ReadLogTableTask.Read(connection, lastaborted.Id);
+
+//Get all load processes and all log entries
+List&lt;LoadProcess&gt; allLoadProcesses = ReadLoadProcessTableTask.ReadAll();
+List&lt;LogEntry&gt; allLogEntries = ReadLogTableTask.Read(connection);
+</code></pre>
 <h2 id="etlbox-logviewer">ETLBox Logviewer</h2>
-<p><strong>Warning</strong>: The ETLBox Logviewer is still in BETA. Any support to improve this tool is highly appreciated.</p>
-<p>Once you have data in these log tables, you can use the <a href="https://github.com/roadrunnerlenny/etlboxlogviewer">ETLBox LogViewer</a> to
-easily access and analyze your logs.</p>
+<p><strong>Warning</strong>: ETLBox Logviewer is still in BETA, and not made for a productive use yet. Any support to improve this tool is highly appreciated.</p>
+<p>Once you have data in these log tables, you could use the <a href="https://github.com/roadrunnerlenny/etlboxlogviewer">ETLBox LogViewer</a> to
+access and analyze your logs.</p>
+<p>Here are some screenshots to give you the idea:</p>
 <span>
     <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen1.png" width="350" alt="Process Overview of ETLBox LogViewer">
     <img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logviewer_screen2.png" width="350" alt="Process Details of ETLBox LogViewer">

@@ -89,12 +89,18 @@
       <h4><a class="xref" href="ALE.ETLBox.Logging.AbortLoadProcessTask.html">AbortLoadProcessTask</a></h4>
       <section><p>Will set the table entry for current load process to aborted.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.Logging.CleanUpLogTask.html">CleanUpLogTask</a></h4>
-      <section><p>Removes log data older than the specified days to keep.</p>
+      <h4><a class="xref" href="ALE.ETLBox.Logging.CreateDatabaseTarget.html">CreateDatabaseTarget</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.Logging.CreateLoadProcessTableTask.html">CreateLoadProcessTableTask</a></h4>
+      <section><p>Will create the default load process table for the default database logging.
+You can then use the <code>StartLoadProcessTask</code>, <code>AbortLoadProcessTask</code>, <code>EndLoadProcessTask</code>.
+These will generate entries in this table and populate the right fields.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.Logging.CreateLogTablesTask.html">CreateLogTablesTask</a></h4>
-      <section><p>Will create two tables: etl.Log and etl.LoadProcess. Also it will create some procedure for starting, stopping and aborting load processes.
-If logging is configured via a NLog config, these tables contain log information from the tasks.</p>
+      <h4><a class="xref" href="ALE.ETLBox.Logging.CreateLogTableTask.html">CreateLogTableTask</a></h4>
+      <section><p>Will create the default log table for the default database logging
+You can use `ControlFlow.SetLoggingDatabase(IConnectionManager connectionManager, string logTableName) to let ETLBox
+update your nlog.config add add this table as database target automatically.
+Or you can update your nlog.config manually.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.Logging.EndLoadProcessTask.html">EndLoadProcessTask</a></h4>
       <section><p>Will set the table entry for current load process to ended.</p>
@@ -102,7 +108,8 @@ If logging is configured via a NLog config, these tables contain log information
       <h4><a class="xref" href="ALE.ETLBox.Logging.ETLLogLayoutRenderer.html">ETLLogLayoutRenderer</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.Logging.GetLoadProcessAsJSONTask.html">GetLoadProcessAsJSONTask</a></h4>
-      <section><p>Returns the content of the etl.LoadProcess table as JSON.</p>
+      <section><p>Returns the content of the LoadProcess table as JSON.
+The table name is read from <code>ControlFlow.LoadProcessTable</code>. The default table name is etlbox_log.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.Logging.GetLogAsJSONTask.html">GetLogAsJSONTask</a></h4>
       <section><p>Returns the content of the etl.Log table as a JSON string.</p>
@@ -117,19 +124,13 @@ If logging is configured via a NLog config, these tables contain log information
       <section><p>Used this task for custom log messages.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.Logging.ReadLoadProcessTableTask.html">ReadLoadProcessTableTask</a></h4>
-      <section><p>Reads data from the etl.LoadProcessTable.</p>
+      <section><p>Read load processes by Id, all processes or last finished/successful/aborted.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.Logging.ReadLogTableTask.html">ReadLogTableTask</a></h4>
       <section><p>Reads data from the etl.Log table.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.Logging.RemoveLogTablesTask.html">RemoveLogTablesTask</a></h4>
-      <section><p>Removes the log tables and all the log procedures.</p>
-</section>
       <h4><a class="xref" href="ALE.ETLBox.Logging.StartLoadProcessTask.html">StartLoadProcessTask</a></h4>
       <section><p>Starts a load process.</p>
-</section>
-      <h4><a class="xref" href="ALE.ETLBox.Logging.TransferCompletedForLoadProcessTask.html">TransferCompletedForLoadProcessTask</a></h4>
-      <section><p>Sets the TransferCompletedDate for the current load process.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
