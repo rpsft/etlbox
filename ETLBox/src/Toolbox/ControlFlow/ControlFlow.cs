@@ -75,6 +75,8 @@ namespace ALE.ETLBox.ControlFlow
 
             try
             {
+                if (LogTable != null && LogTable != DEFAULTLOADPROCESSTABLENAME && logTableName == DEFAULTLOADPROCESSTABLENAME)
+                    logTableName = LogTable;
                 var newTarget = new CreateDatabaseTarget(connection, logTableName).GetNLogDatabaseTarget();
                 NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(newTarget, minLogLevel);
             }
