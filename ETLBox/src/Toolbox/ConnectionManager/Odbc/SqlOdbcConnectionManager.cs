@@ -13,7 +13,7 @@
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection =
+    /// ControlFlow.DefaultDbConnection =
     ///   new OdbcConnectionManager(new ObdcConnectionString(
     ///     "Driver={SQL Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;"));
     /// </code>

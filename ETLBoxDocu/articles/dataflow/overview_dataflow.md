@@ -98,7 +98,7 @@ DBDestination<Order> dest = new DBDestination<Order>(connMan, "OrderTable");
 ```
 
 **If you don't want to pass the connection manager object over and over again to the your DataFlow or ControlFlow objects,
-you can store a default connection in the static property `ControlFlow.CurrentDbConnection`.**
+you can store a default connection in the static property `ControlFlow.DefaultDbConnection`.**
 
 ### Linking all together
 

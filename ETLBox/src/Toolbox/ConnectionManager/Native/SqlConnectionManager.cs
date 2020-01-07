@@ -8,7 +8,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;"));
+    /// ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;"));
     /// </code>
     /// </example>
     public class SqlConnectionManager : DbConnectionManager<SqlConnection>

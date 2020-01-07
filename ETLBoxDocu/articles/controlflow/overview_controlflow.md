@@ -61,10 +61,10 @@ int count = RowCountTask.Count(connectionManager, "demotable");
 ```
 
 Optionally, you can set up a default connection that is used every time you don't provide a connection manager. 
-Simple set the property `CurrentDbConnection` on the static `ControlFlow` class.
+Simple set the property `DefaultDbConnection` on the static `ControlFlow` class.
 
 ```C#
-ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.; Database=Sample; Integrated Security=SSPI""));
+ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.; Database=Sample; Integrated Security=SSPI""));
 ```
 
 Now a RowCount is as simple as this:

@@ -10,7 +10,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection =
+    /// ControlFlow.DefaultDbConnection =
     ///   new.SQLiteConnectionManager(new SQLiteConnectionString(
     ///     "Data Source=.\db\SQLite.db;Version=3;"));
     /// </code>

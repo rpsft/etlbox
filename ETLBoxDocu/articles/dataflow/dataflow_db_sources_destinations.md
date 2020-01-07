@@ -9,7 +9,7 @@ The DBSource is the most common data source for a data flow. It basically connec
 While ADO.NET is reading from the source, data is simultaneously posted into the dataflow pipe.
 To initialize a DBSource, you can either hand over a `TableDefinition`, a SQL-statement or a table name. 
 The DBSource also accepts a connection manager. If no connection manager is specified, the "default" connection manager is used 
-(which is stored in `ControlFlow.CurrentDbConnection`).
+(which is stored in `ControlFlow.DefaultDbConnection`).
 
 The following code would read all data from the table `SourceTable` and use the default connection manager:
 
@@ -29,7 +29,7 @@ DBSource<MySimpleRow> source = new DBSource<MySimpleRow>() {
 
 Like the `DBSource`, the `DBDestination` is the common component for sending data into a database. It is initialized with a table name or a `TableDefinition`.
 
-The following example would transfer data from the destination to the source, using all the same connection manager (derived from `ControlFlow.CurrentDbConnection`):
+The following example would transfer data from the destination to the source, using all the same connection manager (derived from `ControlFlow.DefaultDbConnection`):
 
 ```C#
 DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("SourceTable");
@@ -115,7 +115,7 @@ The `SMOConnectionManager` uses Sql Server Managed Objects to connect to a Sql S
 It can be used with a `ConnectionString`.
 
 ```C#
-ControlFlow.CurrentDbConnection = new SMOConnectionManager(new ConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;"));
+ControlFlow.DefaultDbConnection = new SMOConnectionManager(new ConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;"));
 SqlTask.ExecuteNonQuery("SQL with GO keyword", "CREATE SCHEMA TEST; GO; SELECT 1");
 ```
 
@@ -171,11 +171,11 @@ When you create a new connection manager, you have the choice to either pass the
 
 Every component or task related to a database operation needs to have a connection managers set in order
 to connect to the right database. Sometimes it can be cumbersome to pass the same connection manager over and over
-again. To avoid this, there is a static `ControlFlow` class that contains the property `CurrentDbConnection`.
+again. To avoid this, there is a static `ControlFlow` class that contains the property `DefaultDbConnection`.
 If you define a connection manager here, this will always be used as a fallback value if no other connection manager property was defined.
 
 ```
-ControlFlow.CurrentDbConnection = new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
+ControlFlow.DefaultDbConnection = new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
 //Now you can just create a DBSource like this
 var source = new DBSource("SourceTable");
 ```

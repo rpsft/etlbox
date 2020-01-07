@@ -8,7 +8,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection = new AdmoConnectionManager(new ConnectionString("..connection string.."));
+    /// ControlFlow.DefaultDbConnection = new AdmoConnectionManager(new ConnectionString("..connection string.."));
     /// </code>
     /// </example>
     public class AdomdConnectionManager : DbConnectionManager<AdomdConnection>

@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <example>
     /// <code>
-    /// ControlFlow.CurrentDbConnection =
+    /// ControlFlow.DefaultDbConnection =
     ///   new AccessOdbcConnectionManager(new OdbcConnectionString(
     ///      "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb"));
     /// </code>
