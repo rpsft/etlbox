@@ -62,6 +62,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             Assert.Equal(2, RowCountTask.Count(SqlConnection, "RowTransExceptionTest"));
             Assert.Equal(1, RowCountTask.Count(SqlConnection, "errors"));
+        }
+
+        [Fact]
+        public void ThrowExceptionWithoutHandling()
+        {
+            //Arrange
+            CSVSource source = new CSVSource("res/RowTransformation/TwoColumns.csv");
+            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+
+            //Act
+            RowTransformation<string[], MySimpleRow> trans = new RowTransformation<string[], MySimpleRow>(
+                csvdata => throw new InvalidOperationException("Test"));
+
+            source.LinkTo(trans);
+            trans.LinkTo(dest);
+
+            //Assert
+            Assert.Throws<AggregateException>(() =>
+            {
+                source.Execute();
+                dest.Wait();
+            });
+
 
         }
     }

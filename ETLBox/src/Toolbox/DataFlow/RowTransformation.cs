@@ -39,32 +39,15 @@ namespace ALE.ETLBox.DataFlow
                 TransformBlock = new TransformBlock<TInput, TOutput>(
                     row =>
                     {
-                        if (HasErrorBuffer)
-                        {
-                            try
-                            {
-                                return InvokeRowTransformationFunc(row);
-                            }
-                            catch (Exception e)
-                            {
-                                string rowAsJson = JsonConvert.SerializeObject(row, new JsonSerializerSettings()
-                                {
-                                    NullValueHandling = NullValueHandling.Ignore,
-                                    Formatting = Formatting.Indented
-                                });
-                                ErrorBuffer.Post(new ETLBoxError()
-                                {
-                                    Exception = e,
-                                    ErrorText = e.ToString(),
-                                    ReportTime = DateTime.Now,
-                                    RecordAsJson = rowAsJson
-                                });
-                                return default(TOutput);
-                            }
-                        }
-                        else
+                        try
                         {
                             return InvokeRowTransformationFunc(row);
+                        }
+                        catch (Exception e)
+                        {
+                            if (!ErrorHandler.HasErrorBuffer) throw e;
+                            ErrorHandler.Post(e, ErrorHandler.ConvertIntoJson<TInput>(row));
+                            return default(TOutput);
                         }
                     }
                 );
@@ -79,6 +62,8 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         Func<TInput, TOutput> _rowTransformationFunc;
         internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
+        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
+
         public RowTransformation()
         {
         }
@@ -109,17 +94,8 @@ namespace ALE.ETLBox.DataFlow
             CopyTaskProperties(task);
         }
 
-        public ISourceBlock<ETLBoxError> ErrorSourceBlock => ErrorBuffer;
-        internal BufferBlock<ETLBoxError> ErrorBuffer { get; set; }
-        internal bool HasErrorBuffer => ErrorBuffer != null;
-
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-        {
-            ErrorBuffer = new BufferBlock<ETLBoxError>();
-            ErrorSourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            var t = TransformBlock.Completion;
-            t.ContinueWith(t => ErrorBuffer.Complete());
-        }
+            => ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
             => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target);
