@@ -216,8 +216,17 @@ SELECT cols.column_name
 END AS ""internaldatatype""
 ,CASE
     WHEN cols.domain_name IS NOT NULL THEN domain_name
-    WHEN cols.data_type='character varying' THEN 'varchar('||character_maximum_length||')'
-    WHEN cols.data_type='numeric' THEN 'numeric('||numeric_precision||','||numeric_scale||')'
+    WHEN cols.data_type='character varying' THEN
+        CASE WHEN character_maximum_length IS NULL
+        THEN 'varchar'
+        ELSE 'varchar('||character_maximum_length||')'
+        END
+    WHEN cols.data_type='character' THEN 'char('||character_maximum_length||')'
+    WHEN cols.data_type='numeric' THEN
+        CASE WHEN numeric_precision IS NULL
+        THEN 'numeric'
+        ELSE 'numeric('||numeric_precision||','||numeric_scale||')'
+        END
     WHEN LEFT(cols.data_type,4) = 'time' THEN REPLACE(REPLACE(REPLACE(cols.data_type,'without time zone',''), 'with time zone', 'tz'),' ','')
     ELSE cols.data_type
 END AS ""datatype""

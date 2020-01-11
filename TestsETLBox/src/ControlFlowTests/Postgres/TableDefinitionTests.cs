@@ -70,5 +70,73 @@ CREATE TABLE datetimetypes (
             );
         }
 
+
+        [Fact]
+        public void Character_Varying()
+        {
+            //Arrange
+            SqlTask.ExecuteNonQuery(PostgresConnection, "Create table", @"
+CREATE TABLE varchartable (
+    varchar_50 VARCHAR (50) NULL,
+    varchar_novalue VARCHAR NULL,
+    varchar_charvary CHARACTER VARYING (50),
+    varchar_character CHARACTER (10),
+    varchar_char CHAR,
+    varchar_text TEXT
+)"
+            );
+
+            //Act
+            var result = TableDefinition.GetDefinitionFromTableName("varchartable", PostgresConnection);
+
+            //Assert
+            Assert.Collection(result.Columns,
+                tc => Assert.True(tc.DataType == "varchar(50)" && tc.NETDataType == typeof(String)),
+                tc => Assert.True(tc.DataType == "varchar" && tc.NETDataType == typeof(String)),
+                tc => Assert.True(tc.DataType == "varchar(50)" && tc.NETDataType == typeof(String)),
+                tc => Assert.True(tc.DataType == "char(10)" && tc.NETDataType == typeof(String)),
+                 tc => Assert.True(tc.DataType == "char(1)" && tc.NETDataType == typeof(String)),
+                tc => Assert.True(tc.DataType == "text" && tc.NETDataType == typeof(String))
+            );
+        }
+
+        [Fact]
+        public void Numeric()
+        {
+            //Arrange
+            SqlTask.ExecuteNonQuery(PostgresConnection, "Create table", @"
+CREATE TABLE numerictable (
+    si SMALLINT NULL,
+    i INT NULL,
+    bi BIGINT,
+    dec DECIMAL(10,5),
+    dec_2 DECIMAL(10),
+    dec_3 DECIMAL,
+    num NUMERIC (1,1),
+    num_2 NUMERIC (2),
+    num_3 NUMERIC,
+    r REAL,
+    d DOUBLE PRECISION
+)"
+            );
+
+            //Act
+            var result = TableDefinition.GetDefinitionFromTableName("numerictable", PostgresConnection);
+
+            //Assert
+            Assert.Collection(result.Columns,
+                tc => Assert.True(tc.DataType == "smallint" && tc.NETDataType == typeof(Int16)),
+                tc => Assert.True(tc.DataType == "integer" && tc.NETDataType == typeof(Int32)),
+                tc => Assert.True(tc.DataType == "bigint" && tc.NETDataType == typeof(Int64)),
+                tc => Assert.True(tc.DataType == "numeric(10,5)" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "numeric(10,0)" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "numeric" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "numeric(1,1)" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "numeric(2,0)" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "numeric" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "real" && tc.NETDataType == typeof(double)),
+                tc => Assert.True(tc.DataType == "double precision" && tc.NETDataType == typeof(double))
+            );
+        }
     }
 }
