@@ -27,7 +27,18 @@ does comply with the new ExpandoObject approach
 - CreateTableTask.CreateOrAlter(): add functionality to alter a table (with migration if there is data in the table).
 - CreateTableTask: Function for adding test data into table (depending on table definition)
 
+## New feature
+
+- DataFlowBatchDestination and other destination have the code 
+
+```await TargetBlock.Completion;
+CleanUp()
+```
+
+add a `.ConfigureAwait(false)` and corresponding test, e.g by writing an async test for CSVDestination. 
+
 ## v2.0.0
+
 - switch method parameters for GetTableDefinitionFromSource(string tablanme, IConnectionManager manager) - IConnectionManager is always first
 - Add documentation for ETLBox Core: add a description that ETL is needed for snowflake, and snowflake is needed for reports, and reports could be created with PowerBI
 - get rid of the ExpandoObject in the definitions and only use it internally - from the outside, only use "dynamic" as type
