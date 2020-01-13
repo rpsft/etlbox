@@ -39,8 +39,10 @@ namespace ALE.ETLBox.DataFlow
         {
             if (Data == null) InitMemoryCollection();
             base.WriteBatch(ref data);
-            foreach (TInput record in data)
+            foreach (TInput record in data) {
+                if (record == null) continue;
                 Data.Add(record);
+            }
             LogProgress(data.Length);
         }
 

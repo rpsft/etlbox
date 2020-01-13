@@ -67,22 +67,34 @@ namespace ALE.ETLBox.DataFlow
 
         internal override void WriteBatch(ref TInput[] data)
         {
-            if (CsvWriter == null) InitCsvWriter();
+            if (CsvWriter == null)
+            {
+                InitCsvWriter();
+                WriteHeaderIfRequired();
+            }
             base.WriteBatch(ref data);
             if (TypeInfo.IsArray)
                 WriteArray(ref data);
-            else if (TypeInfo.IsDynamic)
-                WriteDynamicObject(ref data);
             else
-                CsvWriter.WriteRecords(data);
+                WriteObject(ref data);
 
             LogProgress(data.Length);
+        }
+
+        private void WriteHeaderIfRequired()
+        {
+            if (!TypeInfo.IsArray && Configuration.HasHeaderRecord)
+            {
+                CsvWriter.WriteHeader<TInput>();
+                CsvWriter.NextRecord();
+            }
         }
 
         private void WriteArray(ref TInput[] data)
         {
             foreach (var record in data)
             {
+                if (record == null) continue;
                 var recordAsArray = record as object[];
                 foreach (var field in recordAsArray)
                 {
@@ -93,10 +105,11 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        private void WriteDynamicObject(ref TInput[] data)
+        private void WriteObject(ref TInput[] data)
         {
             foreach (var record in data)
             {
+                if (record == null) continue;
                 CsvWriter.WriteRecord(record);
                 CsvWriter.NextRecord();
             }

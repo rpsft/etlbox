@@ -75,6 +75,7 @@ namespace ALE.ETLBox.DataFlow
             base.WriteBatch(ref data);
             foreach (var record in data)
             {
+                if (record == null) continue;
                 JsonSerializer.Serialize(JsonTextWriter, record);
             }
             LogProgress(data.Length);
