@@ -27,6 +27,7 @@ namespace ALE.ETLBox.DataFlow
         internal ActionBlock<TInput[]> TargetAction { get; set; }
         internal int ThresholdCount { get; set; } = 1;
         internal TypeInfo TypeInfo { get; set; }
+        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         internal virtual void InitObjects(int batchSize)
         {
@@ -85,6 +86,9 @@ namespace ALE.ETLBox.DataFlow
             OnCompletion?.Invoke();
             NLogFinish();
         }
+
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
+            => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
 
 
     }

@@ -17,7 +17,6 @@ namespace ALE.ETLBox.DataFlow
         {
             ErrorBuffer = new BufferBlock<ETLBoxError>();
             ErrorSourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            //var tbt = TransformBlock.Completion;
             completion.ContinueWith(t => ErrorBuffer.Complete());
         }
 
@@ -32,13 +31,16 @@ namespace ALE.ETLBox.DataFlow
             });
         }
 
-        public string ConvertIntoJson<T>(T row)
+        public static string ConvertErrorData<T>(T row)
         {
-            return JsonConvert.SerializeObject(row, new JsonSerializerSettings()
+            try
             {
-                NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented
-            });
+                return JsonConvert.SerializeObject(row, new JsonSerializerSettings());
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
         }
     }
 }

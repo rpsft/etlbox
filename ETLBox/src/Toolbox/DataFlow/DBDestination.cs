@@ -72,13 +72,7 @@ namespace ALE.ETLBox.DataFlow
 
             base.WriteBatch(ref data);
 
-            TableData<TInput> td = CreateTableDataObject(ref data);
-
-            new SqlTask(this, $"Execute Bulk insert into {DestinationTableDefinition.Name}")
-            {
-                DisableLogging = true
-            }
-                .BulkInsert(td, DestinationTableDefinition.Name);
+            TryBulkInsertData(ref data);
 
             LogProgress(data.Length);
         }
@@ -89,6 +83,24 @@ namespace ALE.ETLBox.DataFlow
                 DestinationTableDefinition = TableDefinition.GetDefinitionFromTableName(TableName, this.DbConnectionManager);
             else if (!HasDestinationTableDefinition && !HasTableName)
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
+        }
+
+        private void TryBulkInsertData(ref TInput[] data)
+        {
+            TableData<TInput> td = CreateTableDataObject(ref data);
+            try
+            {
+                new SqlTask(this, $"Execute Bulk insert")
+                {
+                    DisableLogging = true
+                }
+                .BulkInsert(td, DestinationTableDefinition.Name);
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer) throw e;
+                ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
+            }
         }
 
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)
@@ -137,7 +149,6 @@ namespace ALE.ETLBox.DataFlow
             }
             return result;
         }
-
     }
 
     /// <summary>

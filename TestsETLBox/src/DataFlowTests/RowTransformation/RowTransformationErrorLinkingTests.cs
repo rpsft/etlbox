@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             CSVSource source = new CSVSource("res/RowTransformation/TwoColumns.csv");
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "RowTransExceptionTest");
 
-            CreateErrorTableTask.Create(SqlConnection, "errors");
+            CreateErrorTableTask.DropAndCreate(SqlConnection, "errors");
             DBDestination<ETLBoxError> errorDest = new DBDestination<ETLBoxError>(SqlConnection, "errors");
 
             //Act

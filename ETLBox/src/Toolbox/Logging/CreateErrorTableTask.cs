@@ -15,15 +15,19 @@ namespace ALE.ETLBox.Logging
         public override string TaskName => $"Create error table";
 
         public string TableName { get; set; }
-        //public ObjectNameDescriptor ON => new ObjectNameDescriptor(TableName, ConnectionType);
+
+        public bool DropAndCreateTable { get; set; }
 
         public void Execute()
         {
+            if (DropAndCreateTable)
+                DropTableTask.DropIfExists(this.ConnectionManager, TableName);
+
             CreateTableTask.Create(this.ConnectionManager, TableName,
                 new List<TableColumn>()
                 {
-                    new TableColumn("ErrorText", "NVARCHAR(MAX)", allowNulls:false),
-                    new TableColumn("RecordAsJson", "NVARCHAR(MAX)", allowNulls:true),
+                    new TableColumn("ErrorText", "TEXT", allowNulls:false),
+                    new TableColumn("RecordAsJson", "TEXT", allowNulls:true),
                     new TableColumn("ReportTime", "DATETIME", allowNulls:false),
                 });
         }
@@ -49,7 +53,11 @@ namespace ALE.ETLBox.Logging
         public static void Create(string tableName)
             => new CreateErrorTableTask(tableName).Execute();
 
+        public static void DropAndCreate(IConnectionManager connectionManager, string tableName)
+    => new CreateErrorTableTask(connectionManager, tableName) { DropAndCreateTable = true }.Execute();
 
+        public static void DropAndCreate(string tableName)
+            => new CreateErrorTableTask(tableName){ DropAndCreateTable = true }.Execute();
 
     }
 }

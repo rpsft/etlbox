@@ -83,7 +83,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteHeaderIfRequired()
         {
-            if (!TypeInfo.IsArray && Configuration.HasHeaderRecord)
+            if (!TypeInfo.IsArray && !TypeInfo.IsDynamic && Configuration.HasHeaderRecord)
             {
                 CsvWriter.WriteHeader<TInput>();
                 CsvWriter.NextRecord();

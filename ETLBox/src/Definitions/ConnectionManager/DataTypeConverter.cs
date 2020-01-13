@@ -124,6 +124,11 @@ namespace ALE.ETLBox.ConnectionManager
         public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
         {
             var typeName = dbSpecificTypeName.Trim().ToUpper();
+            if (connectionType == ConnectionManagerType.SqlServer)
+            {
+                if (typeName.Replace(" ", "") == "TEXT")
+                    return "VARCHAR(MAX)";
+            }
             if (connectionType == ConnectionManagerType.Access)
             {
                 if (typeName == "INT")
