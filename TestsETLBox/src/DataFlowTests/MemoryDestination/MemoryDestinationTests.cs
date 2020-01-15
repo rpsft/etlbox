@@ -51,6 +51,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
             );
         }
 
+        [Fact]
+        public void BatchSize()
+        {
+            //Arrange
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("MemoryDestinationBatchSizeSource");
+            source2Columns.InsertTestData();
+
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "MemoryDestinationBatchSizeSource");
+            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>(batchSize:2);
+
+            //Act
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Collection(dest.Data,
+                d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
+                d => Assert.True(d.Col1 == 2 && d.Col2 == "Test2"),
+                d => Assert.True(d.Col1 == 3 && d.Col2 == "Test3")
+            );
+        }
+
 
     }
 }

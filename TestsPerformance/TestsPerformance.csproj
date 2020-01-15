@@ -7,7 +7,7 @@
 
     <AssemblyName>ALE.ETLBoxTestsPerformance</AssemblyName>
 
-    <RootNamespace>ALE.ETLBoxTests.BigData</RootNamespace>
+    <RootNamespace>ALE.ETLBoxTests.Performance</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

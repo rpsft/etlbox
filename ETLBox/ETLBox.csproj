@@ -4,21 +4,21 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>It's all in the box! Run all your ETL  jobs with this handy C# library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. databases, flat files or web services. ETLbox supports any custom made source and offers out-of-the box functionalities for SqlServer, SQLite, MySql, Postgres, Json, CSV, Excel, Access &amp; much more.</Description>
+    <Description>Build your own ETL &amp; data integration jobs with this handy C# library. Create your own dataflow, where data is send from a source to a target and transformed on its way. Data can be read from or written into various sources, e.g. databases, flat files or web services. ETLbox works with any custom source and offers out-of-the-box support for SqlServer, SQLite, MySql, Postgres, Json, CSV, Excel, Access &amp; more.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixing bug if csv file has no header record. Bulk inserts using the DBDestinations with postgres had problems with timestamp data type - this is solved. All log tasks have been improved, and now they will work with all supported databases.</PackageReleaseNotes>
-    <Version>1.7.5</Version>
+    <PackageReleaseNotes>Fixing bug that prevented MemoryDestination to accept more records than its default batch size. Character varying without size now correctly parse from TableDefinition class.</PackageReleaseNotes>
+    <Version>1.7.6</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.7.5.0</AssemblyVersion>
-    <FileVersion>1.7.5.0</FileVersion>
+    <AssemblyVersion>1.7.6.0</AssemblyVersion>
+    <FileVersion>1.7.6.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>

@@ -16,7 +16,7 @@ using Xunit.Abstractions;
 namespace ALE.ETLBoxTests.Performance
 {
     [Collection("Performance")]
-    public class CSVSourceIntoDBTests : IDisposable
+    public class CSVSourceIntoDBTests
     {
         private readonly ITestOutputHelper output;
 
@@ -40,43 +40,17 @@ namespace ALE.ETLBoxTests.Performance
             new object[] { (IConnectionManager)Config.SQLiteConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviationGeneric, deviationBulk }
         };
 
-        static List<TableColumn> DestTableCols { get; } = new List<TableColumn>() {
-                new TableColumn("Col1", "CHAR(255)", allowNulls: false),
-                new TableColumn("Col2", "CHAR(255)", allowNulls: false),
-                new TableColumn("Col3", "CHAR(255)", allowNulls: false),
-                new TableColumn("Col4", "CHAR(255)", allowNulls: true),
-            };
+
 
         public CSVSourceIntoDBTests(PerformanceDatabaseFixture dbFixture, ITestOutputHelper output)
         {
             this.output = output;
         }
 
-        public void Dispose()
-        {
-        }
-
-        internal static void CreateCSVFileIfNeeded(int numberOfRows)
-        {
-            if (!File.Exists(GetCompleteFilePath(numberOfRows)))
-            {
-                BigDataHelper bigData = new BigDataHelper()
-                {
-                    FileName = GetCompleteFilePath(numberOfRows),
-                    NumberOfRows = numberOfRows,
-                    TableDefinition = new TableDefinition("CSV", DestTableCols)
-                };
-                bigData.CreateBigDataCSV();
-            }
-        }
-
-        static string CSVFolderName = "res/Csv";
-        internal static string GetCompleteFilePath(int numberOfRows) =>
-            Path.GetFullPath(Path.Combine(CSVFolderName, "TestData" + numberOfRows + ".csv"));
 
         private void ReCreateDestinationTable(IConnectionManager connection, string tableName)
         {
-            var tableDef = new TableDefinition(tableName, DestTableCols);
+            var tableDef = new TableDefinition(tableName, BigDataCsvSource.DestTableCols);
             DropTableTask.DropIfExists(connection, tableName);
             tableDef.CreateTable(connection);
         }
@@ -84,23 +58,23 @@ namespace ALE.ETLBoxTests.Performance
         /*
          * X Rows with 1027 bytes per Row (1020 bytes data + 7 bytes for sql server)
          */
-        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000,0.5, 6.0),
-            MemberData(nameof(MySqlConnection), 1000000, 1000, 0.5,0.0),
+        //[Theory, MemberData(nameof(SqlConnection), 1000, 100, 2, 100.0)]
+        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 0.5, 6.0),
+            MemberData(nameof(MySqlConnection), 1000000, 1000, 0.5, 0.0),
             MemberData(nameof(PostgresConnection), 1000000, 1000, 0.5, 0.0),
-            MemberData(nameof(SQLiteConnection), 1000000, 1000, 0.5,0.0)]
+            MemberData(nameof(SQLiteConnection), 1000000, 1000, 0.5, 0.0)]
         public void CompareFlowWithBulkInsert(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
         {
             //Arrange
-            CreateCSVFileIfNeeded(numberOfRows);
+            BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
             ReCreateDestinationTable(connection, "CSVDestinationNonGenericETLBox");
             ReCreateDestinationTable(connection, "CSVDestinationBulkInsert");
             ReCreateDestinationTable(connection, "CSVDestinationGenericETLBox");
 
-            var sourceNonGeneric = new CSVSource(GetCompleteFilePath(numberOfRows));
+            var sourceNonGeneric = new CSVSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destNonGeneric = new DBDestination(connection, "CSVDestinationNonGenericETLBox", batchSize);
-            var sourceGeneric = new CSVSource<CSVData>(GetCompleteFilePath(numberOfRows));
+            var sourceGeneric = new CSVSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destGeneric = new DBDestination<CSVData>(connection, "CSVDestinationGenericETLBox", batchSize);
-
 
             //Act
             var timeElapsedBulkInsert = GetBulkInsertTime(connection, numberOfRows);
@@ -130,7 +104,7 @@ namespace ALE.ETLBoxTests.Performance
                  {
                      SqlTask.ExecuteNonQuery(connection, "Insert with BulkInsert",
             $@"BULK INSERT [dbo].[CSVDestinationBulkInsert]
-        FROM '{GetCompleteFilePath(numberOfRows)}'
+        FROM '{BigDataCsvSource.GetCompleteFilePath(numberOfRows)}'
         WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n' );
         ");
                  });
@@ -158,12 +132,6 @@ namespace ALE.ETLBoxTests.Performance
             return timeElapsedETLBox;
         }
 
-        public class CSVData
-        {
-            public string Col1 { get; set; }
-            public string Col2 { get; set; }
-            public string Col3 { get; set; }
-            public string Col4 { get; set; }
-        }
+
     }
 }

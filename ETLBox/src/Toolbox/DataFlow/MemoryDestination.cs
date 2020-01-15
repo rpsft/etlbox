@@ -46,7 +46,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitMemoryCollection()
         {
-            Data = new BlockingCollection<TInput>(BatchSize);
+            Data = new BlockingCollection<TInput>();
             this.CloseStreamsAction = CloseStream;
         }
 
