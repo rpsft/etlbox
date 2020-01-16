@@ -11,7 +11,7 @@ namespace ALE.ETLBox.DataFlow
         internal TypeInfo TypeInfo { get; set; }
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
-        public DataFlowSource()
+        public virtual void InitObjects()
         {
             TypeInfo = new TypeInfo(typeof(TOutput));
         }

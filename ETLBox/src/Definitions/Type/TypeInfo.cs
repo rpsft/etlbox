@@ -13,6 +13,7 @@ namespace ALE.ETLBox.DataFlow
         internal Dictionary<string, int> PropertyIndex { get; set; }
         internal Dictionary<string, string> ColumnMap2Property { get; set; }
         internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; }
+        internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; set; }
         internal List<string> IdColumnNames { get; set; }
         internal int PropertyLength { get; set; }
         internal bool IsArray { get; set; } = true;
@@ -26,6 +27,7 @@ namespace ALE.ETLBox.DataFlow
             ColumnMap2Property = new Dictionary<string, string>();
             ExcelIndex2PropertyIndex = new Dictionary<int, int>();
             IdColumnNames = new List<string>();
+            UnderlyingPropType = new Dictionary<PropertyInfo, Type>();
             GatherTypeInfos(typ);
         }
         private void GatherTypeInfos(Type typ)
@@ -45,6 +47,7 @@ namespace ALE.ETLBox.DataFlow
                     AddColumnMappingAttribute(propInfo);
                     AddExcelColumnAttribute(propInfo, index);
                     AddMergeIdColumnNameAttribute(propInfo);
+                    AddUnderlyingType(propInfo);
                     index++;
                 }
             }
@@ -80,6 +83,12 @@ namespace ALE.ETLBox.DataFlow
                 else
                     IdColumnNames.Add(propInfo.Name);
             }
+        }
+
+        private void AddUnderlyingType(PropertyInfo propInfo)
+        {
+            Type t = Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
+            UnderlyingPropType.Add(propInfo, t);
         }
 
         internal static object CastPropertyValue(PropertyInfo property, string value)

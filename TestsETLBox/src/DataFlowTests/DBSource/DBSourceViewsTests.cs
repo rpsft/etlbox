@@ -46,5 +46,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void DifferentColumnsInView(IConnectionManager connection)
+        {
+            //Arrange
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "dbsource_extended");
+            source4Columns.InsertTestData();
+            CreateViewTask.CreateOrAlter(connection, "DBSourceViewExtended", "SELECT Col2, Col3 FROM dbsource_simple");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "DBDestinationExtended");
+
+            //Act
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBSourceViewExtended");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBDestinationExtended");
+
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest4Columns.AssertTestData();
+        }
     }
 }

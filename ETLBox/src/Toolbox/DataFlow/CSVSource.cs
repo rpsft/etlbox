@@ -35,9 +35,10 @@ namespace ALE.ETLBox.DataFlow
         CsvReader CsvReader { get; set; }
         StreamReader StreamReader { get; set; }
 
-        public CSVSource() : base()
+        public CSVSource()
         {
             Configuration = new Configuration(CultureInfo.InvariantCulture);
+            base.InitObjects();
         }
 
         public CSVSource(string fileName) : this()

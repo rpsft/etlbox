@@ -31,13 +31,10 @@ namespace ALE.ETLBox.DataFlow
 
         /* Public Properties */
         public TableDefinition SourceTableDefinition { get; set; }
-        public bool HasSourceTableDefinition => SourceTableDefinition != null;
         public List<string> ColumnNames { get; set; }
-        public bool HasColumnNames => ColumnNames != null && ColumnNames?.Count > 0;
         public string TableName { get; set; }
-        public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         public string Sql { get; set; }
-        public bool HasSql => !String.IsNullOrWhiteSpace(Sql);
+
         public string SqlForRead
         {
             get
@@ -68,7 +65,12 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        public string SourceDescription
+        bool HasSourceTableDefinition => SourceTableDefinition != null;
+        bool HasColumnNames => ColumnNames != null && ColumnNames?.Count > 0;
+        bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+        bool HasSql => !String.IsNullOrWhiteSpace(Sql);
+
+        string SourceDescription
         {
             get
             {
@@ -83,6 +85,7 @@ namespace ALE.ETLBox.DataFlow
 
         public DBSource()
         {
+            base.InitObjects();
         }
 
         public DBSource(string tableName) : this()
@@ -110,15 +113,10 @@ namespace ALE.ETLBox.DataFlow
 
         private void ReadAll()
         {
-            this.Query();
-            //new SqlTask(this, SqlForRead)
-            //{
-            //    DisableLogging = true,
-            //    DisableExtension = true,
-            //}.Query<TOutput>(row =>
-            //{
-
-            //}, ColumnNamesEvaluated);
+            SqlTask sqlT = CreateSqlTask(SqlForRead);
+            DefineActions(sqlT, ColumnNamesEvaluated);
+            sqlT.ExecuteReader();
+            CleanupSqlTask(sqlT);
         }
 
         private void LoadTableDefinition()
@@ -129,64 +127,125 @@ namespace ALE.ETLBox.DataFlow
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
 
-        internal void Query()
+        SqlTask CreateSqlTask(string sql)
         {
-            var columnNames = ColumnNamesEvaluated;
-            var sqlT = new SqlTask(this, SqlForRead)
+            var sqlT = new SqlTask(this, sql)
             {
                 DisableLogging = true,
                 DisableExtension = true,
             };
-            sqlT.PrepareQuery();
-            TOutput row = default(TOutput);
-            TypeInfo typeInfo = new TypeInfo(typeof(TOutput));
+            sqlT.Actions = new List<Action<object>>();
+            return sqlT;
+        }
 
-            if (typeInfo.IsArray)
+        TOutput _row;
+        internal void DefineActions(SqlTask sqlT, List<string> columnNames)
+        {
+            _row = default(TOutput);
+            if (TypeInfo.IsArray)
             {
                 sqlT.BeforeRowReadAction = () =>
-                {
-                    row = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { columnNames.Count });
-                };
+                    _row = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { columnNames.Count });
                 int index = 0;
                 foreach (var colName in columnNames)
-                {
-                    int currentIndexAvoidingClosure = index;
-                    sqlT.Actions.Add(col =>
-                    {
-                        var ar = row as System.Array;
-                        var x = Convert.ChangeType(col, typeof(TOutput).GetElementType());
-                        ar.SetValue(x, currentIndexAvoidingClosure);
-                    });
-                    index++;
-                }
+                    index = SetupArrayFillAction(sqlT, index);
             }
             else
             {
-                if (columnNames?.Count == 0) columnNames = typeInfo.PropertyNames;
+                if (columnNames?.Count == 0) columnNames = TypeInfo.PropertyNames;
                 foreach (var colName in columnNames)
                 {
-                    if (typeInfo.HasPropertyOrColumnMapping(colName))
-                        sqlT.Actions.Add(colValue => typeInfo.GetInfoByPropertyNameOrColumnMapping(colName).SetValue(row, colValue));
-                    else if (typeInfo.IsDynamic)
-                        sqlT.Actions.Add(colValue =>
-                        {
-                            dynamic r = row as ExpandoObject;
-                            ((IDictionary<String, Object>)r).Add(colName, colValue);
-                        });
+                    if (TypeInfo.HasPropertyOrColumnMapping(colName))
+                        SetupObjectFillAction(sqlT, colName);
+                    else if (TypeInfo.IsDynamic)
+                        SetupDynamicObjectFillAction(sqlT, colName);
                     else
                         sqlT.Actions.Add(col => { });
                 }
-                sqlT.BeforeRowReadAction = () => row = (TOutput)Activator.CreateInstance(typeof(TOutput));
+                sqlT.BeforeRowReadAction = () => _row = (TOutput)Activator.CreateInstance(typeof(TOutput));
             }
             sqlT.AfterRowReadAction = () =>
             {
-                LogProgress(1);
-                Buffer.Post(row);
+                if (_row != null)
+                {
+                    LogProgress(1);
+                    Buffer.Post(_row);
+                }
             };
-            sqlT.ExecuteReader();
-            sqlT.CleanupQuery();
         }
 
+        private int SetupArrayFillAction(SqlTask sqlT, int index)
+        {
+            int currentIndexAvoidingClosure = index;
+            sqlT.Actions.Add(col =>
+            {
+                try
+                {
+                    if (_row != null)
+                    {
+                        var ar = _row as System.Array;
+                        var con = Convert.ChangeType(col, typeof(TOutput).GetElementType());
+                        ar.SetValue(con, currentIndexAvoidingClosure);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!ErrorHandler.HasErrorBuffer) throw e;
+                    _row = default(TOutput);
+                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                }
+            });
+            index++;
+            return index;
+        }
+
+        private void SetupObjectFillAction(SqlTask sqlT, string colName)
+        {
+            sqlT.Actions.Add(colValue =>
+            {
+                try
+                {
+                    if (_row != null)
+                    {
+                        var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
+                        var con = colValue != null ? Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]) : colValue;
+                        propInfo.SetValue(_row, con);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!ErrorHandler.HasErrorBuffer) throw e;
+                    _row = default(TOutput);
+                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                }
+            });
+        }
+
+        private void SetupDynamicObjectFillAction(SqlTask sqlT, string colName)
+        {
+            sqlT.Actions.Add(colValue =>
+            {
+                try
+                {
+                    if (_row != null)
+                    {
+                        dynamic r = _row as ExpandoObject;
+                        ((IDictionary<String, Object>)r).Add(colName, colValue);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!ErrorHandler.HasErrorBuffer) throw e;
+                    _row = default(TOutput);
+                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                }
+            });
+        }
+
+        void CleanupSqlTask(SqlTask sqlT)
+        {
+            sqlT.Actions = null;
+        }
 
 
     }

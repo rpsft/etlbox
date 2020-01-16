@@ -57,7 +57,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             d2c.AssertTestData();
-            //Assert
             Assert.Collection<ETLBoxError>(errorDest.Data,
                 d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
                  d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))

@@ -206,17 +206,6 @@ namespace ALE.ETLBox.ControlFlow
         }
 
 
-
-        internal void PrepareQuery()
-        {
-            Actions = new List<Action<object>>();
-        }
-
-        internal void CleanupQuery()
-        {
-            Actions = null;
-        }
-
         public void BulkInsert(ITableData data, string tableName)
         {
             var conn = DbConnectionManager.Clone();
