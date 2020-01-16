@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
         public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
         public Configuration Configuration { get; set; }
 
-        internal const int DEFAULT_BATCH_SIZE = 1000;
+        internal const int DEFAULT_BATCH_SIZE = 1;
         StreamWriter StreamWriter { get; set; }
         CsvWriter CsvWriter { get; set; }
 
@@ -73,10 +73,19 @@ namespace ALE.ETLBox.DataFlow
                 WriteHeaderIfRequired();
             }
             base.WriteBatch(ref data);
+            try {
             if (TypeInfo.IsArray)
                 WriteArray(ref data);
             else
                 WriteObject(ref data);
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer) throw e;
+                ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
+                CsvWriter.NextRecord();
+            }
+
 
             LogProgress(data.Length);
         }

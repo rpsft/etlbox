@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
         public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
         public JsonSerializer JsonSerializer { get; set; }
 
-        internal const int DEFAULT_BATCH_SIZE = 1000;
+        internal const int DEFAULT_BATCH_SIZE = 1;
         StreamWriter StreamWriter { get; set; }
         JsonTextWriter JsonTextWriter { get; set; }
 
