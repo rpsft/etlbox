@@ -3,6 +3,7 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -109,15 +110,15 @@ namespace ALE.ETLBox.DataFlow
 
         private void ReadAll()
         {
-            new SqlTask(this, SqlForRead)
-            {
-                DisableLogging = true,
-                DisableExtension = true,
-            }.Query<TOutput>(row =>
-            {
-                LogProgress(1);
-                Buffer.Post(row);
-            }, ColumnNamesEvaluated);
+            this.Query();
+            //new SqlTask(this, SqlForRead)
+            //{
+            //    DisableLogging = true,
+            //    DisableExtension = true,
+            //}.Query<TOutput>(row =>
+            //{
+
+            //}, ColumnNamesEvaluated);
         }
 
         private void LoadTableDefinition()
@@ -127,6 +128,67 @@ namespace ALE.ETLBox.DataFlow
             else if (!HasSourceTableDefinition && !HasTableName)
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
+
+        internal void Query()
+        {
+            var columnNames = ColumnNamesEvaluated;
+            var sqlT = new SqlTask(this, SqlForRead)
+            {
+                DisableLogging = true,
+                DisableExtension = true,
+            };
+            sqlT.PrepareQuery();
+            TOutput row = default(TOutput);
+            TypeInfo typeInfo = new TypeInfo(typeof(TOutput));
+
+            if (typeInfo.IsArray)
+            {
+                sqlT.BeforeRowReadAction = () =>
+                {
+                    row = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { columnNames.Count });
+                };
+                int index = 0;
+                foreach (var colName in columnNames)
+                {
+                    int currentIndexAvoidingClosure = index;
+                    sqlT.Actions.Add(col =>
+                    {
+                        var ar = row as System.Array;
+                        var x = Convert.ChangeType(col, typeof(TOutput).GetElementType());
+                        ar.SetValue(x, currentIndexAvoidingClosure);
+                    });
+                    index++;
+                }
+            }
+            else
+            {
+                if (columnNames?.Count == 0) columnNames = typeInfo.PropertyNames;
+                foreach (var colName in columnNames)
+                {
+                    if (typeInfo.HasPropertyOrColumnMapping(colName))
+                        sqlT.Actions.Add(colValue => typeInfo.GetInfoByPropertyNameOrColumnMapping(colName).SetValue(row, colValue));
+                    else if (typeInfo.IsDynamic)
+                        sqlT.Actions.Add(colValue =>
+                        {
+                            dynamic r = row as ExpandoObject;
+                            ((IDictionary<String, Object>)r).Add(colName, colValue);
+                        });
+                    else
+                        sqlT.Actions.Add(col => { });
+                }
+                sqlT.BeforeRowReadAction = () => row = (TOutput)Activator.CreateInstance(typeof(TOutput));
+            }
+            sqlT.AfterRowReadAction = () =>
+            {
+                LogProgress(1);
+                Buffer.Post(row);
+            };
+            sqlT.ExecuteReader();
+            sqlT.CleanupQuery();
+        }
+
+
+
     }
 
     /// <summary>

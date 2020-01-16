@@ -17,8 +17,8 @@ namespace ALE.ETLBox.ControlFlow
         public List<Action<object>> Actions { get; set; }
         public Action BeforeRowReadAction { get; set; }
         public Action AfterRowReadAction { get; set; }
-        Action InternalBeforeRowReadAction { get; set; }
-        Action InternalAfterRowReadAction { get; set; }
+        //internal Action InternalBeforeRowReadAction { get; set; }
+        //internal Action InternalAfterRowReadAction { get; set; }
         public long ReadTopX { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
         public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(OdbcConnectionManager));
@@ -174,7 +174,7 @@ namespace ALE.ETLBox.ControlFlow
                 {
                     if (reader.Read())
                     {
-                        InternalBeforeRowReadAction?.Invoke();
+                        //InternalBeforeRowReadAction?.Invoke();
                         BeforeRowReadAction?.Invoke();
                         for (int i = 0; i < Actions?.Count; i++)
                         {
@@ -188,7 +188,7 @@ namespace ALE.ETLBox.ControlFlow
                             }
                         }
                         AfterRowReadAction?.Invoke();
-                        InternalAfterRowReadAction?.Invoke();
+                        //InternalAfterRowReadAction?.Invoke();
                     }
                     else
                     {
@@ -205,62 +205,14 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
-        internal List<T> Query<T>(Action<T> doWithRowAction, List<string> columnNames)
-        {
-            List<T> result = null;
-            PrepareQuery();
-            T row = default(T);
-            TypeInfo typeInfo = new TypeInfo(typeof(T));
 
-            if (typeInfo.IsArray)
-            {
-                InternalBeforeRowReadAction = () =>
-                {
-                    row = (T)Activator.CreateInstance(typeof(T), new object[] { columnNames.Count });
-                };
-                int index = 0;
-                foreach (var colName in columnNames)
-                {
-                    int currentIndexAvoidingClosure = index;
-                    Actions.Add(col =>
-                    {
-                        var ar = row as System.Array;
-                        var x = Convert.ChangeType(col, typeof(T).GetElementType());
-                        ar.SetValue(x, currentIndexAvoidingClosure);
-                    });
-                    index++;
-                }
-            }
-            else
-            {
-                if (columnNames?.Count == 0) columnNames = typeInfo.PropertyNames;
-                foreach (var colName in columnNames)
-                {
-                    if (typeInfo.HasPropertyOrColumnMapping(colName))
-                        Actions.Add(colValue => typeInfo.GetInfoByPropertyNameOrColumnMapping(colName).SetValue(row, colValue));
-                    else if (typeInfo.IsDynamic)
-                        Actions.Add(colValue =>
-                        {
-                            dynamic r = row as ExpandoObject;
-                            ((IDictionary<String, Object>)r).Add(colName, colValue);
-                        });
-                    else
-                        Actions.Add(col => { });
-                }
-                InternalBeforeRowReadAction = () => row = (T)Activator.CreateInstance(typeof(T));
-            }
-            InternalAfterRowReadAction = () => doWithRowAction(row);
-            ExecuteReader();
-            CleanupQuery();
-            return result;
-        }
 
-        private void PrepareQuery()
+        internal void PrepareQuery()
         {
             Actions = new List<Action<object>>();
         }
 
-        private void CleanupQuery()
+        internal void CleanupQuery()
         {
             Actions = null;
         }

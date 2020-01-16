@@ -52,46 +52,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
-        public class MyExtendedRow
-        {
-            [ColumnMap("Col3")]
-            public long? Value { get; set; }
-            [ColumnMap("Col4")]
-            public decimal Percentage { get; set; }
-            [ColumnMap("Col1")]
-            public Int64 Id { get; set; }
-            [ColumnMap("Col2")]
-            public string Text { get; set; }
-        }
-
-        [Theory, MemberData(nameof(Connections))]
-        public void ColumnMapping(IConnectionManager connection)
-        {
-            //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection,
-                "SourceColumnMapping", identityColumnIndex: 0);
-            source4Columns.InsertTestData();
-
-            //Act
-            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(connection, "SourceColumnMapping");
-            CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(
-                input =>
-                {
-                    //Assert
-                    Assert.InRange(input.Id, 1, 3);
-                    Assert.StartsWith("Test", input.Text);
-                    if (input.Id == 1)
-                        Assert.Null(input.Value);
-                    else
-                        Assert.True(input.Value > 0);
-                    Assert.InRange(input.Percentage, 1, 2);
-                });
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-        }
-
-
     }
 }

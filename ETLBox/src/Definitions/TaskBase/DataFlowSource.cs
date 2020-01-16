@@ -9,6 +9,7 @@ namespace ALE.ETLBox.DataFlow
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         internal BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
         internal TypeInfo TypeInfo { get; set; }
+        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public DataFlowSource()
         {
@@ -42,6 +43,9 @@ namespace ALE.ETLBox.DataFlow
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
             => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
+            => ErrorHandler.LinkErrorTo(target, SourceBlock.Completion);
 
         internal void NLogStart()
         {
