@@ -55,10 +55,6 @@ namespace ALE.ETLBox.DataFlow
                 ReadAll();
                 Buffer.Complete();
             }
-            catch (Exception e)
-            {
-                throw new ETLBoxException("Error during reading data from csv file - see inner exception for details.", e);
-            }
             finally
             {
                 Close();
@@ -97,20 +93,32 @@ namespace ALE.ETLBox.DataFlow
 
         private void ReadLineAndSendIntoBuffer()
         {
-            if (TypeInfo.IsArray)
+            try
             {
-                string[] line = CsvReader.Context.Record;
-                Buffer.Post((TOutput)(object)line);
+                if (TypeInfo.IsArray)
+                {
+                    string[] line = CsvReader.Context.Record;
+                    Buffer.Post((TOutput)(object)line);
+                }
+                else if (TypeInfo.IsDynamic)
+                {
+                    TOutput bufferObject = CsvReader.GetRecord<dynamic>();
+                    Buffer.Post(bufferObject);
+                }
+                else
+                {
+                    TOutput bufferObject = CsvReader.GetRecord<TOutput>();
+                    Buffer.Post(bufferObject);
+                }
             }
-            else if (TypeInfo.IsDynamic)
+            catch (Exception e)
             {
-                TOutput bufferObject = CsvReader.GetRecord<dynamic>();
-                Buffer.Post(bufferObject);
-            }
-            else
-            {
-                TOutput bufferObject = CsvReader.GetRecord<TOutput>();
-                Buffer.Post(bufferObject);
+                if (!ErrorHandler.HasErrorBuffer) throw e;
+                if (e is CsvHelperException csvex)
+                    ErrorHandler.Post(e,
+                        $"Row: {csvex.ReadingContext?.Row} -- StartPos: {csvex.ReadingContext?.RawRecordStartPosition} -- RawRecord: {csvex.ReadingContext?.RawRecord ?? string.Empty}");
+                else
+                    ErrorHandler.Post(e, "N/A");
             }
         }
 
