@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceTests
+    public class DBSourceTableDefinitionTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceTests(DataFlowDatabaseFixture dbFixture)
+        public DBSourceTableDefinitionTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -27,17 +27,24 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void SimpleFlow(IConnectionManager connection)
+        public void WithTableDefinition(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "DBSourceSimple");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationSimple");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "Destination");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBSourceSimple");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBDestinationSimple");
-
+            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
+            {
+                SourceTableDefinition = source2Columns.TableDefinition,
+                ConnectionManager = connection
+            };
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>()
+            {
+                DestinationTableDefinition = dest2Columns.TableDefinition,
+                ConnectionManager = connection
+            };
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
