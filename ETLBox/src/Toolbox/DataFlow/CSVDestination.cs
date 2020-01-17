@@ -35,17 +35,7 @@ namespace ALE.ETLBox.DataFlow
             BatchSize = DEFAULT_BATCH_SIZE;
         }
 
-        public CSVDestination(int batchSize)
-        {
-            BatchSize = batchSize;
-        }
-
         public CSVDestination(string fileName) : this()
-        {
-            FileName = fileName;
-        }
-
-        public CSVDestination(string fileName, int batchSize) : this(batchSize)
         {
             FileName = fileName;
         }
@@ -150,11 +140,7 @@ namespace ALE.ETLBox.DataFlow
     {
         public CSVDestination() : base() { }
 
-        public CSVDestination(int batchSize) : base(batchSize) { }
-
         public CSVDestination(string fileName) : base(fileName) { }
-
-        public CSVDestination(string fileName, int batchSize) : base(fileName, batchSize) { }
 
     }
 

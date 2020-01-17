@@ -34,17 +34,7 @@ namespace ALE.ETLBox.DataFlow
             BatchSize = DEFAULT_BATCH_SIZE;
         }
 
-        public JsonDestination(int batchSize)
-        {
-            BatchSize = batchSize;
-        }
-
         public JsonDestination(string fileName) : this()
-        {
-            FileName = fileName;
-        }
-
-        public JsonDestination(string fileName, int batchSize) : this(batchSize)
         {
             FileName = fileName;
         }
@@ -114,11 +104,7 @@ namespace ALE.ETLBox.DataFlow
     {
         public JsonDestination() : base() { }
 
-        public JsonDestination(int batchSize) : base(batchSize) { }
-
         public JsonDestination(string fileName) : base(fileName) { }
-
-        public JsonDestination(string fileName, int batchSize) : base(fileName, batchSize) { }
 
     }
 

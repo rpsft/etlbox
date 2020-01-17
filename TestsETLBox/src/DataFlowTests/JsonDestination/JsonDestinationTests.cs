@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "JsonDestBatch");
 
             //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./ObjectWithBatchWrite.json", 1);
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./ObjectWithBatchWrite.json");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -51,7 +51,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = "3" },
 
             };
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("ErrorFile.csv", batchSize: 1);
+            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("ErrorFile.csv");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
@@ -82,7 +82,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = "1" },
                 new MySimpleRow() { Col1 = null }
             };
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("ErrorFile.csv", batchSize: 2);
+            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("ErrorFile.csv");
 
             //Act
             //Assert

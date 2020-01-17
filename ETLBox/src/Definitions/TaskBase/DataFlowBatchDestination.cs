@@ -12,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
 
         public ITargetBlock<TInput> TargetBlock => Buffer;
 
-        internal int BatchSize
+        public int BatchSize
         {
             get { return batchSize; }
             set
