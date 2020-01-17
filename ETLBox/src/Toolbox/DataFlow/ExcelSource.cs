@@ -54,10 +54,6 @@ namespace ALE.ETLBox.DataFlow
                 ReadAll();
                 Buffer.Complete();
             }
-            catch (Exception e)
-            {
-                throw new ETLBoxException("Error during reading data from excel file - see inner exception for details.", e);
-            }
             finally
             {
                 Close();
@@ -78,8 +74,16 @@ namespace ALE.ETLBox.DataFlow
                     rowNr++;
                     if (HasRange && rowNr > Range.EndRowIfSet) break;
                     if (HasRange && rowNr < Range.StartRow) continue;
-                    TOutput row = ParseDataRow(typeInfo);
-                    Buffer.Post(row);
+                    try
+                    {
+                        TOutput row = ParseDataRow(typeInfo);
+                        Buffer.Post(row);
+                    }
+                    catch (Exception e)
+                    {
+                        if (!ErrorHandler.HasErrorBuffer) throw e;
+                        ErrorHandler.Post(e, $"File: {FileName} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
+                    }
                     LogProgress(1);
                 }
             } while (ExcelDataReader.NextResult());

@@ -57,7 +57,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void JsonFromWebService()
         {
             //Arrange
-            MemoryDestination<Todo> dest = new MemoryDestination<Todo>(200);
+            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
 
             //Act
             JsonSource<Todo> source = new JsonSource<Todo>("https://jsonplaceholder.typicode.com/todos");

@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
         public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
         public Configuration Configuration { get; set; }
 
-        internal const int DEFAULT_BATCH_SIZE = 1;
+        internal const int DEFAULT_BATCH_SIZE = 1000;
         StreamWriter StreamWriter { get; set; }
         CsvWriter CsvWriter { get; set; }
 

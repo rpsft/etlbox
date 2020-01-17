@@ -59,7 +59,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
 
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "MemoryDestinationBatchSizeSource");
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>(batchSize:2);
+            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>()
+            {
+                BatchSize = 2
+            };
 
             //Act
             source.LinkTo(dest);

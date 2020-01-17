@@ -16,19 +16,13 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName => $"Write data into memory";
 
-        internal const int DEFAULT_BATCH_SIZE = 1000;
+        internal const int DEFAULT_BATCH_SIZE = 100;
         public BlockingCollection<TInput> Data { get; set; }
 
         public MemoryDestination()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
         }
-
-        public MemoryDestination(int batchSize)
-        {
-            BatchSize = batchSize;
-        }
-
 
         internal override void InitObjects(int batchSize)
         {
@@ -66,7 +60,5 @@ namespace ALE.ETLBox.DataFlow
     public class MemoryDestination : MemoryDestination<string[]>
     {
         public MemoryDestination() : base() { }
-
-        public MemoryDestination(int batchSize) : base(batchSize) { }
     }
 }
