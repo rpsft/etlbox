@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void RedirectBatch()
+        public void RedirectSingleRecordWithObject()
         {
             //Arrange
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
@@ -82,7 +82,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = "1" },
                 new MySimpleRow() { Col1 = null }
             };
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("ErrorFile.csv");
+            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("ErrorFileNoError.csv");
 
             //Act
             //Assert

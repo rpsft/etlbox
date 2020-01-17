@@ -63,19 +63,12 @@ namespace ALE.ETLBox.DataFlow
                 WriteHeaderIfRequired();
             }
             base.WriteBatch(ref data);
-            try
-            {
-                if (TypeInfo.IsArray)
-                    WriteArray(ref data);
-                else
-                    WriteObject(ref data);
-            }
-            catch (Exception e)
-            {
-                if (!ErrorHandler.HasErrorBuffer) throw e;
-                ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
-                CsvWriter.NextRecord();
-            }
+
+            if (TypeInfo.IsArray)
+                WriteArray(ref data);
+            else
+                WriteObject(ref data);
+
 
             LogProgress(data.Length);
         }
@@ -95,9 +88,17 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (record == null) continue;
                 var recordAsArray = record as object[];
-                foreach (var field in recordAsArray)
+                try
                 {
-                    CsvWriter.WriteField(field);
+                    foreach (var field in recordAsArray)
+                    {
+                        CsvWriter.WriteField(field);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!ErrorHandler.HasErrorBuffer) throw e;
+                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData(record));
                 }
 
                 CsvWriter.NextRecord();
@@ -109,7 +110,15 @@ namespace ALE.ETLBox.DataFlow
             foreach (var record in data)
             {
                 if (record == null) continue;
-                CsvWriter.WriteRecord(record);
+                try
+                {
+                    CsvWriter.WriteRecord(record);
+                }
+                catch (Exception e)
+                {
+                    if (!ErrorHandler.HasErrorBuffer) throw e;
+                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData(record));
+                }
                 CsvWriter.NextRecord();
             }
         }

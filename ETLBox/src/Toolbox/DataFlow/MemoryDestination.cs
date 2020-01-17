@@ -16,7 +16,7 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName => $"Write data into memory";
 
-        internal const int DEFAULT_BATCH_SIZE = 100;
+        internal const int DEFAULT_BATCH_SIZE = 1000;
         public BlockingCollection<TInput> Data { get; set; }
 
         public MemoryDestination()
