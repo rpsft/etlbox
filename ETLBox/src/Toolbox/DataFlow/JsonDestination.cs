@@ -64,6 +64,12 @@ namespace ALE.ETLBox.DataFlow
             StreamWriter = new StreamWriter(FileName);
             JsonTextWriter = new JsonTextWriter(StreamWriter);
             JsonTextWriter.Formatting = JsonSerializer.Formatting;
+            if (ErrorHandler.HasErrorBuffer)
+                JsonSerializer.Error += (sender, args) =>
+                {
+                    ErrorHandler.Post(args.ErrorContext.Error, ErrorHandler.ConvertErrorData(args.CurrentObject));
+                    args.ErrorContext.Handled = true;
+                };
             JsonTextWriter.WriteStartArray();
             this.CloseStreamsAction = CloseStreams;
 

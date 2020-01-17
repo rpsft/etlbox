@@ -73,11 +73,12 @@ namespace ALE.ETLBox.DataFlow
                 WriteHeaderIfRequired();
             }
             base.WriteBatch(ref data);
-            try {
-            if (TypeInfo.IsArray)
-                WriteArray(ref data);
-            else
-                WriteObject(ref data);
+            try
+            {
+                if (TypeInfo.IsArray)
+                    WriteArray(ref data);
+                else
+                    WriteObject(ref data);
             }
             catch (Exception e)
             {
@@ -85,7 +86,6 @@ namespace ALE.ETLBox.DataFlow
                 ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
                 CsvWriter.NextRecord();
             }
-
 
             LogProgress(data.Length);
         }

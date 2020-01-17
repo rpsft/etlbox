@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceErrorLinkingTests
+    public class JsonSourceErrorLinkingTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public CSVSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
+        public JsonSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -31,12 +31,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceErrorLinking");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "CSVSourceErrorLinking");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSourceErrorLinking");
+            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "JsonSourceErrorLinking");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
+            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/TwoColumnsErrorLinking.json",
+                ResourceType.File);
 
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
@@ -47,8 +48,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
             Assert.Collection<ETLBoxError>(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
                 d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
                 d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
             );
@@ -61,10 +60,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
+            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/TwoColumnsErrorLinking.json", ResourceType.File);
 
             //Assert
-            Assert.Throws<CsvHelper.TypeConversion.TypeConverterException>(() =>
+            Assert.Throws<Newtonsoft.Json.JsonReaderException>(() =>
             {
                 source.LinkTo(dest);
                 source.Execute();

@@ -25,7 +25,7 @@ namespace ALE.ETLBox.DataFlow
             ErrorBuffer.Post(new ETLBoxError()
             {
                 Exception = e,
-                ErrorText = e.ToString(),
+                ErrorText = e.Message,
                 ReportTime = DateTime.Now,
                 RecordAsJson = jsonRow
             });
@@ -39,7 +39,7 @@ namespace ALE.ETLBox.DataFlow
             }
             catch (Exception e)
             {
-                return e.ToString();
+                return e.Message;
             }
         }
     }

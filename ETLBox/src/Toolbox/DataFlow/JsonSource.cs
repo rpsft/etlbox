@@ -68,10 +68,6 @@ namespace ALE.ETLBox.DataFlow
                 ReadAll();
                 Buffer.Complete();
             }
-            catch (Exception e)
-            {
-                throw new ETLBoxException("Error during reading data from json file - see inner exception for details.", e);
-            }
             finally
             {
                 Close();
@@ -100,12 +96,26 @@ namespace ALE.ETLBox.DataFlow
             if (JsonTextReader.TokenType != JsonToken.StartArray)
                 throw new ETLBoxException("Json needs to contain an array on root level!");
 
+            bool skipRecord = false;
+            if (ErrorHandler.HasErrorBuffer)
+                JsonSerializer.Error += (sender, args) =>
+                {
+                    ErrorHandler.Post(args.ErrorContext.Error, args.ErrorContext.Error.Message);
+                    args.ErrorContext.Handled = true;
+                    skipRecord = true;
+                };
             while (JsonTextReader.Read())
             {
                 if (JsonTextReader.TokenType == JsonToken.EndArray) continue;
                 else
                 {
                     TOutput record = JsonSerializer.Deserialize<TOutput>(JsonTextReader);
+                    if (skipRecord)
+                    {
+                        if (JsonTextReader.TokenType == JsonToken.EndObject)
+                            skipRecord = false;
+                        continue;
+                    }
                     Buffer.Post(record);
                     LogProgress(1);
                 }
