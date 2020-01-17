@@ -74,14 +74,6 @@ namespace ALE.ETLBox.DataFlow
             CopyTaskProperties(task);
         }
 
-        private void CopyTaskProperties(ITask task)
-        {
-            this.TaskHash = task.TaskHash;
-            this.TaskName = task.TaskName;
-            this.TaskType = task.TaskType;
-            this.DisableLogging = task.DisableLogging;
-        }
-
         private void WriteIntoOutput()
         {
             NLogStart();
