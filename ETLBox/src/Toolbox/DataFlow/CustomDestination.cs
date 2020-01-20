@@ -25,12 +25,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 _writeAction = value;
                 TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
-                Completion = TargetActionBlock.Completion.ContinueWith(t =>
-                {
-                    CleanUp();
-                    if (t.IsFaulted)
-                        throw t.Exception.InnerException;
-                });
+                Completion = AwaitCompletion();
             }
         }
         public Action OnCompletion { get; set; }
@@ -62,6 +57,12 @@ namespace ALE.ETLBox.DataFlow
         public void Wait()
         {
             Completion.Wait();
+        }
+
+        public async Task AwaitCompletion()
+        {
+            await TargetActionBlock.Completion.ConfigureAwait(false);
+            CleanUp();
         }
 
         private void CleanUp()

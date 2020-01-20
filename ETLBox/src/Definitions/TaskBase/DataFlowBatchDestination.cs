@@ -33,12 +33,8 @@ namespace ALE.ETLBox.DataFlow
         {
             Buffer = new BatchBlock<TInput>(batchSize);
             TargetAction = new ActionBlock<TInput[]>(d => WriteBatch(ref d));
+            Completion = AwaitCompletion();
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
-            Completion = TargetAction.Completion.ContinueWith(t => {
-                CleanUp();
-                if (t.IsFaulted)
-                    throw t.Exception.InnerException;
-             });
             TypeInfo = new TypeInfo(typeof(TInput));
         }
 
@@ -76,6 +72,12 @@ namespace ALE.ETLBox.DataFlow
         public virtual void Wait()
         {
             Completion.Wait();
+        }
+
+        internal async Task AwaitCompletion()
+        {
+            await TargetAction.Completion.ConfigureAwait(false);
+            CleanUp();
         }
 
         private void CleanUp()

@@ -20,7 +20,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class CSVDestinationAsyncTests
     {
-        [Theory, InlineData("AsyncTestFile.csv",1000)]
+        [Theory, InlineData("AsyncTestFile.csv",5000)]
         public void WriteAsyncAndCheckLock(string filename, int noRecords)
         {
             //Arrange
@@ -29,6 +29,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             for (int i=0;i<noRecords;i++)
                 source.Data.Add(new string[] { HashHelper.RandomString(100)});
             CSVDestination dest = new CSVDestination(filename);
+            bool onCompletionRun = false;
 
             //Act
             source.LinkTo(dest);
@@ -37,11 +38,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
             while (!File.Exists(filename)) { Task.Delay(10).Wait(); }
 
             //Assert
-            dest.OnCompletion = () => Assert.False(IsFileLocked(filename));
-            //Right after the start the file must still be locked.
-            Assert.True(IsFileLocked(filename));
+            dest.OnCompletion = () =>
+            {
+                Assert.False(IsFileLocked(filename), "StreamWriter should be disposed and file unlocked");
+                onCompletionRun = true;
+            };
 
-
+            Assert.True(IsFileLocked(filename), "Right after  start the file should still be locked.");
+            dt.Wait();
+            Assert.True(onCompletionRun, "OnCompletion action and assertion did run");
         }
 
         protected virtual bool IsFileLocked(string filename)
