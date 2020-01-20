@@ -8,8 +8,7 @@ namespace ALE.ETLBox.DataFlow
     {
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
         public Action OnCompletion { get; set; }
-        internal Action CloseStreamsAction { get; set; }
-
+        public Task Completion { get; private set; }
         public ITargetBlock<TInput> TargetBlock => Buffer;
 
         public int BatchSize
@@ -22,8 +21,8 @@ namespace ALE.ETLBox.DataFlow
             }
         }
         private int batchSize;
-        private Task targetActionCompletionTask;
 
+        internal Action CloseStreamsAction { get; set; }
         internal BatchBlock<TInput> Buffer { get; set; }
         internal ActionBlock<TInput[]> TargetAction { get; set; }
         internal int ThresholdCount { get; set; } = 1;
@@ -35,7 +34,7 @@ namespace ALE.ETLBox.DataFlow
             Buffer = new BatchBlock<TInput>(batchSize);
             TargetAction = new ActionBlock<TInput[]>(d => WriteBatch(ref d));
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
-            targetActionCompletionTask = TargetAction.Completion.ContinueWith(t => CleanUp());
+            Completion = TargetAction.Completion.ContinueWith(t => CleanUp());
             TypeInfo = new TypeInfo(typeof(TInput));
         }
 
@@ -72,10 +71,8 @@ namespace ALE.ETLBox.DataFlow
 
         public virtual void Wait()
         {
-            targetActionCompletionTask.Wait();
+            Completion.Wait();
         }
-
-        public Task Completion => targetActionCompletionTask;
 
         private void CleanUp()
         {
@@ -86,7 +83,6 @@ namespace ALE.ETLBox.DataFlow
 
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
             => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
-
 
     }
 }
