@@ -64,7 +64,7 @@ namespace ALE.ETLBox.ConnectionManager
                 {
                     successfullyConnected = false;
                     lastException = e;
-                    Task.Delay(1000 * i).Wait();
+                    Task.Delay(1000).Wait();
                 }
                 if (successfullyConnected)
                 {

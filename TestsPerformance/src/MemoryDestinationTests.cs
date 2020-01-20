@@ -32,18 +32,18 @@ namespace ALE.ETLBoxTests.Performance
          * X Rows with 1027 bytes per Row (1020 bytes data + 7 bytes for sql server)
          */
         [Theory,
-            InlineData(100000, 10000, 0.5)]
-        public void CompareFlowWithBulkInsert(int numberOfRows, int batchSize, double deviation)
+            InlineData(100000, 0.5)]
+        public void CompareFlowWithBulkInsert(int numberOfRows,  double deviation)
         {
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
 
             var sourceNonGeneric = new CSVSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destNonGeneric = new MemoryDestination(batchSize);
+            var destNonGeneric = new MemoryDestination();
             var sourceGeneric = new CSVSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destGeneric = new MemoryDestination<CSVData>(batchSize);
+            var destGeneric = new MemoryDestination<CSVData>();
             var sourceDynamic = new CSVSource<ExpandoObject>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destDynamic = new MemoryDestination<ExpandoObject>(batchSize);
+            var destDynamic = new MemoryDestination<ExpandoObject>();
 
 
             //Act
