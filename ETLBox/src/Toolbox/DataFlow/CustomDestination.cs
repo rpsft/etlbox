@@ -25,7 +25,12 @@ namespace ALE.ETLBox.DataFlow
             {
                 _writeAction = value;
                 TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
-                Completion = TargetActionBlock.Completion.ContinueWith(t => CleanUp());
+                Completion = TargetActionBlock.Completion.ContinueWith(t =>
+                {
+                    CleanUp();
+                    if (t.IsFaulted)
+                        throw t.Exception.InnerException;
+                });
             }
         }
         public Action OnCompletion { get; set; }
