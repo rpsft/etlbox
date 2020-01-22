@@ -20,6 +20,8 @@ aggregation calculation. E.g. an Aggregation component which could be used to do
 
 ### CF - Known Issues
 
+- If a tabledefintion or a List<TableColumns> is given to the CreateTableTask, and the DataType is empty (null), then a NULLReferenceException is thrown - this probably is also true if the Name of the column (or the name of the definition) is empty. There should be tests, and the exception should be much better understandable
+
 ### CF - New features
 
 - TableDefinition: Get "dynamic" class object from TableDefintion that can be used as type object for the flow - make sure this 
