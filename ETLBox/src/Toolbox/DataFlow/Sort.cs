@@ -17,7 +17,7 @@ namespace ALE.ETLBox.DataFlow
     /// Sort&lt;MyDataRow&gt; block = new Sort&lt;MyDataRow&gt;(comp);
     /// </code>
     /// </example>
-    public class Sort<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
+    public class Sort<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Sort";
@@ -34,8 +34,8 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        public ISourceBlock<TInput> SourceBlock => BlockTransformation.SourceBlock;
-        public ITargetBlock<TInput> TargetBlock => BlockTransformation.TargetBlock;
+        public override ISourceBlock<TInput> SourceBlock => BlockTransformation.SourceBlock;
+        public override ITargetBlock<TInput> TargetBlock => BlockTransformation.TargetBlock;
 
         /* Private stuff */
         Comparison<TInput> _sortFunction;
@@ -60,24 +60,6 @@ namespace ALE.ETLBox.DataFlow
             data.Sort(SortFunction);
             return data;
         }
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target)
-            => BlockTransformation.LinkTo(target);
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => BlockTransformation.LinkTo(target, predicate);
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
-            => BlockTransformation.LinkTo(target, rowsToKeep, rowsIntoVoid);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target)
-            => BlockTransformation.LinkTo<TConvert>(target);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => BlockTransformation.LinkTo<TConvert>(target, predicate);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
-            => BlockTransformation.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
     }
 
     /// <summary>

@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
     /// block.LinkTo(dest);
     /// </code>
     /// </example>
-    public class BlockTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
+    public class BlockTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Block Transformation";
@@ -44,8 +44,8 @@ namespace ALE.ETLBox.DataFlow
 
             }
         }
-        public ISourceBlock<TOutput> SourceBlock => OutputBuffer;
-        public ITargetBlock<TInput> TargetBlock => InputBuffer;
+        public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
+        public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
         /* Private stuff */
         BufferBlock<TOutput> OutputBuffer { get; set; }
@@ -84,45 +84,6 @@ namespace ALE.ETLBox.DataFlow
             }
             OutputBuffer.Complete();
             NLogFinish();
-        }
-
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target);
-
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target, predicate);
-
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target, rowsToKeep, rowsIntoVoid);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, predicate);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
-
-        void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
         }
     }
 

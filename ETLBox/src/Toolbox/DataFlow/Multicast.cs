@@ -18,14 +18,14 @@ namespace ALE.ETLBox.DataFlow
     /// multicast.LinkTo(dest2);
     /// </code>
     /// </example>
-    public class Multicast<TInput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TInput>
+    public class Multicast<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Multicast - duplicate data";
 
         /* Public Properties */
-        public ISourceBlock<TInput> SourceBlock => BroadcastBlock;
-        public ITargetBlock<TInput> TargetBlock => BroadcastBlock;
+        public override ISourceBlock<TInput> SourceBlock => BroadcastBlock;
+        public override ITargetBlock<TInput> TargetBlock => BroadcastBlock;
 
         /* Private stuff */
         internal BroadcastBlock<TInput> BroadcastBlock { get; set; }
@@ -40,24 +40,6 @@ namespace ALE.ETLBox.DataFlow
         {
             this.TaskName = name;
         }
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target)
-            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target);
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target, predicate);
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
-            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo(target, rowsToKeep, rowsIntoVoid);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target)
-            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, predicate);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
-            => (new DataFlowLinker<TInput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
 
         private TInput Clone(TInput row)
         {
@@ -89,14 +71,6 @@ namespace ALE.ETLBox.DataFlow
             LogProgress(1);
             return clone;
         }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
     }
 
     /// <summary>

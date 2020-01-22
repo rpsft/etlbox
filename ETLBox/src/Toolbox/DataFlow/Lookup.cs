@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
     /// </code>
     /// </example>
     public class Lookup<TTransformationInput, TTransformationOutput, TSourceOutput>
-        : DataFlowTask, ITask, IDataFlowTransformation<TTransformationInput, TTransformationOutput>
+        : DataFlowTransformation<TTransformationInput, TTransformationOutput>, ITask, IDataFlowTransformation<TTransformationInput, TTransformationOutput>
     {
 
         /* ITask Interface */
@@ -30,8 +30,8 @@ namespace ALE.ETLBox.DataFlow
         ActionBlock<TSourceOutput> LookupBuffer { get; set; }
 
         /* Public Properties */
-        public ISourceBlock<TTransformationOutput> SourceBlock => RowTransformation.SourceBlock;
-        public ITargetBlock<TTransformationInput> TargetBlock => RowTransformation.TargetBlock;
+        public override ISourceBlock<TTransformationOutput> SourceBlock => RowTransformation.SourceBlock;
+        public override ITargetBlock<TTransformationInput> TargetBlock => RowTransformation.TargetBlock;
         public IDataFlowSource<TSourceOutput> Source
         {
             get
@@ -101,24 +101,6 @@ namespace ALE.ETLBox.DataFlow
             if (LookupList == null) LookupList = new List<TSourceOutput>();
             LookupList.Add(sourceRow);
         }
-
-        public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target)
-            => RowTransformation.LinkTo(target);
-
-        public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate)
-            => RowTransformation.LinkTo(target, predicate);
-
-        public IDataFlowLinkSource<TTransformationOutput> LinkTo(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> rowsToKeep, Predicate<TTransformationOutput> rowsIntoVoid)
-            => RowTransformation.LinkTo(target, rowsToKeep, rowsIntoVoid);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput> target)
-            => RowTransformation.LinkTo<TConvert>(target);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> predicate)
-            => RowTransformation.LinkTo<TConvert>(target, predicate);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TTransformationOutput> target, Predicate<TTransformationOutput> rowsToKeep, Predicate<TTransformationOutput> rowsIntoVoid)
-            => RowTransformation.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
     }
 
     /// <summary>

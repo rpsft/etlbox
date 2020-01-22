@@ -16,7 +16,7 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DBMerge<TInput> : DataFlowTask, ITask, IDataFlowLinkTarget<TInput>, IDataFlowSource<TInput> where TInput : IMergeableRow, new()
+    public class DBMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput,TInput> where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, Upsert or delete in destination";
@@ -25,7 +25,8 @@ namespace ALE.ETLBox.DataFlow
         public void Execute() => OutputSource.Execute();
 
         /* Public Properties */
-        public ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
+        public override ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
+        public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
         public bool DisableDeletion { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
@@ -204,27 +205,6 @@ namespace ALE.ETLBox.DataFlow
 
         public void Wait() => DestinationTable.Wait();
         public async Task Completion() => await DestinationTable.Completion;
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target)
-            => OutputSource.LinkTo(target);
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => OutputSource.LinkTo(target, predicate);
-
-        public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
-            => OutputSource.LinkTo(target, rowsToKeep, rowsIntoVoid);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target)
-            => OutputSource.LinkTo<TConvert>(target);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> predicate)
-            => OutputSource.LinkTo<TConvert>(target, predicate);
-
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TInput> target, Predicate<TInput> rowsToKeep, Predicate<TInput> rowsIntoVoid)
-            => OutputSource.LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
-
-        public ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
-
     }
 
 

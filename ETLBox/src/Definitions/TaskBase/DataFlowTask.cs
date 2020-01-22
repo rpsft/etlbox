@@ -20,6 +20,6 @@
 
         public virtual int ProgressCount { get; set; }
 
-        public bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
+        internal bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
     }
 }
