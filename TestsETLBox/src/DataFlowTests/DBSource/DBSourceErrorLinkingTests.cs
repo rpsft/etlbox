@@ -76,7 +76,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                });
 
             if (connection.GetType() == typeof(SQLiteConnectionManager))
-                Task.Delay(70).Wait(); //Database was locked and needs to recover after exception
+                Task.Delay(100).Wait(); //Database was locked and needs to recover after exception
         }
 
         private static void CreateSourceTable(IConnectionManager connection, string tableName)

@@ -9,15 +9,14 @@ namespace ALE.ETLBox.DataFlow
     public class DataFlowLinker<TOutput>
     {
         public ISourceBlock<TOutput> SourceBlock { get; set; }
-        public bool DisableLogging { get; set; }
+        public bool DisableLogging => CallingTask.DisableLogging;
         public NLog.Logger NLogger { get; set; } = CF.ControlFlow.GetLogger();
-        public ITask CallingTask { get; set; }
+        public DataFlowTask CallingTask { get; set; }
 
-        public DataFlowLinker(ITask callingTask, ISourceBlock<TOutput> sourceBlock, bool disableLogging)
+        public DataFlowLinker(DataFlowTask callingTask, ISourceBlock<TOutput> sourceBlock)
         {
             this.CallingTask = callingTask;
             this.SourceBlock = sourceBlock;
-            this.DisableLogging = disableLogging;
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)

@@ -1,8 +1,12 @@
-﻿namespace ALE.ETLBox
+﻿using ALE.ETLBox.DataFlow;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ALE.ETLBox
 {
     public abstract class DataFlowTask : GenericTask, ITask
     {
-        public int? _loggingThresholdRows;
+        protected int? _loggingThresholdRows;
         public virtual int? LoggingThresholdRows
         {
             get
@@ -18,10 +22,11 @@
             }
         }
 
-        protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         public int ProgressCount { get; set; }
-        protected int ThresholdCount { get; set; } = 1;
 
+        protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
+        protected int ThresholdCount { get; set; } = 1;
+        protected List<Task> CompletionTasks { get; set; } = new List<Task>();
 
         protected void NLogStart()
         {
@@ -53,6 +58,8 @@
             if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
                 NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
         }
+
+
     }
 
 }
