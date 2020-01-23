@@ -39,7 +39,7 @@ namespace ALE.ETLBox.DataFlow
             FileName = fileName;
         }
 
-        internal override void InitObjects(int batchSize)
+        protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
             JsonSerializer = new JsonSerializer()
@@ -49,7 +49,7 @@ namespace ALE.ETLBox.DataFlow
             };
         }
 
-        internal void InitJsonWriter()
+        protected void InitJsonWriter()
         {
             StreamWriter = new StreamWriter(FileName);
             JsonTextWriter = new JsonTextWriter(StreamWriter);
@@ -65,7 +65,7 @@ namespace ALE.ETLBox.DataFlow
 
         }
 
-        internal override void WriteBatch(ref TInput[] data)
+        protected override void WriteBatch(ref TInput[] data)
         {
             if (JsonTextWriter == null) InitJsonWriter();
             base.WriteBatch(ref data);

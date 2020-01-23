@@ -18,18 +18,18 @@
             }
         }
 
-        internal bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
+        protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         public int ProgressCount { get; set; }
-        internal int ThresholdCount { get; set; } = 1;
+        protected int ThresholdCount { get; set; } = 1;
 
 
-        internal void NLogStart()
+        protected void NLogStart()
         {
             if (!DisableLogging)
                 NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
         }
 
-        internal void NLogFinish()
+        protected void NLogFinish()
         {
             if (!DisableLogging && HasLoggingThresholdRows)
                 NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
@@ -37,7 +37,7 @@
                 NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
         }
 
-        internal void LogProgressBatch(int rowsProcessed)
+        protected void LogProgressBatch(int rowsProcessed)
         {
             ProgressCount += rowsProcessed;
             if (!DisableLogging && HasLoggingThresholdRows && ProgressCount >= (LoggingThresholdRows * ThresholdCount))
@@ -47,7 +47,7 @@
             }
         }
 
-        internal void LogProgress()
+        protected void LogProgress()
         {
             ProgressCount += 1;
             if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))

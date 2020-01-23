@@ -7,9 +7,9 @@ namespace ALE.ETLBox.DataFlow
     public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask
     {
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
-        internal BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
+        protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
         internal TypeInfo TypeInfo { get; set; }
-        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
+        protected ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public virtual void InitObjects()
         {

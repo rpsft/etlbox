@@ -7,14 +7,14 @@ namespace ALE.ETLBox.DataFlow
     /// <summary>
     /// Define your own destination block.
     /// </summary>
-    /// <typeparam name="TInput">Type of datasoure input.</typeparam>
-    public class CustomDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
+    /// <typeparam name="TInput">Type of datasource input.</typeparam>
+    public class CustomDestination<TInput> : DataFlowDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = $"Write data into custom target";
 
         /* Public properties */
-        public ITargetBlock<TInput> TargetBlock => TargetActionBlock;
+        public ITargetBlock<TInput> TargetBlock => TargetAction;
         public Action<TInput> WriteAction
         {
             get
@@ -24,16 +24,12 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _writeAction = value;
-                TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
-                Completion = AwaitCompletion();
+                InitObjects();
             }
         }
-        public Action OnCompletion { get; set; }
-        public Task Completion { get; private set; }
 
         /* Private stuff */
         private Action<TInput> _writeAction;
-        internal ActionBlock<TInput> TargetActionBlock { get; set; }
 
         public CustomDestination()
         {
@@ -54,21 +50,10 @@ namespace ALE.ETLBox.DataFlow
             this.TaskName = taskName;
         }
 
-        public void Wait()
+        private void InitObjects()
         {
-            Completion.Wait();
-        }
-
-        public async Task AwaitCompletion()
-        {
-            await TargetActionBlock.Completion.ConfigureAwait(false);
-            CleanUp();
-        }
-
-        private void CleanUp()
-        {
-            OnCompletion?.Invoke();
-            NLogFinish();
+            TargetAction = new ActionBlock<TInput>(AddLogging(_writeAction));
+            SetCompletionTask();
         }
 
         private Action<TInput> AddLogging(Action<TInput> writeAction)

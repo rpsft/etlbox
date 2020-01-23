@@ -40,7 +40,7 @@ namespace ALE.ETLBox.DataFlow
             FileName = fileName;
         }
 
-        internal override void InitObjects(int batchSize)
+        protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
             Configuration = new Configuration(CultureInfo.InvariantCulture);
@@ -48,14 +48,14 @@ namespace ALE.ETLBox.DataFlow
 
         }
 
-        internal void InitCsvWriter()
+        protected void InitCsvWriter()
         {
             StreamWriter = new StreamWriter(FileName);
             CsvWriter = new CsvWriter(StreamWriter, Configuration, leaveOpen: true);
             this.CloseStreamsAction = CloseStreams;
         }
 
-        internal override void WriteBatch(ref TInput[] data)
+        protected override void WriteBatch(ref TInput[] data)
         {
             if (CsvWriter == null)
             {

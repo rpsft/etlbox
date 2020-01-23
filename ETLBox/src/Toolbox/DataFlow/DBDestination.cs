@@ -61,12 +61,12 @@ namespace ALE.ETLBox.DataFlow
             ConnectionManager = connectionManager;
         }
 
-        internal override void InitObjects(int batchSize)
+        protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
         }
 
-        internal override void WriteBatch(ref TInput[] data)
+        protected override void WriteBatch(ref TInput[] data)
         {
             if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
 

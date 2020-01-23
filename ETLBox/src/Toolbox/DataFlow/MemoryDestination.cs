@@ -24,12 +24,12 @@ namespace ALE.ETLBox.DataFlow
             BatchSize = DEFAULT_BATCH_SIZE;
         }
 
-        internal override void InitObjects(int batchSize)
+        protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
         }
 
-        internal override void WriteBatch(ref TInput[] data)
+        protected override void WriteBatch(ref TInput[] data)
         {
             if (Data == null) InitMemoryCollection();
             base.WriteBatch(ref data);
