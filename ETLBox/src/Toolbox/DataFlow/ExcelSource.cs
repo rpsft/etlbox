@@ -77,12 +77,12 @@ namespace ALE.ETLBox.DataFlow
                     try
                     {
                         TOutput row = ParseDataRow(typeInfo);
-                        Buffer.Post(row);
+                        Buffer.SendAsync(row).Wait();
                     }
                     catch (Exception e)
                     {
                         if (!ErrorHandler.HasErrorBuffer) throw e;
-                        ErrorHandler.Post(e, $"File: {FileName} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
+                        ErrorHandler.Send(e, $"File: {FileName} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
                     }
                     LogProgress();
                 }

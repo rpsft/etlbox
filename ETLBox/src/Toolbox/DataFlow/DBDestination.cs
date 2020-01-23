@@ -99,7 +99,7 @@ namespace ALE.ETLBox.DataFlow
             catch (Exception e)
             {
                 if (!ErrorHandler.HasErrorBuffer) throw e;
-                ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
             }
         }
 

@@ -100,7 +100,7 @@ namespace ALE.ETLBox.DataFlow
             if (ErrorHandler.HasErrorBuffer)
                 JsonSerializer.Error += (sender, args) =>
                 {
-                    ErrorHandler.Post(args.ErrorContext.Error, args.ErrorContext.Error.Message);
+                    ErrorHandler.Send(args.ErrorContext.Error, args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
                     skipRecord = true;
                 };
@@ -116,7 +116,7 @@ namespace ALE.ETLBox.DataFlow
                             skipRecord = false;
                         continue;
                     }
-                    Buffer.Post(record);
+                    Buffer.SendAsync(record).Wait();
                     LogProgress();
                 }
             }

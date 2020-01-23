@@ -57,7 +57,7 @@ namespace ALE.ETLBox.DataFlow
             if (ErrorHandler.HasErrorBuffer)
                 JsonSerializer.Error += (sender, args) =>
                 {
-                    ErrorHandler.Post(args.ErrorContext.Error, ErrorHandler.ConvertErrorData(args.CurrentObject));
+                    ErrorHandler.Send(args.ErrorContext.Error, ErrorHandler.ConvertErrorData(args.CurrentObject));
                     args.ErrorContext.Handled = true;
                 };
             JsonTextWriter.WriteStartArray();

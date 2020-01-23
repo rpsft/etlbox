@@ -47,7 +47,7 @@ namespace ALE.ETLBox.DataFlow
         {
             foreach (TOutput record in Data)
             {
-                Buffer.Post(record);
+                Buffer.SendAsync(record).Wait();
             }
         }
 

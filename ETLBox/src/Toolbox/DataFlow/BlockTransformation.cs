@@ -79,7 +79,7 @@ namespace ALE.ETLBox.DataFlow
             NLogStart();
             foreach (TOutput row in OutputData)
             {
-                OutputBuffer.Post(row);
+                OutputBuffer.SendAsync(row).Wait();
                 LogProgress();
             }
             OutputBuffer.Complete();

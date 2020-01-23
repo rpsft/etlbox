@@ -98,7 +98,7 @@ namespace ALE.ETLBox.DataFlow
                 catch (Exception e)
                 {
                     if (!ErrorHandler.HasErrorBuffer) throw e;
-                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData(record));
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(record));
                 }
 
                 CsvWriter.NextRecord();
@@ -117,7 +117,7 @@ namespace ALE.ETLBox.DataFlow
                 catch (Exception e)
                 {
                     if (!ErrorHandler.HasErrorBuffer) throw e;
-                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData(record));
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(record));
                 }
                 CsvWriter.NextRecord();
             }
