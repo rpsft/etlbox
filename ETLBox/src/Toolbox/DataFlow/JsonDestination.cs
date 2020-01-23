@@ -74,7 +74,7 @@ namespace ALE.ETLBox.DataFlow
                 if (record == null) continue;
                 JsonSerializer.Serialize(JsonTextWriter, record);
             }
-            LogProgress(data.Length);
+            LogProgressBatch(data.Length);
         }
 
         public void CloseStreams()

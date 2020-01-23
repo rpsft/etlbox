@@ -117,7 +117,7 @@ namespace ALE.ETLBox.DataFlow
                         continue;
                     }
                     Buffer.Post(record);
-                    LogProgress(1);
+                    LogProgress();
                 }
             }
         }

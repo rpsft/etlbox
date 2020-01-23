@@ -68,7 +68,7 @@ namespace ALE.ETLBox.DataFlow
                     propInfo.SetValue(clone, propInfo.GetValue(row));
                 }
             }
-            LogProgress(1);
+            LogProgress();
             return clone;
         }
     }

@@ -87,7 +87,7 @@ namespace ALE.ETLBox.DataFlow
             while (CsvReader.Read())
             {
                 ReadLineAndSendIntoBuffer();
-                LogProgress(1);
+                LogProgress();
             }
         }
 

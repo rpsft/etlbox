@@ -74,7 +74,7 @@ namespace ALE.ETLBox.DataFlow
 
             TryBulkInsertData(ref data);
 
-            LogProgress(data.Length);
+            LogProgressBatch(data.Length);
         }
 
         private void LoadTableDefinitionFromTableName()

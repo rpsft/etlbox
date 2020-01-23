@@ -38,7 +38,7 @@ namespace ALE.ETLBox.DataFlow
         {
             NLogStart();
             ReadRecordAndSendIntoBuffer();
-            LogProgress(1);
+            LogProgress();
             Buffer.Complete();
             NLogFinish();
         }

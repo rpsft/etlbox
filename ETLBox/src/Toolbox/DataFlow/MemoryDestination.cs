@@ -37,7 +37,7 @@ namespace ALE.ETLBox.DataFlow
                 if (record == null) continue;
                 Data.Add(record);
             }
-            LogProgress(data.Length);
+            LogProgressBatch(data.Length);
         }
 
         private void InitMemoryCollection()

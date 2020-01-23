@@ -168,7 +168,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (_row != null)
                 {
-                    LogProgress(1);
+                    LogProgress();
                     Buffer.Post(_row);
                 }
             };

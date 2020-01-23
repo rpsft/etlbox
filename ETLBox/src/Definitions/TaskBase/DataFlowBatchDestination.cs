@@ -4,7 +4,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public abstract class DataFlowBatchDestination<TInput> : DataFlowTask, ITask
+    public abstract class DataFlowBatchDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
     {
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
         public Action OnCompletion { get; set; }
@@ -25,7 +25,7 @@ namespace ALE.ETLBox.DataFlow
         internal Action CloseStreamsAction { get; set; }
         internal BatchBlock<TInput> Buffer { get; set; }
         internal ActionBlock<TInput[]> TargetAction { get; set; }
-        internal int ThresholdCount { get; set; } = 1;
+
         internal TypeInfo TypeInfo { get; set; }
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
@@ -43,30 +43,6 @@ namespace ALE.ETLBox.DataFlow
             if (ProgressCount == 0) NLogStart();
             if (BeforeBatchWrite != null)
                 data = BeforeBatchWrite.Invoke(data);
-        }
-
-        internal void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        internal void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        internal void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && ProgressCount >= (LoggingThresholdRows * ThresholdCount))
-            {
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-                ThresholdCount++;
-            }
         }
 
         public virtual void Wait()

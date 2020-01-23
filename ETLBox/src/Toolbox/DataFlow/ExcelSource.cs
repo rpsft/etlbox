@@ -84,7 +84,7 @@ namespace ALE.ETLBox.DataFlow
                         if (!ErrorHandler.HasErrorBuffer) throw e;
                         ErrorHandler.Post(e, $"File: {FileName} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
                     }
-                    LogProgress(1);
+                    LogProgress();
                 }
             } while (ExcelDataReader.NextResult());
         }

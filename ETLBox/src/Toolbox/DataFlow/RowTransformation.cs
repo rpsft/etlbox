@@ -107,7 +107,7 @@ namespace ALE.ETLBox.DataFlow
                 if (!DisableLogging)
                     NLogger.Debug(TaskName + " was initialized!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
             }
-            LogProgress(1);
+            LogProgress();
             return RowTransformationFunc.Invoke(row);
         }
     }

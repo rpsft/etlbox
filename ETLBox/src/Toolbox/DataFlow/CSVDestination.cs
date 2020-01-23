@@ -70,7 +70,7 @@ namespace ALE.ETLBox.DataFlow
                 WriteObject(ref data);
 
 
-            LogProgress(data.Length);
+            LogProgressBatch(data.Length);
         }
 
         private void WriteHeaderIfRequired()
