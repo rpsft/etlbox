@@ -1,32 +1,38 @@
-﻿using System;
+﻿using ALE.ETLBox.DataFlow;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox
 {
-    public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask
+    public abstract class DataFlowTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {
-        public ISourceBlock<TOutput> SourceBlock => this.Buffer;
-        protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
-        internal TypeInfo TypeInfo { get; set; }
-        protected ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
+        public virtual ITargetBlock<TInput> TargetBlock { get; }
+        public virtual ISourceBlock<TOutput> SourceBlock { get; }
 
-        public virtual void InitObjects()
+        protected List<Task> PredecessorCompletions { get; set; } = new List<Task>();
+
+        public void AddPredecessorCompletion(Task completion)
         {
-            TypeInfo = new TypeInfo(typeof(TOutput));
+            PredecessorCompletions.Add(completion);
+            completion.ContinueWith(t => CheckCompleteAction());
         }
 
-        public abstract void Execute();
-
-        public Task ExecuteAsync()
+        protected void CheckCompleteAction()
         {
-            return Task.Factory.StartNew(
-                () => Execute()
-                );
+            Task.WhenAll(PredecessorCompletions).ContinueWith(t =>
+            {
+                if (!TargetBlock.Completion.IsCompleted)
+                {
+                    if (t.IsFaulted) TargetBlock.Fault(t.Exception.InnerException);
+                    else TargetBlock.Complete();
+                }
+            });
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target);
+        => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target);
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
             => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target, predicate);
@@ -42,9 +48,5 @@ namespace ALE.ETLBox.DataFlow
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
             => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
-
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-            => ErrorHandler.LinkErrorTo(target, SourceBlock.Completion);
-
     }
 }

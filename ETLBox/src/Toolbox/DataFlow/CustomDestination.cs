@@ -7,14 +7,13 @@ namespace ALE.ETLBox.DataFlow
     /// <summary>
     /// Define your own destination block.
     /// </summary>
-    /// <typeparam name="TInput">Type of datasoure input.</typeparam>
-    public class CustomDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
+    /// <typeparam name="TInput">Type of datasource input.</typeparam>
+    public class CustomDestination<TInput> : DataFlowDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = $"Write data into custom target";
 
         /* Public properties */
-        public ITargetBlock<TInput> TargetBlock => TargetActionBlock;
         public Action<TInput> WriteAction
         {
             get
@@ -24,16 +23,12 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _writeAction = value;
-                TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
-                Completion = AwaitCompletion();
+                InitObjects();
             }
         }
-        public Action OnCompletion { get; set; }
-        public Task Completion { get; private set; }
 
         /* Private stuff */
         private Action<TInput> _writeAction;
-        internal ActionBlock<TInput> TargetActionBlock { get; set; }
 
         public CustomDestination()
         {
@@ -54,42 +49,10 @@ namespace ALE.ETLBox.DataFlow
             this.TaskName = taskName;
         }
 
-        public void Wait()
+        private void InitObjects()
         {
-            Completion.Wait();
-        }
-
-        public async Task AwaitCompletion()
-        {
-            await TargetActionBlock.Completion.ConfigureAwait(false);
-            CleanUp();
-        }
-
-        private void CleanUp()
-        {
-            OnCompletion?.Invoke();
-            NLogFinish();
-        }
-
-        void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
+            TargetAction = new ActionBlock<TInput>(AddLogging(_writeAction));
+            SetCompletionTask();
         }
 
         private Action<TInput> AddLogging(Action<TInput> writeAction)
@@ -99,7 +62,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (ProgressCount == 0) NLogStart();
                     writeAction.Invoke(input);
-                    LogProgress(1);
+                    LogProgress();
                 });
         }
     }

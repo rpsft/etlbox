@@ -8,6 +8,9 @@
 - Check if DBMerge works properly if the constructors are not used. E.g. if the Connectionmanager is set via assignment, the underlying DBSource and DBDestination needs to be  updated.
 - BeforeBulkInsert / AfterBulkInsert in connection managers is executed before *every* bulk. There should be a "ExecuteOnceBeforeBulkInsert" function, where e.g. server side settings could be set once before every bulk operation
 
+- VoidDestination: Use a NullBlock as Target 
+https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.dataflow.dataflowblock.nulltarget?view=netcore-3.1
+
 ### DF - New features
 
 - Based on the BlockTransformation (but without storing all data in memory), there could be predefined components that do a Sum / Min / Max / Avg or other

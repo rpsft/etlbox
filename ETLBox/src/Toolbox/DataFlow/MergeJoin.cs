@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -67,22 +68,22 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target);
+            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target);
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target, predicate);
+            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target, predicate);
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo(target, rowsToKeep, rowsIntoVoid);
+            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target, rowsToKeep, rowsIntoVoid);
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target);
+            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target);
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, predicate);
+            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, predicate);
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock, DisableLogging)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
     }
 
     public class MergeJoinTarget<TInput> : GenericTask, IDataFlowDestination<TInput>
@@ -95,6 +96,23 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public Task Completion => TargetBlock.Completion;
+
+        protected List<Task> PredecessorCompletions { get; set; } = new List<Task>();
+
+        public void AddPredecessorCompletion(Task completion)
+        {
+            PredecessorCompletions.Add(completion);
+            completion.ContinueWith(t => CheckCompleteAction());
+        }
+
+        protected void CheckCompleteAction()
+        {
+            Task.WhenAll(PredecessorCompletions).ContinueWith(t =>
+            {
+                if (t.IsFaulted) TargetBlock.Fault(t.Exception.InnerException);
+                else TargetBlock.Complete();
+            });
+        }
 
         public MergeJoinTarget(ITask parent, ITargetBlock<TInput> joinTarget)
         {
@@ -141,7 +159,7 @@ namespace ALE.ETLBox.DataFlow
         public MergeJoin(Func<string[], string[], string[]> mergeJoinFunc) : base(mergeJoinFunc)
         { }
 
-        public MergeJoin(string name,Func<string[], string[], string[]> mergeJoinFunc) : base(name, mergeJoinFunc)
+        public MergeJoin(string name, Func<string[], string[], string[]> mergeJoinFunc) : base(name, mergeJoinFunc)
         { }
     }
 }

@@ -168,8 +168,8 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (_row != null)
                 {
-                    LogProgress(1);
-                    Buffer.Post(_row);
+                    LogProgress();
+                    Buffer.SendAsync(_row).Wait();
                 }
             };
         }
@@ -192,7 +192,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!ErrorHandler.HasErrorBuffer) throw e;
                     _row = default(TOutput);
-                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
                 }
             });
             index++;
@@ -216,7 +216,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!ErrorHandler.HasErrorBuffer) throw e;
                     _row = default(TOutput);
-                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
                 }
             });
         }
@@ -237,7 +237,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!ErrorHandler.HasErrorBuffer) throw e;
                     _row = default(TOutput);
-                    ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
                 }
             });
         }

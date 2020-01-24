@@ -40,8 +40,8 @@ namespace ALE.ETLBox.DataFlow
             NLogStart();
             while (!ReadCompletedFunc.Invoke())
             {
-                Buffer.Post(ReadFunc.Invoke());
-                LogProgress(1);
+                Buffer.SendAsync(ReadFunc.Invoke()).Wait();
+                LogProgress();
             }
             Buffer.Complete();
             NLogFinish();

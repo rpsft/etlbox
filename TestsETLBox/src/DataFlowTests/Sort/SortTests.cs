@@ -22,10 +22,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
         }
 
-        public void Dispose()
-        {
-        }
-
         public class MySimpleRow
         {
             public int Col1 { get; set; }

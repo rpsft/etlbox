@@ -61,12 +61,12 @@ namespace ALE.ETLBox.DataFlow
             ConnectionManager = connectionManager;
         }
 
-        internal override void InitObjects(int batchSize)
+        protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
         }
 
-        internal override void WriteBatch(ref TInput[] data)
+        protected override void WriteBatch(ref TInput[] data)
         {
             if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
 
@@ -74,7 +74,7 @@ namespace ALE.ETLBox.DataFlow
 
             TryBulkInsertData(ref data);
 
-            LogProgress(data.Length);
+            LogProgressBatch(data.Length);
         }
 
         private void LoadTableDefinitionFromTableName()
@@ -99,7 +99,7 @@ namespace ALE.ETLBox.DataFlow
             catch (Exception e)
             {
                 if (!ErrorHandler.HasErrorBuffer) throw e;
-                ErrorHandler.Post(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
             }
         }
 

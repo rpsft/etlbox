@@ -9,7 +9,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask interface */
         public override string TaskName { get; set; }
-        public new void Execute()
+        public void Execute()
         {
             throw new Exception("A custom task can't be used without an Action!");
         }

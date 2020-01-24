@@ -87,7 +87,7 @@ namespace ALE.ETLBox.DataFlow
             while (CsvReader.Read())
             {
                 ReadLineAndSendIntoBuffer();
-                LogProgress(1);
+                LogProgress();
             }
         }
 
@@ -98,27 +98,27 @@ namespace ALE.ETLBox.DataFlow
                 if (TypeInfo.IsArray)
                 {
                     string[] line = CsvReader.Context.Record;
-                    Buffer.Post((TOutput)(object)line);
+                    Buffer.SendAsync((TOutput)(object)line).Wait();
                 }
                 else if (TypeInfo.IsDynamic)
                 {
                     TOutput bufferObject = CsvReader.GetRecord<dynamic>();
-                    Buffer.Post(bufferObject);
+                    Buffer.SendAsync(bufferObject).Wait();
                 }
                 else
                 {
                     TOutput bufferObject = CsvReader.GetRecord<TOutput>();
-                    Buffer.Post(bufferObject);
+                    Buffer.SendAsync(bufferObject).Wait();
                 }
             }
             catch (Exception e)
             {
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 if (e is CsvHelperException csvex)
-                    ErrorHandler.Post(e,
+                    ErrorHandler.Send(e,
                         $"Row: {csvex.ReadingContext?.Row} -- StartPos: {csvex.ReadingContext?.RawRecordStartPosition} -- RawRecord: {csvex.ReadingContext?.RawRecord ?? string.Empty}");
                 else
-                    ErrorHandler.Post(e, "N/A");
+                    ErrorHandler.Send(e, "N/A");
             }
         }
 

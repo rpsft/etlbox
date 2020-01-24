@@ -69,7 +69,7 @@ namespace ALE.ETLBox.ConnectionManager
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

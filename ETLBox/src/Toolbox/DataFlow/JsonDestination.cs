@@ -39,7 +39,7 @@ namespace ALE.ETLBox.DataFlow
             FileName = fileName;
         }
 
-        internal override void InitObjects(int batchSize)
+        protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
             JsonSerializer = new JsonSerializer()
@@ -49,7 +49,7 @@ namespace ALE.ETLBox.DataFlow
             };
         }
 
-        internal void InitJsonWriter()
+        protected void InitJsonWriter()
         {
             StreamWriter = new StreamWriter(FileName);
             JsonTextWriter = new JsonTextWriter(StreamWriter);
@@ -57,7 +57,7 @@ namespace ALE.ETLBox.DataFlow
             if (ErrorHandler.HasErrorBuffer)
                 JsonSerializer.Error += (sender, args) =>
                 {
-                    ErrorHandler.Post(args.ErrorContext.Error, ErrorHandler.ConvertErrorData(args.CurrentObject));
+                    ErrorHandler.Send(args.ErrorContext.Error, ErrorHandler.ConvertErrorData(args.CurrentObject));
                     args.ErrorContext.Handled = true;
                 };
             JsonTextWriter.WriteStartArray();
@@ -65,7 +65,7 @@ namespace ALE.ETLBox.DataFlow
 
         }
 
-        internal override void WriteBatch(ref TInput[] data)
+        protected override void WriteBatch(ref TInput[] data)
         {
             if (JsonTextWriter == null) InitJsonWriter();
             base.WriteBatch(ref data);
@@ -74,7 +74,7 @@ namespace ALE.ETLBox.DataFlow
                 if (record == null) continue;
                 JsonSerializer.Serialize(JsonTextWriter, record);
             }
-            LogProgress(data.Length);
+            LogProgressBatch(data.Length);
         }
 
         public void CloseStreams()

@@ -7,6 +7,7 @@ using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -73,6 +74,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
                    source.Execute();
                    dest.Wait();
                });
+
+            if (connection.GetType() == typeof(SQLiteConnectionManager))
+                Task.Delay(100).Wait(); //Database was locked and needs to recover after exception
         }
 
         private static void CreateSourceTable(IConnectionManager connection, string tableName)

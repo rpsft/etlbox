@@ -4,12 +4,10 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public abstract class DataFlowBatchDestination<TInput> : DataFlowTask, ITask
+    public abstract class DataFlowBatchDestination<TInput> : DataFlowDestination<TInput[]>, ITask, IDataFlowDestination<TInput>
     {
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
-        public Action OnCompletion { get; set; }
-        public Task Completion { get; private set; }
-        public ITargetBlock<TInput> TargetBlock => Buffer;
+        public new ITargetBlock<TInput> TargetBlock => Buffer;
 
         public int BatchSize
         {
@@ -20,75 +18,56 @@ namespace ALE.ETLBox.DataFlow
                 InitObjects(batchSize);
             }
         }
+
+        public new void AddPredecessorCompletion(Task completion)
+        {
+            PredecessorCompletions.Add(completion);
+            completion.ContinueWith(t => CheckCompleteAction());
+        }
+
+        protected new void CheckCompleteAction() {
+            Task.WhenAll(PredecessorCompletions).ContinueWith(t =>
+            {
+                if (!TargetBlock.Completion.IsCompleted)
+                {
+                    if (t.IsFaulted) TargetBlock.Fault(t.Exception.InnerException);
+                    else TargetBlock.Complete();
+                }
+            });
+        }
+
         private int batchSize;
 
-        internal Action CloseStreamsAction { get; set; }
-        internal BatchBlock<TInput> Buffer { get; set; }
-        internal ActionBlock<TInput[]> TargetAction { get; set; }
-        internal int ThresholdCount { get; set; } = 1;
+        protected Action CloseStreamsAction { get; set; }
+        protected BatchBlock<TInput> Buffer { get; set; }
         internal TypeInfo TypeInfo { get; set; }
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
-        internal virtual void InitObjects(int batchSize)
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
+            => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
+
+        protected virtual void InitObjects(int batchSize)
         {
             Buffer = new BatchBlock<TInput>(batchSize);
             TargetAction = new ActionBlock<TInput[]>(d => WriteBatch(ref d));
-            Completion = AwaitCompletion();
+            SetCompletionTask();
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
             TypeInfo = new TypeInfo(typeof(TInput));
         }
 
-        internal virtual void WriteBatch(ref TInput[] data)
+        protected virtual void WriteBatch(ref TInput[] data)
         {
             if (ProgressCount == 0) NLogStart();
             if (BeforeBatchWrite != null)
                 data = BeforeBatchWrite.Invoke(data);
         }
 
-        internal void NLogStart()
-        {
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        internal void NLogFinish()
-        {
-            if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(TaskName + $" processed {ProgressCount} records in total.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-            if (!DisableLogging)
-                NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-        }
-
-        internal void LogProgress(int rowsProcessed)
-        {
-            ProgressCount += rowsProcessed;
-            if (!DisableLogging && HasLoggingThresholdRows && ProgressCount >= (LoggingThresholdRows * ThresholdCount))
-            {
-                NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
-                ThresholdCount++;
-            }
-        }
-
-        public virtual void Wait()
-        {
-            Completion.Wait();
-        }
-
-        internal async Task AwaitCompletion()
-        {
-            await TargetAction.Completion.ConfigureAwait(false);
-            CleanUp();
-        }
-
-        private void CleanUp()
+        protected override void CleanUp()
         {
             CloseStreamsAction?.Invoke();
             OnCompletion?.Invoke();
             NLogFinish();
         }
-
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-            => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
 
     }
 }

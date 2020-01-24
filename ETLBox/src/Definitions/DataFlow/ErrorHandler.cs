@@ -20,15 +20,15 @@ namespace ALE.ETLBox.DataFlow
             completion.ContinueWith(t => ErrorBuffer.Complete());
         }
 
-        public void Post(Exception e, string jsonRow)
+        public void Send(Exception e, string jsonRow)
         {
-            ErrorBuffer.Post(new ETLBoxError()
+            ErrorBuffer.SendAsync(new ETLBoxError()
             {
                 Exception = e,
                 ErrorText = e.Message,
                 ReportTime = DateTime.Now,
                 RecordAsJson = jsonRow
-            });
+            }).Wait();
         }
 
         public static string ConvertErrorData<T>(T row)
