@@ -26,6 +26,9 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => _voidDestination.Wait();
+
+        public void AddPredecessorCompletion(Task completion) => _voidDestination.AddPredecessorCompletion(completion);
+
         public Task Completion => _voidDestination.Completion;
     }
 

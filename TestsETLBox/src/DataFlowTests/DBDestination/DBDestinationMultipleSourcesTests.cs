@@ -50,7 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source1.LinkTo(dest);
             source2.LinkTo(dest);
             source2.Execute();
-            //source1.Execute();
+            source1.Execute();
 
             dest.Wait();
 

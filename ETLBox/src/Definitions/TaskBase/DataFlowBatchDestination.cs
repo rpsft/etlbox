@@ -7,7 +7,7 @@ namespace ALE.ETLBox.DataFlow
     public abstract class DataFlowBatchDestination<TInput> : DataFlowDestination<TInput[]>, ITask, IDataFlowDestination<TInput>
     {
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
-        public ITargetBlock<TInput> TargetBlock => Buffer;
+        public new ITargetBlock<TInput> TargetBlock => Buffer;
 
         public int BatchSize
         {
@@ -17,6 +17,23 @@ namespace ALE.ETLBox.DataFlow
                 batchSize = value;
                 InitObjects(batchSize);
             }
+        }
+
+        public new void AddPredecessorCompletion(Task completion)
+        {
+            PredecessorCompletions.Add(completion);
+            completion.ContinueWith(t => CheckCompleteAction());
+        }
+
+        protected new void CheckCompleteAction() {
+            Task.WhenAll(PredecessorCompletions).ContinueWith(t =>
+            {
+                if (!TargetBlock.Completion.IsCompleted)
+                {
+                    if (t.IsFaulted) TargetBlock.Fault(t.Exception.InnerException);
+                    else TargetBlock.Complete();
+                }
+            });
         }
 
         private int batchSize;

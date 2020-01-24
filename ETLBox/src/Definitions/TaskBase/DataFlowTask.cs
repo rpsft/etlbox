@@ -26,7 +26,7 @@ namespace ALE.ETLBox
 
         protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         protected int ThresholdCount { get; set; } = 1;
-        protected List<Task> CompletionTasks { get; set; } = new List<Task>();
+
 
         protected void NLogStart()
         {

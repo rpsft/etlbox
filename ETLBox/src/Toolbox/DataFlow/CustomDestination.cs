@@ -14,7 +14,6 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName { get; set; } = $"Write data into custom target";
 
         /* Public properties */
-        public ITargetBlock<TInput> TargetBlock => TargetAction;
         public Action<TInput> WriteAction
         {
             get

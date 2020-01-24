@@ -75,7 +75,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.Execute();
             dest.Wait();
 
-            int i;
             //Assert
             //            IntCol LongCol DecimalCol DoubleCol   DateTimeCol DateCol StringCol CharCol DecimalStringCol NullCol
             //1 - 1  2.3 5.4 2010 - 01 - 01 10:10:10.100 2020 - 01 - 01  Test T   13.4566000000   NULL
