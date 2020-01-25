@@ -17,8 +17,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
         public AddFileGroupTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
-        public string DBName => Config.SqlConnectionString("ControlFlow").DBName;
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("ControlFlow");
+        public string DBName => Config.SqlConnection.ConnectionString("ControlFlow").DBName;
 
         [Fact]
         public void AddFileGroup()

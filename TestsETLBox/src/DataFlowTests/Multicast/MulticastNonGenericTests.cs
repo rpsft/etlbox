@@ -14,14 +14,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class MulticastNonGenericTests : IDisposable
+    public class MulticastNonGenericTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public MulticastNonGenericTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 

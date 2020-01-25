@@ -25,11 +25,6 @@ namespace ALE.ETLBox.Helper
 
         }
 
-        public static ConnectionString SqlConnectionString(string section)
-            => SqlConnection.ConnectionString(section);
-        public static SqlConnectionManager SqlConnectionManager(string section)
-            => SqlConnection.ConnectionManager(section);
-
         public static ConnectionDetails<ConnectionString, SqlConnectionManager> SqlConnection
         { get; set; } = new ConnectionDetails<ConnectionString, SqlConnectionManager>("SqlConnectionString");
 

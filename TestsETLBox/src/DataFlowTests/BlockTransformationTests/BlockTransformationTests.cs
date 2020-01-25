@@ -15,14 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class BlockTransformationTests : IDisposable
+    public class BlockTransformationTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public BlockTransformationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 

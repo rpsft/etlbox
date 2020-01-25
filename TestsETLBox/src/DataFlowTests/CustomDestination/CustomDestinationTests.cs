@@ -16,7 +16,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class CustomDestinationTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("DataFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public CustomDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }

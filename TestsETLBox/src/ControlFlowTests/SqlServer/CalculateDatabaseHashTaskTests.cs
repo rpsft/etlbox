@@ -14,7 +14,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
     [Collection("ControlFlow")]
     public class CalculateDatabaseHashTaskTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("ControlFlow");
         public CalculateDatabaseHashTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 

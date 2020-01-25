@@ -13,7 +13,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class RowCountTaskTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("ControlFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
         public RowCountTaskTests(ControlFlowDatabaseFixture dbFixture)

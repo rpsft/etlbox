@@ -14,7 +14,7 @@ namespace ALE.ETLBoxTests.Logging
     [Collection("Logging")]
     public class DefaultDbConnectionTests : IDisposable
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnectionManager("Logging");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
 
         public DefaultDbConnectionTests(LoggingDatabaseFixture dbFixture)
         {

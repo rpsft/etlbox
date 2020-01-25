@@ -14,7 +14,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class SqlTaskInParallelTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnectionManager("ControlFlow");
+        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("ControlFlow");
         public SqlTaskInParallelTests(ControlFlowDatabaseFixture dbFixture)
         {
             CreateTableTask.Create(Connection, "FastParallel",

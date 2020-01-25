@@ -12,7 +12,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class DropDatabaseTaskTests
     {
-        public SqlConnectionManager MasterConnection => new SqlConnectionManager(Config.SqlConnectionString("ControlFlow").GetMasterConnection());
+        public SqlConnectionManager MasterConnection => new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection());
         public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
                     new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
                     new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").GetMasterConnection()) },

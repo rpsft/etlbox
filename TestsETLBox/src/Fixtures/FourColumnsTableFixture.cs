@@ -13,7 +13,7 @@ namespace ALE.ETLBoxTests.Fixtures
 {
     public class FourColumnsTableFixture
     {
-        public IConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
+        public IConnectionManager Connection { get; set; } = Config.SqlConnection.ConnectionManager("DataFlow");
         public bool IsSQLiteConnection => this.Connection.GetType() == typeof(SQLiteConnectionManager);
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }

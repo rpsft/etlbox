@@ -11,7 +11,7 @@ namespace ALE.ETLBoxTests.Fixtures
 {
     public class TwoColumnsDeltaTableFixture
     {
-        public IConnectionManager Connection { get; set; } = Config.SqlConnectionManager("DataFlow");
+        public IConnectionManager Connection { get; set; } = Config.SqlConnection.ConnectionManager("DataFlow");
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
         public TwoColumnsDeltaTableFixture(string tableName)

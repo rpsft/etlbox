@@ -15,18 +15,15 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow Source and Destination")]
-    public class UpdateOnHashMatchTests : IDisposable
+    public class UpdateOnHashMatchTests
     {
-        public SqlConnectionManager ConnectionSource => Config.SqlConnectionManager("DataFlowSource");
-        public SqlConnectionManager ConnectionDestination => Config.SqlConnectionManager("DataFlowDestination");
+        public SqlConnectionManager ConnectionSource => Config.SqlConnection.ConnectionManager("DataFlowSource");
+        public SqlConnectionManager ConnectionDestination => Config.SqlConnection.ConnectionManager("DataFlowDestination");
 
         public UpdateOnHashMatchTests(DatabaseSourceDestinationFixture dbFixture)
         {
         }
 
-        public void Dispose()
-        {
-        }
 
         private void CreateSourceTable(string tableName)
         {
