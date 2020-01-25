@@ -13,6 +13,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected ActionBlock<TInput> TargetAction { get; set; }
         protected List<Task> PredecessorCompletions { get; set; } = new List<Task>();
+        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public virtual void Wait() => Completion.Wait();
 
@@ -21,6 +22,9 @@ namespace ALE.ETLBox.DataFlow
             PredecessorCompletions.Add(completion);
             completion.ContinueWith(t => CheckCompleteAction());
         }
+
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
+    => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
 
         protected void CheckCompleteAction()
         {

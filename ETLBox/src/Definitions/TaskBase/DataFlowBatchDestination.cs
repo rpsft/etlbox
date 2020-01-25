@@ -41,10 +41,7 @@ namespace ALE.ETLBox.DataFlow
         protected Action CloseStreamsAction { get; set; }
         protected BatchBlock<TInput> Buffer { get; set; }
         internal TypeInfo TypeInfo { get; set; }
-        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-            => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
 
         protected virtual void InitObjects(int batchSize)
         {

@@ -51,17 +51,25 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitObjects()
         {
-            TargetAction = new ActionBlock<TInput>(AddLogging(_writeAction));
+            TargetAction = new ActionBlock<TInput>(AddLoggingAndErrorHandling(_writeAction));
             SetCompletionTask();
         }
 
-        private Action<TInput> AddLogging(Action<TInput> writeAction)
+        private Action<TInput> AddLoggingAndErrorHandling(Action<TInput> writeAction)
         {
             return new Action<TInput>(
                 input =>
                 {
                     if (ProgressCount == 0) NLogStart();
-                    writeAction.Invoke(input);
+                    try
+                    {
+                        writeAction.Invoke(input);
+                    }
+                    catch (Exception e)
+                    {
+                        if (!ErrorHandler.HasErrorBuffer) throw e;
+                        ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(input));
+                    }
                     LogProgress();
                 });
         }
