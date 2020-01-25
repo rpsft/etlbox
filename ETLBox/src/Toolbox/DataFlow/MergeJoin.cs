@@ -84,6 +84,9 @@ namespace ALE.ETLBox.DataFlow
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
             => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+            Transformation.LinkErrorTo(target);
     }
 
     public class MergeJoinTarget<TInput> : GenericTask, IDataFlowDestination<TInput>

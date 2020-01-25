@@ -86,9 +86,8 @@ namespace ALE.ETLBox.DataFlow
         {
             try
             {
-                Task source = Source.ExecuteAsync();
-                Task dest = LookupBuffer.Completion;
-                Task.WhenAll(source, dest).Wait();
+                Source.Execute();
+                LookupBuffer.Completion.Wait();
             }
             catch (Exception e)
             {
@@ -101,6 +100,12 @@ namespace ALE.ETLBox.DataFlow
             if (LookupList == null) LookupList = new List<TSourceOutput>();
             LookupList.Add(sourceRow);
         }
+
+        public void LinkLookupSourceErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+            Source.LinkErrorTo(target);
+
+        public void LinkLookupTransformationErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+            RowTransformation.LinkErrorTo(target);
     }
 
     /// <summary>
