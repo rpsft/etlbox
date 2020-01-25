@@ -13,10 +13,12 @@ namespace ALE.ETLBox.DataFlow
         internal BufferBlock<ETLBoxError> ErrorBuffer { get; set; }
         internal bool HasErrorBuffer => ErrorBuffer != null;
 
+
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target, Task completion)
         {
             ErrorBuffer = new BufferBlock<ETLBoxError>();
-            ErrorSourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            ErrorSourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions());
+            target.AddPredecessorCompletion(ErrorSourceBlock.Completion);
             completion.ContinueWith(t => ErrorBuffer.Complete());
         }
 
