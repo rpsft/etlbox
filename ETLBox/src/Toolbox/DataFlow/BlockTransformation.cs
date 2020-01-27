@@ -23,7 +23,7 @@ namespace ALE.ETLBox.DataFlow
     public class BlockTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Block Transformation";
+        public override string TaskName { get; set; } = "Excecute block transformation";
 
         /* Public Properties */
         public Func<List<TInput>, List<TOutput>> BlockTransformationFunc
@@ -69,7 +69,7 @@ namespace ALE.ETLBox.DataFlow
             this.TaskName = name;
         }
 
-        public BlockTransformation(ITask task, Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this(blockTransformationFunc)
+        internal BlockTransformation(ITask task, Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this(blockTransformationFunc)
         {
             CopyTaskProperties(task);
         }
@@ -109,8 +109,6 @@ namespace ALE.ETLBox.DataFlow
         public BlockTransformation(string name, Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(name, blockTransformationFunc)
         { }
 
-        public BlockTransformation(ITask task, Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(task, blockTransformationFunc)
-        { }
     }
 
     /// <summary>
@@ -126,8 +124,6 @@ namespace ALE.ETLBox.DataFlow
         public BlockTransformation(string name, Func<List<string[]>, List<string[]>> blockTransformationFunc) : base(name, blockTransformationFunc)
         { }
 
-        public BlockTransformation(ITask task, Func<List<string[]>, List<string[]>> blockTransformationFunc) : base(task, blockTransformationFunc)
-        { }
     }
 
 }

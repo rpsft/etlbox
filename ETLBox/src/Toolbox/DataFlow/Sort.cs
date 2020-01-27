@@ -30,7 +30,7 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _sortFunction = value;
-                BlockTransformation = new BlockTransformation<TInput>(this, SortByFunc);
+                BlockTransformation = new BlockTransformation<TInput, TInput>(this, SortByFunc);
             }
         }
 
@@ -39,7 +39,7 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         Comparison<TInput> _sortFunction;
-        BlockTransformation<TInput> BlockTransformation { get; set; }
+        BlockTransformation<TInput, TInput> BlockTransformation { get; set; }
         public Sort()
         {
             NLogger = NLog.LogManager.GetLogger("ETL");

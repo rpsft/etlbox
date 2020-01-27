@@ -23,25 +23,25 @@ namespace ALE.ETLBox.DataFlow
     public class RowTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Row Transformation";
+        public override string TaskName { get; set; } = "Execute row transformation";
 
         /* Public Properties */
-        public Func<TInput, TOutput> RowTransformationFunc
+        public Func<TInput, TOutput> TransformationFunc
         {
             get
             {
-                return _rowTransformationFunc;
+                return _transformationFunc;
             }
 
             set
             {
-                _rowTransformationFunc = value;
+                _transformationFunc = value;
                 TransformBlock = new TransformBlock<TInput, TOutput>(
                     row =>
                     {
                         try
                         {
-                            return InvokeRowTransformationFunc(row);
+                            return WrapTransformation(row);
                         }
                         catch (Exception e)
                         {
@@ -60,7 +60,7 @@ namespace ALE.ETLBox.DataFlow
         public override ISourceBlock<TOutput> SourceBlock => TransformBlock;
 
         /* Private stuff */
-        Func<TInput, TOutput> _rowTransformationFunc;
+        Func<TInput, TOutput> _transformationFunc;
         internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
@@ -70,7 +70,7 @@ namespace ALE.ETLBox.DataFlow
 
         public RowTransformation(Func<TInput, TOutput> rowTransformationFunc) : this()
         {
-            RowTransformationFunc = rowTransformationFunc;
+            TransformationFunc = rowTransformationFunc;
         }
 
         public RowTransformation(string name, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
@@ -84,12 +84,12 @@ namespace ALE.ETLBox.DataFlow
             this.InitAction = initAction;
         }
 
-        public RowTransformation(ITask task) : this()
+        internal RowTransformation(ITask task) : this()
         {
             CopyTaskProperties(task);
         }
 
-        public RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
+        internal RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
         {
             CopyTaskProperties(task);
         }
@@ -98,7 +98,7 @@ namespace ALE.ETLBox.DataFlow
             => ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
 
-        private TOutput InvokeRowTransformationFunc(TInput row)
+        private TOutput WrapTransformation(TInput row)
         {
             if (!WasInitialized)
             {
@@ -108,7 +108,7 @@ namespace ALE.ETLBox.DataFlow
                     NLogger.Debug(TaskName + " was initialized!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
             }
             LogProgress();
-            return RowTransformationFunc.Invoke(row);
+            return TransformationFunc.Invoke(row);
         }
     }
 
@@ -133,9 +133,7 @@ namespace ALE.ETLBox.DataFlow
         public RowTransformation(Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc) { }
         public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc) : base(name, rowTransformationFunc) { }
         public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
-        public RowTransformation(ITask task) : base(task) { }
-        public RowTransformation(ITask task, Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc) { }
-    }
+   }
 
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
@@ -160,9 +158,5 @@ namespace ALE.ETLBox.DataFlow
         public RowTransformation(Func<string[], string[]> rowTransformationFunc) : base(rowTransformationFunc) { }
         public RowTransformation(string name, Func<string[], string[]> rowTransformationFunc) : base(name, rowTransformationFunc) { }
         public RowTransformation(string name, Func<string[], string[]> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
-        public RowTransformation(ITask task) : base(task)
-        { }
-        public RowTransformation(ITask task, Func<string[], string[]> rowTransformationFunc) : base(rowTransformationFunc)
-        { }
     }
 }

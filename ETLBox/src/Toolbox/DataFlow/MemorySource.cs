@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => $"Read data from memory";
 
         /* Public properties */
-        public List<TOutput> Data { get; set; }
+        public IList<TOutput> Data { get; set; }
 
         /* Private stuff */
 
