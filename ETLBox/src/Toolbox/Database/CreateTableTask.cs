@@ -23,6 +23,7 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Create table {TableName}";
         public void Execute()
         {
+            CheckTableDefinition();
             bool tableExists = new IfTableOrViewExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (tableExists && ThrowErrorIfTableExists) throw new ETLBoxException($"Table {TableName} already exists!");
             if (!tableExists)
@@ -74,6 +75,18 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
 
         string ColumnsDefinitionSql
             => String.Join("  , " + Environment.NewLine, Columns?.Select(col => CreateTableDefinition(col)));
+
+        private void CheckTableDefinition()
+        {
+            if (string.IsNullOrEmpty(TableName))
+                throw new ETLBoxException("No table name was provided - can not create or alter the table.");
+            if (Columns == null || Columns.Count == 0)
+                throw new ETLBoxException("You did not provide any columns for the table - please define at least one table column.");
+            if (Columns.Any(col => string.IsNullOrEmpty(col.Name)))
+                throw new ETLBoxException("One of the provided columns is either null or empty - can't create table.");
+            if (Columns.Any(col => string.IsNullOrEmpty(col.DataType)))
+                throw new ETLBoxException("One of the provided columns has a datatype that is either null or empty - can't create table.");
+        }
 
         string PrimaryKeySql => CreatePrimaryKeyConstraint();
         string CreateTableDefinition(ITableColumn col)

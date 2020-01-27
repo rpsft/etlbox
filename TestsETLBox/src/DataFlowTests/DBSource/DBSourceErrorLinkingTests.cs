@@ -32,6 +32,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void RedirectErrorWithObject(IConnectionManager connection)
         {
+            if (connection.GetType() == typeof(SQLiteConnectionManager))
+                Task.Delay(100).Wait(); //Database was locked and needs to recover after exception
+
             //Arrange
             CreateSourceTable(connection, "DBSourceErrorLinking");
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationErrorLinking");
@@ -74,9 +77,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
                    source.Execute();
                    dest.Wait();
                });
-
-            if (connection.GetType() == typeof(SQLiteConnectionManager))
-                Task.Delay(100).Wait(); //Database was locked and needs to recover after exception
         }
 
         private static void CreateSourceTable(IConnectionManager connection, string tableName)
