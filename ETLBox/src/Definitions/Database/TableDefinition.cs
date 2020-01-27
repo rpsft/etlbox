@@ -83,7 +83,11 @@ SELECT  cols.name
      , cols.collation_name
      , compCol.definition AS computed_column_definition
 FROM sys.columns cols
-INNER JOIN sys.tables tbl
+INNER JOIN (
+    SELECT name, type, object_id, schema_id FROM sys.tables 
+    UNION 
+    SELECT  name, type, object_id, schema_id FROM sys.views
+    ) tbl
     ON cols.object_id = tbl.object_id
 INNER JOIN sys.schemas sc
     ON tbl.schema_id = sc.schema_id
@@ -104,7 +108,7 @@ LEFT JOIN sys.default_constraints defconstr
 LEFT JOIN sys.computed_columns compCol
     ON compCol.object_id = cols.object_id
 WHERE ( CONCAt (sc.name,'.',tbl.name) ='{TN.UnquotatedFullName}' OR  tbl.name = '{TN.UnquotatedFullName}' )
-    AND tbl.type = 'U'
+    AND tbl.type IN ('U','V')
     AND tpes.name <> 'sysname'
 ORDER BY cols.column_id
 "

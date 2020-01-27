@@ -22,7 +22,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MySimpleRow
         {
-            public long Col1 { get; set; }
+            public int Col1 { get; set; }
             public string Col2 { get; set; }
         }
 
@@ -47,25 +47,32 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
+        public class MyExtendedRow
+        {
+            public string Col2 { get; set; }
+            public long? Col3 { get; set; }
+            public double Col4 { get; set; }
+        }
+
         [Theory, MemberData(nameof(Connections))]
         public void DifferentColumnsInView(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "dbsource_extended");
-            source4Columns.InsertTestData();
-            CreateViewTask.CreateOrAlter(connection, "DBSourceViewExtended", "SELECT Col2, Col3 FROM dbsource_simple");
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "DBDestinationExtended");
+            FourColumnsTableFixture s4c = new FourColumnsTableFixture(connection, "dbsource_extended");
+            s4c.InsertTestData();
+            CreateViewTask.CreateOrAlter(connection, "DBSourceViewExtended", $"SELECT {s4c.QB}Col2{s4c.QE}, {s4c.QB}Col4{s4c.QE} FROM dbsource_extended");
+            FourColumnsTableFixture d4c = new FourColumnsTableFixture(connection, "DBDestinationExtended", 1);
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBSourceViewExtended");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBDestinationExtended");
+            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(connection, "DBSourceViewExtended");
+            DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(connection, "DBDestinationExtended");
 
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            dest4Columns.AssertTestData();
+            d4c.AssertTestData();
         }
     }
 }

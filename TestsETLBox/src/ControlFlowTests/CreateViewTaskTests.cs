@@ -25,9 +25,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             //Act
-            CreateViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS Test");
+            CreateViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS test");
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View1"));
+            var td = TableDefinition.GetDefinitionFromTableName("View1", connection);
+            Assert.Contains(td.Columns, col => col.Name == "test");
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -38,7 +40,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View2"));
 
             //Act
-            CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 5 AS Test");
+            CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 5 AS test");
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View2"));
