@@ -41,7 +41,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             List<string[]> lookupList = new List<string[]>();
 
             DBSource lookupSource = new DBSource(connection, "LookupNonGeneric");
-            Lookup lookup = new Lookup(
+            LookupTransformation lookup = new LookupTransformation(
                 row =>
                 {
                     Array.Resize(ref row, 4);

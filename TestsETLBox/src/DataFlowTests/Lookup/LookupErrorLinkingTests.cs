@@ -55,7 +55,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.ThrowsAny<Exception>(() =>
             {
                 List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
-                Lookup<MyInputDataRow, MyInputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyInputDataRow, MyLookupRow>(
+                LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<MyInputDataRow, MyLookupRow>(
                     row =>
                     {
                         row.Col2 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue).FirstOrDefault();
@@ -91,7 +91,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
-            Lookup<MyInputDataRow, MyInputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyInputDataRow, MyLookupRow>(
+            LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<MyInputDataRow, MyLookupRow>(
                 row =>
                 {
                     row.Col2 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue).FirstOrDefault();

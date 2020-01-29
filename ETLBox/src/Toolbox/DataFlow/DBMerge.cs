@@ -49,7 +49,7 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         bool _useTruncateMethod;
-        Lookup<TInput, TInput, TInput> Lookup { get; set; }
+        LookupTransformation<TInput, TInput> Lookup { get; set; }
         DBSource<TInput> DestinationTableAsSource { get; set; }
         DBDestination<TInput> DestinationTable { get; set; }
         List<TInput> InputData { get; set; } = new List<TInput>();
@@ -101,7 +101,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitInternalFlow()
         {
-            Lookup = new Lookup<TInput, TInput, TInput>(
+            Lookup = new LookupTransformation<TInput, TInput>(
                 row => UpdateRowWithDeltaInfo(row),
                 DestinationTableAsSource,
                 InputData

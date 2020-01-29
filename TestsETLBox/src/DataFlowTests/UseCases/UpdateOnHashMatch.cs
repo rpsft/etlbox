@@ -78,7 +78,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             List<string[]> allEntriesInDestination = new List<string[]>();
-            Lookup lookup = new Lookup(
+            LookupTransformation lookup = new LookupTransformation(
                 row =>
                 {
                     var matchingIdEntry = allEntriesInDestination.Where(destRow => destRow[0] == row[0]).FirstOrDefault();
