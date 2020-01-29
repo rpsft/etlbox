@@ -8,7 +8,7 @@ This method accepts a target, which either is another transformation or a destin
 
 Example of Linking a `DBSource` to a `RowTransformation` and the to a `DBDestination`.
 
-```
+```C#
 //Create the components
 DBSource source = new DBSource("SourceTable");
 RowTransformation rowTrans = new RowTransformation( row => row );
@@ -23,6 +23,7 @@ This will result in a flow which looks like this:
 
 DBSource --> RowTransformation --> DBDestination
 
+
 ### Fluent notation
 
 There is also a chained notation available, which give you the same result:
@@ -32,9 +33,18 @@ There is also a chained notation available, which give you the same result:
 source.LinkTo(row).LinkTo(dest);
 ```
 
-This notation can be used most of the time - please note that it won't work with `Multicast` or `MergeJoin`. 
+This notation can be used most of the time - please note that it won't work with `Multicast` or `MergeJoin` as these
+components have more than one input respective output.
 
-## Predicates 
+If your transformation has a different output type than your input, you need to adjust the linking a little bit. The LinkTo
+accepts a type that defines the output of the linking. 
+E.g. if you have a `RowTransformation<InputType, OutputType> row`, the linking would look like this:
+
+```C#
+source.LinkTo<OutputType>(row).LinkTo(dest)
+```
+
+## Predicates
 
 Whenever you link components in a dataflow, you can add a filter expression to the link -
 this is called a predicate for the link.
@@ -82,6 +92,55 @@ source.LinkTo(dest, row => row.Value > 0,  row => row.Value <= 0);
 Internally, this will create a `VoidDestination` when linking the components, but you don't have to deal with anymore.
 At the end, only records where the Value column is greater 0 will be written into the destination.
 
+## Linking errors
+
+By default, exception won't be handled within you dataflow components. Whenever within a source, transformation or 
+a destination an error occurs, this exception will be thrown in your user code. You can use the normal try/catch block to handle
+these exceptions.
+
+If you want to handle exceptions within your dataflow, some components offer the ability to redirect errors.
+Beside the normal `LinkTo` method, you can use the  `LinkErrorTo` to redirect erroronous records into a separate pipeline.
+
+Here an example for a database source, where error records are linked into a MemoryDestination:
+
+```C#
+DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "SourceTable");
+DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationTable");
+MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+source.LinkTo(dest);
+source.LinkErrorTo(errorDest);
+source.Execute();
+dest.Wait();
+errorDest.Wait();
+```
+
+`LinkErrorTo` only accepts transformations or destinations that have the input type `ETLBoxError`. It will contain
+the exception itself and an exception message, the time the error occured, and the faulted record as json (if it was
+possible to connvert it).
+
+ETLBoxError is defined like this:
+
+```C#
+public class ETLBoxError
+{
+    public string ErrorText { get; set; }
+    public DateTime ReportTime { get; set; }
+    public Exception Exception { get; set; }
+    public string RecordAsJson { get; set; }
+}
+```
+
+### CreateErrorTableTask
+
+If you want to store your exception in a table in a database, ETLBox offers you a task that will automatically 
+create this table for you.
+
+```C#
+CreateErrorTableTask.Create(connection, "etlbox_error");
+```
+
+The table will have three columns: ErrorText, RecordAsJson and ReportTime (with the right data type). Of course you can 
+create you own table.
 
 ## Synchronous Execution
 
@@ -122,7 +181,7 @@ in separate task(s) in the background.
 
 ### Example async execution
 
-```
+```C#
 DBSource source = new DBSource("SourceTable");
 RowTransformation rowTrans = new RowTransformation( row => row );
 DBDestination dest = new DBDestination("DestTable");
@@ -130,7 +189,7 @@ DBDestination dest = new DBDestination("DestTable");
 source.LinkTo(row).LinkTo(dest);
 
 Task sourceTask = source.ExecuteAsync();
-Task destTask = dest.Completion();
+Task destTask = dest.Completion;
 try
 {
     sourceTask.Wait();
@@ -142,6 +201,5 @@ try
 ```
 
 The `ExecuteAsync()` method will return a Task which completes when all data is read from the source and posted in the dataflow.
-The `Completion()` method will return a Task which completes when all data has arrived at the destination.
-
+The `Completion` property will return a Task which completes when all data has arrived at the destination.
 
