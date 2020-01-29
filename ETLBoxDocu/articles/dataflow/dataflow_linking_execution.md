@@ -23,7 +23,6 @@ This will result in a flow which looks like this:
 
 DBSource --> RowTransformation --> DBDestination
 
-
 ### Fluent notation
 
 There is also a chained notation available, which give you the same result:
@@ -141,6 +140,27 @@ CreateErrorTableTask.Create(connection, "etlbox_error");
 
 The table will have three columns: ErrorText, RecordAsJson and ReportTime (with the right data type). Of course you can 
 create you own table.
+
+## Multiple inputs
+
+There is no restriction on the amount of inputs that a destination or transformation can have. Instead of having
+only single source, you can have multiple source for every component that can be linked.
+
+E.g. this is possible graph for you dataflow:
+
+```
+DBSource1 ---> RowTransformation1 -|
+DBSource2 -|-> RowTransformation2 -|-> DBDestination
+CSVSource -|
+```
+
+In this example graph, RowTransformation2 has two inputs: DBSource2 & CSVSource. Also, DBDestination has two inputs:
+RowTransformation1 & RowTransformation2. The DBDestination will complete when data from all sources 
+(DBSource1, DBSource2, CSVSource) was written into the data flow and arrived at the DBDestination. 
+
+*Note*: When you want to merge you data of multiple source before any further processing, consider using the 
+`MergeJoin`. If you want to split your data, you can use the `Multicast`. 
+[Read more about these transformations here.](dataflow_transformations.md)
 
 ## Synchronous Execution
 

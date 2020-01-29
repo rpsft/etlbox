@@ -91,9 +91,10 @@ is execution and the result posted into the targets.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html">BlockTransformation</a>&lt;TInput, TInput&gt;</div>
-    <div class="level4"><span class="xref">BlockTransformation&lt;TInput&gt;</span></div>
-      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation.html">BlockTransformation</a></div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;TInput, TInput&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html">BlockTransformation</a>&lt;TInput, TInput&gt;</div>
+    <div class="level5"><span class="xref">BlockTransformation&lt;TInput&gt;</span></div>
+      <div class="level6"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation.html">BlockTransformation</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -117,22 +118,37 @@ is execution and the result posted into the targets.</p>
       <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_TargetBlock">BlockTransformation&lt;TInput, TInput&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">BlockTransformation&lt;TInput, TInput&gt;.LinkTo(IDataFlowLinkTarget&lt;TInput&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_TargetBlock">DataFlowTransformation&lt;TInput, TInput&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">BlockTransformation&lt;TInput, TInput&gt;.LinkTo(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_SourceBlock">DataFlowTransformation&lt;TInput, TInput&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">BlockTransformation&lt;TInput, TInput&gt;.LinkTo(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions">DataFlowTransformation&lt;TInput, TInput&gt;.PredecessorCompletions</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">BlockTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowTransformation&lt;TInput, TInput&gt;.AddPredecessorCompletion(Task)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">BlockTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction">DataFlowTransformation&lt;TInput, TInput&gt;.CheckCompleteAction()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">BlockTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo(IDataFlowLinkTarget&lt;TInput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -145,6 +161,21 @@ is execution and the result posted into the targets.</p>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_HasLoggingThresholdRows">DataFlowTask.HasLoggingThresholdRows</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_ThresholdCount">DataFlowTask.ThresholdCount</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogStart">DataFlowTask.NLogStart()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogFinish">DataFlowTask.NLogFinish()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgressBatch_System_Int32_">DataFlowTask.LogProgressBatch(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgress">DataFlowTask.LogProgress()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
@@ -234,47 +265,10 @@ block.LinkTo(dest);</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_ALE_ETLBox_ITask_System_Func_System_Collections_Generic_List__0__System_Collections_Generic_List__0___.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.BlockTransformation%601.%23ctor(ALE.ETLBox.ITask%2CSystem.Func%7BSystem.Collections.Generic.List%7B%600%7D%2CSystem.Collections.Generic.List%7B%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L159">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_" data-uid="ALE.ETLBox.DataFlow.BlockTransformation`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_ALE_ETLBox_ITask_System_Func_System_Collections_Generic_List__0__System_Collections_Generic_List__0___" data-uid="ALE.ETLBox.DataFlow.BlockTransformation`1.#ctor(ALE.ETLBox.ITask,System.Func{System.Collections.Generic.List{`0},System.Collections.Generic.List{`0}})">BlockTransformation(ITask, Func&lt;List&lt;TInput&gt;, List&lt;TInput&gt;&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BlockTransformation(ITask task, Func&lt;List&lt;TInput&gt;, List&lt;TInput&gt;&gt; blockTransformationFunc)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></td>
-        <td><span class="parametername">task</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;TInput&gt;, <span class="xref">System.Collections.Generic.List</span>&lt;TInput&gt;&gt;</td>
-        <td><span class="parametername">blockTransformationFunc</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_System_Func_System_Collections_Generic_List__0__System_Collections_Generic_List__0___.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.BlockTransformation%601.%23ctor(System.Func%7BSystem.Collections.Generic.List%7B%600%7D%2CSystem.Collections.Generic.List%7B%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L153">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L106">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_" data-uid="ALE.ETLBox.DataFlow.BlockTransformation`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_System_Func_System_Collections_Generic_List__0__System_Collections_Generic_List__0___" data-uid="ALE.ETLBox.DataFlow.BlockTransformation`1.#ctor(System.Func{System.Collections.Generic.List{`0},System.Collections.Generic.List{`0}})">BlockTransformation(Func&lt;List&lt;TInput&gt;, List&lt;TInput&gt;&gt;)</h4>
@@ -306,7 +300,7 @@ block.LinkTo(dest);</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_System_String_System_Func_System_Collections_Generic_List__0__System_Collections_Generic_List__0___.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.BlockTransformation%601.%23ctor(System.String%2CSystem.Func%7BSystem.Collections.Generic.List%7B%600%7D%2CSystem.Collections.Generic.List%7B%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L156">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L109">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_" data-uid="ALE.ETLBox.DataFlow.BlockTransformation`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_BlockTransformation_1__ctor_System_String_System_Func_System_Collections_Generic_List__0__System_Collections_Generic_List__0___" data-uid="ALE.ETLBox.DataFlow.BlockTransformation`1.#ctor(System.String,System.Func{System.Collections.Generic.List{`0},System.Collections.Generic.List{`0}})">BlockTransformation(String, Func&lt;List&lt;TInput&gt;, List&lt;TInput&gt;&gt;)</h4>
@@ -362,7 +356,7 @@ block.LinkTo(dest);</code></pre>
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_BlockTransformation_1.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.BlockTransformation%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L151" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/BlockTransformation.cs/#L104" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

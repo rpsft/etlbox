@@ -83,7 +83,7 @@
 The linking is quite easy - every source component and every transformation offers a LinkTo() method.
 This method accepts a target, which either is another transformation or a destination.</p>
 <p>Example of Linking a <code>DBSource</code> to a <code>RowTransformation</code> and the to a <code>DBDestination</code>.</p>
-<pre><code>//Create the components
+<pre><code class="lang-C#">//Create the components
 DBSource source = new DBSource(&quot;SourceTable&quot;);
 RowTransformation rowTrans = new RowTransformation( row =&gt; row );
 DBDestination dest = new DBDestination(&quot;DestTable&quot;);
@@ -99,7 +99,13 @@ row.LinkTo(dest);
 <pre><code class="lang-C#">//Link the components
 source.LinkTo(row).LinkTo(dest);
 </code></pre>
-<p>This notation can be used most of the time - please note that it won't work with <code>Multicast</code> or <code>MergeJoin</code>.</p>
+<p>This notation can be used most of the time - please note that it won't work with <code>Multicast</code> or <code>MergeJoin</code> as these
+components have more than one input respective output.</p>
+<p>If your transformation has a different output type than your input, you need to adjust the linking a little bit. The LinkTo
+accepts a type that defines the output of the linking.
+E.g. if you have a <code>RowTransformation&lt;InputType, OutputType&gt; row</code>, the linking would look like this:</p>
+<pre><code class="lang-C#">source.LinkTo&lt;OutputType&gt;(row).LinkTo(dest)
+</code></pre>
 <h2 id="predicates">Predicates</h2>
 <p>Whenever you link components in a dataflow, you can add a filter expression to the link -
 this is called a predicate for the link.
@@ -133,6 +139,55 @@ the example above. But there is a short way to write it:</p>
 </code></pre>
 <p>Internally, this will create a <code>VoidDestination</code> when linking the components, but you don't have to deal with anymore.
 At the end, only records where the Value column is greater 0 will be written into the destination.</p>
+<h2 id="linking-errors">Linking errors</h2>
+<p>By default, exception won't be handled within you dataflow components. Whenever within a source, transformation or
+a destination an error occurs, this exception will be thrown in your user code. You can use the normal try/catch block to handle
+these exceptions.</p>
+<p>If you want to handle exceptions within your dataflow, some components offer the ability to redirect errors.
+Beside the normal <code>LinkTo</code> method, you can use the  <code>LinkErrorTo</code> to redirect erroronous records into a separate pipeline.</p>
+<p>Here an example for a database source, where error records are linked into a MemoryDestination:</p>
+<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(connection, &quot;SourceTable&quot;);
+DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(connection, &quot;DestinationTable&quot;);
+MemoryDestination&lt;ETLBoxError&gt; errorDest = new MemoryDestination&lt;ETLBoxError&gt;();
+source.LinkTo(dest);
+source.LinkErrorTo(errorDest);
+source.Execute();
+dest.Wait();
+errorDest.Wait();
+</code></pre>
+<p><code>LinkErrorTo</code> only accepts transformations or destinations that have the input type <code>ETLBoxError</code>. It will contain
+the exception itself and an exception message, the time the error occured, and the faulted record as json (if it was
+possible to connvert it).</p>
+<p>ETLBoxError is defined like this:</p>
+<pre><code class="lang-C#">public class ETLBoxError
+{
+    public string ErrorText { get; set; }
+    public DateTime ReportTime { get; set; }
+    public Exception Exception { get; set; }
+    public string RecordAsJson { get; set; }
+}
+</code></pre>
+<h3 id="createerrortabletask">CreateErrorTableTask</h3>
+<p>If you want to store your exception in a table in a database, ETLBox offers you a task that will automatically
+create this table for you.</p>
+<pre><code class="lang-C#">CreateErrorTableTask.Create(connection, &quot;etlbox_error&quot;);
+</code></pre>
+<p>The table will have three columns: ErrorText, RecordAsJson and ReportTime (with the right data type). Of course you can
+create you own table.</p>
+<h2 id="multiple-inputs">Multiple inputs</h2>
+<p>There is no restriction on the amount of inputs that a destination or transformation can have. Instead of having
+only single source, you can have multiple source for every component that can be linked.</p>
+<p>E.g. this is possible graph for you dataflow:</p>
+<pre><code>DBSource1 ---&gt; RowTransformation1 -|
+DBSource2 -|-&gt; RowTransformation2 -|-&gt; DBDestination
+CSVSource -|
+</code></pre>
+<p>In this example graph, RowTransformation2 has two inputs: DBSource2 &amp; CSVSource. Also, DBDestination has two inputs:
+RowTransformation1 &amp; RowTransformation2. The DBDestination will complete when data from all sources
+(DBSource1, DBSource2, CSVSource) was written into the data flow and arrived at the DBDestination.</p>
+<p><em>Note</em>: When you want to merge you data of multiple source before any further processing, consider using the
+<code>MergeJoin</code>. If you want to split your data, you can use the <code>Multicast</code>.
+<a href="dataflow_transformations.html">Read more about these transformations here.</a></p>
 <h2 id="synchronous-execution">Synchronous Execution</h2>
 <p>The easiest way to execute a dataflow is synchronous. That means that execution of your program is paused
 until all data was read from sources and written into all destinations. Using the synchronous execution also makes
@@ -161,14 +216,14 @@ this method will call the Wait() method of the Task from the underlying dataflow
 execution of your program will continue while the data is read from the source and written into the destinations
 in separate task(s) in the background.</p>
 <h3 id="example-async-execution">Example async execution</h3>
-<pre><code>DBSource source = new DBSource(&quot;SourceTable&quot;);
+<pre><code class="lang-C#">DBSource source = new DBSource(&quot;SourceTable&quot;);
 RowTransformation rowTrans = new RowTransformation( row =&gt; row );
 DBDestination dest = new DBDestination(&quot;DestTable&quot;);
 
 source.LinkTo(row).LinkTo(dest);
 
 Task sourceTask = source.ExecuteAsync();
-Task destTask = dest.Completion();
+Task destTask = dest.Completion;
 try
 {
     sourceTask.Wait();
@@ -179,7 +234,7 @@ try
 }
 </code></pre>
 <p>The <code>ExecuteAsync()</code> method will return a Task which completes when all data is read from the source and posted in the dataflow.
-The <code>Completion()</code> method will return a Task which completes when all data has arrived at the destination.</p>
+The <code>Completion</code> property will return a Task which completes when all data has arrived at the destination.</p>
 </article>
           </div>
           

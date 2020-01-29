@@ -119,8 +119,8 @@ This is the same connection manager as used within the data flow part.</p>
 <pre><code class="lang-C#">int count = RowCountTask.Count(connectionManager, &quot;demotable&quot;);
 </code></pre>
 <p>Optionally, you can set up a default connection that is used every time you don't provide a connection manager.
-Simple set the property <code>CurrentDbConnection</code> on the static <code>ControlFlow</code> class.</p>
-<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.; Database=Sample; Integrated Security=SSPI&quot;&quot;));
+Simple set the property <code>DefaultDbConnection</code> on the static <code>ControlFlow</code> class.</p>
+<pre><code class="lang-C#">ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString(&quot;Data Source=.; Database=Sample; Integrated Security=SSPI&quot;&quot;));
 </code></pre>
 <p>Now a RowCount is as simple as this:</p>
 <pre><code class="lang-C#">int count = RowCountTask.Count(&quot;demotable&quot;);

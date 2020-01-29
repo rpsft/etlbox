@@ -91,12 +91,15 @@ The MemoryDestination access a string array as input type. If you need other dat
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html">MemoryDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div class="level5"><span class="xref">MemoryDestination</span></div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html">DataFlowDestination</a>&lt;<span class="xref">System.String</span>[][]&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html">MemoryDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div class="level6"><span class="xref">MemoryDestination</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;<span class="xref">System.String</span>[][]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[][]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
@@ -110,19 +113,70 @@ The MemoryDestination access a string array as input type. If you need other dat
       <a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_Data">MemoryDestination&lt;String[]&gt;.Data</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite">DataFlowBatchDestination&lt;String[]&gt;.BeforeBatchWrite</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_InitObjects_System_Int32_">MemoryDestination&lt;String[]&gt;.InitObjects(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_OnCompletion">DataFlowBatchDestination&lt;String[]&gt;.OnCompletion</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html#ALE_ETLBox_DataFlow_MemoryDestination_1_WriteBatch__0____">MemoryDestination&lt;String[]&gt;.WriteBatch(String[][])</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite">DataFlowBatchDestination&lt;String[]&gt;.BeforeBatchWrite</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock">DataFlowBatchDestination&lt;String[]&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Wait">DataFlowBatchDestination&lt;String[]&gt;.Wait()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize">DataFlowBatchDestination&lt;String[]&gt;.BatchSize</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Completion">DataFlowBatchDestination&lt;String[]&gt;.Completion()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowBatchDestination&lt;String[]&gt;.AddPredecessorCompletion(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CheckCompleteAction">DataFlowBatchDestination&lt;String[]&gt;.CheckCompleteAction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CloseStreamsAction">DataFlowBatchDestination&lt;String[]&gt;.CloseStreamsAction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Buffer">DataFlowBatchDestination&lt;String[]&gt;.Buffer</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp">DataFlowBatchDestination&lt;String[]&gt;.CleanUp()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_OnCompletion">DataFlowDestination&lt;String[][]&gt;.OnCompletion</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Completion">DataFlowDestination&lt;String[][]&gt;.Completion</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetBlock">DataFlowDestination&lt;String[][]&gt;.TargetBlock</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetAction">DataFlowDestination&lt;String[][]&gt;.TargetAction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_PredecessorCompletions">DataFlowDestination&lt;String[][]&gt;.PredecessorCompletions</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Wait">DataFlowDestination&lt;String[][]&gt;.Wait()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowDestination&lt;String[][]&gt;.AddPredecessorCompletion(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowDestination&lt;String[][]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CheckCompleteAction">DataFlowDestination&lt;String[][]&gt;.CheckCompleteAction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_SetCompletionTask">DataFlowDestination&lt;String[][]&gt;.SetCompletionTask()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AwaitCompletion">DataFlowDestination&lt;String[][]&gt;.AwaitCompletion()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CleanUp">DataFlowDestination&lt;String[][]&gt;.CleanUp()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -135,6 +189,21 @@ The MemoryDestination access a string array as input type. If you need other dat
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_HasLoggingThresholdRows">DataFlowTask.HasLoggingThresholdRows</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_ThresholdCount">DataFlowTask.ThresholdCount</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogStart">DataFlowTask.NLogStart()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogFinish">DataFlowTask.NLogFinish()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgressBatch_System_Int32_">DataFlowTask.LogProgressBatch(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgress">DataFlowTask.LogProgress()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
@@ -195,7 +264,7 @@ The MemoryDestination access a string array as input type. If you need other dat
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_MemoryDestination_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MemoryDestination : MemoryDestination&lt;string[]&gt;, IDataFlowDestination&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class MemoryDestination : MemoryDestination&lt;string[]&gt;, IDataFlowDestination&lt;string[][]&gt;, IDataFlowLinkTarget&lt;string[][]&gt;, IDataFlowDestination&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;, ITask</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -204,7 +273,7 @@ The MemoryDestination access a string array as input type. If you need other dat
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemoryDestination__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemoryDestination.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemoryDestination.cs/#L66">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemoryDestination.cs/#L62">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_MemoryDestination__ctor_" data-uid="ALE.ETLBox.DataFlow.MemoryDestination.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_MemoryDestination__ctor" data-uid="ALE.ETLBox.DataFlow.MemoryDestination.#ctor">MemoryDestination()</h4>
@@ -214,39 +283,13 @@ The MemoryDestination access a string array as input type. If you need other dat
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public MemoryDestination()</code></pre>
   </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemoryDestination__ctor_System_Int32_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemoryDestination.%23ctor(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemoryDestination.cs/#L68">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_MemoryDestination__ctor_" data-uid="ALE.ETLBox.DataFlow.MemoryDestination.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MemoryDestination__ctor_System_Int32_" data-uid="ALE.ETLBox.DataFlow.MemoryDestination.#ctor(System.Int32)">MemoryDestination(Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MemoryDestination(int batchSize)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">batchSize</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a>
+  </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a>
   </div>
@@ -267,7 +310,7 @@ The MemoryDestination access a string array as input type. If you need other dat
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemoryDestination.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemoryDestination%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemoryDestination.cs/#L64" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemoryDestination.cs/#L60" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

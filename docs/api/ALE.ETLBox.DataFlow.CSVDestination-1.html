@@ -90,12 +90,15 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination</a>&lt;TInput&gt;</div>
-    <div class="level4"><span class="xref">CSVDestination&lt;TInput&gt;</span></div>
-      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination.html">CSVDestination</a></div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html">DataFlowDestination</a>&lt;TInput[]&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination</a>&lt;TInput&gt;</div>
+    <div class="level5"><span class="xref">CSVDestination&lt;TInput&gt;</span></div>
+      <div class="level6"><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination.html">CSVDestination</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;TInput[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TInput[]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
@@ -106,16 +109,61 @@
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite">DataFlowBatchDestination&lt;TInput&gt;.BeforeBatchWrite</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_OnCompletion">DataFlowBatchDestination&lt;TInput&gt;.OnCompletion</a>
-    </div>
-    <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock">DataFlowBatchDestination&lt;TInput&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Wait">DataFlowBatchDestination&lt;TInput&gt;.Wait()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize">DataFlowBatchDestination&lt;TInput&gt;.BatchSize</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Completion">DataFlowBatchDestination&lt;TInput&gt;.Completion()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowBatchDestination&lt;TInput&gt;.AddPredecessorCompletion(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CheckCompleteAction">DataFlowBatchDestination&lt;TInput&gt;.CheckCompleteAction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CloseStreamsAction">DataFlowBatchDestination&lt;TInput&gt;.CloseStreamsAction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Buffer">DataFlowBatchDestination&lt;TInput&gt;.Buffer</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp">DataFlowBatchDestination&lt;TInput&gt;.CleanUp()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_OnCompletion">DataFlowDestination&lt;TInput[]&gt;.OnCompletion</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Completion">DataFlowDestination&lt;TInput[]&gt;.Completion</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetBlock">DataFlowDestination&lt;TInput[]&gt;.TargetBlock</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetAction">DataFlowDestination&lt;TInput[]&gt;.TargetAction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_PredecessorCompletions">DataFlowDestination&lt;TInput[]&gt;.PredecessorCompletions</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Wait">DataFlowDestination&lt;TInput[]&gt;.Wait()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowDestination&lt;TInput[]&gt;.AddPredecessorCompletion(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowDestination&lt;TInput[]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CheckCompleteAction">DataFlowDestination&lt;TInput[]&gt;.CheckCompleteAction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_SetCompletionTask">DataFlowDestination&lt;TInput[]&gt;.SetCompletionTask()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AwaitCompletion">DataFlowDestination&lt;TInput[]&gt;.AwaitCompletion()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CleanUp">DataFlowDestination&lt;TInput[]&gt;.CleanUp()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -128,6 +176,21 @@
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_HasLoggingThresholdRows">DataFlowTask.HasLoggingThresholdRows</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_ThresholdCount">DataFlowTask.ThresholdCount</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogStart">DataFlowTask.NLogStart()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogFinish">DataFlowTask.NLogFinish()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgressBatch_System_Int32_">DataFlowTask.LogProgressBatch(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgress">DataFlowTask.LogProgress()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
@@ -185,7 +248,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_CSVDestination_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CSVDestination&lt;TInput&gt; : DataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class CSVDestination&lt;TInput&gt; : DataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput[]&gt;, IDataFlowLinkTarget&lt;TInput[]&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -226,42 +289,10 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1__ctor_System_Int32_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.%23ctor(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L38">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_CSVDestination_1__ctor_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1__ctor_System_Int32_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.#ctor(System.Int32)">CSVDestination(Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CSVDestination(int batchSize)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">batchSize</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L43">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L38">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_CSVDestination_1__ctor_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.#ctor(System.String)">CSVDestination(String)</h4>
@@ -284,43 +315,6 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">fileName</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1__ctor_System_String_System_Int32_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.%23ctor(System.String%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L48">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_CSVDestination_1__ctor_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1__ctor_System_String_System_Int32_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.#ctor(System.String,System.Int32)">CSVDestination(String, Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CSVDestination(string fileName, int batchSize)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">fileName</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">batchSize</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -456,7 +450,7 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1_CloseStreams.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.CloseStreams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L105">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L126">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_CSVDestination_1_CloseStreams_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.CloseStreams*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1_CloseStreams" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.CloseStreams">CloseStreams()</h4>
@@ -466,7 +460,96 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void CloseStreams()</code></pre>
   </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1_InitCsvWriter.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.InitCsvWriter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L51">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlow_CSVDestination_1_InitCsvWriter_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.InitCsvWriter*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1_InitCsvWriter" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.InitCsvWriter">InitCsvWriter()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void InitCsvWriter()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1_InitObjects_System_Int32_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.InitObjects(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L43">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlow_CSVDestination_1_InitObjects_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.InitObjects*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1_InitObjects_System_Int32_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.InitObjects(System.Int32)">InitObjects(Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void InitObjects(int batchSize)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">batchSize</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowBatchDestination&lt;TInput&gt;.InitObjects(System.Int32)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVDestination_1_WriteBatch__0____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVDestination%601.WriteBatch(%600%5B%5D%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVDestination.cs/#L58">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlow_CSVDestination_1_WriteBatch_" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.WriteBatch*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CSVDestination_1_WriteBatch__0____" data-uid="ALE.ETLBox.DataFlow.CSVDestination`1.WriteBatch(`0[]@)">WriteBatch(ref TInput[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void WriteBatch(ref TInput[] data)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>TInput[]</td>
+        <td><span class="parametername">data</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowBatchDestination&lt;TInput&gt;.WriteBatch(TInput[])</span></div>
   <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a>
+  </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a>
   </div>

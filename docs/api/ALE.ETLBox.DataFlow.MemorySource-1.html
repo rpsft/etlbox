@@ -107,6 +107,15 @@ Data is read a as string from the source and dynamically converted into the corr
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;TOutput&gt;.SourceBlock</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Buffer">DataFlowSource&lt;TOutput&gt;.Buffer</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ErrorHandler">DataFlowSource&lt;TOutput&gt;.ErrorHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_InitObjects">DataFlowSource&lt;TOutput&gt;.InitObjects()</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync">DataFlowSource&lt;TOutput&gt;.ExecuteAsync()</a>
     </div>
     <div>
@@ -128,6 +137,9 @@ Data is read a as string from the source and dynamically converted into the corr
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;TOutput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowSource&lt;TOutput&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
     </div>
     <div>
@@ -138,6 +150,21 @@ Data is read a as string from the source and dynamically converted into the corr
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_HasLoggingThresholdRows">DataFlowTask.HasLoggingThresholdRows</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_ThresholdCount">DataFlowTask.ThresholdCount</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogStart">DataFlowTask.NLogStart()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_NLogFinish">DataFlowTask.NLogFinish()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgressBatch_System_Int32_">DataFlowTask.LogProgressBatch(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask_LogProgress">DataFlowTask.LogProgress()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
@@ -276,7 +303,7 @@ Data is read a as string from the source and dynamically converted into the corr
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;TOutput&gt; Data { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;TOutput&gt; Data { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -288,7 +315,7 @@ Data is read a as string from the source and dynamically converted into the corr
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;TOutput&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;TOutput&gt;</td>
         <td></td>
       </tr>
     </tbody>

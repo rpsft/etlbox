@@ -144,7 +144,7 @@ need to pass the connection manager to the DBDestination so that connection to o
 <pre><code class="lang-C#">DBDestination&lt;Order&gt; dest = new DBDestination&lt;Order&gt;(connMan, &quot;OrderTable&quot;);
 </code></pre>
 <p><strong>If you don't want to pass the connection manager object over and over again to the your DataFlow or ControlFlow objects,
-you can store a default connection in the static property <code>ControlFlow.CurrentDbConnection</code>.</strong></p>
+you can store a default connection in the static property <code>ControlFlow.DefaultDbConnection</code>.</strong></p>
 <h3 id="linking-all-together">Linking all together</h3>
 <p>Until now we have only created the components, but we didn't define the Data Flow pipe. Let's do this now:</p>
 <pre><code class="lang-C#">sourceOrderData.LinkTo(rowTrans);

@@ -95,7 +95,7 @@ though every database comes with some database specific particularities. The fol
 <p>We need to create the destination table <code>orders</code> and customer_rating as empty table. Also
 we want a <code>customer</code> table that hold a customer key for our customer names.
 We could do this manually, or we can use the following ControlFlow Tasks to create these tables:</p>
-<pre><code class="lang-C#">ControlFlow.CurrentDbConnection = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;);
+<pre><code class="lang-C#">ControlFlow.DefaultDbConnection = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;);
 
 TableDefinition OrderDataTableDef = new TableDefinition(&quot;orders&quot;,
     new List&lt;TableColumn&gt;() {

@@ -11,14 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixing bug that prevented MemoryDestination to accept more records than its default batch size. Character varying without size now correctly parse from TableDefinition class.</PackageReleaseNotes>
-    <Version>1.7.6</Version>
+    <PackageReleaseNotes>New LinkErrorTo() method on most data flow component - you can now redirect erronous records into a different error destination. Fixed bug on Sql Server that did not read the table definition for views correctly. Now a destination can be used a link target for multiple sources or transformations. All Destinations now will ignore null values.</PackageReleaseNotes>
+    <Version>1.7.7</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.7.6.0</AssemblyVersion>
-    <FileVersion>1.7.6.0</FileVersion>
+    <AssemblyVersion>1.7.7.0</AssemblyVersion>
+    <FileVersion>1.7.7.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>

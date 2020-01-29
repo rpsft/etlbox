@@ -138,18 +138,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_ALE_ETLBox_ITask_System_Threading_Tasks_Dataflow_ISourceBlock__0__System_Boolean_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DataFlowLinker%601.%23ctor(ALE.ETLBox.ITask%2CSystem.Threading.Tasks.Dataflow.ISourceBlock%7B%600%7D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_ALE_ETLBox_DataFlowTask_System_Threading_Tasks_Dataflow_ISourceBlock__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DataFlowLinker%601.%23ctor(ALE.ETLBox.DataFlowTask%2CSystem.Threading.Tasks.Dataflow.ISourceBlock%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L16">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_ALE_ETLBox_ITask_System_Threading_Tasks_Dataflow_ISourceBlock__0__System_Boolean_" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor(ALE.ETLBox.ITask,System.Threading.Tasks.Dataflow.ISourceBlock{`0},System.Boolean)">DataFlowLinker(ITask, ISourceBlock&lt;TOutput&gt;, Boolean)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowLinker_1__ctor_ALE_ETLBox_DataFlowTask_System_Threading_Tasks_Dataflow_ISourceBlock__0__" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.#ctor(ALE.ETLBox.DataFlowTask,System.Threading.Tasks.Dataflow.ISourceBlock{`0})">DataFlowLinker(DataFlowTask, ISourceBlock&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DataFlowLinker(ITask callingTask, ISourceBlock&lt;TOutput&gt; sourceBlock, bool disableLogging)</code></pre>
+    <pre><code class="lang-csharp hljs">public DataFlowLinker(DataFlowTask callingTask, ISourceBlock&lt;TOutput&gt; sourceBlock)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -162,18 +162,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></td>
         <td><span class="parametername">callingTask</span></td>
         <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Threading.Tasks.Dataflow.ISourceBlock</span>&lt;TOutput&gt;</td>
         <td><span class="parametername">sourceBlock</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">disableLogging</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -193,7 +188,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ITask CallingTask { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public DataFlowTask CallingTask { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -205,7 +200,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -223,7 +218,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DisableLogging { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool DisableLogging { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -307,7 +302,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DataFlowLinker%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L23">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L22">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
@@ -406,7 +401,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DataFlowLinker%601.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L45">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L46">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
@@ -463,7 +458,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DataFlowLinker%601.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L26">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L25">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
@@ -592,7 +587,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DataFlowLinker%601.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%600%7D%2CSystem.Predicate%7B%600%7D%2CSystem.Predicate%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L48">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/DataFlow/DataFlowLinker.cs/#L49">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo_" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowLinker_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.DataFlowLinker`1.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`0},System.Predicate{`0},System.Predicate{`0})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>

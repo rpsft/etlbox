@@ -163,7 +163,7 @@
     <pre><code class="lang-csharp hljs">public class SQLiteConnectionManager : DbConnectionManager&lt;SQLiteConnection&gt;, IConnectionManager, IDisposable</code></pre>
   </div>
   <h5 id="ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_examples"><strong>Examples</strong></h5>
-  <pre><code>ControlFlow.CurrentDbConnection =
+  <pre><code>ControlFlow.DefaultDbConnection =
   new.SQLiteConnectionManager(new SQLiteConnectionString(
     &quot;Data Source=.\db\SQLite.db;Version=3;&quot;));</code></pre>
 

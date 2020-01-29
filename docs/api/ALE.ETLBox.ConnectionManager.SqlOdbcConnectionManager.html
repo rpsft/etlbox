@@ -179,7 +179,7 @@ Reduce the batch size if you encounter issues here.</p>
     <pre><code class="lang-csharp hljs">public class SqlOdbcConnectionManager : OdbcConnectionManager, IConnectionManager, IDisposable</code></pre>
   </div>
   <h5 id="ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_examples"><strong>Examples</strong></h5>
-  <pre><code>ControlFlow.CurrentDbConnection =
+  <pre><code>ControlFlow.DefaultDbConnection =
   new OdbcConnectionManager(new ObdcConnectionString(
     &quot;Driver={SQL Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;&quot;));</code></pre>
 

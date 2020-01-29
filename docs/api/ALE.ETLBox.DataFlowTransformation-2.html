@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class MergeJoin&lt;TInput1, TInput2, TOutput&gt;
+    <title>Class DataFlowTransformation&lt;TInput, TOutput&gt;
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class MergeJoin&lt;TInput1, TInput2, TOutput&gt;
+    <meta name="title" content="Class DataFlowTransformation&lt;TInput, TOutput&gt;
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,27 +77,33 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlowTransformation`2">
   
   
-  <h1 id="ALE_ETLBox_DataFlow_MergeJoin_3" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3" class="text-break">Class MergeJoin&lt;TInput1, TInput2, TOutput&gt;
+  <h1 id="ALE_ETLBox_DataFlowTransformation_2" data-uid="ALE.ETLBox.DataFlowTransformation`2" class="text-break">Class DataFlowTransformation&lt;TInput, TOutput&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><span class="xref">MergeJoin&lt;TInput1, TInput2, TOutput&gt;</span></div>
-      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin.html">MergeJoin</a></div>
-      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-1.html">MergeJoin&lt;TInput&gt;</a></div>
+    <div class="level3"><span class="xref">DataFlowTransformation&lt;TInput, TOutput&gt;</span></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Aggregation-2.html">Aggregation&lt;TInput, TOutput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html">BlockTransformation&lt;TInput, TOutput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DBMerge-1.html">DBMerge&lt;TInput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Lookup-3.html">Lookup&lt;TTransformationInput, TTransformationOutput, TSourceOutput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Multicast-1.html">Multicast&lt;TInput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html">RowTransformation&lt;TInput, TOutput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html">Sort&lt;TInput&gt;</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;TInput, TOutput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;TOutput&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TInput&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -130,6 +136,9 @@
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
@@ -180,11 +189,11 @@
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.DataFlow.html">ALE.ETLBox.DataFlow</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.html">ALE.ETLBox</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_DataFlow_MergeJoin_3_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_DataFlowTransformation_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MergeJoin&lt;TInput1, TInput2, TOutput&gt; : DataFlowTask, ITask, IDataFlowLinkSource&lt;TOutput&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class DataFlowTransformation&lt;TInput, TOutput&gt; : DataFlowTask, IDataFlowTransformation&lt;TInput, TOutput&gt;, IDataFlowLinkSource&lt;TOutput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -196,110 +205,11 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TInput1</span></td>
-        <td><p>Type of data for input block one.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="parametername">TInput2</span></td>
-        <td><p>Type of data for input block two.</p>
-</td>
+        <td><span class="parametername">TInput</span></td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="parametername">TOutput</span></td>
-        <td><p>Type of output data.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="ALE_ETLBox_DataFlow_MergeJoin_3_examples"><strong>Examples</strong></h5>
-  <pre><code>MergeJoin&lt;MyDataRow1, MyDataRow2, MyDataRow1> join = new MergeJoin&lt;MyDataRow1, MyDataRow2, MyDataRow1>(Func&lt;TInput1, TInput2, TOutput> mergeJoinFunc);
-source1.LinkTo(join.Target1);;
-source2.LinkTo(join.Target2);;
-join.LinkTo(dest);</code></pre>
-
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L52">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3__ctor" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.#ctor">MergeJoin()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoin()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3__ctor_System_Func__0__1__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.%23ctor(System.Func%7B%600%2C%601%2C%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L60">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3__ctor_System_Func__0__1__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.#ctor(System.Func{`0,`1,`2})">MergeJoin(Func&lt;TInput1, TInput2, TOutput&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoin(Func&lt;TInput1, TInput2, TOutput&gt; mergeJoinFunc)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;TInput1, TInput2, TOutput&gt;</td>
-        <td><span class="parametername">mergeJoinFunc</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3__ctor_System_String_System_Func__0__1__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.%23ctor(System.String%2CSystem.Func%7B%600%2C%601%2C%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L65">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3__ctor_System_String_System_Func__0__1__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.#ctor(System.String,System.Func{`0,`1,`2})">MergeJoin(String, Func&lt;TInput1, TInput2, TOutput&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoin(string name, Func&lt;TInput1, TInput2, TOutput&gt; mergeJoinFunc)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;TInput1, TInput2, TOutput&gt;</td>
-        <td><span class="parametername">mergeJoinFunc</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -308,18 +218,18 @@ join.LinkTo(dest);</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_MergeJoinFunc.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.MergeJoinFunc%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.PredecessorCompletions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L35">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L14">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_MergeJoinFunc_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.MergeJoinFunc*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_MergeJoinFunc" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.MergeJoinFunc">MergeJoinFunc</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions_" data-uid="ALE.ETLBox.DataFlowTransformation`2.PredecessorCompletions*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions" data-uid="ALE.ETLBox.DataFlowTransformation`2.PredecessorCompletions">PredecessorCompletions</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Func&lt;TInput1, TInput2, TOutput&gt; MergeJoinFunc { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">protected List&lt;Task&gt; PredecessorCompletions { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -331,25 +241,25 @@ join.LinkTo(dest);</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;TInput1, TInput2, TOutput&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Threading.Tasks.Task</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L33">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L12">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.SourceBlock*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_SourceBlock" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.SourceBlock">SourceBlock</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_SourceBlock_" data-uid="ALE.ETLBox.DataFlowTransformation`2.SourceBlock*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_SourceBlock" data-uid="ALE.ETLBox.DataFlowTransformation`2.SourceBlock">SourceBlock</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ISourceBlock&lt;TOutput&gt; SourceBlock { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual ISourceBlock&lt;TOutput&gt; SourceBlock { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -368,18 +278,18 @@ join.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_Target1.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.Target1%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_TargetBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.TargetBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L31">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L11">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_Target1_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.Target1*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_Target1" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.Target1">Target1</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_TargetBlock_" data-uid="ALE.ETLBox.DataFlowTransformation`2.TargetBlock*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_TargetBlock" data-uid="ALE.ETLBox.DataFlowTransformation`2.TargetBlock">TargetBlock</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoinTarget&lt;TInput1&gt; Target1 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual ITargetBlock&lt;TInput&gt; TargetBlock { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -391,89 +301,27 @@ join.LinkTo(dest);</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoinTarget-1.html">MergeJoinTarget</a>&lt;TInput1&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Dataflow.ITargetBlock</span>&lt;TInput&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_Target2.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.Target2%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L32">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_Target2_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.Target2*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_Target2" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.Target2">Target2</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoinTarget&lt;TInput2&gt; Target2 { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoinTarget-1.html">MergeJoinTarget</a>&lt;TInput2&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L28">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_TaskName_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.TaskName*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_TaskName" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.TaskName">TaskName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string TaskName { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a></div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7BALE.ETLBox.DataFlow.ETLBoxError%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.AddPredecessorCompletion(System.Threading.Tasks.Task)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L88">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L16">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkErrorTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkErrorTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{ALE.ETLBox.DataFlow.ETLBoxError})">LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_" data-uid="ALE.ETLBox.DataFlowTransformation`2.AddPredecessorCompletion*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_" data-uid="ALE.ETLBox.DataFlowTransformation`2.AddPredecessorCompletion(System.Threading.Tasks.Task)">AddPredecessorCompletion(Task)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt; target)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddPredecessorCompletion(Task completion)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -486,21 +334,36 @@ join.LinkTo(dest);</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<a class="xref" href="ALE.ETLBox.DataFlow.ETLBoxError.html">ETLBoxError</a>&gt;</td>
-        <td><span class="parametername">target</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="parametername">completion</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.CheckCompleteAction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L70">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L22">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction_" data-uid="ALE.ETLBox.DataFlowTransformation`2.CheckCompleteAction*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction" data-uid="ALE.ETLBox.DataFlowTransformation`2.CheckCompleteAction">CheckCompleteAction()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void CheckCompleteAction()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L34">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -541,13 +404,13 @@ join.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%602%7D%2CSystem.Predicate%7B%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%601%7D%2CSystem.Predicate%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L73">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L37">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -593,13 +456,13 @@ join.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%602%7D%2CSystem.Predicate%7B%602%7D%2CSystem.Predicate%7B%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%601%7D%2CSystem.Predicate%7B%601%7D%2CSystem.Predicate%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L76">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L40">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2},System.Predicate{`2})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})">LinkTo(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -650,13 +513,13 @@ join.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L79">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L43">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -712,13 +575,13 @@ join.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%602%7D%2CSystem.Predicate%7B%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%601%7D%2CSystem.Predicate%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L82">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L46">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -779,13 +642,13 @@ join.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%602%7D%2CSystem.Predicate%7B%602%7D%2CSystem.Predicate%7B%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602.LinkTo%60%601(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7B%601%7D%2CSystem.Predicate%7B%601%7D%2CSystem.Predicate%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L85">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L49">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__" data-uid="ALE.ETLBox.DataFlow.MergeJoin`3.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`2},System.Predicate{`2},System.Predicate{`2})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo``1(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1},System.Predicate{`1},System.Predicate{`1})">LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TOutput&gt;, Predicate&lt;TOutput&gt;, Predicate&lt;TOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -851,10 +714,16 @@ join.LinkTo(dest);</code></pre>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a>
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource&lt;TOutput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
   </div>
 </article>
           </div>
@@ -864,10 +733,10 @@ join.LinkTo(dest);</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin_3.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%603%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlowTransformation_2.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlowTransformation%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Definitions/TaskBase/DataFlowTransformation.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -175,7 +175,7 @@ select * from (
     <pre><code class="lang-csharp hljs">public class AccessOdbcConnectionManager : OdbcConnectionManager, IConnectionManager, IDisposable</code></pre>
   </div>
   <h5 id="ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_examples"><strong>Examples</strong></h5>
-  <pre><code>ControlFlow.CurrentDbConnection =
+  <pre><code>ControlFlow.DefaultDbConnection =
   new AccessOdbcConnectionManager(new OdbcConnectionString(
      &quot;Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb&quot;));</code></pre>
 
