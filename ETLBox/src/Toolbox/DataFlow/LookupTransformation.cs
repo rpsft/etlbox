@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -56,31 +57,17 @@ namespace ALE.ETLBox.DataFlow
         private IDataFlowSource<TSourceOutput> _source;
         private TypeInfo TypeInfoInput { get; set; }
         private TypeInfo TypeInfoSource { get; set; }
-
+        List<Tuple<PropertyInfo, PropertyInfo>> MatchColumnsInputAndSource { get; set; }
+        List<Tuple<PropertyInfo, PropertyInfo>> RetrieveColumnsInputAndSource { get; set; }
 
         public LookupTransformation()
         {
             LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
             if (RowTransformationFunc == null)
             {
-                TypeInfoInput = new TypeInfo(typeof(TInput));
-                TypeInfoSource = new TypeInfo(typeof(TSourceOutput));
-                RowTransformationFunc = new Func<TInput, TInput>(
-                    row => {
-                        var matchColumn = TypeInfoInput.GetInfoByPropertyNameOrColumnMapping("LookupId");
-                        var retrieveColumn = TypeInfoInput.GetInfoByPropertyNameOrColumnMapping("LookupValue");
-                        var matchColumnSource = TypeInfoSource.GetInfoByPropertyNameOrColumnMapping("Id");
-                        var retrieveColumnSource = TypeInfoSource.GetInfoByPropertyNameOrColumnMapping("Value");
-                        var matchValue = matchColumn.GetValue(row);
-                        var lookupHit = LookupList.Find(e =>
-                       {
-                           return matchValue.Equals(matchColumnSource.GetValue(e));
-                       });
-                        var retrieveValue = retrieveColumnSource.GetValue(lookupHit);
-                        retrieveColumn.SetValue(row, retrieveValue);
-                        return row;
-                    }
-                );
+                ReadAndCheckTypeInfo();
+                CombineInputAndSourceTypeInfo();
+                RowTransformationFunc = row => FindRowByAttributes(row);
             }
         }
 
@@ -96,6 +83,50 @@ namespace ALE.ETLBox.DataFlow
             Source = source;
             LookupList = lookupList;
         }
+
+        private void ReadAndCheckTypeInfo()
+        {
+            TypeInfoInput = new TypeInfo(typeof(TInput));
+            TypeInfoSource = new TypeInfo(typeof(TSourceOutput));
+            if (!TypeInfoInput.IsDynamic && (TypeInfoInput.MatchColumns.Count == 0 || TypeInfoInput.RetrieveColumns.Count == 0) )
+                throw new ETLBoxException("Please define either a transformation function or use the MatchColumn / RetrieveColumn attributes.");
+        }
+
+        private void CombineInputAndSourceTypeInfo()
+        {
+            MatchColumnsInputAndSource = new List<Tuple<PropertyInfo, PropertyInfo>>();
+            foreach (var mcp in TypeInfoInput.MatchColumns)
+                MatchColumnsInputAndSource.Add(Tuple.Create(mcp.Item1, TypeInfoSource.PropertiesByName[mcp.Item2]));
+
+            RetrieveColumnsInputAndSource = new List<Tuple<PropertyInfo, PropertyInfo>>();
+            foreach (var rcp in TypeInfoInput.RetrieveColumns)
+                RetrieveColumnsInputAndSource.Add(Tuple.Create(rcp.Item1, TypeInfoSource.PropertiesByName[rcp.Item2]));
+        }
+
+        private TInput FindRowByAttributes(TInput row)
+        {
+            var lookupHit = LookupList.Find(e =>
+            {
+                bool same = true;
+                foreach (var mc in MatchColumnsInputAndSource)
+                {
+                    same &= mc.Item1.GetValue(row).Equals(mc.Item2.GetValue(e));
+                    if (!same) break;
+                }
+                return same;
+            });
+            if (lookupHit != null)
+            {
+                foreach (var rc in RetrieveColumnsInputAndSource)
+                {
+                    var retrieveValue = rc.Item2.GetValue(lookupHit);
+                    rc.Item1.SetValue(row, retrieveValue);
+                }
+            }
+            return row;
+        }
+
+
 
         private void LoadLookupData()
         {
