@@ -189,7 +189,6 @@ namespace ALE.ETLBox.DataFlow
             )")
                 {
                     DisableLogging = true,
-                    DisableExtension = true,
                 }.ExecuteNonQuery();
             }
         }

@@ -20,7 +20,6 @@ namespace ALE.ETLBox.Logging
             {
                 DisableLogging = true,
                 ConnectionManager = this.ConnectionManager,
-                DisableExtension = true,
                 BeforeRowReadAction = () => current = new LogEntry(),
                 AfterRowReadAction = () => LogEntries.Add(current),
                 Actions = new List<Action<object>>() {

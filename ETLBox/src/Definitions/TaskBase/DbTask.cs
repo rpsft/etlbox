@@ -26,7 +26,6 @@ namespace ALE.ETLBox.ControlFlow
         private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
         private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
         public virtual bool DoXMLCommentStyle { get; set; }
-        public bool DisableExtension { get; set; }
         public string Command
         {
             get
@@ -102,9 +101,9 @@ namespace ALE.ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                QueryStart();
+                if (!DisableLogging) LoggingStart();
                 RowsAffected = DoSkipSql ? 0 : conn.ExecuteNonQuery(Command, Parameter);
-                QueryFinish(LogType.Rows);
+                if (!DisableLogging) LoggingEnd(LogType.Rows);
             }
             finally
             {
@@ -121,9 +120,9 @@ namespace ALE.ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                QueryStart();
+                if (!DisableLogging) LoggingStart();
                 result = conn.ExecuteScalar(Command, Parameter);
-                QueryFinish();
+                if (!DisableLogging) LoggingEnd();
             }
             finally
             {
@@ -168,7 +167,7 @@ namespace ALE.ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                QueryStart();
+                if (!DisableLogging) LoggingStart();
                 IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader;
                 for (int rowNr = 0; rowNr < ReadTopX; rowNr++)
                 {
@@ -196,7 +195,7 @@ namespace ALE.ETLBox.ControlFlow
                     }
                 }
                 reader.Close();
-                QueryFinish();
+                if (!DisableLogging) LoggingEnd();
             }
             finally
             {
@@ -212,12 +211,12 @@ namespace ALE.ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                QueryStart(LogType.Bulk);
+                if (!DisableLogging) LoggingStart(LogType.Bulk);
                 conn.BeforeBulkInsert(tableName);
                 conn.BulkInsert(data, tableName);
                 conn.AfterBulkInsert(tableName);
                 RowsAffected = data.RecordsAffected;
-                QueryFinish(LogType.Bulk);
+                if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
             finally
             {
@@ -236,23 +235,7 @@ namespace ALE.ETLBox.ControlFlow
         }
 
 
-
-        void QueryStart(LogType logType = LogType.None)
-        {
-            if (!DisableLogging)
-                LoggingStart(logType);
-
-            if (!DisableExtension)
-                ExecuteExtension();
-        }
-
-        void QueryFinish(LogType logType = LogType.None)
-        {
-            if (!DisableLogging)
-                LoggingEnd(logType);
-        }
-
-        void LoggingStart(LogType logType)
+        void LoggingStart(LogType logType = LogType.None)
         {
             NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.Id);
             if (logType == LogType.Bulk)
@@ -261,36 +244,11 @@ namespace ALE.ETLBox.ControlFlow
                 NLogger.Debug($"{Command}", TaskType, "RUN", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.Id);
         }
 
-        void LoggingEnd(LogType logType)
+        void LoggingEnd(LogType logType = LogType.None)
         {
             NLogger.Info(TaskName, TaskType, "END", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.Id);
             if (logType == LogType.Rows)
                 NLogger.Debug($"Rows affected: {RowsAffected ?? 0}", TaskType, "RUN", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.Id);
         }
-
-        void ExecuteExtension()
-        {
-            if (ExtensionFileLoader.ExistsFolder && HasName)
-            {
-                List<ExtensionFile> extFiles = ExtensionFileLoader.GetExtensionFiles(TaskHash);
-
-                if (extFiles.Count > 0)
-                {
-                    foreach (var extFile in extFiles)
-                    {
-                        new SqlTask($"Extensions: {extFile.Name}", new FileConnectionManager(extFile.FileName))
-                        {
-                            ConnectionManager = this.ConnectionManager,
-                            DisableExtension = true
-                        }.ExecuteNonQuery();
-                    }
-                    DoSkipSql = extFiles.Any(ef => ef.HasSkipNextStatement);
-                }
-            }
-        }
-
-
     }
-
-
 }

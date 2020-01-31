@@ -132,7 +132,6 @@ namespace ALE.ETLBox.DataFlow
             var sqlT = new SqlTask(this, sql)
             {
                 DisableLogging = true,
-                DisableExtension = true,
             };
             sqlT.Actions = new List<Action<object>>();
             return sqlT;
