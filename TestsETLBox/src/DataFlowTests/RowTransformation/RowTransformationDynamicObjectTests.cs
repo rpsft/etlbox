@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationRowTransformationDynamic");
-            CSVSource<ExpandoObject> source = new CSVSource<ExpandoObject>("res/RowTransformation/TwoColumns.csv");
+            CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/RowTransformation/TwoColumns.csv");
 
             //Act
             RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(

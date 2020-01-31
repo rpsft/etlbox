@@ -50,7 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
 
             //Act
-            CSVDestination<MySeriRow> dest = new CSVDestination<MySeriRow>("./DateTimeSerialization.csv");
+            CsvDestination<MySeriRow> dest = new CsvDestination<MySeriRow>("./DateTimeSerialization.csv");
                         source.LinkTo(dest);
             source.Execute();
             dest.Wait();

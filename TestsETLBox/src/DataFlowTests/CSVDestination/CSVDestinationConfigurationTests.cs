@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVSourceNoHeader");
 
             //Act
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./ConfigurationNoHeader.csv");
+            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ConfigurationNoHeader.csv");
             dest.Configuration.HasHeaderRecord = false;
             source.LinkTo(dest);
             source.Execute();

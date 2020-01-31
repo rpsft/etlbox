@@ -39,7 +39,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVSource2Cols");
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -56,7 +56,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVSourceSkipRows");
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumnsSkipRows.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsSkipRows.csv");
             source.SkipRows = 2;
             source.LinkTo(dest);
             source.Execute();

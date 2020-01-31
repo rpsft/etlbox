@@ -11,14 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>New LinkErrorTo() method on most data flow component - you can now redirect erronous records into a different error destination. Fixed bug on Sql Server that did not read the table definition for views correctly. Now a destination can be used a link target for multiple sources or transformations. All Destinations now will ignore null values.</PackageReleaseNotes>
-    <Version>1.7.7</Version>
+    <PackageReleaseNotes>Improving Lookup with new set of attributes to defined matching and retrieving properties. Also a new Aggretion component simplifies creating aggregates (e.g. SUM, MAX or Average).</PackageReleaseNotes>
+    <Version>1.8.0</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.7.7.0</AssemblyVersion>
-    <FileVersion>1.7.7.0</FileVersion>
+    <AssemblyVersion>1.8.0.0</AssemblyVersion>
+    <FileVersion>1.8.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>

@@ -48,7 +48,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./IgnoreNullValues.csv");
+            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./IgnoreNullValues.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

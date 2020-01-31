@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(SqlConnection, "CSVDestDynamicObject");
 
             //Act
-            CSVDestination<ExpandoObject> dest = new CSVDestination<ExpandoObject>("./SimpleWithDynamicObject.csv");
+            CsvDestination<ExpandoObject> dest = new CsvDestination<ExpandoObject>("./SimpleWithDynamicObject.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

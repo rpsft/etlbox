@@ -73,7 +73,7 @@ namespace ALE.ETLBoxTests.Performance
 
             var sourceNonGeneric = new CSVSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destNonGeneric = new DBDestination(connection, "CSVDestinationNonGenericETLBox", batchSize);
-            var sourceGeneric = new CSVSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
+            var sourceGeneric = new CsvSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destGeneric = new DBDestination<CSVData>(connection, "CSVDestinationGenericETLBox", batchSize);
 
             //Act
@@ -115,7 +115,7 @@ namespace ALE.ETLBoxTests.Performance
             return result ;
         }
 
-        private TimeSpan GetETLBoxTime<T>(int numberOfRows, CSVSource<T> source, DBDestination<T> dest)
+        private TimeSpan GetETLBoxTime<T>(int numberOfRows, CsvSource<T> source, DBDestination<T> dest)
         {
             source.LinkTo(dest);
             var timeElapsedETLBox = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with {numberOfRows} rows of data using ETLBox",

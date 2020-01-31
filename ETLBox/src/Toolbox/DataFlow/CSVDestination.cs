@@ -17,10 +17,10 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class CSVDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    public class CsvDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Write CSV data into file {FileName ?? ""}";
+        public override string TaskName => $"Write Csv data into file {FileName ?? ""}";
 
         public string FileName { get; set; }
         public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
@@ -30,12 +30,12 @@ namespace ALE.ETLBox.DataFlow
         StreamWriter StreamWriter { get; set; }
         CsvWriter CsvWriter { get; set; }
 
-        public CSVDestination()
+        public CsvDestination()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
         }
 
-        public CSVDestination(string fileName) : this()
+        public CsvDestination(string fileName) : this()
         {
             FileName = fileName;
         }
@@ -136,7 +136,7 @@ namespace ALE.ETLBox.DataFlow
     /// A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
     /// The CSVDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.
     /// </summary>
-    /// <see cref="CSVDestination{TInput}"/>
+    /// <see cref="CsvDestination{TInput}"/>
     /// <example>
     /// <code>
     /// //Non generic CSVDestination works with string[] as input
@@ -145,7 +145,7 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class CSVDestination : CSVDestination<string[]>
+    public class CSVDestination : CsvDestination<string[]>
     {
         public CSVDestination() : base() { }
 

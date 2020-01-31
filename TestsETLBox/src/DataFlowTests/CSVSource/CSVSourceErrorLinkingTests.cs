@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
 
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
@@ -61,7 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
 
             //Assert
             Assert.Throws<CsvHelper.TypeConversion.TypeConverterException>(() =>

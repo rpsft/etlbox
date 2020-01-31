@@ -40,7 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             List<ExpandoObject> lookupList = new List<ExpandoObject>();
 
-            CSVSource<ExpandoObject> lookupSource = new CSVSource<ExpandoObject>("res/Lookup/LookupSource.csv");
+            CsvSource<ExpandoObject> lookupSource = new CsvSource<ExpandoObject>("res/Lookup/LookupSource.csv");
 
             var lookup = new ETLBox.DataFlow.LookupTransformation<ExpandoObject, ExpandoObject>(
                 lookupSource,

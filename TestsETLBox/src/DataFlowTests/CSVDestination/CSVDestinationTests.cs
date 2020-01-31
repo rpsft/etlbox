@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVDestSimple");
 
             //Act
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./SimpleWithObject.csv");
+            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./SimpleWithObject.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVDestBatch");
 
             //Act
-            CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./ObjectWithBatchWrite.csv")
+            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ObjectWithBatchWrite.csv")
             {
                 BatchSize = 2
             };

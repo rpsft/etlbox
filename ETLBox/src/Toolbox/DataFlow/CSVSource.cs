@@ -19,10 +19,10 @@ namespace ALE.ETLBox.DataFlow
     /// source.Configuration.Delimiter = ";";
     /// </code>
     /// </example>
-    public class CSVSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    public class CsvSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read CSV data from file {FileName ?? ""}";
+        public override string TaskName => $"Read Csv data from file {FileName ?? ""}";
 
         /* Public properties */
         public Configuration Configuration { get; set; }
@@ -35,13 +35,13 @@ namespace ALE.ETLBox.DataFlow
         CsvReader CsvReader { get; set; }
         StreamReader StreamReader { get; set; }
 
-        public CSVSource()
+        public CsvSource()
         {
             Configuration = new Configuration(CultureInfo.InvariantCulture);
             base.InitObjects();
         }
 
-        public CSVSource(string fileName) : this()
+        public CsvSource(string fileName) : this()
         {
             FileName = fileName;
         }
@@ -134,7 +134,7 @@ namespace ALE.ETLBox.DataFlow
     /// CSVSource as a nongeneric type always return a string array as output. If you need typed output, use
     /// the CSVSource&lt;TOutput&gt; object instead.
     /// </summary>
-    /// <see cref="CSVSource{TOutput}"/>
+    /// <see cref="CsvSource{TOutput}"/>
     /// <example>
     /// <code>
     /// CSVSource source = new CSVSource("demodata.csv");
@@ -142,7 +142,7 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
-    public class CSVSource : CSVSource<string[]>
+    public class CSVSource : CsvSource<string[]>
     {
         public CSVSource() : base() { }
         public CSVSource(string fileName) : base(fileName) { }

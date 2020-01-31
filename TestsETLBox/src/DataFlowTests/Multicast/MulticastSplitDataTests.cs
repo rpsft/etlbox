@@ -49,7 +49,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
             FourColumnsTableFixture dest2Table = new FourColumnsTableFixture("SplitDataDestination2");
 
-            var source = new CSVSource<CSVPoco>("res/Multicast/CSVSourceToSplit.csv")
+            var source = new CsvSource<CSVPoco>("res/Multicast/CSVSourceToSplit.csv")
             {
                 Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = ";" }
             };

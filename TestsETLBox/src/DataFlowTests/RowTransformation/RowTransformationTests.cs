@@ -59,7 +59,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationRowTransformation");
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/RowTransformation/TwoColumnsIdMinus1.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/RowTransformation/TwoColumnsIdMinus1.csv");
 
             //Act
             int IdOffset = 0;

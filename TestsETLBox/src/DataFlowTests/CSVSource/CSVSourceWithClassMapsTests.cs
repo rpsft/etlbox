@@ -47,7 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVDestination2ColumnsClassMap");
 
             //Act
-            CSVSource<MySimpleRow> source = new CSVSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
             source.Configuration.RegisterClassMap<ModelClassMap>();
             source.LinkTo(dest);
             source.Execute();
@@ -83,7 +83,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(Connection, "CSVDestination4ColumnsClassMap");
 
             //Act
-            CSVSource<MyExtendedRow> source = new CSVSource<MyExtendedRow>("res/CSVSource/FourColumnsInvalidHeader.csv");
+            CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CSVSource/FourColumnsInvalidHeader.csv");
             source.Configuration.RegisterClassMap<ExtendedClassMap>();
             source.Configuration.HasHeaderRecord = false;
             source.Configuration.ShouldSkipRecord = ShouldSkipRecordDelegate;
