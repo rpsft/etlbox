@@ -141,30 +141,41 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string LookupValue { get; set; }
         }
 
+
         [Fact]
         public void TestExceptions()
         {
-            //Arrange
-            MemorySource<InputDataError1> source = new MemorySource<InputDataError1>();
-            source.Data.Add(new InputDataError1() { LookupId = 1 });
-            MemorySource<LookupData> lookupSource = new MemorySource<LookupData>();
+            RunExceptionFlowWithType<InputDataError1>(new InputDataError1() { LookupId = 1 });
+            RunExceptionFlowWithType<InputDataError2>(new InputDataError2() { LookupId = 1 });
+            RunExceptionFlowWithType<InputDataError3>(new InputDataError3() { LookupId = 1 });
 
+        }
+
+        private static void RunExceptionFlowWithType<T>(T sourceDataItem)
+        {
+            //Arrange
+            MemorySource<T> source = new MemorySource<T>();
+            source.Data.Add(sourceDataItem);
+            MemorySource<LookupData> lookupSource = new MemorySource<LookupData>();
+            var lookup = new LookupTransformation<T, LookupData>(lookupSource);
+            MemoryDestination<T> dest = new MemoryDestination<T>();
+
+            source.LinkTo(lookup);
+            lookup.LinkTo(dest);
+
+            //Act && Assert
             Assert.Throws<ETLBoxException>(() =>
             {
-                var lookup = new LookupTransformation<InputDataError1, LookupData>();
+                try
+                {
+                    source.Execute();
+                    dest.Wait();
+                }
+                catch (AggregateException e)
+                {
+                    throw e.InnerException;
+                }
             });
-            //lookup.Source = lookupSource;
-            //MemoryDestination<InputDataError1> dest = new MemoryDestination<InputDataError1>();
-            //source.LinkTo(lookup);
-            //lookup.LinkTo(dest);
-
-            ////Act && Assert
-            //Assert.Throws<ETLBoxException>(() =>
-            //{
-            //    source.Execute();
-            //    dest.Wait();
-            //});
-
         }
     }
 }

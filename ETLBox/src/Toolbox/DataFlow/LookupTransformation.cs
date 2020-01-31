@@ -17,10 +17,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Lookup";
-
-        public List<TSourceOutput> LookupList { get; set; }
-
-        ActionBlock<TSourceOutput> LookupBuffer { get; set; }
+        public List<TSourceOutput> LookupData { get; set; }
 
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => RowTransformation.SourceBlock;
@@ -37,7 +34,8 @@ namespace ALE.ETLBox.DataFlow
                 Source.SourceBlock.LinkTo(LookupBuffer, new DataflowLinkOptions() { PropagateCompletion = true });
             }
         }
-        public Func<TInput, TInput> RowTransformationFunc
+
+        public Func<TInput, TInput> TransformationFunc
         {
             get
             {
@@ -46,69 +44,70 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _rowTransformationFunc = value;
-                RowTransformation = new RowTransformation<TInput, TInput>(this, _rowTransformationFunc);
-                RowTransformation.InitAction = LoadLookupData;
+                InitRowTransformation(LoadLookupData);
             }
         }
 
         /* Private stuff */
+        private ActionBlock<TSourceOutput> LookupBuffer { get; set; }
         private RowTransformation<TInput, TInput> RowTransformation { get; set; }
         private Func<TInput, TInput> _rowTransformationFunc;
         private IDataFlowSource<TSourceOutput> _source;
-        private TypeInfo TypeInfoInput { get; set; }
-        private TypeInfo TypeInfoSource { get; set; }
-        List<Tuple<PropertyInfo, PropertyInfo>> MatchColumnsInputAndSource { get; set; }
-        List<Tuple<PropertyInfo, PropertyInfo>> RetrieveColumnsInputAndSource { get; set; }
+        private LookupTypeInfo TypeInfo { get; set; }
 
         public LookupTransformation()
         {
             LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
-            if (RowTransformationFunc == null)
+            if (_rowTransformationFunc == null)
+                InitLookupWithMatchRetrieveAttributes();
+        }
+
+        public LookupTransformation(IDataFlowSource<TSourceOutput> lookupSource) : this()
+        {
+            Source = lookupSource;
+        }
+
+        public LookupTransformation(IDataFlowSource<TSourceOutput> lookupSource, Func<TInput, TInput> transformationFunc)
+            : this(lookupSource)
+        {
+            TransformationFunc = transformationFunc;
+        }
+
+        public LookupTransformation(IDataFlowSource<TSourceOutput> lookupSource, Func<TInput, TInput> transformationFunc, List<TSourceOutput> lookupList)
+            : this(lookupSource, transformationFunc)
+        {
+            LookupData = lookupList;
+        }
+
+        private void InitRowTransformation(Action initAction)
+        {
+            RowTransformation = new RowTransformation<TInput, TInput>(this, _rowTransformationFunc);
+            RowTransformation.InitAction = initAction;
+        }
+
+        private void InitLookupWithMatchRetrieveAttributes()
+        {
+            _rowTransformationFunc = row => FindRowByAttributes(row);
+            InitRowTransformation(() =>
             {
                 ReadAndCheckTypeInfo();
-                CombineInputAndSourceTypeInfo();
-                RowTransformationFunc = row => FindRowByAttributes(row);
-            }
-        }
-
-        public LookupTransformation(Func<TInput, TInput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source) : this()
-        {
-            RowTransformationFunc = rowTransformationFunc;
-            Source = source;
-        }
-
-        public LookupTransformation(Func<TInput, TInput> rowTransformationFunc, IDataFlowSource<TSourceOutput> source, List<TSourceOutput> lookupList) : this()
-        {
-            RowTransformationFunc = rowTransformationFunc;
-            Source = source;
-            LookupList = lookupList;
+                LoadLookupData();
+            });
         }
 
         private void ReadAndCheckTypeInfo()
         {
-            TypeInfoInput = new TypeInfo(typeof(TInput));
-            TypeInfoSource = new TypeInfo(typeof(TSourceOutput));
-            if (!TypeInfoInput.IsDynamic && (TypeInfoInput.MatchColumns.Count == 0 || TypeInfoInput.RetrieveColumns.Count == 0) )
+            TypeInfo = new LookupTypeInfo(typeof(TInput), typeof(TSourceOutput));
+            if (TypeInfo.MatchColumns.Count == 0 || TypeInfo.RetrieveColumns.Count == 0)
                 throw new ETLBoxException("Please define either a transformation function or use the MatchColumn / RetrieveColumn attributes.");
-        }
-
-        private void CombineInputAndSourceTypeInfo()
-        {
-            MatchColumnsInputAndSource = new List<Tuple<PropertyInfo, PropertyInfo>>();
-            foreach (var mcp in TypeInfoInput.MatchColumns)
-                MatchColumnsInputAndSource.Add(Tuple.Create(mcp.Item1, TypeInfoSource.PropertiesByName[mcp.Item2]));
-
-            RetrieveColumnsInputAndSource = new List<Tuple<PropertyInfo, PropertyInfo>>();
-            foreach (var rcp in TypeInfoInput.RetrieveColumns)
-                RetrieveColumnsInputAndSource.Add(Tuple.Create(rcp.Item1, TypeInfoSource.PropertiesByName[rcp.Item2]));
         }
 
         private TInput FindRowByAttributes(TInput row)
         {
-            var lookupHit = LookupList.Find(e =>
+            var lookupHit = LookupData.Find(e =>
             {
                 bool same = true;
-                foreach (var mc in MatchColumnsInputAndSource)
+                foreach (var mc in TypeInfo.MatchColumnsInputAndSource)
                 {
                     same &= mc.Item1.GetValue(row).Equals(mc.Item2.GetValue(e));
                     if (!same) break;
@@ -117,7 +116,7 @@ namespace ALE.ETLBox.DataFlow
             });
             if (lookupHit != null)
             {
-                foreach (var rc in RetrieveColumnsInputAndSource)
+                foreach (var rc in TypeInfo.RetrieveColumnsInputAndSource)
                 {
                     var retrieveValue = rc.Item2.GetValue(lookupHit);
                     rc.Item1.SetValue(row, retrieveValue);
@@ -125,8 +124,6 @@ namespace ALE.ETLBox.DataFlow
             }
             return row;
         }
-
-
 
         private void LoadLookupData()
         {
@@ -143,8 +140,8 @@ namespace ALE.ETLBox.DataFlow
 
         private void FillBuffer(TSourceOutput sourceRow)
         {
-            if (LookupList == null) LookupList = new List<TSourceOutput>();
-            LookupList.Add(sourceRow);
+            if (LookupData == null) LookupData = new List<TSourceOutput>();
+            LookupData.Add(sourceRow);
         }
 
         public void LinkLookupSourceErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
@@ -159,24 +156,21 @@ namespace ALE.ETLBox.DataFlow
     /// The non generic implementation accepts a string array as input and output. The lookup data source
     /// always returns a list of string array.
     /// </summary>
-    /// <example>
-    /// <code>
-    /// Lookup = new Lookup(
-    ///     testClass.TestTransformationFunc, lookupSource, testClass.LookupData
-    /// );
-    /// </code>
-    /// </example>
     public class LookupTransformation : LookupTransformation<string[], string[]>
     {
         public LookupTransformation() : base()
         { }
 
-        public LookupTransformation(Func<string[], string[]> rowTransformationFunc, IDataFlowSource<string[]> source)
-            : base(rowTransformationFunc, source)
+        public LookupTransformation(IDataFlowSource<string[]> lookupSource)
+            : base(lookupSource)
         { }
 
-        public LookupTransformation(Func<string[], string[]> rowTransformationFunc, IDataFlowSource<string[]> source, List<string[]> lookupList)
-            : base(rowTransformationFunc, source, lookupList)
+        public LookupTransformation(IDataFlowSource<string[]> lookupSource, Func<string[], string[]> transformationFunc)
+            : base(lookupSource, transformationFunc)
+        { }
+
+        public LookupTransformation(IDataFlowSource<string[]> lookupSource, Func<string[], string[]> transformationFunc, List<string[]> lookupList)
+            : base(lookupSource, transformationFunc, lookupList)
         { }
     }
 

@@ -79,6 +79,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             List<string[]> allEntriesInDestination = new List<string[]>();
             LookupTransformation lookup = new LookupTransformation(
+                new DBSource(ConnectionDestination, "dbo.HashMatchDestination"),
                 row =>
                 {
                     var matchingIdEntry = allEntriesInDestination.Where(destRow => destRow[0] == row[0]).FirstOrDefault();
@@ -97,8 +98,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     }
                     return row;
                 },
-                new DBSource(ConnectionDestination, "dbo.HashMatchDestination"),
-                allEntriesInDestination);
+                allEntriesInDestination
+                );
 
             VoidDestination voidDest = new VoidDestination();
             source.LinkTo(trans);

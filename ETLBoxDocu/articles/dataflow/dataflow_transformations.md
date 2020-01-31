@@ -54,7 +54,7 @@ RowTransformation&lt;string[], MySimpleRow&gt; trans = new RowTransformation&lt;
 });
 ```
 
-### Lookup
+### LookupTransformation
 
 The lookup is a row transformation, but before it starts processing any rows it will load all data from the given LookupSource into memory 
 and will make it accessible as a List object.
@@ -65,19 +65,16 @@ Here is an example:
 ```C#
 DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>(connection, "Lookup");
 List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
-Lookup<MyInputDataRow, MyOutputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyOutputDataRow, MyLookupRow>(
+LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyLookupRow>(
+    lookupSource,
     row =>
     {
-        MyOutputDataRow output = new MyOutputDataRow()
-        {
-            Col1 = row.Col1,
-            Col2 = row.Col2,
-            Col3 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue1).FirstOrDefault(),
-            Col4 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue2).FirstOrDefault(),
-        };
-        return output;
+        Col1 = row.Col1,
+        Col2 = row.Col2,
+        Col3 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue1).FirstOrDefault(),
+        Col4 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue2).FirstOrDefault(),
+        return row;
     }
-    , lookupSource
     , LookupTableData
 );
 ```

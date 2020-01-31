@@ -55,14 +55,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>(connection, "LookupSameType");
 
             var lookup = new ETLBox.DataFlow.LookupTransformation<MyDataRow, MyLookupRow>();
-            lookup.RowTransformationFunc =
+            lookup.TransformationFunc =
                 row =>
                 {
 
                     row.Col1 = row.Col1;
                     row.Col2 = row.Col2;
-                    row.Col3 = lookup.LookupList.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue1).FirstOrDefault();
-                    row.Col4 = lookup.LookupList.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue2).FirstOrDefault();
+                    row.Col3 = lookup.LookupData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue1).FirstOrDefault();
+                    row.Col4 = lookup.LookupData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue2).FirstOrDefault();
                     return row;
                 };
             lookup.Source = lookupSource;

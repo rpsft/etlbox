@@ -52,7 +52,7 @@ namespace ALE.ETLBox.DataFlow
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DBSource<TInput> DestinationTableAsSource { get; set; }
         DBDestination<TInput> DestinationTable { get; set; }
-        List<TInput> InputData { get; set; } = new List<TInput>();
+        List<TInput> InputData => Lookup.LookupData;
         CustomSource<TInput> OutputSource { get; set; }
         bool WasDeletionExecuted { get; set; }
         List<string> MergeIdColumnNames { get; set; }
@@ -102,9 +102,8 @@ namespace ALE.ETLBox.DataFlow
         private void InitInternalFlow()
         {
             Lookup = new LookupTransformation<TInput, TInput>(
-                row => UpdateRowWithDeltaInfo(row),
                 DestinationTableAsSource,
-                InputData
+                row => UpdateRowWithDeltaInfo(row)
             );
 
             DestinationTable.BeforeBatchWrite = batch =>
