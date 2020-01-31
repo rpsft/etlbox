@@ -41,7 +41,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             List<string[]> lookupList = new List<string[]>();
 
             DBSource lookupSource = new DBSource(connection, "LookupNonGeneric");
-            Lookup lookup = new Lookup(
+            LookupTransformation lookup = new LookupTransformation(
+                lookupSource,
                 row =>
                 {
                     Array.Resize(ref row, 4);
@@ -49,7 +50,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     row[3] = lookupList.Where(lkupRow => lkupRow[0] == row[0]).Select(lkupRow => lkupRow[3]).FirstOrDefault();
                     return row;
                 },
-                lookupSource,
                 lookupList
             );
 

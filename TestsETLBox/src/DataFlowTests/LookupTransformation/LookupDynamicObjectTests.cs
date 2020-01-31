@@ -42,7 +42,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             CSVSource<ExpandoObject> lookupSource = new CSVSource<ExpandoObject>("res/Lookup/LookupSource.csv");
 
-            var lookup = new ETLBox.DataFlow.Lookup<ExpandoObject, ExpandoObject>(
+            var lookup = new ETLBox.DataFlow.LookupTransformation<ExpandoObject, ExpandoObject>(
+                lookupSource,
                 row =>
                 {
                     dynamic r = row as ExpandoObject;
@@ -57,7 +58,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
                             .FirstOrDefault();
                      return row;
                 },
-                lookupSource,
                 lookupList
             );
 

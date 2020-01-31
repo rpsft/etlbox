@@ -9,28 +9,21 @@ namespace ALE.ETLBox.DataFlow
     internal class TypeInfo
     {
         internal PropertyInfo[] Properties { get; set; }
-        internal List<string> PropertyNames { get; set; }
-        internal Dictionary<string, int> PropertyIndex { get; set; }
-        internal Dictionary<string, string> ColumnMap2Property { get; set; }
-        internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; }
-        internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; set; }
-        internal List<string> IdColumnNames { get; set; }
+        internal List<string> PropertyNames { get; set; } = new List<string>();
+        internal Dictionary<string, int> PropertyIndex { get; set; } = new Dictionary<string, int>();
+        internal Dictionary<string, string> ColumnMap2Property { get; set; } = new Dictionary<string, string>();
+        internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; } = new Dictionary<int, int>();
+        internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; set; } = new Dictionary<PropertyInfo, Type>();
+        //internal Dictionary<string, PropertyInfo> PropertiesByName { get; set; } = new Dictionary<string, PropertyInfo>();
+        //internal List<Tuple<PropertyInfo, string>> MatchColumns { get; set; } = new List<Tuple<PropertyInfo, string>>();
+        //internal List<Tuple<PropertyInfo, string>> RetrieveColumns { get; set; } = new List<Tuple<PropertyInfo, string>>();
+        internal List<string> IdColumnNames { get; set; } = new List<string>();
         internal int PropertyLength { get; set; }
         internal bool IsArray { get; set; } = true;
         internal bool IsDynamic { get; set; }
         internal int ArrayLength { get; set; }
 
         internal TypeInfo(Type typ)
-        {
-            PropertyNames = new List<string>();
-            PropertyIndex = new Dictionary<string, int>();
-            ColumnMap2Property = new Dictionary<string, string>();
-            ExcelIndex2PropertyIndex = new Dictionary<int, int>();
-            IdColumnNames = new List<string>();
-            UnderlyingPropType = new Dictionary<PropertyInfo, Type>();
-            GatherTypeInfos(typ);
-        }
-        private void GatherTypeInfos(Type typ)
         {
             IsArray = typ.IsArray;
             if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(typ))
@@ -43,11 +36,14 @@ namespace ALE.ETLBox.DataFlow
                 foreach (var propInfo in Properties)
                 {
                     PropertyNames.Add(propInfo.Name);
+                    //PropertiesByName.Add(propInfo.Name, propInfo);
                     PropertyIndex.Add(propInfo.Name, index);
                     AddColumnMappingAttribute(propInfo);
                     AddExcelColumnAttribute(propInfo, index);
                     AddMergeIdColumnNameAttribute(propInfo);
                     AddUnderlyingType(propInfo);
+                    //AddRetrieveColumn(propInfo);
+                    //AddMatchColumn(propInfo);
                     index++;
                 }
             }
@@ -55,7 +51,6 @@ namespace ALE.ETLBox.DataFlow
             {
                 ArrayLength = typ.GetArrayRank();
             }
-
         }
 
         private void AddColumnMappingAttribute(PropertyInfo propInfo)
@@ -90,6 +85,20 @@ namespace ALE.ETLBox.DataFlow
             Type t = Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
             UnderlyingPropType.Add(propInfo, t);
         }
+
+        //private void AddMatchColumn(PropertyInfo propInfo)
+        //{
+        //    var attr = propInfo.GetCustomAttribute(typeof(MatchColumn)) as MatchColumn;
+        //    if (attr != null)
+        //        MatchColumns.Add(Tuple.Create(propInfo, attr.LookupSourcePropertyName));
+        //}
+
+        //private void AddRetrieveColumn(PropertyInfo propInfo)
+        //{
+        //    var attr = propInfo.GetCustomAttribute(typeof(RetrieveColumn)) as RetrieveColumn;
+        //    if (attr != null)
+        //        RetrieveColumns.Add(Tuple.Create(propInfo, attr.LookupSourcePropertyName));
+        //}
 
         internal static object CastPropertyValue(PropertyInfo property, string value)
         {

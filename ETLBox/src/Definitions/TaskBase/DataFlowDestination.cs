@@ -42,8 +42,22 @@ namespace ALE.ETLBox.DataFlow
 
         protected virtual async Task AwaitCompletion()
         {
-            await TargetAction.Completion.ConfigureAwait(false);
-            CleanUp();
+            try
+            {
+                await TargetAction.Completion.ConfigureAwait(false);
+            }
+            catch (AggregateException ae)
+            {
+                throw ae.InnerException;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                CleanUp();
+            }
         }
 
         protected virtual void CleanUp()

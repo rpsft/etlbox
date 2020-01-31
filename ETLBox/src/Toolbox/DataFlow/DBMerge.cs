@@ -49,10 +49,10 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         bool _useTruncateMethod;
-        Lookup<TInput, TInput, TInput> Lookup { get; set; }
+        LookupTransformation<TInput, TInput> Lookup { get; set; }
         DBSource<TInput> DestinationTableAsSource { get; set; }
         DBDestination<TInput> DestinationTable { get; set; }
-        List<TInput> InputData { get; set; } = new List<TInput>();
+        List<TInput> InputData => Lookup.LookupData;
         CustomSource<TInput> OutputSource { get; set; }
         bool WasDeletionExecuted { get; set; }
         List<string> MergeIdColumnNames { get; set; }
@@ -101,10 +101,9 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitInternalFlow()
         {
-            Lookup = new Lookup<TInput, TInput, TInput>(
-                row => UpdateRowWithDeltaInfo(row),
+            Lookup = new LookupTransformation<TInput, TInput>(
                 DestinationTableAsSource,
-                InputData
+                row => UpdateRowWithDeltaInfo(row)
             );
 
             DestinationTable.BeforeBatchWrite = batch =>
