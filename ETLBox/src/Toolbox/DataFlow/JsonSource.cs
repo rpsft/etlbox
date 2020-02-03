@@ -41,8 +41,9 @@ namespace ALE.ETLBox.DataFlow
         JsonTextReader JsonTextReader { get; set; }
         StreamReader StreamReader { get; set; }
         HttpClient HttpClient { get; set; }
+        TypeInfo TypeInfo { get; set; }
 
-        public JsonSource() : base()
+        public JsonSource() 
         {
             TypeInfo = new TypeInfo(typeof(TOutput));
             JsonSerializer = new JsonSerializer();

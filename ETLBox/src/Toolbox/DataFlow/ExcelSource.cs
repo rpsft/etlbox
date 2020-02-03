@@ -35,9 +35,10 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         FileStream FileStream { get; set; }
         IExcelDataReader ExcelDataReader { get; set; }
-
+        ExcelTypeInfo TypeInfo { get; set; }
         public ExcelSource()
         {
+            TypeInfo = new ExcelTypeInfo(typeof(TOutput));
         }
 
         public ExcelSource(string fileName) : this()
@@ -66,7 +67,7 @@ namespace ALE.ETLBox.DataFlow
             do
             {
                 int rowNr = 0;
-                TypeInfo typeInfo = new TypeInfo(typeof(TOutput));
+
                 while (ExcelDataReader.Read())
                 {
                     if (ExcelDataReader.VisibleState != "visible") continue;
@@ -76,7 +77,7 @@ namespace ALE.ETLBox.DataFlow
                     if (HasRange && rowNr < Range.StartRow) continue;
                     try
                     {
-                        TOutput row = ParseDataRow(typeInfo);
+                        TOutput row = ParseDataRow();
                         Buffer.SendAsync(row).Wait();
                     }
                     catch (Exception e)
@@ -89,7 +90,7 @@ namespace ALE.ETLBox.DataFlow
             } while (ExcelDataReader.NextResult());
         }
 
-        private TOutput ParseDataRow(TypeInfo typeInfo)
+        private TOutput ParseDataRow()
         {
             TOutput row = new TOutput();
             int colInRange = 0;
@@ -97,9 +98,9 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (HasRange && col > Range.EndColumnIfSet) break;
                 if (HasRange && (col + 1) < Range.StartColumn) continue;
-                if (colInRange > typeInfo.PropertyLength) break;
-                if (!typeInfo.ExcelIndex2PropertyIndex.ContainsKey(colInRange)) { colInRange++; continue; }
-                PropertyInfo propInfo = typeInfo.Properties[typeInfo.ExcelIndex2PropertyIndex[colInRange]];
+                if (colInRange > TypeInfo.PropertyLength) break;
+                if (!TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colInRange)) { colInRange++; continue; }
+                PropertyInfo propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colInRange]];
                 object value = ExcelDataReader.GetValue(col);
                 propInfo.SetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
                 colInRange++;

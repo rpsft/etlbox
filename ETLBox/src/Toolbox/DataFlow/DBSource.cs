@@ -69,7 +69,7 @@ namespace ALE.ETLBox.DataFlow
         bool HasColumnNames => ColumnNames != null && ColumnNames?.Count > 0;
         bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         bool HasSql => !String.IsNullOrWhiteSpace(Sql);
-
+        DBTypeInfo TypeInfo { get; set; }
         string SourceDescription
         {
             get
@@ -85,7 +85,7 @@ namespace ALE.ETLBox.DataFlow
 
         public DBSource()
         {
-            base.InitObjects();
+            TypeInfo = new DBTypeInfo(typeof(TOutput));
         }
 
         public DBSource(string tableName) : this()

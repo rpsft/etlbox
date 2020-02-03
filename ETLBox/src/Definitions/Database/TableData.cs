@@ -56,7 +56,7 @@ namespace ALE.ETLBox
         int ReadIndex { get; set; }
         TableDefinition Definition { get; set; }
         public bool HasDefinition => Definition != null;
-        TypeInfo TypeInfo { get; set; }
+        DBTypeInfo TypeInfo { get; set; }
         int? IDColumnIndex { get; set; }
         bool HasIDColumnIndex => IDColumnIndex != null;
 
@@ -65,7 +65,7 @@ namespace ALE.ETLBox
             Definition = definition;
             IDColumnIndex = Definition.IDColumnIndex;
             Rows = new List<object[]>();
-            TypeInfo = new TypeInfo(typeof(T));
+            TypeInfo = new DBTypeInfo(typeof(T));
         }
 
         public TableData(TableDefinition definition, int estimatedBatchSize)
@@ -74,7 +74,7 @@ namespace ALE.ETLBox
             IDColumnIndex = Definition.IDColumnIndex;
             EstimatedBatchSize = estimatedBatchSize;
             Rows = new List<object[]>(estimatedBatchSize);
-            TypeInfo = new TypeInfo(typeof(T));
+            TypeInfo = new DBTypeInfo(typeof(T));
         }
 
         public object this[string name] => Rows[GetOrdinal(name)];

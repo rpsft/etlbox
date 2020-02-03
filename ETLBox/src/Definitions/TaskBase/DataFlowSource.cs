@@ -8,13 +8,8 @@ namespace ALE.ETLBox.DataFlow
     {
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
-        internal TypeInfo TypeInfo { get; set; }
-        protected ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
-        public virtual void InitObjects()
-        {
-            TypeInfo = new TypeInfo(typeof(TOutput));
-        }
+        protected ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public abstract void Execute();
 

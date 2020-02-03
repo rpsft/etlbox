@@ -29,16 +29,13 @@ namespace ALE.ETLBox.DataFlow
         public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
         public bool DisableDeletion { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
-        public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         public string TableName { get; set; }
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
-        public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         public List<TInput> DeltaTable { get; set; } = new List<TInput>();
         public bool UseTruncateMethod
         {
             get
             {
-                if (MergeIdColumnNames == null || MergeIdColumnNames?.Count == 0) return true;
+                if (TypeInfo?.IdColumnNames == null || TypeInfo?.IdColumnNames?.Count == 0) return true;
                 return _useTruncateMethod;
             }
             set
@@ -48,6 +45,9 @@ namespace ALE.ETLBox.DataFlow
         }
 
         /* Private stuff */
+        bool HasDestinationTableDefinition => DestinationTableDefinition != null;
+        bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         bool _useTruncateMethod;
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DBSource<TInput> DestinationTableAsSource { get; set; }
@@ -55,7 +55,7 @@ namespace ALE.ETLBox.DataFlow
         List<TInput> InputData => Lookup.LookupData;
         CustomSource<TInput> OutputSource { get; set; }
         bool WasDeletionExecuted { get; set; }
-        List<string> MergeIdColumnNames { get; set; }
+        DBMergeTypeInfo TypeInfo { get; set; }
 
         public DBMerge(string tableName)
         {
@@ -94,8 +94,8 @@ namespace ALE.ETLBox.DataFlow
 
         private void GetIdColumName()
         {
-            TypeInfo typeInfo = new TypeInfo(typeof(TInput));
-            MergeIdColumnNames = typeInfo.IdColumnNames;
+            TypeInfo = new DBMergeTypeInfo(typeof(TInput));
+
         }
 
 
@@ -179,8 +179,8 @@ namespace ALE.ETLBox.DataFlow
             var idsToDelete = rowsToDelete.Select(row => $"'{row.UniqueId}'");
             if (idsToDelete.Count() > 0)
             {
-                string idNames = $"{QB}{MergeIdColumnNames.First()}{QE}";
-                if (MergeIdColumnNames.Count > 1)
+                string idNames = $"{QB}{TypeInfo.IdColumnNames.First()}{QE}";
+                if (TypeInfo.IdColumnNames.Count > 1)
                     idNames = CreateConcatSqlForNames();
                 new SqlTask(this, $@"
             DELETE FROM {TN.QuotatedFullName} 
@@ -195,9 +195,9 @@ namespace ALE.ETLBox.DataFlow
 
         private string CreateConcatSqlForNames()
         {
-            string result =  $"CONCAT( {string.Join(",", MergeIdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
+            string result =  $"CONCAT( {string.Join(",", TypeInfo?.IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
             if (this.ConnectionType == ConnectionManagerType.SQLite)
-                result = $" {string.Join("||", MergeIdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
+                result = $" {string.Join("||", TypeInfo?.IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
             return result;
         }
 

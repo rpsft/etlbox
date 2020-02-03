@@ -34,11 +34,11 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         CsvReader CsvReader { get; set; }
         StreamReader StreamReader { get; set; }
-
+        TypeInfo TypeInfo { get; set; }
         public CsvSource()
         {
             Configuration = new Configuration(CultureInfo.InvariantCulture);
-            base.InitObjects();
+            TypeInfo = new TypeInfo(typeof(TOutput));
         }
 
         public CsvSource(string fileName) : this()
