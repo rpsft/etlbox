@@ -10,11 +10,13 @@ namespace ALE.ETLBox.DataFlow
     internal abstract class MappingTypeInfo
     {
         protected Dictionary<string, PropertyInfo> OutputPropertiesByName { get; set; } = new Dictionary<string, PropertyInfo>();
-        internal bool IsArray { get; set; } = true;
+        internal bool IsArray { get; set; }
+        internal bool IsArrayOutput { get; set; }
         internal bool IsDynamic { get; set; }
 
         internal MappingTypeInfo(Type inputType, Type outputType)
         {
+            IsArrayOutput = outputType.IsArray;
             IsArray = inputType.IsArray || outputType.IsArray;
             IsDynamic = typeof(IDynamicMetaObjectProvider).IsAssignableFrom(inputType)
                 || typeof(IDynamicMetaObjectProvider).IsAssignableFrom(outputType);

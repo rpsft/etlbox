@@ -50,6 +50,8 @@ namespace ALE.ETLBox.DataFlow
             OutputBuffer = new BufferBlock<TOutput>();
             AggTypeInfo = new AggregationTypeInfo(typeof(TInput), typeof(TOutput));
 
+            CheckTypeInfo();
+
             if (AggregationAction == null && AggTypeInfo.AggregateColumns.Count > 0)
                 AggregationAction = DefineAggregationAction;
 
@@ -58,6 +60,12 @@ namespace ALE.ETLBox.DataFlow
 
             if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
                 StoreKeyAction = DefineStoreKeyActionFromAttributes;
+        }
+
+        private void CheckTypeInfo()
+        {
+            if (AggTypeInfo.IsArrayOutput)
+                throw new Exception("Aggregation target must be of an object or dynamic type! Array types are not allowed.");
         }
 
         public Aggregation(Action<TInput, TOutput> aggregationAction) : this()
