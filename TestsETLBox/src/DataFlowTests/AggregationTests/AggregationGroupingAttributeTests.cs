@@ -14,27 +14,29 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class AggregationUsingMatchingTests
+    public class AggregationGroupingAttributeTests
     {
-        public AggregationUsingMatchingTests()
+        public AggregationGroupingAttributeTests()
         {
         }
 
         public class MyRow
         {
             public int Id { get; set; }
+            [GroupColumn("GroupName")]
             public string ClassName { get; set; }
+            [AggregateColumn("AggValue", AggregationMethod.Sum)]
             public double DetailValue { get; set; }
         }
 
         public class MyAggRow
         {
-            public string ClassName { get; set; }
+            public string GroupName { get; set; }
             public double AggValue { get; set; }
         }
 
         [Fact]
-        public void ClassificationAndKeepingKey()
+        public void WithGrouping()
         {
             //Arrange
             MemorySource<MyRow> source = new MemorySource<MyRow>();
@@ -48,11 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MyRow { Id = 6, ClassName = "Class3", DetailValue = 30.0 },
                 };
 
-            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
-                (row, aggValue) => aggValue.AggValue += row.DetailValue,
-                row => row.ClassName,
-                (key, agg) => agg.ClassName = (string)key
-                );
+            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>();
 
             MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
 
@@ -65,9 +63,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Collection<MyAggRow>(dest.Data,
-                ar => Assert.True(ar.AggValue == 10 && ar.ClassName == "Class1"),
-                ar => Assert.True(ar.AggValue == 20 && ar.ClassName == "Class2"),
-                ar => Assert.True(ar.AggValue == 30 && ar.ClassName == "Class3")
+                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
+                ar => Assert.True(ar.AggValue == 20 && ar.GroupName == "Class2"),
+                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == "Class3")
             );
         }
 

@@ -29,7 +29,7 @@ namespace ALE.ETLBox.DataFlow
                 InputBuffer.Completion.ContinueWith(t => WriteIntoOutput());
             }
         }
-        public Func<TInput, object> ClassificationProperty { get; set; }
+        public Func<TInput, object> GroupingProperty { get; set; }
         public Action<object, TOutput> StoreKeyAction { get; set; }
         public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
@@ -51,14 +51,14 @@ namespace ALE.ETLBox.DataFlow
             AggregationAction = aggregationAction;
         }
 
-        public Aggregation(Action<TInput, TOutput> aggregationAction, Func<TInput, object> classificationProperty)
+        public Aggregation(Action<TInput, TOutput> aggregationAction, Func<TInput, object> groupingProperty)
             : this(aggregationAction)
         {
-            ClassificationProperty = classificationProperty;
+            GroupingProperty = groupingProperty;
         }
 
-        public Aggregation(Action<TInput, TOutput> aggregationAction, Func<TInput, object> classificationProperty, Action<object, TOutput> storeKeyAction)
-            : this(aggregationAction, classificationProperty)
+        public Aggregation(Action<TInput, TOutput> aggregationAction, Func<TInput, object> groupingProperty, Action<object, TOutput> storeKeyAction)
+            : this(aggregationAction, groupingProperty)
         {
             StoreKeyAction = storeKeyAction;
         }
@@ -78,7 +78,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void WrapAggregationAction(TInput row)
         {
-            object key = ClassificationProperty?.Invoke(row) ?? "AggregateAll";
+            object key = GroupingProperty?.Invoke(row) ?? "AggregateAll";
 
             if (!AggregationData.ContainsKey(key))
                 AddRecordToDict(key);
@@ -95,5 +95,13 @@ namespace ALE.ETLBox.DataFlow
             AggregationData.Add(key, firstEntry);
         }
 
+    }
+
+    public enum AggregationMethod
+    {
+        Sum,
+        Min,
+        Max,
+        Avg
     }
 }
