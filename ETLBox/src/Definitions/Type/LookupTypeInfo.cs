@@ -62,7 +62,7 @@ namespace ALE.ETLBox.DataFlow
 
             foreach (var rcp in RetrieveColumns) {
                 if (!SourcePropertiesByName.ContainsKey(rcp.Item2))
-                    throw new ETLBoxException($"Match column {rcp.Item2} does not exists in lookup source object!");
+                    throw new ETLBoxException($"Retrieve column {rcp.Item2} does not exists in lookup source object!");
                 RetrieveColumnsInputAndSource.Add(Tuple.Create(rcp.Item1, SourcePropertiesByName[rcp.Item2]));
             }
         }

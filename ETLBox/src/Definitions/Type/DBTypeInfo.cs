@@ -34,7 +34,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void AddUnderlyingType(PropertyInfo propInfo)
         {
-            Type t = Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
+            Type t = TypeInfo.TryGetUnderlyingType(propInfo);
             UnderlyingPropType.Add(propInfo, t);
         }
 

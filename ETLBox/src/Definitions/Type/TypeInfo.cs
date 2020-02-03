@@ -38,6 +38,11 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+        internal static Type TryGetUnderlyingType(PropertyInfo propInfo)
+        {
+            return Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
+        }
+
         protected virtual void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex)
         {
             ;

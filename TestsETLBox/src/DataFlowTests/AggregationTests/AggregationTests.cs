@@ -32,7 +32,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
 
-
         [Fact]
         public void AggregateSimple()
         {
@@ -63,5 +62,47 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 );
         }
 
+        public class MyRowNullable
+        {
+            public int Id { get; set; }
+            public double? DetailValue { get; set; }
+        }
+
+        public class MyAggRowNullable
+        {
+            public double? AggValue { get; set; } = 0;
+        }
+
+        [Fact]
+        public void AggregateWithNull()
+        {
+            //Arrange
+            MemorySource<MyRowNullable> source = new MemorySource<MyRowNullable>();
+            source.Data = new List<MyRowNullable>()
+                {
+                new MyRowNullable { Id = 1,  DetailValue = 3.5 },
+                new MyRowNullable { Id = 0,  DetailValue = null },
+                new MyRowNullable { Id = 2,  DetailValue = 4.5 },
+                new MyRowNullable { Id = 3,  DetailValue = 2.0 },
+                new MyRowNullable { Id = 4,  DetailValue = null },
+                };
+
+            Aggregation<MyRowNullable, MyAggRowNullable> agg = new Aggregation<MyRowNullable, MyAggRowNullable>(
+                (row, aggRow) => aggRow.AggValue += row.DetailValue ?? 0
+                );
+
+            MemoryDestination<MyAggRowNullable> dest = new MemoryDestination<MyAggRowNullable>();
+
+            //Act
+            source.LinkTo(agg);
+            agg.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Collection<MyAggRowNullable>(dest.Data,
+                ar => Assert.True(ar.AggValue == 10)
+            );
+        }
     }
 }

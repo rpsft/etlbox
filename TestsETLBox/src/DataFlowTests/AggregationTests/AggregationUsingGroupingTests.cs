@@ -46,6 +46,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MyRow { Id = 4, ClassName = "Class2", DetailValue = 2.3 },
                 new MyRow { Id = 5, ClassName = "Class2", DetailValue = 16.5 },
                 new MyRow { Id = 6, ClassName = "Class3", DetailValue = 30.0 },
+                new MyRow { Id = 6, ClassName = null, DetailValue = 14.5 },
+                new MyRow { Id = 6, ClassName = null, DetailValue = 15.5 },
                 };
 
             Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
@@ -67,7 +69,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Collection<MyAggRow>(dest.Data,
                 ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
                 ar => Assert.True(ar.AggValue == 20 && ar.GroupName == "Class2"),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == "Class3")
+                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == "Class3"),
+                ar => Assert.True(ar.AggValue == 30 && ar.GroupName ==  string.Empty)
             );
         }
 
