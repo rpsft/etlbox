@@ -50,7 +50,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.Execute();
             dest.Wait();
 
-
             //Assert
             Assert.Collection<MyAggRow>(dest.Data,
               ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
