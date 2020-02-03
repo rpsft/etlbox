@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.DataFlow;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -6,45 +7,32 @@ using System.Reflection;
 
 namespace ALE.ETLBox.DataFlow
 {
-    internal class AggregationTypeInfo
+    internal class AggregationTypeInfo : MappingTypeInfo
     {
-        private Dictionary<string, PropertyInfo> OutputPropertiesByName { get; set; } = new Dictionary<string, PropertyInfo>();
-        private List<Tuple<PropertyInfo, string>> GroupColumns { get; set; } = new List<Tuple<PropertyInfo, string>>();
-        internal List<Tuple<PropertyInfo, PropertyInfo>> GroupColumnsInputAndOutput { get; set; } = new List<Tuple<PropertyInfo, PropertyInfo>>();
-        private string AggregateColumnNameInOutput { get; set; }
-        internal PropertyInfo AggregateColumnInInput { get; set; }
-        internal PropertyInfo AggregateColumnInOutput { get; set; }
-        internal AggregationMethod AggregationMethod { get; set; }
+        internal List<AggregateAttributeMapping> AggregateColumns { get; set; } = new List<AggregateAttributeMapping>();
+        internal List<AttributeMappingInfo> GroupColumns { get; set; } = new List<AttributeMappingInfo>();
 
-        internal bool IsArray { get; set; } = true;
-        internal bool IsDynamic { get; set; }
-
-        internal AggregationTypeInfo(Type inputType, Type aggType)
+        internal AggregationTypeInfo(Type inputType, Type aggType) : base(inputType, aggType)
         {
-            IsArray = inputType.IsArray || aggType.IsArray;
-            IsDynamic = typeof(IDynamicMetaObjectProvider).IsAssignableFrom(inputType) || typeof(IDynamicMetaObjectProvider).IsAssignableFrom(aggType);
+        }
 
-            if (!IsArray && !IsDynamic)
-            {
-                foreach (var propInfo in inputType.GetProperties())
-                {
-                    AddAggregateColumn(propInfo);
-                    AddGroupColumn(propInfo);
-                }
-
-                foreach (var propInfo in aggType.GetProperties())
-                    OutputPropertiesByName.Add(propInfo.Name, propInfo);
-
-                CombineInputAndOutputTypeInfo();
-            }
-
+        protected override void AddAttributeInfoMapping(PropertyInfo propInfo)
+        {
+            AddAggregateColumn(propInfo);
+            AddGroupColumn(propInfo);
         }
 
         private void AddGroupColumn(PropertyInfo propInfo)
         {
             var attr = propInfo.GetCustomAttribute(typeof(GroupColumn)) as GroupColumn;
             if (attr != null)
-                GroupColumns.Add(Tuple.Create(propInfo, attr.AggregationGroupingProperty));
+            {
+                GroupColumns.Add(new AttributeMappingInfo()
+                {
+                    PropInInput = propInfo,
+                    PropNameInOutput = attr.AggregationGroupingProperty
+                });
+            }
         }
 
         private void AddAggregateColumn(PropertyInfo propInfo)
@@ -52,28 +40,25 @@ namespace ALE.ETLBox.DataFlow
             var attr = propInfo.GetCustomAttribute(typeof(AggregateColumn)) as AggregateColumn;
             if (attr != null)
             {
-                AggregateColumnInInput = propInfo;
-                AggregateColumnNameInOutput = attr.AggregationProperty;
-                AggregationMethod = attr.AggregationMethod;
+                AggregateColumns.Add(new AggregateAttributeMapping()
+                {
+                    PropInInput = propInfo,
+                    PropNameInOutput = attr.AggregationProperty,
+                    AggregationMethod = attr.AggregationMethod
+                });
             }
         }
 
-        private void CombineInputAndOutputTypeInfo()
+        protected override void CombineInputAndOutputMapping()
         {
-            foreach (var mcp in GroupColumns)
-            {
-                if (!OutputPropertiesByName.ContainsKey(mcp.Item2))
-                    throw new ETLBoxException($"Match column {mcp.Item2} does not exists in lookup source object!");
-                GroupColumnsInputAndOutput.Add(Tuple.Create(mcp.Item1, OutputPropertiesByName[mcp.Item2]));
-            }
-
-            if (AggregateColumnNameInOutput != null)
-            {
-                if (!OutputPropertiesByName.ContainsKey(AggregateColumnNameInOutput))
-                    throw new ETLBoxException($"Aggregation column {AggregateColumnNameInOutput} does not exists in aggregation output object!");
-                AggregateColumnInOutput = OutputPropertiesByName[AggregateColumnNameInOutput];
-            }
+            this.AssignOutputProperty(GroupColumns);
+            this.AssignOutputProperty(AggregateColumns.Cast<AttributeMappingInfo>().ToList());
         }
+    }
+
+    internal class AggregateAttributeMapping : AttributeMappingInfo
+    {
+        internal AggregationMethod AggregationMethod { get; set; }
     }
 }
 

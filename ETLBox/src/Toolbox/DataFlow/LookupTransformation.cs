@@ -107,19 +107,19 @@ namespace ALE.ETLBox.DataFlow
             var lookupHit = LookupData.Find(e =>
             {
                 bool same = true;
-                foreach (var mc in TypeInfo.MatchColumnsInputAndSource)
+                foreach (var mc in TypeInfo.MatchColumns)
                 {
-                    same &= mc.Item1.GetValue(row).Equals(mc.Item2.GetValue(e));
+                    same &= mc.PropInInput.GetValue(row).Equals(mc.PropInOutput.GetValue(e));
                     if (!same) break;
                 }
                 return same;
             });
             if (lookupHit != null)
             {
-                foreach (var rc in TypeInfo.RetrieveColumnsInputAndSource)
+                foreach (var rc in TypeInfo.RetrieveColumns)
                 {
-                    var retrieveValue = rc.Item2.GetValue(lookupHit);
-                    rc.Item1.SetValue(row, retrieveValue);
+                    var retrieveValue = rc.PropInOutput.GetValue(lookupHit);
+                    rc.PropInInput.SetValue(row, retrieveValue);
                 }
             }
             return row;

@@ -123,5 +123,59 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 ar => Assert.True(ar.AggValue == 30 && ar.GroupId == null)
             );
         }
+
+        public class MyRowMultiple
+        {
+            public int Id { get; set; }
+            [GroupColumn("Group1Name")]
+            public string Class1Name { get; set; }
+            [GroupColumn("Group2Name")]
+            public string Class2Name { get; set; }
+            [AggregateColumn("AggValue1", AggregationMethod.Sum)]
+            public int DetailValue1 { get; set; }
+            [AggregateColumn("AggValue2", AggregationMethod.Count)]
+            public double DetailValue2 { get; set; }
+        }
+
+        public class MyAggRowMultiple
+        {
+            public string Group1Name { get; set; }
+            public string Group2Name { get; set; }
+            public double AggValue1 { get; set; }
+            public int AggValue2 { get; set; }
+        }
+
+        [Fact]
+        public void WithMultipleGroupingAndAggregation()
+        {
+            //Arrange
+            MemorySource<MyRowMultiple> source = new MemorySource<MyRowMultiple>();
+            source.Data = new List<MyRowMultiple>()
+                {
+                new MyRowMultiple { Id = 1, Class1Name = "Class", Class2Name = "1", DetailValue1 = 4 },
+                new MyRowMultiple { Id = 2, Class1Name = "Class", Class2Name = "1", DetailValue1 = 6 },
+                new MyRowMultiple { Id = 3, Class1Name = "Class2",Class2Name = null, DetailValue1 = 3 },
+                new MyRowMultiple { Id = 4, Class1Name = "Class2",Class2Name = null, DetailValue1 = 7 },
+                new MyRowMultiple { Id = 5, Class1Name = "Class",Class2Name = "3", DetailValue1 = 10 },
+                };
+
+            Aggregation<MyRowMultiple, MyAggRowMultiple> agg = new Aggregation<MyRowMultiple, MyAggRowMultiple>();
+
+            MemoryDestination<MyAggRowMultiple> dest = new MemoryDestination<MyAggRowMultiple>();
+
+            //Act
+            source.LinkTo(agg);
+            agg.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+
+            //Assert
+            Assert.Collection<MyAggRowMultiple>(dest.Data,
+                ar => Assert.True(ar.AggValue1 == 10 && ar.AggValue2 == 2 && ar.Group1Name == "Class" && ar.Group2Name == "1"),
+                ar => Assert.True(ar.AggValue1 == 10 && ar.AggValue2 == 2 && ar.Group1Name == "Class2" && ar.Group2Name == null),
+                ar => Assert.True(ar.AggValue1 == 10 && ar.AggValue2 == 1 && ar.Group1Name == "Class" && ar.Group2Name == "3")
+            );
+        }
     }
 }

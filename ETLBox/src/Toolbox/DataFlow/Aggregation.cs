@@ -50,13 +50,13 @@ namespace ALE.ETLBox.DataFlow
             OutputBuffer = new BufferBlock<TOutput>();
             AggTypeInfo = new AggregationTypeInfo(typeof(TInput), typeof(TOutput));
 
-            if (AggregationAction == null && AggTypeInfo.AggregateColumnInInput != null)
+            if (AggregationAction == null && AggTypeInfo.AggregateColumns.Count > 0)
                 AggregationAction = DefineAggregationAction;
 
-            if (GroupingFunc == null && AggTypeInfo.GroupColumnsInputAndOutput?.Count > 0)
+            if (GroupingFunc == null && AggTypeInfo.GroupColumns.Count > 0)
                 GroupingFunc = DefineGroupingPropertyFromAttributes;
 
-            if (StoreKeyAction == null && AggTypeInfo.GroupColumnsInputAndOutput?.Count > 0)
+            if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
                 StoreKeyAction = DefineStoreKeyActionFromAttributes;
         }
 
@@ -79,25 +79,28 @@ namespace ALE.ETLBox.DataFlow
 
         private void DefineAggregationAction(TInput inputrow, TOutput aggOutput)
         {
-            decimal? inputVal = ConvertToDecimal(AggTypeInfo.AggregateColumnInInput.GetValue(inputrow));
-            decimal? aggVal = ConvertToDecimal(AggTypeInfo.AggregateColumnInOutput.GetValue(aggOutput));
-            decimal? res = null;
-            if (aggVal == null && AggTypeInfo.AggregationMethod == AggregationMethod.Count)
-                res = 1;
-            else if (aggVal == null)
-                res = inputVal;
-            else if (AggTypeInfo.AggregationMethod == AggregationMethod.Sum)
-                res = (inputVal ?? 0) + aggVal;
-            else if (AggTypeInfo.AggregationMethod == AggregationMethod.Max)
-                res = ((inputVal ?? 0) > aggVal) ? inputVal : aggVal;
-            else if (AggTypeInfo.AggregationMethod == AggregationMethod.Min)
-                res = (inputVal ?? 0) < aggVal ? inputVal : aggVal;
-            else if (AggTypeInfo.AggregationMethod == AggregationMethod.Count)
-                res = aggVal + 1;
+            foreach (var attrmap in AggTypeInfo.AggregateColumns)
+            {
+                decimal? inputVal = ConvertToDecimal(attrmap.PropInInput.GetValue(inputrow));
+                decimal? aggVal = ConvertToDecimal(attrmap.PropInOutput.GetValue(aggOutput));
+                decimal? res = null;
+                if (aggVal == null && attrmap.AggregationMethod == AggregationMethod.Count)
+                    res = 1;
+                else if (aggVal == null)
+                    res = inputVal;
+                else if (attrmap.AggregationMethod == AggregationMethod.Sum)
+                    res = (inputVal ?? 0) + aggVal;
+                else if (attrmap.AggregationMethod == AggregationMethod.Max)
+                    res = ((inputVal ?? 0) > aggVal) ? inputVal : aggVal;
+                else if (attrmap.AggregationMethod == AggregationMethod.Min)
+                    res = (inputVal ?? 0) < aggVal ? inputVal : aggVal;
+                else if (attrmap.AggregationMethod == AggregationMethod.Count)
+                    res = aggVal + 1;
 
-            object output = Convert.ChangeType(
-                res, TypeInfo.TryGetUnderlyingType(AggTypeInfo.AggregateColumnInOutput));
-            AggTypeInfo.AggregateColumnInOutput.SetValue(aggOutput, output);
+                object output = Convert.ChangeType(
+                    res, TypeInfo.TryGetUnderlyingType(attrmap.PropInOutput));
+                attrmap.PropInOutput.SetValue(aggOutput, output);
+            }
         }
 
         private decimal? ConvertToDecimal(object input)
@@ -118,8 +121,8 @@ namespace ALE.ETLBox.DataFlow
         private object DefineGroupingPropertyFromAttributes(TInput inputrow)
         {
             var gk = new GroupingKey();
-            foreach (var propMap in AggTypeInfo.GroupColumnsInputAndOutput)
-                gk?.GroupingObjectsByProperty.Add(propMap.Item2, propMap.Item1.GetValue(inputrow));
+            foreach (var propMap in AggTypeInfo.GroupColumns)
+                gk?.GroupingObjectsByProperty.Add(propMap.PropInOutput, propMap.PropInInput.GetValue(inputrow));
             return gk;
         }
         private void WriteIntoOutput()
@@ -158,7 +161,7 @@ namespace ALE.ETLBox.DataFlow
         {
             public override int GetHashCode()
             {
-                unchecked // Overflow is fine, just wrap
+                unchecked
                 {
                     int hash = 29;
                     foreach (var map in GroupingObjectsByProperty)
@@ -186,6 +189,4 @@ namespace ALE.ETLBox.DataFlow
         Max,
         Count
     }
-
-
 }
