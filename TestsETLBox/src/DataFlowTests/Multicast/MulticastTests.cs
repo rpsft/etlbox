@@ -25,6 +25,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }
+            public int Col3 => Col1;
         }
 
         [Fact]

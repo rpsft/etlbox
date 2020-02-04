@@ -65,7 +65,8 @@ namespace ALE.ETLBox.DataFlow
                 clone = (TInput)Activator.CreateInstance(typeof(TInput));
                 foreach (PropertyInfo propInfo in TypeInfo.Properties)
                 {
-                    propInfo.SetValue(clone, propInfo.GetValue(row));
+                    if (propInfo.CanWrite)
+                        propInfo.SetValue(clone, propInfo.GetValue(row));
                 }
             }
             LogProgress();
