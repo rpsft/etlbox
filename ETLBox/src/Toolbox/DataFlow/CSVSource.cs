@@ -142,9 +142,9 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
-    public class CSVSource : CsvSource<string[]>
+    public class CsvSource : CsvSource<string[]>
     {
-        public CSVSource() : base() { }
-        public CSVSource(string fileName) : base(fileName) { }
+        public CsvSource() : base() { }
+        public CsvSource(string fileName) : base(fileName) { }
     }
 }

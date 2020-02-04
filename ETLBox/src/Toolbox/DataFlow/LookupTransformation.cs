@@ -127,6 +127,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void LoadLookupData()
         {
+            CheckLookupObjects();
             try
             {
                 Source.Execute();
@@ -136,6 +137,11 @@ namespace ALE.ETLBox.DataFlow
             {
                 throw e;
             }
+        }
+
+        private void CheckLookupObjects()
+        {
+            if (Source == null) throw new ETLBoxException("You need to define a lookup source before using a LookupTransformation in a data flow");
         }
 
         private void FillBuffer(TSourceOutput sourceRow)

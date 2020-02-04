@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("RowTransExceptionTest");
 
-            CSVSource source = new CSVSource("res/RowTransformation/TwoColumns.csv");
+            CsvSource source = new CsvSource("res/RowTransformation/TwoColumns.csv");
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "RowTransExceptionTest");
 
             CreateErrorTableTask.DropAndCreate(SqlConnection, "errors");
@@ -68,7 +68,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ThrowExceptionWithoutHandling()
         {
             //Arrange
-            CSVSource source = new CSVSource("res/RowTransformation/TwoColumns.csv");
+            CsvSource source = new CsvSource("res/RowTransformation/TwoColumns.csv");
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act

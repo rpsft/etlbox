@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.Performance
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
 
-            var sourceNonGeneric = new CSVSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
+            var sourceNonGeneric = new CsvSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destNonGeneric = new MemoryDestination();
             var sourceGeneric = new CsvSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destGeneric = new MemoryDestination<CSVData>();

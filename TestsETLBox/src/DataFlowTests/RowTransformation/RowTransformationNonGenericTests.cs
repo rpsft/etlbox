@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationRowTransformation");
-            CSVSource source = new CSVSource("res/RowTransformation/TwoColumnsSwapped.csv");
+            CsvSource source = new CsvSource("res/RowTransformation/TwoColumnsSwapped.csv");
 
             //Act
             RowTransformation trans = new RowTransformation(

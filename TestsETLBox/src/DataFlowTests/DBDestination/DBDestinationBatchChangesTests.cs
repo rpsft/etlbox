@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            CSVSource source = new CSVSource("res/CSVSource/TwoColumns.csv");
+            CsvSource source = new CsvSource("res/CSVSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

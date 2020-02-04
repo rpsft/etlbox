@@ -11,8 +11,8 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Improving Lookup with new set of attributes to defined matching and retrieving properties. Also a new Aggretion component simplifies creating aggregates (e.g. SUM, MAX or Average).</PackageReleaseNotes>
-    <Version>1.8.0</Version>
+    <PackageReleaseNotes>Improving Lookup with new set of attributes to define matching and retrieving properties. Also a new Aggretion component that simplifies creating aggregates (e.g. to calculate SUM, MIN, MAX or Count or any other custom defined calculation).</PackageReleaseNotes>
+    <Version>1.8.0-alpha</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>

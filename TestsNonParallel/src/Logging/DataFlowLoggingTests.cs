@@ -143,7 +143,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             CreateTestTable("DBDestination");
-            CSVSource source = new CSVSource("res/DataFlowLogging/TwoColumns.csv");
+            CsvSource source = new CsvSource("res/DataFlowLogging/TwoColumns.csv");
             DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act

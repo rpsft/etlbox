@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination dest = new DBDestination(Connection, "CSVDestination2Columns");
 
             //Act
-            CSVSource source = new CSVSource("res/CSVSource/TwoColumns.csv");
+            CsvSource source = new CsvSource("res/CSVSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -47,7 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination dest = new DBDestination(Connection, "CSVDestination2Columns");
 
             //Act
-            CSVSource source = new CSVSource("res/CSVSource/ThreeColumns.csv");
+            CsvSource source = new CsvSource("res/CSVSource/ThreeColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination dest = new DBDestination(Connection, "CSVDestination2Columns");
 
             //Act
-            CSVSource source = new CSVSource("res/CSVSource/OneColumn.csv");
+            CsvSource source = new CsvSource("res/CSVSource/OneColumn.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
