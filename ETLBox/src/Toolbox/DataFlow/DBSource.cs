@@ -122,7 +122,7 @@ namespace ALE.ETLBox.DataFlow
         private void LoadTableDefinition()
         {
             if (HasTableName)
-                SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(TableName, this.DbConnectionManager);
+                SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(this.DbConnectionManager, TableName);
             else if (!HasSourceTableDefinition && !HasTableName)
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }

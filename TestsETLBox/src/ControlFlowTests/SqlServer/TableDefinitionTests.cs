@@ -30,7 +30,7 @@ CREATE TABLE BigIntIdentity (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName("BigIntIdentity", SqlConnection);
+            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "BigIntIdentity");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -64,7 +64,7 @@ CREATE TABLE NumericDataTypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName("NumericDataTypes", SqlConnection);
+            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "NumericDataTypes");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -99,7 +99,7 @@ CREATE TABLE ReadTableDefinition (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName("ReadTableDefinition", SqlConnection);
+            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "ReadTableDefinition");
 
             //Assert
             Assert.True(result.Columns.All(tc => tc.NETDataType == typeof(DateTime)));

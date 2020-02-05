@@ -45,27 +45,27 @@ namespace ALE.ETLBox
 
         public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
 
-        public static TableDefinition GetDefinitionFromTableName(string tableName, IConnectionManager connection)
+        public static TableDefinition GetDefinitionFromTableName(IConnectionManager connection, string tableName)
         {
             IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = ConnectionManagerSpecifics.GetType(connection);
             ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connectionType);
 
             if (connectionType == ConnectionManagerType.SqlServer)
-                return ReadTableDefinitionFromSqlServer(TN, connection);
+                return ReadTableDefinitionFromSqlServer(connection, TN);
             else if (connectionType == ConnectionManagerType.SQLite)
-                return ReadTableDefinitionFromSQLite(TN, connection);
+                return ReadTableDefinitionFromSQLite(connection, TN);
             else if (connectionType == ConnectionManagerType.MySql)
-                return ReadTableDefinitionFromMySqlServer(TN, connection);
+                return ReadTableDefinitionFromMySqlServer(connection, TN);
             else if (connectionType == ConnectionManagerType.Postgres)
-                return ReadTableDefinitionFromPostgres(TN, connection);
+                return ReadTableDefinitionFromPostgres(connection, TN);
             else if (connectionType == ConnectionManagerType.Access)
-                return ReadTableDefinitionFromAccess(TN, connection);
+                return ReadTableDefinitionFromAccess(connection, TN);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
 
-        private static TableDefinition ReadTableDefinitionFromSqlServer(ObjectNameDescriptor TN, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromSqlServer(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
@@ -134,7 +134,7 @@ ORDER BY cols.column_id
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromSQLite(ObjectNameDescriptor TN, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromSQLite(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
@@ -157,7 +157,7 @@ ORDER BY cols.column_id
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromMySqlServer(ObjectNameDescriptor TN, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromMySqlServer(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
@@ -206,7 +206,7 @@ ORDER BY cols.ordinal_position
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromPostgres(ObjectNameDescriptor TN, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromPostgres(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
@@ -282,7 +282,7 @@ ORDER BY cols.ordinal_position
             return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromAccess(ObjectNameDescriptor TN, IConnectionManager connection)
+        private static TableDefinition ReadTableDefinitionFromAccess(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             var accessConnection = connection as AccessOdbcConnectionManager;
             return accessConnection?.ReadTableDefinition(TN);

@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.Logging
 
             //Assert
             IfTableOrViewExistsTask.IsExisting(connection, "etlbox_testloadprocess");
-            var td = TableDefinition.GetDefinitionFromTableName("etlbox_testloadprocess", connection);
+            var td = TableDefinition.GetDefinitionFromTableName(connection, "etlbox_testloadprocess");
             Assert.True(td.Columns.Count == 11);
 
             //Cleanup
