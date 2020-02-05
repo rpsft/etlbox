@@ -14,10 +14,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class MergeJoinNonGenericTests
+    public class MergeJoinStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MergeJoinNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public MergeJoinStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

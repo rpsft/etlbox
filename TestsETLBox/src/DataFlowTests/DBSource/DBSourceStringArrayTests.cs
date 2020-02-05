@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceNonGenericTests
+    public class DBSourceStringArrayTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public DBSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

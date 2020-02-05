@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class BlockTransformationNonGenericTests
+    public class BlockTransformationStringArrayTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public BlockTransformationNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public BlockTransformationStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

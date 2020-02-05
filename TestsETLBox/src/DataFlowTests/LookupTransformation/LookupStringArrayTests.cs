@@ -15,12 +15,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class LookupNonGenericTests
+    public class LookupStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public LookupNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public LookupStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

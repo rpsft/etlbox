@@ -14,10 +14,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CustomSourceNonGenericTests
+    public class CustomSourceStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CustomSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public CustomSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

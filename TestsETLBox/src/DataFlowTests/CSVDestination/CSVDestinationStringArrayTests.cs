@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonDestinationNonGenericTests : IDisposable
+    public class CSVDestinationStringArrayTests : IDisposable
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public JsonDestinationNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public CSVDestinationStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -33,19 +33,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleNonGeneric()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestSimpleNonGeneric");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimpleNonGeneric");
             s2C.InsertTestDataSet3();
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "JsonDestSimpleNonGeneric");
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "CSVDestSimpleNonGeneric");
 
             //Act
-            JsonDestination<string[]> dest = new JsonDestination<string[]>("./SimpleNonGeneric.json");
+            CsvDestination<string[]> dest = new CsvDestination<string[]>("./SimpleNonGeneric.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3StringArray.json")
-                , File.ReadAllText("./SimpleNonGeneric.json"));
+            //Assert
+            Assert.Equal(File.ReadAllText("./SimpleNonGeneric.csv"),
+                File.ReadAllText("res/CSVDestination/TwoColumnsSet3NoHeader.csv"));
         }
 
 

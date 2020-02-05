@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceNonGenericTests
+    public class CSVSourceStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public CSVSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

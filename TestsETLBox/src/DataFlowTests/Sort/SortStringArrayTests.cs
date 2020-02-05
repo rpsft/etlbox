@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class SortNonGenericTests
+    public class SortStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public SortNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public SortStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

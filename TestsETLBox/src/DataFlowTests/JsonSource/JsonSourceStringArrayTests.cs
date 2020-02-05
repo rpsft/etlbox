@@ -16,10 +16,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonSourceNonGenericTests
+    public class JsonSourceStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public JsonSourceNonGenericTests(DataFlowDatabaseFixture dbFixture)
+        public JsonSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
