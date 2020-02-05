@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.Helper;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
@@ -65,8 +66,7 @@ namespace ALE.ETLBox.DataFlow
                 clone = (TInput)Activator.CreateInstance(typeof(TInput));
                 foreach (PropertyInfo propInfo in TypeInfo.Properties)
                 {
-                    if (propInfo.CanWrite)
-                        propInfo.SetValue(clone, propInfo.GetValue(row));
+                    propInfo.TrySetValue(clone, propInfo.GetValue(row));
                 }
             }
             LogProgress();

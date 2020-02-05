@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.Helper;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -119,7 +120,7 @@ namespace ALE.ETLBox.DataFlow
                 foreach (var rc in TypeInfo.RetrieveColumns)
                 {
                     var retrieveValue = rc.PropInOutput.GetValue(lookupHit);
-                    rc.PropInInput.SetValue(row, retrieveValue);
+                    rc.PropInInput.TrySetValue(row, retrieveValue);
                 }
             }
             return row;

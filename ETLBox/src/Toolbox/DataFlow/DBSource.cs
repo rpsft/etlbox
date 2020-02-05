@@ -208,7 +208,7 @@ namespace ALE.ETLBox.DataFlow
                     {
                         var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
                         var con = colValue != null ? Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]) : colValue;
-                        propInfo.SetValue(_row, con);
+                        propInfo.TrySetValue(_row, con);
                     }
                 }
                 catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using ALE.ETLBox.Helper;
+using ExcelDataReader;
 using System;
 using System.IO;
 using System.Reflection;
@@ -102,7 +103,7 @@ namespace ALE.ETLBox.DataFlow
                 if (!TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colInRange)) { colInRange++; continue; }
                 PropertyInfo propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colInRange]];
                 object value = ExcelDataReader.GetValue(col);
-                propInfo.SetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
+                propInfo.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
                 colInRange++;
             }
             return row;

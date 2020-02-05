@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -107,7 +108,7 @@ namespace ALE.ETLBox.DataFlow
 
                 object output = Convert.ChangeType(
                     res, TypeInfo.TryGetUnderlyingType(attrmap.PropInOutput));
-                attrmap.PropInOutput.SetValue(aggOutput, output);
+                attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
             }
         }
 
@@ -123,7 +124,7 @@ namespace ALE.ETLBox.DataFlow
         {
             var gk = key as GroupingKey;
             foreach (var propMap in gk?.GroupingObjectsByProperty)
-                propMap.Key.SetValue(outputRow, propMap.Value);
+                propMap.Key.TrySetValue(outputRow, propMap.Value);
         }
 
         private object DefineGroupingPropertyFromAttributes(TInput inputrow)
