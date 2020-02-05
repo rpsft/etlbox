@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the data flow
     /// </code>
     /// </example>
-    public class DBSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    public class DbSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Read data from {SourceDescription}";
@@ -83,22 +83,22 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        public DBSource()
+        public DbSource()
         {
             TypeInfo = new DBTypeInfo(typeof(TOutput));
         }
 
-        public DBSource(string tableName) : this()
+        public DbSource(string tableName) : this()
         {
             TableName = tableName;
         }
 
-        public DBSource(IConnectionManager connectionManager) : this()
+        public DbSource(IConnectionManager connectionManager) : this()
         {
             ConnectionManager = connectionManager;
         }
 
-        public DBSource(IConnectionManager connectionManager, string tableName) : this(tableName)
+        public DbSource(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;
         }
@@ -253,7 +253,7 @@ namespace ALE.ETLBox.DataFlow
     /// A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
     /// into the targets. The non generic version of the DBSource creates a string array that contains the data.
     /// </summary>
-    /// <see cref="DBSource{TOutput}"/>
+    /// <see cref="DbSource{TOutput}"/>
     /// <example>
     /// <code>
     /// //Non generic DBSource works with string[] as output
@@ -263,11 +263,11 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the data flow
     /// </code>
     /// </example>
-    public class DBSource : DBSource<string[]>
+    public class DbSource : DbSource<string[]>
     {
-        public DBSource() : base() { }
-        public DBSource(string tableName) : base(tableName) { }
-        public DBSource(IConnectionManager connectionManager) : base(connectionManager) { }
-        public DBSource(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
+        public DbSource() : base() { }
+        public DbSource(string tableName) : base(tableName) { }
+        public DbSource(IConnectionManager connectionManager) : base(connectionManager) { }
+        public DbSource(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
     }
 }

@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceStringArrayTests
+    public class CsvSourceStringArrayTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
+        public CsvSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "CSVDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination2Columns");
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/TwoColumns.csv");
@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "CSVDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination2Columns");
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumns.csv");
@@ -61,7 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "CSVDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination2Columns");
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/OneColumn.csv");

@@ -15,11 +15,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBMergeTests
+    public class DbMergeTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBMergeTests(DataFlowDatabaseFixture dbFixture)
+        public DbMergeTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -43,10 +43,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestDataSet2();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
 
             //Act
-            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -68,10 +68,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestData();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
 
             //Act
-            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             dest.DisableDeletion = true;
             source.LinkTo(dest);
             source.Execute();
@@ -93,10 +93,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestData();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
 
             //Act
-            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             dest.UseTruncateMethod = true;
             source.LinkTo(dest);
             source.Execute();

@@ -18,10 +18,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationDynamicObjectTests
+    public class CsvDestinationDynamicObjectTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
+        public CsvDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestDynamicObject");
             s2C.InsertTestDataSet3();
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(SqlConnection, "CSVDestDynamicObject");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "CSVDestDynamicObject");
 
             //Act
             CsvDestination<ExpandoObject> dest = new CsvDestination<ExpandoObject>("./SimpleWithDynamicObject.csv");

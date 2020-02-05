@@ -36,8 +36,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(Connection, "BlockTransSource");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "BlockTransDest");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "BlockTransSource");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "BlockTransDest");
 
             //Act
             BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
@@ -73,8 +73,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(Connection , "BlockTransSource");
-            DBDestination<MyOtherRow> dest = new DBDestination<MyOtherRow>(Connection, "BlockTransDest");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection , "BlockTransSource");
+            DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(Connection, "BlockTransDest");
 
             //Act
             BlockTransformation<MySimpleRow, MyOtherRow> block = new BlockTransformation<MySimpleRow, MyOtherRow>(

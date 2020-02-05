@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceViewsTests
+    public class DbSourceViewsTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceViewsTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceViewsTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -36,8 +36,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationSimple");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBSourceView");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBDestinationSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBSourceView");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DBDestinationSimple");
 
             source.LinkTo(dest);
             source.Execute();
@@ -64,8 +64,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             FourColumnsTableFixture d4c = new FourColumnsTableFixture(connection, "DBDestinationExtended", 1);
 
             //Act
-            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(connection, "DBSourceViewExtended");
-            DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(connection, "DBDestinationExtended");
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "DBSourceViewExtended");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "DBDestinationExtended");
 
             source.LinkTo(dest);
             source.Execute();

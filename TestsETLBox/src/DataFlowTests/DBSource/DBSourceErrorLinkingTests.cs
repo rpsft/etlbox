@@ -13,11 +13,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceErrorLinkingTests
+    public class DbSourceErrorLinkingTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -40,8 +40,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationErrorLinking");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBSourceErrorLinking");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBDestinationErrorLinking");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBSourceErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DBDestinationErrorLinking");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
@@ -67,8 +67,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationNoErrorLinking");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBSourceNoErrorLinking");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBDestinationNoErrorLinking");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBSourceNoErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DBDestinationNoErrorLinking");
             source.LinkTo(dest);
 
             //Assert

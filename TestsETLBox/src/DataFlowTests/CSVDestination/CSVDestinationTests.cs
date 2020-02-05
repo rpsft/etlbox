@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationTests
+    public class CsvDestinationTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationTests(DataFlowDatabaseFixture dbFixture)
+        public CsvDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -40,7 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimple");
             s2C.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVDestSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVDestSimple");
 
             //Act
             CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./SimpleWithObject.csv");
@@ -59,7 +59,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestBatch");
             s2C.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVDestBatch");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVDestBatch");
 
             //Act
             CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ObjectWithBatchWrite.csv")

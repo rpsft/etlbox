@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelSourceErrorLinking");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "ExcelSourceErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "ExcelSourceErrorLinking");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

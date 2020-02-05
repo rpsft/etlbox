@@ -46,8 +46,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(AzureSqlConnection, "[dest].[AzureDestination]");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(AzureSqlConnection, "[source].[AzureSource]");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(AzureSqlConnection, "[dest].[AzureDestination]");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(AzureSqlConnection, "[source].[AzureSource]");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(AzureSqlConnection, "[dest].[AzureDestination]");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -65,10 +65,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestDataSet2();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(AzureSqlConnection, "[dest].[AzureMergeDestination]");
             d2c.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "DBMergeSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "DBMergeSource");
 
             //Act
-            DBMerge<MySimpleRow> dest = new DBMerge<MySimpleRow>(AzureSqlConnection, "[dest].[AzureMergeDestination]");
+            DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>(AzureSqlConnection, "[dest].[AzureMergeDestination]");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

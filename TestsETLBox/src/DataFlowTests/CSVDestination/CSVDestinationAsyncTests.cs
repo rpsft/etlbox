@@ -18,7 +18,7 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationAsyncTests
+    public class CsvDestinationAsyncTests
     {
         [Theory, InlineData("AsyncTestFile.csv",5000)]
         public void WriteAsyncAndCheckLock(string filename, int noRecords)

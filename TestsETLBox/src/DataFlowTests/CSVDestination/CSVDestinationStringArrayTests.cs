@@ -17,17 +17,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationStringArrayTests : IDisposable
+    public class CsvDestinationStringArrayTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationStringArrayTests(DataFlowDatabaseFixture dbFixture)
+        public CsvDestinationStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
-
-        public void Dispose()
-        {
-        }
-
 
         [Fact]
         public void SimpleNonGeneric()
@@ -35,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimpleNonGeneric");
             s2C.InsertTestDataSet3();
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "CSVDestSimpleNonGeneric");
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "CSVDestSimpleNonGeneric");
 
             //Act
             CsvDestination<string[]> dest = new CsvDestination<string[]>("./SimpleNonGeneric.csv");

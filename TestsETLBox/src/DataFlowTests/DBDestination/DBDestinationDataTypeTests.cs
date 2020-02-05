@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationDataTypeTests
+    public class DbDestinationDataTypeTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public DBDestinationDataTypeTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationDataTypeTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 }) ;
 
             //Act
-            DBDestination<MyDataTypeRow> dest = new DBDestination<MyDataTypeRow>(connection, "datatypedestination");
+            DbDestination<MyDataTypeRow> dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

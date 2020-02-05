@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceDynamicObjectTests
+    public class CsvSourceDynamicObjectTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVSourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
+        public CsvSourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -29,7 +29,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceDynamic");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(SqlConnection, "CSVSourceDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "CSVSourceDynamic");
 
             //Act
             CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/CSVSource/TwoColumnsForDynamic.csv");
@@ -46,7 +46,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceDynamicColsInSource");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(SqlConnection, "CSVSourceDynamicColsInSource");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "CSVSourceDynamicColsInSource");
 
             //Act
             CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/CSVSource/FourColumnsForDynamic.csv");
@@ -69,7 +69,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     new TableColumn("Col1", "INT",allowNulls:true),
                     new TableColumn("ColX", "INT",allowNulls:true),
             });
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(SqlConnection, "CSVSourceDynamicColsInDest");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "CSVSourceDynamicColsInDest");
 
             //Act
             CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/CSVSource/TwoColumnsForDynamic.csv");

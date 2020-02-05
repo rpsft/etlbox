@@ -13,13 +13,13 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceWithSqlTests
+    public class DbSourceWithSqlTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
         public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public DBSourceWithSqlTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceWithSqlTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -38,12 +38,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationSelectStar");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>()
             {
                 Sql = $@"SELECT * FROM {s2c.QB}SourceSelectStar{s2c.QE}",
                 ConnectionManager = connection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSelectStar");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DestinationSelectStar");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -61,14 +61,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationSql");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>()
             {
                 Sql = $@"SELECT CASE WHEN {s2c.QB}Col1{s2c.QE} IS NOT NULL THEN {s2c.QB}Col1{s2c.QE} ELSE {s2c.QB}Col1{s2c.QE} END AS {s2c.QB}Col1{s2c.QE}, 
 {s2c.QB}Col2{s2c.QE} 
 FROM {s2c.QB}SourceSql{s2c.QE}",
                 ConnectionManager = connection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationSql");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DestinationSql");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

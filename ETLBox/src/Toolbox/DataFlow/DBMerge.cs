@@ -16,7 +16,7 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DBMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput,TInput> where TInput : IMergeableRow, new()
+    public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput,TInput> where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, Upsert or delete in destination";
@@ -50,35 +50,35 @@ namespace ALE.ETLBox.DataFlow
         ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         bool _useTruncateMethod;
         LookupTransformation<TInput, TInput> Lookup { get; set; }
-        DBSource<TInput> DestinationTableAsSource { get; set; }
-        DBDestination<TInput> DestinationTable { get; set; }
+        DbSource<TInput> DestinationTableAsSource { get; set; }
+        DbDestination<TInput> DestinationTable { get; set; }
         List<TInput> InputData => Lookup.LookupData;
         CustomSource<TInput> OutputSource { get; set; }
         bool WasDeletionExecuted { get; set; }
         DBMergeTypeInfo TypeInfo { get; set; }
 
-        public DBMerge(string tableName)
+        public DbMerge(string tableName)
         {
             TableName = tableName;
-            DestinationTableAsSource = new DBSource<TInput>(TableName);
-            DestinationTable = new DBDestination<TInput>(TableName);
+            DestinationTableAsSource = new DbSource<TInput>(TableName);
+            DestinationTable = new DbDestination<TInput>(TableName);
             Init();
         }
 
-        public DBMerge(IConnectionManager connectionManager, string tableName) : this(tableName)
+        public DbMerge(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             TableName = tableName;
             ConnectionManager = connectionManager;
-            DestinationTableAsSource = new DBSource<TInput>(connectionManager, TableName);
-            DestinationTable = new DBDestination<TInput>(connectionManager, TableName);
+            DestinationTableAsSource = new DbSource<TInput>(connectionManager, TableName);
+            DestinationTable = new DbDestination<TInput>(connectionManager, TableName);
             Init();
         }
 
-        public DBMerge(TableDefinition tableDefinition)
+        public DbMerge(TableDefinition tableDefinition)
         {
             DestinationTableDefinition = tableDefinition;
             TableName = tableDefinition.Name;
-            DestinationTableAsSource = new DBSource<TInput>()
+            DestinationTableAsSource = new DbSource<TInput>()
             {
                 SourceTableDefinition = DestinationTableDefinition
             };

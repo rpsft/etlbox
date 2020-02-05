@@ -10,7 +10,7 @@ namespace ALE.ETLBox.DataFlow
     /// <summary>
     /// A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
     /// </summary>
-    /// <see cref="DBDestination"/>
+    /// <see cref="DbDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
     /// <example>
     /// <code>
@@ -18,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DBDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    public class DbDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write data into table {DestinationTableDefinition?.Name ?? TableName}";
@@ -32,32 +32,32 @@ namespace ALE.ETLBox.DataFlow
         internal const int DEFAULT_BATCH_SIZE = 1000;
 
 
-        public DBDestination()
+        public DbDestination()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
         }
 
-        public DBDestination(int batchSize)
+        public DbDestination(int batchSize)
         {
             BatchSize = batchSize;
         }
 
-        public DBDestination(string tableName) : this()
+        public DbDestination(string tableName) : this()
         {
             TableName = tableName;
         }
 
-        public DBDestination(IConnectionManager connectionManager, string tableName) : this(tableName)
+        public DbDestination(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;
         }
 
-        public DBDestination(string tableName, int batchSize) : this(batchSize)
+        public DbDestination(string tableName, int batchSize) : this(batchSize)
         {
             TableName = tableName;
         }
 
-        public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize) : this(tableName, batchSize)
+        public DbDestination(IConnectionManager connectionManager, string tableName, int batchSize) : this(tableName, batchSize)
         {
             ConnectionManager = connectionManager;
         }
@@ -156,7 +156,7 @@ namespace ALE.ETLBox.DataFlow
     /// A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
     /// The DBDestination uses a dynamic object as input type. If you need other data types, use the generic DBDestination instead.
     /// </summary>
-    /// <see cref="DBDestination{TInput}"/>
+    /// <see cref="DbDestination{TInput}"/>
     /// <example>
     /// <code>
     /// //Non generic DBDestination works with dynamic object as input
@@ -165,19 +165,19 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DBDestination : DBDestination<ExpandoObject>
+    public class DbDestination : DbDestination<ExpandoObject>
     {
-        public DBDestination() : base() { }
+        public DbDestination() : base() { }
 
-        public DBDestination(int batchSize) : base(batchSize) { }
+        public DbDestination(int batchSize) : base(batchSize) { }
 
-        public DBDestination(string tableName) : base(tableName) { }
+        public DbDestination(string tableName) : base(tableName) { }
 
-        public DBDestination(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
+        public DbDestination(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
 
-        public DBDestination(string tableName, int batchSize) : base(tableName, batchSize) { }
+        public DbDestination(string tableName, int batchSize) : base(tableName, batchSize) { }
 
-        public DBDestination(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize) { }
+        public DbDestination(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize) { }
     }
 
 }

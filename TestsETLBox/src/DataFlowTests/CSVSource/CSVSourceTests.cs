@@ -16,10 +16,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceTests
+    public class CsvSourceTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVSourceTests(DataFlowDatabaseFixture dbFixture)
+        public CsvSourceTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSource2Cols");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVSource2Cols");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVSource2Cols");
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
@@ -53,7 +53,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceSkipRows");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVSourceSkipRows");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVSourceSkipRows");
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsSkipRows.csv");

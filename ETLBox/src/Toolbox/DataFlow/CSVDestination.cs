@@ -10,7 +10,7 @@ namespace ALE.ETLBox.DataFlow
     /// <summary>
     /// A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
     /// </summary>
-    /// <see cref="DBDestination"/>
+    /// <see cref="DbDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
     /// <example>
     /// <code>

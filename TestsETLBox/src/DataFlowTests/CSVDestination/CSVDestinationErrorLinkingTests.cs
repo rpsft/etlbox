@@ -15,9 +15,9 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationErrorLinkingTests
+    public class CsvDestinationErrorLinkingTests
     {
-        public CSVDestinationErrorLinkingTests()
+        public CsvDestinationErrorLinkingTests()
         {
 
         }

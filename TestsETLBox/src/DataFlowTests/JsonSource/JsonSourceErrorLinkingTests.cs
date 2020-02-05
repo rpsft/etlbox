@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSourceErrorLinking");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "JsonSourceErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "JsonSourceErrorLinking");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

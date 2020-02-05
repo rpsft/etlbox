@@ -37,9 +37,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Table.InsertTestDataSet2();
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture("MergeJoinDestination");
 
-            DBSource<MySimpleRow> source1 = new DBSource<MySimpleRow>(Connection, "MergeJoinSource1");
-            DBSource<MySimpleRow> source2 = new DBSource<MySimpleRow>(Connection, "MergeJoinSource2");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "MergeJoinDestination");
+            DbSource<MySimpleRow> source1 = new DbSource<MySimpleRow>(Connection, "MergeJoinSource1");
+            DbSource<MySimpleRow> source2 = new DbSource<MySimpleRow>(Connection, "MergeJoinSource2");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "MergeJoinDestination");
 
             //Act
             MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow> join = new MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow>(

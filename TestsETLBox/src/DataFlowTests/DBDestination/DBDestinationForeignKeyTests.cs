@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationForeignKeyTests
+    public class DbDestinationForeignKeyTests
     {
         public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("DataFlow");
-        public DBDestinationForeignKeyTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationForeignKeyTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -89,10 +89,10 @@ ON DELETE CASCADE;");
             InsertTestData(connection, "FKSourceTable");
             AddFKConstraint(connection, "FKDestTable", "FKReferenceTable");
 
-            DBSource<MyRow> source = new DBSource<MyRow>(connection, "FKSourceTable");
+            DbSource<MyRow> source = new DbSource<MyRow>(connection, "FKSourceTable");
 
             //Act
-            DBDestination<MyRow> dest = new DBDestination<MyRow>(connection, "FKDestTable");
+            DbDestination<MyRow> dest = new DbDestination<MyRow>(connection, "FKDestTable");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

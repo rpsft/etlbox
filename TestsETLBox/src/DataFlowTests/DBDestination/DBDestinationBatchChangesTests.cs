@@ -15,11 +15,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationBatchChangesTests
+    public class DbDestinationBatchChangesTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBDestinationBatchChangesTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationBatchChangesTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -28,7 +28,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBDestinationBatchChanges");
-            DBDestination<string[]> dest = new DBDestination<string[]>(connection, "DBDestinationBatchChanges", batchSize: 2)
+            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DBDestinationBatchChanges", batchSize: 2)
             {
                 BeforeBatchWrite = rowArray =>
                                    {

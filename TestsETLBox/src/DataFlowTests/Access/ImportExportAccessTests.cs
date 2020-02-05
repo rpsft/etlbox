@@ -60,7 +60,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/UseCases/AccessData.csv");
-            DBDestination<string[]> dest = new DBDestination<string[]>(batchSize: 2)
+            DbDestination<string[]> dest = new DbDestination<string[]>(batchSize: 2)
             {
                 DestinationTableDefinition = testTable,
                 ConnectionManager = AccessOdbcConnection
@@ -91,11 +91,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTableWTD");
 
             //Act
-            DBSource<Data> source = new DBSource<Data>(AccessOdbcConnection)
+            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection)
             {
                 SourceTableDefinition = testTable
             };
-            DBDestination<Data> dest = new DBDestination<Data>(SqlConnection, "dbo.AccessTargetTableWTD");
+            DbDestination<Data> dest = new DbDestination<Data>(SqlConnection, "dbo.AccessTargetTableWTD");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -123,8 +123,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTable");
 
             //Act
-            DBSource<Data> source = new DBSource<Data>(AccessOdbcConnection, "TestTable");
-            DBDestination<Data> dest = new DBDestination<Data>(SqlConnection, "dbo.AccessTargetTable");
+            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection, "TestTable");
+            DbDestination<Data> dest = new DbDestination<Data>(SqlConnection, "dbo.AccessTargetTable");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

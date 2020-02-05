@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceWithClassMapsTests 
+    public class CsvSourceWithClassMapsTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVSourceWithClassMapsTests(DataFlowDatabaseFixture dbFixture)
+        public CsvSourceWithClassMapsTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2ColumnsClassMap");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "CSVDestination2ColumnsClassMap");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVDestination2ColumnsClassMap");
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
@@ -80,7 +80,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture d4c = new FourColumnsTableFixture("CSVDestination4ColumnsClassMap");
-            DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(Connection, "CSVDestination4ColumnsClassMap");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(Connection, "CSVDestination4ColumnsClassMap");
 
             //Act
             CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CSVSource/FourColumnsInvalidHeader.csv");

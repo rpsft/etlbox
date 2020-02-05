@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationConfigurationTests
+    public class CsvDestinationConfigurationTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationConfigurationTests(DataFlowDatabaseFixture dbFixture)
+        public CsvDestinationConfigurationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -39,7 +39,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture("CSVSourceNoHeader");
             s2c.InsertTestData();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "CSVSourceNoHeader");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVSourceNoHeader");
 
             //Act
             CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ConfigurationNoHeader.csv");

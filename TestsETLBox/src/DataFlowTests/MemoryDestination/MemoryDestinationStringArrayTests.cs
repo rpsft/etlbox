@@ -29,7 +29,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("MemoryDestinationNonGenericSource");
             source2Columns.InsertTestData();
 
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "MemoryDestinationNonGenericSource");
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "MemoryDestinationNonGenericSource");
             MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
             //Act

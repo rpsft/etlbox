@@ -15,12 +15,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationSpecialCharacterTests
+    public class DbDestinationSpecialCharacterTests
     {
         public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnections("DataFlow");
         public static IEnumerable<object[]> SqlConnections => Config.AllSqlConnections("DataFlow");
 
-        public DBDestinationSpecialCharacterTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationSpecialCharacterTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -48,12 +48,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "SpecialCharacterDestination");
 
             //Act
-            DBSource<string[]> source = new DBSource<string[]>()
+            DbSource<string[]> source = new DbSource<string[]>()
             {
                 ConnectionManager = connection,
                 SourceTableDefinition = s2c.TableDefinition
             };
-            DBDestination<string[]> dest = new DBDestination<string[]>()
+            DbDestination<string[]> dest = new DbDestination<string[]>()
             {
                 ConnectionManager = connection,
                 DestinationTableDefinition = d2c.TableDefinition

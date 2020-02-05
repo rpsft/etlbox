@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestDynamic");
             s2C.InsertTestDataSet3();
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(SqlConnection, "JsonDestDynamic");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "JsonDestDynamic");
 
             //Act
             JsonDestination<ExpandoObject> dest = new JsonDestination<ExpandoObject>("./SimpleWithDynamicObject.json");

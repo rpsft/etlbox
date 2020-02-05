@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "MemoryDestination");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "MemoryDestination");
 
             //Act
             source.Data = new List<MySimpleRow>()

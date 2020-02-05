@@ -34,13 +34,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
             FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection,"LookupNonGeneric");
             lookup4Columns.InsertTestData();
 
-            DBSource<string[]> source = new DBSource<string[]>(connection, "SourceNonGenericLookup");
-            DBDestination<string[]> dest = new DBDestination<string[]>(connection, "DestinationNonGenericLookup");
+            DbSource<string[]> source = new DbSource<string[]>(connection, "SourceNonGenericLookup");
+            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DestinationNonGenericLookup");
 
             //Act
             List<string[]> lookupList = new List<string[]>();
 
-            DBSource<string[]> lookupSource = new DBSource<string[]>(connection, "LookupNonGeneric");
+            DbSource<string[]> lookupSource = new DbSource<string[]>(connection, "LookupNonGeneric");
             LookupTransformation<string[], string[]> lookup = new LookupTransformation<string[], string[]> (
                 lookupSource,
                 row =>

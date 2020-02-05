@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceTableDefinitionTests
+    public class DbSourceTableDefinitionTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceTableDefinitionTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceTableDefinitionTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -35,12 +35,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "Destination");
 
             //Act
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>()
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>()
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
                 ConnectionManager = connection
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>()
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>()
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
                 ConnectionManager = connection

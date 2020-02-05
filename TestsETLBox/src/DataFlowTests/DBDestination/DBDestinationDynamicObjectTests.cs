@@ -13,12 +13,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationDynamicObjectTests
+    public class DbDestinationDynamicObjectTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
         public static IEnumerable<object[]> ConnectionsNoSQLite => Config.AllConnectionsWithoutSQLite("DataFlow");
 
-        public DBDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -31,8 +31,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationDynamic2Cols");
 
             //Act
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(connection, "SourceDynamic4Cols");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(connection, "DestinationDynamic2Cols");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamic4Cols");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamic2Cols");
 
             source.LinkTo(dest);
             source.Execute();
@@ -57,8 +57,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(connection, "SourceDynamicDiffCols");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(connection, "DestinationDynamicDiffCols");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamicDiffCols");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamicDiffCols");
 
             source.LinkTo(dest);
             source.Execute();
@@ -88,8 +88,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(connection, "SourceDynamicIDCol");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(connection, "DestinationDynamicIdCol");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamicIDCol");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamicIdCol");
 
             source.LinkTo(dest);
             source.Execute();

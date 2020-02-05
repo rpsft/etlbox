@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceIdentityColumnTests
+    public class DbSourceIdentityColumnTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceIdentityColumnTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceIdentityColumnTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -28,8 +28,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void DataFlowForIdentityColumn(IConnectionManager connection)
         {
-            DBSource<MyPartialRow> source = new DBSource<MyPartialRow>(connection, "Source4Cols");
-            DBDestination<MyPartialRow> dest = new DBDestination<MyPartialRow>(connection, "Destination4Cols");
+            DbSource<MyPartialRow> source = new DbSource<MyPartialRow>(connection, "Source4Cols");
+            DbDestination<MyPartialRow> dest = new DbDestination<MyPartialRow>(connection, "Destination4Cols");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

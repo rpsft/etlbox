@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationTests
+    public class DbDestinationTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public DBDestinationTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source4Columns.InsertTestData();
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination", identityColumnIndex: 2);
 
-            DBSource source = new DBSource(connection, "Source");
+            DbSource source = new DbSource(connection, "Source");
             RowTransformation<string[], MyExtendedRow> trans = new RowTransformation<string[], MyExtendedRow>(
                 row => new MyExtendedRow()
                 {
@@ -53,7 +53,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DBDestination<MyExtendedRow> dest = new DBDestination<MyExtendedRow>(connection, "Destination");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "Destination");
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

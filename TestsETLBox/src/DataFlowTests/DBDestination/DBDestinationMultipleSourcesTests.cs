@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationMultipleSourcesTests
+    public class DbDestinationMultipleSourcesTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBDestinationMultipleSourcesTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationMultipleSourcesTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBMultipleDestination");
 
             //Act
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DBMultipleDestination");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DBMultipleDestination");
 
             source1.LinkTo(dest);
             source2.LinkTo(dest);

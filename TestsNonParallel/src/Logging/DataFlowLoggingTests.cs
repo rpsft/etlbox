@@ -64,8 +64,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "DBSource");
-            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "DBSource");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 3;
@@ -94,8 +94,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "DBSource");
-            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "DBSource");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 0;
@@ -119,8 +119,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "DBSource");
-            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "DBSource");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
             RowTransformation<string[]> rowTrans = new RowTransformation<string[]>(row => row);
 
             //Act
@@ -144,7 +144,7 @@ namespace ALE.ETLBoxTests.Logging
             //Arrange
             CreateTestTable("DBDestination");
             CsvSource source = new CsvSource("res/DataFlowLogging/TwoColumns.csv");
-            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
+            DbDestination dest = new DbDestination(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 2;
@@ -180,7 +180,7 @@ namespace ALE.ETLBoxTests.Logging
 
             //Act
             CustomSource<string[]> source = new CustomSource<string[]>(ReadData, EndOfData);
-            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "Destination4CustomSource");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion;

@@ -36,8 +36,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "SourceMultipleLinks");
-            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DestinationMultipleLinks");
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "SourceMultipleLinks");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DestinationMultipleLinks");
             RowTransformation<string[]> trans1 = new RowTransformation<string[]>(row => row);
             RowTransformation<string[]> trans2 = new RowTransformation<string[]>(row => row);
             RowTransformation<string[]> trans3 = new RowTransformation<string[]>(row => row);
@@ -62,8 +62,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestDataSet2();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "DestinationMultipleLinks");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "DestinationMultipleLinks");
             RowTransformation<MySimpleRow> trans1 = new RowTransformation<MySimpleRow>(row => row);
 
             //Act
@@ -93,8 +93,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
-            DBDestination<MyOtherRow> dest = new DBDestination<MyOtherRow>(SqlConnection, "DestinationMultipleLinks");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
+            DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(SqlConnection, "DestinationMultipleLinks");
             RowTransformation<MySimpleRow, MyOtherRow> trans1 = new RowTransformation<MySimpleRow, MyOtherRow>
                 (row =>
                 {

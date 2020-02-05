@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationNullHandlingTests
+    public class DbDestinationNullHandlingTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public DBDestinationNullHandlingTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationNullHandlingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = 3, Col2 = "Test3"},
                 null
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "DestIgnoreNullValues");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "DestIgnoreNullValues");
 
 
             //Act
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new string[] { "3", "Test3"},
                 null
             };
-            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DestIgnoreNullValuesStringArray");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DestIgnoreNullValuesStringArray");
 
 
             //Act

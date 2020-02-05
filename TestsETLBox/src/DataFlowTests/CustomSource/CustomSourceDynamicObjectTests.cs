@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CustomSource<ExpandoObject> source = new CustomSource<ExpandoObject>(ReadData, EndOfData);
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(Connection, "Destination4CustomSourceDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "Destination4CustomSourceDynamic");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

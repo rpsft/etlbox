@@ -40,10 +40,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             return source;
         }
 
-        private DBDestination<Poco> CreateDestinationTable(string tableName)
+        private DbDestination<Poco> CreateDestinationTable(string tableName)
         {
             DropTableTask.DropIfExists(Connection, tableName);
-            var dest = new DBDestination<Poco>(Connection, tableName);
+            var dest = new DbDestination<Poco>(Connection, tableName);
             TableDefinition stagingTable = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("PKey", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("ID", "INT", allowNulls: false),
@@ -80,7 +80,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             });
 
             Multicast<Poco> multicast = new Multicast<Poco>();
-            DBDestination<Poco> dest = CreateDestinationTable("dbo.DuplicateCheck");
+            DbDestination<Poco> dest = CreateDestinationTable("dbo.DuplicateCheck");
             VoidDestination<Poco> trash = new VoidDestination<Poco>();
 
             source.LinkTo(rowTrans);
@@ -111,7 +111,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             {
                 return inputList.GroupBy(item => item.ID).Select(y => y.First()).ToList();
             });
-            DBDestination<Poco> dest = CreateDestinationTable("dbo.DuplicateCheck");
+            DbDestination<Poco> dest = CreateDestinationTable("dbo.DuplicateCheck");
 
             source.LinkTo(blockTrans);
             blockTrans.LinkTo(dest);

@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationSerializationTests
+    public class CsvDestinationSerializationTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationSerializationTests(DataFlowDatabaseFixture dbFixture)
+        public CsvDestinationSerializationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 

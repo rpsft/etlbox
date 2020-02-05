@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceStringArrayTests
+    public class DbSourceStringArrayTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -29,12 +29,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationTableDef");
 
             //Act
-            DBSource<string[]> source = new DBSource<string[]>()
+            DbSource<string[]> source = new DbSource<string[]>()
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
                 ConnectionManager = connection
             };
-            DBDestination<string[]> dest = new DBDestination<string[]>()
+            DbDestination<string[]> dest = new DbDestination<string[]>()
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
                 ConnectionManager = connection
@@ -57,12 +57,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationWithSql");
 
             //Act
-            DBSource<string[]> source = new DBSource<string[]>()
+            DbSource<string[]> source = new DbSource<string[]>()
             {
                 Sql = $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceWithSql{s2c.QE}",
                 ConnectionManager = connection
             };
-            DBDestination<string[]> dest = new DBDestination<string[]>(connection, "DestinationWithSql");
+            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DestinationWithSql");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -80,7 +80,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO source_onlynulls VALUES(NULL, NULL)");
             //Act
-            DBSource<string[]> source = new DBSource<string[]>(connection, "source_onlynulls");
+            DbSource<string[]> source = new DbSource<string[]>(connection, "source_onlynulls");
             MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
             source.LinkTo(dest);
             source.Execute();

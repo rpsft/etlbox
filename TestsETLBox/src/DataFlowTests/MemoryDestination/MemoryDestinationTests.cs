@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("MemoryDestinationSource");
             source2Columns.InsertTestData();
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "MemoryDestinationSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "MemoryDestinationSource");
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act
@@ -58,7 +58,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("MemoryDestinationBatchSizeSource");
             source2Columns.InsertTestData();
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "MemoryDestinationBatchSizeSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "MemoryDestinationBatchSizeSource");
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>()
             {
                 BatchSize = 2

@@ -51,7 +51,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion;

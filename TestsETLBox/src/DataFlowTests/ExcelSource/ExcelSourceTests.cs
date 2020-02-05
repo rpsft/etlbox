@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnData.xlsx");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "ExcelDestination", 2);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestination", 2);
 
             source.LinkTo(dest);
             source.Execute();
@@ -60,7 +60,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             ExcelSource<OneExcelColumn> source = new ExcelSource<OneExcelColumn>("res/Excel/TwoColumnData.xlsx");
-            DBDestination<OneExcelColumn> dest = new DBDestination<OneExcelColumn>(Connection, "ExcelDestination", 2);
+            DbDestination<OneExcelColumn> dest = new DbDestination<OneExcelColumn>(Connection, "ExcelDestination", 2);
 
             source.LinkTo(dest);
             source.Execute();
@@ -95,7 +95,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 SheetName = "Sheet2"
             };
 
-            DBDestination<ExcelDataSheet2> dest = new DBDestination<ExcelDataSheet2>(Connection, "ExcelDestination");
+            DbDestination<ExcelDataSheet2> dest = new DbDestination<ExcelDataSheet2>(Connection, "ExcelDestination");
 
             source.LinkTo(dest);
             source.Execute();

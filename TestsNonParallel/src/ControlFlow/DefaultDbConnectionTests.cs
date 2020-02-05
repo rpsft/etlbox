@@ -65,8 +65,8 @@ namespace ALE.ETLBoxTests.Logging
             SqlTask.ExecuteNonQuery("Insert test data", "INSERT INTO TestSourceTable VALUES ('T');");
             CreateTableTask.Create("TestDestinationTable",
                 new List<TableColumn>() { new TableColumn("Col1", "VARCHAR(100)") });
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("TestSourceTable");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>("TestDestinationTable");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("TestSourceTable");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("TestDestinationTable");
 
             //Act
             source.LinkTo(dest);

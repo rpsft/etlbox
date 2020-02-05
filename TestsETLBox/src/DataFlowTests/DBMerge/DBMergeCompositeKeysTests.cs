@@ -15,13 +15,13 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBMergeCompositeKeysTests
+    public class DbMergeCompositeKeysTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
 
-        public DBMergeCompositeKeysTests(DataFlowDatabaseFixture dbFixture)
+        public DbMergeCompositeKeysTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -88,8 +88,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             InsertSourceData(connection, TNS);
             InsertDestinationData(connection, TND);
             //Act
-            DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "DBMergeSource");
-            DBMerge<MyMergeRow> dest = new DBMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

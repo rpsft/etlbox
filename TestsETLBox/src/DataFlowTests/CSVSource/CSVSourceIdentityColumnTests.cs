@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceIdentityColumTests
+    public class CsvSourceIdentityColumTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVSourceIdentityColumTests(DataFlowDatabaseFixture dbFixture)
+        public CsvSourceIdentityColumTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 0);
-            DBDestination dest = new DBDestination(Connection, "CSVDestination4Columns");
+            DbDestination dest = new DbDestination(Connection, "CSVDestination4Columns");
 
             //Act
             CsvSource source = new CsvSource("res/CSVSource/ThreeColumnsNoId.csv");
@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 2);
-            DBDestination dest = new DBDestination(Connection, "CSVDestination4Columns");
+            DbDestination dest = new DbDestination(Connection, "CSVDestination4Columns");
 
             //Act
             CsvSource source = new CsvSource("res/CSVSource/ThreeColumnsNoId.csv");
@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 3);
-            DBDestination dest = new DBDestination(Connection, "CSVDestination4Columns");
+            DbDestination dest = new DbDestination(Connection, "CSVDestination4Columns");
 
             //Act
             CsvSource source = new CsvSource("res/CSVSource/ThreeColumnsNoId.csv");

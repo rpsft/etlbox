@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSource2Cols");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "JsonSource2Cols");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "JsonSource2Cols");
 
             //Act
             JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/TwoColumns.json", ResourceType.File);

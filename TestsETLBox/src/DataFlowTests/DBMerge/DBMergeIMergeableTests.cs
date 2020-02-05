@@ -15,11 +15,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBMergeIMergeableTests
+    public class DbMergeIMergeableTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBMergeIMergeableTests(DataFlowDatabaseFixture dbFixture)
+        public DbMergeIMergeableTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -43,10 +43,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestDataSet2();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection,"DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBMergeSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
 
             //Act
-            DBMerge<MySimpleRow> dest = new DBMerge<MySimpleRow>(connection, "DBMergeDestination");
+            DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -71,11 +71,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             d2c.InsertTestDataSet3();
             TwoColumnsDeltaTableFixture delta2Columns = new TwoColumnsDeltaTableFixture(connection, "DBMergeDelta");
 
-            DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "DBMergeSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
 
             //Act
-            DBMerge<MySimpleRow> merge = new DBMerge<MySimpleRow>(connection, "DBMergeDestination");
-            DBDestination<MySimpleRow> delta = new DBDestination<MySimpleRow>(connection, "DBMergeDelta");
+            DbMerge<MySimpleRow> merge = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
+            DbDestination<MySimpleRow> delta = new DbDestination<MySimpleRow>(connection, "DBMergeDelta");
             source.LinkTo(merge);
             merge.LinkTo(delta);
             source.Execute();

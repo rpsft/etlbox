@@ -15,7 +15,7 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow Source and Destination")]
-    public class DBDestinationDifferentDBTests
+    public class DbDestinationDifferentDBTests
     {
         public static IEnumerable<object[]> MixedSourceDestinations() => new[] {
             //Same DB
@@ -55,7 +55,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         };
 
-        public DBDestinationDifferentDBTests(DatabaseSourceDestinationFixture dbFixture)
+        public DbDestinationDifferentDBTests(DatabaseSourceDestinationFixture dbFixture)
         {
         }
 
@@ -68,8 +68,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(destConnection, "Destination");
 
             //Act
-            DBSource<string[]> source = new DBSource<string[]>(sourceConnection, "Source");
-            DBDestination<string[]> dest = new DBDestination<string[]>(destConnection, "Destination");
+            DbSource<string[]> source = new DbSource<string[]>(sourceConnection, "Source");
+            DbDestination<string[]> dest = new DbDestination<string[]>(destConnection, "Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

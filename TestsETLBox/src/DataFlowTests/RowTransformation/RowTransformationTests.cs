@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                         Col2 = csvdata[1]
                     };
                 });
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "DestinationRowTransformation");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "DestinationRowTransformation");
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();
@@ -72,7 +72,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 },
                 () => IdOffset += 1
             );
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(Connection, "DestinationRowTransformation");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "DestinationRowTransformation");
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

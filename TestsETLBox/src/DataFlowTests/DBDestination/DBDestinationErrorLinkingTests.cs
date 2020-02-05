@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBDestinationErrorLinkingTests
+    public class DbDestinationErrorLinkingTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public DBDestinationErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
         {
 
         }
@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = null, Col2 = "ErrorRecord"},
                 new MySimpleRow() { Col1 = "3", Col2 = "Test3"},
             };
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestLinkError", batchSize: 2);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DestLinkError", batchSize: 2);
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

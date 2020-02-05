@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceColumnMappingTests
+    public class DbSourceColumnMappingTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DBSourceColumnMappingTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceColumnMappingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
 
             //Act
-            DBSource<ColumnMapRow> source = new DBSource<ColumnMapRow>(connection, "Source");
+            DbSource<ColumnMapRow> source = new DbSource<ColumnMapRow>(connection, "Source");
             CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
                 input =>
                 {
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source4Columns.InsertTestData();
 
             //Act
-            DBSource<MyExtendedRow> source = new DBSource<MyExtendedRow>(connection, "SourceColumnMapping");
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "SourceColumnMapping");
             CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(
                 input =>
                 {

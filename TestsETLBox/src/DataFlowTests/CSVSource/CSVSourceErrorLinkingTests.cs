@@ -12,11 +12,11 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVSourceErrorLinkingTests
+    public class CsvSourceErrorLinkingTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public CSVSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
+        public CsvSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceErrorLinking");
-            DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "CSVSourceErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "CSVSourceErrorLinking");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

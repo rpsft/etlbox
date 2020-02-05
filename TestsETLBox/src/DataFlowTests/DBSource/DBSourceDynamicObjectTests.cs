@@ -13,12 +13,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DBSourceDynamicObjectTests
+    public class DbSourceDynamicObjectTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
         public static IEnumerable<object[]> ConnectionsNoSQLite => Config.AllConnectionsWithoutSQLite("DataFlow");
 
-        public DBSourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
+        public DbSourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -31,8 +31,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationDynamic");
 
             //Act
-            DBSource<ExpandoObject> source = new DBSource<ExpandoObject>(connection, "SourceDynamic");
-            DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>(connection, "DestinationDynamic");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamic");
 
             source.LinkTo(dest);
             source.Execute();
