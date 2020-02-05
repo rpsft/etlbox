@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -152,17 +153,17 @@ namespace ALE.ETLBox.DataFlow
     /// <summary>
     /// Will join data from the two inputs into one output - on a row by row base.
     /// Make sure both inputs are sorted or in the right order. The non generic implementation deals with
-    /// string array as inputs and merged output.
+    /// a dynamic object as input and merged output.
     /// </summary>
-    public class MergeJoin : MergeJoin<string[], string[], string[]>
+    public class MergeJoin : MergeJoin<ExpandoObject, ExpandoObject, ExpandoObject>
     {
         public MergeJoin() : base()
         { }
 
-        public MergeJoin(Func<string[], string[], string[]> mergeJoinFunc) : base(mergeJoinFunc)
+        public MergeJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc) : base(mergeJoinFunc)
         { }
 
-        public MergeJoin(string name, Func<string[], string[], string[]> mergeJoinFunc) : base(name, mergeJoinFunc)
+        public MergeJoin(string name, Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc) : base(name, mergeJoinFunc)
         { }
     }
 }

@@ -31,12 +31,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Table.InsertTestDataSet2();
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture("MergeJoinNonGenericDestination");
 
-            DBSource source1 = new DBSource(Connection, "MergeJoinNonGenericSource1");
-            DBSource source2 = new DBSource(Connection, "MergeJoinNonGenericSource2");
-            DBDestination dest = new DBDestination(Connection, "MergeJoinNonGenericDestination");
+            DBSource<string[]> source1 = new DBSource<string[]>(Connection, "MergeJoinNonGenericSource1");
+            DBSource<string[]> source2 = new DBSource<string[]>(Connection, "MergeJoinNonGenericSource2");
+            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "MergeJoinNonGenericDestination");
 
             //Act
-            MergeJoin join = new MergeJoin(
+            MergeJoin<string[]> join = new MergeJoin<string[]>(
                 (inputRow1, inputRow2) => {
                     inputRow1[0] = (int.Parse(inputRow1[0]) + int.Parse(inputRow2[0])).ToString();
                     inputRow1[1] += inputRow2[1];

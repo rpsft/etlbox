@@ -22,8 +22,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DBSource()
         {
             //Arrange
-            DBSource source = new DBSource("test");
-            MemoryDestination dest = new MemoryDestination();
+            DBSource<string[]> source = new DBSource<string[]>("test");
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
             source.LinkTo(dest);
 
             //Act & Assert
@@ -39,9 +39,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             string[] data = { "1", "2" };
-            MemorySource source = new MemorySource();
+            MemorySource<string[]> source = new MemorySource<string[]>();
             source.Data.Add(data);
-            DBDestination dest = new DBDestination("test");
+            DBDestination<string[]> dest = new DBDestination<string[]>("test");
             source.LinkTo(dest);
 
             //Act & Assert

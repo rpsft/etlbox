@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
@@ -197,5 +198,24 @@ namespace ALE.ETLBox.DataFlow
         Min,
         Max,
         Count
+    }
+
+    /// <summary>
+    /// Aggregates data by the given aggregation method.
+    /// The non generic implementation uses dynamic objects.
+    /// </summary>
+    /// <see cref="Aggregation{TInput, TOutput}"/>
+    public class Aggregation : Aggregation<ExpandoObject, ExpandoObject>
+    {
+        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction) : base(aggregationAction)
+        { }
+
+        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction, Func<ExpandoObject, object> groupingFunc)
+            : base(aggregationAction, groupingFunc)
+        { }
+
+        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction, Func<ExpandoObject, object> groupingFunc, Action<object, ExpandoObject> storeKeyAction)
+            : base(aggregationAction, groupingFunc, storeKeyAction)
+        { }
     }
 }

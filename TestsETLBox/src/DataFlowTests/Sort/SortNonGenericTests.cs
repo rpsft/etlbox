@@ -32,13 +32,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             List<string[]> actual = new List<string[]>();
-            CustomDestination dest = new CustomDestination(
+            CustomDestination<string[]> dest = new CustomDestination<string[]>(
                 row => actual.Add(row)
             );
             Comparison<string[]> comp = new Comparison<string[]>(
                    (x, y) => int.Parse(y[0]) - int.Parse(x[0])
                 );
-            Sort block = new Sort(comp);
+            Sort<string[]> block = new Sort<string[]>(comp);
             source.LinkTo(block);
             block.LinkTo(dest);
             source.Execute();

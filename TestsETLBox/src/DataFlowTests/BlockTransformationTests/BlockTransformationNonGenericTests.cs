@@ -30,11 +30,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDestNonGeneric");
 
-            DBSource source = new DBSource(SqlConnection, "BlockTransSourceNonGeneric");
-            DBDestination dest = new DBDestination(SqlConnection, "BlockTransDestNonGeneric");
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "BlockTransSourceNonGeneric");
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "BlockTransDestNonGeneric");
 
             //Act
-            BlockTransformation block = new BlockTransformation(
+            BlockTransformation<string[]> block = new BlockTransformation<string[]>(
                 inputData => {
                     inputData.RemoveRange(1, 2);
                     inputData.Add(new string[] { "4", "Test4" });

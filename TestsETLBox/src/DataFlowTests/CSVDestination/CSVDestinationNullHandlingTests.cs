@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IgnoreWithStringArray()
         {
             //Arrange
-            MemorySource source = new MemorySource();
+            MemorySource<string[]> source = new MemorySource<string[]>();
             source.Data = new List<string[]>()
             {
                 null,
@@ -74,7 +74,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            CSVDestination dest = new CSVDestination("./IgnoreNullValuesStringArray.csv");
+            CsvDestination<string[]> dest = new CsvDestination<string[]>("./IgnoreNullValuesStringArray.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

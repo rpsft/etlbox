@@ -36,11 +36,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            DBSource source = new DBSource(SqlConnection, "SourceMultipleLinks");
-            DBDestination dest = new DBDestination(SqlConnection, "DestinationMultipleLinks");
-            RowTransformation trans1 = new RowTransformation(row => row);
-            RowTransformation trans2 = new RowTransformation(row => row);
-            RowTransformation trans3 = new RowTransformation(row => row);
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "SourceMultipleLinks");
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DestinationMultipleLinks");
+            RowTransformation<string[]> trans1 = new RowTransformation<string[]>(row => row);
+            RowTransformation<string[]> trans2 = new RowTransformation<string[]>(row => row);
+            RowTransformation<string[]> trans3 = new RowTransformation<string[]>(row => row);
 
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
@@ -90,7 +90,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
-            source2Columns.InsertTestData();            
+            source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
             DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
@@ -108,7 +108,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             source.LinkTo<MyOtherRow>(trans1).LinkTo(dest);
-            
+
             //Assert
             source.Execute();
             dest.Wait();

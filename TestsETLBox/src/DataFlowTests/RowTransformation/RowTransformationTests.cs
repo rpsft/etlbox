@@ -14,7 +14,7 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class RowTransformationTests 
+    public class RowTransformationTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
         public RowTransformationTests(DataFlowDatabaseFixture dbFixture)
@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationRowTransformation");
-            CsvSource source = new CsvSource("res/RowTransformation/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/RowTransformation/TwoColumns.csv");
 
             //Act
             RowTransformation<string[], MySimpleRow> trans = new RowTransformation<string[], MySimpleRow>(

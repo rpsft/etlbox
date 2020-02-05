@@ -60,7 +60,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DestIgnoreNullValuesStringArray");
-            MemorySource source = new MemorySource();
+            MemorySource<string[]> source = new MemorySource<string[]>();
             source.Data = new List<string[]>()
             {
                 null ,
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new string[] { "3", "Test3"},
                 null
             };
-            DBDestination dest = new DBDestination(SqlConnection, "DestIgnoreNullValuesStringArray");
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DestIgnoreNullValuesStringArray");
 
 
             //Act

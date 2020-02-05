@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Dynamic;
 using System.IO;
 
 namespace ALE.ETLBox.DataFlow
@@ -89,18 +90,18 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The JsonDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.
+    /// The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CSVDestination instead.
     /// </summary>
     /// <see cref="JsonDestination{TInput}"/>
     /// <example>
     /// <code>
-    /// //Non generic JsonDestination works with string[] as input
+    /// //Non generic JsonDestination works with dynamic object as input
     /// //use JsonDestination&lt;TInput&gt; for generic usage!
     /// JsonDestination dest = new JsonDestination("/path/to/file.json");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class JsonDestination : JsonDestination<string[]>
+    public class JsonDestination : JsonDestination<ExpandoObject>
     {
         public JsonDestination() : base() { }
 

@@ -48,12 +48,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "SpecialCharacterDestination");
 
             //Act
-            DBSource source = new DBSource()
+            DBSource<string[]> source = new DBSource<string[]>()
             {
                 ConnectionManager = connection,
                 SourceTableDefinition = s2c.TableDefinition
             };
-            DBDestination dest = new DBDestination()
+            DBDestination<string[]> dest = new DBDestination<string[]>()
             {
                 ConnectionManager = connection,
                 DestinationTableDefinition = d2c.TableDefinition

@@ -28,7 +28,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBDestinationBatchChanges");
-            DBDestination dest = new DBDestination(connection, "DBDestinationBatchChanges", batchSize: 2)
+            DBDestination<string[]> dest = new DBDestination<string[]>(connection, "DBDestinationBatchChanges", batchSize: 2)
             {
                 BeforeBatchWrite = rowArray =>
                                    {
@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

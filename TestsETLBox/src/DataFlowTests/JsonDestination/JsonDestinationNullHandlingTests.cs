@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IgnoreWithStringArray()
         {
             //Arrange
-            MemorySource source = new MemorySource();
+            MemorySource<string[]> source = new MemorySource<string[]>();
             source.Data = new List<string[]>()
             {
                 null,
@@ -76,7 +76,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            JsonDestination dest = new JsonDestination("./IgnoreNullValuesStringArray.json");
+            JsonDestination<string[]> dest = new JsonDestination<string[]>("./IgnoreNullValuesStringArray.json");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -2,6 +2,7 @@
 using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Reflection;
 
 namespace ALE.ETLBox.DataFlow
@@ -153,18 +154,18 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The DBDestination access a string array as input type. If you need other data types, use the generic DBDestination instead.
+    /// The DBDestination uses a dynamic object as input type. If you need other data types, use the generic DBDestination instead.
     /// </summary>
     /// <see cref="DBDestination{TInput}"/>
     /// <example>
     /// <code>
-    /// //Non generic DBDestination works with string[] as input
+    /// //Non generic DBDestination works with dynamic object as input
     /// //use DBDestination&lt;TInput&gt; for generic usage!
     /// DBDestination dest = new DBDestination("dbo.table");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DBDestination : DBDestination<string[]>
+    public class DBDestination : DBDestination<ExpandoObject>
     {
         public DBDestination() : base() { }
 

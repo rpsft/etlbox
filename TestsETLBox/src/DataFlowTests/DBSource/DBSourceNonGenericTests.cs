@@ -29,12 +29,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationTableDef");
 
             //Act
-            DBSource source = new DBSource()
+            DBSource<string[]> source = new DBSource<string[]>()
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
                 ConnectionManager = connection
             };
-            DBDestination dest = new DBDestination()
+            DBDestination<string[]> dest = new DBDestination<string[]>()
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
                 ConnectionManager = connection
@@ -57,12 +57,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationWithSql");
 
             //Act
-            DBSource source = new DBSource()
+            DBSource<string[]> source = new DBSource<string[]>()
             {
                 Sql = $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceWithSql{s2c.QE}",
                 ConnectionManager = connection
             };
-            DBDestination dest = new DBDestination(connection, "DestinationWithSql");
+            DBDestination<string[]> dest = new DBDestination<string[]>(connection, "DestinationWithSql");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -80,8 +80,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO source_onlynulls VALUES(NULL, NULL)");
             //Act
-            DBSource source = new DBSource(connection, "source_onlynulls");
-            MemoryDestination dest = new MemoryDestination();
+            DBSource<string[]> source = new DBSource<string[]>(connection, "source_onlynulls");
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

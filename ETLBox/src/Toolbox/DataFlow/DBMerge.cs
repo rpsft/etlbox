@@ -204,6 +204,4 @@ namespace ALE.ETLBox.DataFlow
         public void Wait() => DestinationTable.Wait();
         public async Task Completion() => await DestinationTable.Completion;
     }
-
-
 }

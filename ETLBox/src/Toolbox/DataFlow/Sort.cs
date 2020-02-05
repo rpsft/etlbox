@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -63,17 +64,17 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Sort the input with the given sort function. The non generic implementation works with string array.
+    /// Sort the input with the given sort function. The non generic implementation works with a dyanmic object.
     /// </summary>
-    public class Sort : Sort<string[]>
+    public class Sort : Sort<ExpandoObject>
     {
         public Sort() : base()
         { }
 
-        public Sort(Comparison<string[]> sortFunction) : base(sortFunction)
+        public Sort(Comparison<ExpandoObject> sortFunction) : base(sortFunction)
         { }
 
-        public Sort(string name, Comparison<string[]> sortFunction) : base(name, sortFunction)
+        public Sort(string name, Comparison<ExpandoObject> sortFunction) : base(name, sortFunction)
         { }
     }
 

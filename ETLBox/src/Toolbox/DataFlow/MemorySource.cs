@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -55,13 +56,13 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// Reads data from a memory source. While reading the data from the file, data is also asnychronously posted into the targets.
-    /// MemorySource as a nongeneric type always return a string array as output. If you need typed output, use
+    /// MemorySource as a nongeneric type always return a dynamic object as output. If you need typed output, use
     /// the MemorySource&lt;TOutput&gt; object instead.
     /// </summary>
     /// <see cref="MemorySource{TOutput}"/>
-    public class MemorySource : MemorySource<string[]>
+    public class MemorySource : MemorySource<ExpandoObject>
     {
         public MemorySource() : base() { }
-        public MemorySource(List<string[]> data) : base(data) { }
+        public MemorySource(List<ExpandoObject> data) : base(data) { }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Dynamic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -43,7 +44,7 @@ namespace ALE.ETLBox.DataFlow
         HttpClient HttpClient { get; set; }
         TypeInfo TypeInfo { get; set; }
 
-        public JsonSource() 
+        public JsonSource()
         {
             TypeInfo = new TypeInfo(typeof(TOutput));
             JsonSerializer = new JsonSerializer();
@@ -133,7 +134,7 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.
-    /// JsonSource as a nongeneric type always return a string array as output. If you need typed output, use
+    /// JsonSource as a nongeneric type returns a dynamic object as output. If you need typed output, use
     /// the JsonSource&lt;TOutput&gt; object instead.
     /// </summary>
     /// <see cref="JsonSource{TOutput}"/>
@@ -144,7 +145,7 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
-    public class JsonSource : JsonSource<string[]>
+    public class JsonSource : JsonSource<ExpandoObject>
     {
         public JsonSource() : base() { }
         public JsonSource(string uri) : base(uri) { }

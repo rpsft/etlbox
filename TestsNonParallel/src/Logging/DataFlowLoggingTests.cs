@@ -64,8 +64,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource source = new DBSource(SqlConnection, "DBSource");
-            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "DBSource");
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 3;
@@ -94,8 +94,8 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource source = new DBSource(SqlConnection, "DBSource");
-            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "DBSource");
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 0;
@@ -119,9 +119,9 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DBSource");
             InsertTestData("DBSource");
             CreateTestTable("DBDestination");
-            DBSource source = new DBSource(SqlConnection, "DBSource");
-            DBDestination dest = new DBDestination(SqlConnection, "DBDestination", batchSize: 3);
-            RowTransformation rowTrans = new RowTransformation(row => row);
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "DBSource");
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "DBDestination", batchSize: 3);
+            RowTransformation<string[]> rowTrans = new RowTransformation<string[]>(row => row);
 
             //Act
             DataFlow.LoggingThresholdRows = 3;
@@ -179,8 +179,8 @@ namespace ALE.ETLBoxTests.Logging
             Func<bool> EndOfData = () => readIndex >= Data.Count;
 
             //Act
-            CustomSource source = new CustomSource(ReadData, EndOfData);
-            DBDestination dest = new DBDestination(SqlConnection, "Destination4CustomSource");
+            CustomSource<string[]> source = new CustomSource<string[]>(ReadData, EndOfData);
+            DBDestination<string[]> dest = new DBDestination<string[]>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion;

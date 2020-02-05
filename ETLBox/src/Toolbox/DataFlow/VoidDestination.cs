@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Dynamic;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -36,9 +37,9 @@ namespace ALE.ETLBox.DataFlow
     /// This destination if used as a trash.
     /// Redirect all data in this destination which you do not want for further processing.
     /// Every records needs to be transferred to a destination to have a dataflow completed.
-    /// The non generic implementation works with a string array as input.
+    /// The non generic implementation works with a dynamic obect as input.
     /// </summary>
-    public class VoidDestination : VoidDestination<string[]>
+    public class VoidDestination : VoidDestination<ExpandoObject>
     {
         public VoidDestination() : base()
         { }

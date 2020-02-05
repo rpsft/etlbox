@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -160,23 +161,22 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A lookup task - data from the input can be enriched with data retrieved from the lookup source.
-    /// The non generic implementation accepts a string array as input and output. The lookup data source
-    /// always returns a list of string array.
+    /// The non generic implementation uses a dynamic object as input and lookup source.
     /// </summary>
-    public class LookupTransformation : LookupTransformation<string[], string[]>
+    public class LookupTransformation : LookupTransformation<ExpandoObject, ExpandoObject>
     {
         public LookupTransformation() : base()
         { }
 
-        public LookupTransformation(IDataFlowSource<string[]> lookupSource)
+        public LookupTransformation(IDataFlowSource<ExpandoObject> lookupSource)
             : base(lookupSource)
         { }
 
-        public LookupTransformation(IDataFlowSource<string[]> lookupSource, Func<string[], string[]> transformationFunc)
+        public LookupTransformation(IDataFlowSource<ExpandoObject> lookupSource, Func<ExpandoObject, ExpandoObject> transformationFunc)
             : base(lookupSource, transformationFunc)
         { }
 
-        public LookupTransformation(IDataFlowSource<string[]> lookupSource, Func<string[], string[]> transformationFunc, List<string[]> lookupList)
+        public LookupTransformation(IDataFlowSource<ExpandoObject> lookupSource, Func<ExpandoObject, ExpandoObject> transformationFunc, List<ExpandoObject> lookupList)
             : base(lookupSource, transformationFunc, lookupList)
         { }
     }

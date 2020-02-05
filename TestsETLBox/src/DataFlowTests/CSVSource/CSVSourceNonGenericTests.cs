@@ -27,10 +27,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination dest = new DBDestination(Connection, "CSVDestination2Columns");
+            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "CSVDestination2Columns");
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -44,10 +44,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination dest = new DBDestination(Connection, "CSVDestination2Columns");
+            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "CSVDestination2Columns");
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/ThreeColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -61,10 +61,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DBDestination dest = new DBDestination(Connection, "CSVDestination2Columns");
+            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "CSVDestination2Columns");
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/OneColumn.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/OneColumn.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

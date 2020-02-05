@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -137,13 +138,13 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
-    /// The non generic RowTransformation accepts a string array as input and returns a string array as output.
+    /// The non generic RowTransformation accepts a dynamic object as input and returns a dynamic object as output.
     /// If you need other data types, use the generic RowTransformation instead.
     /// </summary>
     /// <see cref="RowTransformation{TInput, TOutput}"/>
     /// <example>
     /// <code>
-    /// //Non generic RowTransformation works with string[] as input and output
+    /// //Non generic RowTransformation works with dynamic object as input and output
     /// //use RowTransformation&lt;TInput,TOutput&gt; for generic usage!
     /// RowTransformation trans = new RowTransformation(
     ///     csvdata => {
@@ -152,11 +153,11 @@ namespace ALE.ETLBox.DataFlow
     /// trans.LinkTo(dest);
     /// </code>
     /// </example>
-    public class RowTransformation : RowTransformation<string[]>
+    public class RowTransformation : RowTransformation<ExpandoObject>
     {
         public RowTransformation() : base() { }
-        public RowTransformation(Func<string[], string[]> rowTransformationFunc) : base(rowTransformationFunc) { }
-        public RowTransformation(string name, Func<string[], string[]> rowTransformationFunc) : base(name, rowTransformationFunc) { }
-        public RowTransformation(string name, Func<string[], string[]> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
+        public RowTransformation(Func<ExpandoObject, ExpandoObject> rowTransformationFunc) : base(rowTransformationFunc) { }
+        public RowTransformation(string name, Func<ExpandoObject, ExpandoObject> rowTransformationFunc) : base(name, rowTransformationFunc) { }
+        public RowTransformation(string name, Func<ExpandoObject, ExpandoObject> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
     }
 }

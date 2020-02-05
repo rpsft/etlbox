@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 
@@ -134,22 +135,22 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The CSVDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.
+    /// The CSVDestination uses a dynamic object as input type. If you need other data types, use the generic CSVDestination instead.
     /// </summary>
     /// <see cref="CsvDestination{TInput}"/>
     /// <example>
     /// <code>
-    /// //Non generic CSVDestination works with string[] as input
+    /// //Non generic CSVDestination works with dynamic object as input
     /// //use CSVDestination&lt;TInput&gt; for generic usage!
     /// CSVDestination dest = new CSVDestination("/path/to/file.csv");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class CSVDestination : CsvDestination<string[]>
+    public class CsvDestination : CsvDestination<ExpandoObject>
     {
-        public CSVDestination() : base() { }
+        public CsvDestination() : base() { }
 
-        public CSVDestination(string fileName) : base(fileName) { }
+        public CsvDestination(string fileName) : base(fileName) { }
 
     }
 

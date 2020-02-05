@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 
 namespace ALE.ETLBox.DataFlow
@@ -54,10 +55,10 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A destination in memory - it will store all you data in a list. Inserts are done in batches.
-    /// The MemoryDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.
+    /// The MemoryDestination uses a dynamic object as input type. If you need other data types, use the generic CSVDestination instead.
     /// </summary>
     /// <see cref="MemoryDestination{TInput}"/>
-    public class MemoryDestination : MemoryDestination<string[]>
+    public class MemoryDestination : MemoryDestination<ExpandoObject>
     {
         public MemoryDestination() : base() { }
     }

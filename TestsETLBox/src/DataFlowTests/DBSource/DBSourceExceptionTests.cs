@@ -24,8 +24,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void UnknownTable()
         {
             //Arrange
-            DBSource source = new DBSource(SqlConnection, "UnknownTable");
-            MemoryDestination dest = new MemoryDestination();
+            DBSource<string[]> source = new DBSource<string[]>(SqlConnection, "UnknownTable");
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -45,12 +45,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 {
                     new TableColumn("id", "INT")
                 });
-            DBSource source = new DBSource()
+            DBSource<string[]> source = new DBSource<string[]>()
             {
                 ConnectionManager = SqlConnection,
                 SourceTableDefinition = def
             };
-            MemoryDestination dest = new MemoryDestination();
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
             //Act & Assert
             Assert.Throws<Microsoft.Data.SqlClient.SqlException>(() =>

@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -131,7 +132,7 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
-    /// CSVSource as a nongeneric type always return a string array as output. If you need typed output, use
+    /// CSVSource as a nongeneric type uses dynamic object as output. If you need typed output, use
     /// the CSVSource&lt;TOutput&gt; object instead.
     /// </summary>
     /// <see cref="CsvSource{TOutput}"/>
@@ -142,7 +143,7 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
-    public class CsvSource : CsvSource<string[]>
+    public class CsvSource : CsvSource<ExpandoObject>
     {
         public CsvSource() : base() { }
         public CsvSource(string fileName) : base(fileName) { }

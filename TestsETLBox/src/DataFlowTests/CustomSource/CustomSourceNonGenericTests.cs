@@ -40,8 +40,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Func<bool> EndOfData = () => _readIndex >= Data.Count;
 
             //Act
-            CustomSource source = new CustomSource(ReadData, EndOfData);
-            DBDestination dest = new DBDestination(Connection, "Destination4CustomSourceNonGeneric");
+            CustomSource<string[]> source = new CustomSource<string[]>(ReadData, EndOfData);
+            DBDestination<string[]> dest = new DBDestination<string[]>(Connection, "Destination4CustomSourceNonGeneric");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -58,17 +59,17 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Define your own source block. The non generic implementation return a string array as output.
+    /// Define your own source block. The non generic implementation returns a dynamic object as output.
     /// </summary>
-    public class CustomSource : CustomSource<string[]>
+    public class CustomSource : CustomSource<ExpandoObject>
     {
         public CustomSource() : base()
         { }
 
-        public CustomSource(Func<string[]> readFunc, Func<bool> readCompletedFunc) : base(readFunc, readCompletedFunc)
+        public CustomSource(Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc) : base(readFunc, readCompletedFunc)
         { }
 
-        public CustomSource(string name, Func<string[]> readFunc, Func<bool> readCompletedFunc) : base(name, readFunc, readCompletedFunc)
+        public CustomSource(string name, Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc) : base(name, readFunc, readCompletedFunc)
         { }
     }
 }
