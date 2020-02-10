@@ -57,9 +57,9 @@ namespace ALE.ETLBox.ControlFlow
         public static bool ExecuteScalarAsBool(string name, string sql) => new SqlTask(name, sql).ExecuteScalarAsBool();
         public static bool ExecuteScalarAsBool(IConnectionManager connectionManager, string name, string sql) => new SqlTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalarAsBool();
         public static void ExecuteReaderSingleLine(string name, string sql, params Action<object>[] actions) =>
-           new SqlTask(name, sql, actions) { ReadTopX = 1 }.ExecuteReader();
+           new SqlTask(name, sql, actions) { Limit = 1 }.ExecuteReader();
         public static void ExecuteReaderSingleLine(IConnectionManager connectionManager, string name, string sql, params Action<object>[] actions)
-            => new SqlTask(name, sql, actions) { ConnectionManager = connectionManager, ReadTopX = 1 }.ExecuteReader();
+            => new SqlTask(name, sql, actions) { ConnectionManager = connectionManager, Limit = 1 }.ExecuteReader();
         public static void ExecuteReader(string name, string sql, params Action<object>[] actions) => new SqlTask(name, sql, actions).ExecuteReader();
         public static void ExecuteReader(IConnectionManager connectionManager, string name, string sql, params Action<object>[] actions) => new SqlTask(name, sql, actions) { ConnectionManager = connectionManager }.ExecuteReader();
         public static void ExecuteReader(string name, string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>
@@ -73,9 +73,9 @@ namespace ALE.ETLBox.ControlFlow
         public static Nullable<T> ExecuteScalar<T>(string name, string sql, IEnumerable<QueryParameter> parameterList) where T : struct => new SqlTask(name, sql, parameterList).ExecuteScalar<T>();
         public static bool ExecuteScalarAsBool(string name, string sql, IEnumerable<QueryParameter> parameterList) => new SqlTask(name, sql, parameterList).ExecuteScalarAsBool();
         public static void ExecuteReaderSingleLine(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions)
-            => new SqlTask(name, sql, parameterList, actions) { ReadTopX = 1 }.ExecuteReader();
+            => new SqlTask(name, sql, parameterList, actions) { Limit = 1 }.ExecuteReader();
         public static void ExecuteReaderSingleLine(IConnectionManager connectionManager, string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions)
-    => new SqlTask(name, sql, parameterList, actions) { ConnectionManager = connectionManager,  ReadTopX = 1 }.ExecuteReader();
+    => new SqlTask(name, sql, parameterList, actions) { ConnectionManager = connectionManager,  Limit = 1 }.ExecuteReader();
         public static void ExecuteReader(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) => new SqlTask(name, sql, parameterList, actions).ExecuteReader();
         public static void ExecuteReader(IConnectionManager connectionManager, string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) => new SqlTask(name, sql, parameterList, actions) { ConnectionManager = connectionManager }.ExecuteReader();
         public static void ExecuteReader(string name, string sql, IEnumerable<QueryParameter> parameterList, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>

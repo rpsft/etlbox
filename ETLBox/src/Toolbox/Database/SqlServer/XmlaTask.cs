@@ -57,7 +57,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
         public static Nullable<T> ExecuteScalar<T>(string name, string xmla) where T : struct => new XmlaTask(name, xmla).ExecuteScalar<T>();
         public static bool ExecuteScalarAsBool(string name, string xmla) => new XmlaTask(name, xmla).ExecuteScalarAsBool();
         public static void ExecuteReaderSingleLine(string name, string xmla, params Action<object>[] actions) =>
-           new XmlaTask(name, xmla, actions) { ReadTopX = 1 }.ExecuteReader();
+           new XmlaTask(name, xmla, actions) { Limit = 1 }.ExecuteReader();
         public static void ExecuteReader(string name, string xmla, params Action<object>[] actions) => new XmlaTask(name, xmla, actions).ExecuteReader();
         public static void ExecuteReader(string name, string xmla, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>
             new XmlaTask(name, xmla, beforeRowReadAction, afterRowReadAction, actions).ExecuteReader();

@@ -16,7 +16,7 @@ namespace ALE.ETLBox.ControlFlow
         public List<Action<object>> Actions { get; set; }
         public Action BeforeRowReadAction { get; set; }
         public Action AfterRowReadAction { get; set; }
-        public long ReadTopX { get; set; } = long.MaxValue;
+        public long Limit { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
         public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(OdbcConnectionManager));
         internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
@@ -150,7 +150,7 @@ namespace ALE.ETLBox.ControlFlow
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
                 IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader;
-                for (int rowNr = 0; rowNr < ReadTopX; rowNr++)
+                for (int rowNr = 0; rowNr < Limit; rowNr++)
                 {
                     if (reader.Read())
                     {
