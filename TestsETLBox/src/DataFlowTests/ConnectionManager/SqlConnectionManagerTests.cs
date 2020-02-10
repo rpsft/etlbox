@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         void AssertOpenConnectionCount(int allowedOpenConnections, string connectionString)
         {
-            ConnectionString conString = new ConnectionString(connectionString);
+            SqlConnectionString conString = new SqlConnectionString(connectionString);
             SqlConnectionManager master = new SqlConnectionManager(conString.GetMasterConnection());
             string dbName = conString.SqlConnectionStringBuilder.InitialCatalog;
             int? openConnections =
@@ -47,7 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void TestOpeningCloseConnection()
         {
             //Arrange
-            SqlConnectionManager con = new SqlConnectionManager(new ConnectionString(ConnectionStringParameter));
+            SqlConnectionManager con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
 
             //Act
             AssertOpenConnectionCount(0, ConnectionStringParameter);
@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Fact]
         public void TestOpeningConnectionTwice()
         {
-            SqlConnectionManager con = new SqlConnectionManager(new ConnectionString(ConnectionStringParameter));
+            SqlConnectionManager con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
             AssertOpenConnectionCount(0, ConnectionStringParameter);
             con.Open();
             con.Open();
@@ -94,7 +94,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     END
             ")
                     {
-                        ConnectionManager = new SqlConnectionManager(new ConnectionString(ConnectionStringParameter)),
+                        ConnectionManager = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter)),
                         DisableLogging = true
                     }.ExecuteNonQuery()
                  );

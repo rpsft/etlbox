@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTests.Performance
          */
         [Theory,
             InlineData(100000, 0.5)]
-        public void CompareFlowWithBulkInsert(int numberOfRows,  double deviation)
+        public void CSVIntoMemDest(int numberOfRows,  double deviation)
         {
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.Performance
         private TimeSpan GetETLBoxTime<T>(int numberOfRows, CsvSource<T> source, MemoryDestination<T> dest)
         {
             source.LinkTo(dest);
-            var timeElapsedETLBox = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with {numberOfRows} rows of data using ETLBox",
+            var timeElapsedETLBox = BigDataHelper.LogExecutionTime($"Copying Csv into Memory Destination with {numberOfRows} rows of data using ETLBox",
                 () =>
                 {
                     source.Execute();

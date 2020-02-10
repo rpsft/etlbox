@@ -27,10 +27,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 0);
-            DbDestination dest = new DbDestination(Connection, "CSVDestination4Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination4Columns");
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/ThreeColumnsNoId.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumnsNoId.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -44,10 +44,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 2);
-            DbDestination dest = new DbDestination(Connection, "CSVDestination4Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination4Columns");
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/ThreeColumnsNoId.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumnsNoId.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -62,10 +62,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 3);
-            DbDestination dest = new DbDestination(Connection, "CSVDestination4Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination4Columns");
 
             //Act
-            CsvSource source = new CsvSource("res/CSVSource/ThreeColumnsNoId.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumnsNoId.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

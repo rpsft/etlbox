@@ -14,8 +14,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class AdomdConnectionManager : DbConnectionManager<AdomdConnection>
     {
         public AdomdConnectionManager() : base() { }
-        public AdomdConnectionManager(ConnectionString connectionString) : base(connectionString) { }
-        public AdomdConnectionManager(string connectionString) : base(new ConnectionString(connectionString)) { }
+        public AdomdConnectionManager(SqlConnectionString connectionString) : base(connectionString) { }
+        public AdomdConnectionManager(string connectionString) : base(new SqlConnectionString(connectionString)) { }
 
         public override void BulkInsert(ITableData data, string tableName)
         {
@@ -28,7 +28,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override IConnectionManager Clone()
         {
             if (LeaveOpen) return this;
-            AdomdConnectionManager clone = new AdomdConnectionManager((ConnectionString)ConnectionString)
+            AdomdConnectionManager clone = new AdomdConnectionManager((SqlConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts
             };

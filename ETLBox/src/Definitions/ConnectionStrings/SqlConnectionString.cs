@@ -8,7 +8,7 @@ namespace ALE.ETLBox
     /// A helper class for encapsulating a conection string to a sql server in an object.
     /// Internally the SqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class ConnectionString : IDbConnectionString
+    public class SqlConnectionString : IDbConnectionString
     {
 
         SqlConnectionStringBuilder _builder;
@@ -31,33 +31,33 @@ namespace ALE.ETLBox
 
         public SqlConnectionStringBuilder SqlConnectionStringBuilder => _builder;
 
-        public ConnectionString()
+        public SqlConnectionString()
         {
             _builder = new SqlConnectionStringBuilder();
         }
 
-        public ConnectionString(string connectionString)
+        public SqlConnectionString(string connectionString)
         {
             this.Value = connectionString;
         }
 
-        public ConnectionString GetMasterConnection()
+        public SqlConnectionString GetMasterConnection()
         {
             SqlConnectionStringBuilder con = new SqlConnectionStringBuilder(Value);
             con.InitialCatalog = "master";
-            return new ConnectionString(con.ConnectionString);
+            return new SqlConnectionString(con.ConnectionString);
         }
 
-        public ConnectionString GetConnectionWithoutCatalog()
+        public SqlConnectionString GetConnectionWithoutCatalog()
         {
             SqlConnectionStringBuilder con = new SqlConnectionStringBuilder(Value);
             con.InitialCatalog = "";
-            return new ConnectionString(con.ConnectionString);
+            return new SqlConnectionString(con.ConnectionString);
         }
 
-        public static implicit operator ConnectionString(string v)
+        public static implicit operator SqlConnectionString(string v)
         {
-            return new ConnectionString(v);
+            return new SqlConnectionString(v);
         }
 
         public override string ToString()

@@ -74,8 +74,8 @@ namespace ALE.ETLBoxTests.Logging
             SqlTask.ExecuteNonQuery(LoggingConnection, "Create source table", @"CREATE TABLE DFLogDestination
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
 
-            DbSource<string[]> source = new DbSource<string[]>(NoLogConnection, "DFLogSource");
-            DbDestination<string[]> dest = new DbDestination<string[]>(LoggingConnection, "DFLogDestination");
+            DbSource source = new DbSource(NoLogConnection, "DFLogSource");
+            DbDestination dest = new DbDestination(LoggingConnection, "DFLogDestination");
 
             //Act
             source.LinkTo(dest);
@@ -83,12 +83,12 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DBSource'")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DbSource'")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection
             }.Count().Rows);
-            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DBDestination'")
+            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DbDestination'")
             {
                 DisableLogging = true,
                 ConnectionManager = LoggingConnection
