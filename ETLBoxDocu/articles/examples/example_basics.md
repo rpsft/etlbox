@@ -115,10 +115,10 @@ Value2,2
 Value3,3
 ```
 
-Now we create a CSVSource pointing to the newly created input file. 
+Now we create a CsvSource pointing to the newly created input file. 
 
 ```C#
-CSVSource source = new CSVSource("input.csv");
+CsvSource source = new CsvSource("input.csv");
 ```
 
 Before we continue, we will need an object that can hold our data. Let's call it MyData.
@@ -142,14 +142,14 @@ RowTransformation<string[], MyData> row = new RowTransformation<string[], MyData
 );
 ```
 
-Actually, this transformation wouldn't been necessary - the CSVSource could have automatically converted the
+Actually, this transformation wouldn't been necessary - the CsvSource could have automatically converted the
 incoming data into the `MyData` object. But it shows how a transformation can be used to execute any 
 C# code you like. 
 
 Next we add a database destination pointing to our table.
 
 ```C#
-DBDestination<MyData> dest = new DBDestination<MyData>(dbConnection, "Table1");
+DbDestination<MyData> dest = new DbDestination<MyData>(dbConnection, "Table1");
 ```
 
 Now we need to link the components of our dataflow.

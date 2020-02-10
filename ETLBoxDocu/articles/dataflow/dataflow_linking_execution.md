@@ -6,13 +6,13 @@ Before you can execute a data flow, you need to link your source, transformation
 The linking is quite easy - every source component and every transformation offers a LinkTo() method.
 This method accepts a target, which either is another transformation or a destination. 
 
-Example of Linking a `DBSource` to a `RowTransformation` and the to a `DBDestination`.
+Example of Linking a `DbSource` to a `RowTransformation` and the to a `DbDestination`.
 
 ```C#
 //Create the components
-DBSource source = new DBSource("SourceTable");
+DbSource source = new DbSource("SourceTable");
 RowTransformation rowTrans = new RowTransformation( row => row );
-DBDestination dest = new DBDestination("DestTable");
+DbDestination dest = new DbDestination("DestTable");
 
 //Link the components
 source.LinkTo(row);
@@ -21,7 +21,7 @@ row.LinkTo(dest);
 
 This will result in a flow which looks like this:
 
-DBSource --> RowTransformation --> DBDestination
+DbSource --> RowTransformation --> DbDestination
 
 ### Fluent notation
 
@@ -103,8 +103,8 @@ Beside the normal `LinkTo` method, you can use the  `LinkErrorTo` to redirect er
 Here an example for a database source, where error records are linked into a MemoryDestination:
 
 ```C#
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(connection, "SourceTable");
-DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(connection, "DestinationTable");
+DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "SourceTable");
+DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DestinationTable");
 MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 source.LinkTo(dest);
 source.LinkErrorTo(errorDest);
@@ -149,14 +149,14 @@ only single source, you can have multiple source for every component that can be
 E.g. this is possible graph for you dataflow:
 
 ```
-DBSource1 ---> RowTransformation1 -|
-DBSource2 -|-> RowTransformation2 -|-> DBDestination
-CSVSource -|
+DbSource1 ---> RowTransformation1 -|
+DbSource2 -|-> RowTransformation2 -|-> DbDestination
+CsvSource -|
 ```
 
-In this example graph, RowTransformation2 has two inputs: DBSource2 & CSVSource. Also, DBDestination has two inputs:
-RowTransformation1 & RowTransformation2. The DBDestination will complete when data from all sources 
-(DBSource1, DBSource2, CSVSource) was written into the data flow and arrived at the DBDestination. 
+In this example graph, RowTransformation2 has two inputs: DbSource2 & CsvSource. Also, DbDestination has two inputs:
+RowTransformation1 & RowTransformation2. The DbDestination will complete when data from all sources 
+(DbSource1, DbSource2, CsvSource) was written into the data flow and arrived at the DbDestination. 
 
 *Note*: When you want to merge you data of multiple source before any further processing, consider using the 
 `MergeJoin`. If you want to split your data, you can use the `Multicast`. 
@@ -176,9 +176,9 @@ is based on `Microsoft.TPL.Dataflow`. ETLBox will wrap this behavior into synchr
 
 ```C#
 //Prepare the flow
-DBSource source = new DBSource("SourceTable");
+DbSource source = new DbSource("SourceTable");
 RowTransformation rowTrans = new RowTransformation( row => row );
-DBDestination dest = new DBDestination("DestTable");
+DbDestination dest = new DbDestination("DestTable");
 source.LinkTo(row);
 
 //Execute the source 
@@ -202,9 +202,9 @@ in separate task(s) in the background.
 ### Example async execution
 
 ```C#
-DBSource source = new DBSource("SourceTable");
+DbSource source = new DbSource("SourceTable");
 RowTransformation rowTrans = new RowTransformation( row => row );
-DBDestination dest = new DBDestination("DestTable");
+DbDestination dest = new DbDestination("DestTable");
 
 source.LinkTo(row).LinkTo(dest);
 

@@ -50,7 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./SimpleWithObject.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsSet3.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumnsSet3.csv"));
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./ObjectWithBatchWrite.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsSet3.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumnsSet3.csv"));
         }
     }
 }

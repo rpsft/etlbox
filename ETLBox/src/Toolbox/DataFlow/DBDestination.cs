@@ -14,7 +14,7 @@ namespace ALE.ETLBox.DataFlow
     /// <typeparam name="TInput">Type of data input.</typeparam>
     /// <example>
     /// <code>
-    /// DBDestination&lt;MyRow&gt; dest = new DBDestination&lt;MyRow&gt;("dbo.table");
+    /// DbDestination&lt;MyRow&gt; dest = new DbDestination&lt;MyRow&gt;("dbo.table");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
@@ -154,14 +154,14 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The DBDestination uses a dynamic object as input type. If you need other data types, use the generic DBDestination instead.
+    /// The DbDestination uses a dynamic object as input type. If you need other data types, use the generic DbDestination instead.
     /// </summary>
     /// <see cref="DbDestination{TInput}"/>
     /// <example>
     /// <code>
-    /// //Non generic DBDestination works with dynamic object as input
-    /// //use DBDestination&lt;TInput&gt; for generic usage!
-    /// DBDestination dest = new DBDestination("dbo.table");
+    /// //Non generic DbDestination works with dynamic object as input
+    /// //use DbDestination&lt;TInput&gt; for generic usage!
+    /// DbDestination dest = new DbDestination("dbo.table");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>

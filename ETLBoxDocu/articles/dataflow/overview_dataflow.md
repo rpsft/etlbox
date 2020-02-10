@@ -21,7 +21,7 @@ and destination components for loading.
 All dataflow pipelines will need at least one or more sources. Sources are basically everything that can read data from someplace 
 (e.g. CSV file or a database table) and then post this data into the pipeline. All sources should be able to read data asynchronously. 
 That means, while the component reads data from the source, it simultaneously sends the already processed data to components that are connected to source.
-There are different build-in data sources, e.g.: `CSVSource`, `DBSource` or `ExelSource`. If you are in need of another source component, you can either extend the 
+There are different build-in data sources, e.g.: `CsvSource`, `DbSource` or `ExelSource`. If you are in need of another source component, you can either extend the 
 `CustomSource`. Or you [open an issue in github](https://github.com/roadrunnerlenny/etlbox/issues) describing your needs. 
 
 Once a source starts reading data, it will start sending data to its connected components. These could be either a Transformation or Destination.
@@ -37,8 +37,8 @@ As soon as there is any data in the input, the transformation will start and pos
 
 ### Destination components 
 
-Destination components will have normally only one input. They define a target for your data, e.g. a database table or CSV file. Currently, there is `DBDestination` 
-and `CSVDestination` implemented. If you are in need of another destination component, you can either extend the `CustomDestination` or you [open an 
+Destination components will have normally only one input. They define a target for your data, e.g. a database table or CSV file. Currently, there is `DbDestination` 
+and `CsvDestination` implemented. If you are in need of another destination component, you can either extend the `CustomDestination` or you [open an 
 issue in github](https://github.com/roadrunnerlenny/etlbox/issues).
 
 Every Destination comes with an input buffer. 
@@ -70,10 +70,10 @@ SqlConnectionManager connMan = new SqlConnectionManager("Data Source=.;Initial C
 Now we need to create a source, in this example it could contain order data. This will look like this:
 
 ```C#
-CSVSource source = new CSVSource("demodata.csv");
+CsvSource source = new CsvSource("demodata.csv");
 ```
 
-We now add a row transformation. The default output format of a `CSVSource` is an string array. In this example, 
+We now add a row transformation. The default output format of a `CsvSource` is an string array. In this example, 
 we will convert the csv string array into an `Order` object and adding some logic while the transformation.
 
 ```C#
@@ -87,14 +87,14 @@ RowTransformation<string[], Order> rowTrans = new RowTransformation<string[], Or
     });
 ```
 
-*Please note that the `CSVSource` could be directly created as `CSVSource<OrderFile>`. Data type conversions 
-(like `int.Parse()`) would then have been handled internally by the CSVSource.*
+*Please note that the `CsvSource` could be directly created as `CsvSource<OrderFile>`. Data type conversions 
+(like `int.Parse()`) would then have been handled internally by the CsvSource.*
 
 Now we need to create a destination. Notice that the destination is typed with the `Order` object. We also
-need to pass the connection manager to the DBDestination so that connection to our Sql Server can be used. 
+need to pass the connection manager to the DbDestination so that connection to our Sql Server can be used. 
 
 ```C#
-DBDestination<Order> dest = new DBDestination<Order>(connMan, "OrderTable");
+DbDestination<Order> dest = new DbDestination<Order>(connMan, "OrderTable");
 ```
 
 **If you don't want to pass the connection manager object over and over again to the your DataFlow or ControlFlow objects,
@@ -109,7 +109,7 @@ sourceOrderData.LinkTo(rowTrans);
 rowTrans.LinkTo(dest);
 ```
 
-This will create a data  flow pipe CSVSource -> RowTransformation -> DBDestination
+This will create a data  flow pipe CsvSource -> RowTransformation -> DbDestination
 
 ### Executing the dataflow
 

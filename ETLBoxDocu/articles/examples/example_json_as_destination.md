@@ -25,7 +25,7 @@ public class MySimpleRow {
 ## Implement the dataflow
 
 First, we will read the data from the source. We create a table use a `TableDefinition` object and pass this
-to the `DBSource`.
+to the `DbSource`.
 
 ```C#
 TableDefinition sourceTableDefinition = new TableDefinition("test.Source"
@@ -38,7 +38,7 @@ SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Te
 SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test2',2)");
 SqlTask.ExecuteNonQuery("Insert demo data", $"insert into {tableName} values('Test3',3)");
 
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(sourceTableDefinition);
+DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(sourceTableDefinition);
 ```
 
 Next, we need to have the Destination defined. We create a `CustomDestination` that basically reads all the rows

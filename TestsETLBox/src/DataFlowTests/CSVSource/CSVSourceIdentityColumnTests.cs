@@ -26,11 +26,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IdentityAtPosition1()
         {
             //Arrange
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 0);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination4Columns");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 0);
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumnsNoId.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -43,11 +43,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IdentityInTheMiddle()
         {
             //Arrange
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 2);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination4Columns");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 2);
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumnsNoId.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -61,11 +61,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IdentityAtTheEnd()
         {
             //Arrange
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CSVDestination4Columns", identityColumnIndex: 3);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination4Columns");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 3);
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumnsNoId.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

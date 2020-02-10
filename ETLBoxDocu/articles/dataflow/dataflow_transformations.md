@@ -63,7 +63,7 @@ Though the lookup is non-blocking, it will take as much memory as the lookup tab
 Here is an example:
 
 ```C#
-DBSource<MyLookupRow> lookupSource = new DBSource<MyLookupRow>(connection, "Lookup");
+DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(connection, "Lookup");
 List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
 LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new Lookup<MyInputDataRow, MyLookupRow>(
     lookupSource,
@@ -95,11 +95,11 @@ The following code demonstrate a simple example where data would be duplicated a
 a database table and a Json file. 
 
 ```C#
-var source = new CSVSource("test.csv");
+var source = new CsvSource("test.csv");
 
 var multicast = new Multicast();
 var destination1 = new JsonDestination("test.json");
-var destination2 = new DBDestination("TestTable");
+var destination2 = new DbDestination("TestTable");
 
 source.LinkTo(multicast);
 multicast.LinkTo(destination1);
@@ -112,11 +112,11 @@ E.g. the following code would only copy data into Table1 where the first column 
 copied into Table2.
 
 ```C#
-var source = new CSVSource("test.csv");
+var source = new CsvSource("test.csv");
 
 var multicast = new Multicast();
-var destination1 = new DBDestination("Table1");
-var destination2 = new DBDestination("Table2");
+var destination1 = new DbDestination("Table1");
+var destination2 = new DbDestination("Table2");
 
 source.LinkTo(multicast);
 multicast.LinkTo(destination1, row => row[0] > 0);
@@ -140,9 +140,9 @@ output and the inputs can be different, as long as you handle it in the join fun
 MergeJoin is a non blocking transformation. 
 
 ```C#
-DBSource<MyInputRowType1> source1 = new DBSource<MyInputRowType1>(Connection, "MergeJoinSource1");
-DBSource<MyInputRowType2> source2 = new DBSource<MyInputRowType2>(Connection, "MergeJoinSource2");
-DBDestination<MyOutputRowType> dest = new DBDestination<MyOutputRowType>(Connection, "MergeJoinDestination");
+DbSource<MyInputRowType1> source1 = new DbSource<MyInputRowType1>(Connection, "MergeJoinSource1");
+DbSource<MyInputRowType2> source2 = new DbSource<MyInputRowType2>(Connection, "MergeJoinSource2");
+DbDestination<MyOutputRowType> dest = new DbDestination<MyOutputRowType>(Connection, "MergeJoinDestination");
 
 MergeJoin<MyInputRowType1, MyInputRowType2, MyOutputRowType> join = new MergeJoin<MyInputRowType1, MyInputRowType2, MyOutputRowType>(
     (inputRow1, inputRow2) => {

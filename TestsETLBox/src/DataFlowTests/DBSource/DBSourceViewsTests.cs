@@ -32,12 +32,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "dbsource_simple");
             source2Columns.InsertTestData();
-            CreateViewTask.CreateOrAlter(connection, "DBSourceView", "SELECT * FROM dbsource_simple");
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBDestinationSimple");
+            CreateViewTask.CreateOrAlter(connection, "DbSourceView", "SELECT * FROM dbsource_simple");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationSimple");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBSourceView");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DBDestinationSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceView");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationSimple");
 
             source.LinkTo(dest);
             source.Execute();
@@ -60,12 +60,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             FourColumnsTableFixture s4c = new FourColumnsTableFixture(connection, "dbsource_extended");
             s4c.InsertTestData();
-            CreateViewTask.CreateOrAlter(connection, "DBSourceViewExtended", $"SELECT {s4c.QB}Col2{s4c.QE}, {s4c.QB}Col4{s4c.QE} FROM dbsource_extended");
-            FourColumnsTableFixture d4c = new FourColumnsTableFixture(connection, "DBDestinationExtended", 1);
+            CreateViewTask.CreateOrAlter(connection, "DbSourceViewExtended", $"SELECT {s4c.QB}Col2{s4c.QE}, {s4c.QB}Col4{s4c.QE} FROM dbsource_extended");
+            FourColumnsTableFixture d4c = new FourColumnsTableFixture(connection, "DbDestinationExtended", 1);
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "DBSourceViewExtended");
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "DBDestinationExtended");
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "DbSourceViewExtended");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "DbDestinationExtended");
 
             source.LinkTo(dest);
             source.Execute();

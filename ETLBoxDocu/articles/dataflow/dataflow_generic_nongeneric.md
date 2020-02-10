@@ -28,7 +28,7 @@ public class MySimpleRow {
     public string Col2 { get; set; }
 }
 
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>("demotable");
+DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("demotable");
 ```
 
 The table demotable has 2 column: Value1 with a INT data type and Value2 with an VARCHAR data type. The POCO `MySimpleRow`
@@ -53,7 +53,7 @@ public class MyNewRow {
     public int Value1 { get; set; }
     public string AnotherValue { get; set }
 }
-DBSource<MyNewRow> source = new DBSource<MyNewRow>("demotable");
+DbSource<MyNewRow> source = new DbSource<MyNewRow>("demotable");
 ```
 
 If we would use this object to map with our source table, there would be only data read from Value1. Because the property
@@ -76,7 +76,7 @@ public class MyNewRow {
     public int Value1 { get; set; }
     public string AnotherValue { get; set }
 }
-DBSource<MyNewRow> source = new DBSource<MyNewRow>() {
+DbSource<MyNewRow> source = new DbSource<MyNewRow>() {
     Sql = "SELECT Value1, Value2 AS AnotherValue FROM demotable"
 };
 ```
@@ -105,7 +105,7 @@ public string Key {
 public int _key;
 ```
 
-If you use this object within a `DBSource`, it will read the data from the database column "Id" and then call the `ToString` method on every record
+If you use this object within a `DbSource`, it will read the data from the database column "Id" and then call the `ToString` method on every record
 before actually writing it into the property. 
 
 Now you could add another property:
@@ -165,7 +165,7 @@ The table `destTable` has one column: DestColSum, also an integer value.
 We could now define the following data flow:
 
 ```C#
-DBSource<ExpandoObject> source = new DBSource<ExpandoObject>("sourceTable");
+DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("sourceTable");
 
 //Act
 RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(
@@ -175,10 +175,10 @@ RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(
         c.DestColSum = c.SourceCol1 + c.SourceCol2;
         return c;
     });
-DBDestination<ExpandoObject> dest = new DBDestination<ExpandoObject>("destTable");
+DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("destTable");
 ```
 
-In this example code, the data is read from a DBSource into an ExpandoObject. The properties SourceCol1 and SourceCol2 
+In this example code, the data is read from a DbSource into an ExpandoObject. The properties SourceCol1 and SourceCol2 
 are created automatically, because ETLBox will recognize that it is an ExpandoObject and add a property 
 for each column in the source.
 In the RowTransformation, you can convert the ExpandoObject into a dynamic object first, so that you don't get any errros
@@ -196,12 +196,12 @@ property DestColSum.
 As working with dynamic types can sometimes be a hazzle, ETLBox offers a third way to create your data flow without
 object types. Most data flow components in ETLBox exist as a "non generic" object - which means that you can choose if you want to use
 the object as a generic one with having an object type of without an object type. If you don't pass an object type, ETLBox
-will internally work with an string array. E.g., the use of `DBSource`  is equivalent to `DBSource<string[]>`.
+will internally work with an string array. E.g., the use of `DbSource`  is equivalent to `DbSource<string[]>`.
 
 Here is an example for reading data from a database:
 
 ```C#
-DBSource source = new DBSource($@"select Value1, Value2 from dbo.Test");
+DbSource source = new DbSource($@"select Value1, Value2 from dbo.Test");
 RowTransformation row = new RowTransformation( 
     row => {
         string value1 = row[0];

@@ -1,24 +1,24 @@
 ﻿# Flat files and other sources and destinations
 
-## CSVSource
+## CsvSource
 
 A CSV source simple reads data from a CSV file. Under the hood is the 3rd party library `CSVHelper`. There are several configuration options for the Reader. 
 The default output data type of the CSVReader is a string array. You can either use a `RowTransformation` to transform it into the data type you need, or use
-the generic implementation CSVSource.
+the generic implementation CsvSource.
 
 ```C#
 //Returns string[] as output type for other components
-CSVSource source = new CSVSource("Demo.csv") {
+CsvSource source = new CsvSource("Demo.csv") {
     Delimiter = ";",
     SourceCommentRows = 2
 }
 ```
 
 ```C#
-CSVSource<CSVData> source = new CSVSource<CSVData>("Demo.csv");
+CsvSource<CSVData> source = new CsvSource<CSVData>("Demo.csv");
 ```
 
-## CSVDestination
+## CsvDestination
 
 A CSV destination will create a file containing the data in the desired CSV format. It is based on the 3rd party library `CSVHelper`.
 
@@ -38,7 +38,7 @@ E.g.
     public string Col2 { get; set; }
 }
 
-CSVDestination<MySimpleRow> dest = new CSVDestination<MySimpleRow>("./SimpleWithObject.csv");
+CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./SimpleWithObject.csv");
 ```
 
 will create a .csv file like this
@@ -52,10 +52,10 @@ Header1,Header2
 
 ### CSV Configuration
 
-The `CSVDestination` and the `CSVSource` does have a property `Configuration` which allows you to set e.g. the delimiter for the file. 
+The `CsvDestination` and the `CsvSource` does have a property `Configuration` which allows you to set e.g. the delimiter for the file. 
 
 ```C#
-CSVSource source = new CSVSource("res/CSVSource/OneColumn.csv")
+CsvSource source = new CsvSource("res/CsvSource/OneColumn.csv")
 {
     Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = ";" }
 };
@@ -143,7 +143,7 @@ Example code:
 ```C#
  TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
 MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "MemoryDestination");
+DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "MemoryDestination");
        
 source.Data = new List<MySimpleRow>()
 {
@@ -165,7 +165,7 @@ Data can be read from this collection as soon as it arrives.
 Example:
 
 ```C#
-DBSource<MySimpleRow> source = new DBSource<MySimpleRow>(SqlConnection, "MemoryDestinationSource");
+DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "MemoryDestinationSource");
 MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
 source.LinkTo(dest);

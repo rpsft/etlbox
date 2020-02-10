@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     /// <typeparam name="TOutput">Type of data output.</typeparam>
     /// <example>
     /// <code>
-    /// DBSource&lt;MyRow&gt; source = new DBSource&lt;MyRow&gt;("dbo.table");
+    /// DbSource&lt;MyRow&gt; source = new DbSource&lt;MyRow&gt;("dbo.table");
     /// source.LinkTo(dest); //Transformation or Destination
     /// source.Execute(); //Start the data flow
     /// </code>
@@ -251,12 +251,12 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
-    /// into the targets. The non generic version of the DBSource uses a dynamic object that contains the data.
+    /// into the targets. The non generic version of the DbSource uses a dynamic object that contains the data.
     /// </summary>
     /// <see cref="DbSource{TOutput}"/>
     /// <example>
     /// <code>
-    /// DBSource source = new DBSource("dbo.table");
+    /// DbSource source = new DbSource("dbo.table");
     /// source.LinkTo(dest); //Transformation or Destination
     /// source.Execute(); //Start the data flow
     /// </code>

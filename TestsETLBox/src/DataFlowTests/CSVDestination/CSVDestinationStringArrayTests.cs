@@ -41,7 +41,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             //Assert
             Assert.Equal(File.ReadAllText("./SimpleNonGeneric.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsSet3NoHeader.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumnsSet3NoHeader.csv"));
         }
 
 

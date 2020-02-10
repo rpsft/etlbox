@@ -32,8 +32,8 @@ No we need to create the components for the CSV source and the database destinat
 
 ```C#
 //Import CSV
-CSVSource sourceCSV = new CSVSource("NameList.csv");
-DBDestination importDest = new DBDestination(conMan, "NameTable");
+CsvSource sourceCSV = new CsvSource("NameList.csv");
+DbDestination importDest = new DbDestination(conMan, "NameTable");
 ``` 
 
 No we link the components together and execute the data flow.
@@ -122,8 +122,8 @@ public class NameListElement
 No we create the components for the export, link them together and start the data flow.
 
 ```C#
-DBSource<NameListElement> sourceTable = new DBSource<NameListElement>(conMan, "NameTable");
-CSVDestination<NameListElement> destCSV = new CSVDestination<NameListElement>("Export.csv");
+DbSource<NameListElement> sourceTable = new DbSource<NameListElement>(conMan, "NameTable");
+CsvDestination<NameListElement> destCSV = new CsvDestination<NameListElement>("Export.csv");
 destCSV.Configuration.Delimiter = ";";
 sourceTable.LinkTo(destCSV);
 sourceTable.Execute();
@@ -194,14 +194,14 @@ the source and the destination.
 PostgresConnectionManager postgresConMan = new PostgresConnectionManager(PostgresConnectionString);
 SqlConnectionManager sqlConMan = new SqlConnectionManager(SqlServerConnectionString);
 
-DBSource<NameListElement> source = new DBSource<NameListElement>(postgresConMan, "NameTable");
+DbSource<NameListElement> source = new DbSource<NameListElement>(postgresConMan, "NameTable");
 RowTransformation<NameListElement> trans = new RowTransformation<NameListElement>(
     row =>
     {
         row.FullName = row.LastName + "," + row.FirstName;
         return row;
     }) ;
-DBDestination<NameListElement> dest = new DBDestination<NameListElement>(sqlConMan, "FullNameTable");
+DbDestination<NameListElement> dest = new DbDestination<NameListElement>(sqlConMan, "FullNameTable");
 
 //Linking the components
 source.LinkTo(trans);

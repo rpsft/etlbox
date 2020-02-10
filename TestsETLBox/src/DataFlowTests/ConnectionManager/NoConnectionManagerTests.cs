@@ -19,7 +19,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void DBSource()
+        public void DbSource()
         {
             //Arrange
             DbSource<string[]> source = new DbSource<string[]>("test");
@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void DBDestination()
+        public void DbDestination()
         {
             //Arrange
             string[] data = { "1", "2" };

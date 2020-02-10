@@ -26,11 +26,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleCSVIntoDatabase()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination2Columns");
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -43,11 +43,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MoreColumnsInCSV()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination2Columns");
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/ThreeColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -60,17 +60,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MoreColumnsInDatabase()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CSVDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination2Columns");
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CSVSource/OneColumn.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/OneColumn.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "CSVDestination2Columns", "Col1 IN (1,2,3)"));
+            Assert.Equal(3, RowCountTask.Count(Connection, "CsvDestination2Columns", "Col1 IN (1,2,3)"));
         }
     }
 }

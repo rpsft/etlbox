@@ -41,7 +41,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./SimpleWithDynamicObject.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsSet3DynamicObject.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumnsSet3DynamicObject.csv"));
         }
 
     }

@@ -37,9 +37,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DisableHeader()
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture("CSVSourceNoHeader");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture("CsvSourceNoHeader");
             s2c.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVSourceNoHeader");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CsvSourceNoHeader");
 
             //Act
             CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ConfigurationNoHeader.csv");
@@ -50,7 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./ConfigurationNoHeader.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsNoHeader.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumnsNoHeader.csv"));
         }
 
 

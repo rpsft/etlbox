@@ -17,10 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CSVDestinationNullHandlingTests
+    public class CsvDestinationNullHandlingTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CSVDestinationNullHandlingTests(DataFlowDatabaseFixture dbFixture)
+        public CsvDestinationNullHandlingTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -55,7 +55,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./IgnoreNullValues.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumns.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumns.csv"));
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./IgnoreNullValuesStringArray.csv"),
-                File.ReadAllText("res/CSVDestination/TwoColumnsNoHeader.csv"));
+                File.ReadAllText("res/CsvDestination/TwoColumnsNoHeader.csv"));
         }
 
 

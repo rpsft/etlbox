@@ -63,7 +63,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./ErrorFile.csv"),
-                 File.ReadAllText("res/CSVDestination/TwoColumnsErrorLinking.csv"));
+                 File.ReadAllText("res/CsvDestination/TwoColumnsErrorLinking.csv"));
             Assert.Collection<ETLBoxError>(errorDest.Data,
                 d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
                  d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))

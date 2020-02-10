@@ -84,7 +84,7 @@ retrieve data and post it into the dataflow - it is called until the second `Fun
 ```C#
 WebserviceReader wsreader = new WebserviceReader();
 CustomSource<Todo> source = new CustomSource<Todo>(wsreader.ReadTodo, wsreader.EndOfData);
-DBDestination<Todo> dest = new DBDestination<Todo>("dbo.ws_dest");
+DbDestination<Todo> dest = new DbDestination<Todo>("dbo.ws_dest");
 source.LinkTo(dest);
 ```
 

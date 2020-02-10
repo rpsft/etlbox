@@ -43,11 +43,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleFlowUsingClassMap()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVDestination2ColumnsClassMap");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVDestination2ColumnsClassMap");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2ColumnsClassMap");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvDestination2ColumnsClassMap");
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv");
             source.Configuration.RegisterClassMap<ModelClassMap>();
             source.LinkTo(dest);
             source.Execute();
@@ -79,11 +79,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void UsingClassMapAndNoHeader()
         {
             //Arrange
-            FourColumnsTableFixture d4c = new FourColumnsTableFixture("CSVDestination4ColumnsClassMap");
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(Connection, "CSVDestination4ColumnsClassMap");
+            FourColumnsTableFixture d4c = new FourColumnsTableFixture("CsvDestination4ColumnsClassMap");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(Connection, "CsvDestination4ColumnsClassMap");
 
             //Act
-            CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CSVSource/FourColumnsInvalidHeader.csv");
+            CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CsvSource/FourColumnsInvalidHeader.csv");
             source.Configuration.RegisterClassMap<ExtendedClassMap>();
             source.Configuration.HasHeaderRecord = false;
             source.Configuration.ShouldSkipRecord = ShouldSkipRecordDelegate;

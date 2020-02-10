@@ -43,7 +43,7 @@ The DBMerge was designed for scenario 1, but also  works for scenario 2 except f
 
 #### Data and object definition
 
-To implement an example sync between two tables, we will  need a `DBSource` pointing to our source table. 
+To implement an example sync between two tables, we will  need a `DbSource` pointing to our source table. 
  In our case we just pass a table name for the source table, but you could also define a sql query 
  (e.g. which gives you only the delta records).
 
@@ -97,7 +97,7 @@ Key |Value         |
 No we can already set up a data flow. It would look like this: 
 
 ```C#
-DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "SourceTable");
+DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "SourceTable");
 DBMerge<MyMergeRow> merge = new DBMerge<MyMergeRow>(connection, "DestinationTable");
 source.LinkTo(dest);
 source.Execute();
@@ -157,9 +157,9 @@ This information can be used as a source for further processing in the data flow
 simple by connecting the DBMerge to a transformation or another Destination. So our complete flow could look like this:
 
 ```C#
-DBSource<MyMergeRow> source = new DBSource<MyMergeRow>(connection, "SourceTable");
+DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "SourceTable");
 DBMerge<MyMergeRow> merge = new DBMerge<MyMergeRow>(connection, "DestinationTable");
-DBDestination<MyMergeRow> delta = new DBDestination<MyMergeRow>(connection, "DeltaTable");
+DbDestination<MyMergeRow> delta = new DbDestination<MyMergeRow>(connection, "DeltaTable");
 source.LinkTo(merge);
 merge.LinkTo(delta);
 source.Execute();

@@ -79,7 +79,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             List<string[]> allEntriesInDestination = new List<string[]>();
             LookupTransformation<string[],string[]> lookup = new LookupTransformation<string[],string[]> (
-                new DbSource(ConnectionDestination, "dbo.HashMatchDestination"),
+                new DbSource<string[]>(ConnectionDestination, "dbo.HashMatchDestination"),
                 row =>
                 {
                     var matchingIdEntry = allEntriesInDestination.Where(destRow => destRow[0] == row[0]).FirstOrDefault();

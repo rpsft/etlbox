@@ -14,7 +14,7 @@ namespace ALE.ETLBox.DataFlow
     /// <typeparam name="TInput">Type of data input.</typeparam>
     /// <example>
     /// <code>
-    /// CSVDestination&lt;MyRow&gt; dest = new CSVDestination&lt;MyRow&gt;("/path/to/file.csv");
+    /// CsvDestination&lt;MyRow&gt; dest = new CsvDestination&lt;MyRow&gt;("/path/to/file.csv");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
@@ -135,14 +135,14 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The CSVDestination uses a dynamic object as input type. If you need other data types, use the generic CSVDestination instead.
+    /// The CsvDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="CsvDestination{TInput}"/>
     /// <example>
     /// <code>
-    /// //Non generic CSVDestination works with dynamic object as input
-    /// //use CSVDestination&lt;TInput&gt; for generic usage!
-    /// CSVDestination dest = new CSVDestination("/path/to/file.csv");
+    /// //Non generic CsvDestination works with dynamic object as input
+    /// //use CsvDestination&lt;TInput&gt; for generic usage!
+    /// CsvDestination dest = new CsvDestination("/path/to/file.csv");
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>

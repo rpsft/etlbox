@@ -35,11 +35,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSource2Cols");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVSource2Cols");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSource2Cols");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvSource2Cols");
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumns.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -52,11 +52,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void CSVGenericWithSkipRows_DB()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceSkipRows");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVSourceSkipRows");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceSkipRows");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvSourceSkipRows");
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsSkipRows.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumnsSkipRows.csv");
             source.SkipRows = 2;
             source.LinkTo(dest);
             source.Execute();

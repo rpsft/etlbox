@@ -32,14 +32,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void CSVSourceNoHeader()
+        public void CsvSourceNoHeader()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceNoHeader");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CSVSourceNoHeader");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceNoHeader");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvSourceNoHeader");
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsNoHeader.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumnsNoHeader.csv");
             source.Configuration.HasHeaderRecord = false;
             source.LinkTo(dest);
             source.Execute();

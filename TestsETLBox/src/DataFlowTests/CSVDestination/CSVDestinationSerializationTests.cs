@@ -57,7 +57,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./DateTimeSerialization.csv"),
-                File.ReadAllText("res/CSVDestination/DateTimeSerialization.csv"));
+                File.ReadAllText("res/CsvDestination/DateTimeSerialization.csv"));
         }
 
 

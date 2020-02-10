@@ -16,7 +16,7 @@ using Xunit.Abstractions;
 namespace ALE.ETLBoxTests.Performance
 {
     [Collection("Performance")]
-    public class CSVSourceIntoDBTests
+    public class CsvSourceIntoDBTests
     {
         private readonly ITestOutputHelper output;
 
@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.Performance
 
 
 
-        public CSVSourceIntoDBTests(PerformanceDatabaseFixture dbFixture, ITestOutputHelper output)
+        public CsvSourceIntoDBTests(PerformanceDatabaseFixture dbFixture, ITestOutputHelper output)
         {
             this.output = output;
         }
@@ -67,14 +67,14 @@ namespace ALE.ETLBoxTests.Performance
         {
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
-            ReCreateDestinationTable(connection, "CSVDestinationNonGenericETLBox");
-            ReCreateDestinationTable(connection, "CSVDestinationBulkInsert");
-            ReCreateDestinationTable(connection, "CSVDestinationGenericETLBox");
+            ReCreateDestinationTable(connection, "CsvDestinationNonGenericETLBox");
+            ReCreateDestinationTable(connection, "CsvDestinationBulkInsert");
+            ReCreateDestinationTable(connection, "CsvDestinationGenericETLBox");
 
             var sourceNonGeneric = new CsvSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destNonGeneric = new DbDestination(connection, "CSVDestinationNonGenericETLBox", batchSize);
+            var destNonGeneric = new DbDestination(connection, "CsvDestinationNonGenericETLBox", batchSize);
             var sourceGeneric = new CsvSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destGeneric = new DbDestination<CSVData>(connection, "CSVDestinationGenericETLBox", batchSize);
+            var destGeneric = new DbDestination<CSVData>(connection, "CsvDestinationGenericETLBox", batchSize);
 
             //Act
             var timeElapsedBulkInsert = GetBulkInsertTime(connection, numberOfRows);
@@ -83,8 +83,8 @@ namespace ALE.ETLBoxTests.Performance
 
 
             //Assert
-            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CSVDestinationNonGenericETLBox"));
-            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CSVDestinationGenericETLBox"));
+            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationNonGenericETLBox"));
+            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationGenericETLBox"));
             Assert.True(Math.Abs(timeElapsedETLBoxGeneric.TotalMilliseconds- timeElapsedETLBoxNonGeneric.TotalMilliseconds) <
                 Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds, timeElapsedETLBoxNonGeneric.TotalMilliseconds) * deviationGeneric );
             if (timeElapsedBulkInsert.TotalMilliseconds > 0)
@@ -103,12 +103,12 @@ namespace ALE.ETLBoxTests.Performance
                  () =>
                  {
                      SqlTask.ExecuteNonQuery(connection, "Insert with BulkInsert",
-            $@"BULK INSERT [dbo].[CSVDestinationBulkInsert]
+            $@"BULK INSERT [dbo].[CsvDestinationBulkInsert]
         FROM '{BigDataCsvSource.GetCompleteFilePath(numberOfRows)}'
         WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n' );
         ");
                  });
-                Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CSVDestinationBulkInsert"));
+                Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationBulkInsert"));
                 output.WriteLine("Elapsed " + result.TotalSeconds + " seconds for bulk insert.");
             }
 
@@ -135,4 +135,3 @@ namespace ALE.ETLBoxTests.Performance
 
     }
 }
-F

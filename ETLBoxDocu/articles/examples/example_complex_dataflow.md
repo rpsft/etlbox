@@ -103,7 +103,7 @@ Now we can construct a pipeline. Let's start with the source
 
 ```C#
 //Read data from csv file
-CSVSource sourceOrderData = new CSVSource("DemoData.csv");
+CsvSource sourceOrderData = new CsvSource("DemoData.csv");
 sourceOrderData.Configuration.Delimiter = ";";
 ```
 
@@ -147,7 +147,7 @@ A lookup will use a third source to enrich the data in the flow, in our case to 
 
 ```C#
 //Find corresponding customer id if customer exists in Customer table
-DBSource<Customer> sourceCustomerData = new DBSource<Customer>("customer");
+DbSource<Customer> sourceCustomerData = new DbSource<Customer>("customer");
 LookupCustomerKey lookupCustKeyClass = new LookupCustomerKey();
 Lookup<Order, Order, Customer> lookupCustomerKey = new Lookup<Order, Order, Customer>(
     lookupCustKeyClass.FindKey, sourceCustomerData, lookupCustKeyClass.LookupData);
@@ -182,7 +182,7 @@ As mentioned before, one output of the multicast will end up in a database desti
 
 ```C#
 //Store Order in Orders table
-DBDestination<Order> destOrderTable = new DBDestination<Order>("orders");
+DbDestination<Order> destOrderTable = new DbDestination<Order>("orders");
 multiCast.LinkTo(destOrderTable);
 ```
 
@@ -216,7 +216,7 @@ Now we want to store the calculated Rating in the table `customer_rating`. So we
 for this table and link it to our BlockTransformation.
 
 ```C#
-DBDestination<Rating> destRating = new DBDestination<Rating>("customer_rating");
+DbDestination<Rating> destRating = new DbDestination<Rating>("customer_rating");
 blockOrders.LinkTo(destRating);
 ```
 

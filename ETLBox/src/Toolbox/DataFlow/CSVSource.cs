@@ -16,7 +16,7 @@ namespace ALE.ETLBox.DataFlow
     /// </summary>
     /// <example>
     /// <code>
-    /// CSVSource&lt;CSVData&gt; source = new CSVSource&lt;CSVData&gt;("Demo.csv");
+    /// CsvSource&lt;CSVData&gt; source = new CsvSource&lt;CSVData&gt;("Demo.csv");
     /// source.Configuration.Delimiter = ";";
     /// </code>
     /// </example>
@@ -132,13 +132,13 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
-    /// CSVSource as a nongeneric type uses dynamic object as output. If you need typed output, use
-    /// the CSVSource&lt;TOutput&gt; object instead.
+    /// CsvSource as a nongeneric type uses dynamic object as output. If you need typed output, use
+    /// the CsvSource&lt;TOutput&gt; object instead.
     /// </summary>
     /// <see cref="CsvSource{TOutput}"/>
     /// <example>
     /// <code>
-    /// CSVSource source = new CSVSource("demodata.csv");
+    /// CsvSource source = new CsvSource("demodata.csv");
     /// source.LinkTo(dest); //Link to transformation or destination
     /// source.Execute(); //Start the dataflow
     /// </code>

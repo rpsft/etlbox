@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public bool IsDuplicate { get; set; }
         }
 
-        private CsvSource<Poco> CreateDuplicateCSVSource(string fileName)
+        private CsvSource<Poco> CreateDuplicateCsvSource(string fileName)
         {
             CsvSource<Poco> source = new CsvSource<Poco>(fileName);
             source.Configuration.Delimiter = ";";
@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DuplicateCheckInRowTrans()
         {
             //Arrange
-            CsvSource<Poco> source = CreateDuplicateCSVSource("res/UseCases/DuplicateCheck.csv");
+            CsvSource<Poco> source = CreateDuplicateCsvSource("res/UseCases/DuplicateCheck.csv");
             List<int> IDs = new List<int>(); //at the end of the flow, this list will contain all IDs of your source
 
             //Act
@@ -103,7 +103,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DuplicateCheckWithBlockTrans()
         {
             //Arrange
-            CsvSource<Poco> source = CreateDuplicateCSVSource("res/UseCases/DuplicateCheck.csv");
+            CsvSource<Poco> source = CreateDuplicateCsvSource("res/UseCases/DuplicateCheck.csv");
             List<int> IDs = new List<int>(); //at the end of the flow, this list will contain all IDs of your source
 
             //Act

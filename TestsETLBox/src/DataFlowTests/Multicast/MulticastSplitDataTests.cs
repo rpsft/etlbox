@@ -43,13 +43,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void SplitCSVSourceIn2Tables()
+        public void SplitCsvSourceIn2Tables()
         {
             //Arrange
             TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
             FourColumnsTableFixture dest2Table = new FourColumnsTableFixture("SplitDataDestination2");
 
-            var source = new CsvSource<CSVPoco>("res/Multicast/CSVSourceToSplit.csv")
+            var source = new CsvSource<CSVPoco>("res/Multicast/CsvSourceToSplit.csv")
             {
                 Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = ";" }
             };

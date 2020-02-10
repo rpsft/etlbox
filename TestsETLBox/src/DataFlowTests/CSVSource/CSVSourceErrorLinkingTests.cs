@@ -31,12 +31,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CSVSourceErrorLinking");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "CSVSourceErrorLinking");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "CsvSourceErrorLinking");
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumnsErrorLinking.csv");
 
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
@@ -61,7 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CSVSource/TwoColumnsErrorLinking.csv");
+            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumnsErrorLinking.csv");
 
             //Assert
             Assert.Throws<CsvHelper.TypeConversion.TypeConverterException>(() =>

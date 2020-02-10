@@ -90,7 +90,7 @@ namespace ALE.ETLBox.DataFlow
 
     /// <summary>
     /// A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CSVDestination instead.
+    /// The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="JsonDestination{TInput}"/>
     /// <example>

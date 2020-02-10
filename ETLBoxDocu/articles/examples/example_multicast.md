@@ -81,12 +81,12 @@ var row2 = new RowTransformation<TestPoco, TestEntity2>(input => {
     };
 });
 
-var source = new CSVSource<TestPoco>("src/DataFlowExamples/Issue5.csv") {
+var source = new CsvSource<TestPoco>("src/DataFlowExamples/Issue5.csv") {
     Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = ";" }
 };
 var multicast = new Multicast<TestPoco>();
-var destination1 = new DBDestination<TestEntity1>("test.Table1");
-var destination2 = new DBDestination<TestEntity2>("test.Table2");
+var destination1 = new DbDestination<TestEntity1>("test.Table1");
+var destination2 = new DbDestination<TestEntity2>("test.Table2");
 
 source.LinkTo(multicast);
 multicast.LinkTo(row1);
