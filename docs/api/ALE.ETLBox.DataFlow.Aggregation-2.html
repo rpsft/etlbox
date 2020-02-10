@@ -92,6 +92,7 @@
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;TInput, TOutput&gt;</div>
     <div class="level4"><span class="xref">Aggregation&lt;TInput, TOutput&gt;</span></div>
+      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.Aggregation.html">Aggregation</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -248,7 +249,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L44">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L50">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2__ctor" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor">Aggregation()</h4>
@@ -263,7 +264,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2__ctor_System_Action__0__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.%23ctor(System.Action%7B%600%2C%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L49">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L73">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_System_Action__0__1__" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor(System.Action{`0,`1})">Aggregation(Action&lt;TInput, TOutput&gt;)</h4>
@@ -295,7 +296,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2__ctor_System_Action__0__1__System_Func__0_System_Object__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.%23ctor(System.Action%7B%600%2C%601%7D%2CSystem.Func%7B%600%2CSystem.Object%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L54">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L78">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_System_Action__0__1__System_Func__0_System_Object__" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor(System.Action{`0,`1},System.Func{`0,System.Object})">Aggregation(Action&lt;TInput, TOutput&gt;, Func&lt;TInput, Object&gt;)</h4>
@@ -303,7 +304,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Aggregation(Action&lt;TInput, TOutput&gt; aggregationAction, Func&lt;TInput, object&gt; classificationProperty)</code></pre>
+    <pre><code class="lang-csharp hljs">public Aggregation(Action&lt;TInput, TOutput&gt; aggregationAction, Func&lt;TInput, object&gt; groupingFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -322,7 +323,7 @@
       </tr>
       <tr>
         <td><span class="xref">System.Func</span>&lt;TInput, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">classificationProperty</span></td>
+        <td><span class="parametername">groupingFunc</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -332,7 +333,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2__ctor_System_Action__0__1__System_Func__0_System_Object__System_Action_System_Object__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.%23ctor(System.Action%7B%600%2C%601%7D%2CSystem.Func%7B%600%2CSystem.Object%7D%2CSystem.Action%7BSystem.Object%2C%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L60">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L84">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2__ctor_System_Action__0__1__System_Func__0_System_Object__System_Action_System_Object__1__" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.#ctor(System.Action{`0,`1},System.Func{`0,System.Object},System.Action{System.Object,`1})">Aggregation(Action&lt;TInput, TOutput&gt;, Func&lt;TInput, Object&gt;, Action&lt;Object, TOutput&gt;)</h4>
@@ -340,7 +341,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Aggregation(Action&lt;TInput, TOutput&gt; aggregationAction, Func&lt;TInput, object&gt; classificationProperty, Action&lt;object, TOutput&gt; storeKeyAction)</code></pre>
+    <pre><code class="lang-csharp hljs">public Aggregation(Action&lt;TInput, TOutput&gt; aggregationAction, Func&lt;TInput, object&gt; groupingFunc, Action&lt;object, TOutput&gt; storeKeyAction)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -359,7 +360,7 @@
       </tr>
       <tr>
         <td><span class="xref">System.Func</span>&lt;TInput, <span class="xref">System.Object</span>&gt;</td>
-        <td><span class="parametername">classificationProperty</span></td>
+        <td><span class="parametername">groupingFunc</span></td>
         <td></td>
       </tr>
       <tr>
@@ -376,7 +377,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_AggregationAction.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.AggregationAction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L19">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L23">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2_AggregationAction_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.AggregationAction*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_AggregationAction" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.AggregationAction">AggregationAction</h4>
@@ -403,18 +404,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_ClassificationProperty.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.ClassificationProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_GroupingFunc.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.GroupingFunc%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L32">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L36">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_Aggregation_2_ClassificationProperty_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.ClassificationProperty*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_ClassificationProperty" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.ClassificationProperty">ClassificationProperty</h4>
+  <a id="ALE_ETLBox_DataFlow_Aggregation_2_GroupingFunc_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.GroupingFunc*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_GroupingFunc" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.GroupingFunc">GroupingFunc</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Func&lt;TInput, object&gt; ClassificationProperty { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Func&lt;TInput, object&gt; GroupingFunc { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -436,7 +437,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L34">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L38">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.SourceBlock*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_SourceBlock" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.SourceBlock">SourceBlock</h4>
@@ -468,7 +469,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_StoreKeyAction.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.StoreKeyAction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L33">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L37">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2_StoreKeyAction_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.StoreKeyAction*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_StoreKeyAction" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.StoreKeyAction">StoreKeyAction</h4>
@@ -498,7 +499,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_TargetBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.TargetBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L35">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L39">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2_TargetBlock_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.TargetBlock*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_TargetBlock" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.TargetBlock">TargetBlock</h4>
@@ -530,7 +531,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L16">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L20">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Aggregation_2_TaskName_" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.TaskName*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Aggregation_2_TaskName" data-uid="ALE.ETLBox.DataFlow.Aggregation`2.TaskName">TaskName</h4>
@@ -581,7 +582,7 @@
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Aggregation_2.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Aggregation%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L13" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Aggregation.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

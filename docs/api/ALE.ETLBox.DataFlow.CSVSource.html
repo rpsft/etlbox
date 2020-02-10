@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class CSVSource
+    <title>Class CsvSource
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class CSVSource
+    <meta name="title" content="Class CsvSource
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,14 +77,14 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.CSVSource">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.CsvSource">
   
   
-  <h1 id="ALE_ETLBox_DataFlow_CSVSource" data-uid="ALE.ETLBox.DataFlow.CSVSource" class="text-break">Class CSVSource
+  <h1 id="ALE_ETLBox_DataFlow_CsvSource" data-uid="ALE.ETLBox.DataFlow.CsvSource" class="text-break">Class CsvSource
   </h1>
   <div class="markdown level0 summary"><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
-CSVSource as a nongeneric type always return a string array as output. If you need typed output, use
-the CSVSource&lt;TOutput&gt; object instead.</p>
+CsvSource as a nongeneric type uses dynamic object as output. If you need typed output, use
+the CsvSource&lt;TOutput&gt; object instead.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -92,74 +92,71 @@ the CSVSource&lt;TOutput&gt; object instead.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html">CSVSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div class="level5"><span class="xref">CSVSource</span></div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html">CsvSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level5"><span class="xref">CsvSource</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_TaskName">CSVSource&lt;String[]&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_TaskName">CsvSource&lt;ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Configuration">CSVSource&lt;String[]&gt;.Configuration</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_Configuration">CsvSource&lt;ExpandoObject&gt;.Configuration</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_SkipRows">CSVSource&lt;String[]&gt;.SkipRows</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_SkipRows">CsvSource&lt;ExpandoObject&gt;.SkipRows</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_FileName">CSVSource&lt;String[]&gt;.FileName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_FileName">CsvSource&lt;ExpandoObject&gt;.FileName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_FieldHeaders">CSVSource&lt;String[]&gt;.FieldHeaders</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_FieldHeaders">CsvSource&lt;ExpandoObject&gt;.FieldHeaders</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_IsHeaderRead">CSVSource&lt;String[]&gt;.IsHeaderRead</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_IsHeaderRead">CsvSource&lt;ExpandoObject&gt;.IsHeaderRead</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html#ALE_ETLBox_DataFlow_CSVSource_1_Execute">CSVSource&lt;String[]&gt;.Execute()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_Execute">CsvSource&lt;ExpandoObject&gt;.Execute()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;String[]&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Buffer">DataFlowSource&lt;String[]&gt;.Buffer</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Buffer">DataFlowSource&lt;ExpandoObject&gt;.Buffer</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ErrorHandler">DataFlowSource&lt;String[]&gt;.ErrorHandler</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ErrorHandler">DataFlowSource&lt;ExpandoObject&gt;.ErrorHandler</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_InitObjects">DataFlowSource&lt;String[]&gt;.InitObjects()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync">DataFlowSource&lt;ExpandoObject&gt;.ExecuteAsync()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync">DataFlowSource&lt;String[]&gt;.ExecuteAsync()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowSource&lt;String[]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowSource&lt;ExpandoObject&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -190,9 +187,6 @@ the CSVSource&lt;TOutput&gt; object instead.</p>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
@@ -245,12 +239,12 @@ the CSVSource&lt;TOutput&gt; object instead.</p>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.DataFlow.html">ALE.ETLBox.DataFlow</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_DataFlow_CSVSource_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_DataFlow_CsvSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CSVSource : CSVSource&lt;string[]&gt;, ITask, IDataFlowSource&lt;string[]&gt;, IDataFlowLinkSource&lt;string[]&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class CsvSource : CsvSource&lt;ExpandoObject&gt;, ITask, IDataFlowSource&lt;ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;</code></pre>
   </div>
-  <h5 id="ALE_ETLBox_DataFlow_CSVSource_examples"><strong>Examples</strong></h5>
-  <pre><code>CSVSource source = new CSVSource(&quot;demodata.csv&quot;);
+  <h5 id="ALE_ETLBox_DataFlow_CsvSource_examples"><strong>Examples</strong></h5>
+  <pre><code>CsvSource source = new CsvSource(&quot;demodata.csv&quot;);
 source.LinkTo(dest); //Link to transformation or destination
 source.Execute(); //Start the dataflow</code></pre>
 
@@ -258,33 +252,33 @@ source.Execute(); //Start the dataflow</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVSource__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVSource.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVSource.cs/#L147">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L148">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_CSVSource__ctor_" data-uid="ALE.ETLBox.DataFlow.CSVSource.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CSVSource__ctor" data-uid="ALE.ETLBox.DataFlow.CSVSource.#ctor">CSVSource()</h4>
+  <a id="ALE_ETLBox_DataFlow_CsvSource__ctor_" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CsvSource__ctor" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor">CsvSource()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CSVSource()</code></pre>
+    <pre><code class="lang-csharp hljs">public CsvSource()</code></pre>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVSource__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVSource.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVSource.cs/#L148">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L149">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_CSVSource__ctor_" data-uid="ALE.ETLBox.DataFlow.CSVSource.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CSVSource__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.CSVSource.#ctor(System.String)">CSVSource(String)</h4>
+  <a id="ALE_ETLBox_DataFlow_CsvSource__ctor_" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CsvSource__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor(System.String)">CsvSource(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CSVSource(string fileName)</code></pre>
+    <pre><code class="lang-csharp hljs">public CsvSource(string fileName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -321,10 +315,10 @@ source.Execute(); //Start the dataflow</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CSVSource.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CSVSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CSVSource.cs/#L145" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L146" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

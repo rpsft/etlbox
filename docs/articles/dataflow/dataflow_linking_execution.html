@@ -82,18 +82,18 @@
 <p>Before you can execute a data flow, you need to link your source, transformation and destinations.
 The linking is quite easy - every source component and every transformation offers a LinkTo() method.
 This method accepts a target, which either is another transformation or a destination.</p>
-<p>Example of Linking a <code>DBSource</code> to a <code>RowTransformation</code> and the to a <code>DBDestination</code>.</p>
+<p>Example of Linking a <code>DbSource</code> to a <code>RowTransformation</code> and the to a <code>DbDestination</code>.</p>
 <pre><code class="lang-C#">//Create the components
-DBSource source = new DBSource(&quot;SourceTable&quot;);
+DbSource source = new DbSource(&quot;SourceTable&quot;);
 RowTransformation rowTrans = new RowTransformation( row =&gt; row );
-DBDestination dest = new DBDestination(&quot;DestTable&quot;);
+DbDestination dest = new DbDestination(&quot;DestTable&quot;);
 
 //Link the components
 source.LinkTo(row);
 row.LinkTo(dest);
 </code></pre>
 <p>This will result in a flow which looks like this:</p>
-<p>DBSource --&gt; RowTransformation --&gt; DBDestination</p>
+<p>DbSource --&gt; RowTransformation --&gt; DbDestination</p>
 <h3 id="fluent-notation">Fluent notation</h3>
 <p>There is also a chained notation available, which give you the same result:</p>
 <pre><code class="lang-C#">//Link the components
@@ -146,8 +146,8 @@ these exceptions.</p>
 <p>If you want to handle exceptions within your dataflow, some components offer the ability to redirect errors.
 Beside the normal <code>LinkTo</code> method, you can use the  <code>LinkErrorTo</code> to redirect erroronous records into a separate pipeline.</p>
 <p>Here an example for a database source, where error records are linked into a MemoryDestination:</p>
-<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(connection, &quot;SourceTable&quot;);
-DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(connection, &quot;DestinationTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(connection, &quot;SourceTable&quot;);
+DbDestination&lt;MySimpleRow&gt; dest = new DbDestination&lt;MySimpleRow&gt;(connection, &quot;DestinationTable&quot;);
 MemoryDestination&lt;ETLBoxError&gt; errorDest = new MemoryDestination&lt;ETLBoxError&gt;();
 source.LinkTo(dest);
 source.LinkErrorTo(errorDest);
@@ -178,13 +178,13 @@ create you own table.</p>
 <p>There is no restriction on the amount of inputs that a destination or transformation can have. Instead of having
 only single source, you can have multiple source for every component that can be linked.</p>
 <p>E.g. this is possible graph for you dataflow:</p>
-<pre><code>DBSource1 ---&gt; RowTransformation1 -|
-DBSource2 -|-&gt; RowTransformation2 -|-&gt; DBDestination
-CSVSource -|
+<pre><code>DbSource1 ---&gt; RowTransformation1 -|
+DbSource2 -|-&gt; RowTransformation2 -|-&gt; DbDestination
+CsvSource -|
 </code></pre>
-<p>In this example graph, RowTransformation2 has two inputs: DBSource2 &amp; CSVSource. Also, DBDestination has two inputs:
-RowTransformation1 &amp; RowTransformation2. The DBDestination will complete when data from all sources
-(DBSource1, DBSource2, CSVSource) was written into the data flow and arrived at the DBDestination.</p>
+<p>In this example graph, RowTransformation2 has two inputs: DbSource2 &amp; CsvSource. Also, DbDestination has two inputs:
+RowTransformation1 &amp; RowTransformation2. The DbDestination will complete when data from all sources
+(DbSource1, DbSource2, CsvSource) was written into the data flow and arrived at the DbDestination.</p>
 <p><em>Note</em>: When you want to merge you data of multiple source before any further processing, consider using the
 <code>MergeJoin</code>. If you want to split your data, you can use the <code>Multicast</code>.
 <a href="dataflow_transformations.html">Read more about these transformations here.</a></p>
@@ -197,9 +197,9 @@ handling with tasks.</p>
 is based on <code>Microsoft.TPL.Dataflow</code>. ETLBox will wrap this behavior into synchronous methods.</p>
 <h3 id="example-sync-execution">Example sync execution</h3>
 <pre><code class="lang-C#">//Prepare the flow
-DBSource source = new DBSource(&quot;SourceTable&quot;);
+DbSource source = new DbSource(&quot;SourceTable&quot;);
 RowTransformation rowTrans = new RowTransformation( row =&gt; row );
-DBDestination dest = new DBDestination(&quot;DestTable&quot;);
+DbDestination dest = new DbDestination(&quot;DestTable&quot;);
 source.LinkTo(row);
 
 //Execute the source 
@@ -216,9 +216,9 @@ this method will call the Wait() method of the Task from the underlying dataflow
 execution of your program will continue while the data is read from the source and written into the destinations
 in separate task(s) in the background.</p>
 <h3 id="example-async-execution">Example async execution</h3>
-<pre><code class="lang-C#">DBSource source = new DBSource(&quot;SourceTable&quot;);
+<pre><code class="lang-C#">DbSource source = new DbSource(&quot;SourceTable&quot;);
 RowTransformation rowTrans = new RowTransformation( row =&gt; row );
-DBDestination dest = new DBDestination(&quot;DestTable&quot;);
+DbDestination dest = new DbDestination(&quot;DestTable&quot;);
 
 source.LinkTo(row).LinkTo(dest);
 

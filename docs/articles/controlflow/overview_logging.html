@@ -182,9 +182,9 @@ ControlFlow.STAGE = &quot;STAGING&quot;
 </code></pre>
 <h3 id="disable-logging">Disable logging</h3>
 <p>Perhaps you want some particular tasks or components not to produce any log output, but you don't want to remove the logging completely.
-For this case you can use the <code>DisableLogging</code> property on every task or component in ETLBox. E.g., if you create a new DBSource, just set
+For this case you can use the <code>DisableLogging</code> property on every task or component in ETLBox. E.g., if you create a new DbSource, just set
 the property to true:</p>
-<pre><code class="lang-C#">DBSource source = new DBSource(&quot;TableName&quot;) { DisableLogging = true};
+<pre><code class="lang-C#">DbSource source = new DbSource(&quot;TableName&quot;) { DisableLogging = true};
 </code></pre>
 <p>If you want to disable logging in general for all tasks, you can set the static property <code>DisableAllLogging</code> in the ControlFlow class:</p>
 <pre><code class="lang-C#">ControlFlow.DisableAllLogging = true;

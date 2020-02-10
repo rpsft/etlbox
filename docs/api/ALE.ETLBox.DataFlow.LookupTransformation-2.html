@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class DbMerge&lt;TInput&gt;
+    <title>Class LookupTransformation&lt;TInput, TSourceOutput&gt;
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class DbMerge&lt;TInput&gt;
+    <meta name="title" content="Class LookupTransformation&lt;TInput, TSourceOutput&gt;
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,12 +77,12 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.DbMerge`1">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2">
   
   
-  <h1 id="ALE_ETLBox_DataFlow_DbMerge_1" data-uid="ALE.ETLBox.DataFlow.DbMerge`1" class="text-break">Class DbMerge&lt;TInput&gt;
+  <h1 id="ALE_ETLBox_DataFlow_LookupTransformation_2" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2" class="text-break">Class LookupTransformation&lt;TInput, TSourceOutput&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Inserts, updates and (optionally) deletes data in db target.</p>
+  <div class="markdown level0 summary"><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -91,7 +91,8 @@
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;TInput, TInput&gt;</div>
-    <div class="level4"><span class="xref">DbMerge&lt;TInput&gt;</span></div>
+    <div class="level4"><span class="xref">LookupTransformation&lt;TInput, TSourceOutput&gt;</span></div>
+      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.LookupTransformation.html">LookupTransformation</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -216,9 +217,9 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.DataFlow.html">ALE.ETLBox.DataFlow</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_DataFlow_DbMerge_1_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_DataFlow_LookupTransformation_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DbMerge&lt;TInput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask where TInput : IMergeableRow, new()</code></pre>
+    <pre><code class="lang-csharp hljs">public class LookupTransformation&lt;TInput, TSourceOutput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -231,30 +232,47 @@
     <tbody>
       <tr>
         <td><span class="parametername">TInput</span></td>
-        <td><p>Type of input data.</p>
+        <td><p>Type of data input and output</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TSourceOutput</span></td>
+        <td><p>Type of lookup data</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <h5 id="ALE_ETLBox_DataFlow_DbMerge_1_examples"><strong>Examples</strong></h5>
-  <pre><code></code></pre>
-
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.%23ctor(ALE.ETLBox.ConnectionManager.IConnectionManager%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L68">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L60">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String)">DbMerge(IConnectionManager, String)</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor">LookupTransformation()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DbMerge(IConnectionManager connectionManager, string tableName)</code></pre>
+    <pre><code class="lang-csharp hljs">public LookupTransformation()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_ALE_ETLBox_DataFlow_IDataFlowSource__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.%23ctor(ALE.ETLBox.DataFlow.IDataFlowSource%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L67">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_ALE_ETLBox_DataFlow_IDataFlowSource__1__" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor(ALE.ETLBox.DataFlow.IDataFlowSource{`1})">LookupTransformation(IDataFlowSource&lt;TSourceOutput&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LookupTransformation(IDataFlowSource&lt;TSourceOutput&gt; lookupSource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -267,31 +285,26 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></td>
-        <td><span class="parametername">connectionManager</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;TSourceOutput&gt;</td>
+        <td><span class="parametername">lookupSource</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1__ctor_ALE_ETLBox_TableDefinition_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.%23ctor(ALE.ETLBox.TableDefinition)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_ALE_ETLBox_DataFlow_IDataFlowSource__1__System_Func__0__0__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.%23ctor(ALE.ETLBox.DataFlow.IDataFlowSource%7B%601%7D%2CSystem.Func%7B%600%2C%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L77">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L72">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_ALE_ETLBox_TableDefinition_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor(ALE.ETLBox.TableDefinition)">DbMerge(TableDefinition)</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_ALE_ETLBox_DataFlow_IDataFlowSource__1__System_Func__0__0__" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor(ALE.ETLBox.DataFlow.IDataFlowSource{`1},System.Func{`0,`0})">LookupTransformation(IDataFlowSource&lt;TSourceOutput&gt;, Func&lt;TInput, TInput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DbMerge(TableDefinition tableDefinition)</code></pre>
+    <pre><code class="lang-csharp hljs">public LookupTransformation(IDataFlowSource&lt;TSourceOutput&gt; lookupSource, Func&lt;TInput, TInput&gt; transformationFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -304,26 +317,31 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.TableDefinition.html">TableDefinition</a></td>
-        <td><span class="parametername">tableDefinition</span></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;TSourceOutput&gt;</td>
+        <td><span class="parametername">lookupSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;TInput, TInput&gt;</td>
+        <td><span class="parametername">transformationFunc</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_ALE_ETLBox_DataFlow_IDataFlowSource__1__System_Func__0__0__System_Collections_Generic_List__1__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.%23ctor(ALE.ETLBox.DataFlow.IDataFlowSource%7B%601%7D%2CSystem.Func%7B%600%2C%600%7D%2CSystem.Collections.Generic.List%7B%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L60">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L78">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor(System.String)">DbMerge(String)</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2__ctor_ALE_ETLBox_DataFlow_IDataFlowSource__1__System_Func__0__0__System_Collections_Generic_List__1__" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.#ctor(ALE.ETLBox.DataFlow.IDataFlowSource{`1},System.Func{`0,`0},System.Collections.Generic.List{`1})">LookupTransformation(IDataFlowSource&lt;TSourceOutput&gt;, Func&lt;TInput, TInput&gt;, List&lt;TSourceOutput&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DbMerge(string tableName)</code></pre>
+    <pre><code class="lang-csharp hljs">public LookupTransformation(IDataFlowSource&lt;TSourceOutput&gt; lookupSource, Func&lt;TInput, TInput&gt; transformationFunc, List&lt;TSourceOutput&gt; lookupList)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -336,8 +354,18 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;TSourceOutput&gt;</td>
+        <td><span class="parametername">lookupSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;TInput, TInput&gt;</td>
+        <td><span class="parametername">transformationFunc</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;TSourceOutput&gt;</td>
+        <td><span class="parametername">lookupList</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -346,18 +374,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_DeltaTable.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.DeltaTable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_LookupData.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.LookupData%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L33">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L22">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_DeltaTable_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.DeltaTable*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_DeltaTable" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.DeltaTable">DeltaTable</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_LookupData_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.LookupData*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_LookupData" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.LookupData">LookupData</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;TInput&gt; DeltaTable { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;TSourceOutput&gt; LookupData { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,25 +397,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;TInput&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;TSourceOutput&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_DestinationTableDefinition.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.DestinationTableDefinition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_Source.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.Source%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L31">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L27">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_DestinationTableDefinition_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.DestinationTableDefinition*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_DestinationTableDefinition" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.DestinationTableDefinition">DestinationTableDefinition</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_Source_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.Source*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_Source" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.Source">Source</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TableDefinition DestinationTableDefinition { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IDataFlowSource&lt;TSourceOutput&gt; Source { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -399,50 +427,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ALE.ETLBox.TableDefinition.html">TableDefinition</a></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;TSourceOutput&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_DisableDeletion.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.DisableDeletion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L30">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L25">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_DisableDeletion_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.DisableDeletion*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_DisableDeletion" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.DisableDeletion">DisableDeletion</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DisableDeletion { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_SourceBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.SourceBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L28">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SourceBlock*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_SourceBlock" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SourceBlock">SourceBlock</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.SourceBlock*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_SourceBlock" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.SourceBlock">SourceBlock</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -468,43 +466,13 @@
   <div><span class="xref">ALE.ETLBox.DataFlowTransformation&lt;TInput, TInput&gt;.SourceBlock</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_TableName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.TableName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_TargetBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.TargetBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L32">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L26">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_TableName_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.TableName*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_TableName" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.TableName">TableName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string TableName { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_TargetBlock.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.TargetBlock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L29">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_TargetBlock_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.TargetBlock*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_TargetBlock" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.TargetBlock">TargetBlock</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_TargetBlock_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.TargetBlock*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_TargetBlock" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.TargetBlock">TargetBlock</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -530,13 +498,13 @@
   <div><span class="xref">ALE.ETLBox.DataFlowTransformation&lt;TInput, TInput&gt;.TargetBlock</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L22">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L21">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_TaskName_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.TaskName*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_TaskName" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.TaskName">TaskName</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_TaskName_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.TaskName*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_TaskName" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.TaskName">TaskName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -562,18 +530,18 @@
   <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_UseTruncateMethod.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.UseTruncateMethod%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_TransformationFunc.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.TransformationFunc%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L34">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L40">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_UseTruncateMethod_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.UseTruncateMethod*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_UseTruncateMethod" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.UseTruncateMethod">UseTruncateMethod</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_TransformationFunc_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.TransformationFunc*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_TransformationFunc" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.TransformationFunc">TransformationFunc</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool UseTruncateMethod { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Func&lt;TInput, TInput&gt; TransformationFunc { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -585,7 +553,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Func</span>&lt;TInput, TInput&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -594,94 +562,68 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_Completion.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.Completion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_LinkLookupSourceErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.LinkLookupSourceErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7BALE.ETLBox.DataFlow.ETLBoxError%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L205">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L155">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_Completion_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Completion*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Completion" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Completion">Completion()</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_LinkLookupSourceErrorTo_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.LinkLookupSourceErrorTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_LinkLookupSourceErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.LinkLookupSourceErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{ALE.ETLBox.DataFlow.ETLBoxError})">LinkLookupSourceErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Completion()</code></pre>
+    <pre><code class="lang-csharp hljs">public void LinkLookupSourceErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt; target)</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<a class="xref" href="ALE.ETLBox.DataFlow.ETLBoxError.html">ETLBoxError</a>&gt;</td>
+        <td><span class="parametername">target</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_Execute.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.Execute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2_LinkLookupTransformationErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602.LinkLookupTransformationErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget%7BALE.ETLBox.DataFlow.ETLBoxError%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L25">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L158">View Source</a>
   </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_Execute_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Execute*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Execute" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Execute">Execute()</h4>
+  <a id="ALE_ETLBox_DataFlow_LookupTransformation_2_LinkLookupTransformationErrorTo_" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.LinkLookupTransformationErrorTo*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_LookupTransformation_2_LinkLookupTransformationErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__" data-uid="ALE.ETLBox.DataFlow.LookupTransformation`2.LinkLookupTransformationErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{ALE.ETLBox.DataFlow.ETLBoxError})">LinkLookupTransformationErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Execute()</code></pre>
+    <pre><code class="lang-csharp hljs">public void LinkLookupTransformationErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt; target)</code></pre>
   </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_ExecuteAsync.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.ExecuteAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L24">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_ExecuteAsync_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.ExecuteAsync*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_ExecuteAsync" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.ExecuteAsync">ExecuteAsync()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task ExecuteAsync()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<a class="xref" href="ALE.ETLBox.DataFlow.ETLBoxError.html">ETLBoxError</a>&gt;</td>
+        <td><span class="parametername">target</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1_Wait.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601.Wait%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L204">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_Wait_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Wait*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Wait" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Wait">Wait()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Wait()</code></pre>
-  </div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a>
@@ -703,10 +645,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_DbMerge_1.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.DbMerge%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_LookupTransformation_2.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.LookupTransformation%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/DbMerge.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/LookupTransformation.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

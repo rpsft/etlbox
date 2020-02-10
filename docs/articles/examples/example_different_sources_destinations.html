@@ -97,8 +97,8 @@ PostgresConnectionManager conMan = new PostgresConnectionManager(PostgresConnect
 </code></pre>
 <p>No we need to create the components for the CSV source and the database destination.</p>
 <pre><code class="lang-C#">//Import CSV
-CSVSource sourceCSV = new CSVSource(&quot;NameList.csv&quot;);
-DBDestination importDest = new DBDestination(conMan, &quot;NameTable&quot;);
+CsvSource sourceCSV = new CsvSource(&quot;NameList.csv&quot;);
+DbDestination importDest = new DbDestination(conMan, &quot;NameTable&quot;);
 </code></pre>
 <p>No we link the components together and execute the data flow.</p>
 <pre><code class="lang-C#">sourceCSV.LinkTo(importDest);
@@ -200,8 +200,8 @@ specifies your data type.</p>
 }
 </code></pre>
 <p>No we create the components for the export, link them together and start the data flow.</p>
-<pre><code class="lang-C#">DBSource&lt;NameListElement&gt; sourceTable = new DBSource&lt;NameListElement&gt;(conMan, &quot;NameTable&quot;);
-CSVDestination&lt;NameListElement&gt; destCSV = new CSVDestination&lt;NameListElement&gt;(&quot;Export.csv&quot;);
+<pre><code class="lang-C#">DbSource&lt;NameListElement&gt; sourceTable = new DbSource&lt;NameListElement&gt;(conMan, &quot;NameTable&quot;);
+CsvDestination&lt;NameListElement&gt; destCSV = new CsvDestination&lt;NameListElement&gt;(&quot;Export.csv&quot;);
 destCSV.Configuration.Delimiter = &quot;;&quot;;
 sourceTable.LinkTo(destCSV);
 sourceTable.Execute();
@@ -255,14 +255,14 @@ the source and the destination.</p>
 <pre><code class="lang-C#">PostgresConnectionManager postgresConMan = new PostgresConnectionManager(PostgresConnectionString);
 SqlConnectionManager sqlConMan = new SqlConnectionManager(SqlServerConnectionString);
 
-DBSource&lt;NameListElement&gt; source = new DBSource&lt;NameListElement&gt;(postgresConMan, &quot;NameTable&quot;);
+DbSource&lt;NameListElement&gt; source = new DbSource&lt;NameListElement&gt;(postgresConMan, &quot;NameTable&quot;);
 RowTransformation&lt;NameListElement&gt; trans = new RowTransformation&lt;NameListElement&gt;(
     row =&gt;
     {
         row.FullName = row.LastName + &quot;,&quot; + row.FirstName;
         return row;
     }) ;
-DBDestination&lt;NameListElement&gt; dest = new DBDestination&lt;NameListElement&gt;(sqlConMan, &quot;FullNameTable&quot;);
+DbDestination&lt;NameListElement&gt; dest = new DbDestination&lt;NameListElement&gt;(sqlConMan, &quot;FullNameTable&quot;);
 
 //Linking the components
 source.LinkTo(trans);

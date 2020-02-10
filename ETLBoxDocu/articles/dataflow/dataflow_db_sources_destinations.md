@@ -68,7 +68,7 @@ Additionally, for all connection managers you can pass a `ConnectionString` obje
 
 ```C#
 DbSource source = DbSource (
-    new SqlConnectionManager(new ConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;")),
+    new SqlConnectionManager(new SqlConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;")),
     "SourceTable"
 );
 ```
@@ -107,16 +107,6 @@ DbSource source = DbSource (
     new SQLiteConnectionManager("Data Source=.\\db\\SQLiteControlFlow.db;Version=3;"),
     "SourceTable"
 );
-```
-
-#### SMO Connection Manager
-
-The `SMOConnectionManager` uses Sql Server Managed Objects to connect to a Sql Server. It allow the use of the GO keyword within your SQL to separate batches. 
-It can be used with a `ConnectionString`.
-
-```C#
-ControlFlow.DefaultDbConnection = new SMOConnectionManager(new ConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;"));
-SqlTask.ExecuteNonQuery("SQL with GO keyword", "CREATE SCHEMA TEST; GO; SELECT 1");
 ```
 
 #### Sql Server ODBC Connections
@@ -162,9 +152,9 @@ DbDestination dest = DbDestination (
 ### Connection String wrapper
 
 When you create a new connection manager, you have the choice to either pass the connection string directly or you
- create a `ConnectionString` object from the connection string before you pass it to the connection manager.
- The `ConnectionString` does exist for every database type (e.g. for MySql it is `MySqlConnectionString`). The ConnectionString
- wraps the raw database connection string into the appropriate `ConnectionStringBuilder` object and also offers some more
+ create an adequate ConnectionString object from the connection string before you pass it to the connection manager.
+ The ConnectionString object does exist for every database type (e.g. for MySql it is `MySqlConnectionString`). The ConnectionString
+ wraps the raw database connection string into the appropriate ConnectionStringBuilder object and also offers some more
  functionalities, e.g. like getting a connection string for the database storing system information. 
 
 ### Default ConnectionManager

@@ -84,7 +84,7 @@
   </h1>
   <div class="markdown level0 summary"><p>Will join data from the two inputs into one output - on a row by row base.
 Make sure both inputs are sorted or in the right order. The non generic implementation deals with
-string array as inputs and merged output.</p>
+a dynamic object as input and merged output.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -92,51 +92,51 @@ string array as inputs and merged output.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html">MergeJoin</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html">MergeJoin</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div class="level4"><span class="xref">MergeJoin</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_TaskName">MergeJoin&lt;String[], String[], String[]&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_TaskName">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_Target1">MergeJoin&lt;String[], String[], String[]&gt;.Target1</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_Target1">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.Target1</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_Target2">MergeJoin&lt;String[], String[], String[]&gt;.Target2</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_Target2">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.Target2</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_SourceBlock">MergeJoin&lt;String[], String[], String[]&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_SourceBlock">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_MergeJoinFunc">MergeJoin&lt;String[], String[], String[]&gt;.MergeJoinFunc</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_MergeJoinFunc">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.MergeJoinFunc</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__">MergeJoin&lt;String[], String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__">MergeJoin&lt;String[], String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__">MergeJoin&lt;String[], String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__">MergeJoin&lt;String[], String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__">MergeJoin&lt;String[], String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__">MergeJoin&lt;String[], String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__2__System_Predicate__2__System_Predicate__2__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">MergeJoin&lt;String[], String[], String[]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-3.html#ALE_ETLBox_DataFlow_MergeJoin_3_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -224,7 +224,7 @@ string array as inputs and merged output.</p>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_MergeJoin_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MergeJoin : MergeJoin&lt;string[], string[], string[]&gt;, ITask, IDataFlowLinkSource&lt;string[]&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class MergeJoin : MergeJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;, ITask, IDataFlowLinkSource&lt;ExpandoObject&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -233,7 +233,7 @@ string array as inputs and merged output.</p>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L159">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L160">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_MergeJoin__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_MergeJoin__ctor" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor">MergeJoin()</h4>
@@ -245,18 +245,18 @@ string array as inputs and merged output.</p>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin__ctor_System_Func_System_String___System_String___System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin.%23ctor(System.Func%7BSystem.String%5B%5D%2CSystem.String%5B%5D%2CSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin__ctor_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin.%23ctor(System.Func%7BSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L162">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L163">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_MergeJoin__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin__ctor_System_Func_System_String___System_String___System_String____" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.Func{System.String[],System.String[],System.String[]})">MergeJoin(Func&lt;String[], String[], String[]&gt;)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_MergeJoin__ctor_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})">MergeJoin(Func&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoin(Func&lt;string[], string[], string[]&gt; mergeJoinFunc)</code></pre>
+    <pre><code class="lang-csharp hljs">public MergeJoin(Func&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt; mergeJoinFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -269,7 +269,7 @@ string array as inputs and merged output.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">mergeJoinFunc</span></td>
         <td></td>
       </tr>
@@ -277,18 +277,18 @@ string array as inputs and merged output.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin__ctor_System_String_System_Func_System_String___System_String___System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin.%23ctor(System.String%2CSystem.Func%7BSystem.String%5B%5D%2CSystem.String%5B%5D%2CSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin__ctor_System_String_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin.%23ctor(System.String%2CSystem.Func%7BSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L165">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L166">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_MergeJoin__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeJoin__ctor_System_String_System_Func_System_String___System_String___System_String____" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.String,System.Func{System.String[],System.String[],System.String[]})">MergeJoin(String, Func&lt;String[], String[], String[]&gt;)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_MergeJoin__ctor_System_String_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.MergeJoin.#ctor(System.String,System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})">MergeJoin(String, Func&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeJoin(string name, Func&lt;string[], string[], string[]&gt; mergeJoinFunc)</code></pre>
+    <pre><code class="lang-csharp hljs">public MergeJoin(string name, Func&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt; mergeJoinFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -306,7 +306,7 @@ string array as inputs and merged output.</p>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">mergeJoinFunc</span></td>
         <td></td>
       </tr>
@@ -330,7 +330,7 @@ string array as inputs and merged output.</p>
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MergeJoin.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MergeJoin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L157" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MergeJoin.cs/#L158" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

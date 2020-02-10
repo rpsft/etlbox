@@ -93,7 +93,7 @@ and destination components for loading.</p>
 <p>All dataflow pipelines will need at least one or more sources. Sources are basically everything that can read data from someplace
 (e.g. CSV file or a database table) and then post this data into the pipeline. All sources should be able to read data asynchronously.
 That means, while the component reads data from the source, it simultaneously sends the already processed data to components that are connected to source.
-There are different build-in data sources, e.g.: <code>CSVSource</code>, <code>DBSource</code> or <code>ExelSource</code>. If you are in need of another source component, you can either extend the
+There are different build-in data sources, e.g.: <code>CsvSource</code>, <code>DbSource</code> or <code>ExelSource</code>. If you are in need of another source component, you can either extend the
 <code>CustomSource</code>. Or you <a href="https://github.com/roadrunnerlenny/etlbox/issues">open an issue in github</a> describing your needs.</p>
 <p>Once a source starts reading data, it will start sending data to its connected components. These could be either a Transformation or Destination.
 Posting data is always done asynchronously, even if you use the blocking Execute() method on the source.</p>
@@ -104,8 +104,8 @@ The purpose of a transformation component is to take the data from its input(s) 
 This is done on a row-by-row basis for non-blocking transformation, or on a complete set for blocking transformations.
 As soon as there is any data in the input, the transformation will start and post the result to the output.</p>
 <h3 id="destination-components">Destination components</h3>
-<p>Destination components will have normally only one input. They define a target for your data, e.g. a database table or CSV file. Currently, there is <code>DBDestination</code>
-and <code>CSVDestination</code> implemented. If you are in need of another destination component, you can either extend the <code>CustomDestination</code> or you <a href="https://github.com/roadrunnerlenny/etlbox/issues">open an
+<p>Destination components will have normally only one input. They define a target for your data, e.g. a database table or CSV file. Currently, there is <code>DbDestination</code>
+and <code>CsvDestination</code> implemented. If you are in need of another destination component, you can either extend the <code>CustomDestination</code> or you <a href="https://github.com/roadrunnerlenny/etlbox/issues">open an
 issue in github</a>.</p>
 <p>Every Destination comes with an input buffer.</p>
 <p>While a Destination for csv target will open a file stream where data is written into it as soon as arrives,
@@ -124,9 +124,9 @@ for MySql).</p>
 <pre><code class="lang-C#">SqlConnectionManager connMan = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;);
 </code></pre>
 <p>Now we need to create a source, in this example it could contain order data. This will look like this:</p>
-<pre><code class="lang-C#">CSVSource source = new CSVSource(&quot;demodata.csv&quot;);
+<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;demodata.csv&quot;);
 </code></pre>
-<p>We now add a row transformation. The default output format of a <code>CSVSource</code> is an string array. In this example,
+<p>We now add a row transformation. The default output format of a <code>CsvSource</code> is an string array. In this example,
 we will convert the csv string array into an <code>Order</code> object and adding some logic while the transformation.</p>
 <pre><code class="lang-C#">RowTransformation&lt;string[], Order&gt; rowTrans = new RowTransformation&lt;string[], Order&gt;(
     row =&gt; new Order()
@@ -137,11 +137,11 @@ we will convert the csv string array into an <code>Order</code> object and addin
         Price = double.Parse(row[4]) * 100
     });
 </code></pre>
-<p><em>Please note that the <code>CSVSource</code> could be directly created as <code>CSVSource&lt;OrderFile&gt;</code>. Data type conversions
-(like <code>int.Parse()</code>) would then have been handled internally by the CSVSource.</em></p>
+<p><em>Please note that the <code>CsvSource</code> could be directly created as <code>CsvSource&lt;OrderFile&gt;</code>. Data type conversions
+(like <code>int.Parse()</code>) would then have been handled internally by the CsvSource.</em></p>
 <p>Now we need to create a destination. Notice that the destination is typed with the <code>Order</code> object. We also
-need to pass the connection manager to the DBDestination so that connection to our Sql Server can be used.</p>
-<pre><code class="lang-C#">DBDestination&lt;Order&gt; dest = new DBDestination&lt;Order&gt;(connMan, &quot;OrderTable&quot;);
+need to pass the connection manager to the DbDestination so that connection to our Sql Server can be used.</p>
+<pre><code class="lang-C#">DbDestination&lt;Order&gt; dest = new DbDestination&lt;Order&gt;(connMan, &quot;OrderTable&quot;);
 </code></pre>
 <p><strong>If you don't want to pass the connection manager object over and over again to the your DataFlow or ControlFlow objects,
 you can store a default connection in the static property <code>ControlFlow.DefaultDbConnection</code>.</strong></p>
@@ -150,7 +150,7 @@ you can store a default connection in the static property <code>ControlFlow.Defa
 <pre><code class="lang-C#">sourceOrderData.LinkTo(rowTrans);
 rowTrans.LinkTo(dest);
 </code></pre>
-<p>This will create a data  flow pipe CSVSource -&gt; RowTransformation -&gt; DBDestination</p>
+<p>This will create a data  flow pipe CsvSource -&gt; RowTransformation -&gt; DbDestination</p>
 <h3 id="executing-the-dataflow">Executing the dataflow</h3>
 <p>Now we will give the source the command to start reading data.</p>
 <pre><code class="lang-C#">  source.Execute();

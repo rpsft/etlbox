@@ -100,7 +100,7 @@ public class MySimpleRow {
     public string Col2 { get; set; }
 }
 
-DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(&quot;demotable&quot;);
+DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(&quot;demotable&quot;);
 </code></pre>
 <p>The table demotable has 2 column: Value1 with a INT data type and Value2 with an VARCHAR data type. The POCO <code>MySimpleRow</code>
 has two properties: Value1 and Value2 with a <code>ColumnMap(&quot;Value2&quot;)</code> attribute. The property Value1 is automatically mapped
@@ -120,7 +120,7 @@ public class MyNewRow {
     public int Value1 { get; set; }
     public string AnotherValue { get; set }
 }
-DBSource&lt;MyNewRow&gt; source = new DBSource&lt;MyNewRow&gt;(&quot;demotable&quot;);
+DbSource&lt;MyNewRow&gt; source = new DbSource&lt;MyNewRow&gt;(&quot;demotable&quot;);
 </code></pre>
 <p>If we would use this object to map with our source table, there would be only data read from Value1. Because the property
 AnotherValue doesn't have a match in the source, no data will be read from this column.</p>
@@ -137,7 +137,7 @@ public class MyNewRow {
     public int Value1 { get; set; }
     public string AnotherValue { get; set }
 }
-DBSource&lt;MyNewRow&gt; source = new DBSource&lt;MyNewRow&gt;() {
+DbSource&lt;MyNewRow&gt; source = new DbSource&lt;MyNewRow&gt;() {
     Sql = &quot;SELECT Value1, Value2 AS AnotherValue FROM demotable&quot;
 };
 </code></pre>
@@ -160,7 +160,7 @@ public string Key {
 
 public int _key;
 </code></pre>
-<p>If you use this object within a <code>DBSource</code>, it will read the data from the database column &quot;Id&quot; and then call the <code>ToString</code> method on every record
+<p>If you use this object within a <code>DbSource</code>, it will read the data from the database column &quot;Id&quot; and then call the <code>ToString</code> method on every record
 before actually writing it into the property.</p>
 <p>Now you could add another property:</p>
 <pre><code class="lang-C#">[ColumnMap(&quot;Hash&quot;)]
@@ -199,7 +199,7 @@ the use of <code>dynamic</code>.</a></p>
 The table <code>sourceTable</code> has two columns: SourceCol1 and SourceCol2, both integer values.
 The table <code>destTable</code> has one column: DestColSum, also an integer value.</p>
 <p>We could now define the following data flow:</p>
-<pre><code class="lang-C#">DBSource&lt;ExpandoObject&gt; source = new DBSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;ExpandoObject&gt; source = new DbSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
 
 //Act
 RowTransformation&lt;ExpandoObject&gt; trans = new RowTransformation&lt;ExpandoObject&gt;(
@@ -209,9 +209,9 @@ RowTransformation&lt;ExpandoObject&gt; trans = new RowTransformation&lt;ExpandoO
         c.DestColSum = c.SourceCol1 + c.SourceCol2;
         return c;
     });
-DBDestination&lt;ExpandoObject&gt; dest = new DBDestination&lt;ExpandoObject&gt;(&quot;destTable&quot;);
+DbDestination&lt;ExpandoObject&gt; dest = new DbDestination&lt;ExpandoObject&gt;(&quot;destTable&quot;);
 </code></pre>
-<p>In this example code, the data is read from a DBSource into an ExpandoObject. The properties SourceCol1 and SourceCol2
+<p>In this example code, the data is read from a DbSource into an ExpandoObject. The properties SourceCol1 and SourceCol2
 are created automatically, because ETLBox will recognize that it is an ExpandoObject and add a property
 for each column in the source.
 In the RowTransformation, you can convert the ExpandoObject into a dynamic object first, so that you don't get any errros
@@ -226,9 +226,9 @@ property DestColSum.</p>
 <p>As working with dynamic types can sometimes be a hazzle, ETLBox offers a third way to create your data flow without
 object types. Most data flow components in ETLBox exist as a &quot;non generic&quot; object - which means that you can choose if you want to use
 the object as a generic one with having an object type of without an object type. If you don't pass an object type, ETLBox
-will internally work with an string array. E.g., the use of <code>DBSource</code>  is equivalent to <code>DBSource&lt;string[]&gt;</code>.</p>
+will internally work with an string array. E.g., the use of <code>DbSource</code>  is equivalent to <code>DbSource&lt;string[]&gt;</code>.</p>
 <p>Here is an example for reading data from a database:</p>
-<pre><code class="lang-C#">DBSource source = new DBSource($@&quot;select Value1, Value2 from dbo.Test&quot;);
+<pre><code class="lang-C#">DbSource source = new DbSource($@&quot;select Value1, Value2 from dbo.Test&quot;);
 RowTransformation row = new RowTransformation( 
     row =&gt; {
         string value1 = row[0];

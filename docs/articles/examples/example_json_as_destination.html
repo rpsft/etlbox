@@ -94,7 +94,7 @@ In order to store the data from table, we first create a POCO (Plain old Compone
 </code></pre>
 <h2 id="implement-the-dataflow">Implement the dataflow</h2>
 <p>First, we will read the data from the source. We create a table use a <code>TableDefinition</code> object and pass this
-to the <code>DBSource</code>.</p>
+to the <code>DbSource</code>.</p>
 <pre><code class="lang-C#">TableDefinition sourceTableDefinition = new TableDefinition(&quot;test.Source&quot;
             , new List&lt;TableColumn&gt;() {
                 new TableColumn(&quot;Col1&quot;, &quot;nvarchar(100)&quot;, allowNulls: false),
@@ -105,7 +105,7 @@ SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, $&quot;insert into {tableN
 SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, $&quot;insert into {tableName} values('Test2',2)&quot;);
 SqlTask.ExecuteNonQuery(&quot;Insert demo data&quot;, $&quot;insert into {tableName} values('Test3',3)&quot;);
 
-DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(sourceTableDefinition);
+DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(sourceTableDefinition);
 </code></pre>
 <p>Next, we need to have the Destination defined. We create a <code>CustomDestination</code> that basically reads all the rows
 into a List object. Be careful when you do this with huge amount of data, as all data will be stored in memory.</p>

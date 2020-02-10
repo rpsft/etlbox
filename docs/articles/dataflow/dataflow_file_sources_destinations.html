@@ -78,19 +78,19 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="flat-files-and-other-sources-and-destinations">Flat files and other sources and destinations</h1>
 
-<h2 id="csvsource">CSVSource</h2>
+<h2 id="csvsource">CsvSource</h2>
 <p>A CSV source simple reads data from a CSV file. Under the hood is the 3rd party library <code>CSVHelper</code>. There are several configuration options for the Reader.
 The default output data type of the CSVReader is a string array. You can either use a <code>RowTransformation</code> to transform it into the data type you need, or use
-the generic implementation CSVSource.</p>
+the generic implementation CsvSource.</p>
 <pre><code class="lang-C#">//Returns string[] as output type for other components
-CSVSource source = new CSVSource(&quot;Demo.csv&quot;) {
+CsvSource source = new CsvSource(&quot;Demo.csv&quot;) {
     Delimiter = &quot;;&quot;,
     SourceCommentRows = 2
 }
 </code></pre>
-<pre><code class="lang-C#">CSVSource&lt;CSVData&gt; source = new CSVSource&lt;CSVData&gt;(&quot;Demo.csv&quot;);
+<pre><code class="lang-C#">CsvSource&lt;CSVData&gt; source = new CsvSource&lt;CSVData&gt;(&quot;Demo.csv&quot;);
 </code></pre>
-<h2 id="csvdestination">CSVDestination</h2>
+<h2 id="csvdestination">CsvDestination</h2>
 <p>A CSV destination will create a file containing the data in the desired CSV format. It is based on the 3rd party library <code>CSVHelper</code>.</p>
 <p>There is a generic and non-generic class available. The generic approach will create a csv file including a header column - the header name is derived
 from the property names or the CSVHelper attributes.</p>
@@ -105,7 +105,7 @@ from the property names or the CSVHelper attributes.</p>
     public string Col2 { get; set; }
 }
 
-CSVDestination&lt;MySimpleRow&gt; dest = new CSVDestination&lt;MySimpleRow&gt;(&quot;./SimpleWithObject.csv&quot;);
+CsvDestination&lt;MySimpleRow&gt; dest = new CsvDestination&lt;MySimpleRow&gt;(&quot;./SimpleWithObject.csv&quot;);
 </code></pre>
 <p>will create a .csv file like this</p>
 <pre><code>Header1,Header2
@@ -114,8 +114,8 @@ CSVDestination&lt;MySimpleRow&gt; dest = new CSVDestination&lt;MySimpleRow&gt;(&
 3,Test3
 </code></pre>
 <h3 id="csv-configuration">CSV Configuration</h3>
-<p>The <code>CSVDestination</code> and the <code>CSVSource</code> does have a property <code>Configuration</code> which allows you to set e.g. the delimiter for the file.</p>
-<pre><code class="lang-C#">CSVSource source = new CSVSource(&quot;res/CSVSource/OneColumn.csv&quot;)
+<p>The <code>CsvDestination</code> and the <code>CsvSource</code> does have a property <code>Configuration</code> which allows you to set e.g. the delimiter for the file.</p>
+<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;res/CsvSource/OneColumn.csv&quot;)
 {
     Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
 };
@@ -180,7 +180,7 @@ asynchronously post record by record into the flow.</p>
 <p>Example code:</p>
 <pre><code class="lang-C#"> TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(&quot;MemoryDestination&quot;);
 MemorySource&lt;MySimpleRow&gt; source = new MemorySource&lt;MySimpleRow&gt;();
-DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestination&quot;);
+DbDestination&lt;MySimpleRow&gt; dest = new DbDestination&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestination&quot;);
        
 source.Data = new List&lt;MySimpleRow&gt;()
 {
@@ -197,7 +197,7 @@ dest.Wait();
 It stores the data within the <code>Data</code> property.
 Data can be read from this collection as soon as it arrives.</p>
 <p>Example:</p>
-<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestinationSource&quot;);
+<pre><code class="lang-C#">DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestinationSource&quot;);
 MemoryDestination&lt;MySimpleRow&gt; dest = new MemoryDestination&lt;MySimpleRow&gt;();
 
 source.LinkTo(dest);

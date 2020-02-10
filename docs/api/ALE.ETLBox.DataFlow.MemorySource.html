@@ -83,7 +83,7 @@
   <h1 id="ALE_ETLBox_DataFlow_MemorySource" data-uid="ALE.ETLBox.DataFlow.MemorySource" class="text-break">Class MemorySource
   </h1>
   <div class="markdown level0 summary"><p>Reads data from a memory source. While reading the data from the file, data is also asnychronously posted into the targets.
-MemorySource as a nongeneric type always return a string array as output. If you need typed output, use
+MemorySource as a nongeneric type always return a dynamic object as output. If you need typed output, use
 the MemorySource&lt;TOutput&gt; object instead.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -92,62 +92,59 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html">MemorySource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html">MemorySource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div class="level5"><span class="xref">MemorySource</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_TaskName">MemorySource&lt;String[]&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_TaskName">MemorySource&lt;ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Data">MemorySource&lt;String[]&gt;.Data</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Data">MemorySource&lt;ExpandoObject&gt;.Data</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Execute">MemorySource&lt;String[]&gt;.Execute()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Execute">MemorySource&lt;ExpandoObject&gt;.Execute()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;String[]&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Buffer">DataFlowSource&lt;String[]&gt;.Buffer</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Buffer">DataFlowSource&lt;ExpandoObject&gt;.Buffer</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ErrorHandler">DataFlowSource&lt;String[]&gt;.ErrorHandler</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ErrorHandler">DataFlowSource&lt;ExpandoObject&gt;.ErrorHandler</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_InitObjects">DataFlowSource&lt;String[]&gt;.InitObjects()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync">DataFlowSource&lt;ExpandoObject&gt;.ExecuteAsync()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync">DataFlowSource&lt;String[]&gt;.ExecuteAsync()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__">DataFlowSource&lt;String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__0__System_Predicate__0__System_Predicate__0__">DataFlowSource&lt;String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowSource&lt;String[]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowSource&lt;ExpandoObject&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -178,9 +175,6 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
@@ -235,7 +229,7 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_MemorySource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MemorySource : MemorySource&lt;string[]&gt;, ITask, IDataFlowSource&lt;string[]&gt;, IDataFlowLinkSource&lt;string[]&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class MemorySource : MemorySource&lt;ExpandoObject&gt;, ITask, IDataFlowSource&lt;ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -244,7 +238,7 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemorySource__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemorySource.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemorySource.cs/#L64">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemorySource.cs/#L65">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_MemorySource__ctor_" data-uid="ALE.ETLBox.DataFlow.MemorySource.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_MemorySource__ctor" data-uid="ALE.ETLBox.DataFlow.MemorySource.#ctor">MemorySource()</h4>
@@ -256,18 +250,18 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_List_System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemorySource.%23ctor(System.Collections.Generic.List%7BSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_List_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemorySource.%23ctor(System.Collections.Generic.List%7BSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemorySource.cs/#L65">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemorySource.cs/#L66">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_MemorySource__ctor_" data-uid="ALE.ETLBox.DataFlow.MemorySource.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_List_System_String____" data-uid="ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.List{System.String[]})">MemorySource(List&lt;String[]&gt;)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_List_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.List{System.Dynamic.ExpandoObject})">MemorySource(List&lt;ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MemorySource(List&lt;string[]&gt; data)</code></pre>
+    <pre><code class="lang-csharp hljs">public MemorySource(List&lt;ExpandoObject&gt; data)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -280,7 +274,7 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">data</span></td>
         <td></td>
       </tr>
@@ -307,7 +301,7 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_MemorySource.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.MemorySource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemorySource.cs/#L62" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/MemorySource.cs/#L63" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

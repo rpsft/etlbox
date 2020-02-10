@@ -143,12 +143,12 @@ var row2 = new RowTransformation&lt;TestPoco, TestEntity2&gt;(input =&gt; {
     };
 });
 
-var source = new CSVSource&lt;TestPoco&gt;(&quot;src/DataFlowExamples/Issue5.csv&quot;) {
+var source = new CsvSource&lt;TestPoco&gt;(&quot;src/DataFlowExamples/Issue5.csv&quot;) {
     Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
 };
 var multicast = new Multicast&lt;TestPoco&gt;();
-var destination1 = new DBDestination&lt;TestEntity1&gt;(&quot;test.Table1&quot;);
-var destination2 = new DBDestination&lt;TestEntity2&gt;(&quot;test.Table2&quot;);
+var destination1 = new DbDestination&lt;TestEntity1&gt;(&quot;test.Table1&quot;);
+var destination2 = new DbDestination&lt;TestEntity2&gt;(&quot;test.Table2&quot;);
 
 source.LinkTo(multicast);
 multicast.LinkTo(row1);

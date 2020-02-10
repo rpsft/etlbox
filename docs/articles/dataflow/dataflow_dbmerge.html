@@ -108,7 +108,7 @@ Deletion is optional (by default turned on) , and can be disabled with the prope
 <p>The DBMerge was designed for scenario 1, but also  works for scenario 2 except for deletions.</p>
 <h3 id="example">Example</h3>
 <h4 id="data-and-object-definition">Data and object definition</h4>
-<p>To implement an example sync between two tables, we will  need a <code>DBSource</code> pointing to our source table.
+<p>To implement an example sync between two tables, we will  need a <code>DbSource</code> pointing to our source table.
 In our case we just pass a table name for the source table, but you could also define a sql query
 (e.g. which gives you only the delta records).</p>
 <p>The source is then connected to the DBMerge, and data from the source will then be inserted,
@@ -183,7 +183,7 @@ for holding a value:</p>
 </table>
 <h4 id="setting-up-the-data-flow">Setting up the data flow</h4>
 <p>No we can already set up a data flow. It would look like this:</p>
-<pre><code class="lang-C#">DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;MyMergeRow&gt; source = new DbSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
 DBMerge&lt;MyMergeRow&gt; merge = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
 source.LinkTo(dest);
 source.Execute();
@@ -246,9 +246,9 @@ table. In this example, it would contain the information, that 1 row was inserte
 , 1 was updated (Key: 2), one column wasn't changed (Key:3) and one column was deleted (Key: 4).</p>
 <p>This information can be used as a source for further processing in the data flow,
 simple by connecting the DBMerge to a transformation or another Destination. So our complete flow could look like this:</p>
-<pre><code class="lang-C#">DBSource&lt;MyMergeRow&gt; source = new DBSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;MyMergeRow&gt; source = new DbSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
 DBMerge&lt;MyMergeRow&gt; merge = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
-DBDestination&lt;MyMergeRow&gt; delta = new DBDestination&lt;MyMergeRow&gt;(connection, &quot;DeltaTable&quot;);
+DbDestination&lt;MyMergeRow&gt; delta = new DbDestination&lt;MyMergeRow&gt;(connection, &quot;DeltaTable&quot;);
 source.LinkTo(merge);
 merge.LinkTo(delta);
 source.Execute();

@@ -64,7 +64,7 @@ Optionally, you can set up a default connection that is used every time you don'
 Simple set the property `DefaultDbConnection` on the static `ControlFlow` class.
 
 ```C#
-ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.; Database=Sample; Integrated Security=SSPI""));
+ControlFlow.DefaultDbConnection = new SqlConnectionManager(new SqlonnectionString("Data Source=.; Database=Sample; Integrated Security=SSPI""));
 ```
 
 Now a RowCount is as simple as this:

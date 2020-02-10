@@ -80,25 +80,25 @@
 
 <p>There a numerous database sources and destinations that come with ETLBox. In short, you can extract data
 from and load data into the following databases: Sql Server, MySql, Postgres, SQLite and Microsoft Access.</p>
-<h2 id="dbsource">DBSource</h2>
-<p>The DBSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data.
+<h2 id="dbsource">DbSource</h2>
+<p>The DbSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data.
 While ADO.NET is reading from the source, data is simultaneously posted into the dataflow pipe.
-To initialize a DBSource, you can either hand over a <code>TableDefinition</code>, a SQL-statement or a table name.
-The DBSource also accepts a connection manager. If no connection manager is specified, the &quot;default&quot; connection manager is used
+To initialize a DbSource, you can either hand over a <code>TableDefinition</code>, a SQL-statement or a table name.
+The DbSource also accepts a connection manager. If no connection manager is specified, the &quot;default&quot; connection manager is used
 (which is stored in <code>ControlFlow.DefaultDbConnection</code>).</p>
 <p>The following code would read all data from the table <code>SourceTable</code> and use the default connection manager:</p>
-<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(&quot;SourceTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(&quot;SourceTable&quot;);
 </code></pre>
-<p>For the <code>DBSource</code>, you can also specify some Sql code to retrieve your data:</p>
-<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;() {
+<p>For the <code>DbSource</code>, you can also specify some Sql code to retrieve your data:</p>
+<pre><code class="lang-C#">DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;() {
     Sql = &quot;SELECT * FROM SourceTable&quot;
 };
 </code></pre>
-<h2 id="dbdestination">DBDestination</h2>
-<p>Like the <code>DBSource</code>, the <code>DBDestination</code> is the common component for sending data into a database. It is initialized with a table name or a <code>TableDefinition</code>.</p>
+<h2 id="dbdestination">DbDestination</h2>
+<p>Like the <code>DbSource</code>, the <code>DbDestination</code> is the common component for sending data into a database. It is initialized with a table name or a <code>TableDefinition</code>.</p>
 <p>The following example would transfer data from the destination to the source, using all the same connection manager (derived from <code>ControlFlow.DefaultDbConnection</code>):</p>
-<pre><code class="lang-C#">DBSource&lt;MySimpleRow&gt; source = new DBSource&lt;MySimpleRow&gt;(&quot;SourceTable&quot;);
-DBDestination&lt;MySimpleRow&gt; dest = new DBDestination&lt;MySimpleRow&gt;(&quot;DestinationTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(&quot;SourceTable&quot;);
+DbDestination&lt;MySimpleRow&gt; dest = new DbDestination&lt;MySimpleRow&gt;(&quot;DestinationTable&quot;);
 //Link everything together
 source.LinkTo(dest);
 //Start the data flow
@@ -113,60 +113,54 @@ for each provider is defined by the ADO.NET framework. If you need assistance
 to create such a connection string, <a href="https://www.connectionstrings.com" target="_blank">have a look at this website that
 provide example string for almost every database</a>.</p>
 <h3 id="database-connections">Database Connections</h3>
-<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect via ADO.NET to a database server.
+<p>The <code>DbSource</code> and <code>DbDestination</code> can be used to connect via ADO.NET to a database server.
 To do so, it will need the correct connection manager and either a raw connection string or a <code>ConnectionString</code> object.
 The easiest way would be to directly pass a raw connection string and connection manager.</p>
-<pre><code class="lang-C#">DBSource source = DBSource (
+<pre><code class="lang-C#">DbSource source = DbSource (
     new SqlConnectionManager(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;)
     , &quot;SourceTable&quot;
 );
 </code></pre>
 <p>Additionally, for all connection managers you can pass a <code>ConnectionString</code> object which wraps the connection string.</p>
-<pre><code class="lang-C#">DBSource source = DBSource (
-    new SqlConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;)),
+<pre><code class="lang-C#">DbSource source = DbSource (
+    new SqlConnectionManager(new SqlConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;)),
     &quot;SourceTable&quot;
 );
 </code></pre>
 <h4 id="mysql-connections">MySql Connections</h4>
-<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect to a MySql database via the MySql ADO.NET provider.
+<p>The <code>DbSource</code> and <code>DbDestination</code> can be used to connect to a MySql database via the MySql ADO.NET provider.
 Either use the raw connection string or a <code>MySqlConnectionString</code> object and a <code>MySqlConnectionManger</code>.</p>
-<pre><code class="lang-C#">DBSource source = DBSource (
+<pre><code class="lang-C#">DbSource source = DbSource (
     new MySqlConnectionManager(&quot;Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;&quot;),
     &quot;SourceTable&quot;
 );
 </code></pre>
 <h4 id="postgres-connections">Postgres Connections</h4>
-<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect to a Postgres database via the Postgres ADO.NET provider.
+<p>The <code>DbSource</code> and <code>DbDestination</code> can be used to connect to a Postgres database via the Postgres ADO.NET provider.
 Either use the raw connection string or a use the <code>PostgresConnectionString</code> object and a <code>PostgresConnectionManger</code>.</p>
-<pre><code class="lang-C#">DBDestination dest = DBDestination (
+<pre><code class="lang-C#">DbDestination dest = DbDestination (
     new PostgresConnectionManager(&quot;Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;&quot;),
     &quot;DestinationTable&quot;
 );
 </code></pre>
 <h4 id="sqlite-connections">SQLite Connections</h4>
-<p>The <code>DBSource</code> and <code>DBDestination</code> can be used to connect to a SQLite database via the SQLite ADO.NET provider.
+<p>The <code>DbSource</code> and <code>DbDestination</code> can be used to connect to a SQLite database via the SQLite ADO.NET provider.
 Either use the raw connection string or a use the <code>SQLiteConnectionString</code> object and a <code>SQLiteConnectionManger</code>.</p>
-<pre><code class="lang-C#">DBSource source = DBSource (
+<pre><code class="lang-C#">DbSource source = DbSource (
     new SQLiteConnectionManager(&quot;Data Source=.\\db\\SQLiteControlFlow.db;Version=3;&quot;),
     &quot;SourceTable&quot;
 );
 </code></pre>
-<h4 id="smo-connection-manager">SMO Connection Manager</h4>
-<p>The <code>SMOConnectionManager</code> uses Sql Server Managed Objects to connect to a Sql Server. It allow the use of the GO keyword within your SQL to separate batches.
-It can be used with a <code>ConnectionString</code>.</p>
-<pre><code class="lang-C#">ControlFlow.DefaultDbConnection = new SMOConnectionManager(new ConnectionString(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;));
-SqlTask.ExecuteNonQuery(&quot;SQL with GO keyword&quot;, &quot;CREATE SCHEMA TEST; GO; SELECT 1&quot;);
-</code></pre>
 <h4 id="sql-server-odbc-connections">Sql Server ODBC Connections</h4>
-<p>The <code>DBSource</code> and <code>DBDestination</code> also works with ODBC connection to Sql Server. .
+<p>The <code>DbSource</code> and <code>DbDestination</code> also works with ODBC connection to Sql Server. .
 You will still use the underlying ADO.NET, but it allows you to connect to SQL Server via ODBC.</p>
-<pre><code class="lang-C#">DBSource source = DBSource (
+<pre><code class="lang-C#">DbSource source = DbSource (
     new SqlODBCConnectionManager(new ODBCConnectionString(&quot;&quot;Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes&quot;)),
     &quot;SourceTable&quot;
 );
 </code></pre>
 <p><em>Warning</em>: ODBC does not support bulk inserts like in &quot;native&quot; connections.
-The <code>DBDestination</code> will do a bulk insert by creating a sql insert statement that
+The <code>DbDestination</code> will do a bulk insert by creating a sql insert statement that
 has multiple values: INSERT INTO (..) VALUES (..),(..),(..)</p>
 <h4 id="access-db-connections">Access DB Connections</h4>
 <p>The ODBC connection to Microsoft Access databases have more restrictions. ETLBox is based .NET Core and will run in your application as dependency.
@@ -177,18 +171,18 @@ if you have a 32bit Access installed, and vice versa. Also, make sure to set up 
 <p>The corresponding 64bit ODBC driver for Access can be download
 Microsoft: <a href="https://www.microsoft.com/en-us/download/details.aspx?id=13255">Microsoft Access Database Engine 2010 Redistributable</a></p>
 <p>To create a connection to an Access Database, use the <code>AccessOdbcConnectionManager</code> and an <code>OdbcConnectionString</code>.</p>
-<pre><code class="lang-C#">DBDestination dest = DBDestination (
+<pre><code class="lang-C#">DbDestination dest = DbDestination (
     new AccessOdbcConnectionManager(new OdbcConnectionString(&quot;Driver={Microsoft Access Driver (*.mdb, *.accdb)}DBQ=C:\DB\Test.mdb&quot;)),
     &quot;DestinationTable&quot;
 );
 </code></pre>
-<p><em>Warning</em>: The <code>DBDestination</code> will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.</p>
+<p><em>Warning</em>: The <code>DbDestination</code> will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.</p>
 <p><em>Note</em>: Please note that the AccessOdbcConnectionManager will create a &quot;temporary&quot; dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. This was necessary to simulate a bulk insert with Access-like Sql.</p>
 <h3 id="connection-string-wrapper">Connection String wrapper</h3>
 <p>When you create a new connection manager, you have the choice to either pass the connection string directly or you
-create a <code>ConnectionString</code> object from the connection string before you pass it to the connection manager.
-The <code>ConnectionString</code> does exist for every database type (e.g. for MySql it is <code>MySqlConnectionString</code>). The ConnectionString
-wraps the raw database connection string into the appropriate <code>ConnectionStringBuilder</code> object and also offers some more
+create an adequate ConnectionString object from the connection string before you pass it to the connection manager.
+The ConnectionString object does exist for every database type (e.g. for MySql it is <code>MySqlConnectionString</code>). The ConnectionString
+wraps the raw database connection string into the appropriate ConnectionStringBuilder object and also offers some more
 functionalities, e.g. like getting a connection string for the database storing system information.</p>
 <h3 id="default-connectionmanager">Default ConnectionManager</h3>
 <p>Every component or task related to a database operation needs to have a connection managers set in order
@@ -196,8 +190,8 @@ to connect to the right database. Sometimes it can be cumbersome to pass the sam
 again. To avoid this, there is a static <code>ControlFlow</code> class that contains the property <code>DefaultDbConnection</code>.
 If you define a connection manager here, this will always be used as a fallback value if no other connection manager property was defined.</p>
 <pre><code>ControlFlow.DefaultDbConnection = new SqlConnectionManager(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;);
-//Now you can just create a DBSource like this
-var source = new DBSource(&quot;SourceTable&quot;);
+//Now you can just create a DbSource like this
+var source = new DbSource(&quot;SourceTable&quot;);
 </code></pre>
 <h3 id="connection-pooling">Connection Pooling</h3>
 <p>The implementation of all connection managers is based on Microsoft ADO.NET and makes use of the underlying
@@ -215,7 +209,7 @@ with concurrent tasks. There may be a use-case where you don't won't to query yo
 want to leave the connection open, avoiding the pooling. <a href="https://github.com/roadrunnerlenny/etlbox/issues/39">For this scenario you can use the <code>LeaveOpen</code> property
 on the connection managers.</a></p>
 <h2 id="table-definitions">Table Definitions</h2>
-<p>If you pass a table name to a <code>DBsource</code> or <code>DBDestination</code> (or a Sql statement to a <code>DBSource</code>), the meta data
+<p>If you pass a table name to a <code>DBsource</code> or <code>DbDestination</code> (or a Sql statement to a <code>DbSource</code>), the meta data
 of the table is automatically derived from that table or sql statement. If you don't want ETLBox to read this information
 from the table, or if you want to provide your own meta information, you can pass a <code>TableDefinition</code> instead.</p>
 <p>This could look like this:</p>
@@ -225,7 +219,7 @@ from the table, or if you want to provide your own meta information, you can pas
     new TableColumn(&quot;OtherCol&quot;, &quot;NVARCHAR(100)&quot;, allowNulls: true)
 });
 
-var DBSource&lt;type&gt; = new DBSource&lt;type&gt;() {  
+var DbSource&lt;type&gt; = new DbSource&lt;type&gt;() {  
   SourceTableDefinition = TableDefinition
 }
 </code></pre>

@@ -82,7 +82,7 @@
   
   <h1 id="ALE_ETLBox_DataFlow_Sort" data-uid="ALE.ETLBox.DataFlow.Sort" class="text-break">Class Sort
   </h1>
-  <div class="markdown level0 summary"><p>Sort the input with the given sort function. The non generic implementation works with string array.</p>
+  <div class="markdown level0 summary"><p>Sort the input with the given sort function. The non generic implementation works with a dyanmic object.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -90,63 +90,63 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html">Sort</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html">Sort</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div class="level5"><span class="xref">Sort</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_TaskName">Sort&lt;String[]&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_TaskName">Sort&lt;ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_SortFunction">Sort&lt;String[]&gt;.SortFunction</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_SortFunction">Sort&lt;ExpandoObject&gt;.SortFunction</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_SourceBlock">Sort&lt;String[]&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_SourceBlock">Sort&lt;ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_TargetBlock">Sort&lt;String[]&gt;.TargetBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html#ALE_ETLBox_DataFlow_Sort_1_TargetBlock">Sort&lt;ExpandoObject&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_TargetBlock">DataFlowTransformation&lt;String[], String[]&gt;.TargetBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_TargetBlock">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_SourceBlock">DataFlowTransformation&lt;String[], String[]&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_SourceBlock">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions">DataFlowTransformation&lt;String[], String[]&gt;.PredecessorCompletions</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.PredecessorCompletions</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowTransformation&lt;String[], String[]&gt;.AddPredecessorCompletion(Task)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.AddPredecessorCompletion(Task)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction">DataFlowTransformation&lt;String[], String[]&gt;.CheckCompleteAction()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.CheckCompleteAction()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -177,9 +177,6 @@
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
@@ -234,7 +231,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_Sort_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Sort : Sort&lt;string[]&gt;, IDataFlowTransformation&lt;string[], string[]&gt;, IDataFlowLinkSource&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class Sort : Sort&lt;ExpandoObject&gt;, IDataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;, IDataFlowLinkTarget&lt;ExpandoObject&gt;, ITask</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -243,7 +240,7 @@
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Sort__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Sort.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L70">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L71">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Sort__ctor_" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_Sort__ctor" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor">Sort()</h4>
@@ -255,18 +252,18 @@
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Sort__ctor_System_Comparison_System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Sort.%23ctor(System.Comparison%7BSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Sort__ctor_System_Comparison_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Sort.%23ctor(System.Comparison%7BSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L73">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L74">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Sort__ctor_" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_Sort__ctor_System_Comparison_System_String____" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor(System.Comparison{System.String[]})">Sort(Comparison&lt;String[]&gt;)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_Sort__ctor_System_Comparison_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor(System.Comparison{System.Dynamic.ExpandoObject})">Sort(Comparison&lt;ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Sort(Comparison&lt;string[]&gt; sortFunction)</code></pre>
+    <pre><code class="lang-csharp hljs">public Sort(Comparison&lt;ExpandoObject&gt; sortFunction)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -279,7 +276,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Comparison</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Comparison</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">sortFunction</span></td>
         <td></td>
       </tr>
@@ -287,18 +284,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Sort__ctor_System_String_System_Comparison_System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Sort.%23ctor(System.String%2CSystem.Comparison%7BSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Sort__ctor_System_String_System_Comparison_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Sort.%23ctor(System.String%2CSystem.Comparison%7BSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L76">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L77">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_Sort__ctor_" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_Sort__ctor_System_String_System_Comparison_System_String____" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor(System.String,System.Comparison{System.String[]})">Sort(String, Comparison&lt;String[]&gt;)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_Sort__ctor_System_String_System_Comparison_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.Sort.#ctor(System.String,System.Comparison{System.Dynamic.ExpandoObject})">Sort(String, Comparison&lt;ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Sort(string name, Comparison&lt;string[]&gt; sortFunction)</code></pre>
+    <pre><code class="lang-csharp hljs">public Sort(string name, Comparison&lt;ExpandoObject&gt; sortFunction)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -316,7 +313,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Comparison</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Comparison</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">sortFunction</span></td>
         <td></td>
       </tr>
@@ -346,7 +343,7 @@
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_Sort.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.Sort%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L68" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/Sort.cs/#L69" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

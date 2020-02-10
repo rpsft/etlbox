@@ -154,8 +154,8 @@ Value,1
 Value2,2
 Value3,3
 </code></pre>
-<p>Now we create a CSVSource pointing to the newly created input file.</p>
-<pre><code class="lang-C#">CSVSource source = new CSVSource(&quot;input.csv&quot;);
+<p>Now we create a CsvSource pointing to the newly created input file.</p>
+<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;input.csv&quot;);
 </code></pre>
 <p>Before we continue, we will need an object that can hold our data. Let's call it MyData.</p>
 <pre><code class="lang-C#">public class MyData
@@ -172,11 +172,11 @@ transform it in our Mydata object.</p>
     { Col1 = input[0], Col2 = input[1] }
 );
 </code></pre>
-<p>Actually, this transformation wouldn't been necessary - the CSVSource could have automatically converted the
+<p>Actually, this transformation wouldn't been necessary - the CsvSource could have automatically converted the
 incoming data into the <code>MyData</code> object. But it shows how a transformation can be used to execute any
 C# code you like.</p>
 <p>Next we add a database destination pointing to our table.</p>
-<pre><code class="lang-C#">DBDestination&lt;MyData&gt; dest = new DBDestination&lt;MyData&gt;(dbConnection, &quot;Table1&quot;);
+<pre><code class="lang-C#">DbDestination&lt;MyData&gt; dest = new DbDestination&lt;MyData&gt;(dbConnection, &quot;Table1&quot;);
 </code></pre>
 <p>Now we need to link the components of our dataflow.</p>
 <pre><code class="lang-C#">source.LinkTo(row);

@@ -83,7 +83,7 @@
   <h1 id="ALE_ETLBox_DataFlow_RowTransformation" data-uid="ALE.ETLBox.DataFlow.RowTransformation" class="text-break">Class RowTransformation
   </h1>
   <div class="markdown level0 summary"><p>Transforms the data row-by-row with the help of the transformation function.
-The non generic RowTransformation accepts a string array as input and returns a string array as output.
+The non generic RowTransformation accepts a dynamic object as input and returns a dynamic object as output.
 If you need other data types, use the generic RowTransformation instead.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -92,67 +92,67 @@ If you need other data types, use the generic RowTransformation instead.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html">RowTransformation</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
-    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-1.html">RowTransformation</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html">RowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-1.html">RowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div class="level6"><span class="xref">RowTransformation</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_TaskName">RowTransformation&lt;String[], String[]&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_TaskName">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_TransformationFunc">RowTransformation&lt;String[], String[]&gt;.TransformationFunc</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_TransformationFunc">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.TransformationFunc</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_InitAction">RowTransformation&lt;String[], String[]&gt;.InitAction</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_InitAction">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.InitAction</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_WasInitialized">RowTransformation&lt;String[], String[]&gt;.WasInitialized</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_WasInitialized">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.WasInitialized</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_TargetBlock">RowTransformation&lt;String[], String[]&gt;.TargetBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_TargetBlock">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_SourceBlock">RowTransformation&lt;String[], String[]&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_SourceBlock">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">RowTransformation&lt;String[], String[]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html#ALE_ETLBox_DataFlow_RowTransformation_2_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">RowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions">DataFlowTransformation&lt;String[], String[]&gt;.PredecessorCompletions</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.PredecessorCompletions</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowTransformation&lt;String[], String[]&gt;.AddPredecessorCompletion(Task)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.AddPredecessorCompletion(Task)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction">DataFlowTransformation&lt;String[], String[]&gt;.CheckCompleteAction()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CheckCompleteAction">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.CheckCompleteAction()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;String[], String[]&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;String[]&gt;, Predicate&lt;String[]&gt;, Predicate&lt;String[]&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;, Predicate&lt;ExpandoObject&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -240,10 +240,10 @@ If you need other data types, use the generic RowTransformation instead.</p>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_RowTransformation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RowTransformation : RowTransformation&lt;string[]&gt;, IDataFlowTransformation&lt;string[], string[]&gt;, IDataFlowLinkSource&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class RowTransformation : RowTransformation&lt;ExpandoObject&gt;, IDataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;, IDataFlowLinkTarget&lt;ExpandoObject&gt;, ITask</code></pre>
   </div>
   <h5 id="ALE_ETLBox_DataFlow_RowTransformation_examples"><strong>Examples</strong></h5>
-  <pre><code>//Non generic RowTransformation works with string[] as input and output
+  <pre><code>//Non generic RowTransformation works with dynamic object as input and output
 //use RowTransformation&lt;TInput,TOutput> for generic usage!
 RowTransformation trans = new RowTransformation(
     csvdata => {
@@ -258,7 +258,7 @@ trans.LinkTo(dest);</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L157">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L158">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_RowTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor">RowTransformation()</h4>
@@ -270,50 +270,18 @@ trans.LinkTo(dest);</code></pre>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor_System_Func_System_String___System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor(System.Func%7BSystem.String%5B%5D%2CSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L158">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_RowTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor_System_Func_System_String___System_String____" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor(System.Func{System.String[],System.String[]})">RowTransformation(Func&lt;String[], String[]&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowTransformation(Func&lt;string[], string[]&gt; rowTransformationFunc)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</td>
-        <td><span class="parametername">rowTransformationFunc</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_String___System_String____.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor(System.String%2CSystem.Func%7BSystem.String%5B%5D%2CSystem.String%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor(System.Func%7BSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L159">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_RowTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_String___System_String____" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor(System.String,System.Func{System.String[],System.String[]})">RowTransformation(String, Func&lt;String[], String[]&gt;)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})">RowTransformation(Func&lt;ExpandoObject, ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowTransformation(string name, Func&lt;string[], string[]&gt; rowTransformationFunc)</code></pre>
+    <pre><code class="lang-csharp hljs">public RowTransformation(Func&lt;ExpandoObject, ExpandoObject&gt; rowTransformationFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -326,12 +294,7 @@ trans.LinkTo(dest);</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">rowTransformationFunc</span></td>
         <td></td>
       </tr>
@@ -339,18 +302,18 @@ trans.LinkTo(dest);</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_String___System_String____System_Action_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor(System.String%2CSystem.Func%7BSystem.String%5B%5D%2CSystem.String%5B%5D%7D%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor(System.String%2CSystem.Func%7BSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L160">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_RowTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_String___System_String____System_Action_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor(System.String,System.Func{System.String[],System.String[]},System.Action)">RowTransformation(String, Func&lt;String[], String[]&gt;, Action)</h4>
+  <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor(System.String,System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})">RowTransformation(String, Func&lt;ExpandoObject, ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowTransformation(string name, Func&lt;string[], string[]&gt; rowTransformationFunc, Action initAction)</code></pre>
+    <pre><code class="lang-csharp hljs">public RowTransformation(string name, Func&lt;ExpandoObject, ExpandoObject&gt; rowTransformationFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -368,7 +331,44 @@ trans.LinkTo(dest);</code></pre>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.String</span>[], <span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
+        <td><span class="parametername">rowTransformationFunc</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__System_Action_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation.%23ctor(System.String%2CSystem.Func%7BSystem.Dynamic.ExpandoObject%2CSystem.Dynamic.ExpandoObject%7D%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L161">View Source</a>
+  </span>
+  <a id="ALE_ETLBox_DataFlow_RowTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_RowTransformation__ctor_System_String_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__System_Action_" data-uid="ALE.ETLBox.DataFlow.RowTransformation.#ctor(System.String,System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject},System.Action)">RowTransformation(String, Func&lt;ExpandoObject, ExpandoObject&gt;, Action)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RowTransformation(string name, Func&lt;ExpandoObject, ExpandoObject&gt; rowTransformationFunc, Action initAction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
         <td><span class="parametername">rowTransformationFunc</span></td>
         <td></td>
       </tr>
@@ -403,7 +403,7 @@ trans.LinkTo(dest);</code></pre>
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_RowTransformation.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.RowTransformation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L155" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/RowTransformation.cs/#L156" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

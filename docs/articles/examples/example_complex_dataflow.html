@@ -162,7 +162,7 @@ is there.</p>
 <h3 id="build-the-pipeline">Build the pipeline</h3>
 <p>Now we can construct a pipeline. Let's start with the source</p>
 <pre><code class="lang-C#">//Read data from csv file
-CSVSource sourceOrderData = new CSVSource(&quot;DemoData.csv&quot;);
+CsvSource sourceOrderData = new CsvSource(&quot;DemoData.csv&quot;);
 sourceOrderData.Configuration.Delimiter = &quot;;&quot;;
 </code></pre>
 <p>Source data will look like this:</p>
@@ -197,7 +197,7 @@ sourceOrderData.LinkTo(transIntoObject);
 A lookup will use a third source to enrich the data in the flow, in our case to retrieve a customer key
 from the customer name.</p>
 <pre><code class="lang-C#">//Find corresponding customer id if customer exists in Customer table
-DBSource&lt;Customer&gt; sourceCustomerData = new DBSource&lt;Customer&gt;(&quot;customer&quot;);
+DbSource&lt;Customer&gt; sourceCustomerData = new DbSource&lt;Customer&gt;(&quot;customer&quot;);
 LookupCustomerKey lookupCustKeyClass = new LookupCustomerKey();
 Lookup&lt;Order, Order, Customer&gt; lookupCustomerKey = new Lookup&lt;Order, Order, Customer&gt;(
     lookupCustKeyClass.FindKey, sourceCustomerData, lookupCustKeyClass.LookupData);
@@ -226,7 +226,7 @@ lookupCustomerKey.LinkTo(multiCast);
 </code></pre>
 <p>As mentioned before, one output of the multicast will end up in a database destination.</p>
 <pre><code class="lang-C#">//Store Order in Orders table
-DBDestination&lt;Order&gt; destOrderTable = new DBDestination&lt;Order&gt;(&quot;orders&quot;);
+DbDestination&lt;Order&gt; destOrderTable = new DbDestination&lt;Order&gt;(&quot;orders&quot;);
 multiCast.LinkTo(destOrderTable);
 </code></pre>
 <p>The other output will go into a block transformation. A Block Transformation is a blocking pipeline element -
@@ -254,7 +254,7 @@ private List&lt;Rating&gt; BlockTransformOrders(List&lt;Order&gt; allOrders) {
 </code></pre>
 <p>Now we want to store the calculated Rating in the table <code>customer_rating</code>. So we create another destination
 for this table and link it to our BlockTransformation.</p>
-<pre><code class="lang-C#">DBDestination&lt;Rating&gt; destRating = new DBDestination&lt;Rating&gt;(&quot;customer_rating&quot;);
+<pre><code class="lang-C#">DbDestination&lt;Rating&gt; destRating = new DbDestination&lt;Rating&gt;(&quot;customer_rating&quot;);
 blockOrders.LinkTo(destRating);
 </code></pre>
 <p>No we are all set.

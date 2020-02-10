@@ -120,26 +120,23 @@ RowTransformation&amp;lt;string[], MySimpleRow&amp;gt; trans = new RowTransforma
         };
 });
 </code></pre>
-<h3 id="lookup">Lookup</h3>
+<h3 id="lookuptransformation">LookupTransformation</h3>
 <p>The lookup is a row transformation, but before it starts processing any rows it will load all data from the given LookupSource into memory
 and will make it accessible as a List object.
 Though the lookup is non-blocking, it will take as much memory as the lookup table needs to be loaded fully into memory.</p>
 <p>Here is an example:</p>
-<pre><code class="lang-C#">DBSource&lt;MyLookupRow&gt; lookupSource = new DBSource&lt;MyLookupRow&gt;(connection, &quot;Lookup&quot;);
+<pre><code class="lang-C#">DbSource&lt;MyLookupRow&gt; lookupSource = new DbSource&lt;MyLookupRow&gt;(connection, &quot;Lookup&quot;);
 List&lt;MyLookupRow&gt; LookupTableData = new List&lt;MyLookupRow&gt;();
-Lookup&lt;MyInputDataRow, MyOutputDataRow, MyLookupRow&gt; lookup = new Lookup&lt;MyInputDataRow, MyOutputDataRow, MyLookupRow&gt;(
+LookupTransformation&lt;MyInputDataRow, MyLookupRow&gt; lookup = new Lookup&lt;MyInputDataRow, MyLookupRow&gt;(
+    lookupSource,
     row =&gt;
     {
-        MyOutputDataRow output = new MyOutputDataRow()
-        {
-            Col1 = row.Col1,
-            Col2 = row.Col2,
-            Col3 = LookupTableData.Where(ld =&gt; ld.Key == row.Col1).Select(ld =&gt; ld.LookupValue1).FirstOrDefault(),
-            Col4 = LookupTableData.Where(ld =&gt; ld.Key == row.Col1).Select(ld =&gt; ld.LookupValue2).FirstOrDefault(),
-        };
-        return output;
+        Col1 = row.Col1,
+        Col2 = row.Col2,
+        Col3 = LookupTableData.Where(ld =&gt; ld.Key == row.Col1).Select(ld =&gt; ld.LookupValue1).FirstOrDefault(),
+        Col4 = LookupTableData.Where(ld =&gt; ld.Key == row.Col1).Select(ld =&gt; ld.LookupValue2).FirstOrDefault(),
+        return row;
     }
-    , lookupSource
     , LookupTableData
 );
 </code></pre>
@@ -153,11 +150,11 @@ written into another. Or you like to split up data based on some conditions. For
 Multicast is a non-blocking operation.</p>
 <p>The following code demonstrate a simple example where data would be duplicated and copied into two destinations -
 a database table and a Json file.</p>
-<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
+<pre><code class="lang-C#">var source = new CsvSource(&quot;test.csv&quot;);
 
 var multicast = new Multicast();
 var destination1 = new JsonDestination(&quot;test.json&quot;);
-var destination2 = new DBDestination(&quot;TestTable&quot;);
+var destination2 = new DbDestination(&quot;TestTable&quot;);
 
 source.LinkTo(multicast);
 multicast.LinkTo(destination1);
@@ -167,11 +164,11 @@ multicast.LinkTo(destination2);
 Predicates allow you to let only certain data pass.
 E.g. the following code would only copy data into Table1 where the first column is greater 0, the rest will be
 copied into Table2.</p>
-<pre><code class="lang-C#">var source = new CSVSource(&quot;test.csv&quot;);
+<pre><code class="lang-C#">var source = new CsvSource(&quot;test.csv&quot;);
 
 var multicast = new Multicast();
-var destination1 = new DBDestination(&quot;Table1&quot;);
-var destination2 = new DBDestination(&quot;Table2&quot;);
+var destination1 = new DbDestination(&quot;Table1&quot;);
+var destination2 = new DbDestination(&quot;Table2&quot;);
 
 source.LinkTo(multicast);
 multicast.LinkTo(destination1, row =&gt; row[0] &gt; 0);
@@ -188,9 +185,9 @@ E.g. you can link two sources with the MergeJoin, define
 a method how to combine these records and produce a new merged output. The data type of the
 output and the inputs can be different, as long as you handle it in the join function.
 MergeJoin is a non blocking transformation.</p>
-<pre><code class="lang-C#">DBSource&lt;MyInputRowType1&gt; source1 = new DBSource&lt;MyInputRowType1&gt;(Connection, &quot;MergeJoinSource1&quot;);
-DBSource&lt;MyInputRowType2&gt; source2 = new DBSource&lt;MyInputRowType2&gt;(Connection, &quot;MergeJoinSource2&quot;);
-DBDestination&lt;MyOutputRowType&gt; dest = new DBDestination&lt;MyOutputRowType&gt;(Connection, &quot;MergeJoinDestination&quot;);
+<pre><code class="lang-C#">DbSource&lt;MyInputRowType1&gt; source1 = new DbSource&lt;MyInputRowType1&gt;(Connection, &quot;MergeJoinSource1&quot;);
+DbSource&lt;MyInputRowType2&gt; source2 = new DbSource&lt;MyInputRowType2&gt;(Connection, &quot;MergeJoinSource2&quot;);
+DbDestination&lt;MyOutputRowType&gt; dest = new DbDestination&lt;MyOutputRowType&gt;(Connection, &quot;MergeJoinDestination&quot;);
 
 MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt; join = new MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt;(
     (inputRow1, inputRow2) =&gt; {

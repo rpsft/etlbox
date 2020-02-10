@@ -83,7 +83,7 @@
   <h1 id="ALE_ETLBox_DataFlow_JsonDestination" data-uid="ALE.ETLBox.DataFlow.JsonDestination" class="text-break">Class JsonDestination
   </h1>
   <div class="markdown level0 summary"><p>A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-The JsonDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -91,104 +91,104 @@ The JsonDestination access a string array as input type. If you need other data 
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
-    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html">DataFlowDestination</a>&lt;<span class="xref">System.String</span>[][]&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html">JsonDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html">DataFlowDestination</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>[]&gt;</div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html">DataFlowBatchDestination</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html">JsonDestination</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div class="level6"><span class="xref">JsonDestination</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;<span class="xref">System.String</span>[][]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[][]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.String</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_TaskName">JsonDestination&lt;String[]&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_TaskName">JsonDestination&lt;ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_FileName">JsonDestination&lt;String[]&gt;.FileName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_FileName">JsonDestination&lt;ExpandoObject&gt;.FileName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_HasFileName">JsonDestination&lt;String[]&gt;.HasFileName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_HasFileName">JsonDestination&lt;ExpandoObject&gt;.HasFileName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_JsonSerializer">JsonDestination&lt;String[]&gt;.JsonSerializer</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_JsonSerializer">JsonDestination&lt;ExpandoObject&gt;.JsonSerializer</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_InitObjects_System_Int32_">JsonDestination&lt;String[]&gt;.InitObjects(Int32)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_InitObjects_System_Int32_">JsonDestination&lt;ExpandoObject&gt;.InitObjects(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_InitJsonWriter">JsonDestination&lt;String[]&gt;.InitJsonWriter()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_InitJsonWriter">JsonDestination&lt;ExpandoObject&gt;.InitJsonWriter()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_WriteBatch__0____">JsonDestination&lt;String[]&gt;.WriteBatch(String[][])</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_WriteBatch__0____">JsonDestination&lt;ExpandoObject&gt;.WriteBatch(ExpandoObject[])</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_CloseStreams">JsonDestination&lt;String[]&gt;.CloseStreams()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html#ALE_ETLBox_DataFlow_JsonDestination_1_CloseStreams">JsonDestination&lt;ExpandoObject&gt;.CloseStreams()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite">DataFlowBatchDestination&lt;String[]&gt;.BeforeBatchWrite</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite">DataFlowBatchDestination&lt;ExpandoObject&gt;.BeforeBatchWrite</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock">DataFlowBatchDestination&lt;String[]&gt;.TargetBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock">DataFlowBatchDestination&lt;ExpandoObject&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize">DataFlowBatchDestination&lt;String[]&gt;.BatchSize</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize">DataFlowBatchDestination&lt;ExpandoObject&gt;.BatchSize</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowBatchDestination&lt;String[]&gt;.AddPredecessorCompletion(Task)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowBatchDestination&lt;ExpandoObject&gt;.AddPredecessorCompletion(Task)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CheckCompleteAction">DataFlowBatchDestination&lt;String[]&gt;.CheckCompleteAction()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CheckCompleteAction">DataFlowBatchDestination&lt;ExpandoObject&gt;.CheckCompleteAction()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CloseStreamsAction">DataFlowBatchDestination&lt;String[]&gt;.CloseStreamsAction</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CloseStreamsAction">DataFlowBatchDestination&lt;ExpandoObject&gt;.CloseStreamsAction</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Buffer">DataFlowBatchDestination&lt;String[]&gt;.Buffer</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Buffer">DataFlowBatchDestination&lt;ExpandoObject&gt;.Buffer</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp">DataFlowBatchDestination&lt;String[]&gt;.CleanUp()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp">DataFlowBatchDestination&lt;ExpandoObject&gt;.CleanUp()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_OnCompletion">DataFlowDestination&lt;String[][]&gt;.OnCompletion</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_OnCompletion">DataFlowDestination&lt;ExpandoObject[]&gt;.OnCompletion</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Completion">DataFlowDestination&lt;String[][]&gt;.Completion</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Completion">DataFlowDestination&lt;ExpandoObject[]&gt;.Completion</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetBlock">DataFlowDestination&lt;String[][]&gt;.TargetBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetBlock">DataFlowDestination&lt;ExpandoObject[]&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetAction">DataFlowDestination&lt;String[][]&gt;.TargetAction</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_TargetAction">DataFlowDestination&lt;ExpandoObject[]&gt;.TargetAction</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_PredecessorCompletions">DataFlowDestination&lt;String[][]&gt;.PredecessorCompletions</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_PredecessorCompletions">DataFlowDestination&lt;ExpandoObject[]&gt;.PredecessorCompletions</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Wait">DataFlowDestination&lt;String[][]&gt;.Wait()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_Wait">DataFlowDestination&lt;ExpandoObject[]&gt;.Wait()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowDestination&lt;String[][]&gt;.AddPredecessorCompletion(Task)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowDestination&lt;ExpandoObject[]&gt;.AddPredecessorCompletion(Task)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowDestination&lt;String[][]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">DataFlowDestination&lt;ExpandoObject[]&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CheckCompleteAction">DataFlowDestination&lt;String[][]&gt;.CheckCompleteAction()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CheckCompleteAction">DataFlowDestination&lt;ExpandoObject[]&gt;.CheckCompleteAction()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_SetCompletionTask">DataFlowDestination&lt;String[][]&gt;.SetCompletionTask()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_SetCompletionTask">DataFlowDestination&lt;ExpandoObject[]&gt;.SetCompletionTask()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AwaitCompletion">DataFlowDestination&lt;String[][]&gt;.AwaitCompletion()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_AwaitCompletion">DataFlowDestination&lt;ExpandoObject[]&gt;.AwaitCompletion()</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CleanUp">DataFlowDestination&lt;String[][]&gt;.CleanUp()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_CleanUp">DataFlowDestination&lt;ExpandoObject[]&gt;.CleanUp()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -219,9 +219,6 @@ The JsonDestination access a string array as input type. If you need other data 
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
@@ -276,10 +273,10 @@ The JsonDestination access a string array as input type. If you need other data 
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_JsonDestination_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonDestination : JsonDestination&lt;string[]&gt;, IDataFlowDestination&lt;string[][]&gt;, IDataFlowLinkTarget&lt;string[][]&gt;, IDataFlowDestination&lt;string[]&gt;, IDataFlowLinkTarget&lt;string[]&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class JsonDestination : JsonDestination&lt;ExpandoObject&gt;, IDataFlowDestination&lt;ExpandoObject[]&gt;, IDataFlowLinkTarget&lt;ExpandoObject[]&gt;, IDataFlowDestination&lt;ExpandoObject&gt;, IDataFlowLinkTarget&lt;ExpandoObject&gt;, ITask</code></pre>
   </div>
   <h5 id="ALE_ETLBox_DataFlow_JsonDestination_examples"><strong>Examples</strong></h5>
-  <pre><code>//Non generic JsonDestination works with string[] as input
+  <pre><code>//Non generic JsonDestination works with dynamic object as input
 //use JsonDestination&lt;TInput> for generic usage!
 JsonDestination dest = new JsonDestination(&quot;/path/to/file.json&quot;);
 dest.Wait(); //Wait for all data to arrive</code></pre>
@@ -291,7 +288,7 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonDestination__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonDestination.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonDestination.cs/#L105">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonDestination.cs/#L106">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_JsonDestination__ctor_" data-uid="ALE.ETLBox.DataFlow.JsonDestination.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_JsonDestination__ctor" data-uid="ALE.ETLBox.DataFlow.JsonDestination.#ctor">JsonDestination()</h4>
@@ -306,7 +303,7 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonDestination__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonDestination.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonDestination.cs/#L107">View Source</a>
+    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonDestination.cs/#L108">View Source</a>
   </span>
   <a id="ALE_ETLBox_DataFlow_JsonDestination__ctor_" data-uid="ALE.ETLBox.DataFlow.JsonDestination.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_JsonDestination__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.JsonDestination.#ctor(System.String)">JsonDestination(String)</h4>
@@ -360,7 +357,7 @@ dest.Wait(); //Wait for all data to arrive</code></pre>
                     <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonDestination.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonDestination%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonDestination.cs/#L103" class="contribution-link">View Source</a>
+                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonDestination.cs/#L104" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

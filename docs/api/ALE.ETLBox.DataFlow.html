@@ -86,6 +86,14 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.AggregateColumn.html">AggregateColumn</a></h4>
+      <section><p>This attribute is used to identify the aggregation property for aggregations. The passed column name
+identifies the property in the aggregation output object.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Aggregation.html">Aggregation</a></h4>
+      <section><p>Aggregates data by the given aggregation method.
+The non generic implementation uses dynamic objects.</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Aggregation-2.html">Aggregation&lt;TInput, TOutput&gt;</a></h4>
       <section><p>Aggregates data by the given aggregation method.</p>
 </section>
@@ -94,7 +102,7 @@
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation.html">BlockTransformation</a></h4>
       <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
 is execution and the result posted into the targets.
-The non generic implementation uses a string array as input and output</p>
+The non generic implementation uses dynamic objects as input and output</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-1.html">BlockTransformation&lt;TInput&gt;</a></h4>
       <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
@@ -116,30 +124,30 @@ object that exists and needs to be updated. It it supposed
 to use with an object that either inherits from MergeableRow.
 If you implement the IMergeable interface, you need to override the Equals-method instead.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination.html">CSVDestination</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CsvDestination.html">CsvDestination</a></h4>
       <section><p>A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-The CSVDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+The CsvDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVDestination-1.html">CSVDestination&lt;TInput&gt;</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CsvDestination-1.html">CsvDestination&lt;TInput&gt;</a></h4>
       <section><p>A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVSource.html">CSVSource</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CsvSource.html">CsvSource</a></h4>
       <section><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
-CSVSource as a nongeneric type always return a string array as output. If you need typed output, use
-the CSVSource&lt;TOutput&gt; object instead.</p>
+CsvSource as a nongeneric type uses dynamic object as output. If you need typed output, use
+the CsvSource&lt;TOutput&gt; object instead.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CSVSource-1.html">CSVSource&lt;TOutput&gt;</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html">CsvSource&lt;TOutput&gt;</a></h4>
       <section><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
 Data is read a as string from the source and dynamically converted into the corresponding data format.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomDestination.html">CustomDestination</a></h4>
-      <section><p>Define your own destination block. The non generic implementation accepts a string array as input.</p>
+      <section><p>Define your own destination block. The non generic implementation uses a dynamic object as input.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomDestination-1.html">CustomDestination&lt;TInput&gt;</a></h4>
       <section><p>Define your own destination block.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomSource.html">CustomSource</a></h4>
-      <section><p>Define your own source block. The non generic implementation return a string array as output.</p>
+      <section><p>Define your own source block. The non generic implementation returns a dynamic object as output.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CustomSource-1.html">CustomSource&lt;TOutput&gt;</a></h4>
       <section><p>Define your own source block.</p>
@@ -156,21 +164,21 @@ Here you can set the threshold value when information about processed records sh
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource&lt;TOutput&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBDestination.html">DBDestination</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbDestination.html">DbDestination</a></h4>
       <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-The DBDestination access a string array as input type. If you need other data types, use the generic DBDestination instead.</p>
+The DbDestination uses a dynamic object as input type. If you need other data types, use the generic DbDestination instead.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBDestination-1.html">DBDestination&lt;TInput&gt;</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html">DbDestination&lt;TInput&gt;</a></h4>
       <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBMerge-1.html">DBMerge&lt;TInput&gt;</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbMerge-1.html">DbMerge&lt;TInput&gt;</a></h4>
       <section><p>Inserts, updates and (optionally) deletes data in db target.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBSource.html">DBSource</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbSource.html">DbSource</a></h4>
       <section><p>A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
-into the targets. The non generic version of the DBSource creates a string array that contains the data.</p>
+into the targets. The non generic version of the DbSource uses a dynamic object that contains the data.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DBSource-1.html">DBSource&lt;TOutput&gt;</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbSource-1.html">DbSource&lt;TOutput&gt;</a></h4>
       <section><p>A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
 into the targets.</p>
 </section>
@@ -192,6 +200,10 @@ The index starts at 0.</p>
 You can define a sheet name and a range - only the data in the specified sheet and range is read. Otherwise, all data
 in all sheets will be processed.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.GroupColumn.html">GroupColumn</a></h4>
+      <section><p>This attribute is used to identify the grouping property for aggregations. The passed column name
+identifies the property in the aggregation output object.</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.IdColumn.html">IdColumn</a></h4>
       <section><p>This attribute defines if the column is used as an Id for the DBMerge. It it supposed
 to use with an object that either inherits from MergeableRow or implements the IMergeable interface.
@@ -200,41 +212,41 @@ if you inherit from MergeableRow.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination.html">JsonDestination</a></h4>
       <section><p>A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-The JsonDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonDestination-1.html">JsonDestination&lt;TInput&gt;</a></h4>
       <section><p>A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource.html">JsonSource</a></h4>
       <section><p>Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.
-JsonSource as a nongeneric type always return a string array as output. If you need typed output, use
+JsonSource as a nongeneric type returns a dynamic object as output. If you need typed output, use
 the JsonSource&lt;TOutput&gt; object instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html">JsonSource&lt;TOutput&gt;</a></h4>
       <section><p>Reads data from a json source. This can be any http resource or a file.
 By default, data is pulled via httpclient. Use the ResourceType property to read data from a file.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup.html">Lookup</a></h4>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.LookupTransformation.html">LookupTransformation</a></h4>
       <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source.
-The non generic implementation accepts a string array as input and output. The lookup data source
-always returns a list of string array.</p>
+The non generic implementation uses a dynamic object as input and lookup source.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup-2.html">Lookup&lt;TTransformationInput, TSourceOutput&gt;</a></h4>
-      <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source. The result is then posted into the output.</p>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.LookupTransformation-2.html">LookupTransformation&lt;TInput, TSourceOutput&gt;</a></h4>
+      <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.Lookup-3.html">Lookup&lt;TTransformationInput, TTransformationOutput, TSourceOutput&gt;</a></h4>
-      <section><p>A lookup task - data from the input can be enriched with data retrieved from the lookup source. The result is then posted into the output.</p>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MatchColumn.html">MatchColumn</a></h4>
+      <section><p>This attribute defines that this property is used to match with the property of the object
+used in the Source for a Lookup identified by the given lookupSourcePropertyName.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination.html">MemoryDestination</a></h4>
       <section><p>A destination in memory - it will store all you data in a list. Inserts are done in batches.
-The MemoryDestination access a string array as input type. If you need other data types, use the generic CSVDestination instead.</p>
+The MemoryDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemoryDestination-1.html">MemoryDestination&lt;TInput&gt;</a></h4>
       <section><p>A destination in memory - it will store all you data in a list. Inserts are done in batches.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemorySource.html">MemorySource</a></h4>
       <section><p>Reads data from a memory source. While reading the data from the file, data is also asnychronously posted into the targets.
-MemorySource as a nongeneric type always return a string array as output. If you need typed output, use
+MemorySource as a nongeneric type always return a dynamic object as output. If you need typed output, use
 the MemorySource&lt;TOutput&gt; object instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MemorySource-1.html">MemorySource&lt;TOutput&gt;</a></h4>
@@ -249,7 +261,7 @@ and the properties use to identify equal object flagged with the CompareColumn a
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin.html">MergeJoin</a></h4>
       <section><p>Will join data from the two inputs into one output - on a row by row base.
 Make sure both inputs are sorted or in the right order. The non generic implementation deals with
-string array as inputs and merged output.</p>
+a dynamic object as input and merged output.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin-1.html">MergeJoin&lt;TInput&gt;</a></h4>
       <section><p>Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.</p>
@@ -261,14 +273,18 @@ string array as inputs and merged output.</p>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Multicast.html">Multicast</a></h4>
       <section><p>A multicast duplicates data from the input into two outputs. The non generic version or the multicast
-excepct a string array as input and has two output with the copies of the incoming stríng array.</p>
+excepct a dynamic object as input and has two output with the copies of the input.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Multicast-1.html">Multicast&lt;TInput&gt;</a></h4>
       <section><p>A multicast duplicates data from the input into two outputs.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.RetrieveColumn.html">RetrieveColumn</a></h4>
+      <section><p>This attribute defines that this property is used to store the lookup value of the property from the object
+used in the Source for a Lookup identified by the given lookupSourcePropertyName.</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation.html">RowTransformation</a></h4>
       <section><p>Transforms the data row-by-row with the help of the transformation function.
-The non generic RowTransformation accepts a string array as input and returns a string array as output.
+The non generic RowTransformation accepts a dynamic object as input and returns a dynamic object as output.
 If you need other data types, use the generic RowTransformation instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-1.html">RowTransformation&lt;TInput&gt;</a></h4>
@@ -278,7 +294,7 @@ If you need other data types, use the generic RowTransformation instead.</p>
       <section><p>Transforms the data row-by-row with the help of the transformation function.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Sort.html">Sort</a></h4>
-      <section><p>Sort the input with the given sort function. The non generic implementation works with string array.</p>
+      <section><p>Sort the input with the given sort function. The non generic implementation works with a dyanmic object.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html">Sort&lt;TInput&gt;</a></h4>
       <section><p>Sort the input with the given sort function.</p>
@@ -287,7 +303,7 @@ If you need other data types, use the generic RowTransformation instead.</p>
       <section><p>This destination if used as a trash.
 Redirect all data in this destination which you do not want for further processing.
 Every records needs to be transferred to a destination to have a dataflow completed.
-The non generic implementation works with a string array as input.</p>
+The non generic implementation works with a dynamic obect as input.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.VoidDestination-1.html">VoidDestination&lt;TInput&gt;</a></h4>
       <section><p>This destination if used as a trash.
@@ -310,6 +326,8 @@ Every records needs to be transferred to a destination to have a dataflow comple
       <section></section>
     <h3 id="enums">Enums
   </h3>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.AggregationMethod.html">AggregationMethod</a></h4>
+      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.ResourceType.html">ResourceType</a></h4>
       <section></section>
 </article>
