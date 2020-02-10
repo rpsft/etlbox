@@ -13,12 +13,9 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public Properties */
         public string Sql { get; set; }
-        public FileConnectionManager FileConnection { get; set; }
         public List<Action<object>> Actions { get; set; }
         public Action BeforeRowReadAction { get; set; }
         public Action AfterRowReadAction { get; set; }
-        //internal Action InternalBeforeRowReadAction { get; set; }
-        //internal Action InternalAfterRowReadAction { get; set; }
         public long ReadTopX { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
         public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(OdbcConnectionManager));
@@ -32,16 +29,6 @@ namespace ALE.ETLBox.ControlFlow
             {
                 if (HasSql)
                     return HasName && !IsOdbcConnection ? NameAsComment + Sql : Sql;
-                else if (HasFileConnection)
-                {
-                    if (FileConnection.FileExists)
-                        return HasName ? NameAsComment + FileConnection.ReadContent() : FileConnection.ReadContent();
-                    else
-                    {
-                        NLogger.Warn($"Sql file was not found: {FileConnection.FileName}", TaskType, "RUN", TaskHash, ControlFlow.STAGE);
-                        return $"SELECT 'File {FileConnection.FileName} not found'";
-                    }
-                }
                 else
                     throw new Exception("Empty command");
             }
@@ -51,8 +38,6 @@ namespace ALE.ETLBox.ControlFlow
         /* Internal/Private properties */
         internal bool DoSkipSql { get; private set; }
         bool HasSql => !(String.IsNullOrWhiteSpace(Sql));
-        bool HasFileConnection => FileConnection != null;
-
 
         /* Some constructors */
         public DbTask()
@@ -89,10 +74,6 @@ namespace ALE.ETLBox.ControlFlow
             Actions = actions.ToList();
         }
 
-        public DbTask(string name, FileConnectionManager fileConnection) : this(name)
-        {
-            this.FileConnection = fileConnection;
-        }
 
         /* Public methods */
         public int ExecuteNonQuery()
@@ -173,7 +154,6 @@ namespace ALE.ETLBox.ControlFlow
                 {
                     if (reader.Read())
                     {
-                        //InternalBeforeRowReadAction?.Invoke();
                         BeforeRowReadAction?.Invoke();
                         for (int i = 0; i < Actions?.Count; i++)
                         {
@@ -187,7 +167,6 @@ namespace ALE.ETLBox.ControlFlow
                             }
                         }
                         AfterRowReadAction?.Invoke();
-                        //InternalAfterRowReadAction?.Invoke();
                     }
                     else
                     {

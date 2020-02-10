@@ -18,22 +18,16 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName { get; set; } = "Run some sql";
         public void Execute() => ExecuteNonQuery();
 
-        public SqlTask() { }
+        public SqlTask() : base()
+        { }
 
         public SqlTask(string name) : base(name) { }
 
-        public SqlTask(string name, FileConnectionManager fileConnection) : base(name, fileConnection) { }
-
-        public SqlTask(ITask callingTask, string sql) : base(callingTask, sql) { }
+        internal SqlTask(ITask callingTask, string sql) : base(callingTask, sql) { }
 
         public SqlTask(string name, string sql) : base(name, sql) { }
 
         public SqlTask(string name, string sql, IEnumerable<QueryParameter> parameter) : base(name, sql)
-        {
-            Parameter = parameter;
-        }
-
-        public SqlTask(string name, FileConnectionManager fileConnection, IEnumerable<QueryParameter> parameter) : base(name, fileConnection)
         {
             Parameter = parameter;
         }
@@ -56,7 +50,6 @@ namespace ALE.ETLBox.ControlFlow
         /* Static methods for convenience */
         public static int ExecuteNonQuery(string name, string sql) => new SqlTask(name, sql).ExecuteNonQuery();
         public static int ExecuteNonQuery(IConnectionManager connectionManager, string name, string sql) => new SqlTask(name, sql) { ConnectionManager = connectionManager }.ExecuteNonQuery();
-        public static int ExecuteNonQuery(string name, FileConnectionManager fileConnection) => new SqlTask(name, fileConnection).ExecuteNonQuery();
         public static object ExecuteScalar(string name, string sql) => new SqlTask(name, sql).ExecuteScalar();
         public static object ExecuteScalar(IConnectionManager connectionManager, string name, string sql) => new SqlTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalar();
         public static Nullable<T> ExecuteScalar<T>(string name, string sql) where T : struct => new SqlTask(name, sql).ExecuteScalar<T>();
@@ -75,7 +68,6 @@ namespace ALE.ETLBox.ControlFlow
             new SqlTask(name, sql, beforeRowReadAction, afterRowReadAction, actions) { ConnectionManager = connectionManager }.ExecuteReader();
         public static int ExecuteNonQuery(string name, string sql, IEnumerable<QueryParameter> parameterList) => new SqlTask(name, sql, parameterList).ExecuteNonQuery();
         public static int ExecuteNonQuery(IConnectionManager connectionManager, string name, string sql, IEnumerable<QueryParameter> parameterList) => new SqlTask(name, sql, parameterList) { ConnectionManager = connectionManager }.ExecuteNonQuery();
-        public static int ExecuteNonQuery(string name, FileConnectionManager fileConnection, IEnumerable<QueryParameter> parameterList) => new SqlTask(name, fileConnection, parameterList).ExecuteNonQuery();
         public static object ExecuteScalar(string name, string sql, IEnumerable<QueryParameter> parameterList) => new SqlTask(name, sql, parameterList).ExecuteScalar();
         public static object ExecuteScalar(IConnectionManager connectionManager, string name, string sql, IEnumerable<QueryParameter> parameterList) => new SqlTask(name, sql, parameterList) { ConnectionManager = connectionManager }.ExecuteScalar();
         public static Nullable<T> ExecuteScalar<T>(string name, string sql, IEnumerable<QueryParameter> parameterList) where T : struct => new SqlTask(name, sql, parameterList).ExecuteScalar<T>();
