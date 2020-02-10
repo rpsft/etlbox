@@ -70,7 +70,7 @@ SqlConnectionManager connMan = new SqlConnectionManager("Data Source=.;Initial C
 Now we need to create a source, in this example it could contain order data. This will look like this:
 
 ```C#
-CsvSource source = new CsvSource("demodata.csv");
+CsvSource<string[]> source = new CsvSource<string[]>("demodata.csv");
 ```
 
 We now add a row transformation. The default output format of a `CsvSource` is an string array. In this example, 

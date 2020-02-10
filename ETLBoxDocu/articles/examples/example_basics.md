@@ -118,7 +118,7 @@ Value3,3
 Now we create a CsvSource pointing to the newly created input file. 
 
 ```C#
-CsvSource source = new CsvSource("input.csv");
+CsvSource<string[]> source = new CsvSource<string[]>("input.csv");
 ```
 
 Before we continue, we will need an object that can hold our data. Let's call it MyData.

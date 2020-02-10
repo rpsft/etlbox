@@ -103,7 +103,7 @@ Now we can construct a pipeline. Let's start with the source
 
 ```C#
 //Read data from csv file
-CsvSource sourceOrderData = new CsvSource("DemoData.csv");
+CsvSource<string[]> sourceOrderData = new CsvSource<string[]>("DemoData.csv");
 sourceOrderData.Configuration.Delimiter = ";";
 ```
 

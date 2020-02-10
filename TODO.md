@@ -28,8 +28,4 @@ does comply with the new ExpandoObject approach
 - CreateTableTask: Function for adding test data into table (depending on table definition)
  
 
-## v2.0.0
 
-- Add documentation for ETLBox Core: add a description that ETL is needed for snowflake, and snowflake is needed for reports, and reports could be created with PowerBI
-- make dynamic as default type instead string[] (update docu, perhaps some tests)
-- remove "name" parameter from constructor in SqlTask

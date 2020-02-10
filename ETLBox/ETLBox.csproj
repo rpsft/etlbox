@@ -13,7 +13,7 @@
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
     <PackageReleaseNotes>Improving Lookup with new set of attributes to define matching and retrieving properties. Also a new Aggretion component that simplifies creating aggregates (e.g. to calculate SUM, MIN, MAX or Count or any other custom defined calculation).
 API CHANGES: Adjusted CSVSource/CSVDestination and DBSource/DBDestination to real CamelCase - they are now CsvSource/CsvDestination and DbSource/DbDestination. Further, ConnectionString was renamed to SqlConnectionString.</PackageReleaseNotes>
-    <Version>1.8.0-alpha</Version>
+    <Version>1.8.0</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
