@@ -94,17 +94,15 @@ namespace ALE.ETLBox.DataFlow
         private TOutput ParseDataRow()
         {
             TOutput row = new TOutput();
-            int colInRange = 0;
-            for (int col = 0; col < ExcelDataReader.FieldCount; col++)
+            for (int col = 0 ,colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
             {
                 if (HasRange && col > Range.EndColumnIfSet) break;
                 if (HasRange && (col + 1) < Range.StartColumn) continue;
-                if (colInRange > TypeInfo.PropertyLength) break;
-                if (!TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colInRange)) { colInRange++; continue; }
-                PropertyInfo propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colInRange]];
+                colNrInRange++;
+                if (!TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colNrInRange)) {  continue; }
+                PropertyInfo propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colNrInRange]];
                 object value = ExcelDataReader.GetValue(col);
                 propInfo.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
-                colInRange++;
             }
             return row;
         }

@@ -107,6 +107,9 @@
     <None Update="res\CustomDestination\simpleJson_tobe.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\Excel\MoreThan20Cols.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\Excel\TwoColumnErrorLinking.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
