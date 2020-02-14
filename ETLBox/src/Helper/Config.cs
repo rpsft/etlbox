@@ -1,5 +1,6 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 
 namespace ALE.ETLBox.Helper
@@ -91,7 +92,11 @@ namespace ALE.ETLBox.Helper
             get
             {
                 if (_defaultConfigFile == null)
-                    Load("default.config.json");
+                {
+                    var envvar = Environment.GetEnvironmentVariable("ETLBoxConfig");
+                    var path = string.IsNullOrWhiteSpace(envvar) ? $"default.config.json" : envvar;
+                    Load(path);
+                }
                 return _defaultConfigFile;
             }
             set
