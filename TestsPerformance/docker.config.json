@@ -1,0 +1,10 @@
+{
+    "Performance": {
+        "SqlConnectionString": "Data Source=10.211.55.2;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_Performance",
+        "SqlOdbcConnectionString": "Driver={SQL Server};Server=10.211.55.2;Database=ETLBox_Performance;User Id=sa;Password=YourStrong@Passw0rd;",
+        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessPerformance.mdb",
+        "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_Performance;Uid=root;Pwd=etlboxpassword;",
+        "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_Performance;User Id=postgres;Password=etlboxpassword;",
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLitePerformance.db;Version=3;"
+    }
+}
