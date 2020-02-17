@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -45,35 +46,32 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
+        
+        [XmlRoot("MySimpleRow")]
         public class MyAttributeRow
         {
+            [XmlAttribute]
             public int Col1 { get; set; }
+            [XmlAttribute]
             public string Col2 { get; set; }
         }
 
-        //public class Todo
-        //{
-        //    [JsonProperty("Id")]
-        //    public int Key { get; set; }
-        //    public string Title { get; set; }
-        //}
+        [Fact]
+        public void XmlOnlyAttributes()
+        {
+            //Arrange
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("XmlSource2ColsAttribute");
+            DbDestination<MyAttributeRow> dest = new DbDestination<MyAttributeRow>(Connection, "XmlSource2ColsAttribute");
+            
+            //Actt
+            XmlSource<MyAttributeRow> source = new XmlSource<MyAttributeRow>("res/XmlSource/TwoColumnsOnlyAttributes.xml", ResourceType.File);
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
 
-        //[Fact]
-        //public void JsonFromWebService()
-        //{
-        //    //Arrange
-        //    MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
-
-        //    //Act
-        //    JsonSource<Todo> source = new JsonSource<Todo>("https://jsonplaceholder.typicode.com/todos");
-        //    source.LinkTo(dest);
-        //    source.Execute();
-        //    dest.Wait();
-
-        //    //Assert
-        //    Assert.All(dest.Data, item => Assert.True(item.Key > 0));
-        //}
+            //Assert
+            dest2Columns.AssertTestData();
+        }
 
     }
 }

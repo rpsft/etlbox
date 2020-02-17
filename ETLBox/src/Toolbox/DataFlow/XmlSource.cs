@@ -34,20 +34,15 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// The element name of the document that contains an item of the data to be parsed
         /// </summary>
-        public string ElementName { 
-            get => _elementName ?? typeof(TOutput).Name; 
-            set => _elementName = value; 
-        }
 
         /* Private stuff */
-        string _elementName;
         XmlReader XmlReader { get; set; }
      
-        TypeInfo TypeInfo { get; set; }
+        XmlTypeInfo TypeInfo { get; set; }
 
         public XmlSource()
         {
-            //TypeInfo = new TypeInfo(typeof(TOutput));
+            TypeInfo = new XmlTypeInfo(typeof(TOutput));
             XmlSerializer = new XmlSerializer(typeof(TOutput));
         }
 
@@ -59,17 +54,6 @@ namespace ALE.ETLBox.DataFlow
         public XmlSource(string uri, ResourceType resourceType) : this(uri)
         {
             ResourceType = resourceType;
-        }
-
-        public XmlSource(string uri, string elementName) : this(uri)
-        {
-            ElementName = elementName;
-        }
-
-
-        public XmlSource(string uri, ResourceType resourceType, string elementName) : this(uri, resourceType)
-        {
-            ElementName = elementName;
         }
 
         protected override void InitReader()
@@ -85,7 +69,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (XmlReader.NodeType == XmlNodeType.Element)
                 {
-                    if (XmlReader.Name == ElementName)
+                    if (XmlReader.Name == TypeInfo.ElementName)
                     {
                         XElement el = XNode.ReadFrom(XmlReader) as XElement;
                         if (el != null)
