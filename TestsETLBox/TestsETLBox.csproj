@@ -173,6 +173,9 @@
     <None Update="res\UseCases\DuplicateCheck.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="res\XmlSource\TwoColumnsElementDifferentNames.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\XmlSource\TwoColumnsOnlyElements.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

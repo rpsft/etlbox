@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +15,12 @@ using System.Xml.Serialization;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// Reads data from a json source. This can be any http resource or a file.
+    /// Reads data from a xml source. This can be any http resource or a file.
     /// By default, data is pulled via httpclient. Use the ResourceType property to read data from a file.
     /// </summary>
     /// <example>
     /// <code>
-    /// JsonSource&lt;POCO&gt; source = new JsonSource&lt;POCO&gt;("https://jsonplaceholder.typicode.com/todos");
+    /// XmlSource&lt;POCO&gt; source = new XmlSource&lt;POCO&gt;("https://jsonplaceholder.typicode.com/todos");
     /// </code>
     /// </example>
     public class XmlSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
@@ -30,6 +32,7 @@ namespace ALE.ETLBox.DataFlow
         /// The XmlSerializer used to deserialize the xml into the used data type.
         /// </summary>
         public XmlSerializer XmlSerializer { get; set; }
+        public string ElementName { get; set; }
 
         /// <summary>
         /// The element name of the document that contains an item of the data to be parsed
@@ -37,13 +40,14 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         XmlReader XmlReader { get; set; }
-     
+
         XmlTypeInfo TypeInfo { get; set; }
 
         public XmlSource()
         {
             TypeInfo = new XmlTypeInfo(typeof(TOutput));
-            XmlSerializer = new XmlSerializer(typeof(TOutput));
+            if (!TypeInfo.IsDynamic)
+                XmlSerializer = new XmlSerializer(typeof(TOutput));
         }
 
         public XmlSource(string uri) : this()
@@ -69,12 +73,22 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (XmlReader.NodeType == XmlNodeType.Element)
                 {
-                    if (XmlReader.Name == TypeInfo.ElementName)
+                    if (XmlReader.Name == (ElementName ?? TypeInfo.ElementName))
                     {
                         XElement el = XNode.ReadFrom(XmlReader) as XElement;
                         if (el != null)
                         {
-                            var output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
+                            TOutput output = default(TOutput);
+                            if (TypeInfo.IsDynamic)
+                            {
+                                string jsonText = JsonConvert.SerializeXNode(el);
+                                dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText) as dynamic;
+                                output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
+                            }
+                            else
+                            {
+                                output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
+                            }
                             Buffer.SendAsync(output).Wait();
                             LogProgress();
                         }
@@ -90,14 +104,14 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Reads data from a json source. While reading the data from the file, data is also asnychronously posted into the targets.
-    /// JsonSource as a nongeneric type returns a dynamic object as output. If you need typed output, use
-    /// the JsonSource&lt;TOutput&gt; object instead.
+    /// Reads data from a xml source. While reading the data from the file, data is also asnychronously posted into the targets.
+    /// XmlSource as a nongeneric type returns a dynamic object as output. If you need typed output, use
+    /// the XmlSource&lt;TOutput&gt; object instead.
     /// </summary>
     /// <see cref="XmlSource{TOutput}"/>
     /// <example>
     /// <code>
-    /// JsonSource source = new JsonSource("demodata.json");
+    /// XmlSource source = new XmlSource("demodata.json");
     /// source.LinkTo(dest); //Link to transformation or destination
     /// source.Execute(); //Start the dataflow
     /// </code>

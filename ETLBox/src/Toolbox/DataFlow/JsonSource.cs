@@ -31,11 +31,9 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         JsonTextReader JsonTextReader { get; set; }
-        TypeInfo TypeInfo { get; set; }
 
         public JsonSource()
         {
-            TypeInfo = new TypeInfo(typeof(TOutput));
             JsonSerializer = new JsonSerializer();
         }
 

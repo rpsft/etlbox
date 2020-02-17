@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("XmlSource2ColsAttribute");
             DbDestination<MyAttributeRow> dest = new DbDestination<MyAttributeRow>(Connection, "XmlSource2ColsAttribute");
-            
+
             //Actt
             XmlSource<MyAttributeRow> source = new XmlSource<MyAttributeRow>("res/XmlSource/TwoColumnsOnlyAttributes.xml", ResourceType.File);
             source.LinkTo(dest);
