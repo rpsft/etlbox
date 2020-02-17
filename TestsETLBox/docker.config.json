@@ -4,13 +4,13 @@
     "SSASConnectionString": "Data Source=10.211.55.2;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ControlFlow",
     "SQLiteConnectionString": "Data Source=.\\db\\SQLiteControlFlow.db;Version=3;",
     "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessControlFlow.mdb",
-    "SqlOdbcConnectionString": "Driver={SQL Server};Server=10.211.55.2;Database=ETLBox_ControlFlow;User Id=sa;Password=YourStrong@Passw0rd;",
+    "SqlOdbcConnectionString": "Driver={SQL Server};Server=10.211.55.2;Database=ETLBox_ControlFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
     "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_ControlFlow;Uid=root;Pwd=etlboxpassword;",
     "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_ControlFlow;User Id=postgres;Password=etlboxpassword;"
   },
   "DataFlow": {
     "SqlConnectionString": "Data Source=10.211.55.2;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlow",
-    "SqlOdbcConnectionString": "Driver={SQL Server};Server=10.211.55.2;Database=ETLBox_DataFlow;User Id=sa;Password=YourStrong@Passw0rd;",
+    "SqlOdbcConnectionString": "Driver={SQL Server};Server=10.211.55.2;Database=ETLBox_DataFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
     "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlow.db;Version=3;",
     "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.mdb",
     "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_DataFlow;Uid=root;Pwd=etlboxpassword;",
