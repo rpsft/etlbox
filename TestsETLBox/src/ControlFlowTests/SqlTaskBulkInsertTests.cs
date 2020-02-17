@@ -23,7 +23,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
 
         [Theory, MemberData(nameof(Connections))
-               , MemberData(nameof(Access))]
+               , MemberData(nameof(Access))]  //If access fails with "Internal OLE Automation error", download and install: https://www.microsoft.com/en-us/download/confirmation.aspx?id=50040
+                                              //see also: https://stackoverflow.com/questions/54632928/internal-ole-automation-error-in-ms-access-using-oledb
 
         public void StringArray(IConnectionManager connection)
         {
