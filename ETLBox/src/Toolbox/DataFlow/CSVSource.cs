@@ -20,52 +20,36 @@ namespace ALE.ETLBox.DataFlow
     /// source.Configuration.Delimiter = ";";
     /// </code>
     /// </example>
-    public class CsvSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read Csv data from file {FileName ?? ""}";
+        public override string TaskName => $"Read Csv data from file {Uri ?? ""}";
 
         /* Public properties */
         public Configuration Configuration { get; set; }
         public int SkipRows { get; set; } = 0;
-        public string FileName { get; set; }
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
 
         /* Private stuff */
         CsvReader CsvReader { get; set; }
-        StreamReader StreamReader { get; set; }
         TypeInfo TypeInfo { get; set; }
+
         public CsvSource()
         {
             Configuration = new Configuration(CultureInfo.InvariantCulture);
             TypeInfo = new TypeInfo(typeof(TOutput));
+            ResourceType = ResourceType.File;
         }
 
-        public CsvSource(string fileName) : this()
+        public CsvSource(string uri) : this()
         {
-            FileName = fileName;
+            Uri = uri;
         }
 
-        public override void Execute()
+        protected override void InitReader()
         {
-            NLogStart();
-            Open();
-            try
-            {
-                ReadAll();
-                Buffer.Complete();
-            }
-            finally
-            {
-                Close();
-            }
-            NLogFinish();
-        }
-
-        private void Open()
-        {
-            StreamReader = new StreamReader(FileName, Configuration.Encoding ?? Encoding.UTF8, true);
+            StreamReader = new StreamReader(Uri, Configuration.Encoding ?? Encoding.UTF8, true);
             SkipFirstRows();
             CsvReader = new CsvReader(StreamReader, Configuration);
         }
@@ -76,8 +60,7 @@ namespace ALE.ETLBox.DataFlow
                 StreamReader.ReadLine();
         }
 
-
-        private void ReadAll()
+        protected override void ReadAll()
         {
             if (Configuration.HasHeaderRecord == true)
             {
@@ -123,10 +106,9 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        private void Close()
+        protected override void CloseReader()
         {
             CsvReader?.Dispose();
-            StreamReader?.Dispose();
         }
     }
 
