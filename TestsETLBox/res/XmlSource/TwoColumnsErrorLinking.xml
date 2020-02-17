@@ -5,9 +5,16 @@
         <Col2>Test1</Col2>
     </MySimpleRow>
     <MySimpleRow>
+        <Col1>Test</Col1>
+        <Col2>Test</Col2>
+    </MySimpleRow>
+    <MySimpleRow>
         <Col1>2</Col1>
         <Col2>Test2</Col2>
     </MySimpleRow>
+    <MyOtherRow>
+        <Col>X</Col>
+    </MyOtherRow>
     <MySimpleRow>
         <Col1>3</Col1>
         <Col2>Test3</Col2>

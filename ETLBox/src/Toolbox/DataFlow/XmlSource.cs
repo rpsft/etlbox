@@ -78,18 +78,26 @@ namespace ALE.ETLBox.DataFlow
                         XElement el = XNode.ReadFrom(XmlReader) as XElement;
                         if (el != null)
                         {
-                            TOutput output = default(TOutput);
-                            if (TypeInfo.IsDynamic)
+                            try
                             {
-                                string jsonText = JsonConvert.SerializeXNode(el);
-                                dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText) as dynamic;
-                                output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
+                                TOutput output = default(TOutput);
+                                if (TypeInfo.IsDynamic)
+                                {
+                                    string jsonText = JsonConvert.SerializeXNode(el);
+                                    dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText) as dynamic;
+                                    output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
+                                }
+                                else
+                                {
+                                    output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
+                                }
+                                Buffer.SendAsync(output).Wait();
                             }
-                            else
+                            catch (Exception e)
                             {
-                                output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
+                                if (!ErrorHandler.HasErrorBuffer) throw e;
+                                ErrorHandler.Send(e, el.ToString());
                             }
-                            Buffer.SendAsync(output).Wait();
                             LogProgress();
                         }
                     }
