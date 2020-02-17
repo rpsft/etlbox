@@ -35,6 +35,9 @@ namespace ALE.ETLBox.DataFlow
                         var compAttr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
                         if (compAttr != null)
                             curAttrProps.CompareAttributeProps.Add(propInfo);
+                        var deleteAttr = propInfo.GetCustomAttribute(typeof(DeleteColumn)) as DeleteColumn;
+                        if (deleteAttr != null)
+                            curAttrProps.DeleteAttributeProps.Add(Tuple.Create(propInfo, deleteAttr.DeleteOnMatchValue));
                     }
                     AttributePropDict.TryAdd(curType, curAttrProps);
                 }
@@ -70,6 +73,18 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+        public bool IsDeletion
+        {
+            get
+            {
+                AttributeProperties attrProps = AttributePropDict[this.GetType()];
+                bool result = true;
+                foreach (var tup in attrProps.DeleteAttributeProps)
+                    result &= (tup.Item1?.GetValue(this)).Equals(tup.Item2);
+                return result;
+            }
+        }
+
         /// <summary>
         /// Overriding the Equals implementation. The Equals function is used identify records
         /// that don't need to be updated. Only properties marked with the CompareColumn attribute
@@ -83,7 +98,7 @@ namespace ALE.ETLBox.DataFlow
             AttributeProperties attrProps = AttributePropDict[this.GetType()];
             bool result = true;
             foreach (var propInfo in attrProps.CompareAttributeProps)
-                result &= (propInfo?.GetValue(this)).Equals(propInfo?.GetValue(other));
+                result &= (propInfo?.GetValue(this))?.Equals(propInfo?.GetValue(other)) ?? false;
             return result;
         }
 
@@ -97,5 +112,6 @@ namespace ALE.ETLBox.DataFlow
     {
         public List<PropertyInfo> IdAttributeProps { get; } = new List<PropertyInfo>();
         public List<PropertyInfo> CompareAttributeProps { get; } = new List<PropertyInfo>();
+        public List<Tuple<PropertyInfo, object>> DeleteAttributeProps { get; } = new List<Tuple<PropertyInfo, object>>();
     }
 }

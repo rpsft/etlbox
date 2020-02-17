@@ -7,5 +7,6 @@ namespace ALE.ETLBox.DataFlow
         DateTime ChangeDate { get; set; }
         string ChangeAction { get; set; }
         string UniqueId { get; }
+        bool IsDeletion { get; }
     }
 }

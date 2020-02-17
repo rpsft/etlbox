@@ -32,6 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public DateTime ChangeDate { get; set; }
             public string ChangeAction { get; set; }
             public string UniqueId => Key.ToString();
+            public bool IsDeletion => false;
         }
 
         [Theory, MemberData(nameof(Connections))]
