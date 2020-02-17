@@ -18,21 +18,12 @@ namespace ALE.ETLBox.DataFlow
     /// JsonSource&lt;POCO&gt; source = new JsonSource&lt;POCO&gt;("https://jsonplaceholder.typicode.com/todos");
     /// </code>
     /// </example>
-    public class JsonSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    public class JsonSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Read Json  from {Uri ?? ""}";
 
         /* Public properties */
-        /// <summary>
-        /// The Url of the webservice (e.g. https://test.com/foo) or the file name (relative or absolute)
-        /// </summary>
-        public string Uri { get; set; }
-        /// <summary>
-        /// Specifies the resourc type. By default requests are made with HttpClient.
-        /// Specify ResourceType.File if you want to read from a json file.
-        /// </summary>
-        public ResourceType ResourceType { get; set; }
         /// <summary>
         /// The Newtonsoft.Json.JsonSerializer used to deserialize the json into the used data type.
         /// </summary>
@@ -40,8 +31,6 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         JsonTextReader JsonTextReader { get; set; }
-        StreamReader StreamReader { get; set; }
-        HttpClient HttpClient { get; set; }
         TypeInfo TypeInfo { get; set; }
 
         public JsonSource()
@@ -60,39 +49,12 @@ namespace ALE.ETLBox.DataFlow
             ResourceType = resourceType;
         }
 
-
-        public override void Execute()
+        protected override void InitReader()
         {
-            NLogStart();
-            Open();
-            try
-            {
-                ReadAll();
-                Buffer.Complete();
-            }
-            finally
-            {
-                Close();
-            }
-            NLogFinish();
-        }
-
-        private void Open()
-        {
-            if (ResourceType == ResourceType.File)
-            {
-                StreamReader = new StreamReader(Uri, true);
-            }
-            else
-            {
-                HttpClient = new HttpClient();
-                StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(Uri)).Result);
-            }
             JsonTextReader = new JsonTextReader(StreamReader);
         }
 
-
-        private void ReadAll()
+        protected override void ReadAll()
         {
             JsonTextReader.Read();
             if (JsonTextReader.TokenType != JsonToken.StartArray)
@@ -124,11 +86,9 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        private void Close()
+        protected override void CloseReader()
         {
             JsonTextReader?.Close();
-            StreamReader?.Dispose();
-            HttpClient?.Dispose();
         }
     }
 
