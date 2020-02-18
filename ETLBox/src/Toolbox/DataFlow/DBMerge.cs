@@ -180,9 +180,9 @@ namespace ALE.ETLBox.DataFlow
             if (DeltaMode == DeltaMode.NoDeletions) return;
             IEnumerable<TInput> deletions = null;
             if (DeltaMode == DeltaMode.Delta) 
-                deletions = InputData.Where(row => row.ChangeAction == "D");
+                deletions = InputData.Where(row => row.ChangeAction == "D").ToList();
             else 
-                deletions = InputData.Where(row => String.IsNullOrEmpty(row.ChangeAction));
+                deletions = InputData.Where(row => String.IsNullOrEmpty(row.ChangeAction)).ToList();
             if (!UseTruncateMethod)
                 SqlDeleteIds(deletions);
             foreach (var row in deletions) //.ForEach(row =>
@@ -226,8 +226,8 @@ namespace ALE.ETLBox.DataFlow
 
     public enum DeltaMode
     {
-        Full = 1,
-        NoDeletions = 2,
-        Delta = 3,
+        Full = 0,
+        NoDeletions = 1,
+        Delta = 2,
     }
 }
