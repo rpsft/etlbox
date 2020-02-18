@@ -79,7 +79,8 @@ namespace ALE.ETLBox.DataFlow
                     try
                     {
                         TOutput row = ParseDataRow();
-                        Buffer.SendAsync(row).Wait();
+                        if (row != null)
+                            Buffer.SendAsync(row).Wait();
                     }
                     catch (Exception e)
                     {
@@ -94,6 +95,7 @@ namespace ALE.ETLBox.DataFlow
         private TOutput ParseDataRow()
         {
             TOutput row = new TOutput();
+            bool emptyRow = true;
             for (int col = 0 ,colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
             {
                 if (HasRange && col > Range.EndColumnIfSet) break;
@@ -101,10 +103,12 @@ namespace ALE.ETLBox.DataFlow
                 colNrInRange++;
                 if (!TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colNrInRange)) {  continue; }
                 PropertyInfo propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colNrInRange]];
+                emptyRow &= ExcelDataReader.IsDBNull(col);
                 object value = ExcelDataReader.GetValue(col);
                 propInfo.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
             }
-            return row;
+            if (emptyRow) return default(TOutput);
+            else return row;
         }
 
         private void Open()

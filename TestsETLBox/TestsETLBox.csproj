@@ -107,6 +107,12 @@
     <None Update="res\CustomDestination\simpleJson_tobe.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\Excel\DemoExcel_BlankRows_Error.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\Excel\DemoExcel_BlankRows_OK.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\Excel\MoreThan20Cols.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
