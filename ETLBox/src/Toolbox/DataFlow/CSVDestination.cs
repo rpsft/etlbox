@@ -8,7 +8,7 @@ using System.IO;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+    /// A Csv destination defines a csv file where data from the flow is inserted.
     /// </summary>
     /// <see cref="DbDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
@@ -22,7 +22,6 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Write Csv data into file {FileName ?? ""}";
-
         public Configuration Configuration { get; set; }
 
         CsvWriter CsvWriter { get; set; }
@@ -109,7 +108,7 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A Csv destination defines a csv file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+    /// A Csv destination defines a csv file where data from the flow is inserted. 
     /// The CsvDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="CsvDestination{TInput}"/>

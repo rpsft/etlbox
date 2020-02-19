@@ -10,12 +10,11 @@ namespace ALE.ETLBox.DataFlow
         public Action OnCompletion { get; set; }
         public Task Completion { get; protected set; }
         public ITargetBlock<TInput> TargetBlock => TargetAction;
+        public virtual void Wait() => Completion.Wait();
 
         protected ActionBlock<TInput> TargetAction { get; set; }
         protected List<Task> PredecessorCompletions { get; set; } = new List<Task>();
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
-
-        public virtual void Wait() => Completion.Wait();
 
         public void AddPredecessorCompletion(Task completion)
         {
@@ -65,6 +64,5 @@ namespace ALE.ETLBox.DataFlow
             OnCompletion?.Invoke();
             NLogFinish();
         }
-
     }
 }

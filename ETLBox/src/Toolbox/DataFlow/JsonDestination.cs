@@ -6,7 +6,7 @@ using System.IO;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches.
+    /// A Json destination defines a json file where data from the flow is inserted. 
     /// </summary>
     /// <see cref="JsonDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
@@ -70,7 +70,7 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A Json destination defines a json file where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+    /// A Json destination defines a json file where data from the flow is inserted. 
     /// The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="JsonDestination{TInput}"/>

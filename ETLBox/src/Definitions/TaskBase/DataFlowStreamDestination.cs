@@ -38,6 +38,5 @@ namespace ALE.ETLBox.DataFlow
         protected abstract void InitStream();
         protected abstract void WriteIntoStream(TInput data);
         protected abstract void CloseStream();
-
     }
 }

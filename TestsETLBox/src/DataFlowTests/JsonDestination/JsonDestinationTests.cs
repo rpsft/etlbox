@@ -52,24 +52,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json")
                 , File.ReadAllText("./SimpleWithObject.json"));
         }
-
-        [Fact]
-        public void SimpleFlowWithBatchWrite()
-        {
-            //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestBatch");
-            s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "JsonDestBatch");
-
-            //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./ObjectWithBatchWrite.json");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3.json"),
-                File.ReadAllText("./ObjectWithBatchWrite.json"));
-        }
     }
 }
