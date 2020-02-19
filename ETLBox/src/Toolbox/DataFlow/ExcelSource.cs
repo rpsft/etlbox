@@ -32,7 +32,7 @@ namespace ALE.ETLBox.DataFlow
         public string ExcelFilePassword { get; set; }
         public ExcelRange Range { get; set; }
         public string SheetName { get; set; }
-
+        public bool IgnoreBlankRows { get; set; }
         /* Private stuff */
         bool HasRange => Range != null;
         bool HasSheetName => !String.IsNullOrWhiteSpace(SheetName);
@@ -65,15 +65,20 @@ namespace ALE.ETLBox.DataFlow
                     try
                     {
                         TOutput row = ParseDataRow();
-                        if (row != null)
+                        if (row == null && IgnoreBlankRows) continue;
+                        else if (row == null && !IgnoreBlankRows) break;
+                        else if (row != null)
+                        {
                             Buffer.SendAsync(row).Wait();
+                            LogProgress();
+                        }
                     }
                     catch (Exception e)
                     {
                         if (!ErrorHandler.HasErrorBuffer) throw e;
                         ErrorHandler.Send(e, $"File: {Uri} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
                     }
-                    LogProgress();
+                   
                 }
             } while (ExcelDataReader.NextResult());
         }
