@@ -18,22 +18,22 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class CsvDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    public class CsvDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write Csv data into file {FileName ?? ""}";
 
-        public string FileName { get; set; }
-        public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
         public Configuration Configuration { get; set; }
 
-        internal const int DEFAULT_BATCH_SIZE = 1000;
-        StreamWriter StreamWriter { get; set; }
         CsvWriter CsvWriter { get; set; }
+        TypeInfo TypeInfo { get; set; }
 
         public CsvDestination()
         {
-            BatchSize = DEFAULT_BATCH_SIZE;
+            Configuration = new Configuration(CultureInfo.InvariantCulture);
+            Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
+            TypeInfo = new TypeInfo(typeof(TInput));
+            InitTargetAction();
         }
 
         public CsvDestination(string fileName) : this()
@@ -41,37 +41,20 @@ namespace ALE.ETLBox.DataFlow
             FileName = fileName;
         }
 
-        protected override void InitObjects(int batchSize)
+        protected override void InitStream()
         {
-            base.InitObjects(batchSize);
-            Configuration = new Configuration(CultureInfo.InvariantCulture);
-            Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
-
-        }
-
-        protected void InitCsvWriter()
-        {
-            StreamWriter = new StreamWriter(FileName);
             CsvWriter = new CsvWriter(StreamWriter, Configuration, leaveOpen: true);
-            this.CloseStreamsAction = CloseStreams;
+            WriteHeaderIfRequired();
         }
 
-        protected override void WriteBatch(ref TInput[] data)
+        protected override void WriteIntoStream(TInput data)
         {
-            if (CsvWriter == null)
-            {
-                InitCsvWriter();
-                WriteHeaderIfRequired();
-            }
-            base.WriteBatch(ref data);
-
             if (TypeInfo.IsArray)
-                WriteArray(ref data);
+                WriteArray(data);
             else
-                WriteObject(ref data);
+                WriteObject(data);
 
-
-            LogProgressBatch(data.Length);
+            LogProgress();
         }
 
         private void WriteHeaderIfRequired()
@@ -83,53 +66,45 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        private void WriteArray(ref TInput[] data)
+        private void WriteArray(TInput data)
         {
-            foreach (var record in data)
+            if (data == null) return;
+            var recordAsArray = data as object[];
+            try
             {
-                if (record == null) continue;
-                var recordAsArray = record as object[];
-                try
+                foreach (var field in recordAsArray)
                 {
-                    foreach (var field in recordAsArray)
-                    {
-                        CsvWriter.WriteField(field);
-                    }
+                    CsvWriter.WriteField(field);
                 }
-                catch (Exception e)
-                {
-                    if (!ErrorHandler.HasErrorBuffer) throw e;
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(record));
-                }
-
-                CsvWriter.NextRecord();
             }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer) throw e;
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
+            }
+
+            CsvWriter.NextRecord();
         }
 
-        private void WriteObject(ref TInput[] data)
+        private void WriteObject(TInput data)
         {
-            foreach (var record in data)
+            if (data == null) return;
+            try
             {
-                if (record == null) continue;
-                try
-                {
-                    CsvWriter.WriteRecord(record);
-                }
-                catch (Exception e)
-                {
-                    if (!ErrorHandler.HasErrorBuffer) throw e;
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(record));
-                }
-                CsvWriter.NextRecord();
+                CsvWriter.WriteRecord(data);
             }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer) throw e;
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
+            }
+            CsvWriter.NextRecord();
         }
 
-        public void CloseStreams()
+        protected override void CloseStream()
         {
             CsvWriter?.Flush();
-            StreamWriter?.Flush();
             CsvWriter?.Dispose();
-            StreamWriter?.Close();
         }
     }
 

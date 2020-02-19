@@ -16,31 +16,43 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class JsonDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    public class XmlDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write Json into file {FileName ?? ""}";
-       
+
+        public string FileName { get; set; }
+        public bool HasFileName => !String.IsNullOrWhiteSpace(FileName);
         public JsonSerializer JsonSerializer { get; set; }
+
+        internal const int DEFAULT_BATCH_SIZE = 1000;
+        StreamWriter StreamWriter { get; set; }
         JsonTextWriter JsonTextWriter { get; set; }
 
-        public JsonDestination() : base()
+
+        public XmlDestination()
         {
+            BatchSize = DEFAULT_BATCH_SIZE;
+        }
+
+        public XmlDestination(string fileName) : this()
+        {
+            FileName = fileName;
+        }
+
+        protected override void InitObjects(int batchSize)
+        {
+            base.InitObjects(batchSize);
             JsonSerializer = new JsonSerializer()
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented
             };
-            InitTargetAction();
         }
 
-        public JsonDestination(string fileName) : this()
+        protected void InitJsonWriter()
         {
-            FileName = fileName;
-        }
-
-        protected override void InitStream()
-        {
+            StreamWriter = new StreamWriter(FileName);
             JsonTextWriter = new JsonTextWriter(StreamWriter);
             JsonTextWriter.Formatting = JsonSerializer.Formatting;
             if (ErrorHandler.HasErrorBuffer)
@@ -50,22 +62,29 @@ namespace ALE.ETLBox.DataFlow
                     args.ErrorContext.Handled = true;
                 };
             JsonTextWriter.WriteStartArray();
+            this.CloseStreamsAction = CloseStreams;
+
         }
 
-        protected override void WriteIntoStream(TInput data)
+        protected override void WriteBatch(ref TInput[] data)
         {
-            if (data != null)
+            if (JsonTextWriter == null) InitJsonWriter();
+            base.WriteBatch(ref data);
+            foreach (var record in data)
             {
-                JsonSerializer.Serialize(JsonTextWriter, data);
-                LogProgress();
+                if (record == null) continue;
+                JsonSerializer.Serialize(JsonTextWriter, record);
             }
+            LogProgressBatch(data.Length);
         }
 
-        protected override void CloseStream()
+        public void CloseStreams()
         {
             JsonTextWriter.WriteEndArray();
             JsonTextWriter?.Flush();
+            StreamWriter?.Flush();
             JsonTextWriter?.Close();
+            StreamWriter?.Close();
         }
     }
 
@@ -82,11 +101,11 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class JsonDestination : JsonDestination<ExpandoObject>
+    public class XmlDestination : XmlDestination<ExpandoObject>
     {
-        public JsonDestination() : base() { }
+        public XmlDestination() : base() { }
 
-        public JsonDestination(string fileName) : base(fileName) { }
+        public XmlDestination(string fileName) : base(fileName) { }
 
     }
 

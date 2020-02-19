@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-    => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
+             => ErrorHandler.LinkErrorTo(target, TargetAction.Completion);
 
         protected void CheckCompleteAction()
         {

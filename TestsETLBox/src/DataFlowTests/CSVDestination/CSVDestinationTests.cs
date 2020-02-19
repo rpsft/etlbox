@@ -53,26 +53,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 File.ReadAllText("res/CsvDestination/TwoColumnsSet3.csv"));
         }
 
-        [Fact]
-        public void SimpleFlowWithBatchWrite()
-        {
-            //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestBatch");
-            s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVDestBatch");
+        //[Fact]
+        //public void SimpleFlowWithBatchWrite()
+        //{
+        //    //Arrange
+        //    TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestBatch");
+        //    s2C.InsertTestDataSet3();
+        //    DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVDestBatch");
 
-            //Act
-            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ObjectWithBatchWrite.csv")
-            {
-                BatchSize = 2
-            };
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+        //    //Act
+        //    CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./ObjectWithBatchWrite.csv")
+        //    {
+        //        BatchSize = 2
+        //    };
+        //    source.LinkTo(dest);
+        //    source.Execute();
+        //    dest.Wait();
 
-            //Assert
-            Assert.Equal(File.ReadAllText("./ObjectWithBatchWrite.csv"),
-                File.ReadAllText("res/CsvDestination/TwoColumnsSet3.csv"));
-        }
+        //    //Assert
+        //    Assert.Equal(File.ReadAllText("./ObjectWithBatchWrite.csv"),
+        //        File.ReadAllText("res/CsvDestination/TwoColumnsSet3.csv"));
+        //}
     }
 }

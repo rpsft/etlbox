@@ -27,6 +27,7 @@ namespace ALE.ETLBox.DataFlow
         public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         public string TableName { get; set; }
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+        internal TypeInfo TypeInfo { get; set; }
 
 
         internal const int DEFAULT_BATCH_SIZE = 1000;
@@ -65,6 +66,7 @@ namespace ALE.ETLBox.DataFlow
         protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
+            TypeInfo = new TypeInfo(typeof(TInput));
         }
 
         protected override void WriteBatch(ref TInput[] data)
