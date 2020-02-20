@@ -94,7 +94,8 @@ VALUES ({String.Join(",", sourceColumnValues)})
             if (LeaveOpen) return this;
             SQLiteConnectionManager clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {
-                MaxLoginAttempts = this.MaxLoginAttempts
+                MaxLoginAttempts = this.MaxLoginAttempts,
+                ModifyDBSettings = this.ModifyDBSettings
             };
             return clone;
         }

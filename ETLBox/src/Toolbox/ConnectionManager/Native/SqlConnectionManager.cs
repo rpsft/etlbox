@@ -77,7 +77,8 @@ namespace ALE.ETLBox.ConnectionManager
             if (LeaveOpen) return this;
             SqlConnectionManager clone = new SqlConnectionManager((SqlConnectionString)ConnectionString)
             {
-                MaxLoginAttempts = this.MaxLoginAttempts
+                MaxLoginAttempts = this.MaxLoginAttempts,
+                ModifyDBSettings = this.ModifyDBSettings
             };
             return clone;
         }

@@ -4,13 +4,9 @@
 
 ### Future release
 - If not everything is connected to an destination when using predicates, it can be that the dataflow never finishes. Write some tests. See Github project DataflowEx for implementation how to create a predicate that always discards records not transferred.
-- BeforeBulkInsert / AfterBulkInsert in connection managers is executed before *every* bulk. There should be a "ExecuteOnceBeforeBulkInsert" function, where e.g. server side settings could be set once before every bulk operation
+- BeforeBulkInsert / AfterBulkInsert in connection managers is executed before *every* bulk. This is o.k. for SqlTask.BulkInsert,
+as there is not known beforehand how many batches are coming. But in DbDestination there should be an idea how much data is coming, and there should be an ExecuteOnceBeforeBulkInsert/Cleanup calls in the ConnectionManagers (including the parameter passing between the clone method). In the ExecuteOnceBeforeBulkInsert the  server side settings could be set once before every bulk operation. Also, there are missing tests that verify that DbDestination modifies these server side settings only once and at then end end of all batches.
 - VoidDestination: [Use a NullBlock as Target](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.dataflow.dataflowblock.nulltarget?view=netcore-3.1)
-
-### Next release
-
-- Check if DBMerge works properly if the constructors are not used. E.g. if the Connectionmanager is set via assignment, the underlying DBSource and DBDestination needs to be  updated.
-- 
 
 ## Update Docu
 - Aggregate
