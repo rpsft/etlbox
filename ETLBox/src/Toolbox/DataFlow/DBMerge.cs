@@ -58,34 +58,21 @@ namespace ALE.ETLBox.DataFlow
         public DbMerge(string tableName)
         {
             TableName = tableName;
-            DestinationTableAsSource = new DbSource<TInput>(TableName);
-            DestinationTable = new DbDestination<TInput>(TableName);
             Init();
         }
 
-        public DbMerge(IConnectionManager connectionManager, string tableName) : this(tableName)
+        public DbMerge(IConnectionManager connectionManager, string tableName) 
         {
             TableName = tableName;
             ConnectionManager = connectionManager;
-            DestinationTableAsSource = new DbSource<TInput>(connectionManager, TableName);
-            DestinationTable = new DbDestination<TInput>(connectionManager, TableName);
-            Init();
-        }
-
-        public DbMerge(TableDefinition tableDefinition)
-        {
-            DestinationTableDefinition = tableDefinition;
-            TableName = tableDefinition.Name;
-            DestinationTableAsSource = new DbSource<TInput>()
-            {
-                SourceTableDefinition = DestinationTableDefinition
-            };
             Init();
         }
 
         private void Init()
         {
             TypeInfo = new DBMergeTypeInfo(typeof(TInput));
+            DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
+            DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName);
             InitInternalFlow();
             InitOutputFlow();
         }
@@ -101,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (DeltaMode == DeltaMode.Delta)
                     DeltaTable.AddRange(batch.Where(row => row.ChangeAction != "D"));
-                else 
+                else
                     DeltaTable.AddRange(batch);
 
                 if (!UseTruncateMethod)
@@ -179,9 +166,9 @@ namespace ALE.ETLBox.DataFlow
         {
             if (DeltaMode == DeltaMode.NoDeletions) return;
             IEnumerable<TInput> deletions = null;
-            if (DeltaMode == DeltaMode.Delta) 
+            if (DeltaMode == DeltaMode.Delta)
                 deletions = InputData.Where(row => row.ChangeAction == "D").ToList();
-            else 
+            else
                 deletions = InputData.Where(row => String.IsNullOrEmpty(row.ChangeAction)).ToList();
             if (!UseTruncateMethod)
                 SqlDeleteIds(deletions);
