@@ -18,8 +18,6 @@ namespace ALE.ETLBox.ConnectionManager
 
         public MySqlConnectionManager(string connectionString) : base(new MySqlConnectionString(connectionString)) { }
 
-        string PageVerify { get; set; }
-        string RecoveryModel { get; set; }
         public override void BulkInsert(ITableData data, string tableName)
         {
             BulkInsertSql<MySqlParameter> bulkInsert = new BulkInsertSql<MySqlParameter>()
