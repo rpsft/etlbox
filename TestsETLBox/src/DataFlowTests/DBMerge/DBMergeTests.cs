@@ -132,5 +132,24 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             d2c.AssertTestData();
         }
+
+        [Fact]
+        public void MergeFromEmptySource()
+        {
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptySource");
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptyDestination");
+            d2c.InsertTestData();
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(SqlConnection, "DBMergeEmptySource");
+
+            //Act
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(SqlConnection, "DBMergeEmptyDestination");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            d2c.AssertTestData();
+        }
     }
 }

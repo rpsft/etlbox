@@ -33,7 +33,6 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _source = value;
-                //Source.SourceBlock.LinkTo(LookupBuffer, new DataflowLinkOptions() { PropagateCompletion = true });
                 Source.LinkTo(LookupBuffer);
             }
         }
@@ -52,16 +51,14 @@ namespace ALE.ETLBox.DataFlow
         }
 
         /* Private stuff */
-        //private ActionBlock<TSourceOutput> LookupBuffer { get; set; }
-        private CustomDestination<TSourceOutput> LookupBuffer { get; set; }
-        private RowTransformation<TInput, TInput> RowTransformation { get; set; }
-        private Func<TInput, TInput> _rowTransformationFunc;
-        private IDataFlowSource<TSourceOutput> _source;
-        private LookupTypeInfo TypeInfo { get; set; }
+        CustomDestination<TSourceOutput> LookupBuffer { get; set; }
+        RowTransformation<TInput, TInput> RowTransformation { get; set; }
+        Func<TInput, TInput> _rowTransformationFunc;
+        IDataFlowSource<TSourceOutput> _source;
+        LookupTypeInfo TypeInfo { get; set; }
 
         public LookupTransformation()
         {
-            //LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
             LookupBuffer = new CustomDestination<TSourceOutput>(this, FillBuffer);
             DefaultInitWithMatchRetrieveAttributes();
         }
