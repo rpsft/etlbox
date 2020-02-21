@@ -18,6 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class DbMergeTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
         public DbMergeTests(DataFlowDatabaseFixture dbFixture)
         {
@@ -111,6 +112,25 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "I" && row.Key == 3).Count() == 1);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "D" && row.Key == 4).Count() == 1);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "D" && row.Key == 10).Count() == 1);
+        }
+
+        [Fact]
+        public void MergeIntoEmptyDestination()
+        {
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptySource");
+            s2c.InsertTestData();
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptyDestination");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(SqlConnection, "DBMergeEmptySource");
+
+            //Act
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(SqlConnection, "DBMergeEmptyDestination");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            d2c.AssertTestData();
         }
     }
 }

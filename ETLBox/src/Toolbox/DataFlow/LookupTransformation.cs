@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Lookup";
-        public List<TSourceOutput> LookupData { get; set; }
+        public List<TSourceOutput> LookupData { get; set; } = new List<TSourceOutput>();
 
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => RowTransformation.SourceBlock;
@@ -33,7 +33,8 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _source = value;
-                Source.SourceBlock.LinkTo(LookupBuffer, new DataflowLinkOptions() { PropagateCompletion = true });
+                //Source.SourceBlock.LinkTo(LookupBuffer, new DataflowLinkOptions() { PropagateCompletion = true });
+                Source.LinkTo(LookupBuffer);
             }
         }
 
@@ -51,7 +52,8 @@ namespace ALE.ETLBox.DataFlow
         }
 
         /* Private stuff */
-        private ActionBlock<TSourceOutput> LookupBuffer { get; set; }
+        //private ActionBlock<TSourceOutput> LookupBuffer { get; set; }
+        private CustomDestination<TSourceOutput> LookupBuffer { get; set; }
         private RowTransformation<TInput, TInput> RowTransformation { get; set; }
         private Func<TInput, TInput> _rowTransformationFunc;
         private IDataFlowSource<TSourceOutput> _source;
@@ -59,9 +61,9 @@ namespace ALE.ETLBox.DataFlow
 
         public LookupTransformation()
         {
-            LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
-            if (_rowTransformationFunc == null)
-                InitLookupWithMatchRetrieveAttributes();
+            //LookupBuffer = new ActionBlock<TSourceOutput>(row => FillBuffer(row));
+            LookupBuffer = new CustomDestination<TSourceOutput>(this, FillBuffer);
+            DefaultInitWithMatchRetrieveAttributes();
         }
 
         public LookupTransformation(IDataFlowSource<TSourceOutput> lookupSource) : this()
@@ -87,7 +89,7 @@ namespace ALE.ETLBox.DataFlow
             RowTransformation.InitAction = initAction;
         }
 
-        private void InitLookupWithMatchRetrieveAttributes()
+        private void DefaultInitWithMatchRetrieveAttributes()
         {
             _rowTransformationFunc = row => FindRowByAttributes(row);
             InitRowTransformation(() =>
@@ -133,7 +135,7 @@ namespace ALE.ETLBox.DataFlow
             try
             {
                 Source.Execute();
-                LookupBuffer.Completion.Wait();
+                LookupBuffer.Wait();
             }
             catch (Exception e)
             {
