@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+  <MySimpleRow>
+    <Col1>1</Col1>
+    <Col2>Test1</Col2>
+  </MySimpleRow>
+  <MySimpleRow>
+    <Col1>2</Col1>
+  </MySimpleRow>
+  <MySimpleRow>
+    <Col1>4</Col1>
+    <Col2>TestX</Col2>
+  </MySimpleRow>
+  <MySimpleRow>
+    <Col1>10</Col1>
+    <Col2>Test10</Col2>
+  </MySimpleRow>
+</Root>
