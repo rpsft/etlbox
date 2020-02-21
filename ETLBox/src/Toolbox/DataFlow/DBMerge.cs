@@ -30,6 +30,17 @@ namespace ALE.ETLBox.DataFlow
         public DeltaMode DeltaMode { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
         public string TableName { get; set; }
+        public override IConnectionManager ConnectionManager
+        {
+            get => base.ConnectionManager;
+            set
+            {
+                base.ConnectionManager = value;
+                DestinationTableAsSource.ConnectionManager = value;
+                DestinationTable.ConnectionManager = value;
+                //Init();
+            }
+        }
         public List<TInput> DeltaTable { get; set; } = new List<TInput>();
         public bool UseTruncateMethod
         {
@@ -46,6 +57,7 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         bool _useTruncateMethod;
+
         ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DbSource<TInput> DestinationTableAsSource { get; set; }
@@ -61,11 +73,9 @@ namespace ALE.ETLBox.DataFlow
             Init();
         }
 
-        public DbMerge(IConnectionManager connectionManager, string tableName) 
+        public DbMerge(IConnectionManager connectionManager, string tableName) : this (tableName)
         {
-            TableName = tableName;
             ConnectionManager = connectionManager;
-            Init();
         }
 
         private void Init()
