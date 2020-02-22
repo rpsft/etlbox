@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "//Mac/Home/Github/roadrunnerlenny/etlbox/ETLBoxDocu",
+  "source_base_path": "//Mac/Home/Github/etlbox/ETLBoxDocu",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -20,7 +20,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html",
-          "hash": "m844cFYe07tmVex7qfpmnw=="
+          "hash": "0peC7LePsXPq/gQ7P6lMEA=="
         }
       },
       "is_incremental": false,
@@ -32,7 +32,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html",
-          "hash": "dVW5nYi/0u8Luuy7Sprehw=="
+          "hash": "3QDzvs0PPy0MXU2FFJY51Q=="
         }
       },
       "is_incremental": false,
@@ -44,7 +44,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html",
-          "hash": "PfK1G2wfgH5GhDyXO1jOMg=="
+          "hash": "NWgKTC3+cYULJQNwu8mzrA=="
         }
       },
       "is_incremental": false,
@@ -56,7 +56,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.ConnectionManagerType.html",
-          "hash": "b4+FTQBxfcdysjEP1/1o/g=="
+          "hash": "vPN/43kFFywVo8fqhkYRyA=="
         }
       },
       "is_incremental": false,
@@ -68,7 +68,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.DataTypeConverter.html",
-          "hash": "wlOF56IPJq8lBbI8hQtvmQ=="
+          "hash": "6YKE9VbBpVoIpR/gC0k61w=="
         }
       },
       "is_incremental": false,
@@ -80,19 +80,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html",
-          "hash": "ddmsB8sal+wBcvFLeePbVg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/ALE.ETLBox.ConnectionManager.FileConnectionManager.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/ALE.ETLBox.ConnectionManager.FileConnectionManager.html",
-          "hash": "DFLmf6daAJrr3PIZQ8Tl/A=="
+          "hash": "QRvrNVuKdD/chL6vP22sIg=="
         }
       },
       "is_incremental": false,
@@ -104,7 +92,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.IConnectionManager.html",
-          "hash": "+t9GuAx0TgL0oP8DTIz5oQ=="
+          "hash": "UMNZ+5cFhUU1O8krQdYq+A=="
         }
       },
       "is_incremental": false,
@@ -116,7 +104,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html",
-          "hash": "z3CWrdLNnxD6V7ZLiQkLRg=="
+          "hash": "xo9g/xv75yYlGTOcEsjasA=="
         }
       },
       "is_incremental": false,
@@ -128,7 +116,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.OdbcConnectionManager.html",
-          "hash": "OPNAXkHpWQR5Ydu1VWaqnA=="
+          "hash": "3Pka0ncujQ4/ctHgf7fEVA=="
         }
       },
       "is_incremental": false,
@@ -140,7 +128,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html",
-          "hash": "F/+XADfoW+QofcuosiyL2g=="
+          "hash": "9xBm4Fp2ouL89M6J1R7oFA=="
         }
       },
       "is_incremental": false,
@@ -152,7 +140,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html",
-          "hash": "gbbW1ACfQL/I5Q8EVrueLg=="
+          "hash": "dUWsurZcw4Gnah1E6GhrmQ=="
         }
       },
       "is_incremental": false,
@@ -164,7 +152,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html",
-          "hash": "rcukTb3br40O8cC9BViTXA=="
+          "hash": "p+dhU9G+r3OI7MxUfd64uA=="
         }
       },
       "is_incremental": false,
@@ -176,7 +164,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html",
-          "hash": "r9uxggtayyF4b7wbIz6Ucg=="
+          "hash": "Yi2XJ2UV0D++7GtZF7MGHA=="
         }
       },
       "is_incremental": false,
@@ -188,7 +176,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ConnectionManager.html",
-          "hash": "S4rgDjiQ1kUiY0TaTt22bw=="
+          "hash": "xMo9XooOHwbTwscbQENsRA=="
         }
       },
       "is_incremental": false,
@@ -200,7 +188,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.ControlFlow.html",
-          "hash": "L01RPvPo3dRzguD+jfVK5w=="
+          "hash": "WruJIz0i3Lgx3p4ZOJj4Fg=="
         }
       },
       "is_incremental": false,
@@ -212,7 +200,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateDatabaseTask.html",
-          "hash": "FB7WVenEgyYpjk0iaXWU5w=="
+          "hash": "NToOkV5vtdlOCi/uuK3PgQ=="
         }
       },
       "is_incremental": false,
@@ -224,7 +212,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateIndexTask.html",
-          "hash": "Tjh38Ui6GQHpLTZlcIAA4A=="
+          "hash": "iuoXMtn/wJzjRoQzzRtTJw=="
         }
       },
       "is_incremental": false,
@@ -236,7 +224,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateProcedureTask.html",
-          "hash": "zjQOMBFpy3VPPYiVnBax/w=="
+          "hash": "6zsJCDedFmS9bsgFwY+0Gw=="
         }
       },
       "is_incremental": false,
@@ -248,7 +236,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateSchemaTask.html",
-          "hash": "FsUAiEEJs26d0vrAXEM1Ew=="
+          "hash": "cjcN7UWS7LpoQMVs6CkXAA=="
         }
       },
       "is_incremental": false,
@@ -260,7 +248,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateTableTask.html",
-          "hash": "cfhMlelMUz3P5dmx8MYEpw=="
+          "hash": "bCzal6SbnNP4vVaP4w9l0A=="
         }
       },
       "is_incremental": false,
@@ -272,7 +260,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CreateViewTask.html",
-          "hash": "kJt6vD/7Vjhoq7iMMF0Fkw=="
+          "hash": "cGiMWeLaeFP4Bo/6EE0KDg=="
         }
       },
       "is_incremental": false,
@@ -284,7 +272,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.CustomTask.html",
-          "hash": "rlqnaXyIGnv/WqxzwpaY0w=="
+          "hash": "cdSj/dH2eJbmVgLwM46t/g=="
         }
       },
       "is_incremental": false,
@@ -296,7 +284,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DbTask.html",
-          "hash": "YJPVuQ/mSnAzNEHBjtn+aQ=="
+          "hash": "Rs+U30fNrZIfxZaMrN96ZA=="
         }
       },
       "is_incremental": false,
@@ -308,7 +296,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropDatabaseTask.html",
-          "hash": "JEGuPV/xValcoNHt5BjkMQ=="
+          "hash": "VYjxOB4Mml9z0lAE7SZLTA=="
         }
       },
       "is_incremental": false,
@@ -320,7 +308,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropIndexTask.html",
-          "hash": "ICtvDkIi9X7MgNw1BjtImQ=="
+          "hash": "VsSh/fr8rsWhfe6IHZsZPg=="
         }
       },
       "is_incremental": false,
@@ -332,7 +320,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropProcedureTask.html",
-          "hash": "vUKdR+Rf36k3Slmw0a0ujQ=="
+          "hash": "9ibFtekupIhT70NkVoNZkA=="
         }
       },
       "is_incremental": false,
@@ -344,7 +332,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropSchemaTask.html",
-          "hash": "ikcwepg6qVe+hp9smNtrMw=="
+          "hash": "Hd+e08K1MWgFTe0HHlv4ZQ=="
         }
       },
       "is_incremental": false,
@@ -356,7 +344,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropTableTask.html",
-          "hash": "EIhRU4Ou7uvTJDBulQSJFg=="
+          "hash": "rqj51VyG5xC5RV/GBCBlAw=="
         }
       },
       "is_incremental": false,
@@ -368,7 +356,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropTask-1.html",
-          "hash": "CTJc2vbFDodepzh8+QDJnw=="
+          "hash": "F9nvPh5VaAYl30FXaVkn0g=="
         }
       },
       "is_incremental": false,
@@ -380,7 +368,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.DropViewTask.html",
-          "hash": "Krfsi0Mn2YDHvPAOO+Iwgw=="
+          "hash": "Tva72dfDguw2OeWf6rtmSA=="
         }
       },
       "is_incremental": false,
@@ -392,7 +380,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.GetDatabaseListTask.html",
-          "hash": "7KZysGkCIvvOIUvcaXzYlA=="
+          "hash": "yw4gqIo6kVbBdHJjMHDl6w=="
         }
       },
       "is_incremental": false,
@@ -404,7 +392,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.IfDatabaseExistsTask.html",
-          "hash": "s9h+UgYNQ3nJtXgeHvaW9w=="
+          "hash": "M313sb3kWGJNqCWGsvvsCQ=="
         }
       },
       "is_incremental": false,
@@ -416,7 +404,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.IfExistsTask.html",
-          "hash": "t6DvlSeEcfUkoULQ/3iEOA=="
+          "hash": "bBH8sYdsHL28U2FJC1M3XA=="
         }
       },
       "is_incremental": false,
@@ -428,7 +416,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.IfIndexExistsTask.html",
-          "hash": "YoHV7AEPHP4oLL2qHHExow=="
+          "hash": "93fhs3TnEntanuoaJgSj4g=="
         }
       },
       "is_incremental": false,
@@ -440,7 +428,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.IfProcedureExistsTask.html",
-          "hash": "LXY7k46lSoLixzTVh45fUA=="
+          "hash": "pDhYw7k3YYqqEyIT5nIjoQ=="
         }
       },
       "is_incremental": false,
@@ -452,7 +440,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.IfSchemaExistsTask.html",
-          "hash": "xwa0JjWAHudZLaCC73RHOg=="
+          "hash": "IPoy6ijA5Vh1ppaviPR07g=="
         }
       },
       "is_incremental": false,
@@ -464,7 +452,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.IfTableOrViewExistsTask.html",
-          "hash": "RRoFvAduOkPFHF0Cf4zz+Q=="
+          "hash": "Kiq/E/QDjKRpbYsho04t4A=="
         }
       },
       "is_incremental": false,
@@ -476,7 +464,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.Package.html",
-          "hash": "QHngquhzCFU0z1820tfZLQ=="
+          "hash": "wQij4eF1JP/c7PxxfUaX2g=="
         }
       },
       "is_incremental": false,
@@ -488,7 +476,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.RecoveryModel.html",
-          "hash": "2wtKaHPBcPRuxPvRZhHDIg=="
+          "hash": "yb1Lvs0WHxTS8lhFWi1zWg=="
         }
       },
       "is_incremental": false,
@@ -500,7 +488,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.RowCountOptions.html",
-          "hash": "VJz2z0mHDiS5p4Hwpuy+Kw=="
+          "hash": "IPwghZjuxDK8Yexq1fN02w=="
         }
       },
       "is_incremental": false,
@@ -512,7 +500,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.RowCountTask.html",
-          "hash": "wfZmzpwmo7ELp+jnkerItw=="
+          "hash": "bgjr/0VC9vqvTJbeUayCdA=="
         }
       },
       "is_incremental": false,
@@ -524,7 +512,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.Sequence-1.html",
-          "hash": "RHcCtXbJCqXOyUuA7yORfg=="
+          "hash": "EjlZrB1h5AnGDdTe/MvVsQ=="
         }
       },
       "is_incremental": false,
@@ -536,7 +524,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.Sequence.html",
-          "hash": "nWrTwkZgCKDjQ9EqfrJndA=="
+          "hash": "Y2CLBX8+FMhO7HlA8GKSaQ=="
         }
       },
       "is_incremental": false,
@@ -548,7 +536,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html",
-          "hash": "fjh/XsKllGb7fVsfajhr+Q=="
+          "hash": "+g773U2ETHCpF3HtEkz09g=="
         }
       },
       "is_incremental": false,
@@ -560,7 +548,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.SqlServer.CalculateDatabaseHashTask.html",
-          "hash": "VrJSpl+46l9eKlx/bEf6Fg=="
+          "hash": "nptXDEzmTxBZ1B5yfyPazg=="
         }
       },
       "is_incremental": false,
@@ -572,7 +560,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.SqlServer.CleanUpSchemaTask.html",
-          "hash": "i2JRcxZUVuVNYZLJDK7PhQ=="
+          "hash": "aTEDG7TMrXRCxQmMxswNFQ=="
         }
       },
       "is_incremental": false,
@@ -584,7 +572,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.SqlServer.RestoreDatabaseTask.html",
-          "hash": "8fRDgMOhg2nwPBdarkv2og=="
+          "hash": "qdQKyfaiBnttTe/q90OHGw=="
         }
       },
       "is_incremental": false,
@@ -596,7 +584,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.SqlServer.XmlaTask.html",
-          "hash": "TkfbJP5Zhl4a99LMt6TGIQ=="
+          "hash": "88d10qDxk4yMjRQ8GHYpSg=="
         }
       },
       "is_incremental": false,
@@ -620,7 +608,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.SqlTask.html",
-          "hash": "72E6qoWzOcijyTfnc4O9Mg=="
+          "hash": "JyyWb2NSIN51HJbS6myQkQ=="
         }
       },
       "is_incremental": false,
@@ -632,7 +620,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ControlFlow.TruncateTableTask.html",
-          "hash": "Y3qHcaCCIBSQ0u6IZZZ8Gg=="
+          "hash": "mECHnocW3nSGNmuS6UZiIA=="
         }
       },
       "is_incremental": false,
@@ -656,7 +644,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.AggregateColumn.html",
-          "hash": "96fmMpHKllyPCW/HJB6ZTw=="
+          "hash": "MFL9AKDFA+KLEp4mYXyegQ=="
         }
       },
       "is_incremental": false,
@@ -668,7 +656,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.Aggregation-2.html",
-          "hash": "PeqFUORxTwk5/0bBQGuNNg=="
+          "hash": "5HmZSyXbnD/ElRrv9L0H9g=="
         }
       },
       "is_incremental": false,
@@ -680,7 +668,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.Aggregation.html",
-          "hash": "mtTgRL1JmTfAOJFsvzgcDw=="
+          "hash": "Ael56GlTVeq3BT/vVVjXlQ=="
         }
       },
       "is_incremental": false,
@@ -692,7 +680,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.AggregationMethod.html",
-          "hash": "TDxXdTzitj2ipmDKQpwABQ=="
+          "hash": "Ln5HrOeyYy/t4PwnNzplGg=="
         }
       },
       "is_incremental": false,
@@ -704,7 +692,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.AttributeProperties.html",
-          "hash": "WV64aH2bnqoIJ07KlUo1Jw=="
+          "hash": "OqrXuNUNnwnKJY3N15bNzg=="
         }
       },
       "is_incremental": false,
@@ -716,7 +704,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.BlockTransformation-1.html",
-          "hash": "iak+sanQDkkSD1GTVu1mbg=="
+          "hash": "U6r+TfG7plMjPYJIba7cwg=="
         }
       },
       "is_incremental": false,
@@ -728,7 +716,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.BlockTransformation-2.html",
-          "hash": "tANbW0gfmZJBKIzygI7L1Q=="
+          "hash": "mww4PK34cEXRClURO5MBdA=="
         }
       },
       "is_incremental": false,
@@ -740,7 +728,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.BlockTransformation.html",
-          "hash": "zdczNyLrJhIXO3q6Aj1haw=="
+          "hash": "qgOlvL0L9NoJeV2wymzsFg=="
         }
       },
       "is_incremental": false,
@@ -752,7 +740,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ColumnMap.html",
-          "hash": "d2IxOV+x1altsciuvFlu2w=="
+          "hash": "1ouR9skLi2WltD+4RMLtXg=="
         }
       },
       "is_incremental": false,
@@ -764,7 +752,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CompareColumn.html",
-          "hash": "+t2swzlxbxNXPPVHHryH2A=="
+          "hash": "E+X/cHpp212j7jRqFJG5bQ=="
         }
       },
       "is_incremental": false,
@@ -776,7 +764,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CsvDestination-1.html",
-          "hash": "U45NAcyFDeyYNPjEca/Dow=="
+          "hash": "Q5fws1dNQVQr9e67TDQiAw=="
         }
       },
       "is_incremental": false,
@@ -788,7 +776,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CsvDestination.html",
-          "hash": "HCY8UUMemd3EGFAraYElDg=="
+          "hash": "viVhuoH1ZgjEwVb4r3y03Q=="
         }
       },
       "is_incremental": false,
@@ -800,7 +788,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CsvSource-1.html",
-          "hash": "yKXddYNjj63i1ifgumqipA=="
+          "hash": "vBTlZ41YQqLCTHE4cPaBYQ=="
         }
       },
       "is_incremental": false,
@@ -812,7 +800,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CsvSource.html",
-          "hash": "DAaBNabeCmOVXJ//l83mKg=="
+          "hash": "s62feV79AqKqRiQ4WFa/iA=="
         }
       },
       "is_incremental": false,
@@ -824,7 +812,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CustomDestination-1.html",
-          "hash": "cyewuXblAXXNDcsToPlV0g=="
+          "hash": "VUv+99uxK71U+ne2hVUIcA=="
         }
       },
       "is_incremental": false,
@@ -836,7 +824,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CustomDestination.html",
-          "hash": "qwMAGaaE2SCvcig1CbbaZQ=="
+          "hash": "SVwps4IQPkkSGX0Esd+guA=="
         }
       },
       "is_incremental": false,
@@ -848,7 +836,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CustomSource-1.html",
-          "hash": "EETSmAE6+fyGGJ/gzPN60w=="
+          "hash": "Rkq/2Pr5VZuiDRpDeSFQ4A=="
         }
       },
       "is_incremental": false,
@@ -860,7 +848,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.CustomSource.html",
-          "hash": "Mn5pFIIFyKrn7jybtwAA/A=="
+          "hash": "PCtRtgO9mZb1n1vOKJEfGA=="
         }
       },
       "is_incremental": false,
@@ -872,7 +860,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DataFlow.html",
-          "hash": "DvOV00O27C3mEGbH7QiQ8Q=="
+          "hash": "66WtIBYikAe1zCJLj09t7w=="
         }
       },
       "is_incremental": false,
@@ -884,7 +872,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html",
-          "hash": "7IvLiRwZdXKNDvtdc4m/xA=="
+          "hash": "jDHDjKbFpfbCciIBvH9QCQ=="
         }
       },
       "is_incremental": false,
@@ -896,7 +884,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DataFlowDestination-1.html",
-          "hash": "V55zvUMaJVK3bnkRnsvAgQ=="
+          "hash": "d7R3gJXuRCSsNTBtfyz3/w=="
         }
       },
       "is_incremental": false,
@@ -908,7 +896,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DataFlowLinker-1.html",
-          "hash": "qSglsX1OK81uC96d7A5uOQ=="
+          "hash": "ilFOj7Eghm0RDBALhA84Uw=="
         }
       },
       "is_incremental": false,
@@ -920,7 +908,31 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DataFlowSource-1.html",
-          "hash": "iPIqhY4sjSCDqAHyrOb1hg=="
+          "hash": "j6YpFv9eQiRa8EL7E7K+1Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.DataFlowStreamDestination-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.DataFlowStreamDestination-1.html",
+          "hash": "hJ2vU8Bt8AeNBfMy2WBbRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html",
+          "hash": "ET+kLxPLs3reUg9r6LKDLA=="
         }
       },
       "is_incremental": false,
@@ -932,7 +944,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DbDestination-1.html",
-          "hash": "BImID9wK49bFo1ABwa1w+Q=="
+          "hash": "vfF3k+60PwyuTeFhlShBTw=="
         }
       },
       "is_incremental": false,
@@ -944,7 +956,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DbDestination.html",
-          "hash": "z6VthHhvxWVvKoldT7YP8w=="
+          "hash": "B9YzOJHXVA0tIy6Xf+KG4g=="
         }
       },
       "is_incremental": false,
@@ -956,7 +968,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DbMerge-1.html",
-          "hash": "7xsn5a7ftOykbeaLSZe3hw=="
+          "hash": "rNvbWidYdUrbLPWQpq95hg=="
         }
       },
       "is_incremental": false,
@@ -968,7 +980,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DbSource-1.html",
-          "hash": "/NBCadC5B09f3HNV2Jdm4Q=="
+          "hash": "E/+LrjsT8m17t+MYRk4WxA=="
         }
       },
       "is_incremental": false,
@@ -980,7 +992,31 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.DbSource.html",
-          "hash": "tMEhd01DnulwtnkKQJocJQ=="
+          "hash": "bOj7roO2PV2c0S1zemUgGw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.DeleteColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.DeleteColumn.html",
+          "hash": "/iYNbws+VSgQD9lTlrbi3g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.DeltaMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.DeltaMode.html",
+          "hash": "6LCYDHBJKaCLi33/RAYwWg=="
         }
       },
       "is_incremental": false,
@@ -992,7 +1028,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ETLBoxError.html",
-          "hash": "PS83bXlLr7JSWemYVBHr8g=="
+          "hash": "eBuYTsrXScnrXT19WTNBOQ=="
         }
       },
       "is_incremental": false,
@@ -1004,7 +1040,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ErrorHandler.html",
-          "hash": "Gk/NtefAoNitl9xpUGHJZA=="
+          "hash": "wPCwwRjdCgMGYIGifJyNRw=="
         }
       },
       "is_incremental": false,
@@ -1016,7 +1052,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ExcelColumn.html",
-          "hash": "nXrfyUciPADYarxs8qofjw=="
+          "hash": "YU+m4ZB/n3ylFYj9GHvrkQ=="
         }
       },
       "is_incremental": false,
@@ -1028,7 +1064,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ExcelRange.html",
-          "hash": "27htN92/BWTzv6yj5pMi0w=="
+          "hash": "VAYOInaWDrWzilAzKa/cNA=="
         }
       },
       "is_incremental": false,
@@ -1040,7 +1076,19 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ExcelSource-1.html",
-          "hash": "I1ezQGYPpEx6IFfRF4DDZw=="
+          "hash": "wrPqPbkj7glUPmSsU3I8vg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.ExcelSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.ExcelSource.html",
+          "hash": "ZMWEjVJV4bZmDCV622rQMQ=="
         }
       },
       "is_incremental": false,
@@ -1052,7 +1100,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.GroupColumn.html",
-          "hash": "CGrJZyKoVSvvUnWhkz9P+w=="
+          "hash": "LjoIwpmu0HgSjL3iuwPGmA=="
         }
       },
       "is_incremental": false,
@@ -1064,7 +1112,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IDataFlowDestination-1.html",
-          "hash": "yFxJ92eYP3atrKRnIvDSuQ=="
+          "hash": "hcTL83FBq3OcorLxkSmhbQ=="
         }
       },
       "is_incremental": false,
@@ -1076,7 +1124,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html",
-          "hash": "QexnxiJ+YEZ6YB9snsMDLw=="
+          "hash": "c6KqLsp51mL3XZo81nAD4w=="
         }
       },
       "is_incremental": false,
@@ -1088,7 +1136,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html",
-          "hash": "oIuw83KwV6atMY8isWfGtg=="
+          "hash": "S8finFZ4qnvetUFd+2CVzw=="
         }
       },
       "is_incremental": false,
@@ -1100,7 +1148,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IDataFlowSource-1.html",
-          "hash": "lwrv7vx9FEBUmvhAxMrQjg=="
+          "hash": "uRekI7wttqyLxhef9J/ONQ=="
         }
       },
       "is_incremental": false,
@@ -1112,7 +1160,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html",
-          "hash": "K57a1iCo0YMDRfErWmtyew=="
+          "hash": "GgrLvEogaf1IqJB7P87A8A=="
         }
       },
       "is_incremental": false,
@@ -1124,7 +1172,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IMergeableRow.html",
-          "hash": "BRs94RJektTF9bfRZvly1A=="
+          "hash": "tAObeOiR5hOJHxpbZ6rH+w=="
         }
       },
       "is_incremental": false,
@@ -1136,7 +1184,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.IdColumn.html",
-          "hash": "XAlIutsRIQpShIN23yeqcw=="
+          "hash": "bhI2Y1C0amv0HCUU3obdvQ=="
         }
       },
       "is_incremental": false,
@@ -1148,7 +1196,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.JsonDestination-1.html",
-          "hash": "Lujmw9oTrTgErz46YuA6zA=="
+          "hash": "aOj9rtdXnlr99ZCGrKJ2yQ=="
         }
       },
       "is_incremental": false,
@@ -1160,7 +1208,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.JsonDestination.html",
-          "hash": "itIzUudB3sW0E6Yh9XRYUw=="
+          "hash": "gFP4SAQjcWA5Tx9ai5xgVQ=="
         }
       },
       "is_incremental": false,
@@ -1172,7 +1220,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.JsonSource-1.html",
-          "hash": "Qip2F+OOpfVv+8gFsX9uHg=="
+          "hash": "FzamugUFiq4Rwj9XyB2dmw=="
         }
       },
       "is_incremental": false,
@@ -1184,7 +1232,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.JsonSource.html",
-          "hash": "B38JZW1FkdLIH5hnzlLfSw=="
+          "hash": "oZCwA8lC9YlzeIVwbKGFQQ=="
         }
       },
       "is_incremental": false,
@@ -1196,7 +1244,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.LookupTransformation-2.html",
-          "hash": "s+nafvvwV/u5UpaX1Vd06Q=="
+          "hash": "gCFzKCWGHdIEOAMQ6q/qAw=="
         }
       },
       "is_incremental": false,
@@ -1208,7 +1256,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.LookupTransformation.html",
-          "hash": "KHYuBjEGBIhyb4fPKze7fA=="
+          "hash": "FOeWO4r0NivpjH6hUzje8A=="
         }
       },
       "is_incremental": false,
@@ -1220,7 +1268,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MatchColumn.html",
-          "hash": "7mZ81VoFTfa9O8rAI1LXyg=="
+          "hash": "lVbjPhTWnDKIlAKCz4uTIA=="
         }
       },
       "is_incremental": false,
@@ -1232,7 +1280,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MemoryDestination-1.html",
-          "hash": "3iu9wccDlWnnL6vd8wtwQg=="
+          "hash": "9zhjN35Fq5c3Uu9M638Vlg=="
         }
       },
       "is_incremental": false,
@@ -1244,7 +1292,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MemoryDestination.html",
-          "hash": "UcOuXYNIoYco9c2eqcXLPw=="
+          "hash": "bMgswdsBfLkRLjC7QDpxPg=="
         }
       },
       "is_incremental": false,
@@ -1256,7 +1304,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MemorySource-1.html",
-          "hash": "s8HJmgTxX6DOL2DWtJWu0w=="
+          "hash": "AUDjz7v0yQoL34xo0zmgRw=="
         }
       },
       "is_incremental": false,
@@ -1268,7 +1316,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MemorySource.html",
-          "hash": "uJ2RuEkFqfy8N76ENDp2VA=="
+          "hash": "K3GxQGRcptkbSl8Fae7kTA=="
         }
       },
       "is_incremental": false,
@@ -1280,7 +1328,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MergeJoin-1.html",
-          "hash": "0VMUq8EUmYZwHAEGNe3NBQ=="
+          "hash": "qECfoJemoqChaOlBsUaiiw=="
         }
       },
       "is_incremental": false,
@@ -1292,7 +1340,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MergeJoin-3.html",
-          "hash": "MN5GOq02b82cA6kkCFeQOA=="
+          "hash": "GiEY9wX4yMRpW+dPMUwrtg=="
         }
       },
       "is_incremental": false,
@@ -1304,7 +1352,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MergeJoin.html",
-          "hash": "DodOHmLDETNDTq0Is3MVDw=="
+          "hash": "aKdCsnQ0E7UWUgHH6eny8g=="
         }
       },
       "is_incremental": false,
@@ -1316,7 +1364,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MergeJoinTarget-1.html",
-          "hash": "t8nBVhBqsP3O9MJWZD6Mhw=="
+          "hash": "ORKXloXe2/OwJz08/C3hXw=="
         }
       },
       "is_incremental": false,
@@ -1328,7 +1376,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.MergeableRow.html",
-          "hash": "wYe+NklN/7RDGim8ZdYitA=="
+          "hash": "6UmcfMItQgvqGLd48qHAHg=="
         }
       },
       "is_incremental": false,
@@ -1340,7 +1388,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.Multicast-1.html",
-          "hash": "836AVrxO1MSyYZ2e0Mej1Q=="
+          "hash": "c4qoNi40nO1sc/wMCCr3OQ=="
         }
       },
       "is_incremental": false,
@@ -1352,7 +1400,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.Multicast.html",
-          "hash": "W6UIoLhgUxK0qenikEnbwA=="
+          "hash": "BT+KL73HNwEY9nJ6lKlDYw=="
         }
       },
       "is_incremental": false,
@@ -1364,7 +1412,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.ResourceType.html",
-          "hash": "QMeFnOaJePwKW8fM7HY6rQ=="
+          "hash": "DeiFcRUwnBPEjwcw7j2t8Q=="
         }
       },
       "is_incremental": false,
@@ -1376,7 +1424,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.RetrieveColumn.html",
-          "hash": "NFDgC03blQx0X3GEBbUoxQ=="
+          "hash": "4YDkI047YwPKYx3FhwdgCA=="
         }
       },
       "is_incremental": false,
@@ -1388,7 +1436,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.RowTransformation-1.html",
-          "hash": "eLvjXoil+qnyrIqSuO6JmA=="
+          "hash": "CeThbdMg7yHKT1gAptOLtw=="
         }
       },
       "is_incremental": false,
@@ -1400,7 +1448,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.RowTransformation-2.html",
-          "hash": "FlzPJM92qp6LAFJD6TpE1A=="
+          "hash": "jXMykXRgyn+990G945v8gg=="
         }
       },
       "is_incremental": false,
@@ -1412,7 +1460,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.RowTransformation.html",
-          "hash": "99Mxd5YiRw4GclARkLDEAQ=="
+          "hash": "nRU87ukSip0KreOkQGBaBw=="
         }
       },
       "is_incremental": false,
@@ -1424,7 +1472,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.Sort-1.html",
-          "hash": "/ja67nGlS7G/29NZ0ZemOg=="
+          "hash": "yBLQQhDamOmafOpwgAQWIw=="
         }
       },
       "is_incremental": false,
@@ -1436,7 +1484,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.Sort.html",
-          "hash": "RY2nSgCzS7ss9CZbLhTslQ=="
+          "hash": "nceAVi6P4BKNFZQrjHPFiA=="
         }
       },
       "is_incremental": false,
@@ -1448,7 +1496,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.VoidDestination-1.html",
-          "hash": "BKFUXNvL+MTpsCvnt2RaqQ=="
+          "hash": "3rMHo5EffFzvYLvEXGnGXw=="
         }
       },
       "is_incremental": false,
@@ -1460,7 +1508,55 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.VoidDestination.html",
-          "hash": "xX8BVvp1rpxPwtx5nb3enQ=="
+          "hash": "66AuLar0g2+ofn9IeJYCAw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.XmlDestination-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.XmlDestination-1.html",
+          "hash": "KmqvVO1jSjppDgSJZ9gHMA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.XmlDestination.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.XmlDestination.html",
+          "hash": "HfLuW4HmCUlil7e7RLGuEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.XmlSource-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.XmlSource-1.html",
+          "hash": "3Rzle93yPqn2CWePg6jg+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ALE.ETLBox.DataFlow.XmlSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ALE.ETLBox.DataFlow.XmlSource.html",
+          "hash": "GshTlewvFs1nXnkjNHR+HA=="
         }
       },
       "is_incremental": false,
@@ -1472,7 +1568,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlow.html",
-          "hash": "se8/HuqiAh9ah2mkrDv/CQ=="
+          "hash": "KSHRFW7mUHFmXx7UrNLpzQ=="
         }
       },
       "is_incremental": false,
@@ -1484,7 +1580,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlowTask.html",
-          "hash": "xbtSNmpbyaySkE3RDnfanA=="
+          "hash": "KagWRnDUMirX3C7xoEl+yw=="
         }
       },
       "is_incremental": false,
@@ -1496,7 +1592,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.DataFlowTransformation-2.html",
-          "hash": "y50ZYFlUV/wZonqmFrxHkw=="
+          "hash": "f+DOFCfPSaePYC4gN0Px9w=="
         }
       },
       "is_incremental": false,
@@ -1508,7 +1604,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ETLBoxException.html",
-          "hash": "4N4s6IHn73h+heTTzdPvGg=="
+          "hash": "UPSx57PW4UUyWbQlZg4vpw=="
         }
       },
       "is_incremental": false,
@@ -1520,7 +1616,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ETLBoxNotSupportedException.html",
-          "hash": "qU+rINMzKoMG1cQat8klog=="
+          "hash": "CHroiNNOVILDVDgi5WN9AA=="
         }
       },
       "is_incremental": false,
@@ -1532,7 +1628,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.GenericTask.html",
-          "hash": "BtH4k+4NG8kAWoIM8zEiEg=="
+          "hash": "GNts0NMZbAj+nwJRWmhBXg=="
         }
       },
       "is_incremental": false,
@@ -1544,7 +1640,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.BigDataHelper.html",
-          "hash": "lLq3bhdmIVTMta2/LUG//g=="
+          "hash": "AcqfVXVMGgPrGr6o/SSySw=="
         }
       },
       "is_incremental": false,
@@ -1556,7 +1652,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.Config.ConnectionDetails-2.html",
-          "hash": "y/byTUgY5Ful5azcNJ8uqg=="
+          "hash": "CZdpf3H37wvKEjV2D4TUbQ=="
         }
       },
       "is_incremental": false,
@@ -1568,7 +1664,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.Config.html",
-          "hash": "hLZ5eOGFHk54Vb7AOgfPhg=="
+          "hash": "w0an28aTBDzL8STu+ZJ9Yw=="
         }
       },
       "is_incremental": false,
@@ -1580,7 +1676,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.DatabaseHelper.html",
-          "hash": "trYVW8hLtworwcnlY5KlLA=="
+          "hash": "9aiRDJVmQmz1bxXlASAfsA=="
         }
       },
       "is_incremental": false,
@@ -1592,7 +1688,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.HashHelper.html",
-          "hash": "VhgEv86JAiitzbiWlezJGw=="
+          "hash": "k6aSuRxUx7JtJN9bFkCBwA=="
         }
       },
       "is_incremental": false,
@@ -1604,7 +1700,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.PropertyInfoExtension.html",
-          "hash": "W09tOSME9LztO1fV6yK3iA=="
+          "hash": "80NSmGBykabzk0lK76fFmA=="
         }
       },
       "is_incremental": false,
@@ -1616,7 +1712,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.SqlHelper.html",
-          "hash": "VMfxREVnqJfQWQO6dfZieA=="
+          "hash": "0wzx0Mw/WmH6vH7pIiYN5A=="
         }
       },
       "is_incremental": false,
@@ -1628,7 +1724,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.SqlHelperExtensions.html",
-          "hash": "S45tj+ZgQu+V+lhc/ZLn5w=="
+          "hash": "bzcJxLhl1fYw6uT05UUO5g=="
         }
       },
       "is_incremental": false,
@@ -1640,7 +1736,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.SqlParser.html",
-          "hash": "xqxWIV5CJg/hniFrQ32/zw=="
+          "hash": "d074KCkpDNz0PW/FNfMxvw=="
         }
       },
       "is_incremental": false,
@@ -1652,7 +1748,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Helper.StringExtension.html",
-          "hash": "eH7wJb6VxEwMbRJDNzMl1Q=="
+          "hash": "27tmkwPUgX8pWPl1ebtpjQ=="
         }
       },
       "is_incremental": false,
@@ -1676,7 +1772,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.IDbConnectionString.html",
-          "hash": "Aa9FlWHdLgTgH0quB6uSpw=="
+          "hash": "pwOKRHfmL1ig7C5CkVc6Zg=="
         }
       },
       "is_incremental": false,
@@ -1688,7 +1784,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ITableColumn.html",
-          "hash": "KRINjD2+QKRVXhyYiU2x9g=="
+          "hash": "AdAnU1SzTdAF54wh7TWmWQ=="
         }
       },
       "is_incremental": false,
@@ -1700,7 +1796,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ITableData.html",
-          "hash": "yKgRBsrZqDIX6qEU3OGfHQ=="
+          "hash": "NKLzWij2odJqjx+yyqesbA=="
         }
       },
       "is_incremental": false,
@@ -1712,7 +1808,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ITask.html",
-          "hash": "c6fSIycV8loAhbloTgmj0A=="
+          "hash": "52gjJjn6mkwdhNEl6DZx9A=="
         }
       },
       "is_incremental": false,
@@ -1724,7 +1820,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.AbortLoadProcessTask.html",
-          "hash": "TcqkRdS2ud6hTELlIUFyzQ=="
+          "hash": "2QUYYBm4nxSdNCAbMadORQ=="
         }
       },
       "is_incremental": false,
@@ -1736,7 +1832,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.CreateDatabaseTarget.html",
-          "hash": "jrw/9eampN7kc2Ej0IPi/w=="
+          "hash": "XdTDpm5/Vi0I28Iomzlgig=="
         }
       },
       "is_incremental": false,
@@ -1748,7 +1844,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.CreateErrorTableTask.html",
-          "hash": "ZClUBHMGxqj/bTd3XyXPvg=="
+          "hash": "SPTXM9D2Nyu2DHQoJwZBGA=="
         }
       },
       "is_incremental": false,
@@ -1760,7 +1856,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.CreateLoadProcessTableTask.html",
-          "hash": "g2N3q4Lh3smVQRIuar7a3Q=="
+          "hash": "U7CgZBqlKGgdX62z3G2ptg=="
         }
       },
       "is_incremental": false,
@@ -1772,7 +1868,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.CreateLogTableTask.html",
-          "hash": "QrPV04S1rElA2MVfFqk+bA=="
+          "hash": "OyVYbM2mGtxUzmRHKnpnWQ=="
         }
       },
       "is_incremental": false,
@@ -1784,7 +1880,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.ETLLogLayoutRenderer.html",
-          "hash": "D1Q/LTyln7R9caUXGRcBBQ=="
+          "hash": "4SAJ3Ot5YmPKE0edkODS/Q=="
         }
       },
       "is_incremental": false,
@@ -1796,7 +1892,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.EndLoadProcessTask.html",
-          "hash": "bSSOhK98bLd3737R99aK0Q=="
+          "hash": "+NCmU9i9WlUqkDZHtyEDow=="
         }
       },
       "is_incremental": false,
@@ -1808,7 +1904,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.GetLoadProcessAsJSONTask.html",
-          "hash": "cPWLbgU/t6CFSpQND9w16w=="
+          "hash": "nFkrUqK0WpdLjGCo4sL1SQ=="
         }
       },
       "is_incremental": false,
@@ -1820,7 +1916,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.GetLogAsJSONTask.html",
-          "hash": "7I+NBRRADvyiyAu9sqBpRQ=="
+          "hash": "1MjZDL42TKyRYsVBOpf0HA=="
         }
       },
       "is_incremental": false,
@@ -1832,7 +1928,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.LoadProcess.html",
-          "hash": "mvGSBdTs5YvLTGEcdNh12w=="
+          "hash": "45r4rVzwAA6X/8zQqMl0pw=="
         }
       },
       "is_incremental": false,
@@ -1844,7 +1940,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.LogEntry.html",
-          "hash": "7R0Ii1MW2maFwNqicr6MhQ=="
+          "hash": "j3hf4nT0Q4BNU4nem+6t1w=="
         }
       },
       "is_incremental": false,
@@ -1856,7 +1952,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.LogHierarchyEntry.html",
-          "hash": "4zQKvkY6j4qCs55WMgf/1A=="
+          "hash": "kTxqw0pcQeJK9A7jv+ZtPg=="
         }
       },
       "is_incremental": false,
@@ -1868,7 +1964,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.LogTask.html",
-          "hash": "Y9DHj5k/zqyv6USBxz1TcQ=="
+          "hash": "XDtPjubTwpmq3BSpwK/AQg=="
         }
       },
       "is_incremental": false,
@@ -1880,7 +1976,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.ReadLoadProcessTableTask.html",
-          "hash": "ID0Ee104hhd0qRmZ+NZ0FQ=="
+          "hash": "dEKjrUUwSS0197s0EtsfRQ=="
         }
       },
       "is_incremental": false,
@@ -1892,7 +1988,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.ReadLogTableTask.html",
-          "hash": "XBRnXbsMj2vKG+vFbtPq5w=="
+          "hash": "q4qeaf+wTMmtoJala6EDrw=="
         }
       },
       "is_incremental": false,
@@ -1904,7 +2000,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.ReadOptions.html",
-          "hash": "+kDEYRiuwJC5nuyHDvruqw=="
+          "hash": "fARbG9Io7aPrV2pCRL0J8g=="
         }
       },
       "is_incremental": false,
@@ -1916,7 +2012,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.Logging.StartLoadProcessTask.html",
-          "hash": "Cl/FzjE4ojXalLaH0zmwbg=="
+          "hash": "lC7N016dIptH6i8kJGZkDg=="
         }
       },
       "is_incremental": false,
@@ -1940,7 +2036,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.MySqlConnectionString.html",
-          "hash": "GG9LHfDuQpwye90soPX9Vg=="
+          "hash": "fqyHZlIxLRYI5u4zRzPfKw=="
         }
       },
       "is_incremental": false,
@@ -1952,7 +2048,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ObjectNameDescriptor.html",
-          "hash": "q9dZuyhVcVLR8IGBXTBUrg=="
+          "hash": "cJ/NtuuKT/+ZdAm+kZKFTw=="
         }
       },
       "is_incremental": false,
@@ -1964,7 +2060,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.OdbcConnectionString.html",
-          "hash": "HIFMIv8Qz3BHVgJVJJKkrQ=="
+          "hash": "iFWMm2cBooSsfc57ItDFOA=="
         }
       },
       "is_incremental": false,
@@ -1976,7 +2072,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.PostgresConnectionString.html",
-          "hash": "Ur7PhObhfuYHhqLIBbutzg=="
+          "hash": "UycCtV0aOIZ5oPJMv+CLDw=="
         }
       },
       "is_incremental": false,
@@ -1988,7 +2084,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ProcedureDefinition.html",
-          "hash": "ghoy0i8AXxNcc0rWhq9JxQ=="
+          "hash": "If4R6iiiCE5hOiUYoR8sTQ=="
         }
       },
       "is_incremental": false,
@@ -2000,7 +2096,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.ProcedureParameter.html",
-          "hash": "SlhZ8tu4OcgwYDCdVr544g=="
+          "hash": "mWrwa23a6qtKGDyPunRiFw=="
         }
       },
       "is_incremental": false,
@@ -2012,7 +2108,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.QueryParameter.html",
-          "hash": "ARU/unMh3Y9dGRMgO+HqpA=="
+          "hash": "CxGMVD7e6p1WMktMyhmAlA=="
         }
       },
       "is_incremental": false,
@@ -2024,7 +2120,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.SQLiteConnectionString.html",
-          "hash": "QXCyJ9J65UW9vnAzE+bshg=="
+          "hash": "dQ0jk3gP8/Tyj4+jE9K6oA=="
         }
       },
       "is_incremental": false,
@@ -2036,7 +2132,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.SqlConnectionString.html",
-          "hash": "FM/uvuNkfXM8+QzTMypVAQ=="
+          "hash": "kOHDDimu4Mfjd5qLIox0wQ=="
         }
       },
       "is_incremental": false,
@@ -2048,7 +2144,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.TableColumn.html",
-          "hash": "zI5cggtN/HzgQKwhggqtJA=="
+          "hash": "XMxMvxvNtedoeUz7uqoxeg=="
         }
       },
       "is_incremental": false,
@@ -2060,7 +2156,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.TableData-1.html",
-          "hash": "jEPZPtliq/tnQ/erxxbgvg=="
+          "hash": "StGnrAoXLtGG6a2ghH+BsA=="
         }
       },
       "is_incremental": false,
@@ -2072,7 +2168,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.TableData.html",
-          "hash": "kI8paeYkkTT2LWhOnfobpQ=="
+          "hash": "GAoruvSEuEFzU5oe1CMlrQ=="
         }
       },
       "is_incremental": false,
@@ -2084,7 +2180,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ALE.ETLBox.TableDefinition.html",
-          "hash": "lbMASf1eOZZKrOGXS4a+hg=="
+          "hash": "5QLfKqMdvMBDBPlPBnUYPg=="
         }
       },
       "is_incremental": false,
@@ -2108,7 +2204,7 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "gPLzEAD7SoKRQQHHnKG37w=="
+          "hash": "cmxygZc3WTTsXYZ+xvOiLg=="
         }
       },
       "is_incremental": false,
@@ -2120,7 +2216,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "SKNcK5PCJ2IzO6Uf0Gv+Bw=="
+          "hash": "YY3Tz1SGHUR62e8QgmpevA=="
         }
       },
       "is_incremental": false,
@@ -2132,7 +2228,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/controlflow/overview_controlflow.html",
-          "hash": "btfostMrzRfkHYvcNG1HKQ=="
+          "hash": "foc0n6xp1zDztZ+7NYQ+9Q=="
         }
       },
       "is_incremental": false,
@@ -2144,7 +2240,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/controlflow/overview_logging.html",
-          "hash": "toKy596/wYLlQU/oHj4GdA=="
+          "hash": "IEkmPTE1O1GzLCvimhbv7Q=="
         }
       },
       "is_incremental": false,
@@ -2156,7 +2252,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_db_sources_destinations.html",
-          "hash": "K1DhIeQPNsNrWjGaEbHJbw=="
+          "hash": "77TIKx2agAH+GKq+I//Zcg=="
         }
       },
       "is_incremental": false,
@@ -2168,7 +2264,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_dbmerge.html",
-          "hash": "axMS9y6MWX0iV0UmlmaOqg=="
+          "hash": "DDN5jR0AhLCncqAuc3ic5g=="
         }
       },
       "is_incremental": false,
@@ -2180,7 +2276,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_file_sources_destinations.html",
-          "hash": "FULhfCrflZmYnqDtL99Rhw=="
+          "hash": "h671FbIU0eIcdoqrLRsp5A=="
         }
       },
       "is_incremental": false,
@@ -2192,7 +2288,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_generic_nongeneric.html",
-          "hash": "Dd/4eAIZgZTLydfCvcpsWw=="
+          "hash": "HNIAB2NP9DkUfIJT7E2zmg=="
         }
       },
       "is_incremental": false,
@@ -2204,7 +2300,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_linking_execution.html",
-          "hash": "Ak8e/dnniHvgVTu9pW4ElQ=="
+          "hash": "anCm4M1KfgKmASa9X8JopQ=="
         }
       },
       "is_incremental": false,
@@ -2216,7 +2312,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_transformations.html",
-          "hash": "fAIuJQpr74l6G+TuKC9kbw=="
+          "hash": "dI/9YP7KIzNtql1R7BkRzQ=="
         }
       },
       "is_incremental": false,
@@ -2228,7 +2324,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_web_services.html",
-          "hash": "Q72y4/lZ0FPU/5qNUaEjxg=="
+          "hash": "N63QdUG/WGQbw7W4urf22A=="
         }
       },
       "is_incremental": false,
@@ -2240,7 +2336,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/overview_dataflow.html",
-          "hash": "phtv/1oUzTpx09hDq7g7Eg=="
+          "hash": "8w/6hi5cBiNS7zuIrelbDw=="
         }
       },
       "is_incremental": false,
@@ -2252,7 +2348,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/examples/example_basics.html",
-          "hash": "gVx+Xj9d9JAI2T93Iw0sVw=="
+          "hash": "/K2c3AfC6H1i/EU2ZBZtFA=="
         }
       },
       "is_incremental": false,
@@ -2264,7 +2360,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/examples/example_complex_dataflow.html",
-          "hash": "qRovsnO8zosFq1x+CDewHg=="
+          "hash": "Xftlz/Gn+dKcQE+3Q3WOLA=="
         }
       },
       "is_incremental": false,
@@ -2276,7 +2372,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/examples/example_different_sources_destinations.html",
-          "hash": "BSD3i3Fd8R5erSlvfsLWQw=="
+          "hash": "IP8dmU2YanT4a9QhG5wk8Q=="
         }
       },
       "is_incremental": false,
@@ -2288,7 +2384,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/examples/example_json_as_destination.html",
-          "hash": "O/qOTxylLlbPsjmqoqwmBA=="
+          "hash": "VwpuEwlEcRk0ncvaTQcCrQ=="
         }
       },
       "is_incremental": false,
@@ -2300,7 +2396,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/examples/example_multicast.html",
-          "hash": "bDkZVQO9Mt41JmZ+4uU08w=="
+          "hash": "IEPJaYpKfSUlWLx8rn47dA=="
         }
       },
       "is_incremental": false,
@@ -2312,7 +2408,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/examples/example_webservice_as_source.html",
-          "hash": "6kt9Uuyg1knBuXUz2vD98w=="
+          "hash": "4mxFaKcBtZJSZRURr0OkRg=="
         }
       },
       "is_incremental": false,
@@ -2324,7 +2420,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/getting_started.html",
-          "hash": "g4XU8Dyo9ogjOpSu6l05cw=="
+          "hash": "j9Gm0+ySoGvpdA8TLK2U/g=="
         }
       },
       "is_incremental": false,
@@ -2336,7 +2432,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/imprint.html",
-          "hash": "jvGQYgav/Txg6BhcUFL6KQ=="
+          "hash": "vEY1w90Mo0Ga//1pgg+/jQ=="
         }
       },
       "is_incremental": false,
@@ -2348,7 +2444,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/overview.html",
-          "hash": "2FAd4meBnXSn1cNBdxOq1w=="
+          "hash": "UYr94gui22k3ow+4zhgh5g=="
         }
       },
       "is_incremental": false,
@@ -2360,7 +2456,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/support_us.html",
-          "hash": "5znvwdMwezCacatWTCkjmg=="
+          "hash": "JN10CYOBTDJ9j366jke4MA=="
         }
       },
       "is_incremental": false,
@@ -2461,7 +2557,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "6BcwsZcoTDedmocCaSs2SQ=="
+          "hash": "Xnh1TFGkvc2vMbFAF65QKg=="
         }
       },
       "is_incremental": false,
@@ -2491,9 +2587,9 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
-        "ResourceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
@@ -2501,7 +2597,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 174,
+          "total_file_count": 182,
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {
@@ -2510,9 +2606,9 @@
           "total_file_count": 22,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0

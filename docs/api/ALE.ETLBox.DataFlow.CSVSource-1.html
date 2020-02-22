@@ -92,8 +92,9 @@ Data is read a as string from the source and dynamically converted into the corr
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;TOutput&gt;</div>
-    <div class="level4"><span class="xref">CsvSource&lt;TOutput&gt;</span></div>
-      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.CsvSource.html">CsvSource</a></div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html">DataFlowStreamSource</a>&lt;TOutput&gt;</div>
+    <div class="level5"><span class="xref">CsvSource&lt;TOutput&gt;</span></div>
+      <div class="level6"><a class="xref" href="ALE.ETLBox.DataFlow.CsvSource.html">CsvSource</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -103,6 +104,27 @@ Data is read a as string from the source and dynamically converted into the corr
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Uri">DataFlowStreamSource&lt;TOutput&gt;.Uri</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_ResourceType">DataFlowStreamSource&lt;TOutput&gt;.ResourceType</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_StreamReader">DataFlowStreamSource&lt;TOutput&gt;.StreamReader</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HttpClient">DataFlowStreamSource&lt;TOutput&gt;.HttpClient</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute">DataFlowStreamSource&lt;TOutput&gt;.Execute()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_OpenStream">DataFlowStreamSource&lt;TOutput&gt;.OpenStream()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseStream">DataFlowStreamSource&lt;TOutput&gt;.CloseStream()</a>
+    </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;TOutput&gt;.SourceBlock</a>
     </div>
@@ -219,7 +241,7 @@ Data is read a as string from the source and dynamically converted into the corr
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_CsvSource_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CsvSource&lt;TOutput&gt; : DataFlowSource&lt;TOutput&gt;, ITask, IDataFlowSource&lt;TOutput&gt;, IDataFlowLinkSource&lt;TOutput&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class CsvSource&lt;TOutput&gt; : DataFlowStreamSource&lt;TOutput&gt;, ITask, IDataFlowSource&lt;TOutput&gt;, IDataFlowLinkSource&lt;TOutput&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -242,13 +264,8 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
 
   <h3 id="constructors">Constructors
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L39">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1__ctor" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.#ctor">CsvSource()</h4>
   <div class="markdown level1 summary"></div>
@@ -257,20 +274,15 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public CsvSource()</code></pre>
   </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L45">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1__ctor_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.#ctor(System.String)">CsvSource(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CsvSource(string fileName)</code></pre>
+    <pre><code class="lang-csharp hljs">public CsvSource(string uri)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -284,20 +296,15 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">fileName</span></td>
+        <td><span class="parametername">uri</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_Configuration.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.Configuration%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L29">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1_Configuration_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.Configuration*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_Configuration" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.Configuration">Configuration</h4>
   <div class="markdown level1 summary"></div>
@@ -321,13 +328,8 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_FieldHeaders.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.FieldHeaders%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L32">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1_FieldHeaders_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.FieldHeaders*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_FieldHeaders" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.FieldHeaders">FieldHeaders</h4>
   <div class="markdown level1 summary"></div>
@@ -351,43 +353,8 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_FileName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.FileName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L31">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_CsvSource_1_FileName_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.FileName*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_FileName" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.FileName">FileName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string FileName { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_IsHeaderRead.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.IsHeaderRead%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L33">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1_IsHeaderRead_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.IsHeaderRead*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_IsHeaderRead" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.IsHeaderRead">IsHeaderRead</h4>
   <div class="markdown level1 summary"></div>
@@ -411,13 +378,8 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_SkipRows.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.SkipRows%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L30">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1_SkipRows_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.SkipRows*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_SkipRows" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.SkipRows">SkipRows</h4>
   <div class="markdown level1 summary"></div>
@@ -441,13 +403,8 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_TaskName.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.TaskName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L26">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_CsvSource_1_TaskName_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.TaskName*"></a>
   <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_TaskName" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.TaskName">TaskName</h4>
   <div class="markdown level1 summary"></div>
@@ -475,23 +432,42 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
   <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a></div>
   <h3 id="methods">Methods
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1_Execute.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601.Execute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L50">View Source</a>
-  </span>
-  <a id="ALE_ETLBox_DataFlow_CsvSource_1_Execute_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.Execute*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_Execute" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.Execute">Execute()</h4>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_CsvSource_1_CloseReader_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.CloseReader*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_CloseReader" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.CloseReader">CloseReader()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void Execute()</code></pre>
+    <pre><code class="lang-csharp hljs">protected override void CloseReader()</code></pre>
   </div>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowSource&lt;TOutput&gt;.Execute()</span></div>
+  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowStreamSource&lt;TOutput&gt;.CloseReader()</span></div>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_CsvSource_1_InitReader_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.InitReader*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_InitReader" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.InitReader">InitReader()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void InitReader()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowStreamSource&lt;TOutput&gt;.InitReader()</span></div>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_CsvSource_1_ReadAll_" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.ReadAll*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CsvSource_1_ReadAll" data-uid="ALE.ETLBox.DataFlow.CsvSource`1.ReadAll">ReadAll()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReadAll()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowStreamSource&lt;TOutput&gt;.ReadAll()</span></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
@@ -509,12 +485,6 @@ source.Configuration.Delimiter = &quot;;&quot;;</code></pre>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_CsvSource_1.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.CsvSource%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/CsvSource.cs/#L23" class="contribution-link">View Source</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

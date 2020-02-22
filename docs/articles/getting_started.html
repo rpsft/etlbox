@@ -117,6 +117,13 @@ Custom      --|
 <li>Power your data ingestion and integration tools.</li>
 <li>Consume large CSV, Excel or Json files</li>
 </ul>
+<h3 id="data-integration">Data integration</h3>
+<p>Data integration solves the problem of moving, transforming, and consolidating information from various sources like
+databases, applications, files, and web services. Bringing them together enables you to cleanse, standarize,
+de-duplicate, manipulate, and synchronize them.
+Data integration can play an important role in any project, and it can be critical to have a rock-solid solution in place
+that is able to integrate numerous applications, services and databases.
+ETLBox as an Extract, transform, and load (ETL) tool is a perfect fit when you need to create a data integration solution.</p>
 <h3 id="common-data-api">Common data API</h3>
 <p>ETLBox provides you with a single API for working with data.
 The API treats all data the same regardless of their source.
@@ -141,6 +148,16 @@ the <code>CustomSource</code> or <code>CustomDestination</code> components.</p>
 in C# or any of the other .NET languages you know (e.g. VisualBasic or F#).
 You can also use your existing tools, IDEs, containers, and libraries.
 Being built on .NET Core means it can run on all servers, operating systems, and environments.</p>
+<h3 id="works-with-big-data">Works with Big Data</h3>
+<p>ETLBox as an ETL tool was designed to handle big amounts of data and therefore you won't encounter any issues
+when you need to handle big data.Any dataflow can have a source, a transformation and a destination.
+While the source starts reading, it will post the data into it's output while continue reading the data.
+As soon as a connected component retrieves any data in, it will start with the further processing
+and subsequently send any processed data further down the line. Any destination will start writing data in the moment where
+it receives it - sometimes in Batches, sometimes for every records, depending of the destination type.
+To achieve this, every compoment has its own set of buffers. So when you start to process big data, that won't mean
+that everything needs to fit into memory - only as much data is stored in memory as you need to keep the buffers filled
+so that there is always enought data available to write into the destination.</p>
 <h2 id="continue-learning">Continue learning</h2>
 <h3 id="more-about-data-flows">More about data flows</h3>
 <p>All components in the Data Flow allow you to create your ETL (Extract, Transform, Load) pipeline -
@@ -167,9 +184,6 @@ All logging capabilities are based on nlog. You can <a href="https://nlog-projec
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/getting_started.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

@@ -124,7 +124,7 @@ for MySql).</p>
 <pre><code class="lang-C#">SqlConnectionManager connMan = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;);
 </code></pre>
 <p>Now we need to create a source, in this example it could contain order data. This will look like this:</p>
-<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;demodata.csv&quot;);
+<pre><code class="lang-C#">CsvSource&lt;string[]&gt; source = new CsvSource&lt;string[]&gt;(&quot;demodata.csv&quot;);
 </code></pre>
 <p>We now add a row transformation. The default output format of a <code>CsvSource</code> is an string array. In this example,
 we will convert the csv string array into an <code>Order</code> object and adding some logic while the transformation.</p>
@@ -168,9 +168,6 @@ rowTrans.LinkTo(dest);
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/dataflow/overview_dataflow.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

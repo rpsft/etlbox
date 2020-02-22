@@ -155,7 +155,7 @@ Value2,2
 Value3,3
 </code></pre>
 <p>Now we create a CsvSource pointing to the newly created input file.</p>
-<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;input.csv&quot;);
+<pre><code class="lang-C#">CsvSource&lt;string[]&gt; source = new CsvSource&lt;string[]&gt;(&quot;input.csv&quot;);
 </code></pre>
 <p>Before we continue, we will need an object that can hold our data. Let's call it MyData.</p>
 <pre><code class="lang-C#">public class MyData
@@ -207,9 +207,6 @@ We use the SQLTask for this and write the result into the output.</p>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/examples/example_basics.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

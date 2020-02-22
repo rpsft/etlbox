@@ -162,7 +162,7 @@ is there.</p>
 <h3 id="build-the-pipeline">Build the pipeline</h3>
 <p>Now we can construct a pipeline. Let's start with the source</p>
 <pre><code class="lang-C#">//Read data from csv file
-CsvSource sourceOrderData = new CsvSource(&quot;DemoData.csv&quot;);
+CsvSource&lt;string[]&gt; sourceOrderData = new CsvSource&lt;string[]&gt;(&quot;DemoData.csv&quot;);
 sourceOrderData.Configuration.Delimiter = &quot;;&quot;;
 </code></pre>
 <p>Source data will look like this:</p>
@@ -277,9 +277,6 @@ destRating.Wait();
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBoxDocu/articles/examples/example_complex_dataflow.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

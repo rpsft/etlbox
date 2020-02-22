@@ -93,8 +93,9 @@ the JsonSource&lt;TOutput&gt; object instead.</p>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html">JsonSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level5"><span class="xref">JsonSource</span></div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html">DataFlowStreamSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html">JsonSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level6"><span class="xref">JsonSource</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -108,16 +109,37 @@ the JsonSource&lt;TOutput&gt; object instead.</p>
       <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_TaskName">JsonSource&lt;ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_Uri">JsonSource&lt;ExpandoObject&gt;.Uri</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_ResourceType">JsonSource&lt;ExpandoObject&gt;.ResourceType</a>
-    </div>
-    <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_JsonSerializer">JsonSource&lt;ExpandoObject&gt;.JsonSerializer</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_Execute">JsonSource&lt;ExpandoObject&gt;.Execute()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_InitReader">JsonSource&lt;ExpandoObject&gt;.InitReader()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_ReadAll">JsonSource&lt;ExpandoObject&gt;.ReadAll()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.JsonSource-1.html#ALE_ETLBox_DataFlow_JsonSource_1_CloseReader">JsonSource&lt;ExpandoObject&gt;.CloseReader()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Uri">DataFlowStreamSource&lt;ExpandoObject&gt;.Uri</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_ResourceType">DataFlowStreamSource&lt;ExpandoObject&gt;.ResourceType</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_StreamReader">DataFlowStreamSource&lt;ExpandoObject&gt;.StreamReader</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HttpClient">DataFlowStreamSource&lt;ExpandoObject&gt;.HttpClient</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute">DataFlowStreamSource&lt;ExpandoObject&gt;.Execute()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_OpenStream">DataFlowStreamSource&lt;ExpandoObject&gt;.OpenStream()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseStream">DataFlowStreamSource&lt;ExpandoObject&gt;.CloseStream()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;ExpandoObject&gt;.SourceBlock</a>
@@ -244,13 +266,8 @@ source.Execute(); //Start the dataflow</code></pre>
 
   <h3 id="constructors">Constructors
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonSource__ctor.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonSource.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonSource.cs/#L150">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_JsonSource__ctor_" data-uid="ALE.ETLBox.DataFlow.JsonSource.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_JsonSource__ctor" data-uid="ALE.ETLBox.DataFlow.JsonSource.#ctor">JsonSource()</h4>
   <div class="markdown level1 summary"></div>
@@ -259,13 +276,8 @@ source.Execute(); //Start the dataflow</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public JsonSource()</code></pre>
   </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonSource__ctor_System_String_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonSource.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonSource.cs/#L151">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_JsonSource__ctor_" data-uid="ALE.ETLBox.DataFlow.JsonSource.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_JsonSource__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.JsonSource.#ctor(System.String)">JsonSource(String)</h4>
   <div class="markdown level1 summary"></div>
@@ -291,13 +303,8 @@ source.Execute(); //Start the dataflow</code></pre>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonSource__ctor_System_String_ALE_ETLBox_DataFlow_ResourceType_.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonSource.%23ctor(System.String%2CALE.ETLBox.DataFlow.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonSource.cs/#L152">View Source</a>
-  </span>
+  
+  
   <a id="ALE_ETLBox_DataFlow_JsonSource__ctor_" data-uid="ALE.ETLBox.DataFlow.JsonSource.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_JsonSource__ctor_System_String_ALE_ETLBox_DataFlow_ResourceType_" data-uid="ALE.ETLBox.DataFlow.JsonSource.#ctor(System.String,ALE.ETLBox.DataFlow.ResourceType)">JsonSource(String, ResourceType)</h4>
   <div class="markdown level1 summary"></div>
@@ -345,12 +352,6 @@ source.Execute(); //Start the dataflow</code></pre>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/new/dev/apiSpec/new?filename=ALE_ETLBox_DataFlow_JsonSource.md&amp;value=---%0Auid%3A%20ALE.ETLBox.DataFlow.JsonSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/roadrunnerlenny/etlbox/blob/dev/ETLBox/src/Toolbox/DataFlow/JsonSource.cs/#L148" class="contribution-link">View Source</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
