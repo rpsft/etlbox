@@ -27,6 +27,7 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => $"Write Xml into file {FileName ?? ""}";
 
         public string RootElementName { get; set; } = "Root";
+        public string DynamicElementName { get; set; } 
         public XmlWriter XmlWriter { get; set; }
         public XmlWriterSettings Settings { get; set; } = new XmlWriterSettings()
         {
@@ -68,12 +69,8 @@ namespace ALE.ETLBox.DataFlow
                 if (TypeInfo.IsDynamic)
                 {
                     string json = JsonConvert.SerializeObject(data);
-                    XElement element = new XElement("Dynamic");
-                    XNode node = JsonConvert.DeserializeXNode(json, "Doc");
-                    XDocument d = node as XDocument;
-                    foreach (var n in d.Descendants())
-                        element.Add(n);
-                    element.WriteTo(XmlWriter);
+                    XDocument doc = JsonConvert.DeserializeXNode(json, DynamicElementName ?? "Dynamic") as XDocument;
+                    doc.Root.WriteTo(XmlWriter);
                 }
                 else
                 {

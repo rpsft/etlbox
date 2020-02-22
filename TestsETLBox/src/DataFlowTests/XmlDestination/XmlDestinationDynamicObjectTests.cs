@@ -40,9 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            //Null values can't be ignored:
-            //https://github.com/JamesNK/Newtonsoft.Json/issues/1466
-            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3DynamicObject.xml"),
+            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsSet3DynamicObject.xml"),
                 File.ReadAllText("./SimpleWithDynamicObject.xml"));
         }
     }

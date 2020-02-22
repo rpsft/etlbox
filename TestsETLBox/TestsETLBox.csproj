@@ -185,6 +185,9 @@
     <None Update="res\UseCases\DuplicateCheck.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="res\XmlDestination\TwoColumnsSet3DynamicObject.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\XmlDestination\TwoColumnsAttributesSet3.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
