@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     public class JsonDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Write Json into file {FileName ?? ""}";
+        public override string TaskName => $"Write Json into file {Uri ?? ""}";
        
         public JsonSerializer JsonSerializer { get; set; }
         JsonTextWriter JsonTextWriter { get; set; }
@@ -34,9 +34,14 @@ namespace ALE.ETLBox.DataFlow
             InitTargetAction();
         }
 
-        public JsonDestination(string fileName) : this()
+        public JsonDestination(string uri) : this()
         {
-            FileName = fileName;
+            Uri = uri;
+        }
+
+        public JsonDestination(string uri, ResourceType resourceType) : this(uri)
+        {
+            ResourceType = resourceType;
         }
 
         protected override void InitStream()
@@ -63,7 +68,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CloseStream()
         {
-            JsonTextWriter.WriteEndArray();
+            JsonTextWriter?.WriteEndArray();
             JsonTextWriter?.Flush();
             JsonTextWriter?.Close();
         }

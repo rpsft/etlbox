@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "XmlDestDynamic");
 
             //Act
-            XmlDestination<ExpandoObject> dest = new XmlDestination<ExpandoObject>("./SimpleWithDynamicObject.xml");
+            XmlDestination<ExpandoObject> dest = new XmlDestination<ExpandoObject>("./SimpleWithDynamicObject.xml", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

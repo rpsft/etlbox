@@ -17,17 +17,12 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonDestinationStringArrayTests : IDisposable
+    public class JsonDestinationStringArrayTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public JsonDestinationStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
-
-        public void Dispose()
-        {
-        }
-
 
         [Fact]
         public void SimpleNonGeneric()
@@ -38,7 +33,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "JsonDestSimpleNonGeneric");
 
             //Act
-            JsonDestination<string[]> dest = new JsonDestination<string[]>("./SimpleNonGeneric.json");
+            JsonDestination<string[]> dest = new JsonDestination<string[]>("./SimpleNonGeneric.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

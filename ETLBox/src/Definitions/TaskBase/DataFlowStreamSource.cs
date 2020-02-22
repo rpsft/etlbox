@@ -20,7 +20,7 @@ namespace ALE.ETLBox.DataFlow
         public ResourceType ResourceType { get; set; }
 
         protected StreamReader StreamReader { get; set; }
-        protected HttpClient HttpClient { get; set; }
+        public HttpClient HttpClient { get; set; } = new HttpClient();
 
         public override void Execute()
         {
@@ -43,14 +43,9 @@ namespace ALE.ETLBox.DataFlow
         protected virtual void OpenStream()
         {
             if (ResourceType == ResourceType.File)
-            {
                 StreamReader = new StreamReader(Uri, true);
-            }
             else
-            {
-                HttpClient = new HttpClient();
                 StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(Uri)).Result);
-            }
         }
 
         protected virtual void CloseStream()

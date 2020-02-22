@@ -40,7 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "XmlDestSimple");
 
             //Act
-            XmlDestination<MySimpleRow> dest = new XmlDestination<MySimpleRow>("./SimpleWithObject.xml");
+            XmlDestination<MySimpleRow> dest = new XmlDestination<MySimpleRow>("./SimpleWithObject.xml", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -68,7 +68,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<MyAttributeRow> source = new DbSource<MyAttributeRow>(SqlConnection, "XmlDestOnlyAttributes");
 
             //Act
-            XmlDestination<MyAttributeRow> dest = new XmlDestination<MyAttributeRow>("./SimpleOnlyAttributes.xml");
+            XmlDestination<MyAttributeRow> dest = new XmlDestination<MyAttributeRow>("./SimpleOnlyAttributes.xml", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -77,6 +77,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsAttributesSet3.xml")
                 , File.ReadAllText("./SimpleOnlyAttributes.xml"));
         }
-
     }
 }

@@ -17,14 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonDestinationTests : IDisposable
+    public class JsonDestinationTests 
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public JsonDestinationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 
@@ -43,7 +39,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "JsonDestSimple");
 
             //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./SimpleWithObject.json");
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./SimpleWithObject.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

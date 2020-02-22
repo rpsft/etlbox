@@ -17,14 +17,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class JsonDestinationNullHandlingTests : IDisposable
+    public class JsonDestinationNullHandlingTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public JsonDestinationNullHandlingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 
@@ -50,7 +46,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./IgnoreNullValues.json");
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./IgnoreNullValues.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -76,7 +72,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            JsonDestination<string[]> dest = new JsonDestination<string[]>("./IgnoreNullValuesStringArray.json");
+            JsonDestination<string[]> dest = new JsonDestination<string[]>("./IgnoreNullValuesStringArray.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

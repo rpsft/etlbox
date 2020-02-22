@@ -51,7 +51,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = "3" },
 
             };
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("ErrorFile.json");
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("ErrorFile.json", ResourceType.File);
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
@@ -82,7 +82,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = "1" },
                 new MySimpleRow() { Col1 = null }
             };
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("ErrorFile.csv");
+            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("ErrorFile.json", ResourceType.File);
 
             //Act
             //Assert

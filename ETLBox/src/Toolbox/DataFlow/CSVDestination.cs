@@ -21,7 +21,7 @@ namespace ALE.ETLBox.DataFlow
     public class CsvDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Write Csv data into file {FileName ?? ""}";
+        public override string TaskName => $"Write Csv data into file {Uri ?? ""}";
         public Configuration Configuration { get; set; }
 
         CsvWriter CsvWriter { get; set; }
@@ -32,12 +32,13 @@ namespace ALE.ETLBox.DataFlow
             Configuration = new Configuration(CultureInfo.InvariantCulture);
             Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
             TypeInfo = new TypeInfo(typeof(TInput));
+            ResourceType = ResourceType.File;
             InitTargetAction();
         }
 
-        public CsvDestination(string fileName) : this()
+        public CsvDestination(string uri) : this()
         {
-            FileName = fileName;
+            Uri = uri;
         }
 
         protected override void InitStream()

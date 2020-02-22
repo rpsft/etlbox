@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
     public class XmlDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Write Xml into file {FileName ?? ""}";
+        public override string TaskName => $"Write Xml into file {Uri ?? ""}";
 
         public string RootElementName { get; set; } = "Root";
         public string DynamicElementName { get; set; } 
@@ -49,7 +49,12 @@ namespace ALE.ETLBox.DataFlow
 
         public XmlDestination(string fileName) : this()
         {
-            FileName = fileName;
+            Uri = fileName;
+        }
+
+        public XmlDestination(string uri, ResourceType resourceType) : this(uri)
+        {
+            ResourceType = resourceType;
         }
 
         protected override void InitStream()
@@ -87,7 +92,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CloseStream()
         {
-            XmlWriter.WriteEndElement();
+            XmlWriter?.WriteEndElement();
             XmlWriter?.Flush();
             XmlWriter?.Close();
         }

@@ -118,7 +118,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CloseReader()
         {
-            ExcelDataReader.Close();
+            ExcelDataReader?.Close();
         }
     }
 
