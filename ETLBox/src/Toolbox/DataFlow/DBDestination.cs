@@ -75,7 +75,7 @@ namespace ALE.ETLBox.DataFlow
 
             base.WriteBatch(ref data);
 
-            TryBulkInsertData(ref data);
+            TryBulkInsertData(data);
 
             LogProgressBatch(data.Length);
         }
@@ -88,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
 
-        private void TryBulkInsertData(ref TInput[] data)
+        private void TryBulkInsertData(TInput[] data)
         {
             TableData<TInput> td = CreateTableDataObject(ref data);
             try
