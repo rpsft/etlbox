@@ -149,7 +149,7 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
 
-        internal string CreateBulkInsertStatementWithParameter(ITableData data, string tableName, ref List<OdbcParameter> parameters)
+        internal string CreateBulkInsertStatementWithParameter(ITableData data, string tableName, List<OdbcParameter> parameters)
         {
             QueryText.Clear();
             TableName = tableName;
