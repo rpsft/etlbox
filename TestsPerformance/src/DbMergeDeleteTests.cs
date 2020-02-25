@@ -41,12 +41,12 @@ namespace ALE.ETLBoxTests.Performance
         }
 
         [Theory,
-            InlineData(500)]
-        public void CSVIntoMemDest(int numberOfRows)
+            InlineData(10000, 5000)]
+        public void CSVIntoMemDest(int rowsInDest, int rowsInSource)
         {
             //Arrange
             List<MyMergeRow> knownGuids = new List<MyMergeRow>();
-            for (int i = 0; i < 1900; i++)
+            for (int i = 0; i < rowsInSource; i++)
                 knownGuids.Add(new MyMergeRow() { 
                     Id = Guid.NewGuid(), 
                     LastUpdated = DateTime.Now,
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.Performance
 
             MemorySource<MyMergeRow> source2 = new MemorySource<MyMergeRow>();
             source2.Data = knownGuids;
-            for (int i = 0; i < numberOfRows; i++)
+            for (int i = 0; i < rowsInDest; i++)
                 knownGuids.Add(new MyMergeRow()
                 {
                     Id = Guid.NewGuid(),
@@ -83,8 +83,7 @@ namespace ALE.ETLBoxTests.Performance
             source2.Execute();
             mergeDest.Wait();
 
-            Assert.True(RowCountTask.Count(SqlConnection, "MergeDestination") == 2400);
-
+            Assert.True(RowCountTask.Count(SqlConnection, "MergeDestination") == rowsInDest + rowsInSource);
         }
 
        
