@@ -23,16 +23,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class LookupData
         {
+            [MatchColumn("LookupId")]
             public int Id { get; set; }
+            [RetrieveColumn("LookupValue")]
             public string Value { get; set; }
         }
 
         public class InputDataRow
         {
-            public int Col1 { get; set; }
-            [MatchColumn("Id")]
-            public int LookupId => Col1;
-            [RetrieveColumn("Value")]
+            public int LookupId { get; set; }
             public string LookupValue { get; set; }
         }
 
@@ -42,10 +41,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<InputDataRow> source = new MemorySource<InputDataRow>();
-            source.Data.Add(new InputDataRow() { Col1 = 1 });
-            source.Data.Add(new InputDataRow() { Col1 = 2 });
-            source.Data.Add(new InputDataRow() { Col1 = 4 });
-            source.Data.Add(new InputDataRow() { Col1 = 3 });
+            source.Data.Add(new InputDataRow() { LookupId = 1 });
+            source.Data.Add(new InputDataRow() { LookupId = 2 });
+            source.Data.Add(new InputDataRow() { LookupId = 4 });
+            source.Data.Add(new InputDataRow() { LookupId = 3 });
             MemorySource<LookupData> lookupSource = new MemorySource<LookupData>();
             lookupSource.Data.Add(new LookupData() { Id = 1, Value = "Test1" });
             lookupSource.Data.Add(new LookupData() { Id = 2, Value = "Test2" });
@@ -70,21 +69,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class LookupDataMultiple
         {
+            [MatchColumn("LookupId1")]
             public int Id1 { get; set; }
+            [MatchColumn("LookupId2")]
             public string Id2 { get; set; }
+            [RetrieveColumn("LookupValue1")]
             public string Value1 { get; set; }
+            [RetrieveColumn("LookupValue2")]
             public int Value2 { get; set; }
         }
 
         public class InputDataMultiple
         {
-            [MatchColumn("Id1")]
             public int LookupId1 { get; set; }
-            [MatchColumn("Id2")]
             public string LookupId2 { get; set; }
-            [RetrieveColumn("Value1")]
             public string LookupValue1 { get; set; }
-            [RetrieveColumn("Value2")]
             public int LookupValue2 { get; set; }
         }
 
@@ -119,13 +118,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 );
         }
 
-        public class InputDataError1
+        public class LookupDataError1
         {
             [MatchColumn("Id")]
             public int LookupId { get; set; }
         }
 
-        public class InputDataError2
+        public class LookupDataError2
         {
             [MatchColumn("XXX")]
             public int LookupId { get; set; }
@@ -133,7 +132,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string LookupValue { get; set; }
         }
 
-        public class InputDataError3
+        public class LookupDataError3
         {
             [MatchColumn("Id")]
             public int LookupId { get; set; }
@@ -145,20 +144,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Fact]
         public void TestExceptions()
         {
-            RunExceptionFlowWithType<InputDataError1>(new InputDataError1() { LookupId = 1 });
-            RunExceptionFlowWithType<InputDataError2>(new InputDataError2() { LookupId = 1 });
-            RunExceptionFlowWithType<InputDataError3>(new InputDataError3() { LookupId = 1 });
+            RunExceptionFlowWithType<LookupDataError1>();
+            RunExceptionFlowWithType<LookupDataError2>();
+            RunExceptionFlowWithType<LookupDataError3>();
 
         }
 
-        private static void RunExceptionFlowWithType<T>(T sourceDataItem)
+        private static void RunExceptionFlowWithType<T>()
         {
             //Arrange
-            MemorySource<T> source = new MemorySource<T>();
-            source.Data.Add(sourceDataItem);
-            MemorySource<LookupData> lookupSource = new MemorySource<LookupData>();
-            var lookup = new LookupTransformation<T, LookupData>(lookupSource);
-            MemoryDestination<T> dest = new MemoryDestination<T>();
+            MemorySource<InputDataRow> source = new MemorySource<InputDataRow>();
+            source.Data.Add(new InputDataRow() { LookupId = 1 });
+            MemorySource<T> lookupSource = new MemorySource<T>();
+            var lookup = new LookupTransformation<InputDataRow, T>(lookupSource);
+            MemoryDestination<InputDataRow> dest = new MemoryDestination<InputDataRow>();
 
             source.LinkTo(lookup);
             lookup.LinkTo(dest);

@@ -23,15 +23,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public class MyRow
         {
             public int Id { get; set; }
-            [GroupColumn("GroupName")]
+          
             public string ClassName { get; set; }
-            [AggregateColumn("AggValue", AggregationMethod.Sum)]
+          
             public double DetailValue { get; set; }
         }
 
         public class MyAggRow
         {
+            [GroupColumn("ClassName")]
             public string GroupName { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Sum)]
             public double AggValue { get; set; }
         }
 
@@ -75,15 +77,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public class MyRowNullable
         {
             public int Id { get; set; }
-            [GroupColumn("GroupId")]
             public int? ClassId { get; set; }
-            [AggregateColumn("AggValue", AggregationMethod.Sum)]
             public double? DetailValue { get; set; }
         }
 
         public class MyAggRowNullable
         {
+            [GroupColumn("ClassId")]
             public int? GroupId { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Sum)]
             public double? AggValue { get; set; }
         }
 
@@ -127,21 +129,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public class MyRowMultiple
         {
             public int Id { get; set; }
-            [GroupColumn("Group1Name")]
             public string Class1Name { get; set; }
-            [GroupColumn("Group2Name")]
             public string Class2Name { get; set; }
-            [AggregateColumn("AggValue1", AggregationMethod.Sum)]
             public int DetailValue1 { get; set; }
-            [AggregateColumn("AggValue2", AggregationMethod.Count)]
             public double DetailValue2 { get; set; }
         }
 
         public class MyAggRowMultiple
         {
+            [GroupColumn("Class1Name")]
             public string Group1Name { get; set; }
+            [GroupColumn("Class2Name")]
             public string Group2Name { get; set; }
+            [AggregateColumn("DetailValue1", AggregationMethod.Sum)]
             public double AggValue1 { get; set; }
+            [AggregateColumn("DetailValue2", AggregationMethod.Count)]
             public int AggValue2 { get; set; }
         }
 

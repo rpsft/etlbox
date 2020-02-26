@@ -29,8 +29,8 @@ namespace ALE.ETLBox.DataFlow
             {
                 GroupColumns.Add(new AttributeMappingInfo()
                 {
-                    PropInInput = propInfo,
-                    PropNameInOutput = attr.AggregationGroupingProperty
+                    PropInOutput = propInfo,
+                    PropNameInInput = attr.AggregationGroupingProperty
                 });
             }
         }
@@ -42,8 +42,8 @@ namespace ALE.ETLBox.DataFlow
             {
                 AggregateColumns.Add(new AggregateAttributeMapping()
                 {
-                    PropInInput = propInfo,
-                    PropNameInOutput = attr.AggregationProperty,
+                    PropInOutput = propInfo,
+                    PropNameInInput = attr.AggregationProperty,
                     AggregationMethod = attr.AggregationMethod
                 });
             }
@@ -51,8 +51,8 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void CombineInputAndOutputMapping()
         {
-            this.AssignOutputProperty(GroupColumns);
-            this.AssignOutputProperty(AggregateColumns.Cast<AttributeMappingInfo>().ToList());
+            this.AssignInputProperty(GroupColumns);
+            this.AssignInputProperty(AggregateColumns.Cast<AttributeMappingInfo>().ToList());
         }
     }
 

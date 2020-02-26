@@ -28,8 +28,8 @@ namespace ALE.ETLBox.DataFlow
             if (attr != null)
                 MatchColumns.Add(new AttributeMappingInfo()
                 {
-                    PropInInput = propInfo,
-                    PropNameInOutput = attr.LookupSourcePropertyName
+                    PropInOutput = propInfo,
+                    PropNameInInput = attr.LookupSourcePropertyName
                 });
         }
 
@@ -39,15 +39,15 @@ namespace ALE.ETLBox.DataFlow
             if (attr != null)
                 RetrieveColumns.Add(new AttributeMappingInfo()
                 {
-                    PropInInput = propInfo,
-                    PropNameInOutput = attr.LookupSourcePropertyName
+                    PropInOutput = propInfo,
+                    PropNameInInput = attr.LookupSourcePropertyName
                 });
         }
 
         protected override void CombineInputAndOutputMapping()
         {
-            this.AssignOutputProperty(MatchColumns);
-            this.AssignOutputProperty(RetrieveColumns);
+            this.AssignInputProperty(MatchColumns);
+            this.AssignInputProperty(RetrieveColumns);
         }
     }
 }

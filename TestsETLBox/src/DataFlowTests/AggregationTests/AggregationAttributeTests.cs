@@ -22,57 +22,56 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MySumRow
         {
-            public int Id { get; set; }
-            [AggregateColumn("AggValue", AggregationMethod.Sum)]
-            public double DetailValue { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Sum)]
+            public double AggValue { get; set; }
         }
 
         public class MySumRowNullable
         {
-            public int Id { get; set; }
-            [AggregateColumn("AggValue", AggregationMethod.Sum)]
-            public double? DetailValue { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Sum)]
+            public double? AggValue { get; set; }
         }
 
 
         public class MyMaxRow
         {
-            [AggregateColumn("AggValue", AggregationMethod.Max)]
-            public float DetailValue { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Max)]
+            public float AggValue { get; set; }
         }
 
         public class MyMinRow
         {
-            [AggregateColumn("AggValue", AggregationMethod.Min)]
-            public long? DetailValue { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Min)]
+            public long? AggValue { get; set; }
         }
 
         public class MyCountRow
         {
-            [AggregateColumn("AggValue", AggregationMethod.Count)]
-            public uint DetailValue { get; set; }
+            [AggregateColumn("DetailValue", AggregationMethod.Count)]
+            public uint AggValue { get; set; }
         }
 
 
-        public class MyAggRow
+        public class MyInputRow
         {
-            public double? AggValue { get; set; }
+            public int Id { get; set; }
+            public double? DetailValue { get; set; }
         }
 
         [Fact]
         public void AggregateSum()
         {
             //Arrange
-            List<MySumRow> sourceData = new List<MySumRow>()
+            List<MyInputRow> sourceData = new List<MyInputRow>()
                 {
-                new MySumRow { Id = 1,  DetailValue = 3.5 },
-                new MySumRow { Id = 2,  DetailValue = 4.5 },
-                new MySumRow { Id = 3,  DetailValue = 2.0 },
+                new MyInputRow { Id = 1,  DetailValue = 3.5 },
+                new MyInputRow { Id = 2,  DetailValue = 4.5 },
+                new MyInputRow { Id = 3,  DetailValue = 2.0 },
                 };
-            MemoryDestination<MyAggRow> dest = CreateFlow(sourceData);
+            MemoryDestination<MySumRow> dest = CreateFlow<MySumRow>(sourceData);
 
             //Assert
-            Assert.Collection<MyAggRow>(dest.Data,
+            Assert.Collection(dest.Data,
                 ar => Assert.True(ar.AggValue == 10)
                 );
         }
@@ -81,17 +80,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void AggregateSumWithNullable()
         {
             //Arrange
-            List<MySumRowNullable> sourceData = new List<MySumRowNullable>()
+            List<MyInputRow> sourceData = new List<MyInputRow>()
                 {
-                new MySumRowNullable { Id = 1,  DetailValue = 3.5 },
-                new MySumRowNullable { Id = 2,  DetailValue = 4.5 },
-                new MySumRowNullable { Id = 3,  DetailValue = 2.0 },
-                new MySumRowNullable { Id = 4,  DetailValue = null },
+                new MyInputRow { Id = 1,  DetailValue = 3.5 },
+                new MyInputRow { Id = 2,  DetailValue = 4.5 },
+                new MyInputRow { Id = 3,  DetailValue = 2.0 },
+                new MyInputRow { Id = 4,  DetailValue = null },
                 };
-            MemoryDestination<MyAggRow> dest = CreateFlow(sourceData);
+            MemoryDestination<MySumRowNullable> dest = CreateFlow<MySumRowNullable>(sourceData);
 
             //Assert
-            Assert.Collection<MyAggRow>(dest.Data,
+            Assert.Collection(dest.Data,
                 ar => Assert.True(ar.AggValue == 10)
                 );
         }
@@ -100,16 +99,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void AggregateMax()
         {
             //Arrange
-            List<MyMaxRow> sourceData = new List<MyMaxRow>()
+            List<MyInputRow> sourceData = new List<MyInputRow>()
                 {
-                new MyMaxRow { DetailValue = 3.5F },
-                new MyMaxRow { DetailValue = 4.5F },
-                new MyMaxRow { DetailValue = 2.0F },
+                new MyInputRow { DetailValue = 3.5F },
+                new MyInputRow { DetailValue = 4.5F },
+                new MyInputRow { DetailValue = 2.0F },
                 };
-            MemoryDestination<MyAggRow> dest = CreateFlow(sourceData);
+            MemoryDestination<MyMaxRow> dest = CreateFlow<MyMaxRow>(sourceData);
 
             //Assert
-            Assert.Collection<MyAggRow>(dest.Data,
+            Assert.Collection(dest.Data,
                 ar => Assert.True(ar.AggValue == 4.5F)
                 );
         }
@@ -118,16 +117,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void AggregateMin()
         {
             //Arrange
-            List<MyMinRow> sourceData = new List<MyMinRow>()
+            List<MyInputRow> sourceData = new List<MyInputRow>()
                 {
-                new MyMinRow { DetailValue = 3 },
-                new MyMinRow { DetailValue = 4 },
-                new MyMinRow { DetailValue = 2 },
+                new MyInputRow { DetailValue = 3 },
+                new MyInputRow { DetailValue = 4 },
+                new MyInputRow { DetailValue = 2 },
                 };
-            MemoryDestination<MyAggRow> dest = CreateFlow(sourceData);
+            MemoryDestination<MyMinRow> dest = CreateFlow<MyMinRow>(sourceData);
 
             //Assert
-            Assert.Collection<MyAggRow>(dest.Data,
+            Assert.Collection(dest.Data,
                 ar => Assert.True(ar.AggValue == 2)
                 );
         }
@@ -136,29 +135,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void AggregateCount()
         {
             //Arrange
-            List<MyCountRow> sourceData = new List<MyCountRow>()
+            List<MyInputRow> sourceData = new List<MyInputRow>()
                 {
-                new MyCountRow { DetailValue = 5 },
-                new MyCountRow { DetailValue = 7 },
-                new MyCountRow { DetailValue = 8 },
+                new MyInputRow { DetailValue = 5 },
+                new MyInputRow { DetailValue = 7 },
+                new MyInputRow { DetailValue = 8 },
                 };
-            MemoryDestination<MyAggRow> dest = CreateFlow(sourceData);
+            MemoryDestination<MyCountRow> dest = CreateFlow<MyCountRow>(sourceData);
 
             //Assert
-            Assert.Collection<MyAggRow>(dest.Data,
+            Assert.Collection(dest.Data,
                 ar => Assert.True(ar.AggValue == 3)
                 );
         }
 
 
-        private MemoryDestination<MyAggRow> CreateFlow<T>(List<T> sourceData)
+        private MemoryDestination<T> CreateFlow<T>(List<MyInputRow> sourceData)
         {
-            MemorySource<T> source = new MemorySource<T>();
+            MemorySource<MyInputRow> source = new MemorySource<MyInputRow>();
             source.Data = sourceData;
 
-            Aggregation<T, MyAggRow> agg = new Aggregation<T, MyAggRow>();
+            Aggregation<MyInputRow, T> agg = new Aggregation<MyInputRow, T>();
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            MemoryDestination<T> dest = new MemoryDestination<T>();
 
             //Act
             source.LinkTo(agg);
