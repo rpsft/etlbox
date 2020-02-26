@@ -42,34 +42,67 @@ namespace ALE.ETLBoxTests.Performance
 
         [Theory,
             InlineData(10000, 5000)]
-        public void CSVIntoMemDest(int rowsInDest, int rowsInSource)
+        public void NoUpdateWithGuid(int rowsInDest, int rowsInSource)
         {
             //Arrange
-            List<MyMergeRow> knownGuids = new List<MyMergeRow>();
-            for (int i = 0; i < rowsInSource; i++)
-                knownGuids.Add(new MyMergeRow() { 
-                    Id = Guid.NewGuid(), 
-                    LastUpdated = DateTime.Now,
-                    Value = HashHelper.RandomString(1)
-                });
-            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
-            source.Data = knownGuids;
+            CreateDestinationTable("MergeDestination");
+            List<MyMergeRow> knownGuids = CreateTestData(rowsInSource);
+            TransferTestDataIntoDestination(knownGuids);
+            MemorySource<MyMergeRow> source = AddNewTestData(rowsInDest, knownGuids);
+            DbMerge<MyMergeRow> mergeDest = new DbMerge<MyMergeRow>(SqlConnection, "MergeDestination");
+            source.LinkTo(mergeDest);
 
-            CreateTableTask.Create(SqlConnection, "MergeDestination",
+            //Act
+            var executionTime = BigDataHelper.LogExecutionTime("Execute merge", () =>
+            {
+                source.Execute();
+                mergeDest.Wait();
+            });
+
+            //Assert
+            Assert.Equal(rowsInDest + rowsInSource, RowCountTask.Count(SqlConnection, "MergeDestination") ?? 0);
+            Assert.True(executionTime <= TimeSpan.FromMilliseconds((rowsInDest + rowsInSource) * 2));
+        }
+
+        private void CreateDestinationTable(string tableName)
+        {
+            DropTableTask.DropIfExists(SqlConnection, tableName);
+            CreateTableTask.Create(SqlConnection, tableName,
                 new List<TableColumn>()
                 {
                     new TableColumn("Id", "UNIQUEIDENTIFIER", allowNulls: false, isPrimaryKey: true),
                     new TableColumn("LastUpdated","DATETIMEOFFSET", allowNulls: false),
                     new TableColumn("Value","CHAR(1)", allowNulls: false),
                 });
+        }
 
+        private static List<MyMergeRow> CreateTestData(int rowsInSource)
+        {
+            List<MyMergeRow> knownGuids = new List<MyMergeRow>();
+            for (int i = 0; i < rowsInSource; i++)
+                knownGuids.Add(new MyMergeRow()
+                {
+                    Id = Guid.NewGuid(),
+                    LastUpdated = DateTime.Now,
+                    Value = HashHelper.RandomString(1)
+                });
+            return knownGuids;
+        }
+
+        private void TransferTestDataIntoDestination(List<MyMergeRow> knownGuids)
+        {
+            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
+            source.Data = knownGuids;
             DbDestination<MyMergeRow> dest = new DbDestination<MyMergeRow>(SqlConnection, "MergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
+        }
 
-            MemorySource<MyMergeRow> source2 = new MemorySource<MyMergeRow>();
-            source2.Data = knownGuids;
+        private MemorySource<MyMergeRow> AddNewTestData(int rowsInDest, List<MyMergeRow> knownGuids)
+        {
+            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
+            source.Data = knownGuids;
             for (int i = 0; i < rowsInDest; i++)
                 knownGuids.Add(new MyMergeRow()
                 {
@@ -77,15 +110,7 @@ namespace ALE.ETLBoxTests.Performance
                     LastUpdated = DateTime.Now,
                     Value = HashHelper.RandomString(1)
                 });
-
-            DbMerge<MyMergeRow> mergeDest = new DbMerge<MyMergeRow>(SqlConnection, "MergeDestination");
-            source2.LinkTo(mergeDest);
-            source2.Execute();
-            mergeDest.Wait();
-
-            Assert.True(RowCountTask.Count(SqlConnection, "MergeDestination") == rowsInDest + rowsInSource);
+            return source;
         }
-
-       
     }
 }

@@ -63,6 +63,7 @@ namespace ALE.ETLBox.DataFlow
         DbSource<TInput> DestinationTableAsSource { get; set; }
         DbDestination<TInput> DestinationTable { get; set; }
         List<TInput> InputData => Lookup.LookupData;
+        Dictionary<string, TInput> InputDataDict { get; set; }
         CustomSource<TInput> OutputSource { get; set; }
         bool WasTruncationExecuted { get; set; }
         DBMergeTypeInfo TypeInfo { get; set; }
@@ -73,7 +74,7 @@ namespace ALE.ETLBox.DataFlow
             Init();
         }
 
-        public DbMerge(IConnectionManager connectionManager, string tableName) : this (tableName)
+        public DbMerge(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;
         }
@@ -133,10 +134,12 @@ namespace ALE.ETLBox.DataFlow
 
         private TInput UpdateRowWithDeltaInfo(TInput row)
         {
+            if (InputDataDict == null) InitInputDataDictionary();
             row.ChangeDate = DateTime.Now;
+            TInput find = default(TInput);
+            InputDataDict.TryGetValue(row.UniqueId, out find);
             if (DeltaMode == DeltaMode.Delta && row.IsDeletion)
             {
-                TInput find = InputData.Where(d => d.UniqueId == row.UniqueId).FirstOrDefault();
                 if (find != null)
                 {
                     find.ChangeAction = "D";
@@ -146,7 +149,7 @@ namespace ALE.ETLBox.DataFlow
             else
             {
                 row.ChangeAction = "I";
-                TInput find = InputData.Where(d => d.UniqueId == row.UniqueId).FirstOrDefault();
+                //TInput find = InputData.Where(d => d.UniqueId == row.UniqueId).FirstOrDefault();
                 if (find != null)
                 {
                     if (row.Equals(find))
@@ -162,6 +165,13 @@ namespace ALE.ETLBox.DataFlow
                 }
             }
             return row;
+        }
+
+        private void InitInputDataDictionary()
+        {
+            InputDataDict = new Dictionary<string, TInput>();
+            foreach (var d in InputData)
+                InputDataDict.Add(d.UniqueId, d);
         }
 
         void TruncateDestinationOnce()
