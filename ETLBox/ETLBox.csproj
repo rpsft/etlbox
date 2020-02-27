@@ -11,17 +11,16 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>BREAKING CHANGES: Adjusted CSVSource/CSVDestination and DBSource/DBDestination/DBMerge to real CamelCase - they are now CsvSource/CsvDestination and DbSource/DbDestination/DbMerge. Further, ConnectionString was renamed to SqlConnectionString.
-NEW FEATURES: Improving Lookup with new set of attributes to define matching and retrieving properties. Also a new Aggretion component that simplifies creating aggregates (e.g. to calculate SUM, MIN, MAX or Count or any other custom defined calculation).
- You can now load or write xml data with XmlSource or XmlDestination. All text files source (Csv, Json, Xml) now accept either a file path OR an URL which is loaded with a HttpClient. DbMerge supports now delta loads, including a new attribute DeleteColumn to flag deletions. 
-BUGFIXES: Fixes bug in ExcelSource - some columns where not property read. Also, blank rows are now skipped.</PackageReleaseNotes>
-    <Version>1.8.0</Version>
+    <PackageReleaseNotes>Fixing performance issue for DbMerge. Also, LookupTransformation and Aggregate Attributes now need to be set on the lookup / aggregate object. 
+
+BREAKING CHANGES since 1.8.0: Adjusted CSVSource/CSVDestination and DBSource/DBDestination/DBMerge to real CamelCase - they are now CsvSource/CsvDestination and DbSource/DbDestination/DbMerge. Further, ConnectionString was renamed to SqlConnectionString.</PackageReleaseNotes>
+    <Version>1.8.1</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.0.0</AssemblyVersion>
-    <FileVersion>1.8.0.0</FileVersion>
+    <AssemblyVersion>1.8.1.0</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>
