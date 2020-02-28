@@ -153,6 +153,15 @@
     <None Update="res\JsonDestination\TwoColumnsStringArray.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\JsonSource\EmptyObject.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\JsonSource\EmptyArray.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\JsonSource\ArrayInObject.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\JsonSource\TwoColumnsErrorLinking.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -54,9 +54,9 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void ReadAll()
         {
-            JsonTextReader.Read();
-            if (JsonTextReader.TokenType != JsonToken.StartArray)
-                throw new ETLBoxException("Json needs to contain an array on root level!");
+            do
+            {
+            } while (JsonTextReader.Read() && JsonTextReader.TokenType != JsonToken.StartArray);
 
             bool skipRecord = false;
             if (ErrorHandler.HasErrorBuffer)
@@ -68,7 +68,7 @@ namespace ALE.ETLBox.DataFlow
                 };
             while (JsonTextReader.Read())
             {
-                if (JsonTextReader.TokenType == JsonToken.EndArray) continue;
+                if (JsonTextReader.TokenType == JsonToken.EndArray || JsonTextReader.TokenType == JsonToken.EndObject) continue;
                 else
                 {
                     TOutput record = JsonSerializer.Deserialize<TOutput>(JsonTextReader);

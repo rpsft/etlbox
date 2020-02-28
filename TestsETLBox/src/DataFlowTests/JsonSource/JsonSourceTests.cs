@@ -18,7 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class JsonSourceTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public JsonSourceTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -34,10 +34,27 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSource2Cols");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "JsonSource2Cols");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "JsonSource2Cols");
 
             //Act
             JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/TwoColumns.json", ResourceType.File);
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest2Columns.AssertTestData();
+        }
+
+        [Fact]
+        public void ArrayInObject()
+        {
+            //Arrange
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSourceArrayInObject");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "JsonSourceArrayInObject");
+
+            //Act
+            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/ArrayInObject.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

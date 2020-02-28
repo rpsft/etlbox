@@ -18,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName => $"Write data into memory";
 
-        public BlockingCollection<TInput> Data { get; set; }
+        public BlockingCollection<TInput> Data { get; set; } = new BlockingCollection<TInput>();
 
         public MemoryDestination()
         {
@@ -43,7 +43,7 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A destination in memory - it will store all you data in a list. 
+    /// A destination in memory - it will store all you data in a list.
     /// The MemoryDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="MemoryDestination{TInput}"/>
