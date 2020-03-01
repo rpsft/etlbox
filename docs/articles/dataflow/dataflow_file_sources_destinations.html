@@ -120,6 +120,36 @@ CsvDestination&lt;MySimpleRow&gt; dest = new CsvDestination&lt;MySimpleRow&gt;(&
     Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
 };
 </code></pre>
+<h2 id="xml">Xml</h2>
+<h3 id="xmlsource">XmlSource</h3>
+<p>The xml source let you read data from a xml source.
+Let's assume your xml file looks like this:</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Root&gt;
+    &lt;MySimpleRow Col1=&quot;1&quot;&gt;
+        &lt;Col2&gt;Test1&lt;/Col2&gt;
+    &lt;/MySimpleRow&gt;
+    &lt;MySimpleRow Col1=&quot;2&quot;&gt;
+        &lt;Col2&gt;Test2&lt;/Col2&gt;
+    &lt;/MySimpleRow&gt;
+&lt;/Root&gt;
+</code></pre>
+<p>Xml parsing is based on XmlSerializer. You can define your source and your object like this, and  make use of the default xml attribute annotations to
+influence the XmlSerializer.</p>
+<pre><code class="lang-C#">[XmlRoot(&quot;MySimpleRow&quot;)]
+public class MyRow
+{
+    [XmlAttribute]
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+  XmlSource&lt;MyRow&gt; source = new XmlSource&lt;MyRow&gt;(&quot;source.xml&quot;, ResourceType.File);
+</code></pre>
+<h3 id="xmldestination">XmlDestination</h3>
+<p>The xml destination will you the same XmlSerializer to deserialize the data and write them into an xml file.</p>
+<pre><code class="lang-C#">XmlDestination&lt;MyRow&gt; dest = new XmlDestination&lt;MyRow&gt;(&quot;dest.xml&quot;, ResourceType.File);
+</code></pre>
 <h2 id="excelsource">ExcelSource</h2>
 <p>An Excel source reads data from a xls or xlsx file. It uses the 3rd party library <code>ExcelDataReader</code>.
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range

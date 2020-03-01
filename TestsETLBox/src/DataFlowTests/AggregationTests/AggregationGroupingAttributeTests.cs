@@ -31,9 +31,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         public class MyAggRow
         {
-            [GroupColumn("ClassName")]
+            [GroupColumn(nameof(MyRow.ClassName))]
             public string GroupName { get; set; }
-            [AggregateColumn("DetailValue", AggregationMethod.Sum)]
+            [AggregateColumn(nameof(MyRow.DetailValue), AggregationMethod.Sum)]
             public double AggValue { get; set; }
         }
 

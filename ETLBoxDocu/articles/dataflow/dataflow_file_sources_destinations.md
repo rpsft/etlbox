@@ -61,6 +61,47 @@ CsvSource source = new CsvSource("res/CsvSource/OneColumn.csv")
 };
 ```
 
+## Xml
+
+### XmlSource
+
+The xml source let you read data from a xml source.
+Let's assume your xml file looks like this:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+    <MySimpleRow Col1="1">
+        <Col2>Test1</Col2>
+    </MySimpleRow>
+    <MySimpleRow Col1="2">
+        <Col2>Test2</Col2>
+    </MySimpleRow>
+</Root>
+```
+
+Xml parsing is based on XmlSerializer. You can define your source and your object like this, and  make use of the default xml attribute annotations to
+influence the XmlSerializer.
+
+```C#
+[XmlRoot("MySimpleRow")]
+public class MyRow
+{
+    [XmlAttribute]
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+  XmlSource<MyRow> source = new XmlSource<MyRow>("source.xml", ResourceType.File);
+```
+
+### XmlDestination
+
+The xml destination will you the same XmlSerializer to deserialize the data and write them into an xml file.
+
+```C#
+XmlDestination<MyRow> dest = new XmlDestination<MyRow>("dest.xml", ResourceType.File);
+```
 
 ## ExcelSource
 

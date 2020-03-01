@@ -124,7 +124,35 @@ RowTransformation&amp;lt;string[], MySimpleRow&amp;gt; trans = new RowTransforma
 <p>The lookup is a row transformation, but before it starts processing any rows it will load all data from the given LookupSource into memory
 and will make it accessible as a List object.
 Though the lookup is non-blocking, it will take as much memory as the lookup table needs to be loaded fully into memory.</p>
-<p>Here is an example:</p>
+<p>A lookup can be used with the Attributes <code>MatchColumn</code> and <code>RetrieveColumn</code>. The MatchColumn defines which property in the target object needs to match, so
+that the lookup should retrieve the value. The RetrieveColumn maps the retrieved value to a property in the target class.</p>
+<p>Let's look at an example:</p>
+<pre><code class="lang-C#">  public class LookupData
+{
+    [MatchColumn(&quot;LookupId&quot;)]
+    public int Id { get; set; }
+    [RetrieveColumn(&quot;LookupValue&quot;)]
+    public string Value { get; set; }
+}
+
+public class InputDataRow
+{
+    public int LookupId { get; set; }
+    public string LookupValue { get; set; }
+}
+
+MemorySource&lt;InputDataRow&gt; source = new MemorySource&lt;InputDataRow&gt;();
+source.Data.Add(new InputDataRow() { LookupId = 1 });
+MemorySource&lt;LookupData&gt; lookupSource = new MemorySource&lt;LookupData&gt;();
+lookupSource.Data.Add(new LookupData() { Id = 1, Value = &quot;Test1&quot; });
+
+var lookup = new LookupTransformation&lt;InputDataRow, LookupData&gt;();
+lookup.Source = lookupSource;
+MemoryDestination&lt;InputDataRow&gt; dest = new MemoryDestination&lt;InputDataRow&gt;();
+source.LinkTo(lookup);
+lookup.LinkTo(dest);
+</code></pre>
+<p>If you don't want to use attributes, you can define your own lookup functions.</p>
 <pre><code class="lang-C#">DbSource&lt;MyLookupRow&gt; lookupSource = new DbSource&lt;MyLookupRow&gt;(connection, &quot;Lookup&quot;);
 List&lt;MyLookupRow&gt; LookupTableData = new List&lt;MyLookupRow&gt;();
 LookupTransformation&lt;MyInputDataRow, MyLookupRow&gt; lookup = new Lookup&lt;MyInputDataRow, MyLookupRow&gt;(
@@ -198,6 +226,40 @@ MergeJoin&lt;MyInputRowType1, MyInputRowType2, MyOutputRowType&gt; join = new Me
 source1.LinkTo(join.Target1);
 source2.LinkTo(join.Target2);
 join.LinkTo(dest);
+</code></pre>
+<h3 id="aggregation">Aggregation</h3>
+<p>The aggregation allow you to aggregate data in your flow in a non-blocking transformation. Aggregation functions
+are sum, min, max and count. This means that you can calculate a total sum, the min or max value or the count of a all items
+in your flow. Also, you can define your own aggregation function.
+The aggregation does not necessarily be calculated on your whole data. You can specify that your calculation is grouped by a particular property or function.</p>
+<p>There are two ways to use the Aggregation. The easier way is to make use of the attributes <code>AggregationColumn</code> and <code>GroupColumn</code>. The first parameter is the
+property name of target property.</p>
+<pre><code class="lang-C#">public class MyRow
+{
+    public string ClassName { get; set; }         
+    public double DetailValue { get; set; }
+}
+
+public class MyAggRow
+{
+    [GroupColumn(nameof(MyRow.ClassName))]
+    public string GroupName { get; set; }
+    [AggregateColumn(nameof(MyRow.DetailValue), AggregationMethod.Sum)]
+    public double AggValue { get; set; }
+}
+
+MemorySource&lt;MyRow&gt; source = new MemorySource&lt;MyRow&gt;();
+Aggregation&lt;MyRow, MyAggRow&gt; agg = new Aggregation&lt;MyRow, MyAggRow&gt;();
+MemoryDestination&lt;MyAggRow&gt; dest = new MemoryDestination&lt;MyAggRow&gt;();
+source.LinkTo(agg);
+agg.LinkTo(dest);
+</code></pre>
+<p>To achieve the same behaviour with your own functions, you could create the Aggregation like this:</p>
+<pre><code class="lang-C#">Aggregation&lt;MyRow, MyAggRow&gt; agg = new Aggregation&lt;MyRow, MyAggRow&gt;(
+    (row, aggValue) =&gt; aggValue.AggValue += row.DetailValue,
+    row =&gt; row.ClassName,
+    (key, agg) =&gt; agg.GroupName = (string)key
+);
 </code></pre>
 <h2 id="blocking-transformations">Blocking Transformations</h2>
 <h3 id="blocktransformation">BlockTransformation</h3>
