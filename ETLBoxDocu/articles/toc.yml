@@ -34,8 +34,8 @@
   items:
     - name: Different Sources and Destinations
       href: examples/example_different_sources_destinations.md
-    - name: Complex Data Flow
-      href: examples/example_complex_dataflow.md
+    - name: Rating Orders
+      href: examples/example_rating_orders.md
 
 
 
