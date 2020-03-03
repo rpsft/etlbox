@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Example: Complex Data Flow | ETLBox - It's all in the box </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Example: Complex Data Flow | ETLBox - It's all in the box ">
+    <meta name="generator" content="docfx 2.47.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="example-complex-data-flow">Example: Complex Data Flow</h1>
+
+<h2 id="purpose">Purpose</h2>
+<p>This example demonstrates how the different data flow components can be used together, simulating a
+real-life scenario.  In this scenario, we will to read some orders from a csv file,
+lookup the customer key by using the customer name, write the orders into an orders table
+and also create a customer rating based on the total amount of purchases.</p>
+<h3 id="schematic-overview">Schematic overview</h3>
+<p><img src="../../images/rating_orders_overview.png" alt="Rating orders overview"></p>
+<h2 id="preqrequisites">Preqrequisites</h2>
+<p>In order to recreate this demo, you need a database server. This example will run on any supported database -
+though every database comes with some database specific particularities.
+The following code was succesfully tested with Sql Server.</p>
+<p>If you are using docker, you can use the following command to create a docker container
+for Sql Server:</p>
+<pre><code class="lang-bash">docker run -e &quot;ACCEPT_EULA=Y&quot; -e &quot;SA_PASSWORD=YourStrong@Passw0rd&quot; -p 1433:1433 --name localmssql -d mcr.microsoft.com/mssql/server
+</code></pre>
+<p>You may need to create a login first, and call <code>docker login</code> before you can execute this command. The container can be started with <code>docker start localmssql</code>.
+This will create a Sql Server database listening on port 1433 for incoming connections. The sysadmin login has the username <code>sa</code> with the password <code>YourStrong@Passw0rd</code>.</p>
+<p>You need to create a database called &quot;demo&quot; prior to following this example.</p>
+<p>The connection string to connect to this database will look similar like this:
+<code>Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=YourStrong@Passw0rd;</code>
+You probably need to adjust the adress to your needs (e.g. replace &quot;.&quot; with &quot;10.211.55.2&quot; to access the database on a different machine).</p>
+<h3 id="preparation">Preparation</h3>
+<p>We need to create the destination table <code>orders</code> and customer_rating as empty table. Also
+we want a <code>customer</code> table that hold a customer key for our customer names.
+We could do this manually, or we can use the following ControlFlow Tasks to create these tables:</p>
+<pre><code class="lang-C#">ControlFlow.DefaultDbConnection = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=YourStrong@Passw0rd&quot;);
+
+TableDefinition OrderDataTableDef = new TableDefinition(&quot;orders&quot;,
+    new List&lt;TableColumn&gt;() {
+        new TableColumn(&quot;Key&quot;, &quot;int&quot;,allowNulls: false, isPrimaryKey:true, isIdentity:true),
+        new TableColumn(&quot;Number&quot;,&quot;nvarchar(100)&quot;, allowNulls: false),
+        new TableColumn(&quot;Item&quot;,&quot;nvarchar(200)&quot;, allowNulls: false),
+        new TableColumn(&quot;Amount&quot;,&quot;money&quot;, allowNulls: false),
+        new TableColumn(&quot;CustomerKey&quot;,&quot;int&quot;, allowNulls: false)
+});
+
+TableDefinition CustomerTableDef = new TableDefinition(&quot;customer&quot;,
+    new List&lt;TableColumn&gt;() {
+        new TableColumn(&quot;Key&quot;, &quot;int&quot;,allowNulls: false, isPrimaryKey:true, isIdentity:true),
+        new TableColumn(&quot;Name&quot;,&quot;nvarchar(200)&quot;, allowNulls: false),
+});
+
+TableDefinition CustomerRatingTableDef = new TableDefinition(&quot;customer_rating&quot;,
+    new List&lt;TableColumn&gt;() {
+        new TableColumn(&quot;Key&quot;, &quot;int&quot;,allowNulls: false, isPrimaryKey:true, isIdentity:true),
+        new TableColumn(&quot;CustomerKey&quot;, &quot;int&quot;,allowNulls: false),
+        new TableColumn(&quot;TotalAmount&quot;,&quot;decimal(10,2)&quot;, allowNulls: false),
+        new TableColumn(&quot;Rating&quot;,&quot;nvarchar(3)&quot;, allowNulls: false)
+});
+
+//Create demo tables &amp; fill with demo data
+OrderDataTableDef.CreateTable();
+CustomerTableDef.CreateTable();
+CustomerRatingTableDef.CreateTable();
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Sandra Kettler')&quot;);
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Nick Thiemann')&quot;);
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Zoe Rehbein')&quot;);
+SqlTask.ExecuteNonQuery(&quot;Fill customer table&quot;, &quot;INSERT INTO customer values('Margit Gries')&quot;);
+</code></pre>
+<p>Let's define some POCOs (Plain old component objects) that can hold the data when it goes through
+the data flow pipeline.</p>
+<pre><code class="lang-C#">public class Order
+{
+    public string Number { get; set; }
+    public string Item { get; set; }
+    public int CustomerKey { get; set; }
+    public string CustomerName { get; set; }
+    public decimal Amount { get; set; }
+}
+
+public class Customer
+{
+    [RetrieveColumn(nameof(Order.CustomerKey)]
+    public int Key { get; set; }
+    [MatchColumn(nameof(Order.CustomerName)]
+    public string Name { get; set; }
+}
+
+public class Rating
+{
+    [GroupColumn(nameof(Order.CustomerKey)]
+    public int CustomerKey { get; set; }
+    [AggregateColumn(nameof(Order.Amount), AggregationMethod.Sum)]
+    public decimal TotalAmount { get; set; }
+
+    [ColumnMap(&quot;Rating&quot;)]
+    public string RatingValue =&gt; TotalAmount &gt; 50 ? &quot;A&quot; : &quot;F&quot;;
+}
+</code></pre>
+<p>Please note that there are attributes above the properties. The attributes MatchColumn/RetrieveColumn are used for the LookupTransformation and
+GroupColumn/AggregationColumn for the Aggregation. They will be explained later.</p>
+<p>The <code>ColumnMap</code> attribute above the property <code>RatingValue</code> will map the table column <code>Rating</code> in the <code>customer_rating</code> table with
+corresponding property &quot;RatingValue&quot;. Normally, ETLBox maps columns in source or destinations with properties by matching names. So to
+make things work by default, the property could have been called &quot;Rating&quot; - but by adding the <code>ColumnMap</code> attribute, we can define a different
+name for the property and let it match with the column &quot;Rating&quot; in the table.</p>
+<h3 id="build-the-pipeline">Build the pipeline</h3>
+<p>Now we can construct a pipeline. Let's start with the source</p>
+<pre><code class="lang-C#">//Read data from csv file
+CsvSource sourceOrderData = new CsvSource(&quot;DemoData.csv&quot;);
+sourceOrderData.Configuration.Delimiter = &quot;;&quot;;
+</code></pre>
+<p>Source data will look like this:</p>
+<pre><code class="lang-csv">OrderNumber;OrderItem;OrderAmount;CustomerName
+4711;Yellow Shoes;30.00$;Sandra Kettler
+4712;Green T-Shirt;14.99$;Nick Thiemann
+4713;Blue Jeans;29.99$;Zoe Rehbein
+4714;White Jeans;29.99$;Margit Gries
+4807;Green Shoes;32.00$;Margit Gries
+</code></pre>
+<p>We add a row transformation - and connect it with source.
+Data will be read from the source and moved into the row transformation.
+A row transformation will go through each row and modifies it by a given function.
+Furthermore, a row transformation can change the object type of the input into something different -
+we use this to transform our string array into our POCO.</p>
+<pre><code class="lang-C#">//Transform into Order object
+RowTransformation&lt;ExpandoObject, Order&gt; transIntoObject = new RowTransformation&lt;ExpandoObject, Order&gt;(
+    csvLine =&gt;
+    {
+        dynamic order = csvLine as dynamic;
+        return new Order()
+        {
+            //Header in Csv: OrderNumber;OrderItem;OrderAmount;CustomerName
+            Number = order.OrderNumber,
+            Item = order.OrderItem,
+            Amount = decimal.Parse(order.OrderAmount.ToString().Replace(&quot;€&quot;,&quot;&quot;), CultureInfo.GetCultureInfo(&quot;en-US&quot;)),
+            CustomerName =  order.CustomerName
+        };
+    });
+sourceOrderData.LinkTo(transIntoObject);
+</code></pre>
+<h4 id="automatically-converting-data-types">Automatically converting data types</h4>
+<p><em>Note</em>: Normally when reading data from a source, you don't necessarily need use a  dynamic object and
+then convert it into a regular object using a RowTransformation. Normally, you can do something like
+<code>CsvSource&lt;Order&gt; source = new CsvSource&lt;Order&gt;(&quot;DemoData.csv&quot;);</code>. All sources and most transformations
+will always try to convert the incoming data into the right data types. In our example, it would work if we would
+remove the &quot;€&quot;-sign from the amount column in the csv file. Then ETLBox would have been to automatically convert the data
+into the right data type.</p>
+<h3 id="retrieving-the-customer-key">Retrieving the customer key</h3>
+<p>Next we want to find a customer key for the customer name in our csv file.
+To make this work, we already created a customer table that holds a list of customer names and the corresponding keys.</p>
+<p>We now define this customer table as a source for our lookup.  A lookup will load data from this source
+to enrich the data in the flow. The customer data will be loaded into the memory as soon as the first rows arrives at the LookupTransformation.</p>
+<pre><code class="lang-C#"> //Find corresponding customer id if customer exists in Customer table
+DbSource&lt;Customer&gt; sourceCustomerData = new DbSource&lt;Customer&gt;(&quot;customer&quot;);
+LookupTransformation&lt;Order, Customer&gt; lookupCustomerKey = new LookupTransformation&lt;Order, Customer&gt;(sourceCustomerData);
+transIntoObject.LinkTo(lookupCustomerKey);
+</code></pre>
+<p>The lookup works because it can gather the required information from the attributes in the Customer object.
+There, we did define a MatchColumn and a RetrieveColumn attribute. The MatchColumn looked like this:
+<code>[MatchColumn(nameof(Order.CustomerName)]</code> and was set on the property &quot;Name&quot;. The lookup now knows that any value in the Name
+must match the property CustomerName in the incoming Order data. If the values of these two properties matches,
+the attribute <code>[RetrieveColumn(nameof(Order.CustomerKey)]</code> tells the LookupTransformation to push the retrieved value from the source into the property
+CustomerKey in the Order.</p>
+<p>After an Order row has been processed by the lookup, the property CustomerKey holds the value from the Key column the customer table.</p>
+<h3 id="splitting-the-data">Splitting the data</h3>
+<p>Now we add a multicast - a multicast &quot;doubles&quot; the input into 2 same outputs with the exact same data.
+This is useful if you want to have additional destination populated with data based on your input.
+In our scenario we do this because we not only want to store the orders in a order table, but also
+we want to create some customer rating based on the orders.</p>
+<pre><code class="lang-C#">//Split data
+Multicast&lt;Order&gt; multiCast = new Multicast&lt;Order&gt;();
+lookupCustomerKey.LinkTo(multiCast);
+</code></pre>
+<p>So now let's store the orders with the retrieved customer key in the order table. We need a DbDestination for this.</p>
+<pre><code class="lang-C#">//Store Order in Orders table
+DbDestination&lt;Order&gt; destOrderTable = new DbDestination&lt;Order&gt;(&quot;orders&quot;);
+multiCast.LinkTo(destOrderTable);
+</code></pre>
+<h3 id="creating-the-customer-rating">Creating the customer rating</h3>
+<p>The other output will go into an aggregation block to calculate the customer rating. An aggragation is a non-blocking transformation
+that can do some basic aggregation: Sum, Min, Max and Count. Also, it allows you to group the aggregation functions on one or more values.
+In our example, we will calculate a rating &quot;A&quot; or &quot;F&quot; based on the total amount of orders - if the total amount is higher
+than 50, it will be an &quot;A&quot;, otherwise &quot;F&quot;.</p>
+<pre><code class="lang-C#">//Create rating for existing customers based total of order amount
+Aggregation&lt;Order, Rating&gt; aggregation = new Aggregation&lt;Order, Rating&gt;();
+multiCast.LinkTo(aggregation);
+</code></pre>
+<p>It seems that some magic happened in the Aggregation. Let's have a look at the CustomerRating object again:</p>
+<pre><code class="lang-C#">public class Rating
+{
+    [GroupColumn(nameof(Order.CustomerKey)]
+    public int CustomerKey { get; set; }
+    [AggregateColumn(nameof(Order.Amount), AggregationMethod.Sum)]
+    public decimal TotalAmount { get; set; }
+
+    [ColumnMap(&quot;Rating&quot;)]
+    public string RatingValue =&gt; TotalAmount &gt; 50 ? &quot;A&quot; : &quot;F&quot;;
+}
+</code></pre>
+<p>The aggrgation gather it's information from the attributes GroupColumn and AggregationColumn. The attribute
+<code>[GroupColumn(nameof(Order.CustomerKey)]</code> on the property CustomerKey tells the aggregation to the Orders by
+the CustomerKey and store the grouping value in the Rating result as well. The attribute
+<code>[AggregateColumn(nameof(Order.Amount), AggregationMethod.Sum)]</code> tells the aggregation to do a sum of Amount for each group.</p>
+<p>The rating itself is then a simple getter method that checks if the sum of the amount is greater than 50 - if yes, the rating is &quot;A&quot;, else &quot;F&quot;.</p>
+<h3 id="storing-the-customer-rating">Storing the customer rating</h3>
+<p>Now we want to store the calculated Rating in the table <code>customer_rating</code>. So we create another destination
+for this table and link it to our BlockTransformation.</p>
+<pre><code class="lang-C#">//Store the rating in the customer rating table
+DbDestination&lt;Rating&gt; destRating = new DbDestination&lt;Rating&gt;(&quot;customer_rating&quot;);
+aggregation.LinkTo(destRating);
+</code></pre>
+<p>The table customer_rating has a column Rating. The attribute <code>[ColumnMap(&quot;Rating&quot;)]</code> tells the DbDestination to store the data from the property
+RatingValue in the column Rating.</p>
+<h3 id="starting-the-data-flow">Starting the data flow</h3>
+<p>No we are all set to start the data flow. We can execute dataflow synchronously or asynchrounously.
+Thus, our csv source can to be started with either the <code>Execute()</code> or <code>ExecuteAsync()</code> method,
+and then we can use the <code>Wait()</code> or <code>Completion()</code> method to wait until all destinations
+got all data and the completion message from the source.</p>
+<p>In our example it looks like this:</p>
+<pre><code class="lang-C#">//Execute the data flow synchronously
+sourceOrderData.Execute();
+destOrderTable.Wait();
+destRating.Wait();
+</code></pre>
+<h2 id="checking-the-result">Checking the result</h2>
+<p>Now you can connect to your database and look into the tables customer_rating and orders. You will find in there the orders from the csv file, including a customer key
+as well as a customer rating based on the total amount of purchases.</p>
+<h3 id="demo-on-github">Demo on Github</h3>
+<p><a href="https://github.com/roadrunnerlenny/etlboxdemo/tree/master/RatingOrdersFlow">The whole demo code is available on GitHub</a>.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Crafted with &lt;3 in Berlin<br>
+<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>
