@@ -287,7 +287,7 @@ as well as a customer rating based on the total amount of purchases.
 
 ### Demo on Github
 
-[The whole demo code is available on GitHub](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/RatingOrdersFlow). 
+[The whole demo code is available on GitHub](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/RatingOrdersExample). 
 
 
 

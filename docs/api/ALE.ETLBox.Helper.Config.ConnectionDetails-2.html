@@ -118,7 +118,9 @@
   <h5 id="ALE_ETLBox_Helper_Config_ConnectionDetails_2_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class ConnectionDetails&lt;TConnectionString, TConnectionManager&gt;
+
     where TConnectionString : IDbConnectionString, new()
+
     where TConnectionManager : IConnectionManager, new()</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
