@@ -41,21 +41,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WriteIntoHttpClient()
         {
             //Arrange
-            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            handlerMock.Protected()
-               .Setup<Task<HttpResponseMessage>>(
-                  "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>()
-               )
-               .ReturnsAsync(new HttpResponseMessage()
-               {
-                   StatusCode = HttpStatusCode.OK
-               })
-               .Verifiable();
-
-            var httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://test.test/"),
-            };
+            Mock<HttpMessageHandler> handlerMock = CreateHandlerMoq();
+            HttpClient httpClient = CreateHttpClient(handlerMock);
 
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
             source.Data.Add(new MySimpleRow() { Col1 = 1, Col2 = "Test1" });
@@ -78,5 +65,31 @@ namespace ALE.ETLBoxTests.DataFlowTests
                ItExpr.IsAny<CancellationToken>()
             );
         }
+
+        private Mock<HttpMessageHandler> CreateHandlerMoq()
+        {
+            //Arrange
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock.Protected()
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>()
+               )
+               .ReturnsAsync(new HttpResponseMessage()
+               {
+                   StatusCode = HttpStatusCode.OK
+               })
+               .Verifiable();
+            return handlerMock;
+        }
+
+        private HttpClient CreateHttpClient(Mock<HttpMessageHandler> handlerMock)
+        {
+            return new HttpClient(handlerMock.Object)
+            {
+                BaseAddress = new Uri("http://test.test/"),
+            };
+        }
+
+
     }
 }

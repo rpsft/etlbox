@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,11 +10,29 @@ namespace ALE.ETLBox.DataFlow
 {
     public abstract class DataFlowStreamSource<TOutput> : DataFlowSource<TOutput>
     {
+
+
         /* Public properties */
         /// <summary>
         /// The Url of the webservice (e.g. https://test.com/foo) or the file name (relative or absolute)
         /// </summary>
-        public string Uri { get; set; }
+        public string Uri
+        {
+            get
+            {
+                return _uri;
+            }
+            set
+            {
+                _uri = value;
+                GetNextUri = c => _uri;
+                CanGetNextUri = c => false;
+            }
+        }
+        protected string _uri;
+
+        public Func<int, string> GetNextUri { get; set; }
+        public Func<int, bool> CanGetNextUri { get; set; }
         /// <summary>
         /// Specifies the resourc type. By default requests are made with HttpClient.
         /// Specify ResourceType.File if you want to read from a json file.
@@ -25,11 +45,15 @@ namespace ALE.ETLBox.DataFlow
         public override void Execute()
         {
             NLogStart();
-            OpenStream();
-            InitReader();
             try
             {
-                ReadAll();
+                do
+                {
+                    string uri = GetNextUri(ProgressCount);
+                    OpenStream(uri);
+                    InitReader();
+                    ReadAll();
+                } while (CanGetNextUri(ProgressCount));
                 Buffer.Complete();
             }
             finally
@@ -40,18 +64,18 @@ namespace ALE.ETLBox.DataFlow
             NLogFinish();
         }
 
-        protected virtual void OpenStream()
+        protected void OpenStream(string uri)
         {
             if (ResourceType == ResourceType.File)
-                StreamReader = new StreamReader(Uri, true);
-            else
-                StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(Uri)).Result);
+                StreamReader = new StreamReader(uri, true);
+            else 
+                StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(uri)).Result);
         }
 
-        protected virtual void CloseStream()
+        protected void CloseStream()
         {
-            StreamReader?.Dispose();
             HttpClient?.Dispose();
+            StreamReader?.Dispose();
         }
 
         protected abstract void InitReader();
@@ -59,4 +83,5 @@ namespace ALE.ETLBox.DataFlow
         protected abstract void CloseReader();
 
     }
+
 }

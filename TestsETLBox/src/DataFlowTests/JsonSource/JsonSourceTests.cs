@@ -63,28 +63,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-        public class Todo
-        {
-            [JsonProperty("Id")]
-            public int Key { get; set; }
-            public string Title { get; set; }
-        }
-
-        [Fact]
-        public void JsonFromWebService()
-        {
-            //Arrange
-            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
-
-            //Act
-            JsonSource<Todo> source = new JsonSource<Todo>("https://jsonplaceholder.typicode.com/todos");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            Assert.All(dest.Data, item => Assert.True(item.Key > 0));
-        }
-
     }
 }
