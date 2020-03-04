@@ -105,7 +105,8 @@ XmlDestination<MyRow> dest = new XmlDestination<MyRow>("dest.xml", ResourceType.
 
 ## ExcelSource
 
-An Excel source reads data from a xls or xlsx file. It uses the 3rd party library `ExcelDataReader`. 
+An Excel source reads data from a xls or xlsx file. 
+[It uses the 3rd party library `ExcelDataReader`](https://github.com/ExcelDataReader/ExcelDataReader). 
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range 
 to restrict this behavior. Additionally, you have to use the Attribute `ExcelColumn` to define the column index
 for each property. The first column would be 0, the 2nd column 1, ...
@@ -126,7 +127,11 @@ ExcelSource<ExcelData> source = new ExcelSource<ExcelData>("src/DataFlow/ExcelDa
     SheetName = "Sheet2"
 };
 ```
+The ExcelRange must not define the full range. It is sufficient if you just set the starting coordinates. The end of the
+data can be automatically determined from the underlying ExcelDataReader.
 
+The ExcelSource has a property `IgnoreBlankRows`. This can be set to true, and all rows which cells are completely empty
+are ignored when reading data from your source. 
 
 ## Other Sources and Destinations
 

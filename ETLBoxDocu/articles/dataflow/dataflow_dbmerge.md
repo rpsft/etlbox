@@ -37,7 +37,8 @@ update or delete the data in the destination table.
 Deletion is optional (by default turned on) , and can be disabled with the property 
 `DisableDeletion` set to true. 
 
-The DBMerge was designed for scenario 1, but also  works for scenario 2 except for deletions. 
+The DBMerge was designed for scenario 1 and scenario 2. For scenario 2, the property DeltaMode has
+to be set to DeltaMode.Delta: `DeltaMode = DeltaMode.Delta`.
 
 ### Example 
 
@@ -189,6 +190,35 @@ if you expect a lot of deletions, but you will always read all data from the des
 Unfortunately, there is no general recommendation when to use this approach. 
 
 Also, if you don't specify any Id columns with teh `IdColumn` attribute, the DbMerge will use the truncate method automatically. 
+
+#### Delta mode
+
+If the source transfer delta information, then you can set the DbMerge delta mode:
+
+```C#
+DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDeltaDestination")
+{
+    DeltaMode = DeltaMode.Delta
+};
+```
+ 
+In delta mode, by default objects in the destination won't be deleted. It can be that there is a property in your source 
+that is an indicator that a record is deleted. In this case, you can flag this property with the attribute `DeleteColumn`.
+
+```C#
+public class MyMergeRow : MergeableRow
+{
+    [IdColumn]
+    public long Key { get; set; }
+    [CompareColumn]
+    public string Value { get; set; }
+    [DeleteColumn(true)]
+    public bool DeleteThisRow { get; set; }
+}
+```
+
+In this example object, if the property DeleteThisRow is set to true, the record in the destination will be deleted
+if it matches with the Key property that is flagged with the attribute IdColumn.
 
 #### ColumnMap attribute
 
