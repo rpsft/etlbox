@@ -54,26 +54,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.All(dest.Data, item => Assert.True(item.Key > 0));
-        }
-
-        [Fact]
-        public void PaginatedRequest()
-        {
-            // Arrange
-            HttpClient httpClient = MoqJsonResponse(File.ReadAllText("res/JsonSource/Todos.json"));
-
-            //Arrange
-            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
-
-            //Act
-            JsonSource<Todo> source = new JsonSource<Todo>();
-            source.HttpClient = httpClient;
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            Assert.All(dest.Data, item => Assert.True(item.Key > 0));
+            Assert.Equal(5, dest.Data.Count);
         }
 
         private HttpClient MoqJsonResponse(string json)
@@ -81,13 +62,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
             handlerMock
                .Protected()
-               // Setup the PROTECTED method to mock
                .Setup<Task<HttpResponseMessage>>(
                   "SendAsync",
                   ItExpr.IsAny<HttpRequestMessage>(),
                   ItExpr.IsAny<CancellationToken>()
                )
-               // prepare the expected response of the mocked http call
                .ReturnsAsync(new HttpResponseMessage()
                {
                    StatusCode = HttpStatusCode.OK,
@@ -95,12 +74,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
                })
                .Verifiable();
 
-            // use real http client with mocked handler here
-            var httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://test.com/"),
-            };
-            return httpClient;
+            return new HttpClient(handlerMock.Object);
+        }
+
+        [Fact]
+        public void PaginatedRequest()
+        {
+            //Arrange
+            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
+            int page = 1;
+            //Act
+            JsonSource<Todo> source = new JsonSource<Todo>();
+            source.GetNextUri = c => $"res/JsonSource/Todos_Page" + page++ + ".json";
+            source.HasNextUri = c => page <= 3;
+            source.ResourceType = ResourceType.File;
+
+            //source.HttpClient = httpClient;
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.All(dest.Data, item => Assert.True(item.Key > 0)); 
+            Assert.Equal(5, dest.Data.Count);
         }
     }
 }

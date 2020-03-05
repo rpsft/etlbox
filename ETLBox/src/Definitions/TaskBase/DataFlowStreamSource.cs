@@ -10,8 +10,6 @@ namespace ALE.ETLBox.DataFlow
 {
     public abstract class DataFlowStreamSource<TOutput> : DataFlowSource<TOutput>
     {
-
-
         /* Public properties */
         /// <summary>
         /// The Url of the webservice (e.g. https://test.com/foo) or the file name (relative or absolute)
@@ -26,13 +24,14 @@ namespace ALE.ETLBox.DataFlow
             {
                 _uri = value;
                 GetNextUri = c => _uri;
-                CanGetNextUri = c => false;
+                HasNextUri = c => false;
             }
         }
         protected string _uri;
 
         public Func<int, string> GetNextUri { get; set; }
-        public Func<int, bool> CanGetNextUri { get; set; }
+        public Func<int, bool> HasNextUri { get; set; }
+
         /// <summary>
         /// Specifies the resourc type. By default requests are made with HttpClient.
         /// Specify ResourceType.File if you want to read from a json file.
@@ -42,6 +41,7 @@ namespace ALE.ETLBox.DataFlow
         protected StreamReader StreamReader { get; set; }
         public HttpClient HttpClient { get; set; } = new HttpClient();
 
+        private bool WasStreamOpened { get; set; }
         public override void Execute()
         {
             NLogStart();
@@ -52,27 +52,31 @@ namespace ALE.ETLBox.DataFlow
                     string uri = GetNextUri(ProgressCount);
                     OpenStream(uri);
                     InitReader();
+                    WasStreamOpened = true;
                     ReadAll();
-                } while (CanGetNextUri(ProgressCount));
+                } while (HasNextUri(ProgressCount));
                 Buffer.Complete();
             }
             finally
             {
-                CloseReader();
-                CloseStream();
+                if (WasStreamOpened)
+                {
+                    CloseReader();
+                    CloseStream();
+                }
             }
             NLogFinish();
         }
 
-        protected void OpenStream(string uri)
+        private void OpenStream(string uri)
         {
             if (ResourceType == ResourceType.File)
-                StreamReader = new StreamReader(uri, true);
-            else 
+                StreamReader = new StreamReader(uri);
+            else
                 StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(uri)).Result);
         }
 
-        protected void CloseStream()
+        private void CloseStream()
         {
             HttpClient?.Dispose();
             StreamReader?.Dispose();
