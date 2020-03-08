@@ -64,7 +64,8 @@ namespace ALE.ETLBox.DataFlow
                     if (ProgressCount == 0) NLogStart();
                     try
                     {
-                        writeAction.Invoke(input);
+                        if (input != null)
+                            writeAction.Invoke(input);
                     }
                     catch (Exception e)
                     {
