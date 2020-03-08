@@ -16,7 +16,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class CustomDestinationStringArrayTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public CustomDestinationStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -30,10 +30,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestinationNonGenericDestination");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(Connection, "CustomDestinationNonGenericSource");
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "CustomDestinationNonGenericSource");
             CustomDestination<string[]> dest = new CustomDestination<string[]>(
                 row => {
-                    SqlTask.ExecuteNonQuery(Connection, "Insert row",
+                    SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
                         $"INSERT INTO dbo.CustomDestinationNonGenericDestination VALUES({row[0]},'{row[1]}')");
                 }
             );

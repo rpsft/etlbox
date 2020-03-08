@@ -45,8 +45,6 @@ namespace ALE.ETLBox.DataFlow
         }
 
         /* Private stuff */
-        internal BufferBlock<TInput1> Buffer1 { get; set; }
-        internal BufferBlock<TInput1> Buffer2 { get; set; }
         internal JoinBlock<TInput1, TInput2> JoinBlock { get; set; }
         internal RowTransformation<Tuple<TInput1, TInput2>, TOutput> Transformation { get; set; }
 

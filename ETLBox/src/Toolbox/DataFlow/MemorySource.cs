@@ -25,12 +25,12 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
 
-        public MemorySource() : base()
+        public MemorySource() 
         {
             Data = new List<TOutput>();
         }
 
-        public MemorySource(List<TOutput> data) : base()
+        public MemorySource(List<TOutput> data) 
         {
             Data = data;
         }

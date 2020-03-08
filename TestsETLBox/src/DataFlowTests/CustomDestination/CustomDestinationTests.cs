@@ -14,14 +14,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CustomDestinationTests : IDisposable
+    public class CustomDestinationTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public CustomDestinationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public void Dispose()
         {
         }
 
@@ -40,10 +36,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestination");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "Source");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
             CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
                 row => {
-                    SqlTask.ExecuteNonQuery(Connection, "Insert row",
+                    SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
                         $"INSERT INTO dbo.CustomDestination VALUES({row.Col1},'{row.Col2}')");
                 }
             );
@@ -61,7 +57,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("JSonSource");
             source2Columns.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "JSonSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "JSonSource");
             List<MySimpleRow> rows = new List<MySimpleRow>();
 
             //Act

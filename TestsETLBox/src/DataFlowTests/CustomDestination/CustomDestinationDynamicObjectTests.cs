@@ -17,7 +17,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class CustomDestinationDynamicObjectTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public CustomDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -31,11 +31,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestinationDynamicDestination");
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(Connection, "CustomDestinationDynamicSource");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "CustomDestinationDynamicSource");
             CustomDestination<ExpandoObject> dest = new CustomDestination<ExpandoObject>(
                 row => {
                     dynamic r = row as ExpandoObject;
-                    SqlTask.ExecuteNonQuery(Connection, "Insert row",
+                    SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
                         $"INSERT INTO dbo.CustomDestinationDynamicDestination VALUES({r.Col1},'{r.Col2}')");
                 }
             );
