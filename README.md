@@ -1,26 +1,22 @@
-# <span><img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32" /> Welcome to ETLBox</span>
+# <span><img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32" /> ETLBox</span>
 
-It's all in the box! Run all your ETL or ELT jobs with this .NET class library. Create your own dataflow, send your data from any source to any target and transform it on-the-fly. Data can be read from or written into various sources, e.g. Flat Files, Webservices or Databases. ETLBox currently supports: SqlServer, SQLite, MySql, Postgres, CSV, Json, Excel (and limited support for Access and SSAS). Furthermore, ETLBox offers control flow tasks that wrap Sql in easy-to-use objects and offers an enhanced logging functionality. 
+A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.
+
+Create your own tailor-made data flow with your .NET language of choice. ETLBox is written in C# and offers full support for .NET Core. 
 
 <div class="hideOnWebsite">
 
 ## ETLBox.net
 
-For a full documenetation, please visit the project homepage: [etlbox.net](https://etlbox.net) contains all the information you need about ETLBox. There is a whole set of [introductional articles](https://etlbox.net/articles/getting_started.html), a lot of examples how to create data flows and a complete API documentation.
-
-**See the video**
-
-Watch a short video that introduces you into the basic concepts of ETLBox and how to create your own ETL process. [See the video on Youtube!](https://www.youtube.com/watch?v=CsWZuRpl6PA)
+[For full documentation visit the project homepage: etlbox.net](https://etlbox.net). You will find a whole set of introductional articles, lots of examples and a complete API documentation.
 
 </div>
 
 ## Why ETLBox
 
-ETLBox is a comprehensive C# class library that is able to manage your whole ETL or ELT.  You can use it to create your own dataflow pipeline programmatically, where data is send from a source to a target and transformed on its way. Or you just can use it to manage your database using some easy-to-use and easy-to-understand .NET objects. It also offers extended logging capabilites that allow you to monitor and anlayze your ETL job runs.
+ETLBox is a comprehensive C# class library that is able to manage your whole [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load) or [ELT](https://en.wikipedia.org/wiki/Extract,_load,_transform).  You can use it to create your own dataflow pipelines programmatically in .NET, e.g. with C#. Besides a big set of dataflow components it comes which some control flow task that let you easily manage your database or simple execute Sql code without any boilerplate code. It also offers extended logging capabilites based on NLog to monitor and anlayze your ETL job runs.
 
-Perhaps you are looking for an alternative to Sql Server Integrations Services (SSIS). Or you are searching for a framework to define and run ETL jobs with C# code. The goal of ETLBox is to provide an easy-to-use but still powerful library with which you can create complex ETL routines and sophisticated data flows.
-
-### Advantages of using ETLBox
+ETLBox is a fully functional alternative to other ETL tools like Sql Server Integrations Services (SSIS). Creating your ETL processes programatically has some advantages: 
 
 **Build ETL in .NET**: Code your ETL with your favorite .NET language fitting your team’s skills and that is coming with a mature toolset.
 
@@ -34,32 +30,49 @@ Perhaps you are looking for an alternative to Sql Server Integrations Services (
 
 **Data integration**: While supporting different databases, flat files and web services, you can use ETLBox as a foundation for your custom made Data Integregation platform.
 
-### Out-of-the-box supported sources and destinations
+**Made for big data**: ETLBox relies on [Microsoft's TPL.Dataflow library](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library) and was designed to work with big amounts of data.
 
+### Data integration
+
+The heart of an ETL framework is it's ability to integrate with other systems. 
 The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox.
+**You can *always* integrate any other system not listed here by using a `CustomSource` or `CustomDestination` - though you have to write the integration code yourself.**
 
-**Please note: You can *always* integrate any other source or destination not listed here by using a `CustomSource` or `CustomDestination` - though it is not supported "out-of-the-box".**
+Source or Destination type|System name or file type|Limitations|
+--------------------------|------------------------|------------
+Databases|Sql Server, Postgres, SQLite, MySql|Full support
+Flat files|Csv, Json, Xml|Full support
+Office|Microsoft Access, Excel|Full support for Access, Excel only as source
+Cube|Sql Server Analysis Service|Only XMLA statements
+Any other|Supported with custom written sources & destinations|No limitations 
 
-Source or Destination type|Supported by ETLBox|
---------------------------|--------------------
-Sql Server|Full support
-Postgres|Full support
-SQLite|Full support
-MySql|Full support
-CSV|Full support
-Json|Full support
-Microsoft Access|Full support
-Excel|Supported as Source
-SSAS|Only XMLA statements
-Oracle|Currently not supported
+### Transformations
 
-## ETLBox capabilities
+ETLBox has 3 type of transformations: Non-blocking, partially blocking and blocking transformations. Non-blocking transformations will
+only store the row that is currently processed in memory (plus some more in the buffer to optimize throughput and performance). Partially blocking transformations will load some data in the memory before they process data row-by-row. Blocking transformations will wait until all data has arrived at the component before it starts processing all records subsequently. 
 
-ETLBox is split into two main components: Data Flow and Control Flow Tasks. Both components will provide customizable logging functionalities.
+The following table is an overview of the most common transformations in ETLBox:  
+
+Non-blocking|Partially blocking|Blocking|
+------------|------------------|---------
+RowTransformation|LookupTransformation|BlockTransformation
+Aggregation|CrossJoin|Sort
+MergeJoin||
+Multicast||
+
+## Overview
+
+ETLBox is split into two main components: Data Flow and Control Flow Tasks. The Data Flow part offers the core ETL components. The tasks in the Control Flow allow you to manage your databases with a simple syntax. Both components come with customizable logging functionalities.
+
+
+
+
+
+
 
 ### Data Flow overview
 
-Dataflow tasks gives you the ability to create your own pipeline where you can send your data through. Dataflows consists of one or more source element (like CSV files or data derived from a table), some transformations and optionally one or more target. To create your own data flow , you need to accomplish three steps:
+Data flow tasks gives you the ability to create your own pipeline where you can send your data through. Data flows consists of one or more source element (like CSV files or data derived from a table), some transformations and optionally one or more target. To create your own data flow , you need to accomplish three steps:
 
 - First you define your dataflow components
 - You link these components together (each source has an output, each transformation at least one input and one output and each destination has an input)

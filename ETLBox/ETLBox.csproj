@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Contains lots of sources, destinations and transformations to read or write data from the most databases or file types.</Description>
+    <Description>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Andreas Lennartz</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
