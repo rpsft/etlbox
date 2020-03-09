@@ -21,7 +21,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void MergeJoinUsingOneObject()
+        public void CrossJoinStringWithInt()
         {
             //Arrange
             MemorySource<string> source1 = new MemorySource<string>();
@@ -30,13 +30,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2.Data = new List<int>() { 1, 2, 3 };
             CrossJoin<string, int, string> crossJoin = new CrossJoin<string, int, string>(
                 (data1, data2) => data1 + data2.ToString()
-                );
+            );
             MemoryDestination<string> dest = new MemoryDestination<string>();
 
 
             //Act
-            source1.LinkTo(crossJoin.SmallTableDest);
-            source2.LinkTo(crossJoin.BigTableDest);
+            source1.LinkTo(crossJoin.InMemoryTarget);
+            source2.LinkTo(crossJoin.PassingTarget);
             crossJoin.LinkTo(dest);
             source1.Execute();
             source2.Execute();

@@ -31,17 +31,18 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemorySource<int> source2 = new MemorySource<int>();
             source2.Data = new List<int>() { 1, 2, 3 };
             CrossJoin<string, int, string> crossJoin = new CrossJoin<string, int, string>(
-                (data1, data2) => {
+                (data1, data2) =>
+                {
                     if (data1 == "A") throw new Exception("Invalid record");
                     return data1 + data2.ToString();
-                    }
-                );
+                }
+            );
             MemoryDestination<string> dest = new MemoryDestination<string>();
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            source1.LinkTo(crossJoin.SmallTableDest);
-            source2.LinkTo(crossJoin.BigTableDest);
+            source1.LinkTo(crossJoin.InMemoryTarget);
+            source2.LinkTo(crossJoin.PassingTarget);
             crossJoin.LinkTo(dest);
             crossJoin.LinkErrorTo(errorDest);
             source1.Execute();

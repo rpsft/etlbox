@@ -8,40 +8,35 @@ using System.Threading.Tasks.Dataflow;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// Will cross join data from the two inputs into one output. The input for the first table will be kept in while in memory.
+    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 
+    /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+    /// The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
     /// </summary>
-    /// <typeparam name="TInput1">Type of data for input block one.</typeparam>
-    /// <typeparam name="TInput2">Type of data for input block two.</typeparam>
+    /// <typeparam name="TInput1">Type of data for in memory input block.</typeparam>
+    /// <typeparam name="TInput2">Type of data for processing input block.</typeparam>
     /// <typeparam name="TOutput">Type of output data.</typeparam>
-    /// <example>
-    /// <code>
-    /// MergeJoin&lt;MyDataRow1, MyDataRow2, MyDataRow1&gt; join = new MergeJoin&lt;MyDataRow1, MyDataRow2, MyDataRow1&gt;(Func&lt;TInput1, TInput2, TOutput&gt; mergeJoinFunc);
-    /// source1.LinkTo(join.Target1);;
-    /// source2.LinkTo(join.Target2);;
-    /// join.LinkTo(dest);
-    /// </code>
-    /// </example>
-    public class CrossJoin<TInput1, TInput2, TOutput> : DataFlowSource<TOutput>//DataFlowTask, ITask, IDataFlowLinkSource<TOutput>
+    public class CrossJoin<TInput1, TInput2, TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowLinkSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Cross join data";
-        public List<TInput1> SmallTableData { get; set; } = new List<TInput1>();
-        public CustomDestination<TInput1> SmallTableDest { get; set; }
-        public CustomDestination<TInput2> BigTableDest { get; set; }
+        public IEnumerable<TInput1> InMemoryData => InMemoryTarget.Data;
+        public MemoryDestination<TInput1> InMemoryTarget { get; set; }
+        public CustomDestination<TInput2> PassingTarget { get; set; }
         public Func<TInput1, TInput2, TOutput> CrossJoinFunc { get; set; }
 
-        private bool WasSmallTableLoaded { get; set; }
+        private bool WasInMemoryTableLoaded { get; set; }
 
         public override void Execute()
         {
             throw new InvalidOperationException("Execute is not supported on CrossJoins! A crossjoin will continue execution" +
             "when the predecessing dataflow components are completed");
         }
+
         public CrossJoin()
         {
-            SmallTableDest = new CustomDestination<TInput1>(this, FillSmallTableBuffer);
-            BigTableDest = new CustomDestination<TInput2>(this, CrossJoinData);
-            BigTableDest.OnCompletion = () => Buffer.Complete();
+            InMemoryTarget = new MemoryDestination<TInput1>(this);
+            PassingTarget = new CustomDestination<TInput2>(this, CrossJoinData);
+            PassingTarget.OnCompletion = () => Buffer.Complete();
         }
 
         public CrossJoin(Func<TInput1, TInput2, TOutput> crossJoinFunc) : this()
@@ -49,34 +44,28 @@ namespace ALE.ETLBox.DataFlow
             CrossJoinFunc = crossJoinFunc;
         }
 
-        private void FillSmallTableBuffer(TInput1 smallTableRow)
+        private void CrossJoinData(TInput2 passingRow)
         {
-            if (SmallTableData == null) SmallTableData = new List<TInput1>();
-            SmallTableData.Add(smallTableRow);
-        }
-
-        private void CrossJoinData(TInput2 bigTableRow)
-        {
-            if (!WasSmallTableLoaded)
+            if (!WasInMemoryTableLoaded)
             {
-                SmallTableDest.Wait();
-                WasSmallTableLoaded = true;
+                InMemoryTarget.Wait();
+                WasInMemoryTableLoaded = true;
             }
-            foreach (TInput1 smallTableRow in SmallTableData)
+            foreach (TInput1 inMemoryRow in InMemoryData)
             {
                 try
                 {
-                    if (smallTableRow != null && bigTableRow != null)
+                    if (inMemoryRow != null && passingRow != null)
                     {
-                        TOutput result = CrossJoinFunc.Invoke(smallTableRow, bigTableRow);
+                        TOutput result = CrossJoinFunc.Invoke(inMemoryRow, passingRow);
                         Buffer.SendAsync(result).Wait();
                     }
                 }
                 catch (Exception e)
                 {
                     if (!ErrorHandler.HasErrorBuffer) throw e;
-                    ErrorHandler.Send(e, string.Concat(ErrorHandler.ConvertErrorData<TInput1>(smallTableRow), "  |--| ",
-                        ErrorHandler.ConvertErrorData<TInput2>(bigTableRow)));
+                    ErrorHandler.Send(e, string.Concat(ErrorHandler.ConvertErrorData<TInput1>(inMemoryRow), "  |--| ",
+                        ErrorHandler.ConvertErrorData<TInput2>(passingRow)));
                 }
                 LogProgress();
             }
@@ -85,17 +74,11 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.
+    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 
+    /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+    /// The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
     /// </summary>
     /// <typeparam name="TInput">Type of data for both inputs and output.</typeparam>
-    /// <example>
-    /// <code>
-    /// MergeJoin&lt;MyDataRow&gt; join = new MergeJoin&lt;MyDataRow&gt;(mergeJoinFunc);
-    /// source1.LinkTo(join.Target1);;
-    /// source2.LinkTo(join.Target2);;
-    /// join.LinkTo(dest);
-    /// </code>
-    /// </example>
     public class CrossJoin<TInput> : CrossJoin<TInput, TInput, TInput>
     {
         public CrossJoin() : base()
@@ -106,9 +89,10 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Will join data from the two inputs into one output - on a row by row base.
-    /// Make sure both inputs are sorted or in the right order. The non generic implementation deals with
-    /// a dynamic object as input and merged output.
+    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 
+    /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+    /// The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
+    /// The non generic implementation deals with a dynamic object for both inputs and output.
     /// </summary>
     public class CrossJoin : CrossJoin<ExpandoObject, ExpandoObject, ExpandoObject>
     {

@@ -26,6 +26,11 @@ namespace ALE.ETLBox.DataFlow
             SetCompletionTask();
         }
 
+        internal MemoryDestination(ITask callingTask) : this()
+        {
+            CopyTaskProperties(callingTask);
+        }
+
         protected void WriteRecord(TInput data)
         {
             if (Data == null) Data = new BlockingCollection<TInput>();

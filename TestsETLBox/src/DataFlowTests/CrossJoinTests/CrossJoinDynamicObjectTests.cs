@@ -15,15 +15,15 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CrossJoinnDynamicObjectTests
+    public class CrossJoinDynamicObjectTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CrossJoinnDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
+        public CrossJoinDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
         [Fact]
-        public void InsertIntoTable()
+        public void DynamicObjectJoin()
         {
             //Arrange
             TwoColumnsTableFixture table1 = new TwoColumnsTableFixture(SqlConnection, "CrossJoinSource1");
@@ -43,11 +43,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     res.Val = d1.Col1 + d2.Col2;
                     return res;
                 }
-                );
+            );
 
             //Act
-            source1.LinkTo(crossJoin.SmallTableDest);
-            source2.LinkTo(crossJoin.BigTableDest);
+            source1.LinkTo(crossJoin.InMemoryTarget);
+            source2.LinkTo(crossJoin.PassingTarget);
             crossJoin.LinkTo(dest);
             source1.Execute();
             source2.Execute();
