@@ -27,11 +27,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<string> source1 = new MemorySource<string>();
-            source1.Data = new List<string>() { "A", null, "B" };
+            source1.Data = new List<string>() { "A", null, "B", "C"};
             MemorySource<int?> source2 = new MemorySource<int?>();
             source2.Data = new List<int?>() { 1, null, 2 , null, 3};
             CrossJoin<string, int?, string> crossJoin = new CrossJoin<string, int?, string>(
-                (data1, data2) => data1 + data2?.ToString()
+                (data1, data2) =>
+                {
+                    if (data1 == "C") return null;
+                    else return data1 + data2?.ToString();
+                }
             );
             MemoryDestination<string> dest = new MemoryDestination<string>();
 

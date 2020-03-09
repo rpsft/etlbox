@@ -58,7 +58,11 @@ namespace ALE.ETLBox.DataFlow
                     if (inMemoryRow != null && passingRow != null)
                     {
                         TOutput result = CrossJoinFunc.Invoke(inMemoryRow, passingRow);
-                        Buffer.SendAsync(result).Wait();
+                        if (result != null)
+                        {
+                            Buffer.SendAsync(result).Wait();
+                            LogProgress();
+                        }
                     }
                 }
                 catch (Exception e)
@@ -67,7 +71,6 @@ namespace ALE.ETLBox.DataFlow
                     ErrorHandler.Send(e, string.Concat(ErrorHandler.ConvertErrorData<TInput1>(inMemoryRow), "  |--| ",
                         ErrorHandler.ConvertErrorData<TInput2>(passingRow)));
                 }
-                LogProgress();
             }
 
         }
