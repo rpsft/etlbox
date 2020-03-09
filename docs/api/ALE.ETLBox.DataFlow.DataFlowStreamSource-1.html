@@ -238,8 +238,84 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="fields">Fields
+  </h3>
+  
+  
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1__uri" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1._uri">_uri</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string _uri</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_GetNextUri_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.GetNextUri*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_GetNextUri" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.GetNextUri">GetNextUri</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;int, string&gt; GetNextUri { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HasNextUri_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HasNextUri*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HasNextUri" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HasNextUri">HasNextUri</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;int, bool&gt; HasNextUri { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HttpClient_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HttpClient*"></a>
@@ -269,7 +345,7 @@
   
   <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_ResourceType_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.ResourceType*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_ResourceType" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.ResourceType">ResourceType</h4>
-  <div class="markdown level1 summary"><p>Specifies the resourc type. By default requests are made with HttpClient.
+  <div class="markdown level1 summary"><p>Specifies the resource type. By default requests are made with HttpClient.
 Specify ResourceType.File if you want to read from a json file.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -357,16 +433,6 @@ Specify ResourceType.File if you want to read from a json file.</p>
   </div>
   
   
-  <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseStream_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseStream*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseStream" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseStream">CloseStream()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void CloseStream()</code></pre>
-  </div>
-  
-  
   <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.Execute*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.Execute">Execute()</h4>
   <div class="markdown level1 summary"></div>
@@ -386,16 +452,6 @@ Specify ResourceType.File if you want to read from a json file.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected abstract void InitReader()</code></pre>
-  </div>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_OpenStream_" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.OpenStream*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DataFlowStreamSource_1_OpenStream" data-uid="ALE.ETLBox.DataFlow.DataFlowStreamSource`1.OpenStream">OpenStream()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void OpenStream()</code></pre>
   </div>
   
   

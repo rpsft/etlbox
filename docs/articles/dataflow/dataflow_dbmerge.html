@@ -105,7 +105,8 @@ It will wait for all data from the flow to arrive, and then either insert,
 update or delete the data in the destination table.
 Deletion is optional (by default turned on) , and can be disabled with the property
 <code>DisableDeletion</code> set to true.</p>
-<p>The DBMerge was designed for scenario 1, but also  works for scenario 2 except for deletions.</p>
+<p>The DBMerge was designed for scenario 1 and scenario 2. For scenario 2, the property DeltaMode has
+to be set to DeltaMode.Delta: <code>DeltaMode = DeltaMode.Delta</code>.</p>
 <h3 id="example">Example</h3>
 <h4 id="data-and-object-definition">Data and object definition</h4>
 <p>To implement an example sync between two tables, we will  need a <code>DbSource</code> pointing to our source table.
@@ -297,6 +298,27 @@ truncate the destination table and then write all changes back into the database
 if you expect a lot of deletions, but you will always read all data from the destination table and write it back.
 Unfortunately, there is no general recommendation when to use this approach.</p>
 <p>Also, if you don't specify any Id columns with teh <code>IdColumn</code> attribute, the DbMerge will use the truncate method automatically.</p>
+<h4 id="delta-mode">Delta mode</h4>
+<p>If the source transfer delta information, then you can set the DbMerge delta mode:</p>
+<pre><code class="lang-C#">DbMerge&lt;MyMergeRow&gt; dest = new DbMerge&lt;MyMergeRow&gt;(connection, &quot;DBMergeDeltaDestination&quot;)
+{
+    DeltaMode = DeltaMode.Delta
+};
+</code></pre>
+<p>In delta mode, by default objects in the destination won't be deleted. It can be that there is a property in your source
+that is an indicator that a record is deleted. In this case, you can flag this property with the attribute <code>DeleteColumn</code>.</p>
+<pre><code class="lang-C#">public class MyMergeRow : MergeableRow
+{
+    [IdColumn]
+    public long Key { get; set; }
+    [CompareColumn]
+    public string Value { get; set; }
+    [DeleteColumn(true)]
+    public bool DeleteThisRow { get; set; }
+}
+</code></pre>
+<p>In this example object, if the property DeleteThisRow is set to true, the record in the destination will be deleted
+if it matches with the Key property that is flagged with the attribute IdColumn.</p>
 <h4 id="columnmap-attribute">ColumnMap attribute</h4>
 <p>If the columns have different names than our property, we need to add the <code>ColumnMap</code> attribute to have them
 mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:</p>

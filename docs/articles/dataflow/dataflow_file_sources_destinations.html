@@ -151,7 +151,8 @@ public class MyRow
 <pre><code class="lang-C#">XmlDestination&lt;MyRow&gt; dest = new XmlDestination&lt;MyRow&gt;(&quot;dest.xml&quot;, ResourceType.File);
 </code></pre>
 <h2 id="excelsource">ExcelSource</h2>
-<p>An Excel source reads data from a xls or xlsx file. It uses the 3rd party library <code>ExcelDataReader</code>.
+<p>An Excel source reads data from a xls or xlsx file.
+<a href="https://github.com/ExcelDataReader/ExcelDataReader">It uses the 3rd party library <code>ExcelDataReader</code></a>.
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range
 to restrict this behavior. Additionally, you have to use the Attribute <code>ExcelColumn</code> to define the column index
 for each property. The first column would be 0, the 2nd column 1, ...</p>
@@ -169,6 +170,10 @@ ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt;(&quot;src
     SheetName = &quot;Sheet2&quot;
 };
 </code></pre>
+<p>The ExcelRange must not define the full range. It is sufficient if you just set the starting coordinates. The end of the
+data can be automatically determined from the underlying ExcelDataReader.</p>
+<p>The ExcelSource has a property <code>IgnoreBlankRows</code>. This can be set to true, and all rows which cells are completely empty
+are ignored when reading data from your source.</p>
 <h2 id="other-sources-and-destinations">Other Sources and Destinations</h2>
 <h3 id="custom-integration">Custom integration</h3>
 <h4 id="custom-source">Custom Source</h4>

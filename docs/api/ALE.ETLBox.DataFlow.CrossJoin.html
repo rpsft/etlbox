@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class CsvSource
+    <title>Class CrossJoin
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class CsvSource
+    <meta name="title" content="Class CrossJoin
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,14 +77,15 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.CsvSource">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.CrossJoin">
   
   
-  <h1 id="ALE_ETLBox_DataFlow_CsvSource" data-uid="ALE.ETLBox.DataFlow.CsvSource" class="text-break">Class CsvSource
+  <h1 id="ALE_ETLBox_DataFlow_CrossJoin" data-uid="ALE.ETLBox.DataFlow.CrossJoin" class="text-break">Class CrossJoin
   </h1>
-  <div class="markdown level0 summary"><p>Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
-CsvSource as a nongeneric type uses dynamic object as output. If you need typed output, use
-the CsvSource&lt;TOutput&gt; object instead.</p>
+  <div class="markdown level0 summary"><p>Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
+join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
+The non generic implementation deals with a dynamic object for both inputs and output.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -93,65 +94,33 @@ the CsvSource&lt;TOutput&gt; object instead.</p>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html">DataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html">DataFlowStreamSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html">CsvSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level6"><span class="xref">CsvSource</span></div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html">CrossJoin</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level5"><span class="xref">CrossJoin</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_TaskName">CsvSource&lt;ExpandoObject&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_TaskName">CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_Configuration">CsvSource&lt;ExpandoObject&gt;.Configuration</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_InMemoryData">CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.InMemoryData</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_SkipRows">CsvSource&lt;ExpandoObject&gt;.SkipRows</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_InMemoryTarget">CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.InMemoryTarget</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_FieldHeaders">CsvSource&lt;ExpandoObject&gt;.FieldHeaders</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_PassingTarget">CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.PassingTarget</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_IsHeaderRead">CsvSource&lt;ExpandoObject&gt;.IsHeaderRead</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_CrossJoinFunc">CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.CrossJoinFunc</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_InitReader">CsvSource&lt;ExpandoObject&gt;.InitReader()</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_ReadAll">CsvSource&lt;ExpandoObject&gt;.ReadAll()</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_CloseReader">CsvSource&lt;ExpandoObject&gt;.CloseReader()</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Uri">DataFlowStreamSource&lt;ExpandoObject&gt;.Uri</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_GetNextUri">DataFlowStreamSource&lt;ExpandoObject&gt;.GetNextUri</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HasNextUri">DataFlowStreamSource&lt;ExpandoObject&gt;.HasNextUri</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_ResourceType">DataFlowStreamSource&lt;ExpandoObject&gt;.ResourceType</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HttpClient">DataFlowStreamSource&lt;ExpandoObject&gt;.HttpClient</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1__uri">DataFlowStreamSource&lt;ExpandoObject&gt;._uri</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_StreamReader">DataFlowStreamSource&lt;ExpandoObject&gt;.StreamReader</a>
-    </div>
-    <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute">DataFlowStreamSource&lt;ExpandoObject&gt;.Execute()</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_Execute">CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;.Execute()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_SourceBlock">DataFlowSource&lt;ExpandoObject&gt;.SourceBlock</a>
@@ -161,6 +130,9 @@ the CsvSource&lt;TOutput&gt; object instead.</p>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ErrorHandler">DataFlowSource&lt;ExpandoObject&gt;.ErrorHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_Execute">DataFlowSource&lt;ExpandoObject&gt;.Execute()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowSource-1.html#ALE_ETLBox_DataFlow_DataFlowSource_1_ExecuteAsync">DataFlowSource&lt;ExpandoObject&gt;.ExecuteAsync()</a>
@@ -217,6 +189,9 @@ the CsvSource&lt;TOutput&gt; object instead.</p>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
     </div>
     <div>
@@ -267,36 +242,31 @@ the CsvSource&lt;TOutput&gt; object instead.</p>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.DataFlow.html">ALE.ETLBox.DataFlow</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_DataFlow_CsvSource_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_DataFlow_CrossJoin_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CsvSource : CsvSource&lt;ExpandoObject&gt;, ITask, IDataFlowSource&lt;ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class CrossJoin : CrossJoin&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;, ITask, IDataFlowLinkSource&lt;ExpandoObject&gt;</code></pre>
   </div>
-  <h5 id="ALE_ETLBox_DataFlow_CsvSource_examples"><strong>Examples</strong></h5>
-  <pre><code>CsvSource source = new CsvSource(&quot;demodata.csv&quot;);
-source.LinkTo(dest); //Link to transformation or destination
-source.Execute(); //Start the dataflow</code></pre>
-
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="ALE_ETLBox_DataFlow_CsvSource__ctor_" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CsvSource__ctor" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor">CsvSource()</h4>
+  <a id="ALE_ETLBox_DataFlow_CrossJoin__ctor_" data-uid="ALE.ETLBox.DataFlow.CrossJoin.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CrossJoin__ctor" data-uid="ALE.ETLBox.DataFlow.CrossJoin.#ctor">CrossJoin()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CsvSource()</code></pre>
+    <pre><code class="lang-csharp hljs">public CrossJoin()</code></pre>
   </div>
   
   
-  <a id="ALE_ETLBox_DataFlow_CsvSource__ctor_" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_CsvSource__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.CsvSource.#ctor(System.String)">CsvSource(String)</h4>
+  <a id="ALE_ETLBox_DataFlow_CrossJoin__ctor_" data-uid="ALE.ETLBox.DataFlow.CrossJoin.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_CrossJoin__ctor_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__" data-uid="ALE.ETLBox.DataFlow.CrossJoin.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})">CrossJoin(Func&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CsvSource(string fileName)</code></pre>
+    <pre><code class="lang-csharp hljs">public CrossJoin(Func&lt;ExpandoObject, ExpandoObject, ExpandoObject&gt; crossJoinFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -309,8 +279,8 @@ source.Execute(); //Start the dataflow</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">fileName</span></td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</td>
+        <td><span class="parametername">crossJoinFunc</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -318,9 +288,6 @@ source.Execute(); //Start the dataflow</code></pre>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.ITask.html">ITask</a>
-  </div>
-  <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowSource-1.html">IDataFlowSource&lt;TOutput&gt;</a>
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource&lt;TOutput&gt;</a>

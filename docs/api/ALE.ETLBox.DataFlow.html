@@ -124,6 +124,22 @@ object that exists and needs to be updated. It it supposed
 to use with an object that either inherits from MergeableRow.
 If you implement the IMergeable interface, you need to override the Equals-method instead.</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin.html">CrossJoin</a></h4>
+      <section><p>Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
+join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
+The non generic implementation deals with a dynamic object for both inputs and output.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-1.html">CrossJoin&lt;TInput&gt;</a></h4>
+      <section><p>Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
+join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.CrossJoin-3.html">CrossJoin&lt;TInput1, TInput2, TOutput&gt;</a></h4>
+      <section><p>Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
+join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
+The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.</p>
+</section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.CsvDestination.html">CsvDestination</a></h4>
       <section><p>A Csv destination defines a csv file where data from the flow is inserted.
 The CsvDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.</p>

@@ -6147,6 +6147,206 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.DataFlow.CompareColumn.CompareColumn
   nameWithType: CompareColumn.CompareColumn
+- uid: ALE.ETLBox.DataFlow.CrossJoin
+  name: CrossJoin
+  href: api/ALE.ETLBox.DataFlow.CrossJoin.html
+  commentId: T:ALE.ETLBox.DataFlow.CrossJoin
+  fullName: ALE.ETLBox.DataFlow.CrossJoin
+  nameWithType: CrossJoin
+- uid: ALE.ETLBox.DataFlow.CrossJoin.#ctor
+  name: CrossJoin()
+  href: api/ALE.ETLBox.DataFlow.CrossJoin.html#ALE_ETLBox_DataFlow_CrossJoin__ctor
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin.#ctor
+  fullName: ALE.ETLBox.DataFlow.CrossJoin.CrossJoin()
+  nameWithType: CrossJoin.CrossJoin()
+- uid: ALE.ETLBox.DataFlow.CrossJoin.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})
+  name: CrossJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject>)
+  href: api/ALE.ETLBox.DataFlow.CrossJoin.html#ALE_ETLBox_DataFlow_CrossJoin__ctor_System_Func_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject_System_Dynamic_ExpandoObject__
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject,System.Dynamic.ExpandoObject})
+  name.vb: CrossJoin(Func(Of ExpandoObject, ExpandoObject, ExpandoObject))
+  fullName: ALE.ETLBox.DataFlow.CrossJoin.CrossJoin(System.Func<System.Dynamic.ExpandoObject, System.Dynamic.ExpandoObject, System.Dynamic.ExpandoObject>)
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin.CrossJoin(System.Func(Of System.Dynamic.ExpandoObject, System.Dynamic.ExpandoObject, System.Dynamic.ExpandoObject))
+  nameWithType: CrossJoin.CrossJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject>)
+  nameWithType.vb: CrossJoin.CrossJoin(Func(Of ExpandoObject, ExpandoObject, ExpandoObject))
+- uid: ALE.ETLBox.DataFlow.CrossJoin.#ctor*
+  name: CrossJoin
+  href: api/ALE.ETLBox.DataFlow.CrossJoin.html#ALE_ETLBox_DataFlow_CrossJoin__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin.CrossJoin
+  nameWithType: CrossJoin.CrossJoin
+- uid: ALE.ETLBox.DataFlow.CrossJoin`1
+  name: CrossJoin<TInput>
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-1.html
+  commentId: T:ALE.ETLBox.DataFlow.CrossJoin`1
+  name.vb: CrossJoin(Of TInput)
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput>
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput)
+  nameWithType: CrossJoin<TInput>
+  nameWithType.vb: CrossJoin(Of TInput)
+- uid: ALE.ETLBox.DataFlow.CrossJoin`1.#ctor
+  name: CrossJoin()
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-1.html#ALE_ETLBox_DataFlow_CrossJoin_1__ctor
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin`1.#ctor
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput>.CrossJoin()
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput).CrossJoin()
+  nameWithType: CrossJoin<TInput>.CrossJoin()
+  nameWithType.vb: CrossJoin(Of TInput).CrossJoin()
+- uid: ALE.ETLBox.DataFlow.CrossJoin`1.#ctor(System.Func{`0,`0,`0})
+  name: CrossJoin(Func<TInput, TInput, TInput>)
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-1.html#ALE_ETLBox_DataFlow_CrossJoin_1__ctor_System_Func__0__0__0__
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin`1.#ctor(System.Func{`0,`0,`0})
+  name.vb: CrossJoin(Func(Of TInput, TInput, TInput))
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput>.CrossJoin(System.Func<TInput, TInput, TInput>)
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput).CrossJoin(System.Func(Of TInput, TInput, TInput))
+  nameWithType: CrossJoin<TInput>.CrossJoin(Func<TInput, TInput, TInput>)
+  nameWithType.vb: CrossJoin(Of TInput).CrossJoin(Func(Of TInput, TInput, TInput))
+- uid: ALE.ETLBox.DataFlow.CrossJoin`1.#ctor*
+  name: CrossJoin
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-1.html#ALE_ETLBox_DataFlow_CrossJoin_1__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`1.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput>.CrossJoin
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput).CrossJoin
+  nameWithType: CrossJoin<TInput>.CrossJoin
+  nameWithType.vb: CrossJoin(Of TInput).CrossJoin
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3
+  name: CrossJoin<TInput1, TInput2, TOutput>
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html
+  commentId: T:ALE.ETLBox.DataFlow.CrossJoin`3
+  name.vb: CrossJoin(Of TInput1, TInput2, TOutput)
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput)
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput)
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.#ctor
+  name: CrossJoin()
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3__ctor
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin`3.#ctor
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.CrossJoin()
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).CrossJoin()
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.CrossJoin()
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).CrossJoin()
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.#ctor(System.Func{`0,`1,`2})
+  name: CrossJoin(Func<TInput1, TInput2, TOutput>)
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3__ctor_System_Func__0__1__2__
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin`3.#ctor(System.Func{`0,`1,`2})
+  name.vb: CrossJoin(Func(Of TInput1, TInput2, TOutput))
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.CrossJoin(System.Func<TInput1, TInput2, TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).CrossJoin(System.Func(Of TInput1, TInput2, TOutput))
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.CrossJoin(Func<TInput1, TInput2, TOutput>)
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).CrossJoin(Func(Of TInput1, TInput2, TOutput))
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.#ctor*
+  name: CrossJoin
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.CrossJoin
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).CrossJoin
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.CrossJoin
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).CrossJoin
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.CrossJoinFunc
+  name: CrossJoinFunc
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_CrossJoinFunc
+  commentId: P:ALE.ETLBox.DataFlow.CrossJoin`3.CrossJoinFunc
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.CrossJoinFunc
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).CrossJoinFunc
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.CrossJoinFunc
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).CrossJoinFunc
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.CrossJoinFunc*
+  name: CrossJoinFunc
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_CrossJoinFunc_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.CrossJoinFunc
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.CrossJoinFunc
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).CrossJoinFunc
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.CrossJoinFunc
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).CrossJoinFunc
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.Execute
+  name: Execute()
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_Execute
+  commentId: M:ALE.ETLBox.DataFlow.CrossJoin`3.Execute
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.Execute()
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).Execute()
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.Execute()
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).Execute()
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.Execute*
+  name: Execute
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_Execute_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.Execute
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.Execute
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).Execute
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.Execute
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).Execute
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryData
+  name: InMemoryData
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_InMemoryData
+  commentId: P:ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryData
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.InMemoryData
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).InMemoryData
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.InMemoryData
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).InMemoryData
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryData*
+  name: InMemoryData
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_InMemoryData_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryData
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.InMemoryData
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).InMemoryData
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.InMemoryData
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).InMemoryData
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryTarget
+  name: InMemoryTarget
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_InMemoryTarget
+  commentId: P:ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryTarget
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.InMemoryTarget
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).InMemoryTarget
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.InMemoryTarget
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).InMemoryTarget
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryTarget*
+  name: InMemoryTarget
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_InMemoryTarget_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.InMemoryTarget
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.InMemoryTarget
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).InMemoryTarget
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.InMemoryTarget
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).InMemoryTarget
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.PassingTarget
+  name: PassingTarget
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_PassingTarget
+  commentId: P:ALE.ETLBox.DataFlow.CrossJoin`3.PassingTarget
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.PassingTarget
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).PassingTarget
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.PassingTarget
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).PassingTarget
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.PassingTarget*
+  name: PassingTarget
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_PassingTarget_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.PassingTarget
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.PassingTarget
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).PassingTarget
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.PassingTarget
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).PassingTarget
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.TaskName
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_TaskName
+  commentId: P:ALE.ETLBox.DataFlow.CrossJoin`3.TaskName
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).TaskName
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.TaskName
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).TaskName
+- uid: ALE.ETLBox.DataFlow.CrossJoin`3.TaskName*
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.CrossJoin-3.html#ALE_ETLBox_DataFlow_CrossJoin_3_TaskName_
+  commentId: Overload:ALE.ETLBox.DataFlow.CrossJoin`3.TaskName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CrossJoin<TInput1, TInput2, TOutput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.CrossJoin(Of TInput1, TInput2, TOutput).TaskName
+  nameWithType: CrossJoin<TInput1, TInput2, TOutput>.TaskName
+  nameWithType.vb: CrossJoin(Of TInput1, TInput2, TOutput).TaskName
 - uid: ALE.ETLBox.DataFlow.CsvDestination
   name: CsvDestination
   href: api/ALE.ETLBox.DataFlow.CsvDestination.html
@@ -7667,6 +7867,14 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput)
   nameWithType: DataFlowStreamSource<TOutput>
   nameWithType.vb: DataFlowStreamSource(Of TOutput)
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1._uri
+  name: _uri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1__uri
+  commentId: F:ALE.ETLBox.DataFlow.DataFlowStreamSource`1._uri
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>._uri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput)._uri
+  nameWithType: DataFlowStreamSource<TOutput>._uri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput)._uri
 - uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseReader
   name: CloseReader()
   href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseReader
@@ -7684,23 +7892,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).CloseReader
   nameWithType: DataFlowStreamSource<TOutput>.CloseReader
   nameWithType.vb: DataFlowStreamSource(Of TOutput).CloseReader
-- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseStream
-  name: CloseStream()
-  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseStream
-  commentId: M:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseStream
-  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.CloseStream()
-  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).CloseStream()
-  nameWithType: DataFlowStreamSource<TOutput>.CloseStream()
-  nameWithType.vb: DataFlowStreamSource(Of TOutput).CloseStream()
-- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseStream*
-  name: CloseStream
-  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CloseStream_
-  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CloseStream
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.CloseStream
-  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).CloseStream
-  nameWithType: DataFlowStreamSource<TOutput>.CloseStream
-  nameWithType.vb: DataFlowStreamSource(Of TOutput).CloseStream
 - uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.Execute
   name: Execute()
   href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute
@@ -7718,6 +7909,40 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).Execute
   nameWithType: DataFlowStreamSource<TOutput>.Execute
   nameWithType.vb: DataFlowStreamSource(Of TOutput).Execute
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.GetNextUri
+  name: GetNextUri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_GetNextUri
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.GetNextUri
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.GetNextUri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).GetNextUri
+  nameWithType: DataFlowStreamSource<TOutput>.GetNextUri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput).GetNextUri
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.GetNextUri*
+  name: GetNextUri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_GetNextUri_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.GetNextUri
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.GetNextUri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).GetNextUri
+  nameWithType: DataFlowStreamSource<TOutput>.GetNextUri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput).GetNextUri
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HasNextUri
+  name: HasNextUri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HasNextUri
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HasNextUri
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.HasNextUri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).HasNextUri
+  nameWithType: DataFlowStreamSource<TOutput>.HasNextUri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput).HasNextUri
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HasNextUri*
+  name: HasNextUri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HasNextUri_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HasNextUri
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.HasNextUri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).HasNextUri
+  nameWithType: DataFlowStreamSource<TOutput>.HasNextUri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput).HasNextUri
 - uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.HttpClient
   name: HttpClient
   href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_HttpClient
@@ -7752,23 +7977,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).InitReader
   nameWithType: DataFlowStreamSource<TOutput>.InitReader
   nameWithType.vb: DataFlowStreamSource(Of TOutput).InitReader
-- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.OpenStream
-  name: OpenStream()
-  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_OpenStream
-  commentId: M:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.OpenStream
-  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.OpenStream()
-  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).OpenStream()
-  nameWithType: DataFlowStreamSource<TOutput>.OpenStream()
-  nameWithType.vb: DataFlowStreamSource(Of TOutput).OpenStream()
-- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.OpenStream*
-  name: OpenStream
-  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_OpenStream_
-  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.OpenStream
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.OpenStream
-  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).OpenStream
-  nameWithType: DataFlowStreamSource<TOutput>.OpenStream
-  nameWithType.vb: DataFlowStreamSource(Of TOutput).OpenStream
 - uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.ReadAll
   name: ReadAll()
   href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_ReadAll
