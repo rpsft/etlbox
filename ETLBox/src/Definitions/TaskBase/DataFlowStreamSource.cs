@@ -27,21 +27,23 @@ namespace ALE.ETLBox.DataFlow
                 HasNextUri = c => false;
             }
         }
-        protected string _uri;
 
         public Func<int, string> GetNextUri { get; set; }
         public Func<int, bool> HasNextUri { get; set; }
 
         /// <summary>
-        /// Specifies the resourc type. By default requests are made with HttpClient.
+        /// Specifies the resource type. By default requests are made with HttpClient.
         /// Specify ResourceType.File if you want to read from a json file.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
-        protected StreamReader StreamReader { get; set; }
         public HttpClient HttpClient { get; set; } = new HttpClient();
-
+        
+        /* Internal properties */
+        protected string _uri;
+        protected StreamReader StreamReader { get; set; }
         private bool WasStreamOpened { get; set; }
+
         public override void Execute()
         {
             NLogStart();
@@ -85,7 +87,5 @@ namespace ALE.ETLBox.DataFlow
         protected abstract void InitReader();
         protected abstract void ReadAll();
         protected abstract void CloseReader();
-
     }
-
 }
