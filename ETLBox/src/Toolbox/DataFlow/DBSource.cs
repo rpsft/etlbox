@@ -56,17 +56,16 @@ namespace ALE.ETLBox.DataFlow
         {
             get
             {
-                if (HasColumnNames)
+                if (ColumnNames?.Count > 0)
                     return ColumnNames;
                 else if (HasSourceTableDefinition)
                     return SourceTableDefinition?.Columns?.Select(col => col.Name).ToList();
                 else
-                    return SqlParser.ParseColumnNames(QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead);
+                    return ParseColumnNamesFromQuery();
             }
         }
 
         bool HasSourceTableDefinition => SourceTableDefinition != null;
-        bool HasColumnNames => ColumnNames != null && ColumnNames?.Count > 0;
         bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         bool HasSql => !String.IsNullOrWhiteSpace(Sql);
         DBTypeInfo TypeInfo { get; set; }
@@ -101,6 +100,15 @@ namespace ALE.ETLBox.DataFlow
         public DbSource(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;
+        }
+
+        private List<string> ParseColumnNamesFromQuery()
+        {
+            var result = SqlParser.ParseColumnNames(QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead);
+            if (result?.Count == 0) throw new ETLBoxException("Could not parse column names from Sql Query! Please pass a valid TableDefinition to the " +
+                " property SourceTableDefinition with at least a name for each column that you want to use in the source."
+                );
+            return result;
         }
 
         public override void Execute()

@@ -15,6 +15,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class DbSourceStringArrayTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
         public DbSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
         {
@@ -69,6 +70,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             d2c.AssertTestData();
+        }
+
+        [Fact]
+        public void WithSelectStar()
+        {
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "SourceWithSelectStar");
+            s2c.InsertTestData();
+
+            //Act
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection)
+            {
+                Sql = $"SELECT * FROM {s2c.QB}SourceWithSelectStar{s2c.QE}",
+            };
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "SomeTable");
+
+            //Assert
+            Assert.Throws<ETLBoxException>(() =>
+           {
+               source.LinkTo(dest);
+               source.Execute();
+               dest.Wait();
+           });
         }
 
         [Theory, MemberData(nameof(Connections))]
