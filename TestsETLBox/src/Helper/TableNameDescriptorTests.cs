@@ -29,6 +29,19 @@ namespace ALE.ETLBoxTests
         }
 
         [Fact]
+        public void SqlServerSchemaWithDot()
+        {
+            ObjectNameDescriptor desc = new ObjectNameDescriptor("[Foo.Bar].[Test]", ConnectionManagerType.SqlServer);
+
+            Assert.Equal("[Foo.Bar]", desc.QuotatedSchemaName);
+            Assert.Equal("[Test]", desc.QuotatedObjectName);
+            Assert.Equal("[Foo.Bar].[Test]", desc.QuotatedFullName);
+            Assert.Equal("Foo.Bar", desc.UnquotatedSchemaName);
+            Assert.Equal("Test", desc.UnquotatedObjectName);
+            Assert.Equal("Foo.Bar.Test", desc.UnquotatedFullName);
+        }
+
+        [Fact]
         public void SqlServerNoSchema()
         {
             ObjectNameDescriptor desc = new ObjectNameDescriptor("Test", ConnectionManagerType.SqlServer);
@@ -62,6 +75,18 @@ namespace ALE.ETLBoxTests
             Assert.Equal(@"`Test`", desc.QuotatedFullName);
             Assert.Equal(@"Test", desc.UnquotatedObjectName);
             Assert.Equal(@"Test", desc.UnquotatedFullName);
+        }
+
+        [Fact]
+        public void PostgresWithSchemaAndDot()
+        {
+            ObjectNameDescriptor desc = new ObjectNameDescriptor(@"""public.dot"".""Test.Test""", ConnectionManagerType.Postgres);
+
+            Assert.Equal(@"""public.dot""", desc.QuotatedSchemaName);
+            Assert.Equal(@"""Test.Test""", desc.QuotatedObjectName);
+            Assert.Equal(@"""public.dot"".""Test.Test""", desc.QuotatedFullName);
+            Assert.Equal(@"Test.Test", desc.UnquotatedObjectName);
+            Assert.Equal(@"public.dot.Test.Test", desc.UnquotatedFullName);
         }
 
     }
