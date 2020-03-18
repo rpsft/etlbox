@@ -23,7 +23,7 @@ namespace ALE.ETLBox.DataFlow
     public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read Csv data from file {Uri ?? ""}";
+        public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";
 
         /* Public properties */
         public Configuration Configuration { get; set; }

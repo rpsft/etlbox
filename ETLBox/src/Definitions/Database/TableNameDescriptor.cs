@@ -10,8 +10,8 @@ namespace ALE.ETLBox
         {
             get
             {
-                string EQB = QB == "[" ? @"\[" : QB;
-                string EQE = QE == "]" ? @"\]" : QB;
+                string EQB = QB == "[" || QB == "" ? @"\[" : QB;
+                string EQE = QE == "]" || QE == "" ? @"\]" : QB;
                 return $@"\.?{EQB}.+?{EQE}|[^{EQB}]+?(?=\.)|[^{EQB}]+"; //\.?\[.+?\]|[^\[]+?(?=\.)|[^\[]+
                 
             }
@@ -55,14 +55,14 @@ namespace ALE.ETLBox
 
         private void ParseSchemaAndTable()
         {
-            var m = Regex.Matches(ObjectName, Expr);
+            var m = Regex.Matches(ObjectName, Expr, RegexOptions.IgnoreCase);
             if (m.Count == 0)
                 throw new ETLBoxException($"Unable to retrieve object name (and possible schema) from {ObjectName}.");
-            if (m.Count > 2)
+            else if (m.Count > 2)
                 throw new ETLBoxException($"Unable to retrieve table and schema name from {ObjectName} - found {m.Count} possible matches.");
-            if (m.Count == 1)
+            else if (m.Count == 1)
                 Table = m[0].Value.Trim();
-            if (m.Count == 2)
+            else if (m.Count == 2)
             {
                 Schema = m[0].Value.Trim();
                 Table = m[1].Value.Trim().StartsWith(".") ? m[1].Value.Trim().Substring(1) : m[1].Value.Trim();

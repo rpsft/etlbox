@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
     public class ExcelSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read excel data from file {Uri ?? ""}";
+        public override string TaskName => $"Read excel data from Uri: {CurrentRequestUri ?? ""}";
 
         /* Public properties */
         public string ExcelFilePassword { get; set; }

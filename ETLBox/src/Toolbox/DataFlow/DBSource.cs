@@ -105,7 +105,7 @@ namespace ALE.ETLBox.DataFlow
         private List<string> ParseColumnNamesFromQuery()
         {
             var result = SqlParser.ParseColumnNames(QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead);
-            if (result?.Count == 0) throw new ETLBoxException("Could not parse column names from Sql Query! Please pass a valid TableDefinition to the " +
+            if (TypeInfo.IsArray && result?.Count == 0) throw new ETLBoxException("Could not parse column names from Sql Query! Please pass a valid TableDefinition to the " +
                 " property SourceTableDefinition with at least a name for each column that you want to use in the source."
                 );
             return result;

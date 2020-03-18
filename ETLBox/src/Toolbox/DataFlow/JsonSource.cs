@@ -21,7 +21,7 @@ namespace ALE.ETLBox.DataFlow
     public class JsonSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read Json  from {Uri ?? ""}";
+        public override string TaskName => $"Read Json from Uri: {CurrentRequestUri ?? ""}";
 
         /* Public properties */
         /// <summary>

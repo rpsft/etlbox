@@ -11,16 +11,15 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Adding CrossJoin data flow component. 
-File Source (Json, Xml, Csv) now support two retrieve the uri via  functions (GetNextUri / HasNextUri). This can be used for requesting paginated data from web services, e.g. using ODATA. 
+    <PackageReleaseNotes>Fixing bug when passing schema/table name with special character. Fixed bug in output for new GetNextUri / HasNextUri in Stream Sources. Improved exceptions.
 </PackageReleaseNotes>
-    <Version>1.8.2</Version>
+    <Version>1.8.3</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.2.0</AssemblyVersion>
-    <FileVersion>1.8.2.0</FileVersion>
+    <AssemblyVersion>1.8.3.0</AssemblyVersion>
+    <FileVersion>1.8.3.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>

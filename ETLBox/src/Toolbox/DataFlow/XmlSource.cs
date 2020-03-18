@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
     public class XmlSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read Xml from {Uri ?? ""}";
+        public override string TaskName => $"Read Xml from Uri: {CurrentRequestUri ?? ""}";
 
         /// <summary>
         /// The XmlSerializer used to deserialize the xml into the used data type.

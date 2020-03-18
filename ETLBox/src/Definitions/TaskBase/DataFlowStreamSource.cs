@@ -41,6 +41,7 @@ namespace ALE.ETLBox.DataFlow
         
         /* Internal properties */
         protected string _uri;
+        protected string CurrentRequestUri { get; set; }
         protected StreamReader StreamReader { get; set; }
         private bool WasStreamOpened { get; set; }
 
@@ -51,8 +52,8 @@ namespace ALE.ETLBox.DataFlow
             {
                 do
                 {
-                    string uri = GetNextUri(ProgressCount);
-                    OpenStream(uri);
+                    CurrentRequestUri = GetNextUri(ProgressCount);
+                    OpenStream(CurrentRequestUri);
                     InitReader();
                     WasStreamOpened = true;
                     ReadAll();
