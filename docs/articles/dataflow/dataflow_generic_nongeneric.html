@@ -194,22 +194,29 @@ sampleObject.test = &quot;Dynamic Property&quot;;
 <p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.dynamic.expandoobject?view=netframework-4.8">The Microsoft documentation gives you a good explanation of the possibilites of the ExpandoObject and also more details about
 the use of <code>dynamic</code>.</a></p>
 <h3 id="etlbox-support-for-expandoobject">ETLBox support for ExpandoObject</h3>
-<p>In order to use the ExpandoObject and dynmic objects with ETLBox, you simple type your data flow with this object.</p>
-<p>Let's say we have two tables.
+<p>In order to use the ExpandoObject and dynmic objects with ETLBox, you simple type your data flow with this object.
+Alternatively, you just use the non generic object - which automitically will use the ExpandoObject.
+The following two lines will do the same:</p>
+<pre><code>DbSource source = new DbSource(&quot;sourceTable&quot;);
+</code></pre>
+<p>and</p>
+<pre><code>DbSource&lt;ExpandoObject&gt; source = new DbSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
+</code></pre>
+<p>Let's walk through an example. Assuming we have two tables.
 The table <code>sourceTable</code> has two columns: SourceCol1 and SourceCol2, both integer values.
 The table <code>destTable</code> has one column: DestColSum, also an integer value.</p>
 <p>We could now define the following data flow:</p>
-<pre><code class="lang-C#">DbSource&lt;ExpandoObject&gt; source = new DbSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
+<pre><code class="lang-C#">DbSource source = new DbSource(&quot;sourceTable&quot;);
 
 //Act
-RowTransformation&lt;ExpandoObject&gt; trans = new RowTransformation&lt;ExpandoObject&gt;(
+RowTransformation trans = new RowTransformation(
     sourcedata =&gt;
     {
         dynamic c = sourcedata as ExpandoObject;
         c.DestColSum = c.SourceCol1 + c.SourceCol2;
         return c;
     });
-DbDestination&lt;ExpandoObject&gt; dest = new DbDestination&lt;ExpandoObject&gt;(&quot;destTable&quot;);
+DbDestination dest = new DbDestination(&quot;destTable&quot;);
 </code></pre>
 <p>In this example code, the data is read from a DbSource into an ExpandoObject. The properties SourceCol1 and SourceCol2
 are created automatically, because ETLBox will recognize that it is an ExpandoObject and add a property
@@ -222,23 +229,24 @@ with the destination column: &quot;DestColSum&quot;. The other two properties (S
 from DestColSum will be written into the target.</p>
 <p><em>Note</em>: Of course you could have create a new ExpandoObject in the RowTransformation, which would have contained the
 property DestColSum.</p>
-<h2 id="non-generic-approach">Non generic approach</h2>
-<p>As working with dynamic types can sometimes be a hazzle, ETLBox offers a third way to create your data flow without
-object types. Most data flow components in ETLBox exist as a &quot;non generic&quot; object - which means that you can choose if you want to use
-the object as a generic one with having an object type of without an object type. If you don't pass an object type, ETLBox
-will internally work with an string array. E.g., the use of <code>DbSource</code>  is equivalent to <code>DbSource&lt;string[]&gt;</code>.</p>
-<p>Here is an example for reading data from a database:</p>
-<pre><code class="lang-C#">DbSource source = new DbSource($@&quot;select Value1, Value2 from dbo.Test&quot;);
-RowTransformation row = new RowTransformation( 
+<h2 id="working-with-arrays">Working with Arrays</h2>
+<p>Wworking with dynamic types can sometimes be a hazzle. ETLBox offers a third way to create your data flow without
+defining object types and the need to create a POCO for your data. Simple use an array as data type - either an array
+of type object or string. An string array could have advantages if you read data from json or csvs, object could work better
+when reading from databases.</p>
+<p>Here is an example for reading data from a file.</p>
+<pre><code class="lang-C#">CsvSource&lt;string[]&gt; source = new CsvSource&lt;string[]&gt;(&quot;text.csv&quot;);
+RowTransformation&lt;string[], row = new RowTransformation( 
     row =&gt; {
-        string value1 = row[0];
-        string value2 = row[1];
+        row[0] = row[0] + &quot;.test&quot;;
+        row[2] = row[2] * 7;
         }
 );
+DbDestination&lt;string[]&gt; dest = new DbDestination&lt;string[]&gt;(&quot;DestinationTable&quot;);
 </code></pre>
-<p>In this example, you would have all data from column &quot;Value1&quot; accessible at the first position of the string array
-and &quot;Value2&quot; at the second position. All your data will be automatically converted into a string data type.
-This will also work for a DBDestDetination - the string data will then automatically be converted into back into the
+<p>In this example, you would have all data from the first column in your csv file accessible at the first position of the string array,
+and so on. All your data will be automatically converted into a string data type.
+This will also work for a DbDestination - the string data will then automatically be converted into back into the
 right data type. Of course you will get an error if data types won't match (e.g. if you want to store the value &quot;xyz&quot; in
 an integer column).</p>
 <p>This approach is very useful when reading from a source where you get only string data, e.g. CSV or Json.

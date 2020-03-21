@@ -156,26 +156,35 @@ the use of `dynamic`.](https://docs.microsoft.com/en-us/dotnet/api/system.dynami
 
 ### ETLBox support for ExpandoObject
 
-In order to use the ExpandoObject and dynmic objects with ETLBox, you simple type your data flow with this object.
+In order to use the ExpandoObject and dynmic objects with ETLBox, you simple type your data flow with this object. 
+Alternatively, you just use the non generic object - which automitically will use the ExpandoObject.
+The following two lines will do the same:
+```
+DbSource source = new DbSource("sourceTable");
+```
+and 
+```
+DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("sourceTable");
+```
 
-Let's say we have two tables.
+Let's walk through an example. Assuming we have two tables.
 The table `sourceTable` has two columns: SourceCol1 and SourceCol2, both integer values.
 The table `destTable` has one column: DestColSum, also an integer value.
 
 We could now define the following data flow:
 
 ```C#
-DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("sourceTable");
+DbSource source = new DbSource("sourceTable");
 
 //Act
-RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(
+RowTransformation trans = new RowTransformation(
     sourcedata =>
     {
         dynamic c = sourcedata as ExpandoObject;
         c.DestColSum = c.SourceCol1 + c.SourceCol2;
         return c;
     });
-DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("destTable");
+DbDestination dest = new DbDestination("destTable");
 ```
 
 In this example code, the data is read from a DbSource into an ExpandoObject. The properties SourceCol1 and SourceCol2 
@@ -191,28 +200,29 @@ from DestColSum will be written into the target.
 *Note*: Of course you could have create a new ExpandoObject in the RowTransformation, which would have contained the 
 property DestColSum.
 
-## Non generic approach
+## Working with Arrays
 
-As working with dynamic types can sometimes be a hazzle, ETLBox offers a third way to create your data flow without
-object types. Most data flow components in ETLBox exist as a "non generic" object - which means that you can choose if you want to use
-the object as a generic one with having an object type of without an object type. If you don't pass an object type, ETLBox
-will internally work with an string array. E.g., the use of `DbSource`  is equivalent to `DbSource<string[]>`.
+Wworking with dynamic types can sometimes be a hazzle. ETLBox offers a third way to create your data flow without
+defining object types and the need to create a POCO for your data. Simple use an array as data type - either an array
+of type object or string. An string array could have advantages if you read data from json or csvs, object could work better
+when reading from databases. 
 
-Here is an example for reading data from a database:
+Here is an example for reading data from a file.
 
 ```C#
-DbSource source = new DbSource($@"select Value1, Value2 from dbo.Test");
-RowTransformation row = new RowTransformation( 
+CsvSource<string[]> source = new CsvSource<string[]>("text.csv");
+RowTransformation<string[], row = new RowTransformation( 
     row => {
-        string value1 = row[0];
-        string value2 = row[1];
+        row[0] = row[0] + ".test";
+        row[2] = row[2] * 7;
         }
 );
+DbDestination<string[]> dest = new DbDestination<string[]>("DestinationTable");
 ```
 
-In this example, you would have all data from column "Value1" accessible at the first position of the string array 
-and "Value2" at the second position. All your data will be automatically converted into a string data type. 
-This will also work for a DBDestDetination - the string data will then automatically be converted into back into the 
+In this example, you would have all data from the first column in your csv file accessible at the first position of the string array, 
+and so on. All your data will be automatically converted into a string data type. 
+This will also work for a DbDestination - the string data will then automatically be converted into back into the 
 right data type. Of course you will get an error if data types won't match (e.g. if you want to store the value "xyz" in 
 an integer column). 
 

@@ -104,6 +104,7 @@ Flat files|Csv, Json, Xml|Full support
 Office|Microsoft Access, Excel|Full support for Access, Excel only as source
 Cube|Sql Server Analysis Service|Only XMLA statements
 Memory|.NET IEnumerable & Collections|Full support
+Cloud Services|Tested with Azure|Full support
 Any other|integration with custom written code|No limitations
 
 You can choose between different sources and destination components. `DbSource` and `DbDestination` will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). `CsvSource`, `CsvDestination` give you support for flat files - [based on CSVHelper](https://joshclose.github.io/CsvHelper/). `ExcelSource` allows you to read data from an excel sheet. `JsonSource`, `JsonDestination`, `XmlSource` and `XmlDestination` let you read and write json from files or web service request. `MemorySource`, `MemoryDestinatiation` as well as `CustomSource` and `CustomDestination` will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.

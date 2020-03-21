@@ -6,9 +6,7 @@ ETL is the foundation of modern Business Intelligence application.
 It separates the analysis part from everything that comes before it. ETL stands for extract, transform 
 and load, and describes a three-step process:
 
-```
-Source Systems --> Extract, Transform, Load --> Data Warehouse
-```
+![Source Systems -> Extract, Transform, Load -> Data Warehouse](../images/source_etl_dwh.png)
 
 *Extracting* data is about acquiring it from a particular source and doing so in a way that all relevant data 
 is collected. For ETL to work well, data needs to come directly from the source and in its rawest form.
@@ -29,16 +27,7 @@ This engine runs inside your applications, APIs, and jobs to extract, filter, tr
 ETLBox speeds up your development by providing an easy-to-use toolbox for integrating your data from 
 different sources within your app and load them into any target you like. 
 
-```
-Sql Server  --|
-MySql       --|                                                         
-Postgres    --|     |-------------------Your app ---------------|    |-- Sql Server
-SQLite      --|---> Transform -> Validate -> Harmonize -> Clean ---> |-- CSV
-CSV         --|     |-------------------------------------------|    |-- & ... 
-Excel       --|
-Json        --| 
-Custom      --|
-```
+![Sources -> Transform, Validate, Harmonize, Clean, Deduplicate -> Destinations](../images/sources_harmonize_clean.png)
 
 ### What you can do with ETLBox
 

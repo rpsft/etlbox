@@ -82,8 +82,7 @@
 <p>ETL is the foundation of modern Business Intelligence application.
 It separates the analysis part from everything that comes before it. ETL stands for extract, transform
 and load, and describes a three-step process:</p>
-<pre><code>Source Systems --&gt; Extract, Transform, Load --&gt; Data Warehouse
-</code></pre>
+<p><img src="../images/source_etl_dwh.png" alt="Source Systems -&gt; Extract, Transform, Load -&gt; Data Warehouse"></p>
 <p><em>Extracting</em> data is about acquiring it from a particular source and doing so in a way that all relevant data
 is collected. For ETL to work well, data needs to come directly from the source and in its rawest form.</p>
 <p><em>Transforming</em> data requires it to be stripped of its various formats, cleaned and harmonized.
@@ -98,15 +97,7 @@ There you can find it ready for your analysis.</p>
 This engine runs inside your applications, APIs, and jobs to extract, filter, transform, migrate data on-the-fly.
 ETLBox speeds up your development by providing an easy-to-use toolbox for integrating your data from
 different sources within your app and load them into any target you like.</p>
-<pre><code>Sql Server  --|
-MySql       --|                                                         
-Postgres    --|     |-------------------Your app ---------------|    |-- Sql Server
-SQLite      --|---&gt; Transform -&gt; Validate -&gt; Harmonize -&gt; Clean ---&gt; |-- CSV
-CSV         --|     |-------------------------------------------|    |-- &amp; ... 
-Excel       --|
-Json        --| 
-Custom      --|
-</code></pre>
+<p><img src="../images/sources_harmonize_clean.png" alt="Sources -&gt; Transform, Validate, Harmonize, Clean, Deduplicate -&gt; Destinations"></p>
 <h3 id="what-you-can-do-with-etlbox">What you can do with ETLBox</h3>
 <p>Here are a few things you can do with ETLBox:</p>
 <ul>

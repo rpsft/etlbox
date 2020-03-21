@@ -19,4 +19,10 @@
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="images\sources_harmonize_clean.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

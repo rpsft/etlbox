@@ -7892,6 +7892,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).CloseReader
   nameWithType: DataFlowStreamSource<TOutput>.CloseReader
   nameWithType.vb: DataFlowStreamSource(Of TOutput).CloseReader
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CurrentRequestUri
+  name: CurrentRequestUri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CurrentRequestUri
+  commentId: P:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CurrentRequestUri
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.CurrentRequestUri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).CurrentRequestUri
+  nameWithType: DataFlowStreamSource<TOutput>.CurrentRequestUri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput).CurrentRequestUri
+- uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CurrentRequestUri*
+  name: CurrentRequestUri
+  href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_CurrentRequestUri_
+  commentId: Overload:ALE.ETLBox.DataFlow.DataFlowStreamSource`1.CurrentRequestUri
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DataFlowStreamSource<TOutput>.CurrentRequestUri
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowStreamSource(Of TOutput).CurrentRequestUri
+  nameWithType: DataFlowStreamSource<TOutput>.CurrentRequestUri
+  nameWithType.vb: DataFlowStreamSource(Of TOutput).CurrentRequestUri
 - uid: ALE.ETLBox.DataFlow.DataFlowStreamSource`1.Execute
   name: Execute()
   href: api/ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html#ALE_ETLBox_DataFlow_DataFlowStreamSource_1_Execute
