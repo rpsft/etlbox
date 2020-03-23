@@ -6,34 +6,81 @@ from and load data into the following databases: Sql Server, MySql, Postgres, SQ
 ## DbSource
 
 The DbSource is the most common data source for a data flow. It basically connects to a database via ADO.NET and executes a SELECT-statement to start reading the data. 
-While ADO.NET is reading from the source, data is simultaneously posted into the dataflow pipe.
-To initialize a DbSource, you can either hand over a `TableDefinition`, a SQL-statement or a table name. 
-The DbSource also accepts a connection manager. If no connection manager is specified, the "default" connection manager is used 
-(which is stored in `ControlFlow.DefaultDbConnection`).
+While data is read from the source, it is simultaneously posted into the dataflow pipe. This enables the DbSource also to handle big amount of data - it constantly can 
+read data from a big table while already read data can be processed by the connected componentens. 
+
+To initialize a DbSource, you can simply pass a table (or view) name or a SQL-statement. The DbSource also accepts a connection manager. 
 
 The following code would read all data from the table `SourceTable` and use the default connection manager:
 
 ```C#
-DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("SourceTable");
+DbSource source = new DbSource("SourceTable");
 ```
 
 For the `DbSource`, you can also specify some Sql code to retrieve your data:
 
 ```C#
-DbSource<MySimpleRow> source = new DbSource<MySimpleRow>() {
+DbSource source = new DbSource() {
     Sql = "SELECT * FROM SourceTable"
 };
 ```
 
-## DbDestination
+### Working with types
 
-Like the `DbSource`, the `DbDestination` is the common component for sending data into a database. It is initialized with a table name or a `TableDefinition`.
+In the examples above we used a  object without a type.
+This will let ETLBox work internally with an `ExpandoObject` which is a dynamic .NET object type.
+Let's assume that SouceTable has two columns:
 
-The following example would transfer data from the destination to the source, using all the same connection manager (derived from `ControlFlow.DefaultDbConnection`):
+ColumnName|Data Type
+----------|---------
+Id|INTEGER
+Value|VARCHAR
+
+Reading from this table using the DbSource without type will internally create a dynamic object with two properties: Id of type int and Value of type string.
+
+Working with dynamic objects has some drawbacks, as .NET is a strongly typed language. Of course you can also use a generic object 
+to type the DbSource.
+
+Let's assume we create a POCO (Plain old component object) `MySimpleRow` that looks like this:
+
+```C#
+public class MySimpleRow {
+    public int Id { get; set;}
+    public string Value { get; set;}
+}
+```
+
+Now we can read the data from the source with a generic object:
 
 ```C#
 DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("SourceTable");
-DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DestinationTable");
+```
+
+ETLBox will autamtically extract missing meta information during runtime from the source table and the involved types. In our example, the source table has
+the exact same columns as the object - ETLBox will check this and write data from the Id column into the Id property, and data from the column Value into the Value property.
+Each record in the source will be a new object that is created and then passed to the connected components. 
+
+Of course the properties in the object and the columsn can differ - ETLBox will only load columns from a source where it can find the right property. If the data type is different,
+ETLBox will try to automatically convert the data. If the names are different, you can use the attribute ColumnMap to define the matching columns name for a property. 
+In our example, we could replace the property Id with a property Key - in order to still read data from the Id column, we add the ColumnMap attribute. Also, if we change
+the data type to string, ETLBox will automatically convert the integer values into a string. 
+
+```C#
+[ColumnMap("Id")]
+public string Key { get;set; }
+```
+
+## DbDestination
+
+Like the `DbSource`, the `DbDestination` is the common component for sending data into a database. It is initialized with a table name.
+Unlike other Destinations, the DbDestination inserts data into the database in batches. The default batch size is 1000 rows - the DbDestination waits
+until it's input buffer has reached the batch size before it bulk inserts the data into the database. 
+
+The following example would transfer data from the destination to the source:
+
+```C#
+DbSource source = new DbSource("SourceTable");
+DbDestination dest = new DbDestination("DestinationTable");
 //Link everything together
 source.LinkTo(dest);
 //Start the data flow
@@ -43,19 +90,21 @@ dest.Wait()
 
 ## Connection manager
 
-### Connection string
+### Connection strings
 
 To connect to your database of choice, you will need a string that contains all information needed to connect
 to your database (e.g., the network address of the database, user name and password). The specific connection string syntax 
 for each provider is defined by the ADO.NET framework. If you need assistance
 to create such a connection string, <a href="https://www.connectionstrings.com" target="_blank">have a look at this website that 
-provide example string for almost every database</a>.
+provide example strings for almost every database</a>.
 
 ### Database Connections
 
 The `DbSource` and `DbDestination` can be used to connect via ADO.NET to a database server. 
 To do so, it will need the correct connection manager and either a raw connection string or a `ConnectionString` object. 
-The easiest way would be to directly pass a raw connection string and connection manager.  
+The easiest way is to directly pass a raw connection string and create with it a connection manager.  
+
+Here is an example creating a connection manager for Sql Server and pass it to a DbSource:
 
 ```C#
 DbSource source = DbSource (
@@ -64,59 +113,65 @@ DbSource source = DbSource (
 );
 ```
 
-Additionally, for all connection managers you can pass a `ConnectionString` object which wraps the connection string. 
+For other databases the code looks very similar. Please be aware that the connection string might look different.
+
+This is how you create a connection manager for MySql:
 
 ```C#
-DbSource source = DbSource (
-    new SqlConnectionManager(new SqlConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;")),
-    "SourceTable"
-);
+MySqlConnectionManager connectionManager = new MySqlConnectionManager("Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;";
 ```
 
-#### MySql Connections
-
-The `DbSource` and `DbDestination` can be used to connect to a MySql database via the MySql ADO.NET provider.
-Either use the raw connection string or a `MySqlConnectionString` object and a `MySqlConnectionManger`. 
+Here the example code for creating a connection manager for Postgres:
 
 ```C#
-DbSource source = DbSource (
-    new MySqlConnectionManager("Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;"),
-    "SourceTable"
-);
+PostgresConnectionManager connectionManager = new PostgresConnectionManager("Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;");
 ```
 
-#### Postgres Connections
-
-The `DbSource` and `DbDestination` can be used to connect to a Postgres database via the Postgres ADO.NET provider.
-Either use the raw connection string or a use the `PostgresConnectionString` object and a `PostgresConnectionManger`. 
+Creation of a connection manager for SQLite:
 
 ```C#
-DbDestination dest = DbDestination (
-    new PostgresConnectionManager("Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;"),
-    "DestinationTable"
-);
+SQLiteConnectionManager connectionManager = new SQLiteConnectionManager("Data Source=.\\db\\SQLiteControlFlow.db;Version=3;");
 ```
 
-#### SQLite Connections
+### Default ConnectionManager
 
-The `DbSource` and `DbDestination` can be used to connect to a SQLite database via the SQLite ADO.NET provider.
-Either use the raw connection string or a use the `SQLiteConnectionString` object and a `SQLiteConnectionManger`. 
+Every component or task related to a database operation needs to have a connection managers set in order
+to connect to the right database. Sometimes it can be cumbersome to pass the same connection manager over and over
+again. To avoid this, there is a static `ControlFlow` class that contains the property `DefaultDbConnection`.
+If you define a connection manager here, this will always be used as a fallback value if no other connection manager property was defined.
+
+```
+ControlFlow.DefaultDbConnection = new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
+//Now you can just create a DbSource like this
+var source = new DbSource("SourceTable");
+```
+
+### Connection String wrapper
+
+When you create a new connection manager, you have the choice to either pass the connection string directly or you
+ create an adequate ConnectionString object from the connection string before you pass it to the connection manager.
+ The ConnectionString object does exist for every database type (e.g. for MySql it is `MySqlConnectionString`). The ConnectionString
+ wraps the raw database connection string into the appropriate ConnectionStringBuilder object and also offers some more
+ functionalities, e.g. like getting a connection string for the database storing system information. 
 
 ```C#
-DbSource source = DbSource (
-    new SQLiteConnectionManager("Data Source=.\\db\\SQLiteControlFlow.db;Version=3;"),
-    "SourceTable"
-);
+SqlConnectionString etlboxConnString = new SqlConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
+SqlConnectionString masterConnString = etlboxConnString.GetMasterConnection();
+
+//masterConnString is equal to "Data Source=.;Integrated Security=SSPI;"
+SqlConnectionManager conectionToMaster = new SqlConnectionManager(masterConnString); 
 ```
 
-#### Sql Server ODBC Connections
+#### ODBC Connections
 
-The `DbSource` and `DbDestination` also works with ODBC connection to Sql Server. . 
-You will still use the underlying ADO.NET, but it allows you to connect to SQL Server via ODBC. 
+The `DbSource` and `DbDestination` also works with ODBC connection. Currently ODBC connections with Sql Server and Access are supported. 
+You will still use the underlying ADO.NET, but it allows you to connect to SQL Server or Access databases via ODBC. 
+
+Here is how you can connect via ODBC:
   
 ```C#
 DbSource source = DbSource (
-    new SqlODBCConnectionManager(new ODBCConnectionString(""Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes")),
+    new SqlODBCConnectionManager("Driver={SQL Server};Server=.;Database=ETLBox_ControlFlow;Trusted_Connection=Yes"),
     "SourceTable"
 );
 ```
@@ -145,30 +200,12 @@ DbDestination dest = DbDestination (
     "DestinationTable"
 );
 ```
-*Warning*: The `DbDestination` will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.
+*Warning*: The `DbDestination` will do a bulk insert by creating a sql statement using a sql query that Access understands. The number of rows per batch is 
+very limited - if it too high, you will the error message 'Query to complex'. Try to reduce the batch size to solve this.
 
-*Note*: Please note that the AccessOdbcConnectionManager will create a "temporary" dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. This was necessary to simulate a bulk insert with Access-like Sql. 
+*Note*: Please note that the AccessOdbcConnectionManager will create a "temporary" dummy table containing one record in your database when doing the bulk insert. After completion it will delete the table again. 
+This is necessary to simulate a bulk insert with Access-like Sql. 
 
-### Connection String wrapper
-
-When you create a new connection manager, you have the choice to either pass the connection string directly or you
- create an adequate ConnectionString object from the connection string before you pass it to the connection manager.
- The ConnectionString object does exist for every database type (e.g. for MySql it is `MySqlConnectionString`). The ConnectionString
- wraps the raw database connection string into the appropriate ConnectionStringBuilder object and also offers some more
- functionalities, e.g. like getting a connection string for the database storing system information. 
-
-### Default ConnectionManager
-
-Every component or task related to a database operation needs to have a connection managers set in order
-to connect to the right database. Sometimes it can be cumbersome to pass the same connection manager over and over
-again. To avoid this, there is a static `ControlFlow` class that contains the property `DefaultDbConnection`.
-If you define a connection manager here, this will always be used as a fallback value if no other connection manager property was defined.
-
-```
-ControlFlow.DefaultDbConnection = new SqlConnectionManager("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
-//Now you can just create a DbSource like this
-var source = new DbSource("SourceTable");
-```
 
 ### Connection Pooling
 
@@ -191,11 +228,13 @@ want to leave the connection open, avoiding the pooling. [For this scenario you 
 on the connection managers.](https://github.com/roadrunnerlenny/etlbox/issues/39)
 
 
-## Table Definitions
+### Table Definitions
 
-If you pass a table name to a `DBsource` or `DbDestination` (or a Sql statement to a `DbSource`), the meta data
-of the table is automatically derived from that table or sql statement. If you don't want ETLBox to read this information
-from the table, or if you want to provide your own meta information, you can pass a `TableDefinition` instead.
+If you pass a table name to a `DBsource` or `DbDestination` or a Sql statement to a `DbSource`, the meta data
+of the table is automatically derived from that table or sql statement by ETLBox. For table or views this is done via a Sql statement that queries
+system information, and for the Sql statement this is done via parsing the statement. 
+If you don't want ETLBox to read this information, or if you want to provide your own meta information, 
+you can pass a `TableDefinition` instead.
 
 This could look like this:
 
@@ -211,4 +250,4 @@ var DbSource<type> = new DbSource<type>() {
 }
 ```
 
-ETLBox will use this meta data instead to connect with the table. 
+ETLBox will use this meta data instead to get the right column names. 
