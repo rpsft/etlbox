@@ -1,11 +1,13 @@
-# A basic example
+# Control and Data flow basics
+
+## Purpose
 
 This purpose of this example is to give you a brief overview of the basic concepts of ETLBox.
 It demonstrates the basic idea of a very simple data flow and shows how to use the ControlFlow objects
 to manage your database metadata. 
 [There is also a video demonstrating this example](https://www.youtube.com/watch?v=CsWZuRpl6PA).
 
-## Setup the environment
+## Preqrequisites
 
 This example is written in C#, based on the current .NET Core. You can use your IDE of your choice -
 most will probably go with Visual Studio or Visual Studio Code. 
@@ -43,7 +45,7 @@ dotnet add package ETLBox
 Now you will be able to use the full set of tools coming with ETLBox
 
 
-### Start coding
+## Start coding
 
 Now open your project and go into the main method of your program.
 
@@ -101,7 +103,7 @@ A terminal window will pop up and display the logging output. As the logging lev
 you will see all SQL code which is executed against the database.
 Check if the database and the table was created.
 
-### A simple etl pipeline
+## A simple etl pipeline
 
 Next we want to create a simple etl pipeline. 
 First we create a demo csv file named ```input.csv```. 
@@ -186,5 +188,5 @@ You'll see that the data was successfully copied into the database table.
 
 ## Code on Github
 
-[The whole code for this example is available on GitHub](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/BasicExample). 
+[The whole code for this example is available on GitHub](https://github.com/roadrunnerlenny/etlboxdemo/tree/master/ControlDataFlowBasics). 
 

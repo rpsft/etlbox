@@ -98,7 +98,7 @@ so that there is always enought data available to write into the destination.
 
 All components in the Data Flow allow you to create your ETL (Extract, Transform, Load) pipeline - 
 where data is extracted from the source(s), asynchronously transformed and then loaded into your destinations.
-Please read the [Overview Data Flow](dataflow/overview_dataflow.md) to get started. 
+Please start with the [simple DataFlow example](dataflow/dataflow_simple_flow.md) to get started. 
 This is the main component of ETLBox, hence you'll find the most examples and articles about this topic. 
 
 ### More about control flows

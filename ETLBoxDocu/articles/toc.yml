@@ -4,12 +4,10 @@
       href: overview.md
     - name: Core concepts
       href: getting_started.md
-    - name: Basic example
-      href: examples/example_basics.md
 - name: DataFlow Tutorial
   items:
     - name: A simple data flow
-      href: dataflow/overview_dataflow.md
+      href: dataflow/dataflow_simple_flow.md
     - name: Integrate databases
       href: dataflow/dataflow_db_sources_destinations.md
     - name: Flat files and other sources and destinations
@@ -32,6 +30,8 @@
       href: controlflow/overview_logging.md
 - name: Examples
   items:
+    - name: Control and Data flow basics
+      href: examples/example_controlflow_dataflow_basics.md
     - name: Different Sources and Destinations
       href: examples/example_different_sources_destinations.md
     - name: Rating Orders
