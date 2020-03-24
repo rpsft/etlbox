@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>A simple data flow | ETLBox - It's all in the box </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="A simple data flow | ETLBox - It's all in the box ">
+    <meta name="generator" content="docfx 2.47.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="a-simple-data-flow">A simple data flow</h1>
+
+<p>The main part of ETLBox is the Data Flow library. It basically is the ETL part, and holds all components
+for extracting, transforming and loading data.  All Data Flow components reside in the 'ALE.ETLBox.DataFlow' namespace.</p>
+<h2 id="what-is-a-data-flow">What is a data flow?</h2>
+<p>You have some data somewhere - stored in some files or a database table or a web service.
+Now you want to define a pipeline which takes this data, transforms it &quot;on the fly&quot; and writes it into a target
+(this could be again a database, a file or anywhere else).
+This is the pure essence of an ETL process (extracting, transforming, loading).
+The building block to define such a data flow in ETLBox are source components for extracting, transformations for modifications
+and destination components for loading.</p>
+<h3 id="source-components">Source components</h3>
+<p>All dataflow pipelines will need at least one or more sources. Sources are basically everything that can read data from someplace
+(e.g. CSV file or database table) and then post this data into the pipeline. All sources are able to read data asynchronously.
+That means, while the component reads data from the source, it simultaneously sends the already processed data to components that are connected to source.
+This is crucial when you operate with big amounts of data - you want be able to process chunks of sources and avoid to load your whole source data into memory first.
+There are be some exceptions to this behaviour, depending on your transformation type.</p>
+<p>There are different build-in data sources in ETLBox, e.g.: <code>CsvSource</code>, <code>DbSource</code> or <code>ExelSource</code> that can be easily use to connect to your data.
+If you are in need of another source component, you can extend the <code>CustomSource</code>.</p>
+<p>Once a source starts reading data, it will start sending data to its connected components. These could be either a Transformation or Destination.
+Posting data is always done asynchronously in separate threads, even if you use the blocking Execute() method on the source to wait for all data to arrive.</p>
+<h3 id="transformations">Transformations</h3>
+<p>Transformations always have at least one input and one output. Inputs can be connected either to other transformations or
+sources, and the output can connect to other transformations or to destinations.
+The purpose of a transformation component is to take the data from its input(s) and post the transformed data to its output(s).
+This is done on a row-by-row basis for non-blocking transformation, some batches stored in memory for partially blocking transformations
+or on the complete set of data for blocking transformations.
+Every transfomation has some buffer for it's input(s) and output(s) in order to improve performance.
+As soon as there is any data in the input, non-blocking transformation will start processing and post the result to the output.</p>
+<h3 id="destination-components">Destination components</h3>
+<p>Destination components will have normally only one input. They define a target for your data, e.g. a database table, a file or a .NET collection.
+If you are in need of another destination component, you can extend the <code>CustomDestination</code>.</p>
+<p>Every Destination comes with an input buffer. While a Destination for csv target will open a file stream where data is written into it as soon as arrives,
+a DB target will do this batch-by-batch - therefore,  it will wait until the input buffer reaches the batch size (or the data is the last batch) and then insert
+it into the database using a bulk insert.</p>
+<h2 id="a-simple-dataflow">A simple dataflow</h2>
+<p>Let's look at a simple dataflow like this:</p>
+<p>Csv File (Source) --&gt; Row transformation --&gt; Database destination.</p>
+<h3 id="source-file">Source file</h3>
+<p>The input file &quot;demodata.csv&quot;  has the following content:</p>
+<table>
+<thead>
+<tr>
+<th>rownr</th>
+<th>name</th>
+<th>quantity_m</th>
+<th>quantity_l</th>
+<th>price_in_cents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>&quot;T-Shirt&quot;</td>
+<td>5</td>
+<td>0</td>
+<td>1200</td>
+</tr>
+<tr>
+<td>2</td>
+<td>&quot;Shirt&quot;</td>
+<td>3</td>
+<td>7</td>
+<td>1500</td>
+</tr>
+<tr>
+<td>3</td>
+<td>&quot;Jeans&quot;</td>
+<td>5</td>
+<td>2</td>
+<td>3000</td>
+</tr>
+</tbody>
+</table>
+<p>It should simulate orders for clothing. All data is separated with a &quot;,&quot;, and the first row is the header.</p>
+<h3 id="destination-table">Destination table</h3>
+<p>We want to store the data from the file in a destination table in Sql Server.
+The destination table will look like this:</p>
+<table>
+<thead>
+<tr>
+<th>ColumnName</th>
+<th>Data Type</th>
+<th>Contraints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>INT</td>
+<td>PK,Identity (auto increment)</td>
+</tr>
+<tr>
+<td>Item</td>
+<td>NVARCHAR(50)</td>
+<td></td>
+</tr>
+<tr>
+<td>Quantity</td>
+<td>INT</td>
+<td></td>
+</tr>
+<tr>
+<td>Price</td>
+<td>DECIMAL(10,2)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="creating-the-components">Creating the components</h3>
+<p>First we need to create a source, in this example it contain the order data. This will look like this:</p>
+<pre><code class="lang-C#">CsvSource&lt;string[]&gt; source = new CsvSource&lt;string[]&gt;(&quot;demodata.csv&quot;);
+</code></pre>
+<p>We now add a row transformation. The output format of the <code>CsvSource</code> is a string array. In this example,
+we will convert the csv string array into an <code>Order</code> object and add some logic in the transformation.</p>
+<pre><code class="lang-C#">RowTransformation&lt;string[], Order&gt; rowTrans = new RowTransformation&lt;string[], Order&gt;(
+    row =&gt; new Order()
+    {
+        Item = row[1],
+        Quantity = int.Parse(row[2]) + int.Parse(row[3]),
+        Price = int.Parse(row[4]) / 100
+    });
+</code></pre>
+<p><em>Please note that you don't have to necessarily use a string array for reading csv file. You can use the CsvSource
+already with the right data object.</em></p>
+<p>Now we need to create a destination. For the database destination we need a connection manager that stores
+the connection string and provides support for a native ADO.NET connection to the database.</p>
+<pre><code class="lang-C#">SqlConnectionManager connMan = new SqlConnectionManager(&quot;Data Source=.;Initial Catalog=demo;Integrated Security=false;User=sa;password=reallyStrongPwd123&quot;);
+</code></pre>
+<p>Always use the right connection manager for you database - e.g., the SqlConnectionManager will connect with
+a Sql Server (and expects a sql server connection string). There are also other connection managers
+(e.g. <code>SQLiteConnectionManager</code> for SQLite, <code>PostgresConnectionManager</code> for Postgres or <code>MySqlConnectionManager</code>
+for MySql).</p>
+<p><em>If you don't want to pass the connection manager object over and over again to your DataFlow or ControlFlow objects,
+you can store a default connection in the static property <code>ControlFlow.DefaultDbConnection</code>.</em></p>
+<p>No we need a database destination.</p>
+<pre><code class="lang-C#">DbDestination&lt;Order&gt; dest = new DbDestination&lt;Order&gt;(connMan, &quot;OrderTable&quot;);
+</code></pre>
+<p>Notice that the destination is typed with the <code>Order</code> object.
+We also need to pass the connection manager to the DbDestination so that connection to our Sql Server can be used,
+and we provide the table name for the destination table.</p>
+<p>The Order object is a POCO (Plain Old Component Object) and looks like this:</p>
+<pre><code class="lang-C#">public class Order
+{
+   public string Item { get; set; }
+   public int Quantity { get; set; }
+   public double Price { get; set; }
+}
+</code></pre>
+<h3 id="linking-the-components">Linking the components</h3>
+<p>Until now we have only created the components, but we didn't define the Data Flow pipe. Let's do this now:</p>
+<pre><code class="lang-C#">source.LinkTo(rowTrans);
+rowTrans.LinkTo(dest);
+</code></pre>
+<p>This will create a data  flow pipe CsvSource -&gt; RowTransformation -&gt; DbDestination. If your data flow becomes more complex, linking will
+become an essential part of your creation. There are transformations that have more than one input or output, and destinations accepts data from
+several sources. Even sources can split data across their destinations - you can defines rules how to split data as so called predicates.</p>
+<h3 id="executing-the-dataflow">Executing the dataflow</h3>
+<p>Now we will give the source the command to start reading data.</p>
+<pre><code class="lang-C#">  source.Execute();
+</code></pre>
+<p>This code will execute as an synchronous task - though the data flow itself will run in it's own thread.
+This method will continue execution when all data was read from the source and posted into the data flow. This does not mean that your data has arrived at the destination
+yet - but reading from the source was done successfully when this method returns. To operate totally asynchrounously, you can use the <code>ExecuteAsync()</code> method.</p>
+<p>Now we want to wait for the Data Flow pipeline to finish. So we add this line to our code</p>
+<pre><code class="lang-C#">dest.Wait();
+</code></pre>
+<p>When <code>dest.Wait()</code> returns, all data was read from the source and written into the database table.  To operate totally asynchrounously, you can use the <code>Completion</code> property to
+receive a Task object for further handling.</p>
+<p>*If you are new to the .NET Task parallel library (TPL) and asynchronous programming, I recommend to use the <code>Execute()</code> &amp; <code>Wait()</code> pattern to run your data flows.
+If you want to use <code>ExecuteAsny()</code> and <code>Completion</code>, learn more abouti <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/">Asynchronous programming with async and await here.</a></p>
+<h2 id="view-the-full-code">View the full code</h2>
+<p>This demo code is available online - <a href="https://github.com/roadrunnerlenny/etlboxdemo/tree/master/SimpeFlow">view the full code on github</a>.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Crafted with &lt;3 in Berlin<br>
+<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "//Mac/Home/Github/etlbox/ETLBoxDocu",
+  "source_base_path": "Y:/Github/roadrunnerlenny/etlbox/ETLBoxDocu",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -2288,7 +2288,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dataflow/dataflow_db_sources_destinations.html",
-          "hash": "77TIKx2agAH+GKq+I//Zcg=="
+          "hash": "9fNoUvYdK8znKIeNhHP3WA=="
         }
       },
       "is_incremental": false,
@@ -2344,6 +2344,18 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/dataflow/dataflow_simple_flow.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/dataflow/dataflow_simple_flow.html",
+          "hash": "ZLBgjZLH08v1hIRHow6QdQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/dataflow/dataflow_transformations.md",
       "output": {
         ".html": {
@@ -2368,23 +2380,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/dataflow/overview_dataflow.md",
+      "source_relative_path": "articles/examples/example_controlflow_dataflow_basics.md",
       "output": {
         ".html": {
-          "relative_path": "articles/dataflow/overview_dataflow.html",
-          "hash": "8w/6hi5cBiNS7zuIrelbDw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/examples/example_basics.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/examples/example_basics.html",
-          "hash": "/K2c3AfC6H1i/EU2ZBZtFA=="
+          "relative_path": "articles/examples/example_controlflow_dataflow_basics.html",
+          "hash": "wXueBxtDhd8N83n7Zbv5KA=="
         }
       },
       "is_incremental": false,
@@ -2456,7 +2456,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/getting_started.html",
-          "hash": "LLRy5pqEsnhQ04XkMO8aqA=="
+          "hash": "5NFI3o5VfRoGBlWsG0wXXg=="
         }
       },
       "is_incremental": false,
@@ -2504,7 +2504,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/toc.html",
-          "hash": "1xGpmMuLdm1tDXcC4FTijA=="
+          "hash": "H3hcbyK1CrW63+CWq77yXw=="
         }
       },
       "is_incremental": false,
@@ -2645,20 +2645,6 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
-        "ResourceDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
@@ -2669,6 +2655,20 @@
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 185,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }
