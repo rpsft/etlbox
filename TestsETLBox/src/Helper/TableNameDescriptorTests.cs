@@ -54,9 +54,34 @@ namespace ALE.ETLBoxTests
         }
 
         [Fact]
+        public void SqlServerNoSchemaWithQuotation()
+        {
+            ObjectNameDescriptor desc = new ObjectNameDescriptor("[Test]", ConnectionManagerType.SqlServer);
+
+            Assert.Equal("", desc.QuotatedSchemaName);
+            Assert.Equal("[Test]", desc.QuotatedObjectName);
+            Assert.Equal("[Test]", desc.QuotatedFullName);
+            Assert.Equal("Test", desc.UnquotatedObjectName);
+            Assert.Equal("Test", desc.UnquotatedFullName);
+        }
+
+
+        [Fact]
         public void PostgresWithSchema()
         {
             ObjectNameDescriptor desc = new ObjectNameDescriptor("public.Test", ConnectionManagerType.Postgres);
+
+            Assert.Equal(@"""public""", desc.QuotatedSchemaName);
+            Assert.Equal(@"""Test""", desc.QuotatedObjectName);
+            Assert.Equal(@"""public"".""Test""", desc.QuotatedFullName);
+            Assert.Equal(@"Test", desc.UnquotatedObjectName);
+            Assert.Equal(@"public.Test", desc.UnquotatedFullName);
+        }
+
+        [Fact]
+        public void PostgresWithSchemaAndQuotation()
+        {
+            ObjectNameDescriptor desc = new ObjectNameDescriptor(@"""public"".""Test""", ConnectionManagerType.Postgres);
 
             Assert.Equal(@"""public""", desc.QuotatedSchemaName);
             Assert.Equal(@"""Test""", desc.QuotatedObjectName);
@@ -75,6 +100,18 @@ namespace ALE.ETLBoxTests
             Assert.Equal(@"`Test`", desc.QuotatedFullName);
             Assert.Equal(@"Test", desc.UnquotatedObjectName);
             Assert.Equal(@"Test", desc.UnquotatedFullName);
+        }
+
+        [Fact]
+        public void MySqlQuotatedTableNameAndDots()
+        {
+            ObjectNameDescriptor desc = new ObjectNameDescriptor("`Test.Test`", ConnectionManagerType.MySql);
+
+            Assert.Equal(@"", desc.QuotatedSchemaName);
+            Assert.Equal(@"`Test.Test`", desc.QuotatedObjectName);
+            Assert.Equal(@"`Test.Test`", desc.QuotatedFullName);
+            Assert.Equal(@"Test.Test", desc.UnquotatedObjectName);
+            Assert.Equal(@"Test.Test", desc.UnquotatedFullName);
         }
 
         [Fact]

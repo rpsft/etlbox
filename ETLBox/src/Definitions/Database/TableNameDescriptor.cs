@@ -12,16 +12,12 @@ namespace ALE.ETLBox
             {
                 string EQB = QB == "[" || QB == "" ? @"\[" : QB;
                 string EQE = QE == "]" || QE == "" ? @"\]" : QB;
-                return $@"\.?{EQB}.+?{EQE}|[^{EQB}]+?(?=\.)|[^{EQB}]+"; //\.?\[.+?\]|[^\[]+?(?=\.)|[^\[]+
-                
+                //see also: https://stackoverflow.com/questions/60747665/regex-expression-for-parsing-sql-server-schema-and-tablename?noredirect=1#comment107559387_60747665
+                return $@"\.? *(?:{EQB}[^{QE}]+{EQE}|\w+)"; //Original Regex:  \.? *(?:\[[^]]+\]|\w+)
             }
         }
         public string Schema { get; set; }
         public string Table { get; set; }
-        //ObjectName.IndexOf('.') > 0 ?
-        //bjectName.Substring(0, ObjectName.IndexOf('.')) : string.Empty;
-        //public string Table => ObjectName.IndexOf('.') > 0
-        //    ? ObjectName.Substring(ObjectName.LastIndexOf('.') + 1) : ObjectName;
         public string QuotatedObjectName => Table.StartsWith(QB) ? Table : QB + Table + QE;
         public string UnquotatedObjectName => Table.StartsWith(QB) ? Table.Replace(QB, string.Empty).Replace(QE, string.Empty) : Table;
         public string UnquotatedSchemaName =>

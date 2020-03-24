@@ -2,8 +2,8 @@
     "Logging": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_Logging",
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteLogging.db;Version=3;",
-        "MySqlConnectionString": "Server=10.37.128.2;Database=ETLBox_Logging;Uid=etlbox;Pwd=etlboxpassword;",
-        "PostgresConnectionString": "Server=10.37.128.2;Database=ETLBox_Logging;User Id=postgres;Password=etlboxpassword;"
+        "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_Logging;Uid=root;Pwd=etlboxpassword;",
+        "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_Logging;User Id=postgres;Password=etlboxpassword;"
     },
     "NoLog": {
         "SqlConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_NoLog"
