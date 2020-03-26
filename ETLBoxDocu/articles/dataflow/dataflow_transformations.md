@@ -111,6 +111,35 @@ LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new Lookup<MyInputDat
 );
 ```
 
+### RowDuplication
+
+Sometimes you want to duplicate the rows of your input data. This can be easily done with the RowDuplication transformation -
+it will give you one or more duplicates of your data. If you want only to duplicate particular rows, you can pass a 
+Predicate expression that define which rows can be clones and which not.
+
+Here a simple example for duplication:
+
+```C#
+DbSource source = new DbSource("SourcTable");
+RowDuplication duplication = new RowDuplication();
+MemoryDestination dest = new MemoryDestination();
+
+source.LinkTo(duplication);
+duplication.LinkTo(dest);
+```
+
+If you need more than 1 duplicate, let's say 10:
+```C#
+RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(10);
+```
+
+And here an example how to set up a predicate to define which rows should be duplicated:
+```C#
+RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(
+    row => row.Col1 == 1 || row.Col2 == "Test"
+);
+```
+
 ### Splitting data
 
 In some of your data flow you may want to split the data and have it processed differently in the further flow.

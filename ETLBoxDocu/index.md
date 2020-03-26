@@ -77,10 +77,10 @@
       <div class="col-md-8 col-md-offset-2 text-center">
         <i class="glyphicon glyphicon-random"></i>
         <section>
-          <h2>It's all in the box!</h2>
-          <p class="lead">Create sophisticated data flows with .NET - read and write data from flatfiles, databases 
-          (e.g. Sql Server, SQLite, MySql or Postgres) or webservices, process the data in-memory with your self-developed transformations 
-          and write them into any destination. 
+          <h2>Create sophisticated data flows</h2>
+          <p class="lead">Read and write data from flatfiles, databases (e.g. Sql Server, SQLite, MySql or Postgres) or webservices. 
+          Harmonize, filter, aggregate, validate and clean the data in-memory with 
+          highly customizable transformations and write them into any destination. 
           </p>
         </section>
       </div>
