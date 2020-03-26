@@ -47,8 +47,6 @@ namespace ALE.ETLBox.DataFlow
         {
             ;
         }
-
-
     }
 }
 

@@ -14,17 +14,17 @@
       href: dataflow/dataflow_file_sources_destinations.md
     - name: Transformations
       href: dataflow/dataflow_transformations.md
-    - name: Working with data types
-      href: dataflow/dataflow_generic_nongeneric.md
-    - name: Json and web service integration
-      href: dataflow/dataflow_web_services.md
     - name: Linking and execution
       href: dataflow/dataflow_linking_execution.md
+    - name: Json and web service integration
+      href: dataflow/dataflow_web_services.md
+    - name: Working with data types
+      href: dataflow/dataflow_generic_nongeneric.md
     - name: Syncing tables with Merge
       href: dataflow/dataflow_dbmerge.md
 - name: ControlFlow and Logging
   items:
-    - name: Overview ControlFlow tasks
+    - name: ControlFlow tasks
       href: controlflow/overview_controlflow.md
     - name: Logging
       href: controlflow/overview_logging.md

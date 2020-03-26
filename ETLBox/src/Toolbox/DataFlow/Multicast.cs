@@ -31,9 +31,11 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         internal BroadcastBlock<TInput> BroadcastBlock { get; set; }
         TypeInfo TypeInfo { get; set; }
+        ObjectCopy<TInput> ObjectCopy { get; set; }
         public Multicast()
         {
             TypeInfo = new TypeInfo(typeof(TInput));
+            ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
             BroadcastBlock = new BroadcastBlock<TInput>(Clone);
         }
 
@@ -44,34 +46,12 @@ namespace ALE.ETLBox.DataFlow
 
         private TInput Clone(TInput row)
         {
-            TInput clone = default(TInput);
-            if (TypeInfo.IsArray)
-            {
-                Array source = row as Array;
-                clone = (TInput)Activator.CreateInstance(typeof(TInput), new object[] { source.Length });
-                Array dest = clone as Array;
-                Array.Copy(source, dest, source.Length);
-            }
-            else if(TypeInfo.IsDynamic) {
-                    clone = (TInput)Activator.CreateInstance(typeof(TInput));//new ExpandoObject();
-
-                    var _original = (IDictionary<string, object>)row;
-                    var _clone = (IDictionary<string, object>)clone;
-
-                    foreach (var kvp in _original)
-                        _clone.Add(kvp);
-            }
-            else
-            {
-                clone = (TInput)Activator.CreateInstance(typeof(TInput));
-                foreach (PropertyInfo propInfo in TypeInfo.Properties)
-                {
-                    propInfo.TrySetValue(clone, propInfo.GetValue(row));
-                }
-            }
+            TInput clone = ObjectCopy.Clone(row);
             LogProgress();
             return clone;
         }
+
+      
     }
 
     /// <summary>
