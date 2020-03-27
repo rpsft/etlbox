@@ -48,5 +48,32 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Equal(2, RowCountTask.Count(connection, "DbDestinationBatchChanges", $"{d2c.QB}Col2{d2c.QE}='NewValue'"));
             Assert.Equal(1, RowCountTask.Count(connection, "DbDestinationBatchChanges", $"{d2c.QB}Col1{d2c.QE} = 2 AND {d2c.QB}Col2{d2c.QE}='Test2'"));
         }
+
+
+        [Theory, MemberData(nameof(Connections))]
+        public void AfterBatchWrite(IConnectionManager connection)
+        {
+            //Arrange
+            bool wasExecuted = false;
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
+            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DbDestinationBatchChanges", batchSize: 1)
+            {
+                AfterBatchWrite = rowArray =>
+                {
+                    Assert.True(rowArray.Length == 1);
+                    wasExecuted = true;
+                }
+            };
+
+            //Act
+            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Equal(3, RowCountTask.Count(connection, "DbDestinationBatchChanges"));
+            Assert.True(wasExecuted);
+        }
     }
 }

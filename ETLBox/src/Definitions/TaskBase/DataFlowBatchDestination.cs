@@ -11,7 +11,14 @@ namespace ALE.ETLBox.DataFlow
         /// It receives an array that represents the batch - you can modify the data itself if needed. 
         /// </summary>
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
+        /// <summary>
+        /// This action is called after a batch was successfully inserted into the destination.
+        /// You will get a copy of the data that was used for the insertion.
+        /// </summary>
         public Action<TInput[]> AfterBatchWrite { get; set; }
+        /// <summary>
+        /// The buffer component used as target for linking. 
+        /// </summary>
         public new ITargetBlock<TInput> TargetBlock => Buffer;
         /// <summary>
         /// The batch size defines how many records needs to be in the Input buffer before data is written into the destination.
@@ -28,6 +35,13 @@ namespace ALE.ETLBox.DataFlow
         }
         private int batchSize;
 
+        /// <summary>
+        /// Use this method if you want to register a task that needs to be completed
+        /// before the destination itself can complete. Normally you don't have to do anything - 
+        /// all linked components will automatically register using this method. 
+        /// Simple use the LinkTo() method of source components or transformations.
+        /// </summary>
+        /// <param name="completion">A task to wait for before this destination can complete.</param>
         public new void AddPredecessorCompletion(Task completion)
         {
             PredecessorCompletions.Add(completion);
