@@ -8,30 +8,32 @@ using System.Reflection;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
+    /// A database destination represents a table where data from the flow is inserted. 
+    /// Inserts are done in batches (using Bulk insert or an equivalent).
     /// </summary>
     /// <see cref="DbDestination"/>
-    /// <typeparam name="TInput">Type of data input.</typeparam>
-    /// <example>
-    /// <code>
-    /// DbDestination&lt;MyRow&gt; dest = new DbDestination&lt;MyRow&gt;("dbo.table");
-    /// dest.Wait(); //Wait for all data to arrive
-    /// </code>
-    /// </example>
+    /// <typeparam name="TInput">Data type for input, preferably representing the destination table.</typeparam>
     public class DbDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write data into table {DestinationTableDefinition?.Name ?? TableName}";
+        
         /* Public properties */
+        /// <summary>
+        /// If you don't want ETLBox to dynamically read the destination table definition from the database,
+        /// you can provide your own table definition. 
+        /// </summary>
         public TableDefinition DestinationTableDefinition { get; set; }
-        public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
+        /// <summary>
+        /// Name of the target table that receives the data from the data flow. 
+        /// </summary>
         public string TableName { get; set; }
-        public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+
+        /* Private stuff */
         internal TypeInfo TypeInfo { get; set; }
-
-
-        internal const int DEFAULT_BATCH_SIZE = 1000;
-
+        protected const int DEFAULT_BATCH_SIZE = 1000;
+        protected bool HasDestinationTableDefinition => DestinationTableDefinition != null;
+        protected bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
 
         public DbDestination()
         {
@@ -69,17 +71,6 @@ namespace ALE.ETLBox.DataFlow
             TypeInfo = new TypeInfo(typeof(TInput));
         }
 
-        protected override void WriteBatch(ref TInput[] data)
-        {
-            if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
-
-            base.WriteBatch(ref data);
-
-            TryBulkInsertData(data);
-
-            LogProgressBatch(data.Length);
-        }
-
         private void LoadTableDefinitionFromTableName()
         {
             if (HasTableName)
@@ -88,8 +79,9 @@ namespace ALE.ETLBox.DataFlow
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
 
-        private void TryBulkInsertData(TInput[] data)
+        protected override void TryBulkInsertData(TInput[] data)
         {
+            if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
             TableData<TInput> td = CreateTableDataObject(ref data);
             try
             {
@@ -155,18 +147,12 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-    /// The DbDestination uses a dynamic object as input type. If you need other data types, use the generic DbDestination instead.
+    /// A database destination represents a table where data from the flow is inserted. 
+    /// Inserts are done in batches (using Bulk insert or an equivalent).
+    /// The DbDestination uses the dynamic ExpandoObject as input type. 
+    /// If you need other data types, use the generic DbDestination instead.
     /// </summary>
     /// <see cref="DbDestination{TInput}"/>
-    /// <example>
-    /// <code>
-    /// //Non generic DbDestination works with dynamic object as input
-    /// //use DbDestination&lt;TInput&gt; for generic usage!
-    /// DbDestination dest = new DbDestination("dbo.table");
-    /// dest.Wait(); //Wait for all data to arrive
-    /// </code>
-    /// </example>
     public class DbDestination : DbDestination<ExpandoObject>
     {
         public DbDestination() : base() { }
@@ -181,5 +167,4 @@ namespace ALE.ETLBox.DataFlow
 
         public DbDestination(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize) { }
     }
-
 }
