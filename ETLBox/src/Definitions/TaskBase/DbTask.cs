@@ -3,6 +3,7 @@ using ALE.ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Odbc;
 using System.Dynamic;
 using System.Linq;
 
@@ -18,11 +19,12 @@ namespace ALE.ETLBox.ControlFlow
         public Action AfterRowReadAction { get; set; }
         public long Limit { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
-        public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(OdbcConnectionManager));
+        public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(DbConnectionManager<OdbcConnection>));
+        public virtual bool DoXMLCommentStyle { get; set; }
+        public IDbTransaction Transaction { get; set; }
         internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
         private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
         private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
-        public virtual bool DoXMLCommentStyle { get; set; }
         public string Command
         {
             get
@@ -78,7 +80,7 @@ namespace ALE.ETLBox.ControlFlow
         /* Public methods */
         public int ExecuteNonQuery()
         {
-            var conn = DbConnectionManager.Clone();
+            var conn = DbConnectionManager.CloneIfAllowed();
             try
             {
                 conn.Open();
@@ -97,7 +99,7 @@ namespace ALE.ETLBox.ControlFlow
         public object ExecuteScalar()
         {
             object result = null;
-            var conn = DbConnectionManager.Clone();
+            var conn = DbConnectionManager.CloneIfAllowed();
             try
             {
                 conn.Open();
@@ -144,7 +146,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public void ExecuteReader()
         {
-            var conn = DbConnectionManager.Clone();
+            var conn = DbConnectionManager.CloneIfAllowed();
             try
             {
                 conn.Open();
@@ -186,7 +188,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public void BulkInsert(ITableData data, string tableName)
         {
-            var conn = DbConnectionManager.Clone();
+            var conn = DbConnectionManager.CloneIfAllowed();
             try
             {
                 conn.Open();

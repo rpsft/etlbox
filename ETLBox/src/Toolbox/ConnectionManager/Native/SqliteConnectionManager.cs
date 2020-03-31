@@ -32,10 +32,14 @@ namespace ALE.ETLBox.ConnectionManager
             var sourceColumnValues = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => "?").ToList();
             var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
 
-            using (var transaction = this.DbConnection.BeginTransaction())
+            SQLiteTransaction existingTransaction = Transaction as SQLiteTransaction;
+            SQLiteTransaction bulkTransaction = null;
+            if (existingTransaction == null)
+                bulkTransaction = this.DbConnection.BeginTransaction();
+            using (bulkTransaction)
             using (var command = this.DbConnection.CreateCommand())
             {
-                command.Transaction = transaction;
+                command.Transaction = existingTransaction ?? bulkTransaction;
                 command.CommandText =
                 $@"INSERT INTO {tableName} 
 ({String.Join(",", sourceColumnNames)})
@@ -53,12 +57,12 @@ VALUES ({String.Join(",", sourceColumnValues)})
                     command.ExecuteNonQuery();
                     command.Parameters.Clear();
                 }
-                transaction.Commit();
+                bulkTransaction?.Commit();
             }
+
         }
 
-
-        public override void BeforeBulkInsert(string tableName)
+        public override void PrepareBulkInsert(string tablename)
         {
             if (ModifyDBSettings)
             {
@@ -75,8 +79,7 @@ VALUES ({String.Join(",", sourceColumnValues)})
                 }
             }
         }
-
-        public override void AfterBulkInsert(string tableName)
+        public override void CleanUpBulkInsert(string tablename)
         {
             if (ModifyDBSettings)
             {
@@ -89,9 +92,12 @@ VALUES ({String.Join(",", sourceColumnValues)})
             }
         }
 
+        public override void BeforeBulkInsert(string tableName) { }
+
+        public override void AfterBulkInsert(string tableName) { }
+
         public override IConnectionManager Clone()
         {
-            if (LeaveOpen) return this;
             SQLiteConnectionManager clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts,

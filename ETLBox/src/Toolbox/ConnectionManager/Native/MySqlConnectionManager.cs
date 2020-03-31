@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -27,14 +28,16 @@ namespace ALE.ETLBox.ConnectionManager
             };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();
+            cmd.Transaction = Transaction as MySqlTransaction;
             cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
             cmd.CommandText = sql;
             cmd.Prepare();
             cmd.ExecuteNonQuery();
         }
 
+        public override void PrepareBulkInsert(string tablename) { }
+        public override void CleanUpBulkInsert(string tablename) { }
         public override void BeforeBulkInsert(string tableName) { }
-
         public override void AfterBulkInsert(string tableName) { }
 
         public override IConnectionManager Clone()

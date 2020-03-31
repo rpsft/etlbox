@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Odbc;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -28,7 +29,7 @@ namespace ALE.ETLBox.ConnectionManager
     ///      "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb"));
     /// </code>
     /// </example>
-    public class AccessOdbcConnectionManager : OdbcConnectionManager
+    public class AccessOdbcConnectionManager :  OdbcConnectionManager
     {
         public AccessOdbcConnectionManager() : base() { }
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
@@ -39,6 +40,7 @@ namespace ALE.ETLBox.ConnectionManager
         /// Contains only 1 record and is only temporarily created.
         /// </summary>
         public string DummyTableName { get; set; } = "etlboxdummydeleteme";
+        protected bool PreparationDone { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName)
         {
@@ -48,11 +50,7 @@ namespace ALE.ETLBox.ConnectionManager
                 AccessDummyTableName = DummyTableName,
                 UseParameterQuery = true
             };
-            string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
-            var cmd = DbConnection.CreateCommand();
-            cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
+            OdbcBulkInsert(data, tableName, bulkInsert);
         }
 
         public bool CheckIfTableOrViewExists(string unquotatedFullName)
@@ -104,14 +102,23 @@ namespace ALE.ETLBox.ConnectionManager
             return result;
         }
 
-        public override void BeforeBulkInsert(string tableName)
+        public override void PrepareBulkInsert(string tablename)
         {
             TryDropDummyTable();
             CreateDummyTable();
         }
+        public override void CleanUpBulkInsert(string tablename) {
+            TryDropDummyTable();
+        }
+
+        public override void BeforeBulkInsert(string tableName)
+        {
+            if (!PreparationDone)
+                PrepareBulkInsert(tableName);
+        }
         public override void AfterBulkInsert(string tableName)
         {
-            TryDropDummyTable();
+            
         }
 
         private void TryDropDummyTable()
@@ -127,10 +134,12 @@ namespace ALE.ETLBox.ConnectionManager
         {
             ExecuteCommandOnSameConnection($@"CREATE TABLE {DummyTableName} (Field1 NUMBER);");
             ExecuteCommandOnSameConnection($@"INSERT INTO { DummyTableName} VALUES(1);");
+            PreparationDone = true;
         }
 
         private void ExecuteCommandOnSameConnection(string sql)
         {
+            if (DbConnection == null) this.Open();
             var cmd = DbConnection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
@@ -138,7 +147,6 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            if (LeaveOpen) return this;
             AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager((OdbcConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts

@@ -35,6 +35,8 @@ namespace ALE.ETLBox.DataFlow
         }
         private int batchSize;
 
+        protected bool WasInitialized { get; set; }
+
         /// <summary>
         /// Use this method if you want to register a task that needs to be completed
         /// before the destination itself can complete. Normally you don't have to do anything - 
@@ -75,12 +77,25 @@ namespace ALE.ETLBox.DataFlow
             if (ProgressCount == 0) NLogStart();
             if (BeforeBatchWrite != null)
                 data = BeforeBatchWrite.Invoke(data);
+            if (!WasInitialized)
+            {
+                PrepareWrite();
+                WasInitialized = true;
+            }
             TryBulkInsertData(data);
             LogProgressBatch(data.Length);
-            if(AfterBatchWrite != null)
-                AfterBatchWrite.Invoke(data);
+            AfterBatchWrite?.Invoke(data);
         }
 
+        protected override void CleanUp()
+        {
+            FinishWrite();
+            base.CleanUp();
+        }
+
+        protected abstract void PrepareWrite();
         protected abstract void TryBulkInsertData(TInput[] data);
+        protected abstract void FinishWrite();
+
     }
 }

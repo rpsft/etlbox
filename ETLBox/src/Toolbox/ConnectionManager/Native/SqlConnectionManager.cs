@@ -25,7 +25,7 @@ namespace ALE.ETLBox.ConnectionManager
         string RecoveryModel { get; set; }
         public override void BulkInsert(ITableData data, string tableName)
         {
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(DbConnection, SqlBulkCopyOptions.TableLock, null))
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(DbConnection, SqlBulkCopyOptions.TableLock, Transaction as SqlTransaction))
             {
                 bulkCopy.BulkCopyTimeout = 0;
                 bulkCopy.DestinationTableName = tableName;
@@ -35,7 +35,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public override void BeforeBulkInsert(string tableName)
+        public override void PrepareBulkInsert(string tablename)
         {
             if (ModifyDBSettings)
             {
@@ -56,7 +56,11 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public override void AfterBulkInsert(string tableName)
+        public override void BeforeBulkInsert(string tableName) { }
+
+        public override void AfterBulkInsert(string tableName) { }
+
+        public override void CleanUpBulkInsert(string tablename)
         {
             if (ModifyDBSettings)
             {
@@ -74,7 +78,6 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            if (LeaveOpen) return this;
             SqlConnectionManager clone = new SqlConnectionManager((SqlConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts,

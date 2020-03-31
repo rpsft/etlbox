@@ -1,5 +1,6 @@
 ﻿using Microsoft.AnalysisServices.AdomdClient;
 using System;
+using System.Data;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -22,12 +23,13 @@ namespace ALE.ETLBox.ConnectionManager
             throw new NotImplementedException();
         }
 
+        public override void PrepareBulkInsert(string tablename) { }
+        public override void CleanUpBulkInsert(string tablename) { }
         public override void BeforeBulkInsert(string tableName) { }
         public override void AfterBulkInsert(string tableName) { }
 
         public override IConnectionManager Clone()
         {
-            if (LeaveOpen) return this;
             AdomdConnectionManager clone = new AdomdConnectionManager((SqlConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts

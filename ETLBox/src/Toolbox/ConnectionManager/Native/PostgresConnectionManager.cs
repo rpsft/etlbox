@@ -58,9 +58,14 @@ FROM STDIN (FORMAT BINARY)"))
             }
         }
 
-        public override void BeforeBulkInsert(string tableName)
+        public override void PrepareBulkInsert(string tablename)
         {
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tableName);
+            ReadTableDefinition(tablename);
+        }
+
+        private void ReadTableDefinition(string tablename)
+        {
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tablename);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {
@@ -68,13 +73,17 @@ FROM STDIN (FORMAT BINARY)"))
             }
         }
 
-        public override void AfterBulkInsert(string tableName)
-        {
+        public override void CleanUpBulkInsert(string tablename) { }
+
+        public override void BeforeBulkInsert(string tableName) {
+            if (DestinationColumns == null)
+                ReadTableDefinition(tableName);
         }
+
+        public override void AfterBulkInsert(string tableName) { }
 
         public override IConnectionManager Clone()
         {
-            if (LeaveOpen) return this;
             PostgresConnectionManager clone = new PostgresConnectionManager((PostgresConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts

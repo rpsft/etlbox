@@ -2,6 +2,7 @@
 using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Dynamic;
 using System.Reflection;
 
@@ -17,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Write data into table {DestinationTableDefinition?.Name ?? TableName}";
-        
+
         /* Public properties */
         /// <summary>
         /// If you don't want ETLBox to dynamically read the destination table definition from the database,
@@ -34,7 +35,7 @@ namespace ALE.ETLBox.DataFlow
         protected const int DEFAULT_BATCH_SIZE = 1000;
         protected bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         protected bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
-
+        protected IConnectionManager ConnectionClone { get; set; }
         public DbDestination()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
@@ -79,16 +80,27 @@ namespace ALE.ETLBox.DataFlow
                 throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
 
+        protected override void PrepareWrite()
+        {
+            if (!HasDestinationTableDefinition)
+                LoadTableDefinitionFromTableName();
+            ConnectionClone = this.DbConnectionManager.CloneIfAllowed();
+            ConnectionClone.IsInBulkInsert = true;
+            ConnectionClone.PrepareBulkInsert(DestinationTableDefinition.Name);
+            
+        }
+
         protected override void TryBulkInsertData(TInput[] data)
         {
-            if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
             TableData<TInput> td = CreateTableDataObject(ref data);
             try
             {
-                new SqlTask(this, $"Execute Bulk insert")
+                var sql = new SqlTask(this, $"Execute Bulk insert")
                 {
-                    DisableLogging = true
-                }
+                    DisableLogging = true,
+                    ConnectionManager = ConnectionClone
+                };
+                sql
                 .BulkInsert(td, DestinationTableDefinition.Name);
             }
             catch (Exception e)
@@ -96,6 +108,11 @@ namespace ALE.ETLBox.DataFlow
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
             }
+        }
+
+        protected override void FinishWrite()
+        {
+            ConnectionClone?.CleanUpBulkInsert(DestinationTableDefinition?.Name);
         }
 
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)

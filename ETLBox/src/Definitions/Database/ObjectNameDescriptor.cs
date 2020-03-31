@@ -10,10 +10,10 @@ namespace ALE.ETLBox
         {
             get
             {
-                string EQB = QB == "[" || QB == "" ? @"\[" : QB;
-                string EQE = QE == "]" || QE == "" ? @"\]" : QB;
+                string EQB = QB == "[" ? @"\[" : ( QB == "" ? @"""" : QB ) ;
+                string EQE = QE == "]" ? @"\]" : ( QE == "" ? @"""" : QB ) ;
                 //see also: https://stackoverflow.com/questions/60747665/regex-expression-for-parsing-sql-server-schema-and-tablename?noredirect=1#comment107559387_60747665
-                return $@"\.? *(?:{EQB}[^{QE}]+{EQE}|\w+)"; //Original Regex:  \.? *(?:\[[^]]+\]|\w+)
+                return $@"\.? *(?:{EQB}[^{EQE}]+{EQE}|\w+)"; //Original Regex:  \.? *(?:\[[^]]+\]|\w+)
             }
         }
         public string Schema { get; set; }

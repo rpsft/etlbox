@@ -9,13 +9,19 @@ namespace ALE.ETLBox.ConnectionManager
         where Connection : class, IDbConnection, new()
     {
         public int MaxLoginAttempts { get; set; } = 3;
-        public bool LeaveOpen { get; set; } = false;
+        public bool LeaveOpen
+        {
+            get => _leaveOpen || IsInBulkInsert || Transaction != null;
+            set => _leaveOpen = value;
+        }
 
         public IDbConnectionString ConnectionString { get; set; }
 
         internal Connection DbConnection { get; set; }
         public ConnectionState? State => DbConnection?.State;
-
+        public IDbTransaction Transaction { get; set; }
+        public bool IsInBulkInsert { get; set; }
+        private bool _leaveOpen;
         public DbConnectionManager() { }
 
         public DbConnectionManager(IDbConnectionString connectionString) : this()
@@ -93,13 +99,15 @@ namespace ALE.ETLBox.ConnectionManager
                     cmd.Parameters.Add(newPar);
                 }
             }
+            if (Transaction?.Connection != null && Transaction.Connection.State == ConnectionState.Open)
+                cmd.Transaction = Transaction;
             return cmd;
         }
 
         public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null)
         {
-            IDbCommand sqlcmd = CreateCommand(commandText, parameterList);
-            return sqlcmd.ExecuteNonQuery();
+            IDbCommand cmd = CreateCommand(commandText, parameterList);
+            return cmd.ExecuteNonQuery();
         }
 
         public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null)
@@ -115,12 +123,33 @@ namespace ALE.ETLBox.ConnectionManager
 
         }
 
+        public void BeginTransaction(IsolationLevel isolationLevel)
+        {
+            Open();
+            Transaction = DbConnection?.BeginTransaction(isolationLevel);
+        }
+
+        public IConnectionManager CloneIfAllowed()
+        {
+            if (LeaveOpen) return this;
+            else return Clone();
+        }
+
+        public void BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
+
+        public void CommitTransaction() => Transaction?.Commit();
+        public void RollbackTransaction() => Transaction?.Rollback();
+
+        public abstract void PrepareBulkInsert(string tablename);
+        public abstract void CleanUpBulkInsert(string tablename);
+
         public abstract void BulkInsert(ITableData data, string tableName);
         public abstract void BeforeBulkInsert(string tableName);
         public abstract void AfterBulkInsert(string tableName);
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
+
 
         protected virtual void Dispose(bool disposing)
         {

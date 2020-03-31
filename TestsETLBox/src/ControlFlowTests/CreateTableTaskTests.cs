@@ -243,6 +243,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 tableName = @"[dbo].[ T""D"" 1 ]";
             else if (connection.GetType() == typeof(PostgresConnectionManager))
                 tableName = @"""public""."" T [D] 1 """;
+            else if (connection.GetType() == typeof(MySqlConnectionManager))
+                tableName = @"` T [D] 1`";
             else
                 tableName = @""" T [D] 1 """;
             CreateTableTask.Create(connection, tableName, columns);
