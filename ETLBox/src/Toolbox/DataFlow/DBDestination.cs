@@ -35,7 +35,7 @@ namespace ALE.ETLBox.DataFlow
         protected const int DEFAULT_BATCH_SIZE = 1000;
         protected bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         protected bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
-        protected IConnectionManager ConnectionClone { get; set; }
+        public IConnectionManager BulkInsertConnectionManager { get; set; }
         public DbDestination()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
@@ -84,10 +84,10 @@ namespace ALE.ETLBox.DataFlow
         {
             if (!HasDestinationTableDefinition)
                 LoadTableDefinitionFromTableName();
-            ConnectionClone = this.DbConnectionManager.CloneIfAllowed();
-            ConnectionClone.IsInBulkInsert = true;
-            ConnectionClone.PrepareBulkInsert(DestinationTableDefinition.Name);
-            
+            BulkInsertConnectionManager = this.DbConnectionManager.CloneIfAllowed();
+            BulkInsertConnectionManager.IsInBulkInsert = true;
+            BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
+
         }
 
         protected override void TryBulkInsertData(TInput[] data)
@@ -98,13 +98,14 @@ namespace ALE.ETLBox.DataFlow
                 var sql = new SqlTask(this, $"Execute Bulk insert")
                 {
                     DisableLogging = true,
-                    ConnectionManager = ConnectionClone
+                    ConnectionManager = BulkInsertConnectionManager
                 };
                 sql
                 .BulkInsert(td, DestinationTableDefinition.Name);
             }
             catch (Exception e)
             {
+                FinishWrite();
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
             }
@@ -112,7 +113,12 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void FinishWrite()
         {
-            ConnectionClone?.CleanUpBulkInsert(DestinationTableDefinition?.Name);
+            if (BulkInsertConnectionManager != null)
+            {
+                BulkInsertConnectionManager.IsInBulkInsert = false;
+                BulkInsertConnectionManager.CleanUpBulkInsert(DestinationTableDefinition?.Name);
+                BulkInsertConnectionManager.CloseIfAllowed();
+            }
         }
 
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)

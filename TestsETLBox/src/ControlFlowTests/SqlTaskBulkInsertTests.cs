@@ -44,6 +44,9 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             destTable.AssertTestData();
+
+            //Assert connection is closed
+            Assert.True(connection.State == null);
         }
 
         [Theory, MemberData(nameof(ConnectionsWithValue), 0),

@@ -9,10 +9,14 @@ namespace ALE.ETLBox.ConnectionManager
         IDbConnectionString ConnectionString { get; set; }
         void Open();
         void Close();
+        void CloseIfAllowed();
+        ConnectionState? State { get; }
+        int MaxLoginAttempts { get; set; }
         IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList);
         int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null);
         object ExecuteScalar(string command, IEnumerable<QueryParameter> parameterList = null);
         IDataReader ExecuteReader(string command, IEnumerable<QueryParameter> parameterList = null);
+        IDbTransaction Transaction { get; set; }
         void BulkInsert(ITableData data, string tableName);
         void BeforeBulkInsert(string tableName);
         void AfterBulkInsert(string tableName);
@@ -26,6 +30,7 @@ namespace ALE.ETLBox.ConnectionManager
         void BeginTransaction();
         void CommitTransaction();
         void RollbackTransaction();
+        void CloseTransaction();
 
 
     }

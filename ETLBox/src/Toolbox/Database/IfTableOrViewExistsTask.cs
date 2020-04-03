@@ -38,8 +38,10 @@ namespace ALE.ETLBox.ControlFlow
             }
             else if (this.ConnectionType == ConnectionManagerType.Access)
             {
-                var connMan = this.DbConnectionManager as AccessOdbcConnectionManager;
+                
+                var connMan = this.DbConnectionManager.CloneIfAllowed() as AccessOdbcConnectionManager;
                 DoesExist = connMan?.CheckIfTableOrViewExists(ON.UnquotatedFullName) ?? false;
+                connMan.CloseIfAllowed();
                 return string.Empty;
                 //return $@"SELECT * FROM MSysObjects WHERE Type=1 AND Flags=0  AND Name = '{ON.UnquotatedFullName}'";
             }

@@ -80,6 +80,7 @@ namespace ALE.ETLBox.ConnectionManager
             restrictions[2] = unquotatedFullName;
             DataTable schemaTable = DbConnection.GetSchema(schemaInfo, restrictions);
             return schemaTable;
+           
         }
 
         internal TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
@@ -118,26 +119,26 @@ namespace ALE.ETLBox.ConnectionManager
         }
         public override void AfterBulkInsert(string tableName)
         {
-            
+            ;
         }
 
         private void TryDropDummyTable()
         {
             try
             {
-                ExecuteCommandOnSameConnection($@"DROP TABLE {DummyTableName};");
+                ExecuteCommand($@"DROP TABLE {DummyTableName};");
             }
             catch { }
         }
 
         private void CreateDummyTable()
         {
-            ExecuteCommandOnSameConnection($@"CREATE TABLE {DummyTableName} (Field1 NUMBER);");
-            ExecuteCommandOnSameConnection($@"INSERT INTO { DummyTableName} VALUES(1);");
+            ExecuteCommand($@"CREATE TABLE {DummyTableName} (Field1 NUMBER);");
+            ExecuteCommand($@"INSERT INTO { DummyTableName} VALUES(1);");
             PreparationDone = true;
         }
 
-        private void ExecuteCommandOnSameConnection(string sql)
+        private void ExecuteCommand(string sql)
         {
             if (DbConnection == null) this.Open();
             var cmd = DbConnection.CreateCommand();

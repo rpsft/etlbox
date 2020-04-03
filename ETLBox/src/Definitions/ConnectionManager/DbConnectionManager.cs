@@ -137,8 +137,25 @@ namespace ALE.ETLBox.ConnectionManager
 
         public void BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
 
-        public void CommitTransaction() => Transaction?.Commit();
-        public void RollbackTransaction() => Transaction?.Rollback();
+        public void CommitTransaction()
+        {
+            Transaction?.Commit();
+            CloseTransaction();
+        }
+
+        public void RollbackTransaction()
+        {
+            Transaction?.Rollback();
+            CloseTransaction();
+        }
+
+        public void CloseTransaction()
+        {
+            Transaction.Dispose();
+            Transaction = null;
+            CloseIfAllowed();
+        }
+
 
         public abstract void PrepareBulkInsert(string tablename);
         public abstract void CleanUpBulkInsert(string tablename);
@@ -157,8 +174,9 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 if (disposing)
                 {
-                    if (DbConnection != null)
-                        DbConnection.Close();
+                    Transaction?.Dispose();
+                    Transaction = null;
+                    DbConnection?.Close();
                     DbConnection = null;
                 }
                 disposedValue = true;
@@ -168,6 +186,12 @@ namespace ALE.ETLBox.ConnectionManager
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        public void CloseIfAllowed()
+        {
+            if (!LeaveOpen)
+                Dispose();
         }
 
         public void Close()

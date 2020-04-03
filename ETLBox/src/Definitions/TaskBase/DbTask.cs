@@ -90,8 +90,7 @@ namespace ALE.ETLBox.ControlFlow
             }
             finally
             {
-                if (!conn.LeaveOpen)
-                    conn.Close();
+                conn.CloseIfAllowed();
             }
             return RowsAffected ?? 0;
         }
@@ -109,8 +108,7 @@ namespace ALE.ETLBox.ControlFlow
             }
             finally
             {
-                if (!conn.LeaveOpen)
-                    conn.Close();
+                conn.CloseIfAllowed();
             }
             return result;
         }
@@ -180,8 +178,7 @@ namespace ALE.ETLBox.ControlFlow
             }
             finally
             {
-                if (!conn.LeaveOpen)
-                    conn.Close();
+                conn.CloseIfAllowed();
             }
         }
 
@@ -201,8 +198,7 @@ namespace ALE.ETLBox.ControlFlow
             }
             finally
             {
-                if (!conn.LeaveOpen)
-                    conn.Close();
+                conn.CloseIfAllowed();
             }
         }
 

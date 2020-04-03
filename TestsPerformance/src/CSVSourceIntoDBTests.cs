@@ -58,10 +58,10 @@ namespace ALE.ETLBoxTests.Performance
         /*
          * X Rows with 1027 bytes per Row (1020 bytes data + 7 bytes for sql server)
          */
-        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 0.5, 6.0),
-            MemberData(nameof(MySqlConnection), 1000000, 1000, 0.5, 0.0),
-            MemberData(nameof(PostgresConnection), 1000000, 1000, 0.5, 0.0),
-            MemberData(nameof(SQLiteConnection), 1000000, 1000, 0.5, 0.0)]
+        [Theory, MemberData(nameof(SqlConnection), 100000, 1000, 0.5, 6.0),
+            MemberData(nameof(MySqlConnection), 100000, 1000, 0.5, 0.0),
+            MemberData(nameof(PostgresConnection), 100000, 1000, 0.5, 0.0),
+            MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5, 0.0)]
         public void CompareFlowWithBulkInsert(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
         {
             //Arrange
