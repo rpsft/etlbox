@@ -82,8 +82,10 @@
   
   <h1 id="ALE_ETLBox_DataFlow_DbDestination" data-uid="ALE.ETLBox.DataFlow.DbDestination" class="text-break">Class DbDestination
   </h1>
-  <div class="markdown level0 summary"><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-The DbDestination uses a dynamic object as input type. If you need other data types, use the generic DbDestination instead.</p>
+  <div class="markdown level0 summary"><p>A database destination represents a table where data from the flow is inserted.
+Inserts are done in batches (using Bulk insert or an equivalent).
+The DbDestination uses the dynamic ExpandoObject as input type.
+If you need other data types, use the generic DbDestination instead.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -113,28 +115,46 @@ The DbDestination uses a dynamic object as input type. If you need other data ty
       <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_DestinationTableDefinition">DbDestination&lt;ExpandoObject&gt;.DestinationTableDefinition</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasDestinationTableDefinition">DbDestination&lt;ExpandoObject&gt;.HasDestinationTableDefinition</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_TableName">DbDestination&lt;ExpandoObject&gt;.TableName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_TableName">DbDestination&lt;ExpandoObject&gt;.TableName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_DEFAULT_BATCH_SIZE">DbDestination&lt;ExpandoObject&gt;.DEFAULT_BATCH_SIZE</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasDestinationTableDefinition">DbDestination&lt;ExpandoObject&gt;.HasDestinationTableDefinition</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasTableName">DbDestination&lt;ExpandoObject&gt;.HasTableName</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_BulkInsertConnectionManager">DbDestination&lt;ExpandoObject&gt;.BulkInsertConnectionManager</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_InitObjects_System_Int32_">DbDestination&lt;ExpandoObject&gt;.InitObjects(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_WriteBatch__0____">DbDestination&lt;ExpandoObject&gt;.WriteBatch(ExpandoObject[])</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_PrepareWrite">DbDestination&lt;ExpandoObject&gt;.PrepareWrite()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_TryBulkInsertData__0___">DbDestination&lt;ExpandoObject&gt;.TryBulkInsertData(ExpandoObject[])</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_FinishWrite">DbDestination&lt;ExpandoObject&gt;.FinishWrite()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite">DataFlowBatchDestination&lt;ExpandoObject&gt;.BeforeBatchWrite</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AfterBatchWrite">DataFlowBatchDestination&lt;ExpandoObject&gt;.AfterBatchWrite</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock">DataFlowBatchDestination&lt;ExpandoObject&gt;.TargetBlock</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize">DataFlowBatchDestination&lt;ExpandoObject&gt;.BatchSize</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WasInitialized">DataFlowBatchDestination&lt;ExpandoObject&gt;.WasInitialized</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_">DataFlowBatchDestination&lt;ExpandoObject&gt;.AddPredecessorCompletion(Task)</a>
@@ -144,6 +164,12 @@ The DbDestination uses a dynamic object as input type. If you need other data ty
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_Buffer">DataFlowBatchDestination&lt;ExpandoObject&gt;.Buffer</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WriteBatch__0___">DataFlowBatchDestination&lt;ExpandoObject&gt;.WriteBatch(ExpandoObject[])</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp">DataFlowBatchDestination&lt;ExpandoObject&gt;.CleanUp()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowDestination-1.html#ALE_ETLBox_DataFlow_DataFlowDestination_1_OnCompletion">DataFlowDestination&lt;ExpandoObject[]&gt;.OnCompletion</a>
@@ -266,12 +292,6 @@ The DbDestination uses a dynamic object as input type. If you need other data ty
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class DbDestination : DbDestination&lt;ExpandoObject&gt;, IDataFlowDestination&lt;ExpandoObject[]&gt;, IDataFlowLinkTarget&lt;ExpandoObject[]&gt;, IDataFlowDestination&lt;ExpandoObject&gt;, IDataFlowLinkTarget&lt;ExpandoObject&gt;, ITask</code></pre>
   </div>
-  <h5 id="ALE_ETLBox_DataFlow_DbDestination_examples"><strong>Examples</strong></h5>
-  <pre><code>//Non generic DbDestination works with dynamic object as input
-//use DbDestination&lt;TInput> for generic usage!
-DbDestination dest = new DbDestination(&quot;dbo.table&quot;);
-dest.Wait(); //Wait for all data to arrive</code></pre>
-
   <h3 id="constructors">Constructors
   </h3>
   

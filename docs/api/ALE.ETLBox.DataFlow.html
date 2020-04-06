@@ -185,11 +185,14 @@ Here you can set the threshold value when information about processed records sh
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DataFlowStreamSource-1.html">DataFlowStreamSource&lt;TOutput&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbDestination.html">DbDestination</a></h4>
-      <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).
-The DbDestination uses a dynamic object as input type. If you need other data types, use the generic DbDestination instead.</p>
+      <section><p>A database destination represents a table where data from the flow is inserted.
+Inserts are done in batches (using Bulk insert or an equivalent).
+The DbDestination uses the dynamic ExpandoObject as input type.
+If you need other data types, use the generic DbDestination instead.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbDestination-1.html">DbDestination&lt;TInput&gt;</a></h4>
-      <section><p>A database destination defines a table where data from the flow is inserted. Inserts are done in batches (using Bulk insert).</p>
+      <section><p>A database destination represents a table where data from the flow is inserted.
+Inserts are done in batches (using Bulk insert or an equivalent).</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbMerge-1.html">DbMerge&lt;TInput&gt;</a></h4>
       <section><p>Inserts, updates and (optionally) deletes data in db target.</p>
@@ -313,6 +316,13 @@ excepct a dynamic object as input and has two output with the copies of the inpu
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.RetrieveColumn.html">RetrieveColumn</a></h4>
       <section><p>This attribute defines that this property is used to store the lookup value of the property from the object
 used in the Source for a Lookup identified by the given lookupSourcePropertyName.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowDuplication.html">RowDuplication</a></h4>
+      <section><p>Creates one or more duplicates of your incoming rows.
+The non generic implementation works with dynamic object.</p>
+</section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowDuplication-1.html">RowDuplication&lt;TInput&gt;</a></h4>
+      <section><p>Creates one or more duplicates of your incoming rows.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation.html">RowTransformation</a></h4>
       <section><p>Transforms the data row-by-row with the help of the transformation function.

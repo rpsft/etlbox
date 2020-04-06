@@ -82,18 +82,7 @@
   
   <h1 id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager" class="text-break">Class OdbcConnectionManager
   </h1>
-  <div class="markdown level0 summary"><p>Abstract implementation of Connection manager for an ODBC connection based on ADO.NET.
-ODBC can be used to connect to any ODBC able endpoint. Please use the specific ODBC
-for each database, e.g. use the SqlOdbcConnectionManager when connecting to Sql Server via Odbc or
-the AccessOdbcConnectionManager when connecting to an Access database via Odbc.
-Please note: ODBC by default does not support a Bulk Insert -
-inserting big amounts of data is translated into a</p>
-<pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
-<p>This means that inserting big amounts of data in a database via Odbc can be much slower
-than using the native connector.
-Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
-Reduce the batch size if you encounter issues here.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -123,6 +112,12 @@ Reduce the batch size if you encounter issues here.</p>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_State">DbConnectionManager&lt;OdbcConnection&gt;.State</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Transaction">DbConnectionManager&lt;OdbcConnection&gt;.Transaction</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_IsInBulkInsert">DbConnectionManager&lt;OdbcConnection&gt;.IsInBulkInsert</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Open">DbConnectionManager&lt;OdbcConnection&gt;.Open()</a>
     </div>
     <div>
@@ -138,10 +133,46 @@ Reduce the batch size if you encounter issues here.</p>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_ExecuteReader_System_String_System_Collections_Generic_IEnumerable_ALE_ETLBox_QueryParameter__">DbConnectionManager&lt;OdbcConnection&gt;.ExecuteReader(String, IEnumerable&lt;QueryParameter&gt;)</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeginTransaction_System_Data_IsolationLevel_">DbConnectionManager&lt;OdbcConnection&gt;.BeginTransaction(IsolationLevel)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloneIfAllowed">DbConnectionManager&lt;OdbcConnection&gt;.CloneIfAllowed()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeginTransaction">DbConnectionManager&lt;OdbcConnection&gt;.BeginTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CommitTransaction">DbConnectionManager&lt;OdbcConnection&gt;.CommitTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_RollbackTransaction">DbConnectionManager&lt;OdbcConnection&gt;.RollbackTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloseTransaction">DbConnectionManager&lt;OdbcConnection&gt;.CloseTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_PrepareBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.PrepareBulkInsert(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CleanUpBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.CleanUpBulkInsert(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BulkInsert_ALE_ETLBox_ITableData_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.BulkInsert(ITableData, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeforeBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.BeforeBulkInsert(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_AfterBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.AfterBulkInsert(String)</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Dispose_System_Boolean_">DbConnectionManager&lt;OdbcConnection&gt;.Dispose(Boolean)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Dispose">DbConnectionManager&lt;OdbcConnection&gt;.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloseIfAllowed">DbConnectionManager&lt;OdbcConnection&gt;.CloseIfAllowed()</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Close">DbConnectionManager&lt;OdbcConnection&gt;.Close()</a>
@@ -216,100 +247,6 @@ Reduce the batch size if you encounter issues here.</p>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager_AfterBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.AfterBulkInsert*"></a>
-  <h4 id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager_AfterBulkInsert_System_String_" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.AfterBulkInsert(System.String)">AfterBulkInsert(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void AfterBulkInsert(string tableName)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ALE.ETLBox.ConnectionManager.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.AfterBulkInsert(System.String)</span></div>
-  
-  
-  <a id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager_BeforeBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.BeforeBulkInsert*"></a>
-  <h4 id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager_BeforeBulkInsert_System_String_" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.BeforeBulkInsert(System.String)">BeforeBulkInsert(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void BeforeBulkInsert(string tableName)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ALE.ETLBox.ConnectionManager.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.BeforeBulkInsert(System.String)</span></div>
-  
-  
-  <a id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager_BulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.BulkInsert*"></a>
-  <h4 id="ALE_ETLBox_ConnectionManager_OdbcConnectionManager_BulkInsert_ALE_ETLBox_ITableData_System_String_" data-uid="ALE.ETLBox.ConnectionManager.OdbcConnectionManager.BulkInsert(ALE.ETLBox.ITableData,System.String)">BulkInsert(ITableData, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void BulkInsert(ITableData data, string tableName)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.ITableData.html">ITableData</a></td>
-        <td><span class="parametername">data</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ALE.ETLBox.ConnectionManager.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.BulkInsert(ALE.ETLBox.ITableData, System.String)</span></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a>

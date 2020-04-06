@@ -246,9 +246,38 @@
   </h3>
   
   
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AfterBatchWrite_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.AfterBatchWrite*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AfterBatchWrite" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.AfterBatchWrite">AfterBatchWrite</h4>
+  <div class="markdown level1 summary"><p>This action is called after a batch was successfully inserted into the destination.
+You will get a copy of the data that was used for the insertion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Action&lt;TInput[]&gt; AfterBatchWrite { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;TInput[]&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.BatchSize*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.BatchSize">BatchSize</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The batch size defines how many records needs to be in the Input buffer before data is written into the destination.
+The default batch size is 1000.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -273,7 +302,9 @@
   
   <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.BeforeBatchWrite*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BeforeBatchWrite" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.BeforeBatchWrite">BeforeBatchWrite</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>This function is called every time before a batch is inserted into the destination.
+It receives an array that represents the batch - you can modify the data itself if needed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -323,7 +354,8 @@
   
   <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.TargetBlock*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TargetBlock" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.TargetBlock">TargetBlock</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The buffer component used as target for linking.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -344,13 +376,42 @@
       </tr>
     </tbody>
   </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WasInitialized_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.WasInitialized*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WasInitialized" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.WasInitialized">WasInitialized</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool WasInitialized { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   
   
   <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.AddPredecessorCompletion*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_AddPredecessorCompletion_System_Threading_Tasks_Task_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.AddPredecessorCompletion(System.Threading.Tasks.Task)">AddPredecessorCompletion(Task)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Use this method if you want to register a task that needs to be completed
+before the destination itself can complete. Normally you don't have to do anything -
+all linked components will automatically register using this method.
+Simple use the LinkTo() method of source components or transformations.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -369,7 +430,8 @@
       <tr>
         <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td><span class="parametername">completion</span></td>
-        <td></td>
+        <td><p>A task to wait for before this destination can complete.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -382,6 +444,28 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected void CheckCompleteAction()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.CleanUp*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_CleanUp" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.CleanUp">CleanUp()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void CleanUp()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DataFlow.DataFlowDestination&lt;TInput[]&gt;.CleanUp()</span></div>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_FinishWrite_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.FinishWrite*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_FinishWrite" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.FinishWrite">FinishWrite()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void FinishWrite()</code></pre>
   </div>
   
   
@@ -412,13 +496,50 @@
   </table>
   
   
-  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WriteBatch_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.WriteBatch*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WriteBatch__0____" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.WriteBatch(`0[]@)">WriteBatch(ref TInput[])</h4>
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_PrepareWrite_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.PrepareWrite*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_PrepareWrite" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.PrepareWrite">PrepareWrite()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void WriteBatch(ref TInput[] data)</code></pre>
+    <pre><code class="lang-csharp hljs">protected abstract void PrepareWrite()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TryBulkInsertData_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.TryBulkInsertData*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_TryBulkInsertData__0___" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.TryBulkInsertData(`0[])">TryBulkInsertData(TInput[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void TryBulkInsertData(TInput[] data)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>TInput[]</td>
+        <td><span class="parametername">data</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WriteBatch_" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.WriteBatch*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WriteBatch__0___" data-uid="ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.WriteBatch(`0[])">WriteBatch(TInput[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void WriteBatch(TInput[] data)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

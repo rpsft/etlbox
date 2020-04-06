@@ -213,6 +213,31 @@
   </table>
   
   
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_IsInBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.IsInBulkInsert*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_IsInBulkInsert" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.IsInBulkInsert">IsInBulkInsert</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsInBulkInsert { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_LeaveOpen_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.LeaveOpen*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_LeaveOpen" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.LeaveOpen">LeaveOpen</h4>
   <div class="markdown level1 summary"></div>
@@ -286,6 +311,31 @@
       </tr>
     </tbody>
   </table>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Transaction_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Transaction*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Transaction" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Transaction">Transaction</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDbTransaction Transaction { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Data.IDbTransaction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   
@@ -344,6 +394,43 @@
   </table>
   
   
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeginTransaction_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.BeginTransaction*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeginTransaction" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.BeginTransaction">BeginTransaction()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void BeginTransaction()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeginTransaction_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.BeginTransaction*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BeginTransaction_System_Data_IsolationLevel_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.BeginTransaction(System.Data.IsolationLevel)">BeginTransaction(IsolationLevel)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void BeginTransaction(IsolationLevel isolationLevel)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Data.IsolationLevel</span></td>
+        <td><span class="parametername">isolationLevel</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.BulkInsert*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_BulkInsert_ALE_ETLBox_ITableData_System_String_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.BulkInsert(ALE.ETLBox.ITableData,System.String)">BulkInsert(ITableData, String)</h4>
   <div class="markdown level1 summary"></div>
@@ -376,6 +463,33 @@
   </table>
   
   
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CleanUpBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CleanUpBulkInsert*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CleanUpBulkInsert_System_String_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CleanUpBulkInsert(System.String)">CleanUpBulkInsert(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void CleanUpBulkInsert(string tablename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tablename</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Clone_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Clone*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Clone" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Clone">Clone()</h4>
   <div class="markdown level1 summary"></div>
@@ -401,6 +515,31 @@
   </table>
   
   
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloneIfAllowed_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CloneIfAllowed*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloneIfAllowed" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CloneIfAllowed">CloneIfAllowed()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IConnectionManager CloneIfAllowed()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Close_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Close*"></a>
   <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Close" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Close">Close()</h4>
   <div class="markdown level1 summary"></div>
@@ -408,6 +547,36 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Close()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloseIfAllowed_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CloseIfAllowed*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloseIfAllowed" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CloseIfAllowed">CloseIfAllowed()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CloseIfAllowed()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloseTransaction_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CloseTransaction*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CloseTransaction" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CloseTransaction">CloseTransaction()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CloseTransaction()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CommitTransaction_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CommitTransaction*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_CommitTransaction" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.CommitTransaction">CommitTransaction()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CommitTransaction()</code></pre>
   </div>
   
   
@@ -643,6 +812,43 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Open()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_PrepareBulkInsert_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.PrepareBulkInsert*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_PrepareBulkInsert_System_String_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.PrepareBulkInsert(System.String)">PrepareBulkInsert(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void PrepareBulkInsert(string tablename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tablename</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_RollbackTransaction_" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.RollbackTransaction*"></a>
+  <h4 id="ALE_ETLBox_ConnectionManager_DbConnectionManager_1_RollbackTransaction" data-uid="ALE.ETLBox.ConnectionManager.DbConnectionManager`1.RollbackTransaction">RollbackTransaction()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RollbackTransaction()</code></pre>
   </div>
   <h3 id="implements">Implements</h3>
   <div>

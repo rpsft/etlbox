@@ -79,22 +79,73 @@
 <h1 id="flat-files-and-other-sources-and-destinations">Flat files and other sources and destinations</h1>
 
 <h2 id="csvsource">CsvSource</h2>
-<p>A CSV source simple reads data from a CSV file. Under the hood is the 3rd party library <code>CSVHelper</code>. There are several configuration options for the Reader.
-The default output data type of the CSVReader is a string array. You can either use a <code>RowTransformation</code> to transform it into the data type you need, or use
-the generic implementation CsvSource.</p>
-<pre><code class="lang-C#">//Returns string[] as output type for other components
-CsvSource source = new CsvSource(&quot;Demo.csv&quot;) {
-    Delimiter = &quot;;&quot;,
-    SourceCommentRows = 2
-}
+<p>A CcsvSource simple reads data from a CSV file.
+It is based on the <a href="https://joshclose.github.io/CsvHelper/">library CsvHelper created by Josh Close</a>.
+In the following examples, you will learn how to configure the CsvReader to your needs.
+See the documentation of CsvHelper to learn more about the configuration options for the CsvReader itself.</p>
+<p>Let's start with a simple example:</p>
+<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;Demo.csv&quot;);
+source.Configuration.Delimiter = &quot;;&quot;;
+source.Configuration.IgnoreBlankLines = true;
 </code></pre>
-<pre><code class="lang-C#">CsvSource&lt;CSVData&gt; source = new CsvSource&lt;CSVData&gt;(&quot;Demo.csv&quot;);
+<p>This will creata a source component that reads the data from a &quot;Demo.csv&quot; file. This file could look like this:</p>
+<pre><code class="lang-csv">Row_Nr;Value
+1;Test1
+2;Test2
+</code></pre>
+<p>There are several configuration options for the Reader that you can set in the Configuration property. Learn more
+about these options <a href="https://joshclose.github.io/CsvHelper/api/CsvHelper.Configuration/Configuration/">in the CsvHelper.Configuration api documentation</a>.
+The default output data type of the CsvSource is an ExpandoObject. This is a dynamic object which will contain a property
+for each column in your csv file. The first row of your file is supposed to be a header record (unless you use the SkipRows property to define how many
+rows needs to be skipped before your header starts). The header will define the property names of the ExpandoObject.</p>
+<p>You can now use a <code>RowTransformation</code> to transform it into the data type you need, or just stick with the ExpandoObject. (All other components
+in ETLBox will also support this).</p>
+<p>This is an example to transform the dynamic object into a regular .NET object:</p>
+<pre><code class="lang-C#"> CsvSource&lt;ExpandoObject&gt; source = new CsvSource&lt;ExpandoObject&gt;(&quot;Demo.csv&quot;);
+RowTransformation&lt;ExpandoObject,MyDataObject&gt; trans = new RowTransformation&lt;ExpandoObject,MyDataObject&gt;(
+    csvdata =&gt;
+    {
+        dynamic csvrow = csvdata as ExpandoObject;
+        MyDataObject myData = new MyDataObject() {
+            myData.Id = csvRow.Row_Nr;
+            myData.Value = csvRow.Value;
+        };
+        return myData;
+    });
+</code></pre>
+<h4 id="using-object-types">Using object types</h4>
+<p>Of course you can  use your data object as type for the CsvSource. The following code would directly read the data from the csv file
+into the right object type.</p>
+<pre><code class="lang-C#">public class MyCsvData {
+    public int Row_Nr { get; set; }
+    public string Value { get; set; }
+}
+CsvSource&lt;MyCsvData&gt; source = new CsvSource&lt;MyCsvData&gt;(&quot;Demo.csv&quot;);
+</code></pre>
+<p>ETLBox will find the right property by the equivalent header column in your file. Therefore, the order of the columns doesn't matter, as long
+as the column has an equivalent header. If the header name is different, you can use attributes or a ClassMap to find the right column.
+Here is an example for using the Name and index attribute:</p>
+<pre><code class="lang-C#">public class MyCsvData {
+    [Name(&quot;Row_nr&quot;)]
+    public int Id { get; set; }
+    [Index(1)]
+    public string Text { get;set;}
+}
+CsvSource&lt;MyCsvData&gt; source = new CsvSource&lt;MyCsvData&gt;(&quot;Demo.csv&quot;);
+</code></pre>
+<p>See the full documentation <a href="https://joshclose.github.io/CsvHelper/examples/configuration/attributes">about CsvHelepr attributes here</a> or
+read more <a href="https://joshclose.github.io/CsvHelper/examples/configuration">about class maps</a>.</p>
+<h4 id="using-arrays">Using arrays</h4>
+<p>Sometimes it can be easier to use a string array (or object array) to read from a csv file, e.g. if your Csv file doesn't have a header.
+ETLBox will support arrays as well - just define your CsvSource like this</p>
+<pre><code class="lang-C#">CsvSource&lt;string[]&gt; source = new CsvSource&lt;string[]&gt;(&quot;Demo.csv&quot;);
+source.Configuration.HasHeaderRecord = false;
 </code></pre>
 <h2 id="csvdestination">CsvDestination</h2>
-<p>A CSV destination will create a file containing the data in the desired CSV format. It is based on the 3rd party library <code>CSVHelper</code>.</p>
-<p>There is a generic and non-generic class available. The generic approach will create a csv file including a header column - the header name is derived
-from the property names or the CSVHelper attributes.</p>
-<p>E.g.</p>
+<p>A CSV destination will create a file containing the data in the desired CSV format.
+Like the CsvSource it is based on the <a href="https://joshclose.github.io/CsvHelper/">library CsvHelper created by Josh Close</a>.</p>
+<p>The CsvDestination will work with the dynamic (ExpandoObject) as well as with regular object or arrays.
+Here is an example how you can use a classic object to write data into a Csv file:</p>
 <pre><code class="lang-C#"> public class MySimpleRow
 {    
     [Name(&quot;Header1&quot;)]
@@ -113,17 +164,12 @@ CsvDestination&lt;MySimpleRow&gt; dest = new CsvDestination&lt;MySimpleRow&gt;(&
 2,Test2
 3,Test3
 </code></pre>
-<h3 id="csv-configuration">CSV Configuration</h3>
-<p>The <code>CsvDestination</code> and the <code>CsvSource</code> does have a property <code>Configuration</code> which allows you to set e.g. the delimiter for the file.</p>
-<pre><code class="lang-C#">CsvSource source = new CsvSource(&quot;res/CsvSource/OneColumn.csv&quot;)
-{
-    Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = &quot;;&quot; }
-};
-</code></pre>
+<p>If you use the ExpandoObject, the header names will be derived from the property names. In most cases, this will work as expected.
+If you use an array, e.g. <code>CsvDestination&lt;string[]&gt;</code>, you won't get a header column.</p>
 <h2 id="xml">Xml</h2>
 <h3 id="xmlsource">XmlSource</h3>
-<p>The xml source let you read data from a xml source.
-Let's assume your xml file looks like this:</p>
+<p>The xml source let you read data from a xml source. It will use  <code>System.Xml</code> under the hood.</p>
+<p>Let's assume your xml file looks like this:</p>
 <pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;Root&gt;
     &lt;MySimpleRow Col1=&quot;1&quot;&gt;
@@ -134,8 +180,8 @@ Let's assume your xml file looks like this:</p>
     &lt;/MySimpleRow&gt;
 &lt;/Root&gt;
 </code></pre>
-<p>Xml parsing is based on XmlSerializer. You can define your source and your object like this, and  make use of the default xml attribute annotations to
-influence the XmlSerializer.</p>
+<p>Xml reading is based on the Micrsoft XmlSerializer (using System.Xml.Serialization). You can make use of the default xml attribute
+annotations to influence how data is read by the XmlSerializer. For the example xml above, the following code could read the xml file:</p>
 <pre><code class="lang-C#">[XmlRoot(&quot;MySimpleRow&quot;)]
 public class MyRow
 {
@@ -144,15 +190,63 @@ public class MyRow
     public string Col2 { get; set; }
 }
 
-  XmlSource&lt;MyRow&gt; source = new XmlSource&lt;MyRow&gt;(&quot;source.xml&quot;, ResourceType.File);
+XmlSource&lt;MyRow&gt; source = new XmlSource&lt;MyRow&gt;(&quot;source.xml&quot;, ResourceType.File);
+</code></pre>
+<h4 id="using-dynamic-objects">Using dynamic objects</h4>
+<p>XmlSource does also support the dynamic ExpanoObject. If you want to use it, you can define an ElementName that contains the data you acutally
+want to parse - as you normally are not interested in your root element. ETLBox then will look for this Element and parse every occurence of
+it into an ExpandoObject and send it into the connected components.</p>
+<p>Here is an example. If your xml looks like this:</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Root&gt;
+    &lt;MySimpleRow&gt;
+        &lt;Column1&gt;1&lt;/Column1&gt;
+        &lt;Column2&gt;Test1&lt;/Column2&gt;
+    &lt;/MySimpleRow&gt;
+    &lt;MySimpleRow&gt;
+        &lt;Column1&gt;2&lt;/Column1&gt;
+        &lt;Column2&gt;Test2&lt;/Column2&gt;
+    &lt;/MySimpleRow&gt;
+&lt;Root&gt;
+</code></pre>
+<p>You can parse the two elements <mysimplerow> with the follwoing code:<p>
+<pre><code class="lang-C#">XmlSource source = new XmlSource(&quot;demo2.xml&quot;, ResourceType.File)
+{
+    ElementName = &quot;MySimpleRow&quot;
+};
 </code></pre>
 <h3 id="xmldestination">XmlDestination</h3>
-<p>The xml destination will you the same XmlSerializer to deserialize the data and write them into an xml file.</p>
-<pre><code class="lang-C#">XmlDestination&lt;MyRow&gt; dest = new XmlDestination&lt;MyRow&gt;(&quot;dest.xml&quot;, ResourceType.File);
+<p>The xml destination will use the same XmlSerializer to serialize the data and write them into an xml file.</p>
+<p>Here is an example how to influence the XmlSerializer using attributes:</p>
+<pre><code class="lang-C#">[XmlRoot(&quot;MySimpleRow&quot;)]
+public class MyRow
+{
+    [XmlAttribute]
+    public int Col1 { get; set; }
+    [XmlAttribute]
+    public string Col2 { get; set; }
+}
+
+XmlDestination&lt;MyRow&gt; dest = new XmlDestination&lt;MyRow&gt;(&quot;dest.xml&quot;, ResourceType.File);
 </code></pre>
+<p>Could create an output that looks like this:</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Root&gt;
+  &lt;MySimpleRow Col1=&quot;1&quot; Col2=&quot;Test1&quot; /&gt;
+  &lt;MySimpleRow Col1=&quot;2&quot; /&gt;
+&lt;/Root&gt;
+</code></pre>
+<h2 id="resource-type-and-web-requests">Resource Type and Web Requests</h2>
+<p>You may have noticed that both sources and destinations (Xml and Csv) are use with the <code>ResourceType.File</code> option.
+This is default for CsvSource/CsvDestination, but not for the XmlSource/XmlDestination. The other option
+is ResourceType.Http - and allows you to read data from a web service. Instead of a filename just provide
+and Url. Furthermore, the components also have a <code>[HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8)</code> property that can be used to configure the Http request
+(e.g. to add authentication.)
+As Csv and Xml is not so commonly used anymore, you can read more about querying data from web services in
+the article <a href="dataflow_web_services.html">Json and webservice integration</a>.</p>
 <h2 id="excelsource">ExcelSource</h2>
 <p>An Excel source reads data from a xls or xlsx file.
-<a href="https://github.com/ExcelDataReader/ExcelDataReader">It uses the 3rd party library <code>ExcelDataReader</code></a>.
+<a href="https://github.com/ExcelDataReader/ExcelDataReader">It is based the 3rd party library <code>ExcelDataReader</code></a>.
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range
 to restrict this behavior. Additionally, you have to use the Attribute <code>ExcelColumn</code> to define the column index
 for each property. The first column would be 0, the 2nd column 1, ...</p>
@@ -175,78 +269,66 @@ data can be automatically determined from the underlying ExcelDataReader.</p>
 <p>The ExcelSource has a property <code>IgnoreBlankRows</code>. This can be set to true, and all rows which cells are completely empty
 are ignored when reading data from your source.</p>
 <h2 id="other-sources-and-destinations">Other Sources and Destinations</h2>
-<h3 id="custom-integration">Custom integration</h3>
-<h4 id="custom-source">Custom Source</h4>
-<p>A custom source can generate any type of of output you describe in a Function. There is a function that describe how the records
-are generated and a function that returns true if you reached the end of your data.</p>
-<pre><code class="lang-C#">List&lt;string&gt; Data = new List&lt;string&gt;() { &quot;Test1&quot;, &quot;Test2&quot;, &quot;Test3&quot; };
+<h3 id="customsource">CustomSource</h3>
+<p>A custom source can generate any type of  output you need.
+It will accept tow function: One function that generates the your output, and another one that return true if you reached the end of your data.</p>
+<p>Let's look at a simple example. Assuming we have a list of strings, and we want to return these string wrapped into an object data for our source.</p>
+<p>First we define an object</p>
+<pre><code class="lang-C#">public class MyRow {
+    public int Id { get; set; }
+    public string Value { get; set; }
+}
+
+List&lt;string&gt; Data = new List&lt;string&gt;() { &quot;Test1&quot;, &quot;Test2&quot;, &quot;Test3&quot; };
 int _readIndex = 0;
-Func&lt;MySimpleRow&gt; ReadData = () =&gt;
-{
-    var result = new MySimpleRow()
-    {
-        Col1 = _readIndex + 1,
-        Col2 = Data[_readIndex]
-    };
-    _readIndex++;
-    return result;
-};
 
-Func&lt;bool&gt; EndOfData = () =&gt; _readIndex &gt;= Data.Count;
-
-//Act
-CustomSource&lt;MySimpleRow&gt; source = new CustomSource&lt;MySimpleRow&gt;(ReadData, EndOfData);
+CustomSource&lt;MySimpleRow&gt; source = new CustomSource&lt;MySimpleRow&gt;(
+    () =&gt; {
+        return new MyRow()
+        {
+            Id = _readIndex++,
+            Value = Data[_readIndex]
+        };
+    }, 
+    () =&gt; _readIndex &gt;= Data.Count);
 </code></pre>
+<p>CustomSource also works with dynamic ExpandoObject and arrays.</p>
 <h4 id="custom-destination">Custom Destination</h4>
-<p>A custom destination calls the given action for every received record in the destination.</p>
+<p>The use of a custom destination is even simpler - a custom destination
+just calls an action for every received record.</p>
+<p>Here is an example:</p>
 <pre><code class="lang-C#">CustomDestination&lt;MySimpleRow&gt; dest = new CustomDestination&lt;MySimpleRow&gt;(
     row =&gt; {
         SqlTask.ExecuteNonQuery(Connection, &quot;Insert row&quot;,
-            $&quot;INSERT INTO dbo.CustomDestination VALUES({row.Col1},'{row.Col2}')&quot;);
+            $&quot;INSERT INTO dbo.CustomDestination VALUES({row.Id},'{row.Value}')&quot;);
     }
 );
 </code></pre>
-<h3 id="integrate-from-memory">Integrate from memory</h3>
-<h4 id="memory-source">Memory Source</h4>
-<p>A Memory source is a simple source components that accepts a list. Use this component
-within your dataflow if you already have you collection or records available in memory.
+<h3 id="memory-source">Memory Source</h3>
+<p>A Memory source is a simple source component that accepts a .NET list or enumerable. Use this component
+within your dataflow if you already have a collection containing your data available in memory.
 When you execute the flow, the memory destination will iterate through the list and
 asynchronously post record by record into the flow.</p>
 <p>Example code:</p>
-<pre><code class="lang-C#"> TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(&quot;MemoryDestination&quot;);
-MemorySource&lt;MySimpleRow&gt; source = new MemorySource&lt;MySimpleRow&gt;();
-DbDestination&lt;MySimpleRow&gt; dest = new DbDestination&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestination&quot;);
-       
+<pre><code class="lang-C#">MemorySource&lt;MySimpleRow&gt; source = new MemorySource&lt;MySimpleRow&gt;();
 source.Data = new List&lt;MySimpleRow&gt;()
 {
     new MySimpleRow() { Col1 = 1, Col2 = &quot;Test1&quot; },
     new MySimpleRow() { Col1 = 2, Col2 = &quot;Test2&quot; },
     new MySimpleRow() { Col1 = 3, Col2 = &quot;Test3&quot; }
 };
-source.LinkTo(dest);
-source.Execute();
-dest.Wait();
 </code></pre>
-<h4 id="memorydestination">MemoryDestination</h4>
+<h3 id="memorydestination">MemoryDestination</h3>
 <p>A memory destination is a component that store the incoming data within a <a href="https://docs.microsoft.com/de-de/dotnet/api/system.collections.concurrent.blockingcollection-1?view=netframework-4.8">BlockingCollection</a>.
-It stores the data within the <code>Data</code> property.
+You can access the received data within the <code>Data</code> property.
 Data can be read from this collection as soon as it arrives.</p>
 <p>Example:</p>
-<pre><code class="lang-C#">DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(SqlConnection, &quot;MemoryDestinationSource&quot;);
-MemoryDestination&lt;MySimpleRow&gt; dest = new MemoryDestination&lt;MySimpleRow&gt;();
-
-source.LinkTo(dest);
-Task st = source.ExecuteAsync();
-Task dt = dest.Completion();
-
-// data is accessible in dest.Data
+<pre><code class="lang-C#">MemoryDestination&lt;MySimpleRow&gt; dest = new MemoryDestination&lt;MySimpleRow&gt;();
+// data is accessible in dest.Data 
 </code></pre>
 <p>When starting the data flow asynchronous, you should wait until the tasks complete. The source task will complete when
 all data was posted into the data flow, and the destination task completes when all data has arrived in the destination.</p>
-<h2 id="voiddestination">VoidDestination</h2>
-<p>A <code>VoidDestination</code> is a destination where all incoming data is ignored. This can be helpful if you work with Predicates.
-For more details <a href="dataflow_linking_execution.html">see the article about Predicates</a>.</p>
-</article>
+</mysimplerow></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
