@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Text;
 using Xunit;
@@ -61,7 +62,8 @@ namespace ALE.ETLBoxTests.Performance
         [Theory, MemberData(nameof(SqlConnection), 100000, 1000, 0.5, 6.0),
             MemberData(nameof(MySqlConnection), 100000, 1000, 0.5, 0.0),
             MemberData(nameof(PostgresConnection), 100000, 1000, 0.5, 0.0),
-            MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5, 0.0)]
+            MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5, 0.0)
+            ]
         public void CompareFlowWithBulkInsert(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
         {
             //Arrange
@@ -96,7 +98,7 @@ namespace ALE.ETLBoxTests.Performance
         private TimeSpan GetBulkInsertTime(IConnectionManager connection, int numberOfRows)
         {
             TimeSpan result = TimeSpan.FromMilliseconds(0);
-            if (connection.GetType() == typeof(SqlConnectionManager))
+            if (connection.GetType() == typeof(SqlConnectionManager) && 1==0)
             {
                 result = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with rows of data using BulkInsert",
                  () =>
@@ -131,6 +133,46 @@ namespace ALE.ETLBoxTests.Performance
             return timeElapsedETLBox;
         }
 
+
+        [Theory, MemberData(nameof(SqlConnection), 10000000, 1000, 1.0,1.0)]
+        public void WithExpandoToObjectTransformation(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
+        {
+            //Arrange
+            BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
+            ReCreateDestinationTable(connection, "CsvDestinationWithTransformation");
+
+            var sourceExpando = new CsvSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
+            var trans = new RowTransformation<ExpandoObject, CSVData>(
+               row =>
+               {
+                   dynamic r = row as ExpandoObject;
+                   return new CSVData()
+                   {
+                       Col1 = r.Col1,
+                       Col2 = r.Col2,
+                       Col3 = r.Col3,
+                       Col4 = r.Col4
+                   };
+                });
+            var destGeneric = new DbDestination<CSVData>(connection, "CsvDestinationWithTransformation", batchSize);
+
+            //Act
+            sourceExpando.LinkTo(trans);
+            trans.LinkTo(destGeneric);
+            var timeElapsedETLBox = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with {numberOfRows} rows of data using ETLBox",
+                () =>
+                {
+                    sourceExpando.Execute();
+                    destGeneric.Wait();
+                }
+            );
+            output.WriteLine("Elapsed " + timeElapsedETLBox.TotalSeconds + " seconds for ETLBox (Expando to object transformation).");
+
+            //Assert
+            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationWithTransformation"));
+            //10.000.000 rows, batch size 10.000: ~8 min
+            //10.000.000 rows, batch size  1.000: ~10 min 10 sec
+        }
 
     }
 }
