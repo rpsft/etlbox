@@ -123,7 +123,7 @@ namespace ALE.ETLBox.DataFlow
 
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)
         {
-            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
+            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, BatchSize);
             td.Rows = ConvertRows(ref data);
             if (TypeInfo.IsDynamic && data.Length > 0)
                 foreach (var column in (IDictionary<string, object>)data[0])
