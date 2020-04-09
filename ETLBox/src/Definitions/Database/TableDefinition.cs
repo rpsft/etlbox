@@ -73,7 +73,7 @@ namespace ALE.ETLBox
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@"
 SELECT  cols.name
-     , UPPER(tpes.name) AS type_name
+     , IIF(tpes.name in ('varchar', 'nvarchar'), CONCAT(UPPER(tpes.name), '(', cols.max_length, ')'), UPPER(tpes.name)) AS type_name
      , cols.is_nullable
      , cols.is_identity
      , ident.seed_value
