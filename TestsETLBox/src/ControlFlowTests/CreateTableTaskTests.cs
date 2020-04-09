@@ -283,5 +283,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                    {  new TableColumn() { DataType = "INT" } })
             );
         }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void CopyTableUsingTableDefinition(IConnectionManager connection)
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>() {
+                new TableColumn("Id", "INT",allowNulls:false, isPrimaryKey:true, isIdentity:true),
+                new TableColumn("value1", "NVARCHAR(10)",allowNulls:true),
+                new TableColumn("value2", "DECIMAL(10,2)",allowNulls:false) { DefaultValue = "3.12" }                
+            };
+            CreateTableTask.Create(connection, "CreateTable10", columns);
+
+            //Act
+            var definition =
+                TableDefinition.GetDefinitionFromTableName(connection, "CreateTable10");
+            definition.Name = "CreateTable10_copy";          
+            CreateTableTask.Create(connection, definition);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable10_copy"));
+        }
     }
 }
