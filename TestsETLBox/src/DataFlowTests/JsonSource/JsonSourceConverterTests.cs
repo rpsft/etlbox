@@ -1,0 +1,98 @@
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Helper;
+using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.Fixtures;
+using CsvHelper.Configuration.Attributes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using Xunit;
+
+namespace ALE.ETLBoxTests.DataFlowTests
+{
+    [Collection("DataFlow")]
+    public class JsonSourceConverterTests
+    {
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonSourceConverterTests(DataFlowDatabaseFixture dbFixture)
+        {
+        }
+
+        [JsonConverter(typeof(JsonPathConverter))]
+        public class MySimpleRow
+        {
+            [JsonProperty("Column1")]
+            public int Col1 { get; set; }
+            [JsonProperty("Column2.Value")]
+            public string Col2 { get; set; }
+        }
+
+        [Fact]
+        public void JsonPathInJsonPropertyAttribute()
+        {
+            //Arrange
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSourceNested");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "JsonSourceNested");
+
+            //Act
+            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/NestedData.json", ResourceType.File);            
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest2Columns.AssertTestData();
+        }
+
+        [Fact]
+        public void JsonPathInEpandoObject()
+        {
+            //Arrange
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSourceNestedDynamic");
+            RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(
+                row =>
+                {
+                    dynamic r = row as ExpandoObject;
+                    r.Col1 = r.Column1;
+                    return r;
+                });
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "JsonSourceNestedDynamic");
+
+            //Act
+            JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/NestedData.json", ResourceType.File);
+            List<JsonProperty2JsonPath> pathLookups = new List<JsonProperty2JsonPath>()
+            {
+                new JsonProperty2JsonPath()
+                {
+                    ReplacePropertyName = "Column2",
+                    JsonPath = "Value",
+                    NewPropertyName = "Col2"
+                 }
+            };
+            source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
+
+            source.LinkTo(trans).LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest2Columns.AssertTestData();
+        }
+
+       
+       
+
+       
+    }
+}
