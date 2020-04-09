@@ -73,7 +73,11 @@ namespace ALE.ETLBox
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@"
 SELECT  cols.name
-     , IIF(tpes.name in ('varchar', 'nvarchar'), CONCAT(UPPER(tpes.name), '(', cols.max_length, ')'), UPPER(tpes.name)) AS type_name
+     , CASE WHEN tpes.name IN ('varchar','char','binary','varbinary') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length, ')')
+            WHEN tpes.name IN ('nvarchar','nchar') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length/2, ')')
+            WHEN tpes.name IN ('decimal','numeric') THEN CONCAT(UPPER(tpes.name), '(', cols.precision,',',cols.scale, ')')
+            ELSE UPPER(tpes.name)            
+       END AS type_name
      , cols.is_nullable
      , cols.is_identity
      , ident.seed_value
@@ -165,7 +169,10 @@ ORDER BY cols.column_id
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
 $@" 
 SELECT cols.column_name
-  , cols.data_type
+  , CASE WHEN cols.data_type IN ('varchar','char') THEN CONCAT (cols.data_type,'(',cols.character_maximum_length, ')')
+	     WHEN cols.data_type IN ('decimal') THEN CONCAT (cols.data_type,'(',cols.numeric_precision,',', cols.numeric_scale, ')')
+		 ELSE cols.data_type
+         END AS 'data_type'
   , CASE WHEN cols.is_nullable = 'NO' THEN 0 ELSE 1 END AS 'is_nullable'
   , CASE WHEN cols.extra IS NOT NULL AND cols.extra = 'auto_increment' THEN 1 ELSE 0 END AS 'auto_increment'
   , CASE WHEN isnull(k.constraint_name) THEN 0 ELSE 1 END AS 'primary_key'

@@ -99,10 +99,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                                     : string.Empty;
             string nullSql = CreateNotNullSql(col);
             string defaultSql = CreateDefaultSql(col);
-            string computedColumnSql = CreateComputedColumnSql(col);
-            return ConnectionType == ConnectionManagerType.SqlServer ?
-                $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql}" :
-                $@"{QB}{col.Name}{QE} {dataType} {nullSql} {identitySql} {collationSql} {defaultSql} {computedColumnSql}";
+            string computedColumnSql = CreateComputedColumnSql(col);            
+            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql}";             
         }
 
 

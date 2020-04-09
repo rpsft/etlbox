@@ -69,10 +69,10 @@ CREATE TABLE NumericDataTypes (
             //Assert
             Assert.Collection(result.Columns,
                 tc => Assert.True(tc.DataType == "BIGINT" && tc.NETDataType == typeof(Int64)),
-                tc => Assert.True(tc.DataType == "NUMERIC" && tc.NETDataType == typeof(Decimal)),
+                tc => Assert.True(tc.DataType == "NUMERIC(18,0)" && tc.NETDataType == typeof(Decimal)),
                 tc => Assert.True(tc.DataType == "BIT" && tc.NETDataType == typeof(Boolean)),
                 tc => Assert.True(tc.DataType == "SMALLINT" && tc.NETDataType == typeof(Int16)),
-                tc => Assert.True(tc.DataType == "DECIMAL" && tc.NETDataType == typeof(Decimal)),
+                tc => Assert.True(tc.DataType == "DECIMAL(18,0)" && tc.NETDataType == typeof(Decimal)),
                 tc => Assert.True(tc.DataType == "SMALLMONEY" && tc.NETDataType == typeof(Decimal)),
                 tc => Assert.True(tc.DataType == "INT" && tc.NETDataType == typeof(Int32)),
                 tc => Assert.True(tc.DataType == "TINYINT" && tc.NETDataType == typeof(UInt16)),
@@ -106,16 +106,61 @@ CREATE TABLE ReadTableDefinition (
             Assert.True(result.Columns.Count == 5);
         }
 
-        /* Missing types
-         --Col17 CHAR(10),
-        --Col18 VARCHAR(20),
-        --Col19 TEXT,
-        --Col20 NCHAR(4000),
-        --Col21 NVARCHAR(MAX),
-        --Col22 NTEXT,
-        --Col23 BINARY,
-        --Col24 VARBINARY(20),
-        --Col25 IMAGE
-        */
+
+        [Fact]
+        public void TypesWithLengthOrPrecision()
+        {
+            //Arrange
+            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+CREATE TABLE LengthOrPrecisionTypes (    
+    Col1 DECIMAL (12,3),
+    Col2 NVARCHAR(100),
+    Col3 VARCHAR(10),
+    Col4 CHAR(4),
+    Col5 NCHAR(4),
+    Col6 NUMERIC(3,2),    
+    Col9 BINARY(10),
+    Col10 VARBINARY(20)
+)"
+            );
+
+            //Act
+            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "LengthOrPrecisionTypes");
+
+            //Assert
+            Assert.Collection(result.Columns,
+                tc => Assert.True(tc.DataType == "DECIMAL(12,3)" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "NVARCHAR(100)" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "VARCHAR(10)" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "CHAR(4)" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "NCHAR(4)" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "NUMERIC(3,2)" && tc.NETDataType == typeof(decimal)),
+                tc => Assert.True(tc.DataType == "BINARY(10)" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "VARBINARY(20)" && tc.NETDataType == typeof(string))
+            );
+        }
+
+        [Fact]
+        public void TextTypes()
+        {
+            //Arrange
+            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+CREATE TABLE TextTypes (    
+    Col1 TEXT,
+    Col2 NTEXT,
+    Col3 IMAGE    
+)"
+            );
+
+            //Act
+            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "TextTypes");
+
+            //Assert
+            Assert.Collection(result.Columns,
+                tc => Assert.True(tc.DataType == "TEXT" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "NTEXT" && tc.NETDataType == typeof(string)),
+                tc => Assert.True(tc.DataType == "IMAGE" && tc.NETDataType == typeof(string))
+            );
+        }
     }
 }

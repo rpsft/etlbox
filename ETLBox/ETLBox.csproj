@@ -11,15 +11,15 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>New transformation: RowDuplication let you duplicate input rows. You can add a predicate expression for rows that you don't want to get duplicated.
-Now all database connection manager support transactions.</PackageReleaseNotes>
-    <Version>1.8.4</Version>
+    <PackageReleaseNotes>Bugfixing when reading table definitions from SqlServer or MySql (now supporting Scale/Precision or Length).
+Add JsonPathConverter and ExpandoJsonPathConverter as example JsonConverter in the ALE.ETLBox.Helper namespace. This allows usage of JsonPath either via attributes or on top of an ExpandoObject.</PackageReleaseNotes>
+    <Version>1.8.5</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.4.0</AssemblyVersion>
-    <FileVersion>1.8.4.0</FileVersion>
+    <AssemblyVersion>1.8.5.0</AssemblyVersion>
+    <FileVersion>1.8.5.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>
