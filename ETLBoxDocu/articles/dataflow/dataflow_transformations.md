@@ -146,7 +146,7 @@ The RowMultiplication component is a variant of the RowTransformation. Like the 
 
 Let's see an example:
 
-```
+```C#
 DbSource<InputRow> source = new DbSource<InputRow>("SourceTable");
 RowMultiplication<InputRow, OutputRow> multiplication = new RowMultiplication<InputRow, OutputRow>(
     row =>
