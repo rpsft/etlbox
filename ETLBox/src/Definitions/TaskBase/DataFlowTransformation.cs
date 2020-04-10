@@ -48,5 +48,14 @@ namespace ALE.ETLBox
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
             => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+
+        protected void CompleteOrFaultBuffer(Task t, IDataflowBlock outputBuffer)
+        {
+            if (t.IsFaulted)
+                outputBuffer.Fault(t.Exception.InnerException);
+            else
+                outputBuffer.Complete();
+        }
+
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -39,8 +41,17 @@ namespace ALE.ETLBox.DataFlow
                 InputBuffer = new ActionBlock<TInput>(row => InputData.Add(row));
                 InputBuffer.Completion.ContinueWith(t =>
                 {
-                    OutputData = BlockTransformationFunc(InputData);
-                    WriteIntoOutput();
+                    if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
+                    try
+                    {
+                        WriteIntoOutput();
+                        OutputBuffer.Complete();
+                    }
+                    catch (Exception e)
+                    {
+                        ((IDataflowBlock)OutputBuffer).Fault(e);
+                        throw e;
+                    }
                 });
 
             }
@@ -78,12 +89,12 @@ namespace ALE.ETLBox.DataFlow
         private void WriteIntoOutput()
         {
             NLogStart();
+            OutputData = BlockTransformationFunc(InputData);
             foreach (TOutput row in OutputData)
             {
                 OutputBuffer.SendAsync(row).Wait();
                 LogProgress();
             }
-            OutputBuffer.Complete();
             NLogFinish();
         }
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -37,8 +38,8 @@ namespace ALE.ETLBox.DataFlow
             TypeInfo = new TypeInfo(typeof(TInput));
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
             OutputBuffer = new BufferBlock<TInput>();
-            InputBuffer = new ActionBlock<TInput>(row => DuplicateRow(row));
-            InputBuffer.Completion.ContinueWith(t => FinishInput());
+            InputBuffer = new ActionBlock<TInput>(DuplicateRow);
+            InputBuffer.Completion.ContinueWith(FinishFlow);
         }
 
         public RowDuplication(int numberOfDuplicates) : this()
@@ -64,11 +65,6 @@ namespace ALE.ETLBox.DataFlow
                 WasInitialized = true;
             }
         }
-        private void FinishInput()
-        {
-            OutputBuffer.Complete();
-            NLogFinish();
-        }
 
         private void DuplicateRow(TInput row)
         {
@@ -84,6 +80,12 @@ namespace ALE.ETLBox.DataFlow
                     LogProgress();
                 }
             }
+        }
+
+        private void FinishFlow(Task t)
+        {
+            CompleteOrFaultBuffer(t, OutputBuffer);
+            NLogFinish();
         }
     }
 

@@ -83,7 +83,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowMultiplicationSource");
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowMultiplicationSources");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowMultiplicationSource");
             RowMultiplication<MySimpleRow, MyOtherRow> multiplication = new RowMultiplication<MySimpleRow, MyOtherRow>(
                 row =>
                 {

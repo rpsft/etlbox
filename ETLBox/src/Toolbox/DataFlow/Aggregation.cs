@@ -29,8 +29,19 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _aggregationAction = value;
-                InputBuffer = new ActionBlock<TInput>(row => WrapAggregationAction(row));
-                InputBuffer.Completion.ContinueWith(t => WriteIntoOutput());
+                InputBuffer = new ActionBlock<TInput>(WrapAggregationAction);
+                InputBuffer.Completion.ContinueWith(t => {
+                    if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
+                    try
+                    {
+                        WriteIntoOutput();
+                        OutputBuffer.Complete();
+                    }
+                    catch (Exception e) {
+                        ((IDataflowBlock)OutputBuffer).Fault(e);
+                        throw e;
+                    }
+                });
             }
         }
         public Func<TInput, object> GroupingFunc { get; set; }
@@ -144,7 +155,6 @@ namespace ALE.ETLBox.DataFlow
                 OutputBuffer.SendAsync(row.Value).Wait();
                 LogProgress();
             }
-            OutputBuffer.Complete();
             NLogFinish();
         }
 
