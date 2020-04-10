@@ -140,6 +140,27 @@ RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(
 );
 ```
 
+### RowMultiplication
+
+The RowMultiplication component is a variant of the RowTransformation. Like the RowTransformation, it accepts an input and an output type, and a transformation function (called MultiplicationFunc). The difference to the RowTransformation is that the multiplication function returns an array or list as return type. So from input record you are able to create a transformation that return one or more output records of different or the same type.
+
+Let's see an example:
+
+```
+DbSource<InputRow> source = new DbSource<InputRow>("SourceTable");
+RowMultiplication<InputRow, OutputRow> multiplication = new RowMultiplication<InputRow, OutputRow>(
+    row =>
+    {
+        List<OutputRow> result = new List<OutputRow>();
+        result.Add(new OutputRow(row.Value1));
+        result.Add(new OutputRow(row.Value2));
+        return result;
+    });
+DbDestination<OutputRow> dest = new DbDestination<OutputRow>();
+source.LinkTo(multiplication);
+multiplication.LinkTo(dest);
+```
+
 ### Splitting data
 
 In some of your data flow you may want to split the data and have it processed differently in the further flow.
