@@ -14,7 +14,7 @@ namespace ALE.ETLBox.DataFlow
     /// </summary>
     /// <see cref="DbDestination"/>
     /// <typeparam name="TInput">Data type for input, preferably representing the destination table.</typeparam>
-    public class DbDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    public class DbDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowBatchDestination<TInput>, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write data into table {DestinationTableDefinition?.Name ?? TableName}";
@@ -32,7 +32,6 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         internal TypeInfo TypeInfo { get; set; }
-        protected const int DEFAULT_BATCH_SIZE = 1000;
         protected bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         protected bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         public IConnectionManager BulkInsertConnectionManager { get; set; }
