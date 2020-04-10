@@ -16,7 +16,10 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput> 
+    public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, 
+        ITask, 
+        IDataFlowTransformation<TInput, TInput>,
+        IDataFlowBatchDestination<TInput>
         where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
@@ -56,6 +59,12 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+        public int BatchSize
+        {
+            get => DestinationTable.BatchSize;
+            set => DestinationTable.BatchSize = value;
+        }
+
         /* Private stuff */
         bool _useTruncateMethod;
 
@@ -80,11 +89,23 @@ namespace ALE.ETLBox.DataFlow
             ConnectionManager = connectionManager;
         }
 
-        private void Init()
+        public DbMerge(string tableName, int batchSize) : this(tableName)
+        {
+            TableName = tableName;
+            Init(batchSize);
+        }
+
+        public DbMerge(IConnectionManager connectionManager, string tableName, int batchSize) : this(tableName, batchSize)
+        {
+            ConnectionManager = connectionManager;
+           
+        }
+
+        private void Init(int batchSize = DbDestination.DEFAULT_BATCH_SIZE)
         {
             TypeInfo = new DBMergeTypeInfo(typeof(TInput));
             DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
-            DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName);
+            DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName, batchSize);
             InitInternalFlow();
             InitOutputFlow();
         }
@@ -229,7 +250,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => DestinationTable.Wait();
-        public async Task Completion() => await DestinationTable.Completion;
+        public Task Completion => DestinationTable.Completion;
     }
 
     public enum DeltaMode
