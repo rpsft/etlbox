@@ -122,6 +122,8 @@ RowTransformation|LookupTransformation|BlockTransformation
 Aggregation|CrossJoin|Sort
 MergeJoin||
 Multicast||
+RowDuplication||
+RowMultiplication||
 
 #### Designed for big data
 
