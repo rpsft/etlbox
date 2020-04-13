@@ -98,7 +98,6 @@ namespace ALE.ETLBox.DataFlow
         public DbMerge(IConnectionManager connectionManager, string tableName, int batchSize) : this(tableName, batchSize)
         {
             ConnectionManager = connectionManager;
-           
         }
 
         private void Init(int batchSize = DbDestination.DEFAULT_BATCH_SIZE)

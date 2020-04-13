@@ -132,7 +132,7 @@ namespace ALE.ETLBox.DataFlow
 
         private List<object[]> ConvertRows(ref TInput[] data)
         {
-            List<object[]> result = new List<object[]>();
+            List<object[]> result = new List<object[]>(data.Length);
             foreach (var CurrentRow in data)
             {
                 if (CurrentRow == null) continue;
