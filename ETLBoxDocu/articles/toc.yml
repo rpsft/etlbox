@@ -10,18 +10,18 @@
       href: dataflow/dataflow_simple_flow.md
     - name: Integrate databases
       href: dataflow/dataflow_db_sources_destinations.md
-    - name: Flat files and other sources and destinations
+    - name: Integrate flat files and web services
       href: dataflow/dataflow_file_sources_destinations.md
     - name: Transformations
       href: dataflow/dataflow_transformations.md
     - name: Linking and execution
       href: dataflow/dataflow_linking_execution.md
-    - name: Json and web service integration
-      href: dataflow/dataflow_web_services.md
     - name: Working with data types
       href: dataflow/dataflow_generic_nongeneric.md
     - name: Syncing tables with Merge
       href: dataflow/dataflow_dbmerge.md
+    - name: Other sources and destinations
+      href: dataflow/dataflow_other_sources_destinations.md
 - name: ControlFlow and Logging
   items:
     - name: ControlFlow tasks
@@ -32,8 +32,10 @@
   items:
     - name: Control and Data flow basics
       href: examples/example_controlflow_dataflow_basics.md
-    - name: Different Sources and Destinations
-      href: examples/example_different_sources_destinations.md
+    - name: Across files and databases
+      href: examples/example_across_files_databases.md
+    - name: Json and web service integration
+      href: examples/example_web_services.md
     - name: Rating Orders
       href: examples/example_rating_orders.md
 

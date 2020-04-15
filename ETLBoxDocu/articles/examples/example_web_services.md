@@ -1,4 +1,10 @@
-﻿# Json and web services
+﻿# Example: Json and web service integration
+
+## Purpose
+
+This example demonstrates how the different how a web service that returns data in json format can
+be used in an ETL pipeline. The json data can come from any service that can be requested from a .net
+HttpClient. 
 
 ## Loading json from a web service
 
@@ -104,7 +110,7 @@ JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("file.json"
 ```
 
 
-## Using JsonPath
+## Using JsonProperty
 
 Sometimes, you don't want to create a full C# Poco (Plain old component object).
 If you leave out some properties, you will see that the Json Deserializer just will ignore these properties. 
@@ -128,25 +134,3 @@ Also, this example does not have the properties `Completed` and `UserId` anymore
 Deserialization is completely based on The [Newtonsoft.Json.JsonSerializer](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializer.htm).
 There is also a property `JsonSerializer` that can be overwritten with your own JsonSerializer.
 
-### Json with String array
-
-If you don't want to use objects, you can use the Non-generic version of `JsonSource`. Your code would look like this:
-
-```C#
-JsonSource source = new JsonSource("https://jsonplaceholder.typicode.com/todos");
-MemoryDestination dest = new MemoryDestination();
-```
-
-Internally, a string array is used to store the data. 
-Now you either have to override the `JsonSerializer` yourself in order to properly convert the json into a string[].
-Or your Json has to be in following format:
-
-```Json
-[
-    [
-        "1",
-        "Test1"
-    ],
-    ...
-]
-```

@@ -1,4 +1,4 @@
-# Example: Different sources and destinations
+# Example: Across files and databases
 
 ## Purpose
 

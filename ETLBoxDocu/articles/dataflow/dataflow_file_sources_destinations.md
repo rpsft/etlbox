@@ -1,4 +1,15 @@
-﻿# Flat files and other sources and destinations
+﻿# Integration of Flat files  and web services
+
+## Resource Type and Web Requests
+
+All  sources and destinations in this artice can be set to work either with a file
+or to use data from a webservice. If you want to access a file on your drive or a network share,
+use the componenten with the `ResourceType.File` option.
+This is default for CsvSource/CsvDestination, but not for the XmlSource/XmlDestination or JsonSource/JsonDestination.
+The other option is `ResourceType.Http` - and allows you to read data from a web service. 
+Instead of a filename just provide a Url. Furthermore, the components also have 
+a `[HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8)` property 
+that can be used to configure the Http request, e.g. to add authentication or use https instead.
 
 ## CsvSource
 
@@ -123,6 +134,200 @@ If you use the ExpandoObject, the header names will be derived from the property
 If you use an array, e.g. `CsvDestination<string[]>`, you won't get a header column.
 
 
+## Json
+
+### JsonSource
+
+Json Source let you read a json. It is based on the `Newtonsoft.Json` and the `JsonSerializer`
+
+Here an example for a json file:
+
+```json
+[
+  {
+    "Col1": 1,
+    "Col2": "Test1"
+  },
+  {
+    "Col1": 2,
+    "Col2": "Test2"
+  },
+  {
+    "Col1": 3,
+    "Col2": "Test3"
+  }
+]
+```
+
+Here is some code that would read that json (and deserialize it into the object type):
+
+```C#
+public class MySimpleRow
+{
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+JsonSource<MySimpleRow> source = new JsonSource<Todo>("http://test.com/");
+```
+This code would then read the three entries from the source and post it into it's connected component.
+
+### Nested arrays
+
+The array doesn't need to be the top node of your json - it could be nested in your json file. 
+Like this:
+```C#
+{
+    "data": {
+        "array": [
+            {
+                "Col1": 1,
+                "Col2": "Test1"
+            },
+            ...
+        ]
+    }
+}
+```
+
+ETLBox automatically scans the incoming json file and starts reading (and deserializing) after the 
+first occurence of the begin of an array (which is the "[" symbol).
+
+### Working with JsonSerializer
+
+Sometimes you have a more complex json structure. Here an example:
+
+```json
+[
+    {
+        "Column1": 1,
+        "Column2": {
+            "Id": "A",
+            "Value": "Test1"
+        }
+    },
+    ...
+]
+```
+
+If you defined your POCOs types to deserialize this json you would need to create objects like this:
+
+```C#
+public class MyRow
+{
+    public int Column1 { get; set; }
+    public MyIdValueObject Column2 { get; set; }
+}
+
+public class MyIdValueObject
+{
+    public string Id { get; set; }
+    public string Value { get; set; }
+}
+```
+
+Sometimes you don't want to specify all objects that would map your json structure. To get around 
+this the underlying JsonSerializer object that is used for deserialization
+is exposed by the JsonSource. [`JsonSerializer` belongs to Newtonsoft.Json](https://www.newtonsoft.com/json/help/html/SerializingJSON.htm)  
+You could add your own JsonConverter so that you could use JsonPath within your JsonProperty attributes. 
+(Please note that the example JsonPathConverter is also part of ETLBox).
+
+```C#
+[JsonConverter(typeof(JsonPathConverter))]
+public class MySimpleRow
+{
+    [JsonProperty("Column1")]
+    public int Col1 { get; set; }
+    [JsonProperty("Column2.Value")]
+    public string Col2 { get; set; }
+}
+
+JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/NestedData.json", ResourceType.File);
+``` 
+
+### JsonDestination
+
+The result of your pipeline can be written as json using a JsonDestination. 
+
+The following code:
+
+```C#
+ public class MySimpleRow
+{
+    public string Col2 { get; set; }
+    public int Col1 { get; set; }
+}
+
+JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("test.json", ResourceType.File);
+```
+
+would result in the following json:
+
+```
+[
+  {
+    "Col1": 1,
+    "Col2": "Test1"
+  },
+  {
+    "Col1": 2,
+    "Col2": "Test2"
+  },
+  {
+    "Col1": 3,
+    "Col2": "Test3"
+  }
+]
+```
+
+Like the JsonSource you can modify the exposed `JsonSerializer` to modfiy the serializing behaviour.
+[`JsonSerializer` belongs to Newtonsoft.Json](https://www.newtonsoft.com/json/help/html/SerializingJSON.htm)  
+
+### Using Json with arrays
+
+If you don't want to use objects, you can use arrays with your  `JsonSource`. Your code would look like this:
+
+```C#
+JsonSource<string[]> source = new JsonSource<string[]>("https://jsonplaceholder.typicode.com/todos");
+```
+
+Now you either have to override the `JsonSerializer` yourself in order to properly convert the json into a string[].
+Or your incoming Json has to be in following format:
+
+```Json
+[
+    [
+        "1",
+        "Test1"
+    ],
+    ...
+]
+```
+
+
+### Working with dynamic objects
+
+JsonSource and destination support the usage of dynamic object. This allows you to use
+a dynamic ExpandoObject instead of a POCO. 
+
+```C#
+JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/TwoColumnsDifferentNames.json", ResourceType.File);
+
+RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(
+    row =>
+    {
+        dynamic r = row as ExpandoObject;
+        r.Col1 = r.Value1;
+        r.Col2 = r.Value2;
+        return r;
+    });
+DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "DynamicJson");
+
+source.LinkTo(trans).LinkTo(dest);
+source.Execute();
+dest.Wait();
+```
+
 ## Xml
 
 ### XmlSource
@@ -160,7 +365,7 @@ XmlSource<MyRow> source = new XmlSource<MyRow>("source.xml", ResourceType.File);
 
 #### Using dynamic objects
 
-XmlSource does also support the dynamic ExpanoObject. If you want to use it, you can define an ElementName that contains the data you acutally
+XmlSource does also support the dynamic ExpandoObject. If you want to use it, you can define an ElementName that contains the data you acutally
 want to parse - as you normally are not interested in your root element. ETLBox then will look for this Element and parse every occurence of
 it into an ExpandoObject and send it into the connected components. 
 
@@ -218,15 +423,6 @@ Could create an output that looks like this:
 </Root>
 ```
 
-## Resource Type and Web Requests
-
-You may have noticed that both sources and destinations (Xml and Csv) are use with the `ResourceType.File` option.
-This is default for CsvSource/CsvDestination, but not for the XmlSource/XmlDestination. The other option
-is ResourceType.Http - and allows you to read data from a web service. Instead of a filename just provide
-and Url. Furthermore, the components also have a `[HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8)` property that can be used to configure the Http request 
-(e.g. to add authentication.)
-As Csv and Xml is not so commonly used anymore, you can read more about querying data from web services in 
-the article [Json and webservice integration](dataflow_web_services.md).
 
 ## ExcelSource
 
@@ -257,87 +453,3 @@ data can be automatically determined from the underlying ExcelDataReader.
 
 The ExcelSource has a property `IgnoreBlankRows`. This can be set to true, and all rows which cells are completely empty
 are ignored when reading data from your source. 
-
-## Other Sources and Destinations
-
-### CustomSource
-
-A custom source can generate any type of  output you need. 
-It will accept tow function: One function that generates the your output, and another one that return true if you reached the end of your data. 
-
-Let's look at a simple example. Assuming we have a list of strings, and we want to return these string wrapped into an object data for our source.
-
-First we define an object
-
-```C#
-public class MyRow {
-    public int Id { get; set; }
-    public string Value { get; set; }
-}
-
-List<string> Data = new List<string>() { "Test1", "Test2", "Test3" };
-int _readIndex = 0;
-
-CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(
-    () => {
-        return new MyRow()
-        {
-            Id = _readIndex++,
-            Value = Data[_readIndex]
-        };
-    }, 
-    () => _readIndex >= Data.Count);
-```
-
-CustomSource also works with dynamic ExpandoObject and arrays. 
-
-#### Custom Destination
-
-The use of a custom destination is even simpler - a custom destination 
-just calls an action for every received record.
-
-Here is an example:
-
-```C#
-CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
-    row => {
-        SqlTask.ExecuteNonQuery(Connection, "Insert row",
-            $"INSERT INTO dbo.CustomDestination VALUES({row.Id},'{row.Value}')");
-    }
-);
-```
-
-### Memory Source
-
-A Memory source is a simple source component that accepts a .NET list or enumerable. Use this component
-within your dataflow if you already have a collection containing your data available in memory.
-When you execute the flow, the memory destination will iterate through the list and 
-asynchronously post record by record into the flow.
-
-Example code:
-
-```C#
-MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-source.Data = new List<MySimpleRow>()
-{
-    new MySimpleRow() { Col1 = 1, Col2 = "Test1" },
-    new MySimpleRow() { Col1 = 2, Col2 = "Test2" },
-    new MySimpleRow() { Col1 = 3, Col2 = "Test3" }
-};
-```
-
-### MemoryDestination
-
-A memory destination is a component that store the incoming data within a [BlockingCollection](https://docs.microsoft.com/de-de/dotnet/api/system.collections.concurrent.blockingcollection-1?view=netframework-4.8).
-You can access the received data within the `Data` property.
-Data can be read from this collection as soon as it arrives. 
-
-Example:
-
-```C#
-MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
-// data is accessible in dest.Data 
-```
-
-When starting the data flow asynchronous, you should wait until the tasks complete. The source task will complete when 
-all data was posted into the data flow, and the destination task completes when all data has arrived in the destination. 
