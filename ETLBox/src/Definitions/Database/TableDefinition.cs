@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace ALE.ETLBox
     {
         public string Name { get; set; }
         public List<TableColumn> Columns { get; set; }
+        public string PrimaryKeyConstraintName { get; set; }
+
         public int? IDColumnIndex
         {
             get

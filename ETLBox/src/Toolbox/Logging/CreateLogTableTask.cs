@@ -39,7 +39,7 @@ namespace ALE.ETLBox.Logging
 
         private void InitCreateTableTask()
         {
-            List<ITableColumn> columns = new List<ITableColumn>() {
+            List<TableColumn> columns = new List<TableColumn>() {
                 new TableColumn("id","BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity:true),
                 new TableColumn("log_date","DATETIME", allowNulls: false),
                 new TableColumn("level","VARCHAR(10)", allowNulls: true),

@@ -32,9 +32,11 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public void Create() => Execute();
-        public string TableName { get; set; }
+        public TableDefinition TableDefinition { get; set; }
+        public string TableName => TableDefinition.Name;
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
-        public IList<ITableColumn> Columns { get; set; }
+        public List<TableColumn> Columns => TableDefinition.Columns;
+
         public bool ThrowErrorIfTableExists { get; set; }
 
         public string Sql
@@ -54,23 +56,19 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
         {
 
         }
-        public CreateTableTask(string tableName, IList<ITableColumn> columns) : this()
+        public CreateTableTask(string tableName, List<TableColumn> columns) : this()
         {
-            this.TableName = tableName;
-            this.Columns = columns;
+            TableDefinition = new TableDefinition(tableName, columns);
         }
 
         public CreateTableTask(TableDefinition tableDefinition) : this()
         {
-            this.TableName = tableDefinition.Name;
-            this.Columns = tableDefinition.Columns.Cast<ITableColumn>().ToList();
+            TableDefinition = tableDefinition;
         }
 
-        public static void Create(string tableName, IList<ITableColumn> columns) => new CreateTableTask(tableName, columns).Execute();
-        public static void Create(string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns.Cast<ITableColumn>().ToList()).Execute();
+        public static void Create(string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns).Execute();
         public static void Create(TableDefinition tableDefinition) => new CreateTableTask(tableDefinition).Execute();
-        public static void Create(IConnectionManager connectionManager, string tableName, IList<ITableColumn> columns) => new CreateTableTask(tableName, columns) { ConnectionManager = connectionManager }.Execute();
-        public static void Create(IConnectionManager connectionManager, string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns.Cast<ITableColumn>().ToList()) { ConnectionManager = connectionManager }.Execute();
+        public static void Create(IConnectionManager connectionManager, string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns) { ConnectionManager = connectionManager }.Execute();
         public static void Create(IConnectionManager connectionManager, TableDefinition tableDefinition) => new CreateTableTask(tableDefinition) { ConnectionManager = connectionManager }.Execute();
 
         string ColumnsDefinitionSql
@@ -99,8 +97,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                                     : string.Empty;
             string nullSql = CreateNotNullSql(col);
             string defaultSql = CreateDefaultSql(col);
-            string computedColumnSql = CreateComputedColumnSql(col);            
-            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql}";             
+            string computedColumnSql = CreateComputedColumnSql(col);
+            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql}";
         }
 
 
@@ -152,9 +150,11 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             if (Columns?.Any(col => col.IsPrimaryKey) ?? false)
             {
                 var pkCols = Columns.Where(col => col.IsPrimaryKey);
-                string constraint = $"CONSTRAINT {QB}pk_{TN.UnquotatedFullName}_{string.Join("_",pkCols.Select(col=>col.Name))}{QE}";
+                string pkConstName = TableDefinition.PrimaryKeyConstraintName ??
+                        $"pk_{TN.UnquotatedFullName}_{string.Join("_", pkCols.Select(col => col.Name))}";
+                string constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
                 if (ConnectionType == ConnectionManagerType.SQLite) constraint = "";
-                    string pkConst = $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
+                string pkConst = $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
                 return pkConst;
             }
             return result;

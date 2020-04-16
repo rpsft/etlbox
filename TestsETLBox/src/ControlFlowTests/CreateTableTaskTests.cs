@@ -133,7 +133,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Assert
             Assert.Throws<ETLBoxException>(() =>
             {
-                new CreateTableTask("CreateTable5", columns.Cast<ITableColumn>().ToList())
+                new CreateTableTask("CreateTable5", columns.ToList())
                 {
                     ConnectionManager = connection,
                     ThrowErrorIfTableExists = true
@@ -291,18 +291,45 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             List<TableColumn> columns = new List<TableColumn>() {
                 new TableColumn("Id", "INT",allowNulls:false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("value1", "NVARCHAR(10)",allowNulls:true),
-                new TableColumn("value2", "DECIMAL(10,2)",allowNulls:false) { DefaultValue = "3.12" }                
+                new TableColumn("value2", "DECIMAL(10,2)",allowNulls:false) { DefaultValue = "3.12" }
             };
             CreateTableTask.Create(connection, "CreateTable10", columns);
 
             //Act
             var definition =
                 TableDefinition.GetDefinitionFromTableName(connection, "CreateTable10");
-            definition.Name = "CreateTable10_copy";          
+            definition.Name = "CreateTable10_copy";
             CreateTableTask.Create(connection, definition);
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable10_copy"));
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithPKConstraintName(IConnectionManager connection)
+        {
+            var columns = new List<TableColumn>()
+            {
+                new TableColumn
+                {
+                    Name = "ThisIsAReallyLongAndPrettyColumnNameWhichICantChange",
+                    DataType = "int",
+                    IsPrimaryKey = true,
+                },
+                new TableColumn
+                {
+                    Name = "JustRandomColumn",
+                    DataType = "int"
+                },
+            };
+
+            var tableDefinition = new TableDefinition("ThisIsAReallyLongTableWhichICantChange", columns);
+            tableDefinition.PrimaryKeyConstraintName = "shortname";
+            CreateTableTask.Create(connection, tableDefinition);
+            var td = TableDefinition.GetDefinitionFromTableName(connection, "ThisIsAReallyLongTableWhichICantChange");
+            Assert.True(td.Columns.Where(col => col.IsPrimaryKey 
+                && col.Name == "ThisIsAReallyLongAndPrettyColumnNameWhichICantChange").Count() == 1);
+
         }
     }
 }
