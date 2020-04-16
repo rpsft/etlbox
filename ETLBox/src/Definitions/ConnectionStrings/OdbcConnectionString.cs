@@ -6,43 +6,24 @@ namespace ALE.ETLBox
     /// A helper class for encapsulating a conection string in an object.
     /// Internally the OdbcConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class OdbcConnectionString : IDbConnectionString
+    public class OdbcConnectionString :
+        DbConnectionString<OdbcConnectionString, OdbcConnectionStringBuilder>
     {
-
-        OdbcConnectionStringBuilder _builder;
-        public string Value
-        {
-            get
-            {
-                return _builder?.ConnectionString;
-            }
-            set
-            {
-                _builder = new OdbcConnectionStringBuilder(value);
-            }
-        }
-
-        public OdbcConnectionStringBuilder OdbcConnectionStringBuilder => _builder;
-
-        public OdbcConnectionString()
-        {
-            _builder = new OdbcConnectionStringBuilder();
-        }
-
-        public OdbcConnectionString(string connectionString)
-        {
-            this.Value = connectionString;
-        }
+        public OdbcConnectionString() :
+            base()
+        { }
+        public OdbcConnectionString(string value) :
+            base(value)
+        { }
 
 
-        public static implicit operator OdbcConnectionString(string v)
-        {
-            return new OdbcConnectionString(v);
-        }
+        public override string DbName {
+            get => throw new ETLBoxNotSupportedException("Odbc connection string are not fully supported yet."); 
+            set => throw new ETLBoxNotSupportedException("Odbc connection string are not fully supported yet."); }
 
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string MasterDbName => throw new ETLBoxNotSupportedException("Odbc connection string are not fully supported yet.");
+        protected override string DbNameKeyword => "Database";
+
+        public static implicit operator OdbcConnectionString(string value) => new OdbcConnectionString(value);
     }
 }

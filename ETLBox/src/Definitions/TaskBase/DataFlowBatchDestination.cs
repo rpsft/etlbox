@@ -4,7 +4,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public abstract class DataFlowBatchDestination<TInput> : DataFlowDestination<TInput[]>, ITask, IDataFlowDestination<TInput>
+    public abstract class DataFlowBatchDestination<TInput> : DataFlowDestination<TInput[]>, ITask, IDataFlowBatchDestination<TInput>
     {
         /// <summary>
         /// This function is called every time before a batch is inserted into the destination. 
@@ -34,6 +34,8 @@ namespace ALE.ETLBox.DataFlow
             }
         }
         private int batchSize;
+
+        public const int DEFAULT_BATCH_SIZE = 1000;
 
         protected bool WasInitialized { get; set; }
 
