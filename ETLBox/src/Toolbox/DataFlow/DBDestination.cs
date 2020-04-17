@@ -31,9 +31,12 @@ namespace ALE.ETLBox.DataFlow
         public string TableName { get; set; }
 
         /* Private stuff */
-        internal TypeInfo TypeInfo { get; set; }
-        protected bool HasDestinationTableDefinition => DestinationTableDefinition != null;
-        protected bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+        TypeInfo TypeInfo { get; set; }
+        bool HasDestinationTableDefinition => DestinationTableDefinition != null;
+        bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
+        TableData<TInput> TableData { get; set; }
+        bool WereDynamicColumnsAdded { get; set; }
+
         public IConnectionManager BulkInsertConnectionManager { get; set; }
         public DbDestination()
         {
@@ -86,21 +89,23 @@ namespace ALE.ETLBox.DataFlow
             BulkInsertConnectionManager = this.DbConnectionManager.CloneIfAllowed();
             BulkInsertConnectionManager.IsInBulkInsert = true;
             BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
-
+            TableData = new TableData<TInput>(DestinationTableDefinition, BatchSize);
         }
 
         protected override void TryBulkInsertData(TInput[] data)
         {
-            TableData<TInput> td = CreateTableDataObject(ref data);
+            TryAddDynamicColumnsToTableDef(data);
             try
             {
+                TableData.ClearData();
+                ConvertAndAddRows(data);
                 var sql = new SqlTask(this, $"Execute Bulk insert")
                 {
                     DisableLogging = true,
                     ConnectionManager = BulkInsertConnectionManager
                 };
                 sql
-                .BulkInsert(td, DestinationTableDefinition.Name);
+                .BulkInsert(TableData, DestinationTableDefinition.Name);
             }
             catch (Exception e)
             {
@@ -120,19 +125,18 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        private TableData<TInput> CreateTableDataObject(ref TInput[] data)
+        private void TryAddDynamicColumnsToTableDef(TInput[] data)
         {
-            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, BatchSize);
-            td.Rows = ConvertRows(ref data);
-            if (TypeInfo.IsDynamic && data.Length > 0)
+            if (!WereDynamicColumnsAdded && TypeInfo.IsDynamic && data.Length > 0)
+            {
                 foreach (var column in (IDictionary<string, object>)data[0])
-                    td.DynamicColumnNames.Add(column.Key);
-            return td;
+                    TableData.DynamicColumnNames.Add(column.Key);
+                WereDynamicColumnsAdded = true;
+            }
         }
 
-        private List<object[]> ConvertRows(ref TInput[] data)
+        private void ConvertAndAddRows(TInput[] data)
         {
-            List<object[]> result = new List<object[]>(data.Length);
             foreach (var CurrentRow in data)
             {
                 if (CurrentRow == null) continue;
@@ -162,9 +166,8 @@ namespace ALE.ETLBox.DataFlow
                         index++;
                     }
                 }
-                result.Add(rowResult);
+                TableData.Rows.Add(rowResult);
             }
-            return result;
         }
     }
 

@@ -14,7 +14,6 @@ namespace ALE.ETLBox
 
     public class TableData<T> : ITableData
     {
-        public int? EstimatedBatchSize { get; set; }
         public IColumnMappingCollection ColumnMapping
         {
             get
@@ -55,24 +54,25 @@ namespace ALE.ETLBox
         public List<string> DynamicColumnNames { get; set; } = new List<string>();
         int ReadIndex { get; set; }
         TableDefinition Definition { get; set; }
-        public bool HasDefinition => Definition != null;
+        bool HasDefinition => Definition != null;
         DBTypeInfo TypeInfo { get; set; }
         int? IDColumnIndex { get; set; }
         bool HasIDColumnIndex => IDColumnIndex != null;
 
         public TableData(TableDefinition definition)
         {
-            Definition = definition;
-            IDColumnIndex = Definition.IDColumnIndex;
-            Rows = new List<object[]>();
-            TypeInfo = new DBTypeInfo(typeof(T));
+            InitObjects(definition);
         }
 
         public TableData(TableDefinition definition, int estimatedBatchSize)
         {
+            InitObjects(definition, estimatedBatchSize);
+        }
+
+        private void InitObjects(TableDefinition definition, int estimatedBatchSize = 0)
+        {
             Definition = definition;
             IDColumnIndex = Definition.IDColumnIndex;
-            EstimatedBatchSize = estimatedBatchSize;
             Rows = new List<object[]>(estimatedBatchSize);
             TypeInfo = new DBTypeInfo(typeof(T));
         }
@@ -180,6 +180,13 @@ namespace ALE.ETLBox
             }
             else
                 return false;
+        }
+
+        public void ClearData()
+        {
+            ReadIndex = 0;
+            CurrentRow = null;
+            Rows.Clear();
         }
 
         #region IDisposable Support
