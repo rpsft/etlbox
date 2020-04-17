@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -86,8 +87,8 @@ namespace ALE.ETLBoxTests.Performance
             //Assert
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationNonGenericETLBox"));
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationGenericETLBox"));
-            Assert.True(Math.Abs(timeElapsedETLBoxGeneric.TotalMilliseconds- timeElapsedETLBoxNonGeneric.TotalMilliseconds) <
-                Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds, timeElapsedETLBoxNonGeneric.TotalMilliseconds) * deviationGeneric );
+            Assert.True(Math.Abs(timeElapsedETLBoxGeneric.TotalMilliseconds - timeElapsedETLBoxNonGeneric.TotalMilliseconds) <
+                Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds, timeElapsedETLBoxNonGeneric.TotalMilliseconds) * deviationGeneric);
             if (timeElapsedBulkInsert.TotalMilliseconds > 0)
             {
                 Assert.True(timeElapsedBulkInsert < timeElapsedETLBoxNonGeneric);
@@ -98,7 +99,7 @@ namespace ALE.ETLBoxTests.Performance
         private TimeSpan GetBulkInsertTime(IConnectionManager connection, int numberOfRows)
         {
             TimeSpan result = TimeSpan.FromMilliseconds(0);
-            if (connection.GetType() == typeof(SqlConnectionManager) && 1==0)
+            if (connection.GetType() == typeof(SqlConnectionManager) && 1 == 0)
             {
                 result = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with rows of data using BulkInsert",
                  () =>
@@ -113,7 +114,7 @@ namespace ALE.ETLBoxTests.Performance
                 output.WriteLine("Elapsed " + result.TotalSeconds + " seconds for bulk insert.");
             }
 
-            return result ;
+            return result;
         }
 
         private TimeSpan GetETLBoxTime<T>(int numberOfRows, CsvSource<T> source, DbDestination<T> dest)
@@ -126,7 +127,7 @@ namespace ALE.ETLBoxTests.Performance
                     dest.Wait();
                 }
             );
-            if(typeof(T) == typeof(string[]))
+            if (typeof(T) == typeof(string[]))
                 output.WriteLine("Elapsed " + timeElapsedETLBox.TotalSeconds + " seconds for ETLBox (Non generic).");
             else
                 output.WriteLine("Elapsed " + timeElapsedETLBox.TotalSeconds + " seconds for ETLBox (Generic).");
@@ -134,7 +135,7 @@ namespace ALE.ETLBoxTests.Performance
         }
 
 
-        [Theory, MemberData(nameof(SqlConnection), 10000000, 1000, 1.0,1.0)]
+        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0, 1.0)]
         public void WithExpandoToObjectTransformation(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
         {
             //Arrange
@@ -153,12 +154,34 @@ namespace ALE.ETLBoxTests.Performance
                        Col3 = r.Col3,
                        Col4 = r.Col4
                    };
-                });
+               });
             var destGeneric = new DbDestination<CSVData>(connection, "CsvDestinationWithTransformation", batchSize);
-
-            //Act
             sourceExpando.LinkTo(trans);
             trans.LinkTo(destGeneric);
+
+            //Act
+            long memAfter = 0;
+            long memBefore = 0;
+            bool startCheck = true;
+            int count = 1;
+            destGeneric.AfterBatchWrite = data =>
+            {
+                count++;
+                if (count % 50 == 0)
+                {
+                    using (Process proc = Process.GetCurrentProcess())
+                    {
+                        memAfter = proc.WorkingSet64;
+                        if (startCheck)
+                        {
+                            memBefore = memAfter;
+                            startCheck = false;
+                        }
+                        Assert.True(memAfter < memBefore + 40000000);
+                    }
+                }
+            };
+
             var timeElapsedETLBox = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with {numberOfRows} rows of data using ETLBox",
                 () =>
                 {
