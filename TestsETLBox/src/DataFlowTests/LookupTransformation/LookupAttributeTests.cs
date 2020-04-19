@@ -41,14 +41,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<InputDataRow> source = new MemorySource<InputDataRow>();
-            source.Data.Add(new InputDataRow() { LookupId = 1 });
-            source.Data.Add(new InputDataRow() { LookupId = 2 });
-            source.Data.Add(new InputDataRow() { LookupId = 4 });
-            source.Data.Add(new InputDataRow() { LookupId = 3 });
+            source.DataAsList.Add(new InputDataRow() { LookupId = 1 });
+            source.DataAsList.Add(new InputDataRow() { LookupId = 2 });
+            source.DataAsList.Add(new InputDataRow() { LookupId = 4 });
+            source.DataAsList.Add(new InputDataRow() { LookupId = 3 });
             MemorySource<LookupData> lookupSource = new MemorySource<LookupData>();
-            lookupSource.Data.Add(new LookupData() { Id = 1, Value = "Test1" });
-            lookupSource.Data.Add(new LookupData() { Id = 2, Value = "Test2" });
-            lookupSource.Data.Add(new LookupData() { Id = 3, Value = "Test3" });
+            lookupSource.DataAsList.Add(new LookupData() { Id = 1, Value = "Test1" });
+            lookupSource.DataAsList.Add(new LookupData() { Id = 2, Value = "Test2" });
+            lookupSource.DataAsList.Add(new LookupData() { Id = 3, Value = "Test3" });
 
             var lookup = new LookupTransformation<InputDataRow, LookupData>();
             lookup.Source = lookupSource;
@@ -92,14 +92,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<InputDataMultiple> source = new MemorySource<InputDataMultiple>();
-            source.Data.Add(new InputDataMultiple() { LookupId1 = 1, LookupId2 = "T1" });
-            source.Data.Add(new InputDataMultiple() { LookupId1 = 2, LookupId2 = "TX" });
-            source.Data.Add(new InputDataMultiple() { LookupId1 = 4, LookupId2 = "T2" });
-            source.Data.Add(new InputDataMultiple() { LookupId1 = 3, LookupId2 = "T3" });
+            source.DataAsList.Add(new InputDataMultiple() { LookupId1 = 1, LookupId2 = "T1" });
+            source.DataAsList.Add(new InputDataMultiple() { LookupId1 = 2, LookupId2 = "TX" });
+            source.DataAsList.Add(new InputDataMultiple() { LookupId1 = 4, LookupId2 = "T2" });
+            source.DataAsList.Add(new InputDataMultiple() { LookupId1 = 3, LookupId2 = "T3" });
             MemorySource<LookupDataMultiple> lookupSource = new MemorySource<LookupDataMultiple>();
-            lookupSource.Data.Add(new LookupDataMultiple() { Id1 = 1, Id2 = "T1", Value1 = "Test1", Value2 = 100 });
-            lookupSource.Data.Add(new LookupDataMultiple() { Id1 = 2, Value1 = "Test2", Value2 = 200 });
-            lookupSource.Data.Add(new LookupDataMultiple() { Id1 = 3, Id2 = "T3", Value2 = 300 });
+            lookupSource.DataAsList.Add(new LookupDataMultiple() { Id1 = 1, Id2 = "T1", Value1 = "Test1", Value2 = 100 });
+            lookupSource.DataAsList.Add(new LookupDataMultiple() { Id1 = 2, Value1 = "Test2", Value2 = 200 });
+            lookupSource.DataAsList.Add(new LookupDataMultiple() { Id1 = 3, Id2 = "T3", Value2 = 300 });
 
             var lookup = new LookupTransformation<InputDataMultiple, LookupDataMultiple>();
             lookup.Source = lookupSource;
@@ -154,7 +154,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<InputDataRow> source = new MemorySource<InputDataRow>();
-            source.Data.Add(new InputDataRow() { LookupId = 1 });
+            source.DataAsList.Add(new InputDataRow() { LookupId = 1 });
             MemorySource<T> lookupSource = new MemorySource<T>();
             var lookup = new LookupTransformation<InputDataRow, T>(lookupSource);
             MemoryDestination<InputDataRow> dest = new MemoryDestination<InputDataRow>();

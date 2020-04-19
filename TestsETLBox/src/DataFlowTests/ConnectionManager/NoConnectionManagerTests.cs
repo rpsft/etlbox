@@ -40,7 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             string[] data = { "1", "2" };
             MemorySource<string[]> source = new MemorySource<string[]>();
-            source.Data.Add(data);
+            source.DataAsList.Add(data);
             DbDestination<string[]> dest = new DbDestination<string[]>("test");
             source.LinkTo(dest);
 

@@ -33,12 +33,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemorySource<MySimpleRow> source1 = new MemorySource<MySimpleRow>();
             MemorySource<MySimpleRow> source2 = new MemorySource<MySimpleRow>();
             //Act
-            source1.Data = new List<MySimpleRow>()
+            source1.DataAsList = new List<MySimpleRow>()
             {
                 new MySimpleRow() { Col1 = 1, Col2 = "Test1" },
                 new MySimpleRow() { Col1 = 2, Col2 = "Test2" },
             };
-            source2.Data = new List<MySimpleRow>()
+            source2.DataAsList = new List<MySimpleRow>()
             {
                 new MySimpleRow() { Col1 = 3, Col2 = "Test3" }
             };

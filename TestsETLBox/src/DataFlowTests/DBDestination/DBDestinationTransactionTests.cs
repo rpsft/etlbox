@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.Data = new List<MySimpleRow>()
+            source.DataAsList = new List<MySimpleRow>()
             {
                 new MySimpleRow() { Col1 = "1", Col2 = "Test1"},
                 new MySimpleRow() { Col1 = "2", Col2 = "Test2"},

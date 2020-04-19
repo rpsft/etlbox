@@ -35,9 +35,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dynamic row3 = new ExpandoObject();
             row3.ClassName = "Class2";
             row3.DetailValue = 10;
-            source.Data.Add(row1);
-            source.Data.Add(row2);
-            source.Data.Add(row3);
+            source.DataAsList.Add(row1);
+            source.DataAsList.Add(row2);
+            source.DataAsList.Add(row3);
 
             Aggregation<ExpandoObject, ExpandoObject> agg = new Aggregation<ExpandoObject, ExpandoObject>(
                 (row, aggValue) =>

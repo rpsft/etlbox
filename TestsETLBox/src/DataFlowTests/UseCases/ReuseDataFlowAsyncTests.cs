@@ -54,7 +54,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             {
                 var x = new MyData() { Key = key, Value = value };
                 _source = new MemorySource<MyData>();
-                _source.Data.Add(x);
+                _source.DataAsList.Add(x);
                 _destination = new CustomDestination<MyData>(x => Data.Add(x.Key, x));
                 _source.LinkTo(_destination);
                 _source.ExecuteAsync();

@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.Data = new List<MySimpleRow>()
+            source.DataAsList = new List<MySimpleRow>()
             {
                 new MySimpleRow() { Col1 = 1, Col2 = "Test1"},
                 new MySimpleRow() { Col1 = 2, Col2 = "ErrorRecord"},

@@ -32,9 +32,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<string[]> source = new MemorySource<string[]>();
-            source.Data.Add(new string[] { "Class1", "3.5" });
-            source.Data.Add(new string[] { "Class1", "6.5" });
-            source.Data.Add(new string[] { "Class2", "10" });
+            source.DataAsList.Add(new string[] { "Class1", "3.5" });
+            source.DataAsList.Add(new string[] { "Class1", "6.5" });
+            source.DataAsList.Add(new string[] { "Class2", "10" });
 
             Aggregation<string[], MyAggRow> agg = new Aggregation<string[], MyAggRow>(
                 (row, aggValue) => aggValue.AggValue += Convert.ToDouble(row[1]),

@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             HttpClient httpClient = CreateHttpClient(handlerMock);
 
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.Data.Add(new MySimpleRow() { Col1 = 1, Col2 = "Test1" });
+            source.DataAsList.Add(new MySimpleRow() { Col1 = 1, Col2 = "Test1" });
 
             //Act
             JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("http://test.test", ResourceType.Http);

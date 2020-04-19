@@ -42,10 +42,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
-            source.Data.Add(new MyMergeRow() { Key = 2, Value = "Test2" });
-            source.Data.Add(new MyMergeRow() { Key = 3, Value = "Test3" });
-            source.Data.Add(new MyMergeRow() { Key = 4, DeleteThisRow = true });
-            source.Data.Add(new MyMergeRow() { Key = 10, DeleteThisRow = true });
+            source.DataAsList.Add(new MyMergeRow() { Key = 2, Value = "Test2" });
+            source.DataAsList.Add(new MyMergeRow() { Key = 3, Value = "Test3" });
+            source.DataAsList.Add(new MyMergeRow() { Key = 4, DeleteThisRow = true });
+            source.DataAsList.Add(new MyMergeRow() { Key = 10, DeleteThisRow = true });
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDeltaDestination");
             d2c.InsertTestDataSet3();
 

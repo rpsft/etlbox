@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestLinkError");
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.Data = new List<MySimpleRow>()
+            source.DataAsList = new List<MySimpleRow>()
             {
                 new MySimpleRow() { Col1 = null, Col2 = "ErrorRecord"},
                 new MySimpleRow() { Col1 = "X2", Col2 = "ErrorRecord"},

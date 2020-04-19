@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "MemoryDestinationNonGeneric");
 
             //Act
-            source.Data = new List<string[]>()
+            source.DataAsList = new List<string[]>()
             {
                 new string[] { "1", "Test1" },
                 new string[] { "2", "Test2" },

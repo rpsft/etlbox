@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private static void AddObjectsToSource(MemorySource<ExpandoObject> source)
         {
-            source.Data = new List<ExpandoObject>();
+            source.DataAsList = new List<ExpandoObject>();
             dynamic item1 = new ExpandoObject();
             item1.Col2 = "Test1";
             item1.Col1 = 1;
@@ -53,9 +53,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dynamic item3 = new ExpandoObject();
             item3.Col2 = "Test3";
             item3.Col1 = 3;
-            source.Data.Add(item1);
-            source.Data.Add(item2);
-            source.Data.Add(item3);
+            source.DataAsList.Add(item1);
+            source.DataAsList.Add(item2);
+            source.DataAsList.Add(item3);
         }
     }
 }

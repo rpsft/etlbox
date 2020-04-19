@@ -21,8 +21,18 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => $"Read data from memory";
 
         /* Public properties */
-        public IList<TOutput> Data { get; set; }
-
+        public IEnumerable<TOutput> Data { get; set; }
+        public IList<TOutput> DataAsList
+        {
+            get
+            {
+                return Data as IList<TOutput>;
+            }
+            set
+            {
+                Data = value;
+            }
+        }
         /* Private stuff */
 
         public MemorySource() 
@@ -30,7 +40,7 @@ namespace ALE.ETLBox.DataFlow
             Data = new List<TOutput>();
         }
 
-        public MemorySource(List<TOutput> data) 
+        public MemorySource(IEnumerable<TOutput> data) 
         {
             Data = data;
         }
@@ -63,6 +73,6 @@ namespace ALE.ETLBox.DataFlow
     public class MemorySource : MemorySource<ExpandoObject>
     {
         public MemorySource() : base() { }
-        public MemorySource(List<ExpandoObject> data) : base(data) { }
+        public MemorySource(IList<ExpandoObject> data) : base(data) { }
     }
 }

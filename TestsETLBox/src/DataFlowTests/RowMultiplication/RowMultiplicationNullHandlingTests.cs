@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.Data = new List<MySimpleRow>()
+            source.DataAsList = new List<MySimpleRow>()
             {
                 null,
                 new MySimpleRow() { Col1 = 1, Col2 = "Test1"},

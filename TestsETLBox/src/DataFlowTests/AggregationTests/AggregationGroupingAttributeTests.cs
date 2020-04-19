@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MyRow> source = new MemorySource<MyRow>();
-            source.Data = new List<MyRow>()
+            source.DataAsList = new List<MyRow>()
                 {
                 new MyRow { Id = 1, ClassName = "Class1", DetailValue = 3.5 },
                 new MyRow { Id = 2, ClassName = "Class1", DetailValue = 6.5 },
@@ -94,7 +94,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MyRowNullable> source = new MemorySource<MyRowNullable>();
-            source.Data = new List<MyRowNullable>()
+            source.DataAsList = new List<MyRowNullable>()
                 {
                 new MyRowNullable { Id = 1, ClassId = 1, DetailValue = 3.5 },
                 new MyRowNullable { Id = 2, ClassId = 1, DetailValue = 6.5 },
@@ -152,7 +152,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MyRowMultiple> source = new MemorySource<MyRowMultiple>();
-            source.Data = new List<MyRowMultiple>()
+            source.DataAsList = new List<MyRowMultiple>()
                 {
                 new MyRowMultiple { Id = 1, Class1Name = "Class", Class2Name = "1", DetailValue1 = 4 },
                 new MyRowMultiple { Id = 2, Class1Name = "Class", Class2Name = "1", DetailValue1 = 6 },

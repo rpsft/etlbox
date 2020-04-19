@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(SqlConnection, "LookupErrorLinkingSource");
 
             MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>();
-            source.Data = new List<MyInputDataRow>() {
+            source.DataAsList = new List<MyInputDataRow>() {
                 new MyInputDataRow() { Col1 = 1 },
                  new MyInputDataRow() { Col1 = 2 },
                   new MyInputDataRow() { Col1 = 3 }
@@ -81,7 +81,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(SqlConnection, "LookupErrorLinkingSource");
 
             MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>();
-            source.Data = new List<MyInputDataRow>() {
+            source.DataAsList = new List<MyInputDataRow>() {
                 new MyInputDataRow() { Col1 = 1 },
                  new MyInputDataRow() { Col1 = 2 },
                   new MyInputDataRow() { Col1 = 3 },

@@ -153,7 +153,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         private MemoryDestination<T> CreateFlow<T>(List<MyInputRow> sourceData)
         {
             MemorySource<MyInputRow> source = new MemorySource<MyInputRow>();
-            source.Data = sourceData;
+            source.DataAsList = sourceData;
 
             Aggregation<MyInputRow, T> agg = new Aggregation<MyInputRow, T>();
 

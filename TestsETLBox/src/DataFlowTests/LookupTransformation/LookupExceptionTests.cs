@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MyDataRow> source = new MemorySource<MyDataRow>();
-            source.Data.Add(new MyDataRow() { Col1 = 1, Col2 = "Test1" });
+            source.DataAsList.Add(new MyDataRow() { Col1 = 1, Col2 = "Test1" });
 
             //Act
             var lookup = new LookupTransformation<MyDataRow, MyLookupRow>();

@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             if (File.Exists(filename)) File.Delete(filename);
             MemorySource<string[]> source = new MemorySource<string[]>();
             for (int i=0;i<noRecords;i++)
-                source.Data.Add(new string[] { HashHelper.RandomString(100)});
+                source.DataAsList.Add(new string[] { HashHelper.RandomString(100)});
             CsvDestination<string[]> dest = new CsvDestination<string[]>(filename);
             bool onCompletionRun = false;
 

@@ -27,9 +27,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<string> source1 = new MemorySource<string>();
-            source1.Data = new List<string>() { "A", null, "B", "C"};
+            source1.DataAsList = new List<string>() { "A", null, "B", "C"};
             MemorySource<int?> source2 = new MemorySource<int?>();
-            source2.Data = new List<int?>() { 1, null, 2 , null, 3};
+            source2.DataAsList = new List<int?>() { 1, null, 2 , null, 3};
             CrossJoin<string, int?, string> crossJoin = new CrossJoin<string, int?, string>(
                 (data1, data2) =>
                 {
