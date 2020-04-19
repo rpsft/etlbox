@@ -26,13 +26,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void InsertTestData(IConnectionManager connection, string tableName)
         {
-            var TN = new ObjectNameDescriptor(tableName, connection);
+            var TN = new ObjectNameDescriptor(tableName, connection.ConnectionManagerType);
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'\0 \"" \b \n \r \t \Z \\ \% \_ ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(2,' '' """" ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(3,' !""§$%&/())='' ')");
+                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(3,' !""ï¿½$%&/())='' ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(4,NULL)");
         }

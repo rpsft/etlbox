@@ -9,7 +9,7 @@ namespace ALE.ETLBox.Logging
 
     public class CreateDatabaseTarget
     {
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(LogTableName, this.ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(LogTableName, ConnectionManager.ConnectionManagerType);
         public string QB => TN.QB;
         public string QE => TN.QE;
         public string CommandText => $@"
@@ -31,20 +31,19 @@ SELECT {LogDate}
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.SqlServer || ConnectionType == ConnectionManagerType.MySql)
+                if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.SqlServer || ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql)
                     return "CAST(@LogDate AS DATETIME)";
-                else if (ConnectionType == ConnectionManagerType.Postgres)
+                else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.Postgres)
                     return "CAST(@LogDate AS TIMESTAMP)";
                 else
                     return "@LogDate";
             }
         }
-        public string VARCHAR => this.ConnectionType == ConnectionManagerType.MySql ? "CHAR" : "VARCHAR";
-        public string INT => this.ConnectionType == ConnectionManagerType.MySql ? "UNSIGNED" : "INT";
+        public string VARCHAR => this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql ? "CHAR" : "VARCHAR";
+        public string INT => this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql ? "UNSIGNED" : "INT";
 
         public IConnectionManager ConnectionManager { get; set; }
         public string LogTableName { get; set; }
-        public ConnectionManagerType ConnectionType => ConnectionManagerSpecifics.GetType(ConnectionManager);
 
         public CreateDatabaseTarget(IConnectionManager connectionManager, string logTableName)
         {
@@ -67,11 +66,11 @@ SELECT {LogDate}
             AddParameter(dbTarget, "Logger", @"${logger}");
 
             dbTarget.CommandText = new NLog.Layouts.SimpleLayout(CommandText);
-            if (ConnectionType == ConnectionManagerType.Postgres)
+            if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.Postgres)
                 dbTarget.DBProvider = "Npgsql.NpgsqlConnection, Npgsql";
-            else if (ConnectionType == ConnectionManagerType.MySql)
+            else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql)
                 dbTarget.DBProvider = "MySql.Data.MySqlClient.MySqlConnection, MySql.Data";
-            else if (ConnectionType == ConnectionManagerType.SQLite)
+            else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.SQLite)
                 dbTarget.DBProvider = "System.Data.SQLite.SQLiteConnection, System.Data.SQLite";
             else
                 dbTarget.DBProvider = "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient";

@@ -22,6 +22,8 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SqlOdbcConnectionManager : OdbcConnectionManager
     {
+        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
+        
         public SqlOdbcConnectionManager() : base() { }
 
         public SqlOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }

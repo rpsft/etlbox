@@ -6,6 +6,7 @@ namespace ALE.ETLBox.ConnectionManager
 {
     public interface IConnectionManager : IDisposable
     {
+        ConnectionManagerType ConnectionManagerType { get; }
         IDbConnectionString ConnectionString { get; set; }
         void Open();
         void Close();

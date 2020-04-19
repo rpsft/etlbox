@@ -31,6 +31,8 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class AccessOdbcConnectionManager :  OdbcConnectionManager
     {
+        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Access;
+        
         public AccessOdbcConnectionManager() : base() { }
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
         public AccessOdbcConnectionManager(string connectionString) : base(new OdbcConnectionString(connectionString)) { }

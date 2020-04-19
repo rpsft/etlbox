@@ -90,7 +90,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new TableColumn("Col3", "VARCHAR(100)", allowNulls: true)
             });
             TableDefinition.CreateTable(connection);
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection.ConnectionManagerType);
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
               , $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1','1')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"

@@ -29,7 +29,7 @@ namespace ALE.ETLBox
             }
         }
 
-        public ConnectionManagerType ConnectionType => ConnectionManagerSpecifics.GetType(this.DbConnectionManager);
+        public ConnectionManagerType ConnectionType => this.DbConnectionManager.ConnectionManagerType;
         public string QB => ConnectionManagerSpecifics.GetBeginQuotation(this.ConnectionType);
         public string QE => ConnectionManagerSpecifics.GetEndQuotation(this.ConnectionType);
 

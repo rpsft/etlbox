@@ -39,7 +39,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     new TableColumn("Id", "INT", allowNulls:false, isPrimaryKey:true),
                     new TableColumn("Other", "VARCHAR(100)", allowNulls:true, isPrimaryKey:false),
                 });
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tablename, connection);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(tablename, connection.ConnectionManagerType);
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(10,'TestX')");
         }
@@ -58,8 +58,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         void AddFKConstraint(IConnectionManager connection, string sourceTableName, string referenceTableName)
         {
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(sourceTableName, connection);
-            ObjectNameDescriptor TNR = new ObjectNameDescriptor(referenceTableName, connection);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(sourceTableName, connection.ConnectionManagerType);
+            ObjectNameDescriptor TNR = new ObjectNameDescriptor(referenceTableName, connection.ConnectionManagerType);
             SqlTask.ExecuteNonQuery(connection, "Add FK constraint",
                 $@"ALTER TABLE {TN.QuotatedFullName}
 ADD CONSTRAINT constraint_fk
@@ -70,7 +70,7 @@ ON DELETE CASCADE;");
 
         void InsertTestData(IConnectionManager connection, string tableName)
         {
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection.ConnectionManagerType);
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                     , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1, 10 ,'Test1')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
