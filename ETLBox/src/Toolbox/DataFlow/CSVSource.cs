@@ -30,11 +30,12 @@ namespace ALE.ETLBox.DataFlow
         public int SkipRows { get; set; } = 0;
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
+        public int ReleaseGCPressureRowCount {get;set; } = 100;
 
         /* Private stuff */
         CsvReader CsvReader { get; set; }
         TypeInfo TypeInfo { get; set; }
-
+        
         public CsvSource()
         {
             Configuration = new Configuration(CultureInfo.InvariantCulture);
@@ -75,6 +76,8 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+
+
         private void ReadLineAndSendIntoBuffer()
         {
             try
@@ -87,13 +90,14 @@ namespace ALE.ETLBox.DataFlow
                 else if (TypeInfo.IsDynamic)
                 {
                     TOutput bufferObject = CsvReader.GetRecord<dynamic>();
-                    Buffer.SendAsync(bufferObject).Wait();
+                    Buffer.Post(bufferObject);
                 }
                 else
                 {
                     TOutput bufferObject = CsvReader.GetRecord<TOutput>();
                     Buffer.SendAsync(bufferObject).Wait();
                 }
+                AvoidGCPressure();
             }
             catch (Exception e)
             {
@@ -104,6 +108,15 @@ namespace ALE.ETLBox.DataFlow
                 else
                     ErrorHandler.Send(e, "N/A");
             }
+        }
+
+        private void AvoidGCPressure()
+        {
+            if (ProgressCount % ReleaseGCPressureRowCount == 0)
+            {
+                GC.Collect();
+                Task.Delay(1).Wait();
+            };
         }
 
         protected override void CloseReader()

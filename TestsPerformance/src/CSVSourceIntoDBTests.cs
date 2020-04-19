@@ -22,24 +22,24 @@ namespace ALE.ETLBoxTests.Performance
     {
         private readonly ITestOutputHelper output;
 
-        public static IEnumerable<object[]> SqlConnection(int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk) => new[] {
-            new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("Performance") , numberOfRows, batchSize, deviationGeneric, deviationBulk},
+        public static IEnumerable<object[]> SqlConnection(int numberOfRows, int batchSize, double deviation) => new[] {
+            new object[] { (IConnectionManager)Config.SqlConnection.ConnectionManager("Performance") , numberOfRows, batchSize, deviation},
         };
 
-        public static IEnumerable<object[]> SqlOdbcConnection(int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk) => new[] {
-            new object[] { (IConnectionManager)Config.SqlOdbcConnection.ConnectionManager("Performance") , numberOfRows, batchSize, deviationGeneric, deviationBulk},
+        public static IEnumerable<object[]> SqlOdbcConnection(int numberOfRows, int batchSize, double deviation) => new[] {
+            new object[] { (IConnectionManager)Config.SqlOdbcConnection.ConnectionManager("Performance") , numberOfRows, batchSize, deviation},
         };
 
-        public static IEnumerable<object[]> MySqlConnection(int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk) => new[] {
-            new object[] { (IConnectionManager)Config.MySqlConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviationGeneric, deviationBulk }
+        public static IEnumerable<object[]> MySqlConnection(int numberOfRows, int batchSize, double deviation) => new[] {
+            new object[] { (IConnectionManager)Config.MySqlConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviation }
         };
 
-        public static IEnumerable<object[]> PostgresConnection(int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk) => new[] {
-            new object[] { (IConnectionManager)Config.PostgresConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviationGeneric, deviationBulk }
+        public static IEnumerable<object[]> PostgresConnection(int numberOfRows, int batchSize, double deviation) => new[] {
+            new object[] { (IConnectionManager)Config.PostgresConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviation }
         };
 
-        public static IEnumerable<object[]> SQLiteConnection(int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk) => new[] {
-            new object[] { (IConnectionManager)Config.SQLiteConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviationGeneric, deviationBulk }
+        public static IEnumerable<object[]> SQLiteConnection(int numberOfRows, int batchSize, double deviation) => new[] {
+            new object[] { (IConnectionManager)Config.SQLiteConnection.ConnectionManager("Performance"), numberOfRows, batchSize, deviation }
         };
 
 
@@ -60,12 +60,12 @@ namespace ALE.ETLBoxTests.Performance
         /*
          * X Rows with 1027 bytes per Row (1020 bytes data + 7 bytes for sql server)
          */
-        [Theory, MemberData(nameof(SqlConnection), 100000, 1000, 0.5, 6.0),
-            MemberData(nameof(MySqlConnection), 100000, 1000, 0.5, 0.0),
-            MemberData(nameof(PostgresConnection), 100000, 1000, 0.5, 0.0),
-            MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5, 0.0)
+        [Theory, MemberData(nameof(SqlConnection), 100000, 1000, 0.5),
+            MemberData(nameof(MySqlConnection), 100000, 1000, 0.5),
+            MemberData(nameof(PostgresConnection), 100000, 1000, 0.5),
+            MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5)
             ]
-        public void CompareFlowWithBulkInsert(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
+        public void CompareGenericAndDynamic(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
         {
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
@@ -79,42 +79,14 @@ namespace ALE.ETLBoxTests.Performance
             var destGeneric = new DbDestination<CSVData>(connection, "CsvDestinationGenericETLBox", batchSize);
 
             //Act
-            var timeElapsedBulkInsert = GetBulkInsertTime(connection, numberOfRows);
             var timeElapsedETLBoxNonGeneric = GetETLBoxTime(numberOfRows, sourceNonGeneric, destNonGeneric);
             var timeElapsedETLBoxGeneric = GetETLBoxTime(numberOfRows, sourceGeneric, destGeneric);
-
 
             //Assert
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationNonGenericETLBox"));
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationGenericETLBox"));
             Assert.True(Math.Abs(timeElapsedETLBoxGeneric.TotalMilliseconds - timeElapsedETLBoxNonGeneric.TotalMilliseconds) <
-                Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds, timeElapsedETLBoxNonGeneric.TotalMilliseconds) * deviationGeneric);
-            if (timeElapsedBulkInsert.TotalMilliseconds > 0)
-            {
-                Assert.True(timeElapsedBulkInsert < timeElapsedETLBoxNonGeneric);
-                Assert.True(timeElapsedBulkInsert.TotalMilliseconds * (deviationBulk + 1) > timeElapsedETLBoxNonGeneric.TotalMilliseconds);
-            }
-        }
-
-        private TimeSpan GetBulkInsertTime(IConnectionManager connection, int numberOfRows)
-        {
-            TimeSpan result = TimeSpan.FromMilliseconds(0);
-            if (connection.GetType() == typeof(SqlConnectionManager) && 1 == 0)
-            {
-                result = BigDataHelper.LogExecutionTime($"Copying Csv into DB (non generic) with rows of data using BulkInsert",
-                 () =>
-                 {
-                     SqlTask.ExecuteNonQuery(connection, "Insert with BulkInsert",
-            $@"BULK INSERT [dbo].[CsvDestinationBulkInsert]
-        FROM '{BigDataCsvSource.GetCompleteFilePath(numberOfRows)}'
-        WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n' );
-        ");
-                 });
-                Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationBulkInsert"));
-                output.WriteLine("Elapsed " + result.TotalSeconds + " seconds for bulk insert.");
-            }
-
-            return result;
+                Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds, timeElapsedETLBoxNonGeneric.TotalMilliseconds) * deviation);
         }
 
         private TimeSpan GetETLBoxTime<T>(int numberOfRows, CsvSource<T> source, DbDestination<T> dest)
@@ -135,8 +107,8 @@ namespace ALE.ETLBoxTests.Performance
         }
 
 
-        [Theory, MemberData(nameof(SqlConnection), 10000000, 1000, 1.0, 1.0)]
-        public void WithExpandoToObjectTransformation(IConnectionManager connection, int numberOfRows, int batchSize, double deviationGeneric, double deviationBulk)
+        [Theory, MemberData(nameof(SqlConnection), 10000000, 1000, 1.0)]
+        public void CheckMemoryUsage(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
         {
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
@@ -166,8 +138,7 @@ namespace ALE.ETLBoxTests.Performance
             int count = 1;
             destGeneric.AfterBatchWrite = data =>
             {
-                count++;
-                if (count % 50 == 0)
+                if (count++ % 50 == 0)
                 {
                     using (Process proc = Process.GetCurrentProcess())
                     {
@@ -177,7 +148,7 @@ namespace ALE.ETLBoxTests.Performance
                             memBefore = memAfter;
                             startCheck = false;
                         }
-                        //Assert.True(memAfter < memBefore + 40000000);
+                        Assert.True(memAfter < (memBefore + (memBefore * deviation)));
                     }
                 }
             };
@@ -195,6 +166,42 @@ namespace ALE.ETLBoxTests.Performance
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationWithTransformation"));
             //10.000.000 rows, batch size 10.000: ~8 min
             //10.000.000 rows, batch size  1.000: ~10 min 10 sec
+        }
+
+        IEnumerable<CSVData> GenerateWithYield(int numberOfRows)
+        {
+            var i = 0;
+            while (i < numberOfRows)
+            {
+                i++;
+                yield return new CSVData()
+                {
+                    Col1 = HashHelper.RandomString(255),
+                    Col2 = HashHelper.RandomString(255),
+                    Col3 = HashHelper.RandomString(255),
+                    Col4 = HashHelper.RandomString(255)
+                };
+            }
+        }
+
+        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
+        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
+        {
+            //Arrange
+            ReCreateDestinationTable(connection, "MemoryDestination");
+
+            var source = new MemorySource<CSVData>();
+            source.Data = GenerateWithYield(numberOfRows);
+            var dest = new DbDestination<CSVData>(connection, "MemoryDestination", batchSize);
+
+            //Act
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Equal(numberOfRows, RowCountTask.Count(connection, "MemoryDestination"));
+
         }
 
     }
