@@ -22,14 +22,14 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Write Csv data into file {Uri ?? ""}";
-        public Configuration Configuration { get; set; }
+        public CsvConfiguration Configuration { get; set; }
 
         CsvWriter CsvWriter { get; set; }
         TypeInfo TypeInfo { get; set; }
 
         public CsvDestination()
         {
-            Configuration = new Configuration(CultureInfo.InvariantCulture);
+            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
             Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
             TypeInfo = new TypeInfo(typeof(TInput));
             ResourceType = ResourceType.File;

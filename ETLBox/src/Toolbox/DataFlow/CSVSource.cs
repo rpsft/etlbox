@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";
 
         /* Public properties */
-        public Configuration Configuration { get; set; }
+        public CsvConfiguration Configuration { get; set; }
         public int SkipRows { get; set; } = 0;
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
@@ -38,7 +38,7 @@ namespace ALE.ETLBox.DataFlow
         
         public CsvSource()
         {
-            Configuration = new Configuration(CultureInfo.InvariantCulture);
+            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
             TypeInfo = new TypeInfo(typeof(TOutput));
             ResourceType = ResourceType.File;
         }

@@ -8,6 +8,7 @@ using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Xunit;
 
@@ -49,10 +50,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
             FourColumnsTableFixture dest2Table = new FourColumnsTableFixture("SplitDataDestination2");
 
-            var source = new CsvSource<CSVPoco>("res/Multicast/CsvSourceToSplit.csv")
-            {
-                Configuration = new CsvHelper.Configuration.Configuration() { Delimiter = ";" }
-            };
+            var source = new CsvSource<CSVPoco>("res/Multicast/CsvSourceToSplit.csv");
+            source.Configuration.Delimiter = ";";
 
             var multicast = new Multicast<CSVPoco>();
 
