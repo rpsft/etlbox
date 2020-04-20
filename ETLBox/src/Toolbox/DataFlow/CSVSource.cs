@@ -112,7 +112,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void AvoidGCPressure()
         {
-            if (ProgressCount % ReleaseGCPressureRowCount == 0)
+            if (ReleaseGCPressureRowCount > 0 && ProgressCount % ReleaseGCPressureRowCount == 0)
             {
                 GC.Collect();
                 Task.Delay(1).Wait();
