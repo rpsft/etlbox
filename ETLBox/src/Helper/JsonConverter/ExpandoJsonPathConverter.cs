@@ -12,14 +12,17 @@ namespace ALE.ETLBox.Helper
 {
     public class JsonProperty2JsonPath
     {
-        public string ReplacePropertyName { get; set; }
+        public string JsonPropertyName { get; set; }
         public string JsonPath { get; set; }
-        public string NewPropertyName { get; set; }
+        public string NewPropertyName
+        {
+            get => _newPropertyName ?? JsonPropertyName;
+            set => _newPropertyName = value;
+        }
+        private string _newPropertyName;
         public bool Validate()
         {
-            if (string.IsNullOrWhiteSpace(ReplacePropertyName) || string.IsNullOrWhiteSpace(JsonPath) || string.IsNullOrWhiteSpace(NewPropertyName))
-                return false;
-            if (!Regex.IsMatch(JsonPath, @"^[a-zA-Z0-9_.-]+$"))
+            if (string.IsNullOrWhiteSpace(JsonPropertyName) || string.IsNullOrWhiteSpace(JsonPath) || string.IsNullOrWhiteSpace(NewPropertyName))
                 return false;
             return true;
         }
@@ -86,9 +89,12 @@ namespace ALE.ETLBox.Helper
                         }
                         else
                         {
-                            var pl = PathLookups.Where(l => l.ReplacePropertyName == propertyName).FirstOrDefault();
-                            if (pl?.Validate() ?? false)
-                                expandoObject[pl.NewPropertyName] = GetValueFromJsonPath(reader, pl.JsonPath); ;
+                            JObject jo = JObject.Load(reader);
+                            foreach (var pl in PathLookups.Where(l => l.JsonPropertyName == propertyName))
+                            {
+                                if (pl?.Validate() ?? false)
+                                    expandoObject[pl.NewPropertyName] = GetValueFromJsonPath(jo, pl.JsonPath);
+                            }
                         }
                         break;
                     case JsonToken.Comment:
@@ -101,10 +107,9 @@ namespace ALE.ETLBox.Helper
             throw new JsonSerializationException("Unexpected end when reading ExpandoObject.");
         }
 
-        private object GetValueFromJsonPath(JsonReader reader, string path)
+        private object GetValueFromJsonPath(JObject jo, string path)
         {
             object val = null;
-            JObject jo = JObject.Load(reader);
             JToken t = jo.SelectToken(path);
             if (t is JValue)
                 val = ((JValue)t).Value;

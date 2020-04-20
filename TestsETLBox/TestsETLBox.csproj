@@ -153,6 +153,9 @@
     <None Update="res\JsonDestination\TwoColumnsStringArray.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\JsonSource\NestedData4Cols.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\JsonSource\Todos_Page2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

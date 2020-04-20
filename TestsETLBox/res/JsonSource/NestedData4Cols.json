@@ -1,0 +1,33 @@
+[
+    {
+        "Co1": 1,
+        "Col2": {
+            "Id": "A",
+            "Value": "Test1"
+        },
+        "Object": {
+            "Number": [ "1.2" ]
+        }
+    },
+    {
+        "Col1": 2,
+        "Col2": {
+            "Id": "B",
+            "Value": "Test2"
+        },
+        "Object": {
+            "Number": [ "1.23" ],
+            "Col3": "4711"
+        }
+    },
+    {
+        "Col1": 3,
+        "Col2": {
+            "Id": "C",
+            "Value": "Test3"
+        },
+        "Object": {
+            "Number": [ "1.234" ]
+        }
+    }
+]

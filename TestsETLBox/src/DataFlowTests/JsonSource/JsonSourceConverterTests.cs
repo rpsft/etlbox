@@ -46,7 +46,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "JsonSourceNested");
 
             //Act
-            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/NestedData.json", ResourceType.File);            
+            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>("res/JsonSource/NestedData.json", ResourceType.File);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -75,7 +75,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             {
                 new JsonProperty2JsonPath()
                 {
-                    ReplacePropertyName = "Column2",
+                    JsonPropertyName = "Column2",
                     JsonPath = "Value",
                     NewPropertyName = "Col2"
                  }
@@ -90,9 +90,48 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-       
-       
 
-       
+        [Fact]
+        public void JsonPathListIntoDynamic()
+        {
+            //Arrange
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("JsonSourceNestedDynamic4Cols");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "JsonSourceNestedDynamic4Cols");
+
+            //Act
+            JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/NestedData4Cols.json", ResourceType.File);
+            List<JsonProperty2JsonPath> pathLookups = new List<JsonProperty2JsonPath>()
+            {
+                new JsonProperty2JsonPath()
+                {
+                    JsonPropertyName = "Col2",
+                    JsonPath = "Value",
+                 },
+                new JsonProperty2JsonPath()
+                {
+                    JsonPropertyName = "Object",
+                    JsonPath = "Number[0]",
+                    NewPropertyName = "Col4"
+                },
+                new JsonProperty2JsonPath()
+                {
+                    JsonPropertyName = "Object",
+                    JsonPath = "Col3",
+                    NewPropertyName = "Col3"
+                 }
+            };
+            source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
+
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest4Columns.AssertTestData();
+            Assert.Equal(1, RowCountTask.Count(SqlConnection, "JsonSourceNestedDynamic4Cols", $"Col2 = 'Test2' AND Col3 = 4711 AND Col4='1.23'"));
+
+        }
+
+
     }
 }
