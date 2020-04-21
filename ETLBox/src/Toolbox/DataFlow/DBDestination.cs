@@ -97,6 +97,7 @@ namespace ALE.ETLBox.DataFlow
             TryAddDynamicColumnsToTableDef(data);
             try
             {
+                TableData.ClearData();
                 ConvertAndAddRows(data);
                 var sql = new SqlTask(this, $"Execute Bulk insert")
                 {
@@ -105,11 +106,9 @@ namespace ALE.ETLBox.DataFlow
                 };
                 sql
                 .BulkInsert(TableData, DestinationTableDefinition.Name);
-                TableData.ClearData();
             }
             catch (Exception e)
             {
-                FinishWrite();
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput[]>(data));
             }
@@ -117,7 +116,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void FinishWrite()
         {
-            TableData.Close();
+            TableData?.Close();
             if (BulkInsertConnectionManager != null)
             {
                 BulkInsertConnectionManager.IsInBulkInsert = false;
