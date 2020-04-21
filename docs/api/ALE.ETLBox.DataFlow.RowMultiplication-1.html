@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class RowDuplication&lt;TInput&gt;
+    <title>Class RowMultiplication&lt;TInput&gt;
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class RowDuplication&lt;TInput&gt;
+    <meta name="title" content="Class RowMultiplication&lt;TInput&gt;
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,13 +77,12 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.RowMultiplication`1">
   
   
-  <h1 id="ALE_ETLBox_DataFlow_RowDuplication_1" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1" class="text-break">Class RowDuplication&lt;TInput&gt;
+  <h1 id="ALE_ETLBox_DataFlow_RowMultiplication_1" data-uid="ALE.ETLBox.DataFlow.RowMultiplication`1" class="text-break">Class RowMultiplication&lt;TInput&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Creates one or more duplicates of your incoming rows.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -91,8 +90,8 @@
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;TInput, TInput&gt;</div>
-    <div class="level4"><span class="xref">RowDuplication&lt;TInput&gt;</span></div>
-      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.RowDuplication.html">RowDuplication</a></div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html">RowMultiplication</a>&lt;TInput, TInput&gt;</div>
+    <div class="level5"><span class="xref">RowMultiplication&lt;TInput&gt;</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -103,6 +102,24 @@
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TaskName">RowMultiplication&lt;TInput, TInput&gt;.TaskName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_SourceBlock">RowMultiplication&lt;TInput, TInput&gt;.SourceBlock</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TargetBlock">RowMultiplication&lt;TInput, TInput&gt;.TargetBlock</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_MultiplicationFunc">RowMultiplication&lt;TInput, TInput&gt;.MultiplicationFunc</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_InitFlow">RowMultiplication&lt;TInput, TInput&gt;.InitFlow()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">RowMultiplication&lt;TInput, TInput&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
+    </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_TargetBlock">DataFlowTransformation&lt;TInput, TInput&gt;.TargetBlock</a>
     </div>
@@ -170,6 +187,9 @@
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskType">GenericTask.TaskType</a>
     </div>
     <div>
+      <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a>
+    </div>
+    <div>
       <a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_NLogger">GenericTask.NLogger</a>
     </div>
     <div>
@@ -220,9 +240,9 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.DataFlow.html">ALE.ETLBox.DataFlow</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_DataFlow_RowDuplication_1_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_DataFlow_RowMultiplication_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RowDuplication&lt;TInput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class RowMultiplication&lt;TInput&gt; : RowMultiplication&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -235,8 +255,7 @@
     <tbody>
       <tr>
         <td><span class="parametername">TInput</span></td>
-        <td><p>Type of data input</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -244,50 +263,23 @@
   </h3>
   
   
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor">RowDuplication()</h4>
+  <a id="ALE_ETLBox_DataFlow_RowMultiplication_1__ctor_" data-uid="ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_RowMultiplication_1__ctor" data-uid="ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor">RowMultiplication()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowDuplication()</code></pre>
+    <pre><code class="lang-csharp hljs">public RowMultiplication()</code></pre>
   </div>
   
   
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_System_Int32_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor(System.Int32)">RowDuplication(Int32)</h4>
+  <a id="ALE_ETLBox_DataFlow_RowMultiplication_1__ctor_" data-uid="ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_RowMultiplication_1__ctor_System_Func__0_System_Collections_Generic_IEnumerable__0___" data-uid="ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`0}})">RowMultiplication(Func&lt;TInput, IEnumerable&lt;TInput&gt;&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowDuplication(int numberOfDuplicates)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">numberOfDuplicates</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_System_Predicate__0__" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor(System.Predicate{`0})">RowDuplication(Predicate&lt;TInput&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowDuplication(Predicate&lt;TInput&gt; canDuplicate)</code></pre>
+    <pre><code class="lang-csharp hljs">public RowMultiplication(Func&lt;TInput, IEnumerable&lt;TInput&gt;&gt; multiplicationFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -300,189 +292,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Predicate</span>&lt;TInput&gt;</td>
-        <td><span class="parametername">canDuplicate</span></td>
+        <td><span class="xref">System.Func</span>&lt;TInput, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TInput&gt;&gt;</td>
+        <td><span class="parametername">multiplicationFunc</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1__ctor_System_Predicate__0__System_Int32_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.#ctor(System.Predicate{`0},System.Int32)">RowDuplication(Predicate&lt;TInput&gt;, Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RowDuplication(Predicate&lt;TInput&gt; canDuplicate, int numberOfDuplicates)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Predicate</span>&lt;TInput&gt;</td>
-        <td><span class="parametername">canDuplicate</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">numberOfDuplicates</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1_CanDuplicate_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.CanDuplicate*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1_CanDuplicate" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.CanDuplicate">CanDuplicate</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Predicate&lt;TInput&gt; CanDuplicate { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Predicate</span>&lt;TInput&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1_NumberOfDuplicates_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.NumberOfDuplicates*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1_NumberOfDuplicates" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.NumberOfDuplicates">NumberOfDuplicates</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int NumberOfDuplicates { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.SourceBlock*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1_SourceBlock" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.SourceBlock">SourceBlock</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ISourceBlock&lt;TInput&gt; SourceBlock { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Dataflow.ISourceBlock</span>&lt;TInput&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ALE.ETLBox.DataFlowTransformation&lt;TInput, TInput&gt;.SourceBlock</span></div>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1_TargetBlock_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.TargetBlock*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1_TargetBlock" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.TargetBlock">TargetBlock</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ITargetBlock&lt;TInput&gt; TargetBlock { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Dataflow.ITargetBlock</span>&lt;TInput&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ALE.ETLBox.DataFlowTransformation&lt;TInput, TInput&gt;.TargetBlock</span></div>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1_TaskName_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.TaskName*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1_TaskName" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.TaskName">TaskName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string TaskName { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ALE.ETLBox.GenericTask.html#ALE_ETLBox_GenericTask_TaskName">GenericTask.TaskName</a></div>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_RowDuplication_1_InitFlow_" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.InitFlow*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_RowDuplication_1_InitFlow" data-uid="ALE.ETLBox.DataFlow.RowDuplication`1.InitFlow">InitFlow()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void InitFlow()</code></pre>
-  </div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a>

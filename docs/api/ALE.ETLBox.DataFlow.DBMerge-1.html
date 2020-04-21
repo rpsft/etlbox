@@ -97,6 +97,8 @@
     <h5>Implements</h5>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation</a>&lt;TInput, TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource</a>&lt;TInput&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html">IDataFlowBatchDestination</a>&lt;TInput&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
   </div>
@@ -134,6 +136,9 @@
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo__1_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__System_Predicate__1__System_Predicate__1__">DataFlowTransformation&lt;TInput, TInput&gt;.LinkTo&lt;TConvert&gt;(IDataFlowLinkTarget&lt;TInput&gt;, Predicate&lt;TInput&gt;, Predicate&lt;TInput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_System_Threading_Tasks_Task_System_Threading_Tasks_Dataflow_IDataflowBlock_">DataFlowTransformation&lt;TInput, TInput&gt;.CompleteOrFaultBuffer(Task, IDataflowBlock)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTask.html#ALE_ETLBox_DataFlowTask__loggingThresholdRows">DataFlowTask._loggingThresholdRows</a>
@@ -215,7 +220,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_DbMerge_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DbMerge&lt;TInput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask where TInput : IMergeableRow, new()</code></pre>
+    <pre><code class="lang-csharp hljs">public class DbMerge&lt;TInput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask where TInput : IMergeableRow, new()</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -273,6 +278,43 @@
   
   
   <a id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_Int32_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Int32)">DbMerge(IConnectionManager, String, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DbMerge(IConnectionManager connectionManager, string tableName, int batchSize)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></td>
+        <td><span class="parametername">connectionManager</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">batchSize</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor(System.String)">DbMerge(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -297,8 +339,90 @@
       </tr>
     </tbody>
   </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1__ctor_System_String_System_Int32_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.#ctor(System.String,System.Int32)">DbMerge(String, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DbMerge(string tableName, int batchSize)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">batchSize</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_BatchSize_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.BatchSize*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_BatchSize" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.BatchSize">BatchSize</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int BatchSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_Completion_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Completion*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Completion" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Completion">Completion</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task Completion { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="ALE_ETLBox_DataFlow_DbMerge_1_ConnectionManager_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.ConnectionManager*"></a>
@@ -536,31 +660,6 @@
   </h3>
   
   
-  <a id="ALE_ETLBox_DataFlow_DbMerge_1_Completion_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Completion*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Completion" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Completion">Completion()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Completion()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="ALE_ETLBox_DataFlow_DbMerge_1_Execute_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Execute*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Execute" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Execute">Execute()</h4>
   <div class="markdown level1 summary"></div>
@@ -610,6 +709,12 @@
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkSource-1.html">IDataFlowLinkSource&lt;TOutput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html">IDataFlowBatchDestination&lt;TInput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a>
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a>

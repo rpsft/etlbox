@@ -188,6 +188,22 @@ duplication.LinkTo(dest);
     row =&gt; row.Col1 == 1 || row.Col2 == &quot;Test&quot;
 );
 </code></pre>
+<h3 id="rowmultiplication">RowMultiplication</h3>
+<p>The RowMultiplication component is a variant of the RowTransformation. Like the RowTransformation, it accepts an input and an output type, and a transformation function (called MultiplicationFunc). The difference to the RowTransformation is that the multiplication function returns an array or list as return type. So from input record you are able to create a transformation that return one or more output records of different or the same type.</p>
+<p>Let's see an example:</p>
+<pre><code class="lang-C#">DbSource&lt;InputRow&gt; source = new DbSource&lt;InputRow&gt;(&quot;SourceTable&quot;);
+RowMultiplication&lt;InputRow, OutputRow&gt; multiplication = new RowMultiplication&lt;InputRow, OutputRow&gt;(
+    row =&gt;
+    {
+        List&lt;OutputRow&gt; result = new List&lt;OutputRow&gt;();
+        result.Add(new OutputRow(row.Value1));
+        result.Add(new OutputRow(row.Value2));
+        return result;
+    });
+DbDestination&lt;OutputRow&gt; dest = new DbDestination&lt;OutputRow&gt;();
+source.LinkTo(multiplication);
+multiplication.LinkTo(dest);
+</code></pre>
 <h3 id="splitting-data">Splitting data</h3>
 <p>In some of your data flow you may want to split the data and have it processed differently in the further flow.
 E.g. your data comes from one source and you want parts of it written into one destination and parts of it

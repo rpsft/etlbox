@@ -2786,15 +2786,15 @@ references:
   commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(ALE.ETLBox.TableDefinition)
   fullName: ALE.ETLBox.ControlFlow.CreateTableTask.CreateTableTask(ALE.ETLBox.TableDefinition)
   nameWithType: CreateTableTask.CreateTableTask(TableDefinition)
-- uid: ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})
-  name: CreateTableTask(String, IList<ITableColumn>)
-  href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask__ctor_System_String_System_Collections_Generic_IList_ALE_ETLBox_ITableColumn__
-  commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})
-  name.vb: CreateTableTask(String, IList(Of ITableColumn))
-  fullName: ALE.ETLBox.ControlFlow.CreateTableTask.CreateTableTask(System.String, System.Collections.Generic.IList<ALE.ETLBox.ITableColumn>)
-  fullName.vb: ALE.ETLBox.ControlFlow.CreateTableTask.CreateTableTask(System.String, System.Collections.Generic.IList(Of ALE.ETLBox.ITableColumn))
-  nameWithType: CreateTableTask.CreateTableTask(String, IList<ITableColumn>)
-  nameWithType.vb: CreateTableTask.CreateTableTask(String, IList(Of ITableColumn))
+- uid: ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(System.String,System.Collections.Generic.List{ALE.ETLBox.TableColumn})
+  name: CreateTableTask(String, List<TableColumn>)
+  href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask__ctor_System_String_System_Collections_Generic_List_ALE_ETLBox_TableColumn__
+  commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(System.String,System.Collections.Generic.List{ALE.ETLBox.TableColumn})
+  name.vb: CreateTableTask(String, List(Of TableColumn))
+  fullName: ALE.ETLBox.ControlFlow.CreateTableTask.CreateTableTask(System.String, System.Collections.Generic.List<ALE.ETLBox.TableColumn>)
+  fullName.vb: ALE.ETLBox.ControlFlow.CreateTableTask.CreateTableTask(System.String, System.Collections.Generic.List(Of ALE.ETLBox.TableColumn))
+  nameWithType: CreateTableTask.CreateTableTask(String, List<TableColumn>)
+  nameWithType.vb: CreateTableTask.CreateTableTask(String, List(Of TableColumn))
 - uid: ALE.ETLBox.ControlFlow.CreateTableTask.#ctor*
   name: CreateTableTask
   href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask__ctor_
@@ -2827,15 +2827,6 @@ references:
   commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,ALE.ETLBox.TableDefinition)
   fullName: ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager, ALE.ETLBox.TableDefinition)
   nameWithType: CreateTableTask.Create(IConnectionManager, TableDefinition)
-- uid: ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})
-  name: Create(IConnectionManager, String, IList<ITableColumn>)
-  href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_Create_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_Collections_Generic_IList_ALE_ETLBox_ITableColumn__
-  commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})
-  name.vb: Create(IConnectionManager, String, IList(Of ITableColumn))
-  fullName: ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.Collections.Generic.IList<ALE.ETLBox.ITableColumn>)
-  fullName.vb: ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.Collections.Generic.IList(Of ALE.ETLBox.ITableColumn))
-  nameWithType: CreateTableTask.Create(IConnectionManager, String, IList<ITableColumn>)
-  nameWithType.vb: CreateTableTask.Create(IConnectionManager, String, IList(Of ITableColumn))
 - uid: ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Collections.Generic.List{ALE.ETLBox.TableColumn})
   name: Create(IConnectionManager, String, List<TableColumn>)
   href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_Create_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_Collections_Generic_List_ALE_ETLBox_TableColumn__
@@ -2851,15 +2842,6 @@ references:
   commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.TableDefinition)
   fullName: ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.TableDefinition)
   nameWithType: CreateTableTask.Create(TableDefinition)
-- uid: ALE.ETLBox.ControlFlow.CreateTableTask.Create(System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})
-  name: Create(String, IList<ITableColumn>)
-  href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_Create_System_String_System_Collections_Generic_IList_ALE_ETLBox_ITableColumn__
-  commentId: M:ALE.ETLBox.ControlFlow.CreateTableTask.Create(System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})
-  name.vb: Create(String, IList(Of ITableColumn))
-  fullName: ALE.ETLBox.ControlFlow.CreateTableTask.Create(System.String, System.Collections.Generic.IList<ALE.ETLBox.ITableColumn>)
-  fullName.vb: ALE.ETLBox.ControlFlow.CreateTableTask.Create(System.String, System.Collections.Generic.IList(Of ALE.ETLBox.ITableColumn))
-  nameWithType: CreateTableTask.Create(String, IList<ITableColumn>)
-  nameWithType.vb: CreateTableTask.Create(String, IList(Of ITableColumn))
 - uid: ALE.ETLBox.ControlFlow.CreateTableTask.Create(System.String,System.Collections.Generic.List{ALE.ETLBox.TableColumn})
   name: Create(String, List<TableColumn>)
   href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_Create_System_String_System_Collections_Generic_List_ALE_ETLBox_TableColumn__
@@ -2902,6 +2884,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ControlFlow.CreateTableTask.Sql
   nameWithType: CreateTableTask.Sql
+- uid: ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition
+  name: TableDefinition
+  href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_TableDefinition
+  commentId: P:ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition
+  fullName: ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition
+  nameWithType: CreateTableTask.TableDefinition
+- uid: ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition*
+  name: TableDefinition
+  href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_TableDefinition_
+  commentId: Overload:ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition
+  isSpec: "True"
+  fullName: ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition
+  nameWithType: CreateTableTask.TableDefinition
 - uid: ALE.ETLBox.ControlFlow.CreateTableTask.TableName
   name: TableName
   href: api/ALE.ETLBox.ControlFlow.CreateTableTask.html#ALE_ETLBox_ControlFlow_CreateTableTask_TableName
@@ -4987,172 +4982,6 @@ references:
   commentId: N:ALE.ETLBox.ControlFlow.SqlServer
   fullName: ALE.ETLBox.ControlFlow.SqlServer
   nameWithType: ALE.ETLBox.ControlFlow.SqlServer
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask
-  name: AddFileGroupTask
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html
-  commentId: T:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask
-  nameWithType: AddFileGroupTask
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor
-  name: AddFileGroupTask()
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask__ctor
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroupTask()
-  nameWithType: AddFileGroupTask.AddFileGroupTask()
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor(System.String,System.String)
-  name: AddFileGroupTask(String, String)
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask__ctor_System_String_System_String_
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor(System.String,System.String)
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroupTask(System.String, System.String)
-  nameWithType: AddFileGroupTask.AddFileGroupTask(String, String)
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor(System.String,System.String,System.String,System.String,System.Boolean)
-  name: AddFileGroupTask(String, String, String, String, Boolean)
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask__ctor_System_String_System_String_System_String_System_String_System_Boolean_
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor(System.String,System.String,System.String,System.String,System.Boolean)
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroupTask(System.String, System.String, System.String, System.String, System.Boolean)
-  nameWithType: AddFileGroupTask.AddFileGroupTask(String, String, String, String, Boolean)
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor*
-  name: AddFileGroupTask
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask__ctor_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.#ctor
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroupTask
-  nameWithType: AddFileGroupTask.AddFileGroupTask
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String)
-  name: AddFileGroup(IConnectionManager, String, String)
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_AddFileGroup_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_String_
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String)
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.String)
-  nameWithType: AddFileGroupTask.AddFileGroup(IConnectionManager, String, String)
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String,System.String,System.String,System.Boolean)
-  name: AddFileGroup(IConnectionManager, String, String, String, String, Boolean)
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_AddFileGroup_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_String_System_String_System_String_System_Boolean_
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.String,System.String,System.String,System.Boolean)
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.String, System.String, System.String, System.Boolean)
-  nameWithType: AddFileGroupTask.AddFileGroup(IConnectionManager, String, String, String, String, Boolean)
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(System.String,System.String)
-  name: AddFileGroup(String, String)
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_AddFileGroup_System_String_System_String_
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(System.String,System.String)
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(System.String, System.String)
-  nameWithType: AddFileGroupTask.AddFileGroup(String, String)
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(System.String,System.String,System.String,System.String,System.Boolean)
-  name: AddFileGroup(String, String, String, String, Boolean)
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_AddFileGroup_System_String_System_String_System_String_System_String_System_Boolean_
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(System.String,System.String,System.String,System.String,System.Boolean)
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup(System.String, System.String, System.String, System.String, System.Boolean)
-  nameWithType: AddFileGroupTask.AddFileGroup(String, String, String, String, Boolean)
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup*
-  name: AddFileGroup
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_AddFileGroup_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.AddFileGroup
-  nameWithType: AddFileGroupTask.AddFileGroup
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.DatabaseName
-  name: DatabaseName
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_DatabaseName
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.DatabaseName
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.DatabaseName
-  nameWithType: AddFileGroupTask.DatabaseName
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.DatabaseName*
-  name: DatabaseName
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_DatabaseName_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.DatabaseName
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.DatabaseName
-  nameWithType: AddFileGroupTask.DatabaseName
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Execute
-  name: Execute()
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Execute
-  commentId: M:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Execute
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Execute()
-  nameWithType: AddFileGroupTask.Execute()
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Execute*
-  name: Execute
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Execute_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Execute
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Execute
-  nameWithType: AddFileGroupTask.Execute
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.FileGroupName
-  name: FileGroupName
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_FileGroupName
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.FileGroupName
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.FileGroupName
-  nameWithType: AddFileGroupTask.FileGroupName
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.FileGroupName*
-  name: FileGroupName
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_FileGroupName_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.FileGroupName
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.FileGroupName
-  nameWithType: AddFileGroupTask.FileGroupName
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Filegrowth
-  name: Filegrowth
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Filegrowth
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Filegrowth
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Filegrowth
-  nameWithType: AddFileGroupTask.Filegrowth
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Filegrowth*
-  name: Filegrowth
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Filegrowth_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Filegrowth
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Filegrowth
-  nameWithType: AddFileGroupTask.Filegrowth
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.IsDefaultFileGroup
-  name: IsDefaultFileGroup
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_IsDefaultFileGroup
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.IsDefaultFileGroup
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.IsDefaultFileGroup
-  nameWithType: AddFileGroupTask.IsDefaultFileGroup
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.IsDefaultFileGroup*
-  name: IsDefaultFileGroup
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_IsDefaultFileGroup_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.IsDefaultFileGroup
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.IsDefaultFileGroup
-  nameWithType: AddFileGroupTask.IsDefaultFileGroup
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Size
-  name: Size
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Size
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Size
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Size
-  nameWithType: AddFileGroupTask.Size
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Size*
-  name: Size
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Size_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Size
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Size
-  nameWithType: AddFileGroupTask.Size
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Sql
-  name: Sql
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Sql
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Sql
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Sql
-  nameWithType: AddFileGroupTask.Sql
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Sql*
-  name: Sql
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_Sql_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Sql
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.Sql
-  nameWithType: AddFileGroupTask.Sql
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.TaskName
-  name: TaskName
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_TaskName
-  commentId: P:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.TaskName
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.TaskName
-  nameWithType: AddFileGroupTask.TaskName
-- uid: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.TaskName*
-  name: TaskName
-  href: api/ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.html#ALE_ETLBox_ControlFlow_SqlServer_AddFileGroupTask_TaskName_
-  commentId: Overload:ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.TaskName
-  isSpec: "True"
-  fullName: ALE.ETLBox.ControlFlow.SqlServer.AddFileGroupTask.TaskName
-  nameWithType: AddFileGroupTask.TaskName
 - uid: ALE.ETLBox.ControlFlow.SqlServer.CalculateDatabaseHashTask
   name: CalculateDatabaseHashTask
   href: api/ALE.ETLBox.ControlFlow.SqlServer.CalculateDatabaseHashTask.html
@@ -7200,6 +7029,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.CsvSource(Of TOutput).ReadAll
   nameWithType: CsvSource<TOutput>.ReadAll
   nameWithType.vb: CsvSource(Of TOutput).ReadAll
+- uid: ALE.ETLBox.DataFlow.CsvSource`1.ReleaseGCPressureRowCount
+  name: ReleaseGCPressureRowCount
+  href: api/ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_ReleaseGCPressureRowCount
+  commentId: P:ALE.ETLBox.DataFlow.CsvSource`1.ReleaseGCPressureRowCount
+  fullName: ALE.ETLBox.DataFlow.CsvSource<TOutput>.ReleaseGCPressureRowCount
+  fullName.vb: ALE.ETLBox.DataFlow.CsvSource(Of TOutput).ReleaseGCPressureRowCount
+  nameWithType: CsvSource<TOutput>.ReleaseGCPressureRowCount
+  nameWithType.vb: CsvSource(Of TOutput).ReleaseGCPressureRowCount
+- uid: ALE.ETLBox.DataFlow.CsvSource`1.ReleaseGCPressureRowCount*
+  name: ReleaseGCPressureRowCount
+  href: api/ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_ReleaseGCPressureRowCount_
+  commentId: Overload:ALE.ETLBox.DataFlow.CsvSource`1.ReleaseGCPressureRowCount
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.CsvSource<TOutput>.ReleaseGCPressureRowCount
+  fullName.vb: ALE.ETLBox.DataFlow.CsvSource(Of TOutput).ReleaseGCPressureRowCount
+  nameWithType: CsvSource<TOutput>.ReleaseGCPressureRowCount
+  nameWithType.vb: CsvSource(Of TOutput).ReleaseGCPressureRowCount
 - uid: ALE.ETLBox.DataFlow.CsvSource`1.SkipRows
   name: SkipRows
   href: api/ALE.ETLBox.DataFlow.CsvSource-1.html#ALE_ETLBox_DataFlow_CsvSource_1_SkipRows
@@ -7662,6 +7508,14 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DataFlowBatchDestination(Of TInput).CleanUp
   nameWithType: DataFlowBatchDestination<TInput>.CleanUp
   nameWithType.vb: DataFlowBatchDestination(Of TInput).CleanUp
+- uid: ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.DEFAULT_BATCH_SIZE
+  name: DEFAULT_BATCH_SIZE
+  href: api/ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_DEFAULT_BATCH_SIZE
+  commentId: F:ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.DEFAULT_BATCH_SIZE
+  fullName: ALE.ETLBox.DataFlow.DataFlowBatchDestination<TInput>.DEFAULT_BATCH_SIZE
+  fullName.vb: ALE.ETLBox.DataFlow.DataFlowBatchDestination(Of TInput).DEFAULT_BATCH_SIZE
+  nameWithType: DataFlowBatchDestination<TInput>.DEFAULT_BATCH_SIZE
+  nameWithType.vb: DataFlowBatchDestination(Of TInput).DEFAULT_BATCH_SIZE
 - uid: ALE.ETLBox.DataFlow.DataFlowBatchDestination`1.FinishWrite
   name: FinishWrite()
   href: api/ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_FinishWrite
@@ -8845,14 +8699,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).BulkInsertConnectionManager
   nameWithType: DbDestination<TInput>.BulkInsertConnectionManager
   nameWithType.vb: DbDestination(Of TInput).BulkInsertConnectionManager
-- uid: ALE.ETLBox.DataFlow.DbDestination`1.DEFAULT_BATCH_SIZE
-  name: DEFAULT_BATCH_SIZE
-  href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_DEFAULT_BATCH_SIZE
-  commentId: F:ALE.ETLBox.DataFlow.DbDestination`1.DEFAULT_BATCH_SIZE
-  fullName: ALE.ETLBox.DataFlow.DbDestination<TInput>.DEFAULT_BATCH_SIZE
-  fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).DEFAULT_BATCH_SIZE
-  nameWithType: DbDestination<TInput>.DEFAULT_BATCH_SIZE
-  nameWithType.vb: DbDestination(Of TInput).DEFAULT_BATCH_SIZE
 - uid: ALE.ETLBox.DataFlow.DbDestination`1.DestinationTableDefinition
   name: DestinationTableDefinition
   href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_DestinationTableDefinition
@@ -8887,40 +8733,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).FinishWrite
   nameWithType: DbDestination<TInput>.FinishWrite
   nameWithType.vb: DbDestination(Of TInput).FinishWrite
-- uid: ALE.ETLBox.DataFlow.DbDestination`1.HasDestinationTableDefinition
-  name: HasDestinationTableDefinition
-  href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasDestinationTableDefinition
-  commentId: P:ALE.ETLBox.DataFlow.DbDestination`1.HasDestinationTableDefinition
-  fullName: ALE.ETLBox.DataFlow.DbDestination<TInput>.HasDestinationTableDefinition
-  fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).HasDestinationTableDefinition
-  nameWithType: DbDestination<TInput>.HasDestinationTableDefinition
-  nameWithType.vb: DbDestination(Of TInput).HasDestinationTableDefinition
-- uid: ALE.ETLBox.DataFlow.DbDestination`1.HasDestinationTableDefinition*
-  name: HasDestinationTableDefinition
-  href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasDestinationTableDefinition_
-  commentId: Overload:ALE.ETLBox.DataFlow.DbDestination`1.HasDestinationTableDefinition
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.DbDestination<TInput>.HasDestinationTableDefinition
-  fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).HasDestinationTableDefinition
-  nameWithType: DbDestination<TInput>.HasDestinationTableDefinition
-  nameWithType.vb: DbDestination(Of TInput).HasDestinationTableDefinition
-- uid: ALE.ETLBox.DataFlow.DbDestination`1.HasTableName
-  name: HasTableName
-  href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasTableName
-  commentId: P:ALE.ETLBox.DataFlow.DbDestination`1.HasTableName
-  fullName: ALE.ETLBox.DataFlow.DbDestination<TInput>.HasTableName
-  fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).HasTableName
-  nameWithType: DbDestination<TInput>.HasTableName
-  nameWithType.vb: DbDestination(Of TInput).HasTableName
-- uid: ALE.ETLBox.DataFlow.DbDestination`1.HasTableName*
-  name: HasTableName
-  href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_HasTableName_
-  commentId: Overload:ALE.ETLBox.DataFlow.DbDestination`1.HasTableName
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.DbDestination<TInput>.HasTableName
-  fullName.vb: ALE.ETLBox.DataFlow.DbDestination(Of TInput).HasTableName
-  nameWithType: DbDestination<TInput>.HasTableName
-  nameWithType.vb: DbDestination(Of TInput).HasTableName
 - uid: ALE.ETLBox.DataFlow.DbDestination`1.InitObjects(System.Int32)
   name: InitObjects(Int32)
   href: api/ALE.ETLBox.DataFlow.DbDestination-1.html#ALE_ETLBox_DataFlow_DbDestination_1_InitObjects_System_Int32_
@@ -9024,6 +8836,14 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).DbMerge(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String)
   nameWithType: DbMerge<TInput>.DbMerge(IConnectionManager, String)
   nameWithType.vb: DbMerge(Of TInput).DbMerge(IConnectionManager, String)
+- uid: ALE.ETLBox.DataFlow.DbMerge`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Int32)
+  name: DbMerge(IConnectionManager, String, Int32)
+  href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1__ctor_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_Int32_
+  commentId: M:ALE.ETLBox.DataFlow.DbMerge`1.#ctor(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Int32)
+  fullName: ALE.ETLBox.DataFlow.DbMerge<TInput>.DbMerge(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.Int32)
+  fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).DbMerge(ALE.ETLBox.ConnectionManager.IConnectionManager, System.String, System.Int32)
+  nameWithType: DbMerge<TInput>.DbMerge(IConnectionManager, String, Int32)
+  nameWithType.vb: DbMerge(Of TInput).DbMerge(IConnectionManager, String, Int32)
 - uid: ALE.ETLBox.DataFlow.DbMerge`1.#ctor(System.String)
   name: DbMerge(String)
   href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1__ctor_System_String_
@@ -9032,6 +8852,14 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).DbMerge(System.String)
   nameWithType: DbMerge<TInput>.DbMerge(String)
   nameWithType.vb: DbMerge(Of TInput).DbMerge(String)
+- uid: ALE.ETLBox.DataFlow.DbMerge`1.#ctor(System.String,System.Int32)
+  name: DbMerge(String, Int32)
+  href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1__ctor_System_String_System_Int32_
+  commentId: M:ALE.ETLBox.DataFlow.DbMerge`1.#ctor(System.String,System.Int32)
+  fullName: ALE.ETLBox.DataFlow.DbMerge<TInput>.DbMerge(System.String, System.Int32)
+  fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).DbMerge(System.String, System.Int32)
+  nameWithType: DbMerge<TInput>.DbMerge(String, Int32)
+  nameWithType.vb: DbMerge(Of TInput).DbMerge(String, Int32)
 - uid: ALE.ETLBox.DataFlow.DbMerge`1.#ctor*
   name: DbMerge
   href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1__ctor_
@@ -9041,14 +8869,31 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).DbMerge
   nameWithType: DbMerge<TInput>.DbMerge
   nameWithType.vb: DbMerge(Of TInput).DbMerge
+- uid: ALE.ETLBox.DataFlow.DbMerge`1.BatchSize
+  name: BatchSize
+  href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1_BatchSize
+  commentId: P:ALE.ETLBox.DataFlow.DbMerge`1.BatchSize
+  fullName: ALE.ETLBox.DataFlow.DbMerge<TInput>.BatchSize
+  fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).BatchSize
+  nameWithType: DbMerge<TInput>.BatchSize
+  nameWithType.vb: DbMerge(Of TInput).BatchSize
+- uid: ALE.ETLBox.DataFlow.DbMerge`1.BatchSize*
+  name: BatchSize
+  href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1_BatchSize_
+  commentId: Overload:ALE.ETLBox.DataFlow.DbMerge`1.BatchSize
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.DbMerge<TInput>.BatchSize
+  fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).BatchSize
+  nameWithType: DbMerge<TInput>.BatchSize
+  nameWithType.vb: DbMerge(Of TInput).BatchSize
 - uid: ALE.ETLBox.DataFlow.DbMerge`1.Completion
-  name: Completion()
+  name: Completion
   href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1_Completion
-  commentId: M:ALE.ETLBox.DataFlow.DbMerge`1.Completion
-  fullName: ALE.ETLBox.DataFlow.DbMerge<TInput>.Completion()
-  fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).Completion()
-  nameWithType: DbMerge<TInput>.Completion()
-  nameWithType.vb: DbMerge(Of TInput).Completion()
+  commentId: P:ALE.ETLBox.DataFlow.DbMerge`1.Completion
+  fullName: ALE.ETLBox.DataFlow.DbMerge<TInput>.Completion
+  fullName.vb: ALE.ETLBox.DataFlow.DbMerge(Of TInput).Completion
+  nameWithType: DbMerge<TInput>.Completion
+  nameWithType.vb: DbMerge(Of TInput).Completion
 - uid: ALE.ETLBox.DataFlow.DbMerge`1.Completion*
   name: Completion
   href: api/ALE.ETLBox.DataFlow.DbMerge-1.html#ALE_ETLBox_DataFlow_DbMerge_1_Completion_
@@ -9999,6 +9844,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.DataFlow.GroupColumn.AggregationGroupingProperty
   nameWithType: GroupColumn.AggregationGroupingProperty
+- uid: ALE.ETLBox.DataFlow.IDataFlowBatchDestination`1
+  name: IDataFlowBatchDestination<TInput>
+  href: api/ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html
+  commentId: T:ALE.ETLBox.DataFlow.IDataFlowBatchDestination`1
+  name.vb: IDataFlowBatchDestination(Of TInput)
+  fullName: ALE.ETLBox.DataFlow.IDataFlowBatchDestination<TInput>
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowBatchDestination(Of TInput)
+  nameWithType: IDataFlowBatchDestination<TInput>
+  nameWithType.vb: IDataFlowBatchDestination(Of TInput)
+- uid: ALE.ETLBox.DataFlow.IDataFlowBatchDestination`1.BatchSize
+  name: BatchSize
+  href: api/ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_IDataFlowBatchDestination_1_BatchSize
+  commentId: P:ALE.ETLBox.DataFlow.IDataFlowBatchDestination`1.BatchSize
+  fullName: ALE.ETLBox.DataFlow.IDataFlowBatchDestination<TInput>.BatchSize
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowBatchDestination(Of TInput).BatchSize
+  nameWithType: IDataFlowBatchDestination<TInput>.BatchSize
+  nameWithType.vb: IDataFlowBatchDestination(Of TInput).BatchSize
+- uid: ALE.ETLBox.DataFlow.IDataFlowBatchDestination`1.BatchSize*
+  name: BatchSize
+  href: api/ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_IDataFlowBatchDestination_1_BatchSize_
+  commentId: Overload:ALE.ETLBox.DataFlow.IDataFlowBatchDestination`1.BatchSize
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.IDataFlowBatchDestination<TInput>.BatchSize
+  fullName.vb: ALE.ETLBox.DataFlow.IDataFlowBatchDestination(Of TInput).BatchSize
+  nameWithType: IDataFlowBatchDestination<TInput>.BatchSize
+  nameWithType.vb: IDataFlowBatchDestination(Of TInput).BatchSize
 - uid: ALE.ETLBox.DataFlow.IDataFlowDestination`1
   name: IDataFlowDestination<TInput>
   href: api/ALE.ETLBox.DataFlow.IDataFlowDestination-1.html
@@ -11025,15 +10896,15 @@ references:
   commentId: M:ALE.ETLBox.DataFlow.MemorySource.#ctor
   fullName: ALE.ETLBox.DataFlow.MemorySource.MemorySource()
   nameWithType: MemorySource.MemorySource()
-- uid: ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.List{System.Dynamic.ExpandoObject})
-  name: MemorySource(List<ExpandoObject>)
-  href: api/ALE.ETLBox.DataFlow.MemorySource.html#ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_List_System_Dynamic_ExpandoObject__
-  commentId: M:ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.List{System.Dynamic.ExpandoObject})
-  name.vb: MemorySource(List(Of ExpandoObject))
-  fullName: ALE.ETLBox.DataFlow.MemorySource.MemorySource(System.Collections.Generic.List<System.Dynamic.ExpandoObject>)
-  fullName.vb: ALE.ETLBox.DataFlow.MemorySource.MemorySource(System.Collections.Generic.List(Of System.Dynamic.ExpandoObject))
-  nameWithType: MemorySource.MemorySource(List<ExpandoObject>)
-  nameWithType.vb: MemorySource.MemorySource(List(Of ExpandoObject))
+- uid: ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.IList{System.Dynamic.ExpandoObject})
+  name: MemorySource(IList<ExpandoObject>)
+  href: api/ALE.ETLBox.DataFlow.MemorySource.html#ALE_ETLBox_DataFlow_MemorySource__ctor_System_Collections_Generic_IList_System_Dynamic_ExpandoObject__
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource.#ctor(System.Collections.Generic.IList{System.Dynamic.ExpandoObject})
+  name.vb: MemorySource(IList(Of ExpandoObject))
+  fullName: ALE.ETLBox.DataFlow.MemorySource.MemorySource(System.Collections.Generic.IList<System.Dynamic.ExpandoObject>)
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource.MemorySource(System.Collections.Generic.IList(Of System.Dynamic.ExpandoObject))
+  nameWithType: MemorySource.MemorySource(IList<ExpandoObject>)
+  nameWithType.vb: MemorySource.MemorySource(IList(Of ExpandoObject))
 - uid: ALE.ETLBox.DataFlow.MemorySource.#ctor*
   name: MemorySource
   href: api/ALE.ETLBox.DataFlow.MemorySource.html#ALE_ETLBox_DataFlow_MemorySource__ctor_
@@ -11058,15 +10929,15 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).MemorySource()
   nameWithType: MemorySource<TOutput>.MemorySource()
   nameWithType.vb: MemorySource(Of TOutput).MemorySource()
-- uid: ALE.ETLBox.DataFlow.MemorySource`1.#ctor(System.Collections.Generic.List{`0})
-  name: MemorySource(List<TOutput>)
-  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1__ctor_System_Collections_Generic_List__0__
-  commentId: M:ALE.ETLBox.DataFlow.MemorySource`1.#ctor(System.Collections.Generic.List{`0})
-  name.vb: MemorySource(List(Of TOutput))
-  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.MemorySource(System.Collections.Generic.List<TOutput>)
-  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).MemorySource(System.Collections.Generic.List(Of TOutput))
-  nameWithType: MemorySource<TOutput>.MemorySource(List<TOutput>)
-  nameWithType.vb: MemorySource(Of TOutput).MemorySource(List(Of TOutput))
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.#ctor(System.Collections.Generic.IEnumerable{`0})
+  name: MemorySource(IEnumerable<TOutput>)
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1__ctor_System_Collections_Generic_IEnumerable__0__
+  commentId: M:ALE.ETLBox.DataFlow.MemorySource`1.#ctor(System.Collections.Generic.IEnumerable{`0})
+  name.vb: MemorySource(IEnumerable(Of TOutput))
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.MemorySource(System.Collections.Generic.IEnumerable<TOutput>)
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).MemorySource(System.Collections.Generic.IEnumerable(Of TOutput))
+  nameWithType: MemorySource<TOutput>.MemorySource(IEnumerable<TOutput>)
+  nameWithType.vb: MemorySource(Of TOutput).MemorySource(IEnumerable(Of TOutput))
 - uid: ALE.ETLBox.DataFlow.MemorySource`1.#ctor*
   name: MemorySource
   href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1__ctor_
@@ -11093,6 +10964,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).Data
   nameWithType: MemorySource<TOutput>.Data
   nameWithType.vb: MemorySource(Of TOutput).Data
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.DataAsList
+  name: DataAsList
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_DataAsList
+  commentId: P:ALE.ETLBox.DataFlow.MemorySource`1.DataAsList
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.DataAsList
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).DataAsList
+  nameWithType: MemorySource<TOutput>.DataAsList
+  nameWithType.vb: MemorySource(Of TOutput).DataAsList
+- uid: ALE.ETLBox.DataFlow.MemorySource`1.DataAsList*
+  name: DataAsList
+  href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_DataAsList_
+  commentId: Overload:ALE.ETLBox.DataFlow.MemorySource`1.DataAsList
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.MemorySource<TOutput>.DataAsList
+  fullName.vb: ALE.ETLBox.DataFlow.MemorySource(Of TOutput).DataAsList
+  nameWithType: MemorySource<TOutput>.DataAsList
+  nameWithType.vb: MemorySource(Of TOutput).DataAsList
 - uid: ALE.ETLBox.DataFlow.MemorySource`1.Execute
   name: Execute()
   href: api/ALE.ETLBox.DataFlow.MemorySource-1.html#ALE_ETLBox_DataFlow_MemorySource_1_Execute
@@ -12007,6 +11895,207 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.RowDuplication(Of TInput).TaskName
   nameWithType: RowDuplication<TInput>.TaskName
   nameWithType.vb: RowDuplication(Of TInput).TaskName
+- uid: ALE.ETLBox.DataFlow.RowMultiplication
+  name: RowMultiplication
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication.html
+  commentId: T:ALE.ETLBox.DataFlow.RowMultiplication
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication
+  nameWithType: RowMultiplication
+- uid: ALE.ETLBox.DataFlow.RowMultiplication.#ctor
+  name: RowMultiplication()
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication.html#ALE_ETLBox_DataFlow_RowMultiplication__ctor
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication.#ctor
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication.RowMultiplication()
+  nameWithType: RowMultiplication.RowMultiplication()
+- uid: ALE.ETLBox.DataFlow.RowMultiplication.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Collections.Generic.IEnumerable{System.Dynamic.ExpandoObject}})
+  name: RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>>)
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication.html#ALE_ETLBox_DataFlow_RowMultiplication__ctor_System_Func_System_Dynamic_ExpandoObject_System_Collections_Generic_IEnumerable_System_Dynamic_ExpandoObject___
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Collections.Generic.IEnumerable{System.Dynamic.ExpandoObject}})
+  name.vb: RowMultiplication(Func(Of ExpandoObject, IEnumerable(Of ExpandoObject)))
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication.RowMultiplication(System.Func<System.Dynamic.ExpandoObject, System.Collections.Generic.IEnumerable<System.Dynamic.ExpandoObject>>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication.RowMultiplication(System.Func(Of System.Dynamic.ExpandoObject, System.Collections.Generic.IEnumerable(Of System.Dynamic.ExpandoObject)))
+  nameWithType: RowMultiplication.RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>>)
+  nameWithType.vb: RowMultiplication.RowMultiplication(Func(Of ExpandoObject, IEnumerable(Of ExpandoObject)))
+- uid: ALE.ETLBox.DataFlow.RowMultiplication.#ctor*
+  name: RowMultiplication
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication.html#ALE_ETLBox_DataFlow_RowMultiplication__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication.RowMultiplication
+  nameWithType: RowMultiplication.RowMultiplication
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`1
+  name: RowMultiplication<TInput>
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-1.html
+  commentId: T:ALE.ETLBox.DataFlow.RowMultiplication`1
+  name.vb: RowMultiplication(Of TInput)
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput>
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput)
+  nameWithType: RowMultiplication<TInput>
+  nameWithType.vb: RowMultiplication(Of TInput)
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor
+  name: RowMultiplication()
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-1.html#ALE_ETLBox_DataFlow_RowMultiplication_1__ctor
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput>.RowMultiplication()
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput).RowMultiplication()
+  nameWithType: RowMultiplication<TInput>.RowMultiplication()
+  nameWithType.vb: RowMultiplication(Of TInput).RowMultiplication()
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`0}})
+  name: RowMultiplication(Func<TInput, IEnumerable<TInput>>)
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-1.html#ALE_ETLBox_DataFlow_RowMultiplication_1__ctor_System_Func__0_System_Collections_Generic_IEnumerable__0___
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`0}})
+  name.vb: RowMultiplication(Func(Of TInput, IEnumerable(Of TInput)))
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput>.RowMultiplication(System.Func<TInput, System.Collections.Generic.IEnumerable<TInput>>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput).RowMultiplication(System.Func(Of TInput, System.Collections.Generic.IEnumerable(Of TInput)))
+  nameWithType: RowMultiplication<TInput>.RowMultiplication(Func<TInput, IEnumerable<TInput>>)
+  nameWithType.vb: RowMultiplication(Of TInput).RowMultiplication(Func(Of TInput, IEnumerable(Of TInput)))
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor*
+  name: RowMultiplication
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-1.html#ALE_ETLBox_DataFlow_RowMultiplication_1__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`1.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput>.RowMultiplication
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput).RowMultiplication
+  nameWithType: RowMultiplication<TInput>.RowMultiplication
+  nameWithType.vb: RowMultiplication(Of TInput).RowMultiplication
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2
+  name: RowMultiplication<TInput, TOutput>
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html
+  commentId: T:ALE.ETLBox.DataFlow.RowMultiplication`2
+  name.vb: RowMultiplication(Of TInput, TOutput)
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput)
+  nameWithType: RowMultiplication<TInput, TOutput>
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput)
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.#ctor
+  name: RowMultiplication()
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2__ctor
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`2.#ctor
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.RowMultiplication()
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).RowMultiplication()
+  nameWithType: RowMultiplication<TInput, TOutput>.RowMultiplication()
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).RowMultiplication()
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`1}})
+  name: RowMultiplication(Func<TInput, IEnumerable<TOutput>>)
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2__ctor_System_Func__0_System_Collections_Generic_IEnumerable__1___
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`2.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`1}})
+  name.vb: RowMultiplication(Func(Of TInput, IEnumerable(Of TOutput)))
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.RowMultiplication(System.Func<TInput, System.Collections.Generic.IEnumerable<TOutput>>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).RowMultiplication(System.Func(Of TInput, System.Collections.Generic.IEnumerable(Of TOutput)))
+  nameWithType: RowMultiplication<TInput, TOutput>.RowMultiplication(Func<TInput, IEnumerable<TOutput>>)
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).RowMultiplication(Func(Of TInput, IEnumerable(Of TOutput)))
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.#ctor*
+  name: RowMultiplication
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2__ctor_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.RowMultiplication
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).RowMultiplication
+  nameWithType: RowMultiplication<TInput, TOutput>.RowMultiplication
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).RowMultiplication
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow
+  name: InitFlow()
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_InitFlow
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.InitFlow()
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).InitFlow()
+  nameWithType: RowMultiplication<TInput, TOutput>.InitFlow()
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).InitFlow()
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow*
+  name: InitFlow
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_InitFlow_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.InitFlow
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).InitFlow
+  nameWithType: RowMultiplication<TInput, TOutput>.InitFlow
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).InitFlow
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{ALE.ETLBox.DataFlow.ETLBoxError})
+  name: LinkErrorTo(IDataFlowLinkTarget<ETLBoxError>)
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__
+  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`2.LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{ALE.ETLBox.DataFlow.ETLBoxError})
+  name.vb: LinkErrorTo(IDataFlowLinkTarget(Of ETLBoxError))
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget<ALE.ETLBox.DataFlow.ETLBoxError>)
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget(Of ALE.ETLBox.DataFlow.ETLBoxError))
+  nameWithType: RowMultiplication<TInput, TOutput>.LinkErrorTo(IDataFlowLinkTarget<ETLBoxError>)
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).LinkErrorTo(IDataFlowLinkTarget(Of ETLBoxError))
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.LinkErrorTo*
+  name: LinkErrorTo
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_LinkErrorTo_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.LinkErrorTo
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.LinkErrorTo
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).LinkErrorTo
+  nameWithType: RowMultiplication<TInput, TOutput>.LinkErrorTo
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).LinkErrorTo
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.MultiplicationFunc
+  name: MultiplicationFunc
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_MultiplicationFunc
+  commentId: P:ALE.ETLBox.DataFlow.RowMultiplication`2.MultiplicationFunc
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.MultiplicationFunc
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).MultiplicationFunc
+  nameWithType: RowMultiplication<TInput, TOutput>.MultiplicationFunc
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).MultiplicationFunc
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.MultiplicationFunc*
+  name: MultiplicationFunc
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_MultiplicationFunc_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.MultiplicationFunc
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.MultiplicationFunc
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).MultiplicationFunc
+  nameWithType: RowMultiplication<TInput, TOutput>.MultiplicationFunc
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).MultiplicationFunc
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.SourceBlock
+  name: SourceBlock
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_SourceBlock
+  commentId: P:ALE.ETLBox.DataFlow.RowMultiplication`2.SourceBlock
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.SourceBlock
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).SourceBlock
+  nameWithType: RowMultiplication<TInput, TOutput>.SourceBlock
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).SourceBlock
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.SourceBlock*
+  name: SourceBlock
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_SourceBlock_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.SourceBlock
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.SourceBlock
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).SourceBlock
+  nameWithType: RowMultiplication<TInput, TOutput>.SourceBlock
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).SourceBlock
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.TargetBlock
+  name: TargetBlock
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TargetBlock
+  commentId: P:ALE.ETLBox.DataFlow.RowMultiplication`2.TargetBlock
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.TargetBlock
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).TargetBlock
+  nameWithType: RowMultiplication<TInput, TOutput>.TargetBlock
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).TargetBlock
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.TargetBlock*
+  name: TargetBlock
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TargetBlock_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.TargetBlock
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.TargetBlock
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).TargetBlock
+  nameWithType: RowMultiplication<TInput, TOutput>.TargetBlock
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).TargetBlock
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.TaskName
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TaskName
+  commentId: P:ALE.ETLBox.DataFlow.RowMultiplication`2.TaskName
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).TaskName
+  nameWithType: RowMultiplication<TInput, TOutput>.TaskName
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).TaskName
+- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.TaskName*
+  name: TaskName
+  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TaskName_
+  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.TaskName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.TaskName
+  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).TaskName
+  nameWithType: RowMultiplication<TInput, TOutput>.TaskName
+  nameWithType.vb: RowMultiplication(Of TInput, TOutput).TaskName
 - uid: ALE.ETLBox.DataFlow.RowTransformation
   name: RowTransformation
   href: api/ALE.ETLBox.DataFlow.RowTransformation.html
@@ -13095,6 +13184,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).CheckCompleteAction
   nameWithType: DataFlowTransformation<TInput, TOutput>.CheckCompleteAction
   nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).CheckCompleteAction
+- uid: ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer(System.Threading.Tasks.Task,System.Threading.Tasks.Dataflow.IDataflowBlock)
+  name: CompleteOrFaultBuffer(Task, IDataflowBlock)
+  href: api/ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_System_Threading_Tasks_Task_System_Threading_Tasks_Dataflow_IDataflowBlock_
+  commentId: M:ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer(System.Threading.Tasks.Task,System.Threading.Tasks.Dataflow.IDataflowBlock)
+  fullName: ALE.ETLBox.DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer(System.Threading.Tasks.Task, System.Threading.Tasks.Dataflow.IDataflowBlock)
+  fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer(System.Threading.Tasks.Task, System.Threading.Tasks.Dataflow.IDataflowBlock)
+  nameWithType: DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer(Task, IDataflowBlock)
+  nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer(Task, IDataflowBlock)
+- uid: ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer*
+  name: CompleteOrFaultBuffer
+  href: api/ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_
+  commentId: Overload:ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer
+  fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer
+  nameWithType: DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer
+  nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer
 - uid: ALE.ETLBox.DataFlowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
   name: LinkTo(IDataFlowLinkTarget<TOutput>)
   href: api/ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__
@@ -13209,6 +13315,267 @@ references:
   fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).TargetBlock
   nameWithType: DataFlowTransformation<TInput, TOutput>.TargetBlock
   nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).TargetBlock
+- uid: ALE.ETLBox.DbConnectionString`2
+  name: DbConnectionString<T, TBuilder>
+  href: api/ALE.ETLBox.DbConnectionString-2.html
+  commentId: T:ALE.ETLBox.DbConnectionString`2
+  name.vb: DbConnectionString(Of T, TBuilder)
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder)
+  nameWithType: DbConnectionString<T, TBuilder>
+  nameWithType.vb: DbConnectionString(Of T, TBuilder)
+- uid: ALE.ETLBox.DbConnectionString`2.#ctor
+  name: DbConnectionString()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2__ctor
+  commentId: M:ALE.ETLBox.DbConnectionString`2.#ctor
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbConnectionString()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbConnectionString()
+  nameWithType: DbConnectionString<T, TBuilder>.DbConnectionString()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbConnectionString()
+- uid: ALE.ETLBox.DbConnectionString`2.#ctor(System.String)
+  name: DbConnectionString(String)
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2__ctor_System_String_
+  commentId: M:ALE.ETLBox.DbConnectionString`2.#ctor(System.String)
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbConnectionString(System.String)
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbConnectionString(System.String)
+  nameWithType: DbConnectionString<T, TBuilder>.DbConnectionString(String)
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbConnectionString(String)
+- uid: ALE.ETLBox.DbConnectionString`2.#ctor*
+  name: DbConnectionString
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2__ctor_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbConnectionString
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbConnectionString
+  nameWithType: DbConnectionString<T, TBuilder>.DbConnectionString
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbConnectionString
+- uid: ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#Clone
+  name: IDbConnectionString.Clone()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_Clone
+  commentId: M:ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#Clone
+  name.vb: ALE.ETLBox.IDbConnectionString.Clone()
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ALE.ETLBox.IDbConnectionString.Clone()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.Clone()
+  nameWithType: DbConnectionString<T, TBuilder>.IDbConnectionString.Clone()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.Clone()
+- uid: ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#Clone*
+  name: IDbConnectionString.Clone
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_Clone_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#Clone
+  isSpec: "True"
+  name.vb: ALE.ETLBox.IDbConnectionString.Clone
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ALE.ETLBox.IDbConnectionString.Clone
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.Clone
+  nameWithType: DbConnectionString<T, TBuilder>.IDbConnectionString.Clone
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.Clone
+- uid: ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithMasterDbName
+  name: IDbConnectionString.CloneWithMasterDbName()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName
+  commentId: M:ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithMasterDbName
+  name.vb: ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName()
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName()
+  nameWithType: DbConnectionString<T, TBuilder>.IDbConnectionString.CloneWithMasterDbName()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName()
+- uid: ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithMasterDbName*
+  name: IDbConnectionString.CloneWithMasterDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithMasterDbName
+  isSpec: "True"
+  name.vb: ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  nameWithType: DbConnectionString<T, TBuilder>.IDbConnectionString.CloneWithMasterDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+- uid: ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithNewDbName(System.String)
+  name: IDbConnectionString.CloneWithNewDbName(String)
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_System_String_
+  commentId: M:ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithNewDbName(System.String)
+  name.vb: ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(String)
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(System.String)
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(System.String)
+  nameWithType: DbConnectionString<T, TBuilder>.IDbConnectionString.CloneWithNewDbName(String)
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(String)
+- uid: ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithNewDbName*
+  name: IDbConnectionString.CloneWithNewDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.ALE#ETLBox#IDbConnectionString#CloneWithNewDbName
+  isSpec: "True"
+  name.vb: ALE.ETLBox.IDbConnectionString.CloneWithNewDbName
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ALE.ETLBox.IDbConnectionString.CloneWithNewDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithNewDbName
+  nameWithType: DbConnectionString<T, TBuilder>.IDbConnectionString.CloneWithNewDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ALE.ETLBox.IDbConnectionString.CloneWithNewDbName
+- uid: ALE.ETLBox.DbConnectionString`2.Builder
+  name: Builder
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Builder
+  commentId: P:ALE.ETLBox.DbConnectionString`2.Builder
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.Builder
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).Builder
+  nameWithType: DbConnectionString<T, TBuilder>.Builder
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).Builder
+- uid: ALE.ETLBox.DbConnectionString`2.Builder*
+  name: Builder
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Builder_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.Builder
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.Builder
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).Builder
+  nameWithType: DbConnectionString<T, TBuilder>.Builder
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).Builder
+- uid: ALE.ETLBox.DbConnectionString`2.Clone
+  name: Clone()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Clone
+  commentId: M:ALE.ETLBox.DbConnectionString`2.Clone
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.Clone()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).Clone()
+  nameWithType: DbConnectionString<T, TBuilder>.Clone()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).Clone()
+- uid: ALE.ETLBox.DbConnectionString`2.Clone*
+  name: Clone
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Clone_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.Clone
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.Clone
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).Clone
+  nameWithType: DbConnectionString<T, TBuilder>.Clone
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).Clone
+- uid: ALE.ETLBox.DbConnectionString`2.CloneWithMasterDbName
+  name: CloneWithMasterDbName()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithMasterDbName
+  commentId: M:ALE.ETLBox.DbConnectionString`2.CloneWithMasterDbName
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.CloneWithMasterDbName()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).CloneWithMasterDbName()
+  nameWithType: DbConnectionString<T, TBuilder>.CloneWithMasterDbName()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).CloneWithMasterDbName()
+- uid: ALE.ETLBox.DbConnectionString`2.CloneWithMasterDbName*
+  name: CloneWithMasterDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithMasterDbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.CloneWithMasterDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.CloneWithMasterDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).CloneWithMasterDbName
+  nameWithType: DbConnectionString<T, TBuilder>.CloneWithMasterDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).CloneWithMasterDbName
+- uid: ALE.ETLBox.DbConnectionString`2.CloneWithNewDbName(System.String)
+  name: CloneWithNewDbName(String)
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithNewDbName_System_String_
+  commentId: M:ALE.ETLBox.DbConnectionString`2.CloneWithNewDbName(System.String)
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.CloneWithNewDbName(System.String)
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).CloneWithNewDbName(System.String)
+  nameWithType: DbConnectionString<T, TBuilder>.CloneWithNewDbName(String)
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).CloneWithNewDbName(String)
+- uid: ALE.ETLBox.DbConnectionString`2.CloneWithNewDbName*
+  name: CloneWithNewDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithNewDbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.CloneWithNewDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.CloneWithNewDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).CloneWithNewDbName
+  nameWithType: DbConnectionString<T, TBuilder>.CloneWithNewDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).CloneWithNewDbName
+- uid: ALE.ETLBox.DbConnectionString`2.CloneWithoutDbName
+  name: CloneWithoutDbName()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithoutDbName
+  commentId: M:ALE.ETLBox.DbConnectionString`2.CloneWithoutDbName
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.CloneWithoutDbName()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).CloneWithoutDbName()
+  nameWithType: DbConnectionString<T, TBuilder>.CloneWithoutDbName()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).CloneWithoutDbName()
+- uid: ALE.ETLBox.DbConnectionString`2.CloneWithoutDbName*
+  name: CloneWithoutDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithoutDbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.CloneWithoutDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.CloneWithoutDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).CloneWithoutDbName
+  nameWithType: DbConnectionString<T, TBuilder>.CloneWithoutDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).CloneWithoutDbName
+- uid: ALE.ETLBox.DbConnectionString`2.DbName
+  name: DbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbName
+  commentId: P:ALE.ETLBox.DbConnectionString`2.DbName
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbName
+  nameWithType: DbConnectionString<T, TBuilder>.DbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbName
+- uid: ALE.ETLBox.DbConnectionString`2.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.DbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbName
+  nameWithType: DbConnectionString<T, TBuilder>.DbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbName
+- uid: ALE.ETLBox.DbConnectionString`2.DbNameKeyword
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbNameKeyword
+  commentId: P:ALE.ETLBox.DbConnectionString`2.DbNameKeyword
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbNameKeyword
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbNameKeyword
+  nameWithType: DbConnectionString<T, TBuilder>.DbNameKeyword
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbNameKeyword
+- uid: ALE.ETLBox.DbConnectionString`2.DbNameKeyword*
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbNameKeyword_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.DbNameKeyword
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.DbNameKeyword
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).DbNameKeyword
+  nameWithType: DbConnectionString<T, TBuilder>.DbNameKeyword
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).DbNameKeyword
+- uid: ALE.ETLBox.DbConnectionString`2.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_MasterDbName
+  commentId: P:ALE.ETLBox.DbConnectionString`2.MasterDbName
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.MasterDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).MasterDbName
+  nameWithType: DbConnectionString<T, TBuilder>.MasterDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).MasterDbName
+- uid: ALE.ETLBox.DbConnectionString`2.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_MasterDbName_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.MasterDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.MasterDbName
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).MasterDbName
+  nameWithType: DbConnectionString<T, TBuilder>.MasterDbName
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).MasterDbName
+- uid: ALE.ETLBox.DbConnectionString`2.ToString
+  name: ToString()
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ToString
+  commentId: M:ALE.ETLBox.DbConnectionString`2.ToString
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ToString()
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ToString()
+  nameWithType: DbConnectionString<T, TBuilder>.ToString()
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ToString()
+- uid: ALE.ETLBox.DbConnectionString`2.ToString*
+  name: ToString
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ToString_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.ToString
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.ToString
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).ToString
+  nameWithType: DbConnectionString<T, TBuilder>.ToString
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).ToString
+- uid: ALE.ETLBox.DbConnectionString`2.Value
+  name: Value
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Value
+  commentId: P:ALE.ETLBox.DbConnectionString`2.Value
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.Value
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).Value
+  nameWithType: DbConnectionString<T, TBuilder>.Value
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).Value
+- uid: ALE.ETLBox.DbConnectionString`2.Value*
+  name: Value
+  href: api/ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Value_
+  commentId: Overload:ALE.ETLBox.DbConnectionString`2.Value
+  isSpec: "True"
+  fullName: ALE.ETLBox.DbConnectionString<T, TBuilder>.Value
+  fullName.vb: ALE.ETLBox.DbConnectionString(Of T, TBuilder).Value
+  nameWithType: DbConnectionString<T, TBuilder>.Value
+  nameWithType.vb: DbConnectionString(Of T, TBuilder).Value
 - uid: ALE.ETLBox.ETLBoxException
   name: ETLBoxException
   href: api/ALE.ETLBox.ETLBoxException.html
@@ -13849,6 +14216,93 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Helper.DatabaseHelper.RecreateSqlDatabase
   nameWithType: DatabaseHelper.RecreateSqlDatabase
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter
+  name: ExpandoJsonPathConverter
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html
+  commentId: T:ALE.ETLBox.Helper.ExpandoJsonPathConverter
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter
+  nameWithType: ExpandoJsonPathConverter
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.#ctor(System.Collections.Generic.IEnumerable{ALE.ETLBox.Helper.JsonProperty2JsonPath})
+  name: ExpandoJsonPathConverter(IEnumerable<JsonProperty2JsonPath>)
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter__ctor_System_Collections_Generic_IEnumerable_ALE_ETLBox_Helper_JsonProperty2JsonPath__
+  commentId: M:ALE.ETLBox.Helper.ExpandoJsonPathConverter.#ctor(System.Collections.Generic.IEnumerable{ALE.ETLBox.Helper.JsonProperty2JsonPath})
+  name.vb: ExpandoJsonPathConverter(IEnumerable(Of JsonProperty2JsonPath))
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ExpandoJsonPathConverter(System.Collections.Generic.IEnumerable<ALE.ETLBox.Helper.JsonProperty2JsonPath>)
+  fullName.vb: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ExpandoJsonPathConverter(System.Collections.Generic.IEnumerable(Of ALE.ETLBox.Helper.JsonProperty2JsonPath))
+  nameWithType: ExpandoJsonPathConverter.ExpandoJsonPathConverter(IEnumerable<JsonProperty2JsonPath>)
+  nameWithType.vb: ExpandoJsonPathConverter.ExpandoJsonPathConverter(IEnumerable(Of JsonProperty2JsonPath))
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.#ctor*
+  name: ExpandoJsonPathConverter
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter__ctor_
+  commentId: Overload:ALE.ETLBox.Helper.ExpandoJsonPathConverter.#ctor
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ExpandoJsonPathConverter
+  nameWithType: ExpandoJsonPathConverter.ExpandoJsonPathConverter
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanConvert(System.Type)
+  name: CanConvert(Type)
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_CanConvert_System_Type_
+  commentId: M:ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanConvert(System.Type)
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanConvert(System.Type)
+  nameWithType: ExpandoJsonPathConverter.CanConvert(Type)
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanConvert*
+  name: CanConvert
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_CanConvert_
+  commentId: Overload:ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanConvert
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanConvert
+  nameWithType: ExpandoJsonPathConverter.CanConvert
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanWrite
+  name: CanWrite
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_CanWrite
+  commentId: P:ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanWrite
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanWrite
+  nameWithType: ExpandoJsonPathConverter.CanWrite
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanWrite*
+  name: CanWrite
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_CanWrite_
+  commentId: Overload:ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanWrite
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.CanWrite
+  nameWithType: ExpandoJsonPathConverter.CanWrite
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.PathLookups
+  name: PathLookups
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_PathLookups
+  commentId: P:ALE.ETLBox.Helper.ExpandoJsonPathConverter.PathLookups
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.PathLookups
+  nameWithType: ExpandoJsonPathConverter.PathLookups
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.PathLookups*
+  name: PathLookups
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_PathLookups_
+  commentId: Overload:ALE.ETLBox.Helper.ExpandoJsonPathConverter.PathLookups
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.PathLookups
+  nameWithType: ExpandoJsonPathConverter.PathLookups
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:ALE.ETLBox.Helper.ExpandoJsonPathConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: ExpandoJsonPathConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ReadJson*
+  name: ReadJson
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_ReadJson_
+  commentId: Overload:ALE.ETLBox.Helper.ExpandoJsonPathConverter.ReadJson
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.ReadJson
+  nameWithType: ExpandoJsonPathConverter.ReadJson
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:ALE.ETLBox.Helper.ExpandoJsonPathConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: ExpandoJsonPathConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+- uid: ALE.ETLBox.Helper.ExpandoJsonPathConverter.WriteJson*
+  name: WriteJson
+  href: api/ALE.ETLBox.Helper.ExpandoJsonPathConverter.html#ALE_ETLBox_Helper_ExpandoJsonPathConverter_WriteJson_
+  commentId: Overload:ALE.ETLBox.Helper.ExpandoJsonPathConverter.WriteJson
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.ExpandoJsonPathConverter.WriteJson
+  nameWithType: ExpandoJsonPathConverter.WriteJson
 - uid: ALE.ETLBox.Helper.HashHelper
   name: HashHelper
   href: api/ALE.ETLBox.Helper.HashHelper.html
@@ -13893,6 +14347,109 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Helper.HashHelper.RandomString
   nameWithType: HashHelper.RandomString
+- uid: ALE.ETLBox.Helper.JsonPathConverter
+  name: JsonPathConverter
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html
+  commentId: T:ALE.ETLBox.Helper.JsonPathConverter
+  fullName: ALE.ETLBox.Helper.JsonPathConverter
+  nameWithType: JsonPathConverter
+- uid: ALE.ETLBox.Helper.JsonPathConverter.CanConvert(System.Type)
+  name: CanConvert(Type)
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html#ALE_ETLBox_Helper_JsonPathConverter_CanConvert_System_Type_
+  commentId: M:ALE.ETLBox.Helper.JsonPathConverter.CanConvert(System.Type)
+  fullName: ALE.ETLBox.Helper.JsonPathConverter.CanConvert(System.Type)
+  nameWithType: JsonPathConverter.CanConvert(Type)
+- uid: ALE.ETLBox.Helper.JsonPathConverter.CanConvert*
+  name: CanConvert
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html#ALE_ETLBox_Helper_JsonPathConverter_CanConvert_
+  commentId: Overload:ALE.ETLBox.Helper.JsonPathConverter.CanConvert
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonPathConverter.CanConvert
+  nameWithType: JsonPathConverter.CanConvert
+- uid: ALE.ETLBox.Helper.JsonPathConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html#ALE_ETLBox_Helper_JsonPathConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:ALE.ETLBox.Helper.JsonPathConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: ALE.ETLBox.Helper.JsonPathConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonPathConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+- uid: ALE.ETLBox.Helper.JsonPathConverter.ReadJson*
+  name: ReadJson
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html#ALE_ETLBox_Helper_JsonPathConverter_ReadJson_
+  commentId: Overload:ALE.ETLBox.Helper.JsonPathConverter.ReadJson
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonPathConverter.ReadJson
+  nameWithType: JsonPathConverter.ReadJson
+- uid: ALE.ETLBox.Helper.JsonPathConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html#ALE_ETLBox_Helper_JsonPathConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:ALE.ETLBox.Helper.JsonPathConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: ALE.ETLBox.Helper.JsonPathConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonPathConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+- uid: ALE.ETLBox.Helper.JsonPathConverter.WriteJson*
+  name: WriteJson
+  href: api/ALE.ETLBox.Helper.JsonPathConverter.html#ALE_ETLBox_Helper_JsonPathConverter_WriteJson_
+  commentId: Overload:ALE.ETLBox.Helper.JsonPathConverter.WriteJson
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonPathConverter.WriteJson
+  nameWithType: JsonPathConverter.WriteJson
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath
+  name: JsonProperty2JsonPath
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html
+  commentId: T:ALE.ETLBox.Helper.JsonProperty2JsonPath
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath
+  nameWithType: JsonProperty2JsonPath
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPath
+  name: JsonPath
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_JsonPath
+  commentId: P:ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPath
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPath
+  nameWithType: JsonProperty2JsonPath.JsonPath
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPath*
+  name: JsonPath
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_JsonPath_
+  commentId: Overload:ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPath
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPath
+  nameWithType: JsonProperty2JsonPath.JsonPath
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPropertyName
+  name: JsonPropertyName
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_JsonPropertyName
+  commentId: P:ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPropertyName
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPropertyName
+  nameWithType: JsonProperty2JsonPath.JsonPropertyName
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPropertyName*
+  name: JsonPropertyName
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_JsonPropertyName_
+  commentId: Overload:ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPropertyName
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.JsonPropertyName
+  nameWithType: JsonProperty2JsonPath.JsonPropertyName
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.NewPropertyName
+  name: NewPropertyName
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_NewPropertyName
+  commentId: P:ALE.ETLBox.Helper.JsonProperty2JsonPath.NewPropertyName
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.NewPropertyName
+  nameWithType: JsonProperty2JsonPath.NewPropertyName
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.NewPropertyName*
+  name: NewPropertyName
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_NewPropertyName_
+  commentId: Overload:ALE.ETLBox.Helper.JsonProperty2JsonPath.NewPropertyName
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.NewPropertyName
+  nameWithType: JsonProperty2JsonPath.NewPropertyName
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.Validate
+  name: Validate()
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_Validate
+  commentId: M:ALE.ETLBox.Helper.JsonProperty2JsonPath.Validate
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.Validate()
+  nameWithType: JsonProperty2JsonPath.Validate()
+- uid: ALE.ETLBox.Helper.JsonProperty2JsonPath.Validate*
+  name: Validate
+  href: api/ALE.ETLBox.Helper.JsonProperty2JsonPath.html#ALE_ETLBox_Helper_JsonProperty2JsonPath_Validate_
+  commentId: Overload:ALE.ETLBox.Helper.JsonProperty2JsonPath.Validate
+  isSpec: "True"
+  fullName: ALE.ETLBox.Helper.JsonProperty2JsonPath.Validate
+  nameWithType: JsonProperty2JsonPath.Validate
 - uid: ALE.ETLBox.Helper.PropertyInfoExtension
   name: PropertyInfoExtension
   href: api/ALE.ETLBox.Helper.PropertyInfoExtension.html
@@ -14100,6 +14657,71 @@ references:
   commentId: T:ALE.ETLBox.IDbConnectionString
   fullName: ALE.ETLBox.IDbConnectionString
   nameWithType: IDbConnectionString
+- uid: ALE.ETLBox.IDbConnectionString.Clone
+  name: Clone()
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_Clone
+  commentId: M:ALE.ETLBox.IDbConnectionString.Clone
+  fullName: ALE.ETLBox.IDbConnectionString.Clone()
+  nameWithType: IDbConnectionString.Clone()
+- uid: ALE.ETLBox.IDbConnectionString.Clone*
+  name: Clone
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_Clone_
+  commentId: Overload:ALE.ETLBox.IDbConnectionString.Clone
+  isSpec: "True"
+  fullName: ALE.ETLBox.IDbConnectionString.Clone
+  nameWithType: IDbConnectionString.Clone
+- uid: ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  name: CloneWithMasterDbName()
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName
+  commentId: M:ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  fullName: ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName()
+  nameWithType: IDbConnectionString.CloneWithMasterDbName()
+- uid: ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName*
+  name: CloneWithMasterDbName
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName_
+  commentId: Overload:ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.IDbConnectionString.CloneWithMasterDbName
+  nameWithType: IDbConnectionString.CloneWithMasterDbName
+- uid: ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(System.String)
+  name: CloneWithNewDbName(String)
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_System_String_
+  commentId: M:ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(System.String)
+  fullName: ALE.ETLBox.IDbConnectionString.CloneWithNewDbName(System.String)
+  nameWithType: IDbConnectionString.CloneWithNewDbName(String)
+- uid: ALE.ETLBox.IDbConnectionString.CloneWithNewDbName*
+  name: CloneWithNewDbName
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_
+  commentId: Overload:ALE.ETLBox.IDbConnectionString.CloneWithNewDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.IDbConnectionString.CloneWithNewDbName
+  nameWithType: IDbConnectionString.CloneWithNewDbName
+- uid: ALE.ETLBox.IDbConnectionString.DbName
+  name: DbName
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_DbName
+  commentId: P:ALE.ETLBox.IDbConnectionString.DbName
+  fullName: ALE.ETLBox.IDbConnectionString.DbName
+  nameWithType: IDbConnectionString.DbName
+- uid: ALE.ETLBox.IDbConnectionString.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_DbName_
+  commentId: Overload:ALE.ETLBox.IDbConnectionString.DbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.IDbConnectionString.DbName
+  nameWithType: IDbConnectionString.DbName
+- uid: ALE.ETLBox.IDbConnectionString.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_MasterDbName
+  commentId: P:ALE.ETLBox.IDbConnectionString.MasterDbName
+  fullName: ALE.ETLBox.IDbConnectionString.MasterDbName
+  nameWithType: IDbConnectionString.MasterDbName
+- uid: ALE.ETLBox.IDbConnectionString.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_MasterDbName_
+  commentId: Overload:ALE.ETLBox.IDbConnectionString.MasterDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.IDbConnectionString.MasterDbName
+  nameWithType: IDbConnectionString.MasterDbName
 - uid: ALE.ETLBox.IDbConnectionString.ToString
   name: ToString()
   href: api/ALE.ETLBox.IDbConnectionString.html#ALE_ETLBox_IDbConnectionString_ToString
@@ -16709,58 +17331,45 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.MySqlConnectionString.MySqlConnectionString
   nameWithType: MySqlConnectionString.MySqlConnectionString
-- uid: ALE.ETLBox.MySqlConnectionString.DBName
-  name: DBName
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_DBName
-  commentId: P:ALE.ETLBox.MySqlConnectionString.DBName
-  fullName: ALE.ETLBox.MySqlConnectionString.DBName
-  nameWithType: MySqlConnectionString.DBName
-- uid: ALE.ETLBox.MySqlConnectionString.DBName*
-  name: DBName
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_DBName_
-  commentId: Overload:ALE.ETLBox.MySqlConnectionString.DBName
+- uid: ALE.ETLBox.MySqlConnectionString.DbName
+  name: DbName
+  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_DbName
+  commentId: P:ALE.ETLBox.MySqlConnectionString.DbName
+  fullName: ALE.ETLBox.MySqlConnectionString.DbName
+  nameWithType: MySqlConnectionString.DbName
+- uid: ALE.ETLBox.MySqlConnectionString.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_DbName_
+  commentId: Overload:ALE.ETLBox.MySqlConnectionString.DbName
   isSpec: "True"
-  fullName: ALE.ETLBox.MySqlConnectionString.DBName
-  nameWithType: MySqlConnectionString.DBName
-- uid: ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog
-  name: GetConnectionWithoutCatalog()
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_GetConnectionWithoutCatalog
-  commentId: M:ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog
-  fullName: ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog()
-  nameWithType: MySqlConnectionString.GetConnectionWithoutCatalog()
-- uid: ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog*
-  name: GetConnectionWithoutCatalog
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_GetConnectionWithoutCatalog_
-  commentId: Overload:ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog
+  fullName: ALE.ETLBox.MySqlConnectionString.DbName
+  nameWithType: MySqlConnectionString.DbName
+- uid: ALE.ETLBox.MySqlConnectionString.DbNameKeyword
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_DbNameKeyword
+  commentId: P:ALE.ETLBox.MySqlConnectionString.DbNameKeyword
+  fullName: ALE.ETLBox.MySqlConnectionString.DbNameKeyword
+  nameWithType: MySqlConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.MySqlConnectionString.DbNameKeyword*
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_DbNameKeyword_
+  commentId: Overload:ALE.ETLBox.MySqlConnectionString.DbNameKeyword
   isSpec: "True"
-  fullName: ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog
-  nameWithType: MySqlConnectionString.GetConnectionWithoutCatalog
-- uid: ALE.ETLBox.MySqlConnectionString.GetMasterConnection
-  name: GetMasterConnection()
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_GetMasterConnection
-  commentId: M:ALE.ETLBox.MySqlConnectionString.GetMasterConnection
-  fullName: ALE.ETLBox.MySqlConnectionString.GetMasterConnection()
-  nameWithType: MySqlConnectionString.GetMasterConnection()
-- uid: ALE.ETLBox.MySqlConnectionString.GetMasterConnection*
-  name: GetMasterConnection
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_GetMasterConnection_
-  commentId: Overload:ALE.ETLBox.MySqlConnectionString.GetMasterConnection
+  fullName: ALE.ETLBox.MySqlConnectionString.DbNameKeyword
+  nameWithType: MySqlConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.MySqlConnectionString.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_MasterDbName
+  commentId: P:ALE.ETLBox.MySqlConnectionString.MasterDbName
+  fullName: ALE.ETLBox.MySqlConnectionString.MasterDbName
+  nameWithType: MySqlConnectionString.MasterDbName
+- uid: ALE.ETLBox.MySqlConnectionString.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_MasterDbName_
+  commentId: Overload:ALE.ETLBox.MySqlConnectionString.MasterDbName
   isSpec: "True"
-  fullName: ALE.ETLBox.MySqlConnectionString.GetMasterConnection
-  nameWithType: MySqlConnectionString.GetMasterConnection
-- uid: ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder
-  name: MySqlConnectionStringBuilder
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_MySqlConnectionStringBuilder
-  commentId: P:ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder
-  fullName: ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder
-  nameWithType: MySqlConnectionString.MySqlConnectionStringBuilder
-- uid: ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder*
-  name: MySqlConnectionStringBuilder
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_MySqlConnectionStringBuilder_
-  commentId: Overload:ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder
-  isSpec: "True"
-  fullName: ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder
-  nameWithType: MySqlConnectionString.MySqlConnectionStringBuilder
+  fullName: ALE.ETLBox.MySqlConnectionString.MasterDbName
+  nameWithType: MySqlConnectionString.MasterDbName
 - uid: ALE.ETLBox.MySqlConnectionString.op_Implicit(System.String)~ALE.ETLBox.MySqlConnectionString
   name: Implicit(String to MySqlConnectionString)
   href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_op_Implicit_System_String__ALE_ETLBox_MySqlConnectionString
@@ -16780,32 +17389,6 @@ references:
   fullName.vb: ALE.ETLBox.MySqlConnectionString.Widening
   nameWithType: MySqlConnectionString.Implicit
   nameWithType.vb: MySqlConnectionString.Widening
-- uid: ALE.ETLBox.MySqlConnectionString.ToString
-  name: ToString()
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_ToString
-  commentId: M:ALE.ETLBox.MySqlConnectionString.ToString
-  fullName: ALE.ETLBox.MySqlConnectionString.ToString()
-  nameWithType: MySqlConnectionString.ToString()
-- uid: ALE.ETLBox.MySqlConnectionString.ToString*
-  name: ToString
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_ToString_
-  commentId: Overload:ALE.ETLBox.MySqlConnectionString.ToString
-  isSpec: "True"
-  fullName: ALE.ETLBox.MySqlConnectionString.ToString
-  nameWithType: MySqlConnectionString.ToString
-- uid: ALE.ETLBox.MySqlConnectionString.Value
-  name: Value
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_Value
-  commentId: P:ALE.ETLBox.MySqlConnectionString.Value
-  fullName: ALE.ETLBox.MySqlConnectionString.Value
-  nameWithType: MySqlConnectionString.Value
-- uid: ALE.ETLBox.MySqlConnectionString.Value*
-  name: Value
-  href: api/ALE.ETLBox.MySqlConnectionString.html#ALE_ETLBox_MySqlConnectionString_Value_
-  commentId: Overload:ALE.ETLBox.MySqlConnectionString.Value
-  isSpec: "True"
-  fullName: ALE.ETLBox.MySqlConnectionString.Value
-  nameWithType: MySqlConnectionString.Value
 - uid: ALE.ETLBox.ObjectNameDescriptor
   name: ObjectNameDescriptor
   href: api/ALE.ETLBox.ObjectNameDescriptor.html
@@ -17012,19 +17595,45 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.OdbcConnectionString.OdbcConnectionString
   nameWithType: OdbcConnectionString.OdbcConnectionString
-- uid: ALE.ETLBox.OdbcConnectionString.OdbcConnectionStringBuilder
-  name: OdbcConnectionStringBuilder
-  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_OdbcConnectionStringBuilder
-  commentId: P:ALE.ETLBox.OdbcConnectionString.OdbcConnectionStringBuilder
-  fullName: ALE.ETLBox.OdbcConnectionString.OdbcConnectionStringBuilder
-  nameWithType: OdbcConnectionString.OdbcConnectionStringBuilder
-- uid: ALE.ETLBox.OdbcConnectionString.OdbcConnectionStringBuilder*
-  name: OdbcConnectionStringBuilder
-  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_OdbcConnectionStringBuilder_
-  commentId: Overload:ALE.ETLBox.OdbcConnectionString.OdbcConnectionStringBuilder
+- uid: ALE.ETLBox.OdbcConnectionString.DbName
+  name: DbName
+  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_DbName
+  commentId: P:ALE.ETLBox.OdbcConnectionString.DbName
+  fullName: ALE.ETLBox.OdbcConnectionString.DbName
+  nameWithType: OdbcConnectionString.DbName
+- uid: ALE.ETLBox.OdbcConnectionString.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_DbName_
+  commentId: Overload:ALE.ETLBox.OdbcConnectionString.DbName
   isSpec: "True"
-  fullName: ALE.ETLBox.OdbcConnectionString.OdbcConnectionStringBuilder
-  nameWithType: OdbcConnectionString.OdbcConnectionStringBuilder
+  fullName: ALE.ETLBox.OdbcConnectionString.DbName
+  nameWithType: OdbcConnectionString.DbName
+- uid: ALE.ETLBox.OdbcConnectionString.DbNameKeyword
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_DbNameKeyword
+  commentId: P:ALE.ETLBox.OdbcConnectionString.DbNameKeyword
+  fullName: ALE.ETLBox.OdbcConnectionString.DbNameKeyword
+  nameWithType: OdbcConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.OdbcConnectionString.DbNameKeyword*
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_DbNameKeyword_
+  commentId: Overload:ALE.ETLBox.OdbcConnectionString.DbNameKeyword
+  isSpec: "True"
+  fullName: ALE.ETLBox.OdbcConnectionString.DbNameKeyword
+  nameWithType: OdbcConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.OdbcConnectionString.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_MasterDbName
+  commentId: P:ALE.ETLBox.OdbcConnectionString.MasterDbName
+  fullName: ALE.ETLBox.OdbcConnectionString.MasterDbName
+  nameWithType: OdbcConnectionString.MasterDbName
+- uid: ALE.ETLBox.OdbcConnectionString.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_MasterDbName_
+  commentId: Overload:ALE.ETLBox.OdbcConnectionString.MasterDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.OdbcConnectionString.MasterDbName
+  nameWithType: OdbcConnectionString.MasterDbName
 - uid: ALE.ETLBox.OdbcConnectionString.op_Implicit(System.String)~ALE.ETLBox.OdbcConnectionString
   name: Implicit(String to OdbcConnectionString)
   href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_op_Implicit_System_String__ALE_ETLBox_OdbcConnectionString
@@ -17044,32 +17653,6 @@ references:
   fullName.vb: ALE.ETLBox.OdbcConnectionString.Widening
   nameWithType: OdbcConnectionString.Implicit
   nameWithType.vb: OdbcConnectionString.Widening
-- uid: ALE.ETLBox.OdbcConnectionString.ToString
-  name: ToString()
-  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_ToString
-  commentId: M:ALE.ETLBox.OdbcConnectionString.ToString
-  fullName: ALE.ETLBox.OdbcConnectionString.ToString()
-  nameWithType: OdbcConnectionString.ToString()
-- uid: ALE.ETLBox.OdbcConnectionString.ToString*
-  name: ToString
-  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_ToString_
-  commentId: Overload:ALE.ETLBox.OdbcConnectionString.ToString
-  isSpec: "True"
-  fullName: ALE.ETLBox.OdbcConnectionString.ToString
-  nameWithType: OdbcConnectionString.ToString
-- uid: ALE.ETLBox.OdbcConnectionString.Value
-  name: Value
-  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_Value
-  commentId: P:ALE.ETLBox.OdbcConnectionString.Value
-  fullName: ALE.ETLBox.OdbcConnectionString.Value
-  nameWithType: OdbcConnectionString.Value
-- uid: ALE.ETLBox.OdbcConnectionString.Value*
-  name: Value
-  href: api/ALE.ETLBox.OdbcConnectionString.html#ALE_ETLBox_OdbcConnectionString_Value_
-  commentId: Overload:ALE.ETLBox.OdbcConnectionString.Value
-  isSpec: "True"
-  fullName: ALE.ETLBox.OdbcConnectionString.Value
-  nameWithType: OdbcConnectionString.Value
 - uid: ALE.ETLBox.PostgresConnectionString
   name: PostgresConnectionString
   href: api/ALE.ETLBox.PostgresConnectionString.html
@@ -17095,58 +17678,45 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.PostgresConnectionString.PostgresConnectionString
   nameWithType: PostgresConnectionString.PostgresConnectionString
-- uid: ALE.ETLBox.PostgresConnectionString.DBName
-  name: DBName
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_DBName
-  commentId: P:ALE.ETLBox.PostgresConnectionString.DBName
-  fullName: ALE.ETLBox.PostgresConnectionString.DBName
-  nameWithType: PostgresConnectionString.DBName
-- uid: ALE.ETLBox.PostgresConnectionString.DBName*
-  name: DBName
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_DBName_
-  commentId: Overload:ALE.ETLBox.PostgresConnectionString.DBName
+- uid: ALE.ETLBox.PostgresConnectionString.DbName
+  name: DbName
+  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_DbName
+  commentId: P:ALE.ETLBox.PostgresConnectionString.DbName
+  fullName: ALE.ETLBox.PostgresConnectionString.DbName
+  nameWithType: PostgresConnectionString.DbName
+- uid: ALE.ETLBox.PostgresConnectionString.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_DbName_
+  commentId: Overload:ALE.ETLBox.PostgresConnectionString.DbName
   isSpec: "True"
-  fullName: ALE.ETLBox.PostgresConnectionString.DBName
-  nameWithType: PostgresConnectionString.DBName
-- uid: ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog
-  name: GetConnectionWithoutCatalog()
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_GetConnectionWithoutCatalog
-  commentId: M:ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog
-  fullName: ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog()
-  nameWithType: PostgresConnectionString.GetConnectionWithoutCatalog()
-- uid: ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog*
-  name: GetConnectionWithoutCatalog
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_GetConnectionWithoutCatalog_
-  commentId: Overload:ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog
+  fullName: ALE.ETLBox.PostgresConnectionString.DbName
+  nameWithType: PostgresConnectionString.DbName
+- uid: ALE.ETLBox.PostgresConnectionString.DbNameKeyword
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_DbNameKeyword
+  commentId: P:ALE.ETLBox.PostgresConnectionString.DbNameKeyword
+  fullName: ALE.ETLBox.PostgresConnectionString.DbNameKeyword
+  nameWithType: PostgresConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.PostgresConnectionString.DbNameKeyword*
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_DbNameKeyword_
+  commentId: Overload:ALE.ETLBox.PostgresConnectionString.DbNameKeyword
   isSpec: "True"
-  fullName: ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog
-  nameWithType: PostgresConnectionString.GetConnectionWithoutCatalog
-- uid: ALE.ETLBox.PostgresConnectionString.GetMasterConnection
-  name: GetMasterConnection()
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_GetMasterConnection
-  commentId: M:ALE.ETLBox.PostgresConnectionString.GetMasterConnection
-  fullName: ALE.ETLBox.PostgresConnectionString.GetMasterConnection()
-  nameWithType: PostgresConnectionString.GetMasterConnection()
-- uid: ALE.ETLBox.PostgresConnectionString.GetMasterConnection*
-  name: GetMasterConnection
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_GetMasterConnection_
-  commentId: Overload:ALE.ETLBox.PostgresConnectionString.GetMasterConnection
+  fullName: ALE.ETLBox.PostgresConnectionString.DbNameKeyword
+  nameWithType: PostgresConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.PostgresConnectionString.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_MasterDbName
+  commentId: P:ALE.ETLBox.PostgresConnectionString.MasterDbName
+  fullName: ALE.ETLBox.PostgresConnectionString.MasterDbName
+  nameWithType: PostgresConnectionString.MasterDbName
+- uid: ALE.ETLBox.PostgresConnectionString.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_MasterDbName_
+  commentId: Overload:ALE.ETLBox.PostgresConnectionString.MasterDbName
   isSpec: "True"
-  fullName: ALE.ETLBox.PostgresConnectionString.GetMasterConnection
-  nameWithType: PostgresConnectionString.GetMasterConnection
-- uid: ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder
-  name: MySqlConnectionStringBuilder
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_MySqlConnectionStringBuilder
-  commentId: P:ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder
-  fullName: ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder
-  nameWithType: PostgresConnectionString.MySqlConnectionStringBuilder
-- uid: ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder*
-  name: MySqlConnectionStringBuilder
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_MySqlConnectionStringBuilder_
-  commentId: Overload:ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder
-  isSpec: "True"
-  fullName: ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder
-  nameWithType: PostgresConnectionString.MySqlConnectionStringBuilder
+  fullName: ALE.ETLBox.PostgresConnectionString.MasterDbName
+  nameWithType: PostgresConnectionString.MasterDbName
 - uid: ALE.ETLBox.PostgresConnectionString.op_Implicit(System.String)~ALE.ETLBox.PostgresConnectionString
   name: Implicit(String to PostgresConnectionString)
   href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_op_Implicit_System_String__ALE_ETLBox_PostgresConnectionString
@@ -17166,32 +17736,6 @@ references:
   fullName.vb: ALE.ETLBox.PostgresConnectionString.Widening
   nameWithType: PostgresConnectionString.Implicit
   nameWithType.vb: PostgresConnectionString.Widening
-- uid: ALE.ETLBox.PostgresConnectionString.ToString
-  name: ToString()
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_ToString
-  commentId: M:ALE.ETLBox.PostgresConnectionString.ToString
-  fullName: ALE.ETLBox.PostgresConnectionString.ToString()
-  nameWithType: PostgresConnectionString.ToString()
-- uid: ALE.ETLBox.PostgresConnectionString.ToString*
-  name: ToString
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_ToString_
-  commentId: Overload:ALE.ETLBox.PostgresConnectionString.ToString
-  isSpec: "True"
-  fullName: ALE.ETLBox.PostgresConnectionString.ToString
-  nameWithType: PostgresConnectionString.ToString
-- uid: ALE.ETLBox.PostgresConnectionString.Value
-  name: Value
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_Value
-  commentId: P:ALE.ETLBox.PostgresConnectionString.Value
-  fullName: ALE.ETLBox.PostgresConnectionString.Value
-  nameWithType: PostgresConnectionString.Value
-- uid: ALE.ETLBox.PostgresConnectionString.Value*
-  name: Value
-  href: api/ALE.ETLBox.PostgresConnectionString.html#ALE_ETLBox_PostgresConnectionString_Value_
-  commentId: Overload:ALE.ETLBox.PostgresConnectionString.Value
-  isSpec: "True"
-  fullName: ALE.ETLBox.PostgresConnectionString.Value
-  nameWithType: PostgresConnectionString.Value
 - uid: ALE.ETLBox.ProcedureDefinition
   name: ProcedureDefinition
   href: api/ALE.ETLBox.ProcedureDefinition.html
@@ -17470,45 +18014,45 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.SqlConnectionString.SqlConnectionString
   nameWithType: SqlConnectionString.SqlConnectionString
-- uid: ALE.ETLBox.SqlConnectionString.DBName
-  name: DBName
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_DBName
-  commentId: P:ALE.ETLBox.SqlConnectionString.DBName
-  fullName: ALE.ETLBox.SqlConnectionString.DBName
-  nameWithType: SqlConnectionString.DBName
-- uid: ALE.ETLBox.SqlConnectionString.DBName*
-  name: DBName
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_DBName_
-  commentId: Overload:ALE.ETLBox.SqlConnectionString.DBName
+- uid: ALE.ETLBox.SqlConnectionString.DbName
+  name: DbName
+  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_DbName
+  commentId: P:ALE.ETLBox.SqlConnectionString.DbName
+  fullName: ALE.ETLBox.SqlConnectionString.DbName
+  nameWithType: SqlConnectionString.DbName
+- uid: ALE.ETLBox.SqlConnectionString.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_DbName_
+  commentId: Overload:ALE.ETLBox.SqlConnectionString.DbName
   isSpec: "True"
-  fullName: ALE.ETLBox.SqlConnectionString.DBName
-  nameWithType: SqlConnectionString.DBName
-- uid: ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog
-  name: GetConnectionWithoutCatalog()
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_GetConnectionWithoutCatalog
-  commentId: M:ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog
-  fullName: ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog()
-  nameWithType: SqlConnectionString.GetConnectionWithoutCatalog()
-- uid: ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog*
-  name: GetConnectionWithoutCatalog
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_GetConnectionWithoutCatalog_
-  commentId: Overload:ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog
+  fullName: ALE.ETLBox.SqlConnectionString.DbName
+  nameWithType: SqlConnectionString.DbName
+- uid: ALE.ETLBox.SqlConnectionString.DbNameKeyword
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_DbNameKeyword
+  commentId: P:ALE.ETLBox.SqlConnectionString.DbNameKeyword
+  fullName: ALE.ETLBox.SqlConnectionString.DbNameKeyword
+  nameWithType: SqlConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.SqlConnectionString.DbNameKeyword*
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_DbNameKeyword_
+  commentId: Overload:ALE.ETLBox.SqlConnectionString.DbNameKeyword
   isSpec: "True"
-  fullName: ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog
-  nameWithType: SqlConnectionString.GetConnectionWithoutCatalog
-- uid: ALE.ETLBox.SqlConnectionString.GetMasterConnection
-  name: GetMasterConnection()
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_GetMasterConnection
-  commentId: M:ALE.ETLBox.SqlConnectionString.GetMasterConnection
-  fullName: ALE.ETLBox.SqlConnectionString.GetMasterConnection()
-  nameWithType: SqlConnectionString.GetMasterConnection()
-- uid: ALE.ETLBox.SqlConnectionString.GetMasterConnection*
-  name: GetMasterConnection
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_GetMasterConnection_
-  commentId: Overload:ALE.ETLBox.SqlConnectionString.GetMasterConnection
+  fullName: ALE.ETLBox.SqlConnectionString.DbNameKeyword
+  nameWithType: SqlConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.SqlConnectionString.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_MasterDbName
+  commentId: P:ALE.ETLBox.SqlConnectionString.MasterDbName
+  fullName: ALE.ETLBox.SqlConnectionString.MasterDbName
+  nameWithType: SqlConnectionString.MasterDbName
+- uid: ALE.ETLBox.SqlConnectionString.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_MasterDbName_
+  commentId: Overload:ALE.ETLBox.SqlConnectionString.MasterDbName
   isSpec: "True"
-  fullName: ALE.ETLBox.SqlConnectionString.GetMasterConnection
-  nameWithType: SqlConnectionString.GetMasterConnection
+  fullName: ALE.ETLBox.SqlConnectionString.MasterDbName
+  nameWithType: SqlConnectionString.MasterDbName
 - uid: ALE.ETLBox.SqlConnectionString.op_Implicit(System.String)~ALE.ETLBox.SqlConnectionString
   name: Implicit(String to SqlConnectionString)
   href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_op_Implicit_System_String__ALE_ETLBox_SqlConnectionString
@@ -17528,32 +18072,6 @@ references:
   fullName.vb: ALE.ETLBox.SqlConnectionString.Widening
   nameWithType: SqlConnectionString.Implicit
   nameWithType.vb: SqlConnectionString.Widening
-- uid: ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder
-  name: SqlConnectionStringBuilder
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_SqlConnectionStringBuilder
-  commentId: P:ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder
-  fullName: ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder
-  nameWithType: SqlConnectionString.SqlConnectionStringBuilder
-- uid: ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder*
-  name: SqlConnectionStringBuilder
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_SqlConnectionStringBuilder_
-  commentId: Overload:ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder
-  isSpec: "True"
-  fullName: ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder
-  nameWithType: SqlConnectionString.SqlConnectionStringBuilder
-- uid: ALE.ETLBox.SqlConnectionString.ToString
-  name: ToString()
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_ToString
-  commentId: M:ALE.ETLBox.SqlConnectionString.ToString
-  fullName: ALE.ETLBox.SqlConnectionString.ToString()
-  nameWithType: SqlConnectionString.ToString()
-- uid: ALE.ETLBox.SqlConnectionString.ToString*
-  name: ToString
-  href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_ToString_
-  commentId: Overload:ALE.ETLBox.SqlConnectionString.ToString
-  isSpec: "True"
-  fullName: ALE.ETLBox.SqlConnectionString.ToString
-  nameWithType: SqlConnectionString.ToString
 - uid: ALE.ETLBox.SqlConnectionString.Value
   name: Value
   href: api/ALE.ETLBox.SqlConnectionString.html#ALE_ETLBox_SqlConnectionString_Value
@@ -17592,19 +18110,45 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.SQLiteConnectionString.SQLiteConnectionString
   nameWithType: SQLiteConnectionString.SQLiteConnectionString
-- uid: ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder
-  name: OdbcConnectionStringBuilder
-  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_OdbcConnectionStringBuilder
-  commentId: P:ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder
-  fullName: ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder
-  nameWithType: SQLiteConnectionString.OdbcConnectionStringBuilder
-- uid: ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder*
-  name: OdbcConnectionStringBuilder
-  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_OdbcConnectionStringBuilder_
-  commentId: Overload:ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder
+- uid: ALE.ETLBox.SQLiteConnectionString.DbName
+  name: DbName
+  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_DbName
+  commentId: P:ALE.ETLBox.SQLiteConnectionString.DbName
+  fullName: ALE.ETLBox.SQLiteConnectionString.DbName
+  nameWithType: SQLiteConnectionString.DbName
+- uid: ALE.ETLBox.SQLiteConnectionString.DbName*
+  name: DbName
+  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_DbName_
+  commentId: Overload:ALE.ETLBox.SQLiteConnectionString.DbName
   isSpec: "True"
-  fullName: ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder
-  nameWithType: SQLiteConnectionString.OdbcConnectionStringBuilder
+  fullName: ALE.ETLBox.SQLiteConnectionString.DbName
+  nameWithType: SQLiteConnectionString.DbName
+- uid: ALE.ETLBox.SQLiteConnectionString.DbNameKeyword
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_DbNameKeyword
+  commentId: P:ALE.ETLBox.SQLiteConnectionString.DbNameKeyword
+  fullName: ALE.ETLBox.SQLiteConnectionString.DbNameKeyword
+  nameWithType: SQLiteConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.SQLiteConnectionString.DbNameKeyword*
+  name: DbNameKeyword
+  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_DbNameKeyword_
+  commentId: Overload:ALE.ETLBox.SQLiteConnectionString.DbNameKeyword
+  isSpec: "True"
+  fullName: ALE.ETLBox.SQLiteConnectionString.DbNameKeyword
+  nameWithType: SQLiteConnectionString.DbNameKeyword
+- uid: ALE.ETLBox.SQLiteConnectionString.MasterDbName
+  name: MasterDbName
+  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_MasterDbName
+  commentId: P:ALE.ETLBox.SQLiteConnectionString.MasterDbName
+  fullName: ALE.ETLBox.SQLiteConnectionString.MasterDbName
+  nameWithType: SQLiteConnectionString.MasterDbName
+- uid: ALE.ETLBox.SQLiteConnectionString.MasterDbName*
+  name: MasterDbName
+  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_MasterDbName_
+  commentId: Overload:ALE.ETLBox.SQLiteConnectionString.MasterDbName
+  isSpec: "True"
+  fullName: ALE.ETLBox.SQLiteConnectionString.MasterDbName
+  nameWithType: SQLiteConnectionString.MasterDbName
 - uid: ALE.ETLBox.SQLiteConnectionString.op_Implicit(System.String)~ALE.ETLBox.SQLiteConnectionString
   name: Implicit(String to SQLiteConnectionString)
   href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_op_Implicit_System_String__ALE_ETLBox_SQLiteConnectionString
@@ -17624,32 +18168,6 @@ references:
   fullName.vb: ALE.ETLBox.SQLiteConnectionString.Widening
   nameWithType: SQLiteConnectionString.Implicit
   nameWithType.vb: SQLiteConnectionString.Widening
-- uid: ALE.ETLBox.SQLiteConnectionString.ToString
-  name: ToString()
-  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_ToString
-  commentId: M:ALE.ETLBox.SQLiteConnectionString.ToString
-  fullName: ALE.ETLBox.SQLiteConnectionString.ToString()
-  nameWithType: SQLiteConnectionString.ToString()
-- uid: ALE.ETLBox.SQLiteConnectionString.ToString*
-  name: ToString
-  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_ToString_
-  commentId: Overload:ALE.ETLBox.SQLiteConnectionString.ToString
-  isSpec: "True"
-  fullName: ALE.ETLBox.SQLiteConnectionString.ToString
-  nameWithType: SQLiteConnectionString.ToString
-- uid: ALE.ETLBox.SQLiteConnectionString.Value
-  name: Value
-  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_Value
-  commentId: P:ALE.ETLBox.SQLiteConnectionString.Value
-  fullName: ALE.ETLBox.SQLiteConnectionString.Value
-  nameWithType: SQLiteConnectionString.Value
-- uid: ALE.ETLBox.SQLiteConnectionString.Value*
-  name: Value
-  href: api/ALE.ETLBox.SQLiteConnectionString.html#ALE_ETLBox_SQLiteConnectionString_Value_
-  commentId: Overload:ALE.ETLBox.SQLiteConnectionString.Value
-  isSpec: "True"
-  fullName: ALE.ETLBox.SQLiteConnectionString.Value
-  nameWithType: SQLiteConnectionString.Value
 - uid: ALE.ETLBox.TableColumn
   name: TableColumn
   href: api/ALE.ETLBox.TableColumn.html
@@ -17934,6 +18452,23 @@ references:
   fullName.vb: ALE.ETLBox.TableData(Of T).TableData
   nameWithType: TableData<T>.TableData
   nameWithType.vb: TableData(Of T).TableData
+- uid: ALE.ETLBox.TableData`1.ClearData
+  name: ClearData()
+  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_ClearData
+  commentId: M:ALE.ETLBox.TableData`1.ClearData
+  fullName: ALE.ETLBox.TableData<T>.ClearData()
+  fullName.vb: ALE.ETLBox.TableData(Of T).ClearData()
+  nameWithType: TableData<T>.ClearData()
+  nameWithType.vb: TableData(Of T).ClearData()
+- uid: ALE.ETLBox.TableData`1.ClearData*
+  name: ClearData
+  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_ClearData_
+  commentId: Overload:ALE.ETLBox.TableData`1.ClearData
+  isSpec: "True"
+  fullName: ALE.ETLBox.TableData<T>.ClearData
+  fullName.vb: ALE.ETLBox.TableData(Of T).ClearData
+  nameWithType: TableData<T>.ClearData
+  nameWithType.vb: TableData(Of T).ClearData
 - uid: ALE.ETLBox.TableData`1.Close
   name: Close()
   href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_Close
@@ -18044,23 +18579,6 @@ references:
   fullName.vb: ALE.ETLBox.TableData(Of T).DynamicColumnNames
   nameWithType: TableData<T>.DynamicColumnNames
   nameWithType.vb: TableData(Of T).DynamicColumnNames
-- uid: ALE.ETLBox.TableData`1.EstimatedBatchSize
-  name: EstimatedBatchSize
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_EstimatedBatchSize
-  commentId: P:ALE.ETLBox.TableData`1.EstimatedBatchSize
-  fullName: ALE.ETLBox.TableData<T>.EstimatedBatchSize
-  fullName.vb: ALE.ETLBox.TableData(Of T).EstimatedBatchSize
-  nameWithType: TableData<T>.EstimatedBatchSize
-  nameWithType.vb: TableData(Of T).EstimatedBatchSize
-- uid: ALE.ETLBox.TableData`1.EstimatedBatchSize*
-  name: EstimatedBatchSize
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_EstimatedBatchSize_
-  commentId: Overload:ALE.ETLBox.TableData`1.EstimatedBatchSize
-  isSpec: "True"
-  fullName: ALE.ETLBox.TableData<T>.EstimatedBatchSize
-  fullName.vb: ALE.ETLBox.TableData(Of T).EstimatedBatchSize
-  nameWithType: TableData<T>.EstimatedBatchSize
-  nameWithType.vb: TableData(Of T).EstimatedBatchSize
 - uid: ALE.ETLBox.TableData`1.FieldCount
   name: FieldCount
   href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_FieldCount
@@ -18455,23 +18973,6 @@ references:
   fullName.vb: ALE.ETLBox.TableData(Of T).GetValues
   nameWithType: TableData<T>.GetValues
   nameWithType.vb: TableData(Of T).GetValues
-- uid: ALE.ETLBox.TableData`1.HasDefinition
-  name: HasDefinition
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_HasDefinition
-  commentId: P:ALE.ETLBox.TableData`1.HasDefinition
-  fullName: ALE.ETLBox.TableData<T>.HasDefinition
-  fullName.vb: ALE.ETLBox.TableData(Of T).HasDefinition
-  nameWithType: TableData<T>.HasDefinition
-  nameWithType.vb: TableData(Of T).HasDefinition
-- uid: ALE.ETLBox.TableData`1.HasDefinition*
-  name: HasDefinition
-  href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_HasDefinition_
-  commentId: Overload:ALE.ETLBox.TableData`1.HasDefinition
-  isSpec: "True"
-  fullName: ALE.ETLBox.TableData<T>.HasDefinition
-  fullName.vb: ALE.ETLBox.TableData(Of T).HasDefinition
-  nameWithType: TableData<T>.HasDefinition
-  nameWithType.vb: TableData(Of T).HasDefinition
 - uid: ALE.ETLBox.TableData`1.IsClosed
   name: IsClosed
   href: api/ALE.ETLBox.TableData-1.html#ALE_ETLBox_TableData_1_IsClosed
@@ -18719,3 +19220,16 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.TableDefinition.Name
   nameWithType: TableDefinition.Name
+- uid: ALE.ETLBox.TableDefinition.PrimaryKeyConstraintName
+  name: PrimaryKeyConstraintName
+  href: api/ALE.ETLBox.TableDefinition.html#ALE_ETLBox_TableDefinition_PrimaryKeyConstraintName
+  commentId: P:ALE.ETLBox.TableDefinition.PrimaryKeyConstraintName
+  fullName: ALE.ETLBox.TableDefinition.PrimaryKeyConstraintName
+  nameWithType: TableDefinition.PrimaryKeyConstraintName
+- uid: ALE.ETLBox.TableDefinition.PrimaryKeyConstraintName*
+  name: PrimaryKeyConstraintName
+  href: api/ALE.ETLBox.TableDefinition.html#ALE_ETLBox_TableDefinition_PrimaryKeyConstraintName_
+  commentId: Overload:ALE.ETLBox.TableDefinition.PrimaryKeyConstraintName
+  isSpec: "True"
+  fullName: ALE.ETLBox.TableDefinition.PrimaryKeyConstraintName
+  nameWithType: TableDefinition.PrimaryKeyConstraintName

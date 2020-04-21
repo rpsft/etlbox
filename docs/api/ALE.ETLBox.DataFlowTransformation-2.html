@@ -96,6 +96,7 @@
       <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.LookupTransformation-2.html">LookupTransformation&lt;TInput, TSourceOutput&gt;</a></div>
       <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Multicast-1.html">Multicast&lt;TInput&gt;</a></div>
       <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowDuplication-1.html">RowDuplication&lt;TInput&gt;</a></div>
+      <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html">RowMultiplication&lt;TInput, TOutput&gt;</a></div>
       <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowTransformation-2.html">RowTransformation&lt;TInput, TOutput&gt;</a></div>
       <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.Sort-1.html">Sort&lt;TInput&gt;</a></div>
   </div>
@@ -331,6 +332,38 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected void CheckCompleteAction()</code></pre>
   </div>
+  
+  
+  <a id="ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_" data-uid="ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer*"></a>
+  <h4 id="ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_System_Threading_Tasks_Task_System_Threading_Tasks_Dataflow_IDataflowBlock_" data-uid="ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer(System.Threading.Tasks.Task,System.Threading.Tasks.Dataflow.IDataflowBlock)">CompleteOrFaultBuffer(Task, IDataflowBlock)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void CompleteOrFaultBuffer(Task t, IDataflowBlock outputBuffer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="parametername">t</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Dataflow.IDataflowBlock</span></td>
+        <td><span class="parametername">outputBuffer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="ALE_ETLBox_DataFlowTransformation_2_LinkTo_" data-uid="ALE.ETLBox.DataFlowTransformation`2.LinkTo*"></a>

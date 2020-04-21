@@ -89,7 +89,8 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">SQLiteConnectionString</span></div>
+    <div class="level1"><a class="xref" href="ALE.ETLBox.DbConnectionString-2.html">DbConnectionString</a>&lt;<a class="xref" href="ALE.ETLBox.SQLiteConnectionString.html">SQLiteConnectionString</a>, <span class="xref">System.Data.SQLite.SQLiteConnectionStringBuilder</span>&gt;</div>
+    <div class="level2"><span class="xref">SQLiteConnectionString</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -97,6 +98,45 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Builder">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.Builder</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Value">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.Value</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Clone">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_Clone">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.IDbConnectionString.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ToString">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbName">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.DbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbNameKeyword">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.DbNameKeyword</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_MasterDbName">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.MasterDbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithNewDbName_System_String_">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithoutDbName">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.CloneWithoutDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_System_String_">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.IDbConnectionString.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithMasterDbName">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.CloneWithMasterDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName">DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;.IDbConnectionString.CloneWithMasterDbName()</a>
+    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -115,12 +155,15 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
     <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.html">ALE.ETLBox</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_SQLiteConnectionString_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SQLiteConnectionString : IDbConnectionString</code></pre>
+    <pre><code class="lang-csharp hljs">public class SQLiteConnectionString : DbConnectionString&lt;SQLiteConnectionString, SQLiteConnectionStringBuilder&gt;, IDbConnectionString</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -142,7 +185,7 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SQLiteConnectionString(string connectionString)</code></pre>
+    <pre><code class="lang-csharp hljs">public SQLiteConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +199,7 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">connectionString</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -165,67 +208,15 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
   </h3>
   
   
-  <a id="ALE_ETLBox_SQLiteConnectionString_OdbcConnectionStringBuilder_" data-uid="ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder*"></a>
-  <h4 id="ALE_ETLBox_SQLiteConnectionString_OdbcConnectionStringBuilder" data-uid="ALE.ETLBox.SQLiteConnectionString.OdbcConnectionStringBuilder">OdbcConnectionStringBuilder</h4>
+  <a id="ALE_ETLBox_SQLiteConnectionString_DbName_" data-uid="ALE.ETLBox.SQLiteConnectionString.DbName*"></a>
+  <h4 id="ALE_ETLBox_SQLiteConnectionString_DbName" data-uid="ALE.ETLBox.SQLiteConnectionString.DbName">DbName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SQLiteConnectionStringBuilder OdbcConnectionStringBuilder { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override string DbName { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Data.SQLite.SQLiteConnectionStringBuilder</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_SQLiteConnectionString_Value_" data-uid="ALE.ETLBox.SQLiteConnectionString.Value*"></a>
-  <h4 id="ALE_ETLBox_SQLiteConnectionString_Value" data-uid="ALE.ETLBox.SQLiteConnectionString.Value">Value</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Value { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_SQLiteConnectionString_ToString_" data-uid="ALE.ETLBox.SQLiteConnectionString.ToString*"></a>
-  <h4 id="ALE_ETLBox_SQLiteConnectionString_ToString" data-uid="ALE.ETLBox.SQLiteConnectionString.ToString">ToString()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -241,7 +232,61 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SQLiteConnectionString, System.Data.SQLite.SQLiteConnectionStringBuilder&gt;.DbName</span></div>
+  
+  
+  <a id="ALE_ETLBox_SQLiteConnectionString_DbNameKeyword_" data-uid="ALE.ETLBox.SQLiteConnectionString.DbNameKeyword*"></a>
+  <h4 id="ALE_ETLBox_SQLiteConnectionString_DbNameKeyword" data-uid="ALE.ETLBox.SQLiteConnectionString.DbNameKeyword">DbNameKeyword</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override string DbNameKeyword { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SQLiteConnectionString, System.Data.SQLite.SQLiteConnectionStringBuilder&gt;.DbNameKeyword</span></div>
+  
+  
+  <a id="ALE_ETLBox_SQLiteConnectionString_MasterDbName_" data-uid="ALE.ETLBox.SQLiteConnectionString.MasterDbName*"></a>
+  <h4 id="ALE_ETLBox_SQLiteConnectionString_MasterDbName" data-uid="ALE.ETLBox.SQLiteConnectionString.MasterDbName">MasterDbName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string MasterDbName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SQLiteConnectionString, System.Data.SQLite.SQLiteConnectionStringBuilder&gt;.MasterDbName</span></div>
   <h3 id="operators">Operators
   </h3>
   
@@ -252,7 +297,7 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator SQLiteConnectionString(string v)</code></pre>
+    <pre><code class="lang-csharp hljs">public static implicit operator SQLiteConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -266,7 +311,7 @@ Internally the SQLiteConnectionStringBuilder is used to access the values of the
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">v</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>

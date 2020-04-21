@@ -89,7 +89,8 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">SqlConnectionString</span></div>
+    <div class="level1"><a class="xref" href="ALE.ETLBox.DbConnectionString-2.html">DbConnectionString</a>&lt;<a class="xref" href="ALE.ETLBox.SqlConnectionString.html">SqlConnectionString</a>, <span class="xref">Microsoft.Data.SqlClient.SqlConnectionStringBuilder</span>&gt;</div>
+    <div class="level2"><span class="xref">SqlConnectionString</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -97,6 +98,45 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Builder">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.Builder</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Value">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.Value</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Clone">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_Clone">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.IDbConnectionString.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ToString">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbName">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.DbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbNameKeyword">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.DbNameKeyword</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_MasterDbName">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.MasterDbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithNewDbName_System_String_">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithoutDbName">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.CloneWithoutDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_System_String_">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithMasterDbName">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.CloneWithMasterDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName">DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithMasterDbName()</a>
+    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -115,12 +155,15 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
     <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.html">ALE.ETLBox</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_SqlConnectionString_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SqlConnectionString : IDbConnectionString</code></pre>
+    <pre><code class="lang-csharp hljs">public class SqlConnectionString : DbConnectionString&lt;SqlConnectionString, SqlConnectionStringBuilder&gt;, IDbConnectionString</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -142,7 +185,7 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SqlConnectionString(string connectionString)</code></pre>
+    <pre><code class="lang-csharp hljs">public SqlConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +199,7 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">connectionString</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -165,142 +208,15 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
   </h3>
   
   
-  <a id="ALE_ETLBox_SqlConnectionString_DBName_" data-uid="ALE.ETLBox.SqlConnectionString.DBName*"></a>
-  <h4 id="ALE_ETLBox_SqlConnectionString_DBName" data-uid="ALE.ETLBox.SqlConnectionString.DBName">DBName</h4>
+  <a id="ALE_ETLBox_SqlConnectionString_DbName_" data-uid="ALE.ETLBox.SqlConnectionString.DbName*"></a>
+  <h4 id="ALE_ETLBox_SqlConnectionString_DbName" data-uid="ALE.ETLBox.SqlConnectionString.DbName">DbName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DBName { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override string DbName { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_SqlConnectionString_SqlConnectionStringBuilder_" data-uid="ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder*"></a>
-  <h4 id="ALE_ETLBox_SqlConnectionString_SqlConnectionStringBuilder" data-uid="ALE.ETLBox.SqlConnectionString.SqlConnectionStringBuilder">SqlConnectionStringBuilder</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SqlConnectionStringBuilder SqlConnectionStringBuilder { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Microsoft.Data.SqlClient.SqlConnectionStringBuilder</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_SqlConnectionString_Value_" data-uid="ALE.ETLBox.SqlConnectionString.Value*"></a>
-  <h4 id="ALE_ETLBox_SqlConnectionString_Value" data-uid="ALE.ETLBox.SqlConnectionString.Value">Value</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Value { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_SqlConnectionString_GetConnectionWithoutCatalog_" data-uid="ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog*"></a>
-  <h4 id="ALE_ETLBox_SqlConnectionString_GetConnectionWithoutCatalog" data-uid="ALE.ETLBox.SqlConnectionString.GetConnectionWithoutCatalog">GetConnectionWithoutCatalog()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SqlConnectionString GetConnectionWithoutCatalog()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.SqlConnectionString.html">SqlConnectionString</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_SqlConnectionString_GetMasterConnection_" data-uid="ALE.ETLBox.SqlConnectionString.GetMasterConnection*"></a>
-  <h4 id="ALE_ETLBox_SqlConnectionString_GetMasterConnection" data-uid="ALE.ETLBox.SqlConnectionString.GetMasterConnection">GetMasterConnection()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SqlConnectionString GetMasterConnection()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.SqlConnectionString.html">SqlConnectionString</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_SqlConnectionString_ToString_" data-uid="ALE.ETLBox.SqlConnectionString.ToString*"></a>
-  <h4 id="ALE_ETLBox_SqlConnectionString_ToString" data-uid="ALE.ETLBox.SqlConnectionString.ToString">ToString()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -316,7 +232,88 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SqlConnectionString, Microsoft.Data.SqlClient.SqlConnectionStringBuilder&gt;.DbName</span></div>
+  
+  
+  <a id="ALE_ETLBox_SqlConnectionString_DbNameKeyword_" data-uid="ALE.ETLBox.SqlConnectionString.DbNameKeyword*"></a>
+  <h4 id="ALE_ETLBox_SqlConnectionString_DbNameKeyword" data-uid="ALE.ETLBox.SqlConnectionString.DbNameKeyword">DbNameKeyword</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override string DbNameKeyword { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SqlConnectionString, Microsoft.Data.SqlClient.SqlConnectionStringBuilder&gt;.DbNameKeyword</span></div>
+  
+  
+  <a id="ALE_ETLBox_SqlConnectionString_MasterDbName_" data-uid="ALE.ETLBox.SqlConnectionString.MasterDbName*"></a>
+  <h4 id="ALE_ETLBox_SqlConnectionString_MasterDbName" data-uid="ALE.ETLBox.SqlConnectionString.MasterDbName">MasterDbName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string MasterDbName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SqlConnectionString, Microsoft.Data.SqlClient.SqlConnectionStringBuilder&gt;.MasterDbName</span></div>
+  
+  
+  <a id="ALE_ETLBox_SqlConnectionString_Value_" data-uid="ALE.ETLBox.SqlConnectionString.Value*"></a>
+  <h4 id="ALE_ETLBox_SqlConnectionString_Value" data-uid="ALE.ETLBox.SqlConnectionString.Value">Value</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string Value { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.SqlConnectionString, Microsoft.Data.SqlClient.SqlConnectionStringBuilder&gt;.Value</span></div>
   <h3 id="operators">Operators
   </h3>
   
@@ -327,7 +324,7 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator SqlConnectionString(string v)</code></pre>
+    <pre><code class="lang-csharp hljs">public static implicit operator SqlConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -341,7 +338,7 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">v</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>

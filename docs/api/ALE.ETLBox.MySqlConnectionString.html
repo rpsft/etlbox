@@ -89,7 +89,8 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">MySqlConnectionString</span></div>
+    <div class="level1"><a class="xref" href="ALE.ETLBox.DbConnectionString-2.html">DbConnectionString</a>&lt;<a class="xref" href="ALE.ETLBox.MySqlConnectionString.html">MySqlConnectionString</a>, <span class="xref">MySql.Data.MySqlClient.MySqlConnectionStringBuilder</span>&gt;</div>
+    <div class="level2"><span class="xref">MySqlConnectionString</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -97,6 +98,45 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Builder">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.Builder</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Value">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.Value</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Clone">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_Clone">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.IDbConnectionString.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ToString">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.DbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbNameKeyword">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.DbNameKeyword</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_MasterDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.MasterDbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithNewDbName_System_String_">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithoutDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.CloneWithoutDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_System_String_">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithMasterDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.CloneWithMasterDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithMasterDbName()</a>
+    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -115,12 +155,15 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.html">ALE.ETLBox</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_MySqlConnectionString_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MySqlConnectionString : IDbConnectionString</code></pre>
+    <pre><code class="lang-csharp hljs">public class MySqlConnectionString : DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;, IDbConnectionString</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -142,7 +185,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MySqlConnectionString(string connectionString)</code></pre>
+    <pre><code class="lang-csharp hljs">public MySqlConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +199,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">connectionString</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -165,142 +208,15 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   </h3>
   
   
-  <a id="ALE_ETLBox_MySqlConnectionString_DBName_" data-uid="ALE.ETLBox.MySqlConnectionString.DBName*"></a>
-  <h4 id="ALE_ETLBox_MySqlConnectionString_DBName" data-uid="ALE.ETLBox.MySqlConnectionString.DBName">DBName</h4>
+  <a id="ALE_ETLBox_MySqlConnectionString_DbName_" data-uid="ALE.ETLBox.MySqlConnectionString.DbName*"></a>
+  <h4 id="ALE_ETLBox_MySqlConnectionString_DbName" data-uid="ALE.ETLBox.MySqlConnectionString.DbName">DbName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DBName { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override string DbName { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_MySqlConnectionString_MySqlConnectionStringBuilder_" data-uid="ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder*"></a>
-  <h4 id="ALE_ETLBox_MySqlConnectionString_MySqlConnectionStringBuilder" data-uid="ALE.ETLBox.MySqlConnectionString.MySqlConnectionStringBuilder">MySqlConnectionStringBuilder</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MySqlConnectionStringBuilder MySqlConnectionStringBuilder { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">MySql.Data.MySqlClient.MySqlConnectionStringBuilder</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_MySqlConnectionString_Value_" data-uid="ALE.ETLBox.MySqlConnectionString.Value*"></a>
-  <h4 id="ALE_ETLBox_MySqlConnectionString_Value" data-uid="ALE.ETLBox.MySqlConnectionString.Value">Value</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Value { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_MySqlConnectionString_GetConnectionWithoutCatalog_" data-uid="ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog*"></a>
-  <h4 id="ALE_ETLBox_MySqlConnectionString_GetConnectionWithoutCatalog" data-uid="ALE.ETLBox.MySqlConnectionString.GetConnectionWithoutCatalog">GetConnectionWithoutCatalog()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MySqlConnectionString GetConnectionWithoutCatalog()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.MySqlConnectionString.html">MySqlConnectionString</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_MySqlConnectionString_GetMasterConnection_" data-uid="ALE.ETLBox.MySqlConnectionString.GetMasterConnection*"></a>
-  <h4 id="ALE_ETLBox_MySqlConnectionString_GetMasterConnection" data-uid="ALE.ETLBox.MySqlConnectionString.GetMasterConnection">GetMasterConnection()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MySqlConnectionString GetMasterConnection()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.MySqlConnectionString.html">MySqlConnectionString</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_MySqlConnectionString_ToString_" data-uid="ALE.ETLBox.MySqlConnectionString.ToString*"></a>
-  <h4 id="ALE_ETLBox_MySqlConnectionString_ToString" data-uid="ALE.ETLBox.MySqlConnectionString.ToString">ToString()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -316,7 +232,61 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.MySqlConnectionString, MySql.Data.MySqlClient.MySqlConnectionStringBuilder&gt;.DbName</span></div>
+  
+  
+  <a id="ALE_ETLBox_MySqlConnectionString_DbNameKeyword_" data-uid="ALE.ETLBox.MySqlConnectionString.DbNameKeyword*"></a>
+  <h4 id="ALE_ETLBox_MySqlConnectionString_DbNameKeyword" data-uid="ALE.ETLBox.MySqlConnectionString.DbNameKeyword">DbNameKeyword</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override string DbNameKeyword { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.MySqlConnectionString, MySql.Data.MySqlClient.MySqlConnectionStringBuilder&gt;.DbNameKeyword</span></div>
+  
+  
+  <a id="ALE_ETLBox_MySqlConnectionString_MasterDbName_" data-uid="ALE.ETLBox.MySqlConnectionString.MasterDbName*"></a>
+  <h4 id="ALE_ETLBox_MySqlConnectionString_MasterDbName" data-uid="ALE.ETLBox.MySqlConnectionString.MasterDbName">MasterDbName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string MasterDbName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.MySqlConnectionString, MySql.Data.MySqlClient.MySqlConnectionStringBuilder&gt;.MasterDbName</span></div>
   <h3 id="operators">Operators
   </h3>
   
@@ -327,7 +297,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator MySqlConnectionString(string v)</code></pre>
+    <pre><code class="lang-csharp hljs">public static implicit operator MySqlConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -341,7 +311,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">v</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>

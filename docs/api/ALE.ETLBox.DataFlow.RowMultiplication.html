@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class BlockTransformation
+    <title>Class RowMultiplication
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class BlockTransformation
+    <meta name="title" content="Class RowMultiplication
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,14 +77,12 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.BlockTransformation">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.DataFlow.RowMultiplication">
   
   
-  <h1 id="ALE_ETLBox_DataFlow_BlockTransformation" data-uid="ALE.ETLBox.DataFlow.BlockTransformation" class="text-break">Class BlockTransformation
+  <h1 id="ALE_ETLBox_DataFlow_RowMultiplication" data-uid="ALE.ETLBox.DataFlow.RowMultiplication" class="text-break">Class RowMultiplication
   </h1>
-  <div class="markdown level0 summary"><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
-is execution and the result posted into the targets.
-The non generic implementation uses dynamic objects as input and output</p>
+  <div class="markdown level0 summary"><p>This transformation allow you to transform your input data into multple output data records.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -93,9 +91,8 @@ The non generic implementation uses dynamic objects as input and output</p>
     <div class="level1"><a class="xref" href="ALE.ETLBox.GenericTask.html">GenericTask</a></div>
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html">BlockTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-1.html">BlockTransformation</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
-    <div class="level6"><span class="xref">BlockTransformation</span></div>
+    <div class="level4"><a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html">RowMultiplication</a>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Dynamic.ExpandoObject</span>&gt;</div>
+    <div class="level5"><span class="xref">RowMultiplication</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -107,16 +104,22 @@ The non generic implementation uses dynamic objects as input and output</p>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_TaskName">BlockTransformation&lt;ExpandoObject, ExpandoObject&gt;.TaskName</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TaskName">RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;.TaskName</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_BlockTransformationFunc">BlockTransformation&lt;ExpandoObject, ExpandoObject&gt;.BlockTransformationFunc</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_SourceBlock">RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;.SourceBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_SourceBlock">BlockTransformation&lt;ExpandoObject, ExpandoObject&gt;.SourceBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_TargetBlock">RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;.TargetBlock</a>
     </div>
     <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation-2.html#ALE_ETLBox_DataFlow_BlockTransformation_2_TargetBlock">BlockTransformation&lt;ExpandoObject, ExpandoObject&gt;.TargetBlock</a>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_MultiplicationFunc">RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;.MultiplicationFunc</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_InitFlow">RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;.InitFlow()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__">RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;.LinkErrorTo(IDataFlowLinkTarget&lt;ETLBoxError&gt;)</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_PredecessorCompletions">DataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;.PredecessorCompletions</a>
@@ -232,21 +235,31 @@ The non generic implementation uses dynamic objects as input and output</p>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.DataFlow.html">ALE.ETLBox.DataFlow</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_DataFlow_BlockTransformation_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_DataFlow_RowMultiplication_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class BlockTransformation : BlockTransformation&lt;ExpandoObject&gt;, IDataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;, IDataFlowLinkTarget&lt;ExpandoObject&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class RowMultiplication : RowMultiplication&lt;ExpandoObject, ExpandoObject&gt;, IDataFlowTransformation&lt;ExpandoObject, ExpandoObject&gt;, IDataFlowLinkSource&lt;ExpandoObject&gt;, IDataFlowLinkTarget&lt;ExpandoObject&gt;, ITask</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="ALE_ETLBox_DataFlow_BlockTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.BlockTransformation.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_BlockTransformation__ctor_System_Func_System_Collections_Generic_List_System_Dynamic_ExpandoObject__System_Collections_Generic_List_System_Dynamic_ExpandoObject___" data-uid="ALE.ETLBox.DataFlow.BlockTransformation.#ctor(System.Func{System.Collections.Generic.List{System.Dynamic.ExpandoObject},System.Collections.Generic.List{System.Dynamic.ExpandoObject}})">BlockTransformation(Func&lt;List&lt;ExpandoObject&gt;, List&lt;ExpandoObject&gt;&gt;)</h4>
+  <a id="ALE_ETLBox_DataFlow_RowMultiplication__ctor_" data-uid="ALE.ETLBox.DataFlow.RowMultiplication.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_RowMultiplication__ctor" data-uid="ALE.ETLBox.DataFlow.RowMultiplication.#ctor">RowMultiplication()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BlockTransformation(Func&lt;List&lt;ExpandoObject&gt;, List&lt;ExpandoObject&gt;&gt; blockTransformationFunc)</code></pre>
+    <pre><code class="lang-csharp hljs">public RowMultiplication()</code></pre>
+  </div>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_RowMultiplication__ctor_" data-uid="ALE.ETLBox.DataFlow.RowMultiplication.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_RowMultiplication__ctor_System_Func_System_Dynamic_ExpandoObject_System_Collections_Generic_IEnumerable_System_Dynamic_ExpandoObject___" data-uid="ALE.ETLBox.DataFlow.RowMultiplication.#ctor(System.Func{System.Dynamic.ExpandoObject,System.Collections.Generic.IEnumerable{System.Dynamic.ExpandoObject}})">RowMultiplication(Func&lt;ExpandoObject, IEnumerable&lt;ExpandoObject&gt;&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RowMultiplication(Func&lt;ExpandoObject, IEnumerable&lt;ExpandoObject&gt;&gt; multiplicationFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -259,40 +272,8 @@ The non generic implementation uses dynamic objects as input and output</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;, <span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;&gt;</td>
-        <td><span class="parametername">blockTransformationFunc</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_BlockTransformation__ctor_" data-uid="ALE.ETLBox.DataFlow.BlockTransformation.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_BlockTransformation__ctor_System_String_System_Func_System_Collections_Generic_List_System_Dynamic_ExpandoObject__System_Collections_Generic_List_System_Dynamic_ExpandoObject___" data-uid="ALE.ETLBox.DataFlow.BlockTransformation.#ctor(System.String,System.Func{System.Collections.Generic.List{System.Dynamic.ExpandoObject},System.Collections.Generic.List{System.Dynamic.ExpandoObject}})">BlockTransformation(String, Func&lt;List&lt;ExpandoObject&gt;, List&lt;ExpandoObject&gt;&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BlockTransformation(string name, Func&lt;List&lt;ExpandoObject&gt;, List&lt;ExpandoObject&gt;&gt; blockTransformationFunc)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;, <span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;&gt;</td>
-        <td><span class="parametername">blockTransformationFunc</span></td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Dynamic.ExpandoObject</span>&gt;&gt;</td>
+        <td><span class="parametername">multiplicationFunc</span></td>
         <td></td>
       </tr>
     </tbody>

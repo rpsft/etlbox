@@ -31,7 +31,9 @@ namespace ALE.ETLBox.Helper
     /// Allows to pass JsonPath string that are applied for particular property names - this will work one on the first level
     /// of the 
     /// </summary>
-    /// <seealso cref="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Converters/ExpandoObjectConverter.cs"/>
+    /// <remarks>
+    /// https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Converters/ExpandoObjectConverter.cs
+    /// </remarks>    
     public class ExpandoJsonPathConverter : JsonConverter
     {
         public IEnumerable<JsonProperty2JsonPath> PathLookups { get; set; }

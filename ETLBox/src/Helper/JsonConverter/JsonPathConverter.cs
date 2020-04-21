@@ -24,8 +24,10 @@ namespace ALE.ETLBox.Helper
     ///     public string Col2 { get; set; }
     /// }
     /// </code>
-    /// </example>
-    /// <seealso cref="https://stackoverflow.com/questions/33088462/can-i-specify-a-path-in-an-attribute-to-map-a-property-in-my-class-to-a-child-pr"/>
+    /// </example>    
+    /// <remarks>
+    /// https://stackoverflow.com/questions/33088462/can-i-specify-a-path-in-an-attribute-to-map-a-property-in-my-class-to-a-child-pr
+    /// </remarks>"
     public class JsonPathConverter : JsonConverter
     {
         /// <inheritdoc />

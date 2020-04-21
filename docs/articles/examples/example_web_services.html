@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Example: Use Custom source to consume web service | ETLBox - It's all in the box </title>
+    <title>Example: Json and web service integration | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Example: Use Custom source to consume web service | ETLBox - It's all in the box ">
+    <meta name="title" content="Example: Json and web service integration | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -76,19 +76,36 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="example-use-custom-source-to-consume-web-service">Example: Use Custom source to consume web service</h1>
+<h1 id="example-json-and-web-service-integration">Example: Json and web service integration</h1>
 
-<h2 id="jsonsource">JsonSource</h2>
-<p>If you would like to use a WebAPI or REST service as data source, you should first check
-if the <a href="example_web_services.html">current implementation of <code>JsonSource</code></a> is not already satisfying your needs.</p>
 <h2 id="purpose">Purpose</h2>
-<p>The example shows how the <code>CustomSource</code> can be used to query any kind of web service.</p>
-<h2 id="test-web-service">Test web service</h2>
-<p>In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
+<p>This example demonstrates how the different how a web service that returns data in json format can
+be used in an ETL pipeline. The json data can come from any service that can be requested from a .net
+HttpClient.</p>
+<h2 id="loading-json-from-a-web-service">Loading json from a web service</h2>
+<p>In this example, I will use the JSONPlaceHolder project. It is a fake online REST API for Testing and Prototyping.
 See <a href="https://jsonplaceholder.typicode.com">jsonplaceholder.typicode.com</a> for more details.</p>
-<h3 id="create-necessary-poco">Create necessary POCO</h3>
-<p>In order to store the data from the webservice, we need a POCO (Plain old Component object) to store an element in there.
-For this example, we create a representation for a Todo item.</p>
+<h3 id="jsonsource">JsonSource</h3>
+<p>You can directly query web services or REST APIs using the <code>JsonSource</code>. There are some minor restrictions</p>
+<ol>
+<li>The http or https service has to send back a Json response</li>
+<li>The json needs to be an array.</li>
+</ol>
+<p>A good example for a valid json response that can be read by the <code>JsonSource</code> component is <a href="https://jsonplaceholder.typicode.com/todos/">this example web service</a>.</p>
+<p>It will return a json in the following format:</p>
+<pre><code class="lang-json">[
+  {
+    &quot;userId&quot;: 1,
+    &quot;id&quot;: 1,
+    &quot;title&quot;: &quot;delectus aut autem&quot;,
+    &quot;completed&quot;: false
+  },
+  ...
+]
+</code></pre>
+<p>Please note that the root element is an array, and it does contain object definitions.</p>
+<p>Here is an example how to read data from this web service.</p>
+<p>First, you need to define your POCO:</p>
 <pre><code class="lang-C#">public class Todo
 {
     public int Id { get; set; }
@@ -97,56 +114,63 @@ For this example, we create a representation for a Todo item.</p>
     public bool Completed { get; set; }
 }
 </code></pre>
-<h2 id="connect-with-the-webservice">Connect with the webservice</h2>
-<p>Next, we need a class that connect to the webservice. This class has a method <code>ReadTodo()</code> which uses
-a simple HttpClient to connect to the service and to get the data for one Todo item.
-Every time it is called, the <code>TodoCounter</code> is increased by one. The method <code>EndOfData</code> returns true when the webservice
-was called more than 5 time.</p>
-<pre><code class="lang-C#">public class WebserviceReader
-{
-    public string Json { get; set; }
-    public int TodoCounter { get; set; } = 1;
-    public Todo ReadTodo()
-    {
-        var todo = new Todo();
-        using (var httpClient = new HttpClient())
-        {
-            var uri = new Uri(&quot;https://jsonplaceholder.typicode.com/todos/&quot; + TodoCounter);
-            TodoCounter++;
-            var response = httpClient.GetStringAsync(uri).Result;
-            Newtonsoft.Json.JsonConvert.PopulateObject(response, todo);
-        }
-        return todo;
-    }
+<p>Now, you can simply read the data from the service by using the <code>JsonSource</code>:</p>
+<pre><code class="lang-C#">JsonSource&lt;Todo&gt; source = new JsonSource&lt;Todo&gt;(&quot;https://jsonplaceholder.typicode.com/todos&quot;);
+</code></pre>
+<p>So a full example where you read data from a webservice e.g. into a memory data table would look like this:</p>
+<pre><code class="lang-C#">JsonSource&lt;Todo&gt; source = new JsonSource&lt;Todo&gt;(&quot;https://jsonplaceholder.typicode.com/todos&quot;);
+MemoryDestination&lt;Todo&gt; dest = new MemoryDestination&lt;Todo&gt;(200);
 
-    public bool EndOfData()
-    {
-        return TodoCounter &gt; 5;
-    }
+source.LinkTo(dest);
+source.Execute();
+dest.Wait();
+
+//dest.Data will now contain all items from the web service
+</code></pre>
+<p>The property <code>Data</code> (which is a snychronized list) will now contain all items from the web service.</p>
+<h2 id="json-as-file">Json as file</h2>
+<h3 id="read-json-from-file">Read json from file</h3>
+<p>Let's consider we have a json file like this as our data input:</p>
+<pre><code>[
+  {
+    &quot;Col1&quot;: 1,
+    &quot;Col2&quot;: &quot;Test1&quot;    
+  },
+  {
+    &quot;Col1&quot;: 2,
+    &quot;Col2&quot;: &quot;Test2&quot;    
+  }
+]
+</code></pre>
+<p>This can be read into a dataflow using the <code>JsonSource</code> and the following code:</p>
+<pre><code class="lang-C#">public class MySimpleRow
+{
+    public int Col1 { get; set; }
+    public string Col2 { get; set; }
+}
+
+JsonSource&lt;MySimpleRow&gt; source = new JsonSource&lt;MySimpleRow&gt;(&quot;file.json&quot;, ResourceType.File);
+</code></pre>
+<h3 id="write-into-json-file">Write into json file</h3>
+<p>To get your data outputted as json, you can use the <code>JSonDestination</code>:</p>
+<pre><code class="lang-C#">JsonDestination&lt;MySimpleRow&gt; dest = new JsonDestination&lt;MySimpleRow&gt;(&quot;file.json&quot;);
+</code></pre>
+<h2 id="using-jsonproperty">Using JsonProperty</h2>
+<p>Sometimes, you don't want to create a full C# Poco (Plain old component object).
+If you leave out some properties, you will see that the Json Deserializer just will ignore these properties.</p>
+<p>You can even use the JsonProperty attribute to add specific JsonPath expressions that the JsonDeserializer uses
+to map the right json records into the object.</p>
+<p>E.g. if you want to have the Id-entry in the json mapped to property <code>Key</code> in your object definition, you would do it like this:</p>
+<pre><code class="lang-C#">public class Todo
+{
+    [JsonProperty(&quot;Id&quot;)]
+    public int Key { get; set; }
+    public string Title { get; set; }
 }
 </code></pre>
-<h2 id="create-a-destination-table">Create a destination table</h2>
-<p>In this example, we want to store the data retrieved from the Webservice in a table in our database.
-For that, we need a table in our database.</p>
-<pre><code class="lang-C#">
-SqlTask.ExecuteNonQuery(&quot;Create test table&quot;,
-    @&quot;CREATE TABLE dbo.ws_dest 
-    ( id INT NOT NULL, userId INT NOT NULL, title NVARCHAR(100) NOT NULL, completed BIT NOT NULL )&quot;
-);
-</code></pre>
-<h2 id="linking-it-all-together">Linking it all together</h2>
-<p>Now we create a dataflow that calls the webservices and stores the result in the database.
-We use the <code>CustomSource</code> for this - a custom source accepts a <code>Func</code> that is called to
-retrieve data and post it into the dataflow - it is called until the second <code>Func</code> is evaluated as true.</p>
-<pre><code class="lang-C#">WebserviceReader wsreader = new WebserviceReader();
-CustomSource&lt;Todo&gt; source = new CustomSource&lt;Todo&gt;(wsreader.ReadTodo, wsreader.EndOfData);
-DbDestination&lt;Todo&gt; dest = new DbDestination&lt;Todo&gt;(&quot;dbo.ws_dest&quot;);
-source.LinkTo(dest);
-</code></pre>
-<p>Now we start the dataflow with:</p>
-<pre><code class="lang-C#">source.Execute();
-dest.Wait();
-</code></pre>
+<p>Also, this example does not have the properties <code>Completed</code> and <code>UserId</code> anymore - they will be ignored in the data flow</p>
+<p>Deserialization is completely based on The <a href="https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializer.htm">Newtonsoft.Json.JsonSerializer</a>.
+There is also a property <code>JsonSerializer</code> that can be overwritten with your own JsonSerializer.</p>
 </article>
           </div>
           

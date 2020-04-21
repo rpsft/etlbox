@@ -203,12 +203,12 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
   
   
   <a id="ALE_ETLBox_ControlFlow_CreateTableTask__ctor_" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.#ctor*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask__ctor_System_String_System_Collections_Generic_IList_ALE_ETLBox_ITableColumn__" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})">CreateTableTask(String, IList&lt;ITableColumn&gt;)</h4>
+  <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask__ctor_System_String_System_Collections_Generic_List_ALE_ETLBox_TableColumn__" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.#ctor(System.String,System.Collections.Generic.List{ALE.ETLBox.TableColumn})">CreateTableTask(String, List&lt;TableColumn&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CreateTableTask(string tableName, IList&lt;ITableColumn&gt; columns)</code></pre>
+    <pre><code class="lang-csharp hljs">public CreateTableTask(string tableName, List&lt;TableColumn&gt; columns)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -226,7 +226,7 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="ALE.ETLBox.TableColumn.html">TableColumn</a>&gt;</td>
         <td><span class="parametername">columns</span></td>
         <td></td>
       </tr>
@@ -242,7 +242,7 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;ITableColumn&gt; Columns { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;TableColumn&gt; Columns { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -254,7 +254,7 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="ALE.ETLBox.TableColumn.html">TableColumn</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -286,13 +286,38 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
   </table>
   
   
+  <a id="ALE_ETLBox_ControlFlow_CreateTableTask_TableDefinition_" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition*"></a>
+  <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask_TableDefinition" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.TableDefinition">TableDefinition</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TableDefinition TableDefinition { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.TableDefinition.html">TableDefinition</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_ControlFlow_CreateTableTask_TableName_" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.TableName*"></a>
   <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask_TableName" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.TableName">TableName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string TableName { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string TableName { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -433,43 +458,6 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
   
   
   <a id="ALE_ETLBox_ControlFlow_CreateTableTask_Create_" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.Create*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask_Create_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_Collections_Generic_IList_ALE_ETLBox_ITableColumn__" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})">Create(IConnectionManager, String, IList&lt;ITableColumn&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void Create(IConnectionManager connectionManager, string tableName, IList&lt;ITableColumn&gt; columns)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.ConnectionManager.IConnectionManager.html">IConnectionManager</a></td>
-        <td><span class="parametername">connectionManager</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a>&gt;</td>
-        <td><span class="parametername">columns</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_ControlFlow_CreateTableTask_Create_" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.Create*"></a>
   <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask_Create_ALE_ETLBox_ConnectionManager_IConnectionManager_System_String_System_Collections_Generic_List_ALE_ETLBox_TableColumn__" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.Create(ALE.ETLBox.ConnectionManager.IConnectionManager,System.String,System.Collections.Generic.List{ALE.ETLBox.TableColumn})">Create(IConnectionManager, String, List&lt;TableColumn&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
@@ -527,38 +515,6 @@ new TableColumn(name:&quot;key&quot;, dataType:&quot;int&quot;, allowNulls:false
       <tr>
         <td><a class="xref" href="ALE.ETLBox.TableDefinition.html">TableDefinition</a></td>
         <td><span class="parametername">tableDefinition</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_ControlFlow_CreateTableTask_Create_" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.Create*"></a>
-  <h4 id="ALE_ETLBox_ControlFlow_CreateTableTask_Create_System_String_System_Collections_Generic_IList_ALE_ETLBox_ITableColumn__" data-uid="ALE.ETLBox.ControlFlow.CreateTableTask.Create(System.String,System.Collections.Generic.IList{ALE.ETLBox.ITableColumn})">Create(String, IList&lt;ITableColumn&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void Create(string tableName, IList&lt;ITableColumn&gt; columns)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">tableName</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a>&gt;</td>
-        <td><span class="parametername">columns</span></td>
         <td></td>
       </tr>
     </tbody>

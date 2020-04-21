@@ -100,6 +100,7 @@ Inserts are done in batches (using Bulk insert or an equivalent).</p>
     <h5>Implements</h5>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;TInput[]&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TInput[]&gt;</div>
+    <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html">IDataFlowBatchDestination</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget</a>&lt;TInput&gt;</div>
     <div><a class="xref" href="ALE.ETLBox.ITask.html">ITask</a></div>
@@ -117,6 +118,9 @@ Inserts are done in batches (using Bulk insert or an equivalent).</p>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_BatchSize">DataFlowBatchDestination&lt;TInput&gt;.BatchSize</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_DEFAULT_BATCH_SIZE">DataFlowBatchDestination&lt;TInput&gt;.DEFAULT_BATCH_SIZE</a>
     </div>
     <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.DataFlowBatchDestination-1.html#ALE_ETLBox_DataFlow_DataFlowBatchDestination_1_WasInitialized">DataFlowBatchDestination&lt;TInput&gt;.WasInitialized</a>
@@ -255,7 +259,7 @@ Inserts are done in batches (using Bulk insert or an equivalent).</p>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_DbDestination_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DbDestination&lt;TInput&gt; : DataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput[]&gt;, IDataFlowLinkTarget&lt;TInput[]&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class DbDestination&lt;TInput&gt; : DataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput[]&gt;, IDataFlowLinkTarget&lt;TInput[]&gt;, IDataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -440,32 +444,6 @@ Inserts are done in batches (using Bulk insert or an equivalent).</p>
       </tr>
     </tbody>
   </table>
-  <h3 id="fields">Fields
-  </h3>
-  
-  
-  <h4 id="ALE_ETLBox_DataFlow_DbDestination_1_DEFAULT_BATCH_SIZE" data-uid="ALE.ETLBox.DataFlow.DbDestination`1.DEFAULT_BATCH_SIZE">DEFAULT_BATCH_SIZE</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected const int DEFAULT_BATCH_SIZE = 1000</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
   
@@ -516,56 +494,6 @@ you can provide your own table definition.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="ALE.ETLBox.TableDefinition.html">TableDefinition</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_DbDestination_1_HasDestinationTableDefinition_" data-uid="ALE.ETLBox.DataFlow.DbDestination`1.HasDestinationTableDefinition*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbDestination_1_HasDestinationTableDefinition" data-uid="ALE.ETLBox.DataFlow.DbDestination`1.HasDestinationTableDefinition">HasDestinationTableDefinition</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected bool HasDestinationTableDefinition { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_DbDestination_1_HasTableName_" data-uid="ALE.ETLBox.DataFlow.DbDestination`1.HasTableName*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_DbDestination_1_HasTableName" data-uid="ALE.ETLBox.DataFlow.DbDestination`1.HasTableName">HasTableName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected bool HasTableName { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -713,6 +641,9 @@ you can provide your own table definition.</p>
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowLinkTarget-1.html">IDataFlowLinkTarget&lt;TInput&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowBatchDestination-1.html">IDataFlowBatchDestination&lt;TInput&gt;</a>
   </div>
   <div>
       <a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowDestination-1.html">IDataFlowDestination&lt;TInput&gt;</a>

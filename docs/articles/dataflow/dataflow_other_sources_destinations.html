@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Example: Use Custom source to consume web service | ETLBox - It's all in the box </title>
+    <title>Other sources and destinations | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Example: Use Custom source to consume web service | ETLBox - It's all in the box ">
+    <meta name="title" content="Other sources and destinations | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -76,77 +76,71 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="example-use-custom-source-to-consume-web-service">Example: Use Custom source to consume web service</h1>
+<h1 id="other-sources-and-destinations">Other sources and destinations</h1>
 
-<h2 id="jsonsource">JsonSource</h2>
-<p>If you would like to use a WebAPI or REST service as data source, you should first check
-if the <a href="example_web_services.html">current implementation of <code>JsonSource</code></a> is not already satisfying your needs.</p>
-<h2 id="purpose">Purpose</h2>
-<p>The example shows how the <code>CustomSource</code> can be used to query any kind of web service.</p>
-<h2 id="test-web-service">Test web service</h2>
-<p>In this example, I will use the JSONPlaceHolder project. It is a fake Online REST API for Testing and Prototyping.
-See <a href="https://jsonplaceholder.typicode.com">jsonplaceholder.typicode.com</a> for more details.</p>
-<h3 id="create-necessary-poco">Create necessary POCO</h3>
-<p>In order to store the data from the webservice, we need a POCO (Plain old Component object) to store an element in there.
-For this example, we create a representation for a Todo item.</p>
-<pre><code class="lang-C#">public class Todo
-{
+<h2 id="custom-written-sources--destinations">Custom written sources &amp; destinations</h2>
+<p>ETLBox allows you to write your own implementation of sources and destinations. This gives you a
+great flexibility if you need to integrate systems that are currently now included in the list of default
+connectors.</p>
+<h3 id="customsource">CustomSource</h3>
+<p>A custom source can generate any type of  output you need.
+It will accept tow function: One function that generates the your output, and another one that return true if you reached the end of your data.</p>
+<p>Let's look at a simple example. Assuming we have a list of strings, and we want to return these string wrapped into an object data for our source.</p>
+<p>First we define an object</p>
+<pre><code class="lang-C#">public class MyRow {
     public int Id { get; set; }
-    public int UserId { get; set; }
-    public string Title { get; set; }
-    public bool Completed { get; set; }
+    public string Value { get; set; }
 }
-</code></pre>
-<h2 id="connect-with-the-webservice">Connect with the webservice</h2>
-<p>Next, we need a class that connect to the webservice. This class has a method <code>ReadTodo()</code> which uses
-a simple HttpClient to connect to the service and to get the data for one Todo item.
-Every time it is called, the <code>TodoCounter</code> is increased by one. The method <code>EndOfData</code> returns true when the webservice
-was called more than 5 time.</p>
-<pre><code class="lang-C#">public class WebserviceReader
-{
-    public string Json { get; set; }
-    public int TodoCounter { get; set; } = 1;
-    public Todo ReadTodo()
-    {
-        var todo = new Todo();
-        using (var httpClient = new HttpClient())
-        {
-            var uri = new Uri(&quot;https://jsonplaceholder.typicode.com/todos/&quot; + TodoCounter);
-            TodoCounter++;
-            var response = httpClient.GetStringAsync(uri).Result;
-            Newtonsoft.Json.JsonConvert.PopulateObject(response, todo);
-        }
-        return todo;
-    }
 
-    public bool EndOfData()
-    {
-        return TodoCounter &gt; 5;
-    }
-}
+List&lt;string&gt; Data = new List&lt;string&gt;() { &quot;Test1&quot;, &quot;Test2&quot;, &quot;Test3&quot; };
+int _readIndex = 0;
+
+CustomSource&lt;MySimpleRow&gt; source = new CustomSource&lt;MySimpleRow&gt;(
+    () =&gt; {
+        return new MyRow()
+        {
+            Id = _readIndex++,
+            Value = Data[_readIndex]
+        };
+    }, 
+    () =&gt; _readIndex &gt;= Data.Count);
 </code></pre>
-<h2 id="create-a-destination-table">Create a destination table</h2>
-<p>In this example, we want to store the data retrieved from the Webservice in a table in our database.
-For that, we need a table in our database.</p>
-<pre><code class="lang-C#">
-SqlTask.ExecuteNonQuery(&quot;Create test table&quot;,
-    @&quot;CREATE TABLE dbo.ws_dest 
-    ( id INT NOT NULL, userId INT NOT NULL, title NVARCHAR(100) NOT NULL, completed BIT NOT NULL )&quot;
+<p>CustomSource also works with dynamic ExpandoObject and arrays.</p>
+<h3 id="custom-destination">Custom Destination</h3>
+<p>The use of a custom destination is even simpler - a custom destination
+just calls an action for every received record.</p>
+<p>Here is an example:</p>
+<pre><code class="lang-C#">CustomDestination&lt;MySimpleRow&gt; dest = new CustomDestination&lt;MySimpleRow&gt;(
+    row =&gt; {
+        SqlTask.ExecuteNonQuery(Connection, &quot;Insert row&quot;,
+            $&quot;INSERT INTO dbo.CustomDestination VALUES({row.Id},'{row.Value}')&quot;);
+    }
 );
 </code></pre>
-<h2 id="linking-it-all-together">Linking it all together</h2>
-<p>Now we create a dataflow that calls the webservices and stores the result in the database.
-We use the <code>CustomSource</code> for this - a custom source accepts a <code>Func</code> that is called to
-retrieve data and post it into the dataflow - it is called until the second <code>Func</code> is evaluated as true.</p>
-<pre><code class="lang-C#">WebserviceReader wsreader = new WebserviceReader();
-CustomSource&lt;Todo&gt; source = new CustomSource&lt;Todo&gt;(wsreader.ReadTodo, wsreader.EndOfData);
-DbDestination&lt;Todo&gt; dest = new DbDestination&lt;Todo&gt;(&quot;dbo.ws_dest&quot;);
-source.LinkTo(dest);
+<h2 id="memory-source">Memory Source</h2>
+<p>A Memory source is a simple source component that accepts a .NET list or enumerable. Use this component
+within your dataflow if you already have a collection containing your data available in memory.
+When you execute the flow, the memory destination will iterate through the list and
+asynchronously post record by record into the flow.</p>
+<p>Example code:</p>
+<pre><code class="lang-C#">MemorySource&lt;MySimpleRow&gt; source = new MemorySource&lt;MySimpleRow&gt;();
+source.Data = new List&lt;MySimpleRow&gt;()
+{
+    new MySimpleRow() { Col1 = 1, Col2 = &quot;Test1&quot; },
+    new MySimpleRow() { Col1 = 2, Col2 = &quot;Test2&quot; },
+    new MySimpleRow() { Col1 = 3, Col2 = &quot;Test3&quot; }
+};
 </code></pre>
-<p>Now we start the dataflow with:</p>
-<pre><code class="lang-C#">source.Execute();
-dest.Wait();
+<h3 id="memorydestination">MemoryDestination</h3>
+<p>A memory destination is a component that store the incoming data within a <a href="https://docs.microsoft.com/de-de/dotnet/api/system.collections.concurrent.blockingcollection-1?view=netframework-4.8">BlockingCollection</a>.
+You can access the received data within the <code>Data</code> property.
+Data can be read from this collection as soon as it arrives.</p>
+<p>Example:</p>
+<pre><code class="lang-C#">MemoryDestination&lt;MySimpleRow&gt; dest = new MemoryDestination&lt;MySimpleRow&gt;();
+// data is accessible in dest.Data 
 </code></pre>
+<p>When starting the data flow asynchronous, you should wait until the tasks complete. The source task will complete when
+all data was posted into the data flow, and the destination task completes when all data has arrived in the destination.</p>
 </article>
           </div>
           

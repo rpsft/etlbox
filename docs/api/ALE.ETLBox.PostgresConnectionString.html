@@ -89,7 +89,8 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">PostgresConnectionString</span></div>
+    <div class="level1"><a class="xref" href="ALE.ETLBox.DbConnectionString-2.html">DbConnectionString</a>&lt;<a class="xref" href="ALE.ETLBox.PostgresConnectionString.html">PostgresConnectionString</a>, <span class="xref">Npgsql.NpgsqlConnectionStringBuilder</span>&gt;</div>
+    <div class="level2"><span class="xref">PostgresConnectionString</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -97,6 +98,45 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Builder">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.Builder</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Value">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.Value</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_Clone">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_Clone">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.IDbConnectionString.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ToString">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbName">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.DbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_DbNameKeyword">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.DbNameKeyword</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_MasterDbName">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.MasterDbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithNewDbName_System_String_">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithoutDbName">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.CloneWithoutDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithNewDbName_System_String_">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_CloneWithMasterDbName">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.CloneWithMasterDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ALE.ETLBox.DbConnectionString-2.html#ALE_ETLBox_DbConnectionString_2_ALE_ETLBox_IDbConnectionString_CloneWithMasterDbName">DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithMasterDbName()</a>
+    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -115,12 +155,15 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.html">ALE.ETLBox</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_PostgresConnectionString_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PostgresConnectionString : IDbConnectionString</code></pre>
+    <pre><code class="lang-csharp hljs">public class PostgresConnectionString : DbConnectionString&lt;PostgresConnectionString, NpgsqlConnectionStringBuilder&gt;, IDbConnectionString</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -142,7 +185,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PostgresConnectionString(string connectionString)</code></pre>
+    <pre><code class="lang-csharp hljs">public PostgresConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +199,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">connectionString</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -165,142 +208,15 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   </h3>
   
   
-  <a id="ALE_ETLBox_PostgresConnectionString_DBName_" data-uid="ALE.ETLBox.PostgresConnectionString.DBName*"></a>
-  <h4 id="ALE_ETLBox_PostgresConnectionString_DBName" data-uid="ALE.ETLBox.PostgresConnectionString.DBName">DBName</h4>
+  <a id="ALE_ETLBox_PostgresConnectionString_DbName_" data-uid="ALE.ETLBox.PostgresConnectionString.DbName*"></a>
+  <h4 id="ALE_ETLBox_PostgresConnectionString_DbName" data-uid="ALE.ETLBox.PostgresConnectionString.DbName">DbName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DBName { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override string DbName { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_PostgresConnectionString_MySqlConnectionStringBuilder_" data-uid="ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder*"></a>
-  <h4 id="ALE_ETLBox_PostgresConnectionString_MySqlConnectionStringBuilder" data-uid="ALE.ETLBox.PostgresConnectionString.MySqlConnectionStringBuilder">MySqlConnectionStringBuilder</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public NpgsqlConnectionStringBuilder MySqlConnectionStringBuilder { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Npgsql.NpgsqlConnectionStringBuilder</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_PostgresConnectionString_Value_" data-uid="ALE.ETLBox.PostgresConnectionString.Value*"></a>
-  <h4 id="ALE_ETLBox_PostgresConnectionString_Value" data-uid="ALE.ETLBox.PostgresConnectionString.Value">Value</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Value { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_PostgresConnectionString_GetConnectionWithoutCatalog_" data-uid="ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog*"></a>
-  <h4 id="ALE_ETLBox_PostgresConnectionString_GetConnectionWithoutCatalog" data-uid="ALE.ETLBox.PostgresConnectionString.GetConnectionWithoutCatalog">GetConnectionWithoutCatalog()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PostgresConnectionString GetConnectionWithoutCatalog()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.PostgresConnectionString.html">PostgresConnectionString</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_PostgresConnectionString_GetMasterConnection_" data-uid="ALE.ETLBox.PostgresConnectionString.GetMasterConnection*"></a>
-  <h4 id="ALE_ETLBox_PostgresConnectionString_GetMasterConnection" data-uid="ALE.ETLBox.PostgresConnectionString.GetMasterConnection">GetMasterConnection()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PostgresConnectionString GetMasterConnection()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ALE.ETLBox.PostgresConnectionString.html">PostgresConnectionString</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_PostgresConnectionString_ToString_" data-uid="ALE.ETLBox.PostgresConnectionString.ToString*"></a>
-  <h4 id="ALE_ETLBox_PostgresConnectionString_ToString" data-uid="ALE.ETLBox.PostgresConnectionString.ToString">ToString()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -316,7 +232,61 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.PostgresConnectionString, Npgsql.NpgsqlConnectionStringBuilder&gt;.DbName</span></div>
+  
+  
+  <a id="ALE_ETLBox_PostgresConnectionString_DbNameKeyword_" data-uid="ALE.ETLBox.PostgresConnectionString.DbNameKeyword*"></a>
+  <h4 id="ALE_ETLBox_PostgresConnectionString_DbNameKeyword" data-uid="ALE.ETLBox.PostgresConnectionString.DbNameKeyword">DbNameKeyword</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override string DbNameKeyword { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.PostgresConnectionString, Npgsql.NpgsqlConnectionStringBuilder&gt;.DbNameKeyword</span></div>
+  
+  
+  <a id="ALE_ETLBox_PostgresConnectionString_MasterDbName_" data-uid="ALE.ETLBox.PostgresConnectionString.MasterDbName*"></a>
+  <h4 id="ALE_ETLBox_PostgresConnectionString_MasterDbName" data-uid="ALE.ETLBox.PostgresConnectionString.MasterDbName">MasterDbName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string MasterDbName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ALE.ETLBox.DbConnectionString&lt;ALE.ETLBox.PostgresConnectionString, Npgsql.NpgsqlConnectionStringBuilder&gt;.MasterDbName</span></div>
   <h3 id="operators">Operators
   </h3>
   
@@ -327,7 +297,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static implicit operator PostgresConnectionString(string v)</code></pre>
+    <pre><code class="lang-csharp hljs">public static implicit operator PostgresConnectionString(string value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -341,7 +311,7 @@ Internally the MySqlConnectionStringBuilder is used to access the values of the 
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">v</span></td>
+        <td><span class="parametername">value</span></td>
         <td></td>
       </tr>
     </tbody>

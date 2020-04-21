@@ -3,7 +3,7 @@
 ## JsonSource
 
 If you would like to use a WebAPI or REST service as data source, you should first check 
-if the [current implementation of `JsonSource`](../dataflow/dataflow_web_services.md) is not already satisfying your needs. 
+if the [current implementation of `JsonSource`](./example_web_services.md) is not already satisfying your needs. 
 
 ## Purpose
 
