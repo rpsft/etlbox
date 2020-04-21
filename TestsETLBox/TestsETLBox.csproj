@@ -33,7 +33,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="db\AccessControlFlow.accdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="db\AccessControlFlow.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="db\AccessDataFlow.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="db\AccessDataFlow.mdb">
