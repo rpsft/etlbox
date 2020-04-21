@@ -15,6 +15,8 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class PostgresConnectionManager : DbConnectionManager<NpgsqlConnection>
     {
+        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Postgres;
+        
         public PostgresConnectionManager() : base() { }
 
         public PostgresConnectionManager(PostgresConnectionString connectionString) : base(connectionString) { }

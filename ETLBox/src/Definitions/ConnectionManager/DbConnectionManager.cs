@@ -8,6 +8,8 @@ namespace ALE.ETLBox.ConnectionManager
     public abstract class DbConnectionManager<Connection> : IDisposable, IConnectionManager
         where Connection : class, IDbConnection, new()
     {
+        public abstract ConnectionManagerType ConnectionManagerType { get; }
+        
         public int MaxLoginAttempts { get; set; } = 3;
         public bool LeaveOpen
         {

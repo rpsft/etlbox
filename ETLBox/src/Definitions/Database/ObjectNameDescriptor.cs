@@ -6,46 +6,34 @@ namespace ALE.ETLBox
 {
     public class ObjectNameDescriptor
     {
-        string Expr
-        {
-            get
-            {
-                string EQB = QB == "[" ? @"\[" : ( QB == "" ? @"""" : QB ) ;
-                string EQE = QE == "]" ? @"\]" : ( QE == "" ? @"""" : QB ) ;
-                //see also: https://stackoverflow.com/questions/60747665/regex-expression-for-parsing-sql-server-schema-and-tablename?noredirect=1#comment107559387_60747665
-                return $@"\.? *(?:{EQB}[^{EQE}]+{EQE}|\w+)"; //Original Regex:  \.? *(?:\[[^]]+\]|\w+)
-            }
-        }
-        public string Schema { get; set; }
-        public string Table { get; set; }
-        public string QuotatedObjectName => Table.StartsWith(QB) ? Table : QB + Table + QE;
-        public string UnquotatedObjectName => Table.StartsWith(QB) ? Table.Replace(QB, string.Empty).Replace(QE, string.Empty) : Table;
+        private readonly ConnectionManagerType _connectionType;
+        private string _schema;
+        private string _table;
+        
+        public string ObjectName { get; }
+
+        public string QuotatedObjectName => _table.StartsWith(QB) ? _table : QB + _table + QE;
+        public string UnquotatedObjectName => _table.StartsWith(QB) ? _table.Replace(QB, string.Empty).Replace(QE, string.Empty) : _table;
+        
         public string UnquotatedSchemaName =>
-            String.IsNullOrWhiteSpace(Schema) ? string.Empty : Schema.StartsWith(QB) ?
-            Schema.Replace(QB, string.Empty).Replace(QE, string.Empty) : Schema;
+            String.IsNullOrWhiteSpace(_schema) ? string.Empty : _schema.StartsWith(QB) ?
+            _schema.Replace(QB, string.Empty).Replace(QE, string.Empty) : _schema;
         public string QuotatedSchemaName =>
-            String.IsNullOrWhiteSpace(Schema) ? string.Empty : Schema.StartsWith(QB) ? Schema : QB + Schema + QE;
+            String.IsNullOrWhiteSpace(_schema) ? string.Empty : _schema.StartsWith(QB) ? _schema : QB + _schema + QE;
+        
         public string QuotatedFullName =>
-            String.IsNullOrWhiteSpace(Schema) ? QuotatedObjectName : QuotatedSchemaName + '.' + QuotatedObjectName;
+            String.IsNullOrWhiteSpace(_schema) ? QuotatedObjectName : QuotatedSchemaName + '.' + QuotatedObjectName;
         public string UnquotatedFullName =>
-           String.IsNullOrWhiteSpace(Schema) ? UnquotatedObjectName : UnquotatedSchemaName + '.' + UnquotatedObjectName;
+           String.IsNullOrWhiteSpace(_schema) ? UnquotatedObjectName : UnquotatedSchemaName + '.' + UnquotatedObjectName;
 
-        public string ObjectName { get; private set; }
-        public ConnectionManagerType ConnectionType { get; private set; }
-
-        public string QB => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
-        public string QE => ConnectionManagerSpecifics.GetEndQuotation(ConnectionType);
+        public string QB => ConnectionManagerSpecifics.GetBeginQuotation(_connectionType);
+        public string QE => ConnectionManagerSpecifics.GetEndQuotation(_connectionType);
+        
         public ObjectNameDescriptor(string objectName, ConnectionManagerType connectionType)
         {
-            this.ObjectName = objectName;
-            this.ConnectionType = connectionType;
-            ParseSchemaAndTable();
-        }
-
-        public ObjectNameDescriptor(string objectName, IConnectionManager connection)
-        {
-            this.ObjectName = objectName;
-            this.ConnectionType = ConnectionManagerSpecifics.GetType(connection);
+            ObjectName = objectName;
+            _connectionType = connectionType;
+            
             ParseSchemaAndTable();
         }
 
@@ -57,11 +45,23 @@ namespace ALE.ETLBox
             else if (m.Count > 2)
                 throw new ETLBoxException($"Unable to retrieve table and schema name from {ObjectName} - found {m.Count} possible matches.");
             else if (m.Count == 1)
-                Table = m[0].Value.Trim();
+                _table = m[0].Value.Trim();
             else if (m.Count == 2)
             {
-                Schema = m[0].Value.Trim();
-                Table = m[1].Value.Trim().StartsWith(".") ? m[1].Value.Trim().Substring(1) : m[1].Value.Trim();
+                _schema = m[0].Value.Trim();
+                _table = m[1].Value.Trim().StartsWith(".") ? m[1].Value.Trim().Substring(1) : m[1].Value.Trim();
+            }
+        }
+        
+        private string Expr
+        {
+            get
+            {
+                string EQB = QB == "[" ? @"\[" : ( QB == "" ? @"""" : QB ) ;
+                string EQE = QE == "]" ? @"\]" : ( QE == "" ? @"""" : QB ) ;
+                
+                //see also: https://stackoverflow.com/questions/60747665/regex-expression-for-parsing-sql-server-schema-and-tablename?noredirect=1#comment107559387_60747665
+                return $@"\.? *(?:{EQB}[^{EQE}]+{EQE}|\w+)"; //Original Regex:  \.? *(?:\[[^]]+\]|\w+)
             }
         }
     }

@@ -13,6 +13,8 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class MySqlConnectionManager : DbConnectionManager<MySqlConnection>
     {
+        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.MySql;
+        
         public MySqlConnectionManager() : base() { }
 
         public MySqlConnectionManager(MySqlConnectionString connectionString) : base(connectionString) { }

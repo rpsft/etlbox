@@ -81,8 +81,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MergeWithCompositeKey(IConnectionManager connection)
         {
             //Arrange
-            ObjectNameDescriptor TNS = new ObjectNameDescriptor("DBMergeSource", connection);
-            ObjectNameDescriptor TND = new ObjectNameDescriptor("DBMergeDestination", connection);
+            ObjectNameDescriptor TNS = new ObjectNameDescriptor("DBMergeSource", connection.ConnectionManagerType);
+            ObjectNameDescriptor TND = new ObjectNameDescriptor("DBMergeDestination", connection.ConnectionManagerType);
             ReCreateTable(connection, TNS);
             ReCreateTable(connection, TND);
             InsertSourceData(connection, TNS);

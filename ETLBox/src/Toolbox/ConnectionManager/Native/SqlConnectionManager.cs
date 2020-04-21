@@ -13,6 +13,8 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SqlConnectionManager : DbConnectionManager<SqlConnection>
     {
+        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
+        
         public bool ModifyDBSettings { get; set; } = false;
 
         public SqlConnectionManager() : base() { }
