@@ -13,6 +13,18 @@ using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
 {
+    public sealed class IgnoreOnNonAzureEnvironmentFact : FactAttribute
+    {
+        public IgnoreOnNonAzureEnvironmentFact()
+        {
+            if (!IsInAzure())
+                Skip = "Ignore on non azure environments";
+        }
+
+        private static bool IsInAzure()
+            => Environment.GetEnvironmentVariable("ETLBoxAzure") != null;
+    }
+
     [Collection("DataFlow")]
     public class AzureSqlTests
     {
@@ -37,9 +49,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string Col2 { get; set; }
         }
 
-        [Fact]
+        [IgnoreOnNonAzureEnvironmentFact]
         public void ReadAndWriteToAzure()
         {
+            var envvar = Environment.GetEnvironmentVariable("ETLBoxAzure");
+            if (envvar != "true") return;
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(AzureSqlConnection, "[source].[AzureSource]");
             source2Columns.InsertTestData();
@@ -56,9 +70,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-        [Fact]
+        [IgnoreOnNonAzureEnvironmentFact]
         public void MergeIntoAzure()
         {
+            var envvar = Environment.GetEnvironmentVariable("ETLBoxAzure");
+            if (envvar != "true") return;
             //Arrange
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeSource");
             s2c.InsertTestData();

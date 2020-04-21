@@ -149,31 +149,31 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
-                IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader;
-                for (int rowNr = 0; rowNr < Limit; rowNr++)
-                {
-                    if (reader.Read())
+                using (IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader) { 
+                    for (int rowNr = 0; rowNr < Limit; rowNr++)
                     {
-                        BeforeRowReadAction?.Invoke();
-                        for (int i = 0; i < Actions?.Count; i++)
+                        if (reader.Read())
                         {
-                            if (!reader.IsDBNull(i))
+                            BeforeRowReadAction?.Invoke();
+                            for (int i = 0; i < Actions?.Count; i++)
                             {
-                                Actions?[i]?.Invoke(reader.GetValue(i));
+                                if (!reader.IsDBNull(i))
+                                {
+                                    Actions?[i]?.Invoke(reader.GetValue(i));
+                                }
+                                else
+                                {
+                                    Actions?[i]?.Invoke(null);
+                                }
                             }
-                            else
-                            {
-                                Actions?[i]?.Invoke(null);
-                            }
+                            AfterRowReadAction?.Invoke();
                         }
-                        AfterRowReadAction?.Invoke();
-                    }
-                    else
-                    {
-                        break;
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
-                reader.Close();
                 if (!DisableLogging) LoggingEnd();
             }
             finally
