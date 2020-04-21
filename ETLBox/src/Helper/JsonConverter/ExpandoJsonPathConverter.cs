@@ -83,15 +83,13 @@ namespace ALE.ETLBox.Helper
                         if (!reader.Read())
                             throw new JsonSerializationException("Unexpected end when reading ExpandoObject.");
 
-                        //object val = null;
                         if (IsPrimitiveToken(reader.TokenType))
                         {
-                            //val = reader.Value;
                             expandoObject[propertyName] = reader.Value;
                         }
                         else
                         {
-                            JObject jo = JObject.Load(reader);
+                            var jo = JContainer.Load(reader);
                             foreach (var pl in PathLookups.Where(l => l.JsonPropertyName == propertyName))
                             {
                                 if (pl?.Validate() ?? false)
@@ -109,7 +107,7 @@ namespace ALE.ETLBox.Helper
             throw new JsonSerializationException("Unexpected end when reading ExpandoObject.");
         }
 
-        private object GetValueFromJsonPath(JObject jo, string path)
+        private object GetValueFromJsonPath(JToken jo, string path)
         {
             object val = null;
             JToken t = jo.SelectToken(path);

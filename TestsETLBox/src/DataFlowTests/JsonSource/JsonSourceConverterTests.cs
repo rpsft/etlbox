@@ -115,8 +115,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 },
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Object",
-                    JsonPath = "Col3",
+                    JsonPropertyName = "Array",
+                    JsonPath = "[1].Value",
                     NewPropertyName = "Col3"
                  }
             };

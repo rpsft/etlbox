@@ -7,7 +7,11 @@
         },
         "Object": {
             "Number": [ "1.2" ]
-        }
+        },
+        "Array": [
+            { "OtherValue": "1" },
+            { "Value": "-1" }
+        ]
     },
     {
         "Col1": 2,
@@ -16,9 +20,12 @@
             "Value": "Test2"
         },
         "Object": {
-            "Number": [ "1.23" ],
-            "Col3": "4711"
-        }
+            "Number": [ "1.23" ]
+        },
+        "Array": [
+            { "OtherValue": "1" },
+            { "Value": "4711" }
+        ]
     },
     {
         "Col1": 3,
