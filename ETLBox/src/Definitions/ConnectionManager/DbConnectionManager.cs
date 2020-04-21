@@ -24,6 +24,10 @@ namespace ALE.ETLBox.ConnectionManager
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
         private bool _leaveOpen;
+        
+        public abstract string QB { get; }
+        public abstract string QE { get; }
+        
         public DbConnectionManager() { }
 
         public DbConnectionManager(IDbConnectionString connectionString) : this()
@@ -158,9 +162,8 @@ namespace ALE.ETLBox.ConnectionManager
             CloseIfAllowed();
         }
 
-
-        public abstract void PrepareBulkInsert(string tablename);
-        public abstract void CleanUpBulkInsert(string tablename);
+        public abstract void PrepareBulkInsert(string tableName);
+        public abstract void CleanUpBulkInsert(string tableName);
 
         public abstract void BulkInsert(ITableData data, string tableName);
         public abstract void BeforeBulkInsert(string tableName);

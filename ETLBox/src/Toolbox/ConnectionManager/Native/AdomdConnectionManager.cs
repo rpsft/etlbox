@@ -15,6 +15,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class AdomdConnectionManager : DbConnectionManager<AdomdConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Adomd;
+        public override string QB { get; } = string.Empty;
+        public override string QE { get; } = string.Empty;
         
         public AdomdConnectionManager() : base() { }
         public AdomdConnectionManager(SqlConnectionString connectionString) : base(connectionString) { }

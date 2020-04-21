@@ -26,7 +26,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void InsertTestData(IConnectionManager connection, string tableName)
         {
-            var TN = new ObjectNameDescriptor(tableName, connection.ConnectionManagerType);
+            var TN = new ObjectNameDescriptor(tableName, connection.QB, connection.QE);
+            
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"
                 , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'\0 \"" \b \n \r \t \Z \\ \% \_ ')");
             SqlTask.ExecuteNonQuery(connection, "Insert demo data"

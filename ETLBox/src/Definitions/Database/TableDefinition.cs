@@ -51,7 +51,7 @@ namespace ALE.ETLBox
         {
             IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = connection.ConnectionManagerType;
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connectionType);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection.QB, connection.QE);
 
             if (connectionType == ConnectionManagerType.SqlServer)
                 return ReadTableDefinitionFromSqlServer(connection, TN);

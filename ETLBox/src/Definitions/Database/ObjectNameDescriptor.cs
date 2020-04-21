@@ -1,17 +1,17 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 
 namespace ALE.ETLBox
 {
     public class ObjectNameDescriptor
     {
-        private readonly ConnectionManagerType _connectionType;
         private string _schema;
         private string _table;
         
         public string ObjectName { get; }
-
+        public string QB { get; }
+        public string QE { get; }
+        
         public string QuotatedObjectName => _table.StartsWith(QB) ? _table : QB + _table + QE;
         public string UnquotatedObjectName => _table.StartsWith(QB) ? _table.Replace(QB, string.Empty).Replace(QE, string.Empty) : _table;
         
@@ -26,13 +26,11 @@ namespace ALE.ETLBox
         public string UnquotatedFullName =>
            String.IsNullOrWhiteSpace(_schema) ? UnquotatedObjectName : UnquotatedSchemaName + '.' + UnquotatedObjectName;
 
-        public string QB => ConnectionManagerSpecifics.GetBeginQuotation(_connectionType);
-        public string QE => ConnectionManagerSpecifics.GetEndQuotation(_connectionType);
-        
-        public ObjectNameDescriptor(string objectName, ConnectionManagerType connectionType)
+        public ObjectNameDescriptor(string objectName, string qb, string qe)
         {
             ObjectName = objectName;
-            _connectionType = connectionType;
+            QB = qb;
+            QE = qe;
             
             ParseSchemaAndTable();
         }

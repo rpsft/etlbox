@@ -56,13 +56,10 @@ namespace ALE.ETLBox.Logging
   , abort_message = @AbortMessage
   WHERE id = @LoadProcessId
 ";
-
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
-
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
         public AbortLoadProcessTask()
         {
-
         }
 
         public AbortLoadProcessTask(long? loadProcessId) : this()

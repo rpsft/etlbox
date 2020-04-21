@@ -68,7 +68,7 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         bool _useTruncateMethod;
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DbSource<TInput> DestinationTableAsSource { get; set; }
         DbDestination<TInput> DestinationTable { get; set; }

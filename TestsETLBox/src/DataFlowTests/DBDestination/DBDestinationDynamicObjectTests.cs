@@ -65,8 +65,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            string QB = ConnectionManagerSpecifics.GetBeginQuotation(connection);
-            string QE = ConnectionManagerSpecifics.GetEndQuotation(connection);
+            string QB = connection.QB;
+            string QE = connection.QE;
             Assert.Equal(3, RowCountTask.Count(connection, "DestinationDynamicDiffCols"));
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationDynamicDiffCols", $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"));
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationDynamicDiffCols", $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"));
@@ -96,8 +96,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            string QB = ConnectionManagerSpecifics.GetBeginQuotation(connection);
-            string QE = ConnectionManagerSpecifics.GetEndQuotation(connection);
+            string QB = connection.QB;
+            string QE = connection.QE;
             Assert.Equal(3, RowCountTask.Count(connection, "DestinationDynamicIdCol"));
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationDynamicIdCol", $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"));
             Assert.Equal(1, RowCountTask.Count(connection, "DestinationDynamicIdCol", $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"));

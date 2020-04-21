@@ -25,14 +25,14 @@ namespace ALE.ETLBox.ConnectionManager
         IConnectionManager CloneIfAllowed();
         bool LeaveOpen { get; set; }
         bool IsInBulkInsert { get; set; }
-        void PrepareBulkInsert(string tablename);
-        void CleanUpBulkInsert(string tablename);
+        void PrepareBulkInsert(string tableName);
+        void CleanUpBulkInsert(string tableName);
         void BeginTransaction(IsolationLevel isolationLevel);
         void BeginTransaction();
         void CommitTransaction();
         void RollbackTransaction();
         void CloseTransaction();
-
-
+        string QB { get; }
+        string QE { get; }
     }
 }

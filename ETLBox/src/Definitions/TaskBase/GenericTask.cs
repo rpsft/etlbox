@@ -30,8 +30,8 @@ namespace ALE.ETLBox
         }
 
         public ConnectionManagerType ConnectionType => this.DbConnectionManager.ConnectionManagerType;
-        public string QB => ConnectionManagerSpecifics.GetBeginQuotation(this.ConnectionType);
-        public string QE => ConnectionManagerSpecifics.GetEndQuotation(this.ConnectionType);
+        public string QB => DbConnectionManager.QB;
+        public string QE => DbConnectionManager.QE;
 
         public bool _disableLogging;
         public virtual bool DisableLogging

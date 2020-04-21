@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Data;
-using System.Data.Odbc;
 
 namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
-    /// Connection manager for an ODBC connection to Acccess databases.
+    /// Connection manager for an ODBC connection to Access databases.
     /// This connection manager also is based on ADO.NET.
-    /// ODBC by default does not support a Bulk Insert - and Access does not supoport the insert into (...) values (...),(...),(...)
+    /// ODBC by default does not support a Bulk Insert - and Access does not support the insert into (...) values (...),(...),(...)
     /// syntax. So the following syntax is used
     /// <code>
     /// insert into (Col1, Col2,...)
@@ -32,6 +31,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class AccessOdbcConnectionManager :  OdbcConnectionManager
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Access;
+        public override string QB { get; } = @"[";
+        public override string QE { get; } = @"]";
         
         public AccessOdbcConnectionManager() : base() { }
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
@@ -43,14 +44,16 @@ namespace ALE.ETLBox.ConnectionManager
         /// </summary>
         public string DummyTableName { get; set; } = "etlboxdummydeleteme";
         protected bool PreparationDone { get; set; }
-
+        
         public override void BulkInsert(ITableData data, string tableName)
         {
             BulkInsertSql bulkInsert = new BulkInsertSql()
             {
                 ConnectionType = ConnectionManagerType.Access,
+                QB = QB,
+                QE = QE,
+                UseParameterQuery = true,
                 AccessDummyTableName = DummyTableName,
-                UseParameterQuery = true
             };
             OdbcBulkInsert(data, tableName, bulkInsert);
         }
@@ -110,6 +113,7 @@ namespace ALE.ETLBox.ConnectionManager
             TryDropDummyTable();
             CreateDummyTable();
         }
+        
         public override void CleanUpBulkInsert(string tablename) {
             TryDropDummyTable();
         }
@@ -121,7 +125,6 @@ namespace ALE.ETLBox.ConnectionManager
         }
         public override void AfterBulkInsert(string tableName)
         {
-            ;
         }
 
         private void TryDropDummyTable()
@@ -156,7 +159,5 @@ namespace ALE.ETLBox.ConnectionManager
             };
             return clone;
         }
-
-
     }
 }

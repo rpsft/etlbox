@@ -30,7 +30,7 @@ namespace ALE.ETLBox.ControlFlow
 
         /* Public properties */
         public string ProcedureName { get; set; }
-        public ObjectNameDescriptor PN => new ObjectNameDescriptor(ProcedureName, ConnectionType);
+        public ObjectNameDescriptor PN => new ObjectNameDescriptor(ProcedureName, QB, QE);
         public string ProcedureDefinition { get; set; }
         public IList<ProcedureParameter> ProcedureParameters { get; set; }
         public string Sql => $@"{CreateOrAlterSql} PROCEDURE {PN.QuotatedFullName}{ParameterDefinition}{Language}
