@@ -17,15 +17,18 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class ImportExportAccessTests : IDisposable
     {
-        public AccessOdbcConnectionManager AccessOdbcConnection => Config.AccessOdbcConnection.ConnectionManager("DataFlow");
+        public AccessOdbcConnectionManager AccessOdbcConnection { get; set; }
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
         public ImportExportAccessTests(DataFlowDatabaseFixture dbFixture)
         {
+            AccessOdbcConnection = Config.AccessOdbcConnection.ConnectionManager("DataFlow");
+            Assert.True(AccessOdbcConnection.LeaveOpen);  //If LeaveOpen is not set to true, very strange errors may occur
         }
 
         public void Dispose()
         {
+            AccessOdbcConnection.Close();
         }
 
         private TableDefinition RecreateAccessTestTable()
@@ -53,6 +56,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         //(Visual Studio 2019 16.4 changed default behvaiour for xunit Tests - they now run with .NET Core 32bit versions
         //Driver Access >2016 https://www.microsoft.com/en-us/download/details.aspx?id=54920
         //Driver Access >2010 https://www.microsoft.com/en-us/download/details.aspx?id=13255
+        //If LeaveOpen is not set to true, very strange errors may occur:
+        //https://stackoverflow.com/questions/37432816/microsoft-ace-oledb-12-0-bug-in-multithread-scenario
+        //It is recommened to leave this connection manager always open (this is why leave open is set to true by default)
+
         [Fact]
         public void CSVIntoAccess()
         {
