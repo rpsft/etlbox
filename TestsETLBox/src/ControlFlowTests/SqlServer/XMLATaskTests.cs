@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 </Delete>";
         }
 
-        [Fact]
+        [Fact(Skip="Adjust to work with tabular model")]
         public void TestCreateAndDelete()
         {
             string dbName = "ETLBox_TestXMLA";

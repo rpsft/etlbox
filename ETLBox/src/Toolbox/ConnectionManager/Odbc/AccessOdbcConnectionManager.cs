@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Data.Odbc;
+using System.Runtime.CompilerServices;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -28,16 +30,24 @@ namespace ALE.ETLBox.ConnectionManager
     ///      "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb"));
     /// </code>
     /// </example>
-    public class AccessOdbcConnectionManager :  OdbcConnectionManager
+    public class AccessOdbcConnectionManager : OdbcConnectionManager
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Access;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
         
-        public AccessOdbcConnectionManager() : base() { }
-        public AccessOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
-        public AccessOdbcConnectionManager(string connectionString) : base(new OdbcConnectionString(connectionString)) { }
-
+        public AccessOdbcConnectionManager() : base() {
+            LeaveOpen = true;
+        }
+        public AccessOdbcConnectionManager(OdbcConnectionString connectionString) 
+            : base(connectionString) {
+            LeaveOpen = true;
+        }
+        public AccessOdbcConnectionManager(string connectionString) : 
+            base(new OdbcConnectionString(connectionString)) {
+            LeaveOpen = true;
+        }
+        
         /// <summary>
         /// Helper table that needs to be created in order to simulate bulk inserts.
         /// Contains only 1 record and is only temporarily created.
