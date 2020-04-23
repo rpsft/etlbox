@@ -36,6 +36,8 @@ namespace ALE.ETLBox.ConnectionManager
             BulkInsertSql bulkInsert = new BulkInsertSql()
             {
                 UseParameterQuery = true,
+                QB = QB,
+                QE = QE,
                 //ConnectionType = ConnectionManagerType.SqlServer
             };
             OdbcBulkInsert(data, tableName, bulkInsert);
