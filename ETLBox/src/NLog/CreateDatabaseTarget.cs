@@ -9,9 +9,9 @@ namespace ALE.ETLBox.Logging
 
     public class CreateDatabaseTarget
     {
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(LogTableName, ConnectionManager.ConnectionManagerType);
-        public string QB => TN.QB;
-        public string QE => TN.QE;
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(LogTableName, ConnectionManager.QB, ConnectionManager.QE);
+        public string QB => ConnectionManager.QB;
+        public string QE => ConnectionManager.QE;
         public string CommandText => $@"
 INSERT INTO {TN.QuotatedFullName}
     ( {QB}log_date{QE}, {QB}level{QE}, {QB}stage{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}source{QE}, {QB}load_process_id{QE})

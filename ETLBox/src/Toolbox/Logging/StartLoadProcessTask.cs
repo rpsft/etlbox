@@ -56,7 +56,8 @@ namespace ALE.ETLBox.Logging
  VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 ) 
 {LastIdSql}";
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
+        
         string LastIdSql
         {
             get

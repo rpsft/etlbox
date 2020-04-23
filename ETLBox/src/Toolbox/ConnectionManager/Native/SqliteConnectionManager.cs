@@ -18,6 +18,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SQLite;
+        public override string QB { get; } = @"""";
+        public override string QE { get; } = @"""";
         
         public bool ModifyDBSettings { get; set; } = false;
 

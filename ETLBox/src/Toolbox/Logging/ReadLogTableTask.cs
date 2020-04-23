@@ -65,7 +65,7 @@ FROM { TN.QuotatedFullName}" +
             (LoadProcessId != null ? $@" WHERE {QB}LoadProcessKey{QE} = {LoadProcessId}"
             : "");
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LogTable, this.ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LogTable, QB, QE);
 
         public ReadLogTableTask()
         {

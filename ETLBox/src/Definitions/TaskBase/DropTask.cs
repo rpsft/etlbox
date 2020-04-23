@@ -11,7 +11,7 @@
         }
 
         public string ObjectName { get; set; }
-        public ObjectNameDescriptor ON => new ObjectNameDescriptor(ObjectName, ConnectionType);
+        public ObjectNameDescriptor ON => new ObjectNameDescriptor(ObjectName, QB, QE);
         internal string OnObjectName { get; set; }
         public string Sql => GetSql();
         internal virtual string GetSql() => string.Empty;

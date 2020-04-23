@@ -8,7 +8,7 @@ namespace ALE.ETLBox.ControlFlow
     public class DropIndexTask : DropTask<IfIndexExistsTask>, ITask
     {
         public string TableName => OnObjectName;
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         internal override string GetSql()
         {
             string sql = $@"DROP INDEX {ON.QuotatedFullName}";

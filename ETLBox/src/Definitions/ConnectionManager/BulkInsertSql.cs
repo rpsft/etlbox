@@ -26,9 +26,9 @@ namespace ALE.ETLBox.ConnectionManager
         List<string> DestColumnNames { get; set; }
         internal string AccessDummyTableName { get; set; }
         internal ConnectionManagerType ConnectionType { get; set; }
-        internal string QB => ConnectionManagerSpecifics.GetBeginQuotation(ConnectionType);
-        internal string QE => ConnectionManagerSpecifics.GetEndQuotation(ConnectionType);
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
+        public string QB { get; set; }
+        public string QE { get; set; }
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         internal string TableName { get; set; }
         private int ParameterNameCount { get; set; }
 
@@ -36,7 +36,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             InitObjects();
             TableName = tableName;
-            GetSourceAndDestColumNames(data);
+            GetSourceAndDestColumnNames(data);
             AppendBeginSql(tableName);
             ReadDataAndCreateQuery(data);
             AppendEndSql();
@@ -49,7 +49,7 @@ namespace ALE.ETLBox.ConnectionManager
             Parameters = new List<T>();
         }
 
-        private void GetSourceAndDestColumNames(ITableData data)
+        private void GetSourceAndDestColumnNames(ITableData data)
         {
             SourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
             DestColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
@@ -153,7 +153,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             QueryText.Clear();
             TableName = tableName;
-            GetSourceAndDestColumNames(data);
+            GetSourceAndDestColumnNames(data);
             AppendBeginSql(tableName);
             while (data.Read())
             {

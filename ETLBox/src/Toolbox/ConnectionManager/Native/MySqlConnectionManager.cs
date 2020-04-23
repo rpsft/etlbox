@@ -14,6 +14,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class MySqlConnectionManager : DbConnectionManager<MySqlConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.MySql;
+        public override string QB { get; } = @"`";
+        public override string QE { get; } = @"`";
         
         public MySqlConnectionManager() : base() { }
 
@@ -25,8 +27,10 @@ namespace ALE.ETLBox.ConnectionManager
         {
             BulkInsertSql<MySqlParameter> bulkInsert = new BulkInsertSql<MySqlParameter>()
             {
+                ConnectionType = ConnectionManagerType.MySql,
+                QB = QB,
+                QE = QE,
                 UseParameterQuery = true,
-                ConnectionType = ConnectionManagerType.MySql
             };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();

@@ -34,7 +34,7 @@ namespace ALE.ETLBox.ControlFlow
         public void Create() => Execute();
         public TableDefinition TableDefinition { get; set; }
         public string TableName => TableDefinition.Name;
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         public List<TableColumn> Columns => TableDefinition.Columns;
 
         public bool ThrowErrorIfTableExists { get; set; }

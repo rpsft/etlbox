@@ -36,8 +36,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             if (connection.GetType() != typeof(MySqlConnectionManager))
             {
-                string QB = ConnectionManagerSpecifics.GetBeginQuotation(connection);
-                string QE = ConnectionManagerSpecifics.GetEndQuotation(connection);
+                string QB = connection.QB;
+                string QE = connection.QE;
                 //Arrange
                 string schemaName = $"{QB} s#!/ {QE}";
                 //Act

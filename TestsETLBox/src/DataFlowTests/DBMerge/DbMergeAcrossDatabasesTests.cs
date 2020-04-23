@@ -67,8 +67,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void Test(IConnectionManager sourceConnection, IConnectionManager destConnection)
         {
             //Arrange
-            string QB = ConnectionManagerSpecifics.GetBeginQuotation(destConnection);
-            string QE = ConnectionManagerSpecifics.GetEndQuotation(destConnection);
+            string QB = destConnection.QB;
+            string QE = destConnection.QE;
             CreateSourceAndDestinationTables(sourceConnection, destConnection, QB, QE);
 
             //Act

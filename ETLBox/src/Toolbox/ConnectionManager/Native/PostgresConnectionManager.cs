@@ -16,6 +16,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class PostgresConnectionManager : DbConnectionManager<NpgsqlConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Postgres;
+        public override string QB { get; } = @"""";
+        public override string QE { get; } = @"""";
         
         public PostgresConnectionManager() : base() { }
 
@@ -28,7 +30,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            var TN = new ObjectNameDescriptor(tableName, ConnectionManagerType.Postgres);
+            var TN = new ObjectNameDescriptor(tableName, QB, QE);
             var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
             var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
             var quotedDestColumns = destColumnNames.Select(col => TN.QB + col + TN.QE);

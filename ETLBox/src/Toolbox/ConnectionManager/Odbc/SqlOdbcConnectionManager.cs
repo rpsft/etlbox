@@ -23,6 +23,8 @@ namespace ALE.ETLBox.ConnectionManager
     public class SqlOdbcConnectionManager : OdbcConnectionManager
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
+        public override string QB { get; } = @"[";
+        public override string QE { get; } = @"]";
         
         public SqlOdbcConnectionManager() : base() { }
 
@@ -34,6 +36,8 @@ namespace ALE.ETLBox.ConnectionManager
             BulkInsertSql bulkInsert = new BulkInsertSql()
             {
                 UseParameterQuery = true,
+                QB = QB,
+                QE = QE,
                 //ConnectionType = ConnectionManagerType.SqlServer
             };
             OdbcBulkInsert(data, tableName, bulkInsert);

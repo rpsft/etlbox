@@ -17,9 +17,9 @@ namespace ALE.ETLBoxTests.Fixtures
         public bool IsSQLiteConnection => this.Connection.GetType() == typeof(SQLiteConnectionManager);
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, Connection.ConnectionManagerType);
-        public string QB => TN.QB;
-        public string QE => TN.QE;
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, Connection.QB, Connection.QE);
+        public string QB => Connection.QB;
+        public string QE => Connection.QE;
         public FourColumnsTableFixture(string tableName)
         {
             this.TableName = tableName;

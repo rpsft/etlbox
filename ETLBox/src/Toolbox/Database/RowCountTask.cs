@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         public string TableName { get; set; }
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         public string Condition { get; set; }
         public bool HasCondition => !String.IsNullOrWhiteSpace(Condition);
         public int? Rows { get; private set; }

@@ -21,7 +21,7 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         public string ViewName { get; set; }
-        public ObjectNameDescriptor VN => new ObjectNameDescriptor(ViewName, ConnectionType);
+        public ObjectNameDescriptor VN => new ObjectNameDescriptor(ViewName, QB, QE);
         string CreateViewName => ConnectionType == ConnectionManagerType.Access ? VN.UnquotatedFullName : VN.QuotatedFullName;
         public string Definition { get; set; }
         public string Sql

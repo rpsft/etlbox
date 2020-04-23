@@ -56,11 +56,10 @@ namespace ALE.ETLBox.Logging
   WHERE id = @LoadProcessId
 ";
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, this.ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
         public EndLoadProcessTask()
         {
-
         }
 
         public EndLoadProcessTask(long? loadProcessId) : this()

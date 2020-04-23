@@ -4,7 +4,6 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ALE.ETLBoxTests.Fixtures
@@ -15,9 +14,9 @@ namespace ALE.ETLBoxTests.Fixtures
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
 
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, Connection.ConnectionManagerType);
-        public string QB => TN.QB;
-        public string QE => TN.QE;
+        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, Connection.QB, Connection.QE);
+        public string QB => Connection.QB;
+        public string QE => Connection.QE;
 
         public TwoColumnsTableFixture(string tableName)
         {
