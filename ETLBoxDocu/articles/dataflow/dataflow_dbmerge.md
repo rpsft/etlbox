@@ -109,10 +109,10 @@ Now what happens if we let this flow run? First of all, all records will be load
 into a memory object and compared with the source data. Within the memory object, the DBMerge 
 will identify:
 
-- which records need to inserted (ChangeAction: I)
-- which records need to be updated (ChangeAction: U)
-- which records exists and doesn't need to be updated (ChangeAction: E)
-- which record needs to be deleted (ChangeAction: D), if deletions are allowed
+- which records need to inserted (ChangeAction: Insert)
+- which records need to be updated (ChangeAction: Update)
+- which records exists and doesn't need to be updated (ChangeAction: Exists)
+- which record needs to be deleted (ChangeAction: Delete), if deletions are allowed
 
 To identify these different options, the `IdColumn` is used. In our example the id column is a unique primary key, 
 and it is recommended to only use unique columns for that.
@@ -172,10 +172,10 @@ The DeltaTable now will look like this:
 
 |Key |ChangeDate         |ChangeAction|
 -----|-------------------|-------------
-1    |2019-01-01 12:00:01|I           
-2    |2019-01-01 12:00:02|U           
-3    |2019-01-01 12:00:02|E           
-4    |2019-01-01 12:00:03|D           
+1    |2019-01-01 12:00:01|Insert (1)      
+2    |2019-01-01 12:00:02|Update (2)           
+3    |2019-01-01 12:00:02|Exists (0)  
+4    |2019-01-01 12:00:03|Delete (3)   
 
 ### Additional configurations 
 
@@ -275,7 +275,7 @@ public class MySimpleRow : IMergeableRow
     public long Key { get; set; }
     public string Value { get; set; }
     public DateTime ChangeDate { get; set; }
-    public string ChangeAction { get; set; }
+    public ChangeAction? ChangeAction { get; set; }
     public string UniqueId => Key.ToString();
     public new bool Equals(object other)
     {

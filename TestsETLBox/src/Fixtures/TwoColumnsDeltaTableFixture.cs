@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.Fixtures
                 new TableColumn("Col1", "INT", allowNulls: false),
                 new TableColumn("Col2", "NVARCHAR(100)", allowNulls: true),
                 new TableColumn("ChangeDate", "DATETIME", allowNulls: false),
-                new TableColumn("ChangeAction", "NCHAR(1)", allowNulls: false),
+                new TableColumn("ChangeAction", "INT", allowNulls: false),
             });
             TableDefinition.CreateTable(Connection);
         }

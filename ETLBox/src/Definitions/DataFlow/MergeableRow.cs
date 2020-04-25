@@ -53,7 +53,7 @@ namespace ALE.ETLBox.DataFlow
         /// The result of a merge operation - this is either 'I' for Insertion,
         /// 'U' for Updates, 'E' for existing records (no change), and 'D' for deleted records.
         /// </summary>
-        public string ChangeAction { get; set; }
+        public ChangeAction? ChangeAction { get; set; }
 
         /// <summary>
         /// The UniqueId of the object. This is a concatenation evaluated from the properties

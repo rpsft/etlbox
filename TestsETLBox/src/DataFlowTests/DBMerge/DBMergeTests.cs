@@ -55,10 +55,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             Assert.Equal(6, RowCountTask.Count(connection, "DBMergeDestination", $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"));
             Assert.True(dest.DeltaTable.Count == 7);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "U").Count() == 2);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "D" && row.Key == 10).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "I").Count() == 3);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "E" && row.Key == 1).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update).Count() == 2);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert).Count() == 3);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Exists && row.Key == 1).Count() == 1);
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -82,9 +82,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             Assert.Equal(5, RowCountTask.Count(connection, "DBMergeDestination"));
             Assert.True(dest.DeltaTable.Count == 3);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "I" && row.Key == 3).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "U" && row.Key == 2).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "E" && row.Key == 1).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert && row.Key == 3).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Exists && row.Key == 1).Count() == 1);
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -107,11 +107,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDestination"));
             Assert.True(dest.DeltaTable.Count == 5);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "E" && row.Key == 1).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "U" && row.Key == 2).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "I" && row.Key == 3).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "D" && row.Key == 4).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "D" && row.Key == 10).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Exists && row.Key == 1).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert && row.Key == 3).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 4).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
         }
 
         [Fact]

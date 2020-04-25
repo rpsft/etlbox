@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             [ColumnMap("Col2")]
             public string Value { get; set; }
             public DateTime ChangeDate { get; set; }
-            public string ChangeAction { get; set; }
+            public ChangeAction? ChangeAction { get; set; }
             public string UniqueId => Key.ToString();
             public bool IsDeletion => false;
         }
@@ -56,9 +56,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.True(dest.UseTruncateMethod == true);
             Assert.Equal(6, RowCountTask.Count(connection, "DBMergeDestination", $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"));
             Assert.True(dest.DeltaTable.Count == 7);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "U").Count() == 3);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "D" && row.Key == 10).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == "I").Count() == 3);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update).Count() == 3);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
+            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert).Count() == 3);
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -87,9 +87,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.True(merge.UseTruncateMethod == true);
             Assert.Equal(6, RowCountTask.Count(connection, "DBMergeDestination", $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"));
             Assert.Equal(7, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 10 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}ChangeAction{d2c.QE} = 'D' AND {d2c.QB}Col1{d2c.QE} = 10"));
-            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}ChangeAction{d2c.QE} = 'U' AND {d2c.QB}Col1{d2c.QE} IN (1,2,4)"));
-            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}ChangeAction{d2c.QE} = 'I' AND {d2c.QB}Col1{d2c.QE} IN (3,5,6)"));
+            Assert.Equal(1, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}ChangeAction{d2c.QE} = '3' AND {d2c.QB}Col1{d2c.QE} = 10"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}ChangeAction{d2c.QE} = '2' AND {d2c.QB}Col1{d2c.QE} IN (1,2,4)"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDelta", $"{d2c.QB}ChangeAction{d2c.QE} = '1' AND {d2c.QB}Col1{d2c.QE} IN (3,5,6)"));
         }
     }
 }
