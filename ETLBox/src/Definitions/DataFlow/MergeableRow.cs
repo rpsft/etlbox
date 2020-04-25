@@ -15,17 +15,18 @@ namespace ALE.ETLBox.DataFlow
     /// <see cref="IdColumn"/>
     public abstract class MergeableRow : IMergeableRow
     {
-        private static ConcurrentDictionary<Type,AttributeProperties> AttributePropDict { get; }
+        private static ConcurrentDictionary<Type, AttributeProperties> AttributePropDict { get; }
             = new ConcurrentDictionary<Type, AttributeProperties>();
 
         public MergeableRow()
         {
             Type curType = this.GetType();
             AttributeProperties curAttrProps;
-            if (!AttributePropDict.TryGetValue(curType, out curAttrProps))
+            lock (AttributePropDict)
             {
-                lock (this)
+                if (!AttributePropDict.TryGetValue(curType, out curAttrProps))
                 {
+
                     curAttrProps = new AttributeProperties();
                     foreach (PropertyInfo propInfo in curType.GetProperties())
                     {
