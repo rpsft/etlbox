@@ -10,21 +10,16 @@ namespace ALE.ETLBox.ControlFlow
         /* ITask Interface */
         internal override string GetSql()
         {
-            if (this.ConnectionType == ConnectionManagerType.SQLite)
-            {
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            }
-            else if (this.ConnectionType == ConnectionManagerType.SqlServer)
+            if (!DbConnectionManager.SupportSchemas)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
+            
+            if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return
     $@"
 IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{ON.UnquotatedObjectName}')
     SELECT 1
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.MySql)
-            {
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite! Use IfExistsDatabaseTask instead.");
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {

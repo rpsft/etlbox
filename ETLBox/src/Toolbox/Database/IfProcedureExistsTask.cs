@@ -9,11 +9,10 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-            if (this.ConnectionType == ConnectionManagerType.SQLite)
-            {
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            }
-            else if (this.ConnectionType == ConnectionManagerType.SqlServer)
+            if (!DbConnectionManager.SupportProcedures)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
+            
+            if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return
     $@"

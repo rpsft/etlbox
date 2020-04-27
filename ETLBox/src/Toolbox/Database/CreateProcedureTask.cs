@@ -19,8 +19,8 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"{CreateOrAlterSql} procedure {ProcedureName}";
         public void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            if (!DbConnectionManager.SupportProcedures)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
 
             IsExisting = new IfProcedureExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (IsExisting && ConnectionType == ConnectionManagerType.MySql)

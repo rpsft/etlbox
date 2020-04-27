@@ -17,8 +17,9 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Create DB {DatabaseName}";
         public void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            if (!DbConnectionManager.SupportDatabases)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
+
             bool doesExist = new IfDatabaseExistsTask(DatabaseName) { DisableLogging = true, ConnectionManager = ConnectionManager }.DoesExist;
             if (!doesExist)
                 new SqlTask(this, Sql).ExecuteNonQuery();

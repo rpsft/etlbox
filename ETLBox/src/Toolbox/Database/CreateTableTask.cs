@@ -170,8 +170,9 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
 
         private string CreateComputedColumnSql(ITableColumn col)
         {
-            if (col.HasComputedColumn && ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("SQLite does not support computed columns");
+            if (col.HasComputedColumn && !DbConnectionManager.SupportComputedColumns)
+                throw new ETLBoxNotSupportedException("Computed columns are not supported.");
+            
             if (col.HasComputedColumn)
                 return $"AS {col.ComputedColumn}";
             else

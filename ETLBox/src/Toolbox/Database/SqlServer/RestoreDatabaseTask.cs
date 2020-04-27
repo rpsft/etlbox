@@ -14,11 +14,10 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
         /* ITask Interface */
         public override string TaskName => $"Restore DB {DatabaseName} from {Path.GetFullPath(FileName)}";
 
-
         public void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            if (!DbConnectionManager.SupportDatabases)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
 
             DefaultDataPath = (string)new SqlTask(this, DefaultDataPathSql) { TaskName = $"Read default data path" }.ExecuteScalar();
             FileList = new List<BackupFile>();

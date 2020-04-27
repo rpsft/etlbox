@@ -34,5 +34,9 @@ namespace ALE.ETLBox.ConnectionManager
         void CloseTransaction();
         string QB { get; }
         string QE { get; }
+        bool SupportDatabases { get; }
+        bool SupportProcedures { get; }
+        bool SupportSchemas { get; }
+        bool SupportComputedColumns { get; }
     }
 }
