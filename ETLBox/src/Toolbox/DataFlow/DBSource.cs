@@ -114,7 +114,16 @@ namespace ALE.ETLBox.DataFlow
         public override void Execute()
         {
             NLogStart();
-            ReadAll();
+            try
+            {
+                ReadAll();
+                Buffer.Complete();
+            }
+            catch (Exception e)
+            {
+                ((IDataflowBlock)Buffer).Fault(e);
+                throw;
+            }
             Buffer.Complete();
             NLogFinish();
         }

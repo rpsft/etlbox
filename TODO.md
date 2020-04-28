@@ -21,6 +21,7 @@
 - All sources (DbSource, CsvSource, etc. )  always read all the data from the source. For development purposes it would be benefical if only the first X rows are read from the source. A property `public int Limit` could be introduced, so that only the first X rows are read for a DBSource/CSVSource/JsonSource/. This is quite easy to implement as SqlTask already has the Limit property. For Csv/Json, there should be a counter on the lines within the stream reader...
 - CreateTableTask.CreateOrAlter(): add functionality to alter a table (with migration if there is data in the table).
 - CreateTableTask: Function for adding test data into table (depending on table definition)
+- New feature: Bounded Capacity for all Buffers (separately for every component & general static property in DataFlow), to restrict buffer size and max memory consumption
 
 ## Todo
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from "GetTableDefinitionFrom"
