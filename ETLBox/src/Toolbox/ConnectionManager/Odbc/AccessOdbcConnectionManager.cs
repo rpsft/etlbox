@@ -35,26 +35,30 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Access;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
-        
+        public override bool SupportDatabases { get; } = false;
+        public override bool SupportProcedures { get; } = false;
+        public override bool SupportSchemas { get; } = false;
+        public override bool SupportComputedColumns { get; } = false;
+
         public AccessOdbcConnectionManager() : base() {
             LeaveOpen = true;
         }
-        public AccessOdbcConnectionManager(OdbcConnectionString connectionString) 
+        public AccessOdbcConnectionManager(OdbcConnectionString connectionString)
             : base(connectionString) {
             LeaveOpen = true;
         }
-        public AccessOdbcConnectionManager(string connectionString) : 
+        public AccessOdbcConnectionManager(string connectionString) :
             base(new OdbcConnectionString(connectionString)) {
             LeaveOpen = true;
         }
-        
+
         /// <summary>
         /// Helper table that needs to be created in order to simulate bulk inserts.
         /// Contains only 1 record and is only temporarily created.
         /// </summary>
         public string DummyTableName { get; set; } = "etlboxdummydeleteme";
         protected bool PreparationDone { get; set; }
-        
+
         public override void BulkInsert(ITableData data, string tableName)
         {
             BulkInsertSql bulkInsert = new BulkInsertSql()
@@ -95,7 +99,7 @@ namespace ALE.ETLBox.ConnectionManager
             restrictions[2] = unquotatedFullName;
             DataTable schemaTable = DbConnection.GetSchema(schemaInfo, restrictions);
             return schemaTable;
-           
+
         }
 
         internal TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
@@ -123,7 +127,7 @@ namespace ALE.ETLBox.ConnectionManager
             TryDropDummyTable();
             CreateDummyTable();
         }
-        
+
         public override void CleanUpBulkInsert(string tablename) {
             TryDropDummyTable();
         }
