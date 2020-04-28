@@ -1,40 +1,44 @@
-[
-    {
-        "Co1": 1,
-        "Col2": {
-            "Id": "A",
-            "Value": "Test1"
+{
+
+    "result": [
+        {
+            "Co1": 1,
+            "Col2": {
+                "Id": "A",
+                "Value": "Test1"
+            },
+            "Object": {
+                "Number": [ "1.2" ]
+            },
+            "Array": [
+                { "OtherValue": "1" },
+                { "Value": "-1" }
+            ]
         },
-        "Object": {
-            "Number": [ "1.2" ]
+        {
+            "Col1": 2,
+            "Col2": {
+                "Id": "B",
+                "Value": "Test2"
+            },
+            "Object": {
+                "Number": [ "1.23" ]
+            },
+            "Array": [
+                { "OtherValue": "1" },
+                { "Value": "4711" }
+            ]
         },
-        "Array": [
-            { "OtherValue": "1" },
-            { "Value": "-1" }
-        ]
-    },
-    {
-        "Col1": 2,
-        "Col2": {
-            "Id": "B",
-            "Value": "Test2"
-        },
-        "Object": {
-            "Number": [ "1.23" ]
-        },
-        "Array": [
-            { "OtherValue": "1" },
-            { "Value": "4711" }
-        ]
-    },
-    {
-        "Col1": 3,
-        "Col2": {
-            "Id": "C",
-            "Value": "Test3"
-        },
-        "Object": {
-            "Number": [ "1.234" ]
+        {
+            "Col1": 3,
+            "Col2": {
+                "Id": "C",
+                "Value": "Test3"
+            },
+            "Object": {
+                "Number": [ "1.234" ]
+            }
         }
-    }
-]
+    ],
+    "something else": "value"
+}
