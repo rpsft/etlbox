@@ -10,6 +10,9 @@ namespace ALE.ETLBox.ControlFlow
         /* ITask Interface */
         internal override string GetSql()
         {
+            if (!DbConnectionManager.SupportDatabases)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
+            
             if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ON.UnquotatedObjectName}'";
@@ -21,10 +24,6 @@ namespace ALE.ETLBox.ControlFlow
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {
                 return $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ON.UnquotatedObjectName}'";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.SQLite)
-            {
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             }
             else
             {

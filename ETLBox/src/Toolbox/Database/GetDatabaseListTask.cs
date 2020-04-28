@@ -19,8 +19,8 @@ namespace ALE.ETLBox.ControlFlow
         public override string TaskName => $"Get names of all databases";
         public void Execute()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            if (!DbConnectionManager.SupportDatabases)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
 
             DatabaseNames = new List<string>();
             new SqlTask(this, Sql)

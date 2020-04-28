@@ -27,8 +27,14 @@ namespace ALE.ETLBox.ConnectionManager
         
         public abstract string QB { get; }
         public abstract string QE { get; }
-        
-        public DbConnectionManager() { }
+        public virtual bool SupportDatabases { get; } = true;
+        public virtual bool SupportProcedures { get; } = true;
+        public virtual bool SupportSchemas { get; } = true;
+        public virtual bool SupportComputedColumns { get; } = true;
+
+        public DbConnectionManager()
+        {
+        }
 
         public DbConnectionManager(IDbConnectionString connectionString) : this()
         {

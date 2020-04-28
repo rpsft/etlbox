@@ -9,11 +9,8 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-
-            if (ConnectionType == ConnectionManagerType.MySql)
-                throw new ETLBoxNotSupportedException("This task is not supported with MySql! Use DropDatabaseTask instead.");
+            if (!DbConnectionManager.SupportSchemas)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
 
             string sql = $@"DROP SCHEMA {ON.QuotatedFullName}";
             return sql;

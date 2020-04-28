@@ -14,7 +14,9 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-
+            if (!DbConnectionManager.SupportDatabases)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
+            
             if (ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return
@@ -26,10 +28,6 @@ ALTER DATABASE [{ObjectName}]
 SET MULTI_USER
 DROP DATABASE [{ObjectName}]  
 ";
-            }
-            else if (ConnectionType == ConnectionManagerType.SQLite)
-            {
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
             }
             else
             {

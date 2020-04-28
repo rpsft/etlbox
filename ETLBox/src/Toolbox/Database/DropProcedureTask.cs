@@ -9,8 +9,9 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
+            if (!DbConnectionManager.SupportProcedures)
+                throw new ETLBoxNotSupportedException("This task is not supported!");
+
             return $@"DROP PROCEDURE {ON.QuotatedFullName}";
         }
 
