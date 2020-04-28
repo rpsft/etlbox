@@ -22,14 +22,11 @@ namespace ALE.ETLBox.DataFlow
         /* Public Properties */
         public int NumberOfDuplicates { get; set; } = 1;
         public Predicate<TInput> CanDuplicate { get; set; }
-        public override ISourceBlock<TInput> SourceBlock => OutputBuffer;
-        public override ITargetBlock<TInput> TargetBlock => InputBuffer;
-
+        public override ISourceBlock<TInput> SourceBlock => TransformBlock;
+        public override ITargetBlock<TInput> TargetBlock => TransformBlock;
 
         /* Private stuff */
-        BufferBlock<TInput> OutputBuffer { get; set; }
-        ActionBlock<TInput> InputBuffer { get; set; }
-        bool WasInitialized { get; set; }
+        TransformManyBlock<TInput, TInput> TransformBlock { get; set; }
         ObjectCopy<TInput> ObjectCopy { get; set; }
         TypeInfo TypeInfo { get; set; }
 
@@ -37,9 +34,7 @@ namespace ALE.ETLBox.DataFlow
         {
             TypeInfo = new TypeInfo(typeof(TInput));
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
-            OutputBuffer = new BufferBlock<TInput>();
-            InputBuffer = new ActionBlock<TInput>(DuplicateRow);
-            InputBuffer.Completion.ContinueWith(FinishFlow);
+            TransformBlock = new TransformManyBlock<TInput, TInput>(DuplicateRow);
         }
 
         public RowDuplication(int numberOfDuplicates) : this()
@@ -57,35 +52,22 @@ namespace ALE.ETLBox.DataFlow
             this.CanDuplicate = canDuplicate;
         }
 
-        public void InitFlow()
+        private IEnumerable<TInput> DuplicateRow(TInput row)
         {
-            if (!WasInitialized)
-            {
-                NLogStart();
-                WasInitialized = true;
-            }
-        }
-
-        private void DuplicateRow(TInput row)
-        {
-            if (row == null) return;
-            OutputBuffer.SendAsync(row).Wait();
+            if (row == null) return null;
+            List<TInput> result = new List<TInput>(NumberOfDuplicates);
+            result.Add(row);
             LogProgress();
             for (int i = 0; i < NumberOfDuplicates; i++)
             {
                 if (CanDuplicate?.Invoke(row) ?? true)
                 {
                     TInput copy = ObjectCopy.Clone(row);
-                    OutputBuffer.SendAsync(copy).Wait();
+                    result.Add(copy);
                     LogProgress();
                 }
             }
-        }
-
-        private void FinishFlow(Task t)
-        {
-            CompleteOrFaultBuffer(t, OutputBuffer);
-            NLogFinish();
+            return result;
         }
     }
 

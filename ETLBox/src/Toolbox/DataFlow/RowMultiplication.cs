@@ -11,7 +11,7 @@ using System.Threading.Tasks.Dataflow;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// This transformation allow you to transform your input data into multple output data records.  
+    /// This transformation allow you to transform your input data into multple output data records.
     /// </summary>
     /// <typeparam name="TInput">Type of data input</typeparam>
     /// <typeparam name="TOutput">Type of data output</typeparam>
@@ -21,21 +21,18 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName { get; set; } = $"Duplicate rows.";
 
         /* Public Properties */
-        public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
-        public override ITargetBlock<TInput> TargetBlock => InputBuffer;
+        public override ISourceBlock<TOutput> SourceBlock => TransformBlock;
+        public override ITargetBlock<TInput> TargetBlock => TransformBlock;
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
         /* Private stuff */
-        BufferBlock<TOutput> OutputBuffer { get; set; }
-        ActionBlock<TInput> InputBuffer { get; set; }
-        bool WasInitialized { get; set; }
+        TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
+
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public RowMultiplication()
         {
-            OutputBuffer = new BufferBlock<TOutput>();
-            InputBuffer = new ActionBlock<TInput>(MultiplicateRow);
-            InputBuffer.Completion.ContinueWith(FinishFlow);
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplicateRow);
         }
 
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc) : this()
@@ -43,45 +40,28 @@ namespace ALE.ETLBox.DataFlow
             MultiplicationFunc = multiplicationFunc;
         }
 
-
-        public void InitFlow()
+        private IEnumerable<TOutput> MultiplicateRow(TInput row)
         {
-            if (!WasInitialized)
-            {
-                NLogStart();
-                WasInitialized = true;
-            }
-        }
-
-        private void MultiplicateRow(TInput row)
-        {
-            if (row == null) return;
+            if (row == null) return null;
             try
             {
-                IEnumerable<TOutput> multipleOutputs = MultiplicationFunc.Invoke(row);
-                foreach (TOutput output in multipleOutputs)
-                    OutputBuffer.SendAsync(output).Wait();
+                return MultiplicationFunc.Invoke(row);
             }
             catch (Exception e)
             {
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(row));
+                return null;
             }
         }
 
-        private void FinishFlow(Task t)
-        {
-            CompleteOrFaultBuffer(t, OutputBuffer);
-            NLogFinish();
-        }
-
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-            => ErrorHandler.LinkErrorTo(target, OutputBuffer.Completion);
+            => ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
     }
 
     /// <summary>
-    /// This transformation allow you to transform your input data into multple output data records.  
+    /// This transformation allow you to transform your input data into multple output data records.
     /// </summary>
     /// <see cref="RowMultiplication{TInput, TOutput}"/>
     public class RowMultiplication : RowMultiplication<ExpandoObject,ExpandoObject>
@@ -90,7 +70,7 @@ namespace ALE.ETLBox.DataFlow
         { }
 
         public RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>> multiplicationFunc)
-            : base (multiplicationFunc) 
+            : base (multiplicationFunc)
         { }
     }
 
