@@ -45,6 +45,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Assert
             destTable.AssertTestData();
 
+            if (connection.GetType() == typeof(AccessOdbcConnectionManager))
+                connection.Close();
             //Assert connection is closed
             Assert.True(connection.State == null);
         }
