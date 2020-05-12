@@ -194,10 +194,10 @@ merge.Wait();
 into a memory object and compared with the source data. Within the memory object, the DBMerge
 will identify:</p>
 <ul>
-<li>which records need to inserted (ChangeAction: I)</li>
-<li>which records need to be updated (ChangeAction: U)</li>
-<li>which records exists and doesn't need to be updated (ChangeAction: E)</li>
-<li>which record needs to be deleted (ChangeAction: D), if deletions are allowed</li>
+<li>which records need to inserted (ChangeAction: Insert)</li>
+<li>which records need to be updated (ChangeAction: Update)</li>
+<li>which records exists and doesn't need to be updated (ChangeAction: Exists)</li>
+<li>which record needs to be deleted (ChangeAction: Delete), if deletions are allowed</li>
 </ul>
 <p>To identify these different options, the <code>IdColumn</code> is used. In our example the id column is a unique primary key,
 and it is recommended to only use unique columns for that.</p>
@@ -269,22 +269,22 @@ delta.Wait();
 <tr>
 <td>1</td>
 <td>2019-01-01 12:00:01</td>
-<td>I</td>
+<td>Insert (1)</td>
 </tr>
 <tr>
 <td>2</td>
 <td>2019-01-01 12:00:02</td>
-<td>U</td>
+<td>Update (2)</td>
 </tr>
 <tr>
 <td>3</td>
 <td>2019-01-01 12:00:02</td>
-<td>E</td>
+<td>Exists (0)</td>
 </tr>
 <tr>
 <td>4</td>
 <td>2019-01-01 12:00:03</td>
-<td>D</td>
+<td>Delete (3)</td>
 </tr>
 </tbody>
 </table>
@@ -362,7 +362,7 @@ existing records.</p>
     public long Key { get; set; }
     public string Value { get; set; }
     public DateTime ChangeDate { get; set; }
-    public string ChangeAction { get; set; }
+    public ChangeAction? ChangeAction { get; set; }
     public string UniqueId =&gt; Key.ToString();
     public new bool Equals(object other)
     {

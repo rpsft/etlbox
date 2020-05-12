@@ -217,9 +217,12 @@ it should be deleted.</p>
       <section><p>The generic ETLBox Exception. See inner exception for more details.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.ExcelColumn.html">ExcelColumn</a></h4>
-      <section><p>This attribute defines which column index is mapped to the property.
-By default, when reading from an excel file, the sequence of the properties is used to store the data.
-With this attribute, you can define the column index of the excel column for the property.
+      <section><p>This attribute defines either which column index is mapped to the property or the
+header name that identifies the column
+By default, when reading from an excel file, a header column is expected in the first row.
+The name of the header is used to match with the property names of the object.
+With this attribute, you can define the column index of the excel column for the property or
+a different header name for a property.
 The index starts at 0.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.ExcelRange.html">ExcelRange</a></h4>
@@ -391,10 +394,13 @@ By default, data is pulled via httpclient. Use the ResourceType property to read
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.IDataFlowTransformation-2.html">IDataFlowTransformation&lt;TInput, TOutput&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.IMergeableRow.html">IMergeableRow</a></h4>
-      <section></section>
+      <section><p>Represents table row in destination database for <a class="xref" href="ALE.ETLBox.DataFlow.DbMerge-1.html">DbMerge&lt;TInput&gt;</a></p>
+</section>
     <h3 id="enums">Enums
   </h3>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.AggregationMethod.html">AggregationMethod</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.ChangeAction.html">ChangeAction</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DeltaMode.html">DeltaMode</a></h4>
       <section></section>

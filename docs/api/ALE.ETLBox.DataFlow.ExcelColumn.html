@@ -82,9 +82,12 @@
   
   <h1 id="ALE_ETLBox_DataFlow_ExcelColumn" data-uid="ALE.ETLBox.DataFlow.ExcelColumn" class="text-break">Class ExcelColumn
   </h1>
-  <div class="markdown level0 summary"><p>This attribute defines which column index is mapped to the property.
-By default, when reading from an excel file, the sequence of the properties is used to store the data.
-With this attribute, you can define the column index of the excel column for the property.
+  <div class="markdown level0 summary"><p>This attribute defines either which column index is mapped to the property or the
+header name that identifies the column
+By default, when reading from an excel file, a header column is expected in the first row.
+The name of the header is used to match with the property names of the object.
+With this attribute, you can define the column index of the excel column for the property or
+a different header name for a property.
 The index starts at 0.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -233,6 +236,8 @@ public class ExcelColumn : Attribute</code></pre>
   <h5 id="ALE_ETLBox_DataFlow_ExcelColumn_examples"><strong>Examples</strong></h5>
   <p>public class MyPoco
 {
+[ExcelColumn(&quot;HeaderName&quot;)]
+public string ColumnByHeaderName { get; set; }
 [ExcelColumn(2)]
 public string ThirdColumnInExcel { get; set; }
 }</p>
@@ -266,17 +271,44 @@ public string ThirdColumnInExcel { get; set; }
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
   
   
-  <a id="ALE_ETLBox_DataFlow_ExcelColumn_Index_" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.Index*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_ExcelColumn_Index" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.Index">Index</h4>
+  <a id="ALE_ETLBox_DataFlow_ExcelColumn__ctor_" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.#ctor*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_ExcelColumn__ctor_System_String_" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.#ctor(System.String)">ExcelColumn(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Index { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ExcelColumn(string columnName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">columnName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_ExcelColumn_ColumnName_" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.ColumnName*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_ExcelColumn_ColumnName" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.ColumnName">ColumnName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ColumnName { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -288,7 +320,32 @@ public string ThirdColumnInExcel { get; set; }
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_ExcelColumn_Index_" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.Index*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_ExcelColumn_Index" data-uid="ALE.ETLBox.DataFlow.ExcelColumn.Index">Index</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? Index { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>

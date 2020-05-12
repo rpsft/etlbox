@@ -399,9 +399,19 @@ XmlDestination&lt;MyRow&gt; dest = new XmlDestination&lt;MyRow&gt;(&quot;dest.xm
 <p>An Excel source reads data from a xls or xlsx file.
 <a href="https://github.com/ExcelDataReader/ExcelDataReader">It is based the 3rd party library <code>ExcelDataReader</code></a>.
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range
-to restrict this behavior. Additionally, you have to use the Attribute <code>ExcelColumn</code> to define the column index
-for each property. The first column would be 0, the 2nd column 1, ...</p>
-<p>Usage example:</p>
+to restrict this behavior.
+By default, a header column is expected in the first row. The name of the header for each columns
+is used to map the column with the object - if the property is equal the header name, the value of
+subsequent rows is written into the property.
+You can change this behaviour with the Attribute <code>ExcelColumn</code>.
+Here you can either define a different header name used for matching for a property.
+Or you can set the column index for the property - the first column would be 0, the 2nd column 1, ...
+When you using the column index, you can read also from ExcelFile that have no header row.
+In this case, you need to set the property <code>HasNoHeader</code> to true when using the ExcelSource.</p>
+<p>Usage example for an excel file that contains no header. This could like this:</p>
+<p>1|Test1
+2|Test2
+3|Test3</p>
 <pre><code class="lang-C#">
 public class ExcelData {
     [ExcelColumn(0)]
@@ -412,7 +422,8 @@ public class ExcelData {
 
 ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt;(&quot;src/DataFlow/ExcelDataFile.xlsx&quot;) {
     Range = new ExcelRange(2, 4, 5, 9),
-    SheetName = &quot;Sheet2&quot;
+    SheetName = &quot;Sheet2&quot;,
+    HasNoHeader = true
 };
 </code></pre>
 <p>The ExcelRange must not define the full range. It is sufficient if you just set the starting coordinates. The end of the

@@ -122,6 +122,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.Clone
   nameWithType: AccessOdbcConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.ConnectionManagerType
+  nameWithType: AccessOdbcConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.ConnectionManagerType
+  nameWithType: AccessOdbcConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.DummyTableName
   name: DummyTableName
   href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_DummyTableName
@@ -161,6 +174,84 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.PrepareBulkInsert
   nameWithType: AccessOdbcConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QB
+  nameWithType: AccessOdbcConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QB
+  nameWithType: AccessOdbcConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QE
+  nameWithType: AccessOdbcConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.QE
+  nameWithType: AccessOdbcConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportComputedColumns
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportComputedColumns
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportComputedColumns
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportComputedColumns
+  nameWithType: AccessOdbcConnectionManager.SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportComputedColumns*
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportComputedColumns_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportComputedColumns
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportComputedColumns
+  nameWithType: AccessOdbcConnectionManager.SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportDatabases
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportDatabases
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportDatabases
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportDatabases
+  nameWithType: AccessOdbcConnectionManager.SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportDatabases*
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportDatabases_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportDatabases
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportDatabases
+  nameWithType: AccessOdbcConnectionManager.SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportProcedures
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportProcedures
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportProcedures
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportProcedures
+  nameWithType: AccessOdbcConnectionManager.SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportProcedures*
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportProcedures_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportProcedures
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportProcedures
+  nameWithType: AccessOdbcConnectionManager.SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportSchemas
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportSchemas
+  commentId: P:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportSchemas
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportSchemas
+  nameWithType: AccessOdbcConnectionManager.SupportSchemas
+- uid: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportSchemas*
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_AccessOdbcConnectionManager_SupportSchemas_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportSchemas
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AccessOdbcConnectionManager.SupportSchemas
+  nameWithType: AccessOdbcConnectionManager.SupportSchemas
 - uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager
   name: AdomdConnectionManager
   href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html
@@ -257,6 +348,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.Clone
   nameWithType: AdomdConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.AdomdConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.ConnectionManagerType
+  nameWithType: AdomdConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AdomdConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.ConnectionManagerType
+  nameWithType: AdomdConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.PrepareBulkInsert(System.String)
   name: PrepareBulkInsert(String)
   href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_PrepareBulkInsert_System_String_
@@ -270,63 +374,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.PrepareBulkInsert
   nameWithType: AdomdConnectionManager.PrepareBulkInsert
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics
-  name: ConnectionManagerSpecifics
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html
-  commentId: T:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics
-  nameWithType: ConnectionManagerSpecifics
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation(ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  name: GetBeginQuotation(ConnectionManagerType)
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetBeginQuotation_ALE_ETLBox_ConnectionManager_ConnectionManagerType_
-  commentId: M:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation(ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation(ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  nameWithType: ConnectionManagerSpecifics.GetBeginQuotation(ConnectionManagerType)
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: GetBeginQuotation(IConnectionManager)
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetBeginQuotation_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: ConnectionManagerSpecifics.GetBeginQuotation(IConnectionManager)
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation*
-  name: GetBeginQuotation
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetBeginQuotation_
-  commentId: Overload:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation
+- uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QB
+  nameWithType: AdomdConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QB
   isSpec: "True"
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetBeginQuotation
-  nameWithType: ConnectionManagerSpecifics.GetBeginQuotation
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation(ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  name: GetEndQuotation(ConnectionManagerType)
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetEndQuotation_ALE_ETLBox_ConnectionManager_ConnectionManagerType_
-  commentId: M:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation(ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation(ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  nameWithType: ConnectionManagerSpecifics.GetEndQuotation(ConnectionManagerType)
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: GetEndQuotation(IConnectionManager)
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetEndQuotation_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: ConnectionManagerSpecifics.GetEndQuotation(IConnectionManager)
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation*
-  name: GetEndQuotation
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetEndQuotation_
-  commentId: Overload:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation
+  fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QB
+  nameWithType: AdomdConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QE
+  nameWithType: AdomdConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.AdomdConnectionManager.html#ALE_ETLBox_ConnectionManager_AdomdConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QE
   isSpec: "True"
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetEndQuotation
-  nameWithType: ConnectionManagerSpecifics.GetEndQuotation
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetType(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: GetType(IConnectionManager)
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetType_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetType(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetType(ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: ConnectionManagerSpecifics.GetType(IConnectionManager)
-- uid: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetType*
-  name: GetType
-  href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.html#ALE_ETLBox_ConnectionManager_ConnectionManagerSpecifics_GetType_
-  commentId: Overload:ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetType
-  isSpec: "True"
-  fullName: ALE.ETLBox.ConnectionManager.ConnectionManagerSpecifics.GetType
-  nameWithType: ConnectionManagerSpecifics.GetType
+  fullName: ALE.ETLBox.ConnectionManager.AdomdConnectionManager.QE
+  nameWithType: AdomdConnectionManager.QE
 - uid: ALE.ETLBox.ConnectionManager.ConnectionManagerType
   name: ConnectionManagerType
   href: api/ALE.ETLBox.ConnectionManager.ConnectionManagerType.html
@@ -755,6 +828,23 @@ references:
   fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).CommitTransaction
   nameWithType: DbConnectionManager<Connection>.CommitTransaction
   nameWithType.vb: DbConnectionManager(Of Connection).CommitTransaction
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.ConnectionManagerType
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).ConnectionManagerType
+  nameWithType: DbConnectionManager<Connection>.ConnectionManagerType
+  nameWithType.vb: DbConnectionManager(Of Connection).ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.ConnectionManagerType
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).ConnectionManagerType
+  nameWithType: DbConnectionManager<Connection>.ConnectionManagerType
+  nameWithType.vb: DbConnectionManager(Of Connection).ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.ConnectionString
   name: ConnectionString
   href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_ConnectionString
@@ -954,6 +1044,40 @@ references:
   fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).PrepareBulkInsert
   nameWithType: DbConnectionManager<Connection>.PrepareBulkInsert
   nameWithType.vb: DbConnectionManager(Of Connection).PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QB
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.QB
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).QB
+  nameWithType: DbConnectionManager<Connection>.QB
+  nameWithType.vb: DbConnectionManager(Of Connection).QB
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.QB
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).QB
+  nameWithType: DbConnectionManager<Connection>.QB
+  nameWithType.vb: DbConnectionManager(Of Connection).QB
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QE
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.QE
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).QE
+  nameWithType: DbConnectionManager<Connection>.QE
+  nameWithType.vb: DbConnectionManager(Of Connection).QE
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.QE
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).QE
+  nameWithType: DbConnectionManager<Connection>.QE
+  nameWithType.vb: DbConnectionManager(Of Connection).QE
 - uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.RollbackTransaction
   name: RollbackTransaction()
   href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_RollbackTransaction
@@ -988,6 +1112,74 @@ references:
   fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).State
   nameWithType: DbConnectionManager<Connection>.State
   nameWithType.vb: DbConnectionManager(Of Connection).State
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportComputedColumns
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportComputedColumns
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportComputedColumns
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportComputedColumns
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportComputedColumns
+  nameWithType: DbConnectionManager<Connection>.SupportComputedColumns
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportComputedColumns*
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportComputedColumns_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportComputedColumns
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportComputedColumns
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportComputedColumns
+  nameWithType: DbConnectionManager<Connection>.SupportComputedColumns
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportDatabases
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportDatabases
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportDatabases
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportDatabases
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportDatabases
+  nameWithType: DbConnectionManager<Connection>.SupportDatabases
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportDatabases*
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportDatabases_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportDatabases
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportDatabases
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportDatabases
+  nameWithType: DbConnectionManager<Connection>.SupportDatabases
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportProcedures
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportProcedures
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportProcedures
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportProcedures
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportProcedures
+  nameWithType: DbConnectionManager<Connection>.SupportProcedures
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportProcedures*
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportProcedures_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportProcedures
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportProcedures
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportProcedures
+  nameWithType: DbConnectionManager<Connection>.SupportProcedures
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportSchemas
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportSchemas
+  commentId: P:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportSchemas
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportSchemas
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportSchemas
+  nameWithType: DbConnectionManager<Connection>.SupportSchemas
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportSchemas
+- uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportSchemas*
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_SupportSchemas_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.DbConnectionManager`1.SupportSchemas
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.DbConnectionManager<Connection>.SupportSchemas
+  fullName.vb: ALE.ETLBox.ConnectionManager.DbConnectionManager(Of Connection).SupportSchemas
+  nameWithType: DbConnectionManager<Connection>.SupportSchemas
+  nameWithType.vb: DbConnectionManager(Of Connection).SupportSchemas
 - uid: ALE.ETLBox.ConnectionManager.DbConnectionManager`1.Transaction
   name: Transaction
   href: api/ALE.ETLBox.ConnectionManager.DbConnectionManager-1.html#ALE_ETLBox_ConnectionManager_DbConnectionManager_1_Transaction
@@ -1160,6 +1352,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.CommitTransaction
   nameWithType: IConnectionManager.CommitTransaction
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionManagerType
+  nameWithType: IConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionManagerType
+  nameWithType: IConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.IConnectionManager.ConnectionString
   name: ConnectionString
   href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_ConnectionString
@@ -1302,6 +1507,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.PrepareBulkInsert
   nameWithType: IConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.QB
+  nameWithType: IConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.QB
+  nameWithType: IConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.QE
+  nameWithType: IConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.QE
+  nameWithType: IConnectionManager.QE
 - uid: ALE.ETLBox.ConnectionManager.IConnectionManager.RollbackTransaction
   name: RollbackTransaction()
   href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_RollbackTransaction
@@ -1328,6 +1559,58 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.State
   nameWithType: IConnectionManager.State
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportComputedColumns
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportComputedColumns
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportComputedColumns
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportComputedColumns
+  nameWithType: IConnectionManager.SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportComputedColumns*
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportComputedColumns_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportComputedColumns
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportComputedColumns
+  nameWithType: IConnectionManager.SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportDatabases
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportDatabases
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportDatabases
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportDatabases
+  nameWithType: IConnectionManager.SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportDatabases*
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportDatabases_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportDatabases
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportDatabases
+  nameWithType: IConnectionManager.SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportProcedures
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportProcedures
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportProcedures
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportProcedures
+  nameWithType: IConnectionManager.SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportProcedures*
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportProcedures_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportProcedures
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportProcedures
+  nameWithType: IConnectionManager.SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportSchemas
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportSchemas
+  commentId: P:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportSchemas
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportSchemas
+  nameWithType: IConnectionManager.SupportSchemas
+- uid: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportSchemas*
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_SupportSchemas_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.IConnectionManager.SupportSchemas
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.IConnectionManager.SupportSchemas
+  nameWithType: IConnectionManager.SupportSchemas
 - uid: ALE.ETLBox.ConnectionManager.IConnectionManager.Transaction
   name: Transaction
   href: api/ALE.ETLBox.ConnectionManager.IConnectionManager.html#ALE_ETLBox_ConnectionManager_IConnectionManager_Transaction
@@ -1437,6 +1720,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.Clone
   nameWithType: MySqlConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.ConnectionManagerType
+  nameWithType: MySqlConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.ConnectionManagerType
+  nameWithType: MySqlConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.PrepareBulkInsert(System.String)
   name: PrepareBulkInsert(String)
   href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_PrepareBulkInsert_System_String_
@@ -1450,6 +1746,45 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.PrepareBulkInsert
   nameWithType: MySqlConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QB
+  nameWithType: MySqlConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QB
+  nameWithType: MySqlConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QE
+  nameWithType: MySqlConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.QE
+  nameWithType: MySqlConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.SupportSchemas
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_SupportSchemas
+  commentId: P:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.SupportSchemas
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.SupportSchemas
+  nameWithType: MySqlConnectionManager.SupportSchemas
+- uid: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.SupportSchemas*
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.MySqlConnectionManager.html#ALE_ETLBox_ConnectionManager_MySqlConnectionManager_SupportSchemas_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.MySqlConnectionManager.SupportSchemas
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.MySqlConnectionManager.SupportSchemas
+  nameWithType: MySqlConnectionManager.SupportSchemas
 - uid: ALE.ETLBox.ConnectionManager.OdbcConnectionManager
   name: OdbcConnectionManager
   href: api/ALE.ETLBox.ConnectionManager.OdbcConnectionManager.html
@@ -1571,6 +1906,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.Clone
   nameWithType: PostgresConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.PostgresConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.ConnectionManagerType
+  nameWithType: PostgresConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.PostgresConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.ConnectionManagerType
+  nameWithType: PostgresConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.PrepareBulkInsert(System.String)
   name: PrepareBulkInsert(String)
   href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_PrepareBulkInsert_System_String_
@@ -1584,6 +1932,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.PrepareBulkInsert
   nameWithType: PostgresConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QB
+  nameWithType: PostgresConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QB
+  nameWithType: PostgresConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QE
+  nameWithType: PostgresConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.PostgresConnectionManager.html#ALE_ETLBox_ConnectionManager_PostgresConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.PostgresConnectionManager.QE
+  nameWithType: PostgresConnectionManager.QE
 - uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager
   name: SqlConnectionManager
   href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html
@@ -1680,6 +2054,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.Clone
   nameWithType: SqlConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.SqlConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.ConnectionManagerType
+  nameWithType: SqlConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SqlConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.ConnectionManagerType
+  nameWithType: SqlConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.ModifyDBSettings
   name: ModifyDBSettings
   href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_ModifyDBSettings
@@ -1706,6 +2093,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.PrepareBulkInsert
   nameWithType: SqlConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.SqlConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QB
+  nameWithType: SqlConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SqlConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QB
+  nameWithType: SqlConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.SqlConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QE
+  nameWithType: SqlConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.SqlConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SqlConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SqlConnectionManager.QE
+  nameWithType: SqlConnectionManager.QE
 - uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager
   name: SQLiteConnectionManager
   href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html
@@ -1802,6 +2215,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.Clone
   nameWithType: SQLiteConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ConnectionManagerType
+  nameWithType: SQLiteConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ConnectionManagerType
+  nameWithType: SQLiteConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.ModifyDBSettings
   name: ModifyDBSettings
   href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_ModifyDBSettings
@@ -1828,6 +2254,84 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.PrepareBulkInsert
   nameWithType: SQLiteConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QB
+  nameWithType: SQLiteConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QB
+  nameWithType: SQLiteConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QE
+  nameWithType: SQLiteConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.QE
+  nameWithType: SQLiteConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportComputedColumns
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportComputedColumns
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportComputedColumns
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportComputedColumns
+  nameWithType: SQLiteConnectionManager.SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportComputedColumns*
+  name: SupportComputedColumns
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportComputedColumns_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportComputedColumns
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportComputedColumns
+  nameWithType: SQLiteConnectionManager.SupportComputedColumns
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportDatabases
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportDatabases
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportDatabases
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportDatabases
+  nameWithType: SQLiteConnectionManager.SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportDatabases*
+  name: SupportDatabases
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportDatabases_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportDatabases
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportDatabases
+  nameWithType: SQLiteConnectionManager.SupportDatabases
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportProcedures
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportProcedures
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportProcedures
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportProcedures
+  nameWithType: SQLiteConnectionManager.SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportProcedures*
+  name: SupportProcedures
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportProcedures_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportProcedures
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportProcedures
+  nameWithType: SQLiteConnectionManager.SupportProcedures
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportSchemas
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportSchemas
+  commentId: P:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportSchemas
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportSchemas
+  nameWithType: SQLiteConnectionManager.SupportSchemas
+- uid: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportSchemas*
+  name: SupportSchemas
+  href: api/ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.html#ALE_ETLBox_ConnectionManager_SQLiteConnectionManager_SupportSchemas_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportSchemas
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SQLiteConnectionManager.SupportSchemas
+  nameWithType: SQLiteConnectionManager.SupportSchemas
 - uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager
   name: SqlOdbcConnectionManager
   href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html
@@ -1924,6 +2428,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.Clone
   nameWithType: SqlOdbcConnectionManager.Clone
+- uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_ConnectionManagerType
+  commentId: P:ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.ConnectionManagerType
+  fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.ConnectionManagerType
+  nameWithType: SqlOdbcConnectionManager.ConnectionManagerType
+- uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_ConnectionManagerType_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.ConnectionManagerType
+  nameWithType: SqlOdbcConnectionManager.ConnectionManagerType
 - uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.PrepareBulkInsert(System.String)
   name: PrepareBulkInsert(String)
   href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_PrepareBulkInsert_System_String_
@@ -1937,6 +2454,32 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.PrepareBulkInsert
   nameWithType: SqlOdbcConnectionManager.PrepareBulkInsert
+- uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QB
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_QB
+  commentId: P:ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QB
+  fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QB
+  nameWithType: SqlOdbcConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QB*
+  name: QB
+  href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_QB_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QB
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QB
+  nameWithType: SqlOdbcConnectionManager.QB
+- uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QE
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_QE
+  commentId: P:ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QE
+  fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QE
+  nameWithType: SqlOdbcConnectionManager.QE
+- uid: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QE*
+  name: QE
+  href: api/ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.html#ALE_ETLBox_ConnectionManager_SqlOdbcConnectionManager_QE_
+  commentId: Overload:ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QE
+  isSpec: "True"
+  fullName: ALE.ETLBox.ConnectionManager.SqlOdbcConnectionManager.QE
+  nameWithType: SqlOdbcConnectionManager.QE
 - uid: ALE.ETLBox.ControlFlow
   name: ALE.ETLBox.ControlFlow
   href: api/ALE.ETLBox.ControlFlow.html
@@ -6473,6 +7016,36 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.BlockTransformation(Of TInput, TOutput).TaskName
   nameWithType: BlockTransformation<TInput, TOutput>.TaskName
   nameWithType.vb: BlockTransformation(Of TInput, TOutput).TaskName
+- uid: ALE.ETLBox.DataFlow.ChangeAction
+  name: ChangeAction
+  href: api/ALE.ETLBox.DataFlow.ChangeAction.html
+  commentId: T:ALE.ETLBox.DataFlow.ChangeAction
+  fullName: ALE.ETLBox.DataFlow.ChangeAction
+  nameWithType: ChangeAction
+- uid: ALE.ETLBox.DataFlow.ChangeAction.Delete
+  name: Delete
+  href: api/ALE.ETLBox.DataFlow.ChangeAction.html#ALE_ETLBox_DataFlow_ChangeAction_Delete
+  commentId: F:ALE.ETLBox.DataFlow.ChangeAction.Delete
+  fullName: ALE.ETLBox.DataFlow.ChangeAction.Delete
+  nameWithType: ChangeAction.Delete
+- uid: ALE.ETLBox.DataFlow.ChangeAction.Exists
+  name: Exists
+  href: api/ALE.ETLBox.DataFlow.ChangeAction.html#ALE_ETLBox_DataFlow_ChangeAction_Exists
+  commentId: F:ALE.ETLBox.DataFlow.ChangeAction.Exists
+  fullName: ALE.ETLBox.DataFlow.ChangeAction.Exists
+  nameWithType: ChangeAction.Exists
+- uid: ALE.ETLBox.DataFlow.ChangeAction.Insert
+  name: Insert
+  href: api/ALE.ETLBox.DataFlow.ChangeAction.html#ALE_ETLBox_DataFlow_ChangeAction_Insert
+  commentId: F:ALE.ETLBox.DataFlow.ChangeAction.Insert
+  fullName: ALE.ETLBox.DataFlow.ChangeAction.Insert
+  nameWithType: ChangeAction.Insert
+- uid: ALE.ETLBox.DataFlow.ChangeAction.Update
+  name: Update
+  href: api/ALE.ETLBox.DataFlow.ChangeAction.html#ALE_ETLBox_DataFlow_ChangeAction_Update
+  commentId: F:ALE.ETLBox.DataFlow.ChangeAction.Update
+  fullName: ALE.ETLBox.DataFlow.ChangeAction.Update
+  nameWithType: ChangeAction.Update
 - uid: ALE.ETLBox.DataFlow.ColumnMap
   name: ColumnMap
   href: api/ALE.ETLBox.DataFlow.ColumnMap.html
@@ -9520,6 +10093,12 @@ references:
   commentId: M:ALE.ETLBox.DataFlow.ExcelColumn.#ctor(System.Int32)
   fullName: ALE.ETLBox.DataFlow.ExcelColumn.ExcelColumn(System.Int32)
   nameWithType: ExcelColumn.ExcelColumn(Int32)
+- uid: ALE.ETLBox.DataFlow.ExcelColumn.#ctor(System.String)
+  name: ExcelColumn(String)
+  href: api/ALE.ETLBox.DataFlow.ExcelColumn.html#ALE_ETLBox_DataFlow_ExcelColumn__ctor_System_String_
+  commentId: M:ALE.ETLBox.DataFlow.ExcelColumn.#ctor(System.String)
+  fullName: ALE.ETLBox.DataFlow.ExcelColumn.ExcelColumn(System.String)
+  nameWithType: ExcelColumn.ExcelColumn(String)
 - uid: ALE.ETLBox.DataFlow.ExcelColumn.#ctor*
   name: ExcelColumn
   href: api/ALE.ETLBox.DataFlow.ExcelColumn.html#ALE_ETLBox_DataFlow_ExcelColumn__ctor_
@@ -9527,6 +10106,19 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.DataFlow.ExcelColumn.ExcelColumn
   nameWithType: ExcelColumn.ExcelColumn
+- uid: ALE.ETLBox.DataFlow.ExcelColumn.ColumnName
+  name: ColumnName
+  href: api/ALE.ETLBox.DataFlow.ExcelColumn.html#ALE_ETLBox_DataFlow_ExcelColumn_ColumnName
+  commentId: P:ALE.ETLBox.DataFlow.ExcelColumn.ColumnName
+  fullName: ALE.ETLBox.DataFlow.ExcelColumn.ColumnName
+  nameWithType: ExcelColumn.ColumnName
+- uid: ALE.ETLBox.DataFlow.ExcelColumn.ColumnName*
+  name: ColumnName
+  href: api/ALE.ETLBox.DataFlow.ExcelColumn.html#ALE_ETLBox_DataFlow_ExcelColumn_ColumnName_
+  commentId: Overload:ALE.ETLBox.DataFlow.ExcelColumn.ColumnName
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.ExcelColumn.ColumnName
+  nameWithType: ExcelColumn.ColumnName
 - uid: ALE.ETLBox.DataFlow.ExcelColumn.Index
   name: Index
   href: api/ALE.ETLBox.DataFlow.ExcelColumn.html#ALE_ETLBox_DataFlow_ExcelColumn_Index
@@ -9710,6 +10302,23 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.ExcelSource(Of TOutput).ExcelFilePassword
   nameWithType: ExcelSource<TOutput>.ExcelFilePassword
   nameWithType.vb: ExcelSource(Of TOutput).ExcelFilePassword
+- uid: ALE.ETLBox.DataFlow.ExcelSource`1.HasNoHeader
+  name: HasNoHeader
+  href: api/ALE.ETLBox.DataFlow.ExcelSource-1.html#ALE_ETLBox_DataFlow_ExcelSource_1_HasNoHeader
+  commentId: P:ALE.ETLBox.DataFlow.ExcelSource`1.HasNoHeader
+  fullName: ALE.ETLBox.DataFlow.ExcelSource<TOutput>.HasNoHeader
+  fullName.vb: ALE.ETLBox.DataFlow.ExcelSource(Of TOutput).HasNoHeader
+  nameWithType: ExcelSource<TOutput>.HasNoHeader
+  nameWithType.vb: ExcelSource(Of TOutput).HasNoHeader
+- uid: ALE.ETLBox.DataFlow.ExcelSource`1.HasNoHeader*
+  name: HasNoHeader
+  href: api/ALE.ETLBox.DataFlow.ExcelSource-1.html#ALE_ETLBox_DataFlow_ExcelSource_1_HasNoHeader_
+  commentId: Overload:ALE.ETLBox.DataFlow.ExcelSource`1.HasNoHeader
+  isSpec: "True"
+  fullName: ALE.ETLBox.DataFlow.ExcelSource<TOutput>.HasNoHeader
+  fullName.vb: ALE.ETLBox.DataFlow.ExcelSource(Of TOutput).HasNoHeader
+  nameWithType: ExcelSource<TOutput>.HasNoHeader
+  nameWithType.vb: ExcelSource(Of TOutput).HasNoHeader
 - uid: ALE.ETLBox.DataFlow.ExcelSource`1.IgnoreBlankRows
   name: IgnoreBlankRows
   href: api/ALE.ETLBox.DataFlow.ExcelSource-1.html#ALE_ETLBox_DataFlow_ExcelSource_1_IgnoreBlankRows
@@ -11810,23 +12419,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.RowDuplication(Of TInput).CanDuplicate
   nameWithType: RowDuplication<TInput>.CanDuplicate
   nameWithType.vb: RowDuplication(Of TInput).CanDuplicate
-- uid: ALE.ETLBox.DataFlow.RowDuplication`1.InitFlow
-  name: InitFlow()
-  href: api/ALE.ETLBox.DataFlow.RowDuplication-1.html#ALE_ETLBox_DataFlow_RowDuplication_1_InitFlow
-  commentId: M:ALE.ETLBox.DataFlow.RowDuplication`1.InitFlow
-  fullName: ALE.ETLBox.DataFlow.RowDuplication<TInput>.InitFlow()
-  fullName.vb: ALE.ETLBox.DataFlow.RowDuplication(Of TInput).InitFlow()
-  nameWithType: RowDuplication<TInput>.InitFlow()
-  nameWithType.vb: RowDuplication(Of TInput).InitFlow()
-- uid: ALE.ETLBox.DataFlow.RowDuplication`1.InitFlow*
-  name: InitFlow
-  href: api/ALE.ETLBox.DataFlow.RowDuplication-1.html#ALE_ETLBox_DataFlow_RowDuplication_1_InitFlow_
-  commentId: Overload:ALE.ETLBox.DataFlow.RowDuplication`1.InitFlow
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.RowDuplication<TInput>.InitFlow
-  fullName.vb: ALE.ETLBox.DataFlow.RowDuplication(Of TInput).InitFlow
-  nameWithType: RowDuplication<TInput>.InitFlow
-  nameWithType.vb: RowDuplication(Of TInput).InitFlow
 - uid: ALE.ETLBox.DataFlow.RowDuplication`1.NumberOfDuplicates
   name: NumberOfDuplicates
   href: api/ALE.ETLBox.DataFlow.RowDuplication-1.html#ALE_ETLBox_DataFlow_RowDuplication_1_NumberOfDuplicates
@@ -11993,23 +12585,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).RowMultiplication
   nameWithType: RowMultiplication<TInput, TOutput>.RowMultiplication
   nameWithType.vb: RowMultiplication(Of TInput, TOutput).RowMultiplication
-- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow
-  name: InitFlow()
-  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_InitFlow
-  commentId: M:ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow
-  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.InitFlow()
-  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).InitFlow()
-  nameWithType: RowMultiplication<TInput, TOutput>.InitFlow()
-  nameWithType.vb: RowMultiplication(Of TInput, TOutput).InitFlow()
-- uid: ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow*
-  name: InitFlow
-  href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_InitFlow_
-  commentId: Overload:ALE.ETLBox.DataFlow.RowMultiplication`2.InitFlow
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlow.RowMultiplication<TInput, TOutput>.InitFlow
-  fullName.vb: ALE.ETLBox.DataFlow.RowMultiplication(Of TInput, TOutput).InitFlow
-  nameWithType: RowMultiplication<TInput, TOutput>.InitFlow
-  nameWithType.vb: RowMultiplication(Of TInput, TOutput).InitFlow
 - uid: ALE.ETLBox.DataFlow.RowMultiplication`2.LinkErrorTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{ALE.ETLBox.DataFlow.ETLBoxError})
   name: LinkErrorTo(IDataFlowLinkTarget<ETLBoxError>)
   href: api/ALE.ETLBox.DataFlow.RowMultiplication-2.html#ALE_ETLBox_DataFlow_RowMultiplication_2_LinkErrorTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget_ALE_ETLBox_DataFlow_ETLBoxError__
@@ -13184,23 +13759,6 @@ references:
   fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).CheckCompleteAction
   nameWithType: DataFlowTransformation<TInput, TOutput>.CheckCompleteAction
   nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).CheckCompleteAction
-- uid: ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer(System.Threading.Tasks.Task,System.Threading.Tasks.Dataflow.IDataflowBlock)
-  name: CompleteOrFaultBuffer(Task, IDataflowBlock)
-  href: api/ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_System_Threading_Tasks_Task_System_Threading_Tasks_Dataflow_IDataflowBlock_
-  commentId: M:ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer(System.Threading.Tasks.Task,System.Threading.Tasks.Dataflow.IDataflowBlock)
-  fullName: ALE.ETLBox.DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer(System.Threading.Tasks.Task, System.Threading.Tasks.Dataflow.IDataflowBlock)
-  fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer(System.Threading.Tasks.Task, System.Threading.Tasks.Dataflow.IDataflowBlock)
-  nameWithType: DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer(Task, IDataflowBlock)
-  nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer(Task, IDataflowBlock)
-- uid: ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer*
-  name: CompleteOrFaultBuffer
-  href: api/ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_CompleteOrFaultBuffer_
-  commentId: Overload:ALE.ETLBox.DataFlowTransformation`2.CompleteOrFaultBuffer
-  isSpec: "True"
-  fullName: ALE.ETLBox.DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer
-  fullName.vb: ALE.ETLBox.DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer
-  nameWithType: DataFlowTransformation<TInput, TOutput>.CompleteOrFaultBuffer
-  nameWithType.vb: DataFlowTransformation(Of TInput, TOutput).CompleteOrFaultBuffer
 - uid: ALE.ETLBox.DataFlowTransformation`2.LinkTo(ALE.ETLBox.DataFlow.IDataFlowLinkTarget{`1})
   name: LinkTo(IDataFlowLinkTarget<TOutput>)
   href: api/ALE.ETLBox.DataFlowTransformation-2.html#ALE_ETLBox_DataFlowTransformation_2_LinkTo_ALE_ETLBox_DataFlow_IDataFlowLinkTarget__1__
@@ -15232,19 +15790,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
   nameWithType: CreateDatabaseTarget.ConnectionManager
-- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
-  name: ConnectionType
-  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_ConnectionType
-  commentId: P:ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
-  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
-  nameWithType: CreateDatabaseTarget.ConnectionType
-- uid: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType*
-  name: ConnectionType
-  href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_ConnectionType_
-  commentId: Overload:ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
-  isSpec: "True"
-  fullName: ALE.ETLBox.Logging.CreateDatabaseTarget.ConnectionType
-  nameWithType: CreateDatabaseTarget.ConnectionType
 - uid: ALE.ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget
   name: GetNLogDatabaseTarget()
   href: api/ALE.ETLBox.Logging.CreateDatabaseTarget.html#ALE_ETLBox_Logging_CreateDatabaseTarget_GetNLogDatabaseTarget
@@ -17395,18 +17940,12 @@ references:
   commentId: T:ALE.ETLBox.ObjectNameDescriptor
   fullName: ALE.ETLBox.ObjectNameDescriptor
   nameWithType: ObjectNameDescriptor
-- uid: ALE.ETLBox.ObjectNameDescriptor.#ctor(System.String,ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  name: ObjectNameDescriptor(String, ConnectionManagerType)
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor__ctor_System_String_ALE_ETLBox_ConnectionManager_ConnectionManagerType_
-  commentId: M:ALE.ETLBox.ObjectNameDescriptor.#ctor(System.String,ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  fullName: ALE.ETLBox.ObjectNameDescriptor.ObjectNameDescriptor(System.String, ALE.ETLBox.ConnectionManager.ConnectionManagerType)
-  nameWithType: ObjectNameDescriptor.ObjectNameDescriptor(String, ConnectionManagerType)
-- uid: ALE.ETLBox.ObjectNameDescriptor.#ctor(System.String,ALE.ETLBox.ConnectionManager.IConnectionManager)
-  name: ObjectNameDescriptor(String, IConnectionManager)
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor__ctor_System_String_ALE_ETLBox_ConnectionManager_IConnectionManager_
-  commentId: M:ALE.ETLBox.ObjectNameDescriptor.#ctor(System.String,ALE.ETLBox.ConnectionManager.IConnectionManager)
-  fullName: ALE.ETLBox.ObjectNameDescriptor.ObjectNameDescriptor(System.String, ALE.ETLBox.ConnectionManager.IConnectionManager)
-  nameWithType: ObjectNameDescriptor.ObjectNameDescriptor(String, IConnectionManager)
+- uid: ALE.ETLBox.ObjectNameDescriptor.#ctor(System.String,System.String,System.String)
+  name: ObjectNameDescriptor(String, String, String)
+  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor__ctor_System_String_System_String_System_String_
+  commentId: M:ALE.ETLBox.ObjectNameDescriptor.#ctor(System.String,System.String,System.String)
+  fullName: ALE.ETLBox.ObjectNameDescriptor.ObjectNameDescriptor(System.String, System.String, System.String)
+  nameWithType: ObjectNameDescriptor.ObjectNameDescriptor(String, String, String)
 - uid: ALE.ETLBox.ObjectNameDescriptor.#ctor*
   name: ObjectNameDescriptor
   href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor__ctor_
@@ -17414,19 +17953,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ObjectNameDescriptor.ObjectNameDescriptor
   nameWithType: ObjectNameDescriptor.ObjectNameDescriptor
-- uid: ALE.ETLBox.ObjectNameDescriptor.ConnectionType
-  name: ConnectionType
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_ConnectionType
-  commentId: P:ALE.ETLBox.ObjectNameDescriptor.ConnectionType
-  fullName: ALE.ETLBox.ObjectNameDescriptor.ConnectionType
-  nameWithType: ObjectNameDescriptor.ConnectionType
-- uid: ALE.ETLBox.ObjectNameDescriptor.ConnectionType*
-  name: ConnectionType
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_ConnectionType_
-  commentId: Overload:ALE.ETLBox.ObjectNameDescriptor.ConnectionType
-  isSpec: "True"
-  fullName: ALE.ETLBox.ObjectNameDescriptor.ConnectionType
-  nameWithType: ObjectNameDescriptor.ConnectionType
 - uid: ALE.ETLBox.ObjectNameDescriptor.ObjectName
   name: ObjectName
   href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_ObjectName
@@ -17505,32 +18031,6 @@ references:
   isSpec: "True"
   fullName: ALE.ETLBox.ObjectNameDescriptor.QuotatedSchemaName
   nameWithType: ObjectNameDescriptor.QuotatedSchemaName
-- uid: ALE.ETLBox.ObjectNameDescriptor.Schema
-  name: Schema
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_Schema
-  commentId: P:ALE.ETLBox.ObjectNameDescriptor.Schema
-  fullName: ALE.ETLBox.ObjectNameDescriptor.Schema
-  nameWithType: ObjectNameDescriptor.Schema
-- uid: ALE.ETLBox.ObjectNameDescriptor.Schema*
-  name: Schema
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_Schema_
-  commentId: Overload:ALE.ETLBox.ObjectNameDescriptor.Schema
-  isSpec: "True"
-  fullName: ALE.ETLBox.ObjectNameDescriptor.Schema
-  nameWithType: ObjectNameDescriptor.Schema
-- uid: ALE.ETLBox.ObjectNameDescriptor.Table
-  name: Table
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_Table
-  commentId: P:ALE.ETLBox.ObjectNameDescriptor.Table
-  fullName: ALE.ETLBox.ObjectNameDescriptor.Table
-  nameWithType: ObjectNameDescriptor.Table
-- uid: ALE.ETLBox.ObjectNameDescriptor.Table*
-  name: Table
-  href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_Table_
-  commentId: Overload:ALE.ETLBox.ObjectNameDescriptor.Table
-  isSpec: "True"
-  fullName: ALE.ETLBox.ObjectNameDescriptor.Table
-  nameWithType: ObjectNameDescriptor.Table
 - uid: ALE.ETLBox.ObjectNameDescriptor.UnquotatedFullName
   name: UnquotatedFullName
   href: api/ALE.ETLBox.ObjectNameDescriptor.html#ALE_ETLBox_ObjectNameDescriptor_UnquotatedFullName
