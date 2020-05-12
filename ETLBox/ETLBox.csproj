@@ -11,16 +11,15 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Some performance improvements. 
-Fixing memory leak when reading large amoutn of data from a CsvFile and writing into a DbDestination. CreateTableTask &amp; TableDefinition now accept name for PrimaryKeyConstraing. 
-Sql Server FileGroupTask removed.</PackageReleaseNotes>
-    <Version>1.8.6</Version>
+    <PackageReleaseNotes>Preparing different packages for different source types.
+Breaking Change: ExcelSource now expects the first line to deliver a header row. This is used to create a mapping to the right excel column (unless stated otherwise).</PackageReleaseNotes>
+    <Version>1.8.7</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.6.0</AssemblyVersion>
-    <FileVersion>1.8.6.0</FileVersion>
+    <AssemblyVersion>1.8.7.0</AssemblyVersion>
+    <FileVersion>1.8.7.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>

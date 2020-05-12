@@ -37,7 +37,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnErrorLinking.xlsx");
-
+            source.HasNoHeader = true;
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
             source.Execute();
@@ -56,6 +56,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnErrorLinking.xlsx");
+            source.HasNoHeader = true;
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act & Assert

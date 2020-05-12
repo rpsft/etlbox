@@ -56,7 +56,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             ExcelSource<MyDataRow> source = new ExcelSource<MyDataRow>(filename)
             {
-                Range = new ExcelRange(1, 3)
+                Range = new ExcelRange(1, 3),
+                HasNoHeader = true
             };
 
             source.LinkTo(dest);
@@ -83,7 +84,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnBlankRow.xlsx")
             {
-                IgnoreBlankRows = true
+                IgnoreBlankRows = true,
+                HasNoHeader = true
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestinationBlankRows", 2);
 

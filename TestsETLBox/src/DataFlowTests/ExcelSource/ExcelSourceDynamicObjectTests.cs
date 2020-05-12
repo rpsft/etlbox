@@ -21,7 +21,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Fact]
-        public void SimpleData()
+        public void SimpleDataNoHeader()
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelDestinationDynamic");
@@ -29,7 +29,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             ExcelSource source = new ExcelSource("res/Excel/TwoColumnShiftedData.xlsx")
             {
-                Range = new ExcelRange(3, 4)
+                Range = new ExcelRange(3, 4),
+                HasNoHeader = true
             };
             RowTransformation trans = new RowTransformation(row =>
             {
@@ -42,6 +43,41 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest2Columns.AssertTestData();
+        }
+
+        [Fact]
+        public void SimpleDataWithHeader()
+        {
+            //Arrange
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelDestinationDynamicWithHeader");
+            ExcelSource source = new ExcelSource("res/Excel/TwoColumnWithHeader.xlsx");
+            DbDestination dest = new DbDestination(Connection, "ExcelDestinationDynamicWithHeader");
+
+            //Act
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            dest2Columns.AssertTestData();
+        }
+
+        [Fact]
+        public void ShiftedDataWithHeader()
+        {
+            //Arrange
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelDestinationDynamicWithHeader");
+            ExcelSource source = new ExcelSource("res/Excel/TwoColumnShiftedDataWithHeader.xlsx");
+            source.Range = new ExcelRange(3, 3);
+            DbDestination dest = new DbDestination(Connection, "ExcelDestinationDynamicWithHeader");
+
+            //Act
+            source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 

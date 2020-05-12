@@ -429,10 +429,21 @@ Could create an output that looks like this:
 An Excel source reads data from a xls or xlsx file. 
 [It is based the 3rd party library `ExcelDataReader`](https://github.com/ExcelDataReader/ExcelDataReader). 
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range 
-to restrict this behavior. Additionally, you have to use the Attribute `ExcelColumn` to define the column index
-for each property. The first column would be 0, the 2nd column 1, ...
+to restrict this behavior. 
+By default, a header column is expected in the first row. The name of the header for each columns
+ is used to map the column with the object - if the property is equal the header name, the value of
+ subsequent rows is written into the property.
+You can change this behaviour with the Attribute `ExcelColumn`.
+Here you can either define a different header name used for matching for a property.
+Or you can set the column index for the property - the first column would be 0, the 2nd column 1, ...
+When you using the column index, you can read also from ExcelFile that have no header row. 
+In this case, you need to set the property `HasNoHeader` to true when using the ExcelSource.
 
-Usage example:
+Usage example for an excel file that contains no header. This could like this:
+
+1|Test1
+2|Test2
+3|Test3
 
 ```C#
 
@@ -445,7 +456,8 @@ public class ExcelData {
 
 ExcelSource<ExcelData> source = new ExcelSource<ExcelData>("src/DataFlow/ExcelDataFile.xlsx") {
     Range = new ExcelRange(2, 4, 5, 9),
-    SheetName = "Sheet2"
+    SheetName = "Sheet2",
+    HasNoHeader = true
 };
 ```
 The ExcelRange must not define the full range. It is sufficient if you just set the starting coordinates. The end of the

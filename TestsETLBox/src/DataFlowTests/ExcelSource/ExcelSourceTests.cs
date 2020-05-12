@@ -35,6 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnData.xlsx");
+            source.HasNoHeader = true;
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestination1", 2);
 
             source.LinkTo(dest);
@@ -60,6 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             ExcelSource<OneExcelColumn> source = new ExcelSource<OneExcelColumn>("res/Excel/TwoColumnData.xlsx");
+            source.HasNoHeader = true;
             DbDestination<OneExcelColumn> dest = new DbDestination<OneExcelColumn>(Connection, "ExcelDestination2", 2);
 
             source.LinkTo(dest);
@@ -92,7 +94,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             ExcelSource<ExcelDataSheet2> source = new ExcelSource<ExcelDataSheet2>("res/Excel/DataOnSheet2.xlsx")
             {
                 Range = new ExcelRange(2, 4, 5, 9),
-                SheetName = "Sheet2"
+                SheetName = "Sheet2",
+                HasNoHeader = true
             };
 
             DbDestination<ExcelDataSheet2> dest = new DbDestination<ExcelDataSheet2>(Connection, "ExcelDestination3");
@@ -132,6 +135,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             ExcelSource<Excel21Cols> source = new ExcelSource<Excel21Cols>("res/Excel/MoreThan20Cols.xlsx")
             {
                 Range = new ExcelRange(1, 2),
+                HasNoHeader = true
             };
 
             MemoryDestination<Excel21Cols> dest = new MemoryDestination<Excel21Cols>();
