@@ -1,6 +1,6 @@
 ﻿# Other sources and destinations
 
-## Custom written sources & destinations
+## Custom sources & destinations
 
 ETLBox allows you to write your own implementation of sources and destinations. This gives you a 
 great flexibility if you need to integrate systems that are currently now included in the list of default 
@@ -53,7 +53,9 @@ CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
 );
 ```
 
-## Memory Source
+## In-Memory
+
+### Memory Source
 
 A Memory source is a simple source component that accepts a .NET list or enumerable. Use this component
 within your dataflow if you already have a collection containing your data available in memory.

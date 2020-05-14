@@ -1,4 +1,4 @@
-﻿# Merging and syncing tables
+﻿# Syncing tables with Merge
 
 ETLbox can be used to integrate data from different source and write them into different destinations. 
 Most of the time you will use tables in a database as target. 
@@ -27,7 +27,7 @@ no straight-forward solution how to manage deleted records here. One way could b
 the record was deleted (including the deletion time as "update" timestamp). 
 Or it could be that deletions are not transferred at all, either because they don't happen or for other reasons.
 
-## DBMerge
+### DBMerge
 
 Both scenarios are supported with ETLBox. The `DBMerge` component can be used to tackle this problem
 
@@ -40,9 +40,9 @@ Deletion is optional (by default turned on) , and can be disabled with the prope
 The DBMerge was designed for scenario 1 and scenario 2. For scenario 2, the property DeltaMode has
 to be set to DeltaMode.Delta: `DeltaMode = DeltaMode.Delta`.
 
-### Example 
+## Example 
 
-#### Data and object definition
+### Data and object definition
 
 To implement an example sync between two tables, we will  need a `DbSource` pointing to our source table. 
  In our case we just pass a table name for the source table, but you could also define a sql query 
@@ -93,7 +93,7 @@ Key |Value         |
 3   |Test - Exists 
 4   |Test - Deleted
 
-#### Setting up the data flow
+### Setting up the data flow
 
 No we can already set up a data flow. It would look like this: 
 
@@ -144,7 +144,7 @@ deletions disable, there would be an additional row in our destination table:
 4    |Test - Deleted
 
 
-#### Delta table
+### Delta table
 
 The DBMerge has a property `DeltaTable` which is a List containing additionally information what records 
 where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding 
@@ -177,9 +177,9 @@ The DeltaTable now will look like this:
 3    |2019-01-01 12:00:02|Exists (0)  
 4    |2019-01-01 12:00:03|Delete (3)   
 
-### Additional configurations 
+## Additional configurations 
 
-#### Truncate instead delete
+### Truncate instead delete
 
 Because the DBMerge does delete records that need to be deleted or updated using a `DELETE` sql statement, 
 this method can sometimes be a performance bottleneck if you expect a lot of deletions  to happen. The 
@@ -191,7 +191,7 @@ Unfortunately, there is no general recommendation when to use this approach.
 
 Also, if you don't specify any Id columns with teh `IdColumn` attribute, the DbMerge will use the truncate method automatically. 
 
-#### Delta mode
+### Delta mode
 
 If the source transfer delta information, then you can set the DbMerge delta mode:
 
@@ -220,7 +220,7 @@ public class MyMergeRow : MergeableRow
 In this example object, if the property DeleteThisRow is set to true, the record in the destination will be deleted
 if it matches with the Key property that is flagged with the attribute IdColumn.
 
-#### ColumnMap attribute
+### ColumnMap attribute
 
 If the columns have different names than our property, we need to add the `ColumnMap` attribute to have them
 mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:
@@ -238,7 +238,7 @@ public class MyMergeRow : MergeableRow
 }
 ```
 
-#### Composite Keys
+### Composite Keys
 
 Composite keys are supported: just flag all the columns that you want to use as composite unique key with the 
 `IdColumn` attribute. Internally, all properties are concatenated to a string by using the ToString() method of the properties.
@@ -264,7 +264,7 @@ public class MyMergeRow : MergeableRow
 As you can see, you can also use the `CompareColumn` attribute on each property that you want to use for identifying
 existing records. 
 
-#### Using the IMergabeRow interface
+### Using the IMergabeRow interface
 
 Sometimes, you want do the implementation of the IMergeableRow interface yourself. Here is an example implementation:
 

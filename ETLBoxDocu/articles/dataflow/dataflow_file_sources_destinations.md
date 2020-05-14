@@ -1,4 +1,4 @@
-﻿# Integration of Flat files  and web services
+﻿# Integration of flat files  and web services
 
 ## Resource Type and Web Requests
 
@@ -11,7 +11,9 @@ Instead of a filename just provide a Url. Furthermore, the components also have
 a `[HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8)` property 
 that can be used to configure the Http request, e.g. to add authentication or use https instead.
 
-## CsvSource
+## Csv 
+
+### CsvSource
 
 A CcsvSource simple reads data from a CSV file. 
 It is based on the [library CsvHelper created by Josh Close](https://joshclose.github.io/CsvHelper/).
@@ -99,7 +101,7 @@ CsvSource<string[]> source = new CsvSource<string[]>("Demo.csv");
 source.Configuration.HasHeaderRecord = false;
 ```
 
-## CsvDestination
+### CsvDestination
 
 A CSV destination will create a file containing the data in the desired CSV format. 
 Like the CsvSource it is based on the [library CsvHelper created by Josh Close](https://joshclose.github.io/CsvHelper/). 
@@ -365,7 +367,7 @@ XmlSource<MyRow> source = new XmlSource<MyRow>("source.xml", ResourceType.File);
 
 #### Using dynamic objects
 
-XmlSource does also support the dynamic ExpandoObject. If you want to use it, you can define an ElementName that contains the data you acutally
+XmlSource does also support the dynamic ExpandoObject. If you want to use it, you can define an ElementName that contains the data you actually
 want to parse - as you normally are not interested in your root element. ETLBox then will look for this Element and parse every occurence of
 it into an ExpandoObject and send it into the connected components. 
 
@@ -424,15 +426,39 @@ Could create an output that looks like this:
 ```
 
 
-## ExcelSource
+## Excel
+
+### ExcelSource
 
 An Excel source reads data from a xls or xlsx file. 
 [It is based the 3rd party library `ExcelDataReader`](https://github.com/ExcelDataReader/ExcelDataReader). 
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range 
 to restrict this behavior. 
+
 By default, a header column is expected in the first row. The name of the header for each columns
  is used to map the column with the object - if the property is equal the header name, the value of
  subsequent rows is written into the property.
+
+Let's consider an example. If your excel file looks like this:
+
+Col1|Col2
+-|-----
+1|Test1
+2|Test2
+3|Test3
+
+You can easily load this data with an object like this:
+
+```C#
+
+public class ExcelData {
+    public string Col1 { get; set; }
+    public int Col2 { get; set; }
+}
+
+ExcelSource<ExcelData> source = new ExcelSource<ExcelData> ("src/DataFlow/ExcelDataFile.xlsx");
+```
+
 You can change this behaviour with the Attribute `ExcelColumn`.
 Here you can either define a different header name used for matching for a property.
 Or you can set the column index for the property - the first column would be 0, the 2nd column 1, ...
@@ -441,9 +467,13 @@ In this case, you need to set the property `HasNoHeader` to true when using the 
 
 Usage example for an excel file that contains no header. This could like this:
 
+ |
+-|-----
 1|Test1
 2|Test2
 3|Test3
+
+This is the corresponding object creation:
 
 ```C#
 
@@ -465,3 +495,15 @@ data can be automatically determined from the underlying ExcelDataReader.
 
 The ExcelSource has a property `IgnoreBlankRows`. This can be set to true, and all rows which cells are completely empty
 are ignored when reading data from your source. 
+
+#### Using dynamic objects
+
+The ExcelSource comes like all other components with with the abitilty to work with dynamic object. 
+
+Just define your ExcelSource like this:
+
+```C#
+ExcelSource source = new ExcelSource("src/DataFlow/ExcelDataFile.xlsx");
+```
+
+This will internally create an ExpandoObject for further processing. The property name will automatically be determined by the header column. If you don't have a header column, the property names would be `Column1` for the first, `Column2` for the second column and so on. 
