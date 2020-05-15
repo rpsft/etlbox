@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public enum ChangeAction : ushort
+    public enum ChangeAction
     {
         Exists = 0,
         Insert = 1,
