@@ -16,14 +16,11 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>,
-        ITask,
-        IDataFlowTransformation<TInput, TInput>,
-        IDataFlowBatchDestination<TInput>
+    public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>, IDataFlowBatchDestination<TInput>
         where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Insert, Upsert or delete in destination";
+        public override string TaskName { get; set; } = "Insert, update or delete in destination";
 
         public async Task ExecuteAsync() => await OutputSource.ExecuteAsync();
         public void Execute() => OutputSource.Execute();
@@ -42,7 +39,6 @@ namespace ALE.ETLBox.DataFlow
                 base.ConnectionManager = value;
                 DestinationTableAsSource.ConnectionManager = value;
                 DestinationTable.ConnectionManager = value;
-                //Init();
             }
         }
         public List<TInput> DeltaTable { get; set; } = new List<TInput>();
@@ -50,7 +46,8 @@ namespace ALE.ETLBox.DataFlow
         {
             get
             {
-                if (TypeInfo?.IdColumnNames == null || TypeInfo?.IdColumnNames?.Count == 0) return true;
+                if (TypeInfo?.IdColumnNames == null
+                    || TypeInfo?.IdColumnNames?.Count == 0) return true;
                 return _useTruncateMethod;
             }
             set
@@ -170,7 +167,6 @@ namespace ALE.ETLBox.DataFlow
             else
             {
                 row.ChangeAction = ChangeAction.Insert;
-                //TInput find = InputData.Where(d => d.UniqueId == row.UniqueId).FirstOrDefault();
                 if (find != null)
                 {
                     if (row.Equals(find))
@@ -223,21 +219,19 @@ namespace ALE.ETLBox.DataFlow
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
-            var idsToDelete = rowsToDelete.Select(row => $"'{row.UniqueId}'");
-            if (idsToDelete.Count() > 0)
-            {
-                string idNames = $"{QB}{TypeInfo.IdColumnNames.First()}{QE}";
-                if (TypeInfo.IdColumnNames.Count > 1)
-                    idNames = CreateConcatSqlForNames();
-                new SqlTask(this, $@"
+            if (rowsToDelete.Count() == 0) return;
+            var deleteString = rowsToDelete.Select(row => $"'{row.UniqueId}'");
+            string idNames = $"{QB}{TypeInfo.IdColumnNames.First()}{QE}";
+            if (TypeInfo.IdColumnNames.Count > 1)
+                idNames = CreateConcatSqlForNames();
+            new SqlTask(this, $@"
             DELETE FROM {TN.QuotatedFullName} 
             WHERE {idNames} IN (
-            {String.Join(",", idsToDelete)}
+            {String.Join(",", deleteString)}
             )")
-                {
-                    DisableLogging = true,
-                }.ExecuteNonQuery();
-            }
+            {
+                DisableLogging = true,
+            }.ExecuteNonQuery();
         }
 
         private string CreateConcatSqlForNames()
