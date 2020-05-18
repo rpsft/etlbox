@@ -71,9 +71,9 @@ namespace ALE.ETLBoxTests.Performance
                          ColValue1 = "X1" + i,
                          ColValue2 = "T1" + i
                      };
-                     string id = row.UniqueId;
-                     bool isequal = row.Equals(row);
-                     LogTask.Trace("Id:" + id + " Equals:" + isequal.ToString());
+                     //string id = row.UniqueId;
+                     //bool isequal = row.Equals(row);
+                     //LogTask.Trace("Id:" + id + " Equals:" + isequal.ToString());
                  };
              });
             output.WriteLine("Elapsed " + timeWithReflection.TotalSeconds + " seconds for creation with reflection.");
@@ -90,9 +90,9 @@ namespace ALE.ETLBoxTests.Performance
                          ColValue1 = "X2" + i,
                          ColValue2 = "T2" + i
                      };
-                     string id = row.UniqueId;
-                     bool isequal = row.Equals(row);
-                     LogTask.Trace("Id:" + id + " Equals:" + isequal.ToString());
+                     //string id = row.UniqueId;
+                     //bool isequal = row.Equals(row);
+                     //LogTask.Trace("Id:" + id + " Equals:" + isequal.ToString());
                  }
              });
             output.WriteLine("Elapsed " + timeWithoutReflection.TotalSeconds + " seconds for creation without reflection.");

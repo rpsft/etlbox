@@ -25,10 +25,10 @@ namespace ALE.ETLBox.DataFlow
         /// Unique row identifier (e.g. textual concatenation of id vlaues)
         /// </summary>
         /// <value>not white space</value>
-        string UniqueId { get; }
+        //string UniqueId { get; }
         /// <summary>
         /// Only for delta loads: Flag to mark if the row is a deletion entry
         /// </summary>
-        bool IsDeletion { get; }
+        //bool IsDeletion { get; }
     }
 }

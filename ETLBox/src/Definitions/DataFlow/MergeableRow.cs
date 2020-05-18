@@ -15,35 +15,35 @@ namespace ALE.ETLBox.DataFlow
     /// <see cref="IdColumn"/>
     public abstract class MergeableRow : IMergeableRow
     {
-        private static ConcurrentDictionary<Type, AttributeProperties> AttributePropDict { get; }
-            = new ConcurrentDictionary<Type, AttributeProperties>();
+        //private static ConcurrentDictionary<Type, AttributeProperties> AttributePropDict { get; }
+        //    = new ConcurrentDictionary<Type, AttributeProperties>();
 
-        public MergeableRow()
-        {
-            Type curType = this.GetType();
-            AttributeProperties curAttrProps;
-            lock (AttributePropDict)
-            {
-                if (!AttributePropDict.TryGetValue(curType, out curAttrProps))
-                {
+        //public MergeableRow()
+        //{
+        //    Type curType = this.GetType();
+        //    AttributeProperties curAttrProps;
+        //    lock (AttributePropDict)
+        //    {
+        //        if (!AttributePropDict.TryGetValue(curType, out curAttrProps))
+        //        {
 
-                    curAttrProps = new AttributeProperties();
-                    foreach (PropertyInfo propInfo in curType.GetProperties())
-                    {
-                        var idAttr = propInfo.GetCustomAttribute(typeof(IdColumn)) as IdColumn;
-                        if (idAttr != null)
-                            curAttrProps.IdAttributeProps.Add(propInfo);
-                        var compAttr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
-                        if (compAttr != null)
-                            curAttrProps.CompareAttributeProps.Add(propInfo);
-                        var deleteAttr = propInfo.GetCustomAttribute(typeof(DeleteColumn)) as DeleteColumn;
-                        if (deleteAttr != null)
-                            curAttrProps.DeleteAttributeProps.Add(Tuple.Create(propInfo, deleteAttr.DeleteOnMatchValue));
-                    }
-                    AttributePropDict.TryAdd(curType, curAttrProps);
-                }
-            }
-        }
+        //            curAttrProps = new AttributeProperties();
+        //            foreach (PropertyInfo propInfo in curType.GetProperties())
+        //            {
+        //                var idAttr = propInfo.GetCustomAttribute(typeof(IdColumn)) as IdColumn;
+        //                if (idAttr != null)
+        //                    curAttrProps.IdAttributeProps.Add(propInfo);
+        //                var compAttr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
+        //                if (compAttr != null)
+        //                    curAttrProps.CompareAttributeProps.Add(propInfo);
+        //                var deleteAttr = propInfo.GetCustomAttribute(typeof(DeleteColumn)) as DeleteColumn;
+        //                if (deleteAttr != null)
+        //                    curAttrProps.DeleteAttributeProps.Add(Tuple.Create(propInfo, deleteAttr.DeleteOnMatchValue));
+        //            }
+        //            AttributePropDict.TryAdd(curType, curAttrProps);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Date and time when the object was considered for merging.
@@ -62,29 +62,29 @@ namespace ALE.ETLBox.DataFlow
         /// using the ToString() method of the object.
         /// </summary>
         /// <see cref="IdColumn"/>
-        public string UniqueId
-        {
-            get
-            {
-                AttributeProperties attrProps = AttributePropDict[this.GetType()];
-                string result = "";
-                foreach (var propInfo in attrProps.IdAttributeProps)
-                    result += propInfo?.GetValue(this).ToString();
-                return result;
-            }
-        }
+        //public string UniqueId
+        //{
+        //    get
+        //    {
+        //        AttributeProperties attrProps = AttributePropDict[this.GetType()];
+        //        string result = "";
+        //        foreach (var propInfo in attrProps.IdAttributeProps)
+        //            result += propInfo?.GetValue(this).ToString();
+        //        return result;
+        //    }
+        //}
 
-        public bool IsDeletion
-        {
-            get
-            {
-                AttributeProperties attrProps = AttributePropDict[this.GetType()];
-                bool result = true;
-                foreach (var tup in attrProps.DeleteAttributeProps)
-                    result &= (tup.Item1?.GetValue(this)).Equals(tup.Item2);
-                return result;
-            }
-        }
+        //public bool IsDeletion
+        //{
+        //    get
+        //    {
+        //        AttributeProperties attrProps = AttributePropDict[this.GetType()];
+        //        bool result = true;
+        //        foreach (var tup in attrProps.DeleteAttributeProps)
+        //            result &= (tup.Item1?.GetValue(this)).Equals(tup.Item2);
+        //        return result;
+        //    }
+        //}
 
         /// <summary>
         /// Overriding the Equals implementation. The Equals function is used identify records
@@ -93,26 +93,26 @@ namespace ALE.ETLBox.DataFlow
         /// </summary>
         /// <param name="other">Object to compare with. Should be of the same type.</param>
         /// <returns>True if all properties marked with CompareColumn attribute are equal.</returns>
-        public override bool Equals(object other)
-        {
-            if (other == null) return false;
-            AttributeProperties attrProps = AttributePropDict[this.GetType()];
-            bool result = true;
-            foreach (var propInfo in attrProps.CompareAttributeProps)
-                result &= (propInfo?.GetValue(this))?.Equals(propInfo?.GetValue(other)) ?? false;
-            return result;
-        }
+        //public override bool Equals(object other)
+        //{
+        //    if (other == null) return false;
+        //    AttributeProperties attrProps = AttributePropDict[this.GetType()];
+        //    bool result = true;
+        //    foreach (var propInfo in attrProps.CompareAttributeProps)
+        //        result &= (propInfo?.GetValue(this))?.Equals(propInfo?.GetValue(other)) ?? false;
+        //    return result;
+        //}
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
     }
 
-    public class AttributeProperties
-    {
-        public List<PropertyInfo> IdAttributeProps { get; } = new List<PropertyInfo>();
-        public List<PropertyInfo> CompareAttributeProps { get; } = new List<PropertyInfo>();
-        public List<Tuple<PropertyInfo, object>> DeleteAttributeProps { get; } = new List<Tuple<PropertyInfo, object>>();
-    }
+    //public class AttributeProperties
+    //{
+    //    public List<PropertyInfo> IdAttributeProps { get; } = new List<PropertyInfo>();
+    //    public List<PropertyInfo> CompareAttributeProps { get; } = new List<PropertyInfo>();
+    //    public List<Tuple<PropertyInfo, object>> DeleteAttributeProps { get; } = new List<Tuple<PropertyInfo, object>>();
+    //}
 }

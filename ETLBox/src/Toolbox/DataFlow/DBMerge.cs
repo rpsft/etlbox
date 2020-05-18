@@ -1,7 +1,9 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using CsvHelper.Expressions;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -17,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     /// </code>
     /// </example>
     public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>, IDataFlowBatchDestination<TInput>
-        where TInput : IMergeableRow, new()
+    //where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
@@ -31,6 +33,7 @@ namespace ALE.ETLBox.DataFlow
         public DeltaMode DeltaMode { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
         public string TableName { get; set; }
+
         public override IConnectionManager ConnectionManager
         {
             get => base.ConnectionManager;
@@ -61,6 +64,8 @@ namespace ALE.ETLBox.DataFlow
             get => DestinationTable.BatchSize;
             set => DestinationTable.BatchSize = value;
         }
+
+        public DynamicObjectPropNames PropNames { get; set; } = new DynamicObjectPropNames();
 
         /* Private stuff */
         bool _useTruncateMethod;
@@ -106,7 +111,103 @@ namespace ALE.ETLBox.DataFlow
             InitOutputFlow();
         }
 
-        private void InitInternalFlow()
+        public ChangeAction? GetChangeAction(TInput row)
+        {
+            if (row is IMergeableRow)
+                return ((IMergeableRow)row).ChangeAction;
+            else if (TypeInfo.IsDynamic)
+            {
+                var r = row as IDictionary<string, object>;
+                if (!r.ContainsKey("ChangeAction"))
+                    r.Add("ChangeAction", null as ChangeAction?);
+                 return r["ChangeAction"] as ChangeAction?;
+            }
+            else
+                throw new NotImplementedException();
+        }
+
+        public void SetChangeAction(TInput row, ChangeAction? changeAction)
+        {
+            if (row is IMergeableRow)
+                ((IMergeableRow)row).ChangeAction = changeAction;
+            else if (TypeInfo.IsDynamic)
+            {
+                dynamic r = row as ExpandoObject;
+                r.ChangeAction = changeAction;
+            }
+            else
+                throw new NotImplementedException();
+        }
+
+        public string GetUniqueId(TInput row)
+        {
+            if (row is IMergeableRow)
+            {
+                string result = "";
+                foreach (var propInfo in TypeInfo.IdAttributeProps)
+                    result += propInfo?.GetValue(this).ToString();
+                return result;
+            }
+            else if (TypeInfo.IsDynamic)
+            {
+                string idColumn = PropNames.IdColumns.FirstOrDefault();
+                var r = row as IDictionary<string, object>;
+                if (!r.ContainsKey(idColumn))
+                    r.Add(idColumn, null);
+                return r[idColumn].ToString();
+            }
+            else
+                throw new NotImplementedException();
+        }
+
+        public bool GetIsDeletion(TInput row)
+        {
+            if (row is IMergeableRow)
+            {
+                bool result = true;
+                foreach (var tup in TypeInfo.DeleteAttributeProps)
+                    result &= (tup.Item1?.GetValue(this)).Equals(tup.Item2);
+                return result;
+            }
+            else
+                throw new NotImplementedException();
+        }
+
+        public void SetChangeDate(TInput row, DateTime changeDate)
+        {
+            if (row is IMergeableRow)
+                ((IMergeableRow)row).ChangeDate = changeDate;
+            else if (TypeInfo.IsDynamic)
+            {
+                dynamic r = row as ExpandoObject;
+                r.ChangeDate = changeDate;
+            }
+            else
+                throw new NotImplementedException();
+        }
+
+        public bool AreEqual(object self, object other)
+        {
+            if (other == null || self == null) return false;
+            if (self is IMergeableRow && other is IMergeableRow)
+            {
+                bool result = true;
+                foreach (var propInfo in TypeInfo.CompareAttributeProps)
+                    result &= (propInfo?.GetValue(self))?.Equals(propInfo?.GetValue(other)) ?? false;
+                return result;
+            }
+            else if (TypeInfo.IsDynamic)
+            {
+                string compColumn = PropNames.CompareColumns.FirstOrDefault();
+                var s = self as IDictionary<string, object>;
+                var o = other as IDictionary<string, object>;
+                return s[compColumn].Equals(o[compColumn]);
+            }
+            else
+                throw new NotImplementedException();
+        }
+
+            private void InitInternalFlow()
         {
             Lookup = new LookupTransformation<TInput, TInput>(
                 DestinationTableAsSource,
@@ -116,19 +217,24 @@ namespace ALE.ETLBox.DataFlow
             DestinationTable.BeforeBatchWrite = batch =>
             {
                 if (DeltaMode == DeltaMode.Delta)
-                    DeltaTable.AddRange(batch.Where(row => row.ChangeAction != ChangeAction.Delete));
+                    DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) != ChangeAction.Delete));
                 else
                     DeltaTable.AddRange(batch);
 
                 if (!UseTruncateMethod)
                 {
-                    SqlDeleteIds(batch.Where(row => row.ChangeAction != ChangeAction.Insert && row.ChangeAction != ChangeAction.Exists));
-                    return batch.Where(row => row.ChangeAction == ChangeAction.Insert || row.ChangeAction == ChangeAction.Update).ToArray();
+                    SqlDeleteIds(batch.Where(row => GetChangeAction(row) != ChangeAction.Insert && GetChangeAction(row) != ChangeAction.Exists));
+                    return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
+                        GetChangeAction(row) == ChangeAction.Update)
+                    .ToArray();
                 }
                 else
                 {
                     TruncateDestinationOnce();
-                    return batch.Where(row => row.ChangeAction == ChangeAction.Insert || row.ChangeAction == ChangeAction.Update || row.ChangeAction == ChangeAction.Exists).ToArray();
+                    return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
+                        GetChangeAction(row) == ChangeAction.Update ||
+                        GetChangeAction(row) == ChangeAction.Exists)
+                    .ToArray();
                 }
             };
 
@@ -153,31 +259,31 @@ namespace ALE.ETLBox.DataFlow
         private TInput UpdateRowWithDeltaInfo(TInput row)
         {
             if (InputDataDict == null) InitInputDataDictionary();
-            row.ChangeDate = DateTime.Now;
+            SetChangeDate(row, DateTime.Now);
             TInput find = default(TInput);
-            InputDataDict.TryGetValue(row.UniqueId, out find);
-            if (DeltaMode == DeltaMode.Delta && row.IsDeletion)
+            InputDataDict.TryGetValue(GetUniqueId(row), out find);
+            if (DeltaMode == DeltaMode.Delta && GetIsDeletion(row))
             {
                 if (find != null)
                 {
-                    find.ChangeAction = ChangeAction.Delete;
-                    row.ChangeAction = ChangeAction.Delete;
+                    SetChangeAction(find, ChangeAction.Delete);
+                    SetChangeAction(row, ChangeAction.Delete);
                 }
             }
             else
             {
-                row.ChangeAction = ChangeAction.Insert;
+                SetChangeAction(row, ChangeAction.Insert);
                 if (find != null)
                 {
-                    if (row.Equals(find))
+                    if (AreEqual(row,find))
                     {
-                        row.ChangeAction = ChangeAction.Exists;
-                        find.ChangeAction = ChangeAction.Exists;
+                        SetChangeAction(row, ChangeAction.Exists);
+                        SetChangeAction(find, ChangeAction.Exists);
                     }
                     else
                     {
-                        row.ChangeAction = ChangeAction.Update;
-                        find.ChangeAction = ChangeAction.Update;
+                        SetChangeAction(row, ChangeAction.Update);
+                        SetChangeAction(find, ChangeAction.Update);
                     }
                 }
             }
@@ -188,7 +294,7 @@ namespace ALE.ETLBox.DataFlow
         {
             InputDataDict = new Dictionary<string, TInput>();
             foreach (var d in InputData)
-                InputDataDict.Add(d.UniqueId, d);
+                InputDataDict.Add(GetUniqueId(d), d);
         }
 
         void TruncateDestinationOnce()
@@ -204,15 +310,15 @@ namespace ALE.ETLBox.DataFlow
             if (DeltaMode == DeltaMode.NoDeletions) return;
             IEnumerable<TInput> deletions = null;
             if (DeltaMode == DeltaMode.Delta)
-                deletions = InputData.Where(row => row.ChangeAction == ChangeAction.Delete).ToList();
+                deletions = InputData.Where(row => GetChangeAction(row) == ChangeAction.Delete).ToList();
             else
-                deletions = InputData.Where(row => row.ChangeAction == null).ToList();
+                deletions = InputData.Where(row => GetChangeAction(row) == null).ToList();
             if (!UseTruncateMethod)
                 SqlDeleteIds(deletions);
             foreach (var row in deletions) //.ForEach(row =>
             {
-                row.ChangeAction = ChangeAction.Delete;
-                row.ChangeDate = DateTime.Now;
+                SetChangeAction(row, ChangeAction.Delete);
+                SetChangeDate(row, DateTime.Now);
             };
             DeltaTable.AddRange(deletions);
         }
@@ -220,7 +326,7 @@ namespace ALE.ETLBox.DataFlow
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
             if (rowsToDelete.Count() == 0) return;
-            var deleteString = rowsToDelete.Select(row => $"'{row.UniqueId}'");
+            var deleteString = rowsToDelete.Select(row => $"'{GetUniqueId(row)}'");
             string idNames = $"{QB}{TypeInfo.IdColumnNames.First()}{QE}";
             if (TypeInfo.IdColumnNames.Count > 1)
                 idNames = CreateConcatSqlForNames();
@@ -251,5 +357,13 @@ namespace ALE.ETLBox.DataFlow
         Full = 0,
         NoDeletions = 1,
         Delta = 2,
+    }
+
+    public class DynamicObjectPropNames
+    {
+        public List<string> IdColumns { get; set; } = new List<string>();
+        public List<string> CompareColumns { get; set; } = new List<string>();
+        public Dictionary<string, object> DeletionColumns { get; set; } = new Dictionary<string, object>();
+
     }
 }
