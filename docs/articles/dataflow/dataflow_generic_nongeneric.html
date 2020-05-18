@@ -197,10 +197,10 @@ the use of <code>dynamic</code>.</a></p>
 <p>In order to use the ExpandoObject and dynmic objects with ETLBox, you simple type your data flow with this object.
 Alternatively, you just use the non generic object - which automitically will use the ExpandoObject.
 The following two lines will do the same:</p>
-<pre><code>DbSource source = new DbSource(&quot;sourceTable&quot;);
+<pre><code class="lang-C#">DbSource source = new DbSource(&quot;sourceTable&quot;);
 </code></pre>
 <p>and</p>
-<pre><code>DbSource&lt;ExpandoObject&gt; source = new DbSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
+<pre><code class="lang-C#">DbSource&lt;ExpandoObject&gt; source = new DbSource&lt;ExpandoObject&gt;(&quot;sourceTable&quot;);
 </code></pre>
 <p>Let's walk through an example. Assuming we have two tables.
 The table <code>sourceTable</code> has two columns: SourceCol1 and SourceCol2, both integer values.

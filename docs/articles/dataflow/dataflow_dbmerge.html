@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Merging and syncing tables | ETLBox - It's all in the box </title>
+    <title>Syncing tables with Merge | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Merging and syncing tables | ETLBox - It's all in the box ">
+    <meta name="title" content="Syncing tables with Merge | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -76,7 +76,7 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="merging-and-syncing-tables">Merging and syncing tables</h1>
+<h1 id="syncing-tables-with-merge">Syncing tables with Merge</h1>
 
 <p>ETLbox can be used to integrate data from different source and write them into different destinations.
 Most of the time you will use tables in a database as target.
@@ -98,7 +98,7 @@ existing and what data they have. In the Delta scenario the handling of deletion
 no straight-forward solution how to manage deleted records here. One way could be an extra flag indicating that
 the record was deleted (including the deletion time as &quot;update&quot; timestamp).
 Or it could be that deletions are not transferred at all, either because they don't happen or for other reasons.</p>
-<h2 id="dbmerge">DBMerge</h2>
+<h3 id="dbmerge">DBMerge</h3>
 <p>Both scenarios are supported with ETLBox. The <code>DBMerge</code> component can be used to tackle this problem</p>
 <p>The <code>DBMerge</code> is a destination component and is created on a destination table in your dataflow.
 It will wait for all data from the flow to arrive, and then either insert,
@@ -107,8 +107,8 @@ Deletion is optional (by default turned on) , and can be disabled with the prope
 <code>DisableDeletion</code> set to true.</p>
 <p>The DBMerge was designed for scenario 1 and scenario 2. For scenario 2, the property DeltaMode has
 to be set to DeltaMode.Delta: <code>DeltaMode = DeltaMode.Delta</code>.</p>
-<h3 id="example">Example</h3>
-<h4 id="data-and-object-definition">Data and object definition</h4>
+<h2 id="example">Example</h2>
+<h3 id="data-and-object-definition">Data and object definition</h3>
 <p>To implement an example sync between two tables, we will  need a <code>DbSource</code> pointing to our source table.
 In our case we just pass a table name for the source table, but you could also define a sql query
 (e.g. which gives you only the delta records).</p>
@@ -182,7 +182,7 @@ for holding a value:</p>
 </tr>
 </tbody>
 </table>
-<h4 id="setting-up-the-data-flow">Setting up the data flow</h4>
+<h3 id="setting-up-the-data-flow">Setting up the data flow</h3>
 <p>No we can already set up a data flow. It would look like this:</p>
 <pre><code class="lang-C#">DbSource&lt;MyMergeRow&gt; source = new DbSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
 DBMerge&lt;MyMergeRow&gt; merge = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
@@ -238,7 +238,7 @@ you need to disable the deletions - in that case, deletions need to be handled m
 deletions disable, there would be an additional row in our destination table:</p>
 <p>-----|---------------
 4    |Test - Deleted</p>
-<h4 id="delta-table">Delta table</h4>
+<h3 id="delta-table">Delta table</h3>
 <p>The DBMerge has a property <code>DeltaTable</code> which is a List containing additionally information what records
 where updated, existing,  inserted or deleted. The operation and change-date is stored in the corresponding
 <code>ChangeDate</code>/ <code>ChangeAction</code> properties.</p>
@@ -288,8 +288,8 @@ delta.Wait();
 </tr>
 </tbody>
 </table>
-<h3 id="additional-configurations">Additional configurations</h3>
-<h4 id="truncate-instead-delete">Truncate instead delete</h4>
+<h2 id="additional-configurations">Additional configurations</h2>
+<h3 id="truncate-instead-delete">Truncate instead delete</h3>
 <p>Because the DBMerge does delete records that need to be deleted or updated using a <code>DELETE</code> sql statement,
 this method can sometimes be a performance bottleneck if you expect a lot of deletions  to happen. The
 <code>DBMerge</code> does support a Truncate-approach by setting the property <code>UseTruncateMethod</code> to true.
@@ -298,7 +298,7 @@ truncate the destination table and then write all changes back into the database
 if you expect a lot of deletions, but you will always read all data from the destination table and write it back.
 Unfortunately, there is no general recommendation when to use this approach.</p>
 <p>Also, if you don't specify any Id columns with teh <code>IdColumn</code> attribute, the DbMerge will use the truncate method automatically.</p>
-<h4 id="delta-mode">Delta mode</h4>
+<h3 id="delta-mode">Delta mode</h3>
 <p>If the source transfer delta information, then you can set the DbMerge delta mode:</p>
 <pre><code class="lang-C#">DbMerge&lt;MyMergeRow&gt; dest = new DbMerge&lt;MyMergeRow&gt;(connection, &quot;DBMergeDeltaDestination&quot;)
 {
@@ -319,7 +319,7 @@ that is an indicator that a record is deleted. In this case, you can flag this p
 </code></pre>
 <p>In this example object, if the property DeleteThisRow is set to true, the record in the destination will be deleted
 if it matches with the Key property that is flagged with the attribute IdColumn.</p>
-<h4 id="columnmap-attribute">ColumnMap attribute</h4>
+<h3 id="columnmap-attribute">ColumnMap attribute</h3>
 <p>If the columns have different names than our property, we need to add the <code>ColumnMap</code> attribute to have them
 mapped correctly. If the columns would be named Col1 for the Key and Col2 for the Value, our object would look like this:</p>
 <pre><code class="lang-C#">public class MyMergeRow : MergeableRow
@@ -333,7 +333,7 @@ mapped correctly. If the columns would be named Col1 for the Key and Col2 for th
     public string Value { get; set; }
 }
 </code></pre>
-<h4 id="composite-keys">Composite Keys</h4>
+<h3 id="composite-keys">Composite Keys</h3>
 <p>Composite keys are supported: just flag all the columns that you want to use as composite unique key with the
 <code>IdColumn</code> attribute. Internally, all properties are concatenated to a string by using the ToString() method of the properties.
 This concatenated string is then used as identifier for each record.</p>
@@ -354,7 +354,7 @@ This concatenated string is then used as identifier for each record.</p>
 </code></pre>
 <p>As you can see, you can also use the <code>CompareColumn</code> attribute on each property that you want to use for identifying
 existing records.</p>
-<h4 id="using-the-imergaberow-interface">Using the IMergabeRow interface</h4>
+<h3 id="using-the-imergaberow-interface">Using the IMergabeRow interface</h3>
 <p>Sometimes, you want do the implementation of the IMergeableRow interface yourself. Here is an example implementation:</p>
 <pre><code class="lang-C#">public class MySimpleRow : IMergeableRow
 {

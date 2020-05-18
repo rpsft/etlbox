@@ -14,9 +14,9 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Integration of Flat files  and web services | ETLBox - It's all in the box </title>
+    <title>Integration of flat files  and web services | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Integration of Flat files  and web services | ETLBox - It's all in the box ">
+    <meta name="title" content="Integration of flat files  and web services | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -76,7 +76,7 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="integration-of-flat-files--and-web-services">Integration of Flat files  and web services</h1>
+<h1 id="integration-of-flat-files--and-web-services">Integration of flat files  and web services</h1>
 
 <h2 id="resource-type-and-web-requests">Resource Type and Web Requests</h2>
 <p>All  sources and destinations in this artice can be set to work either with a file
@@ -87,7 +87,8 @@ The other option is <code>ResourceType.Http</code> - and allows you to read data
 Instead of a filename just provide a Url. Furthermore, the components also have
 a <code>[HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8)</code> property
 that can be used to configure the Http request, e.g. to add authentication or use https instead.</p>
-<h2 id="csvsource">CsvSource</h2>
+<h2 id="csv">Csv</h2>
+<h3 id="csvsource">CsvSource</h3>
 <p>A CcsvSource simple reads data from a CSV file.
 It is based on the <a href="https://joshclose.github.io/CsvHelper/">library CsvHelper created by Josh Close</a>.
 In the following examples, you will learn how to configure the CsvReader to your needs.
@@ -150,7 +151,7 @@ ETLBox will support arrays as well - just define your CsvSource like this</p>
 <pre><code class="lang-C#">CsvSource&lt;string[]&gt; source = new CsvSource&lt;string[]&gt;(&quot;Demo.csv&quot;);
 source.Configuration.HasHeaderRecord = false;
 </code></pre>
-<h2 id="csvdestination">CsvDestination</h2>
+<h3 id="csvdestination">CsvDestination</h3>
 <p>A CSV destination will create a file containing the data in the desired CSV format.
 Like the CsvSource it is based on the <a href="https://joshclose.github.io/CsvHelper/">library CsvHelper created by Josh Close</a>.</p>
 <p>The CsvDestination will work with the dynamic (ExpandoObject) as well as with regular object or arrays.
@@ -352,7 +353,7 @@ public class MyRow
 XmlSource&lt;MyRow&gt; source = new XmlSource&lt;MyRow&gt;(&quot;source.xml&quot;, ResourceType.File);
 </code></pre>
 <h4 id="using-dynamic-objects">Using dynamic objects</h4>
-<p>XmlSource does also support the dynamic ExpandoObject. If you want to use it, you can define an ElementName that contains the data you acutally
+<p>XmlSource does also support the dynamic ExpandoObject. If you want to use it, you can define an ElementName that contains the data you actually
 want to parse - as you normally are not interested in your root element. ETLBox then will look for this Element and parse every occurence of
 it into an ExpandoObject and send it into the connected components.</p>
 <p>Here is an example. If your xml looks like this:</p>
@@ -395,23 +396,76 @@ XmlDestination&lt;MyRow&gt; dest = new XmlDestination&lt;MyRow&gt;(&quot;dest.xm
   &lt;MySimpleRow Col1=&quot;2&quot; /&gt;
 &lt;/Root&gt;
 </code></pre>
-<h2 id="excelsource">ExcelSource</h2>
+<h2 id="excel">Excel</h2>
+<h3 id="excelsource">ExcelSource</h3>
 <p>An Excel source reads data from a xls or xlsx file.
 <a href="https://github.com/ExcelDataReader/ExcelDataReader">It is based the 3rd party library <code>ExcelDataReader</code></a>.
 By default the excel reader will try to read all data in the file. You can specify a sheet name and a range
-to restrict this behavior.
-By default, a header column is expected in the first row. The name of the header for each columns
+to restrict this behavior.</p>
+<p>By default, a header column is expected in the first row. The name of the header for each columns
 is used to map the column with the object - if the property is equal the header name, the value of
-subsequent rows is written into the property.
-You can change this behaviour with the Attribute <code>ExcelColumn</code>.
+subsequent rows is written into the property.</p>
+<p>Let's consider an example. If your excel file looks like this:</p>
+<table>
+<thead>
+<tr>
+<th>Col1</th>
+<th>Col2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Test1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Test2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Test3</td>
+</tr>
+</tbody>
+</table>
+<p>You can easily load this data with an object like this:</p>
+<pre><code class="lang-C#">
+public class ExcelData {
+    public string Col1 { get; set; }
+    public int Col2 { get; set; }
+}
+
+ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt; (&quot;src/DataFlow/ExcelDataFile.xlsx&quot;);
+</code></pre>
+<p>You can change this behaviour with the Attribute <code>ExcelColumn</code>.
 Here you can either define a different header name used for matching for a property.
 Or you can set the column index for the property - the first column would be 0, the 2nd column 1, ...
 When you using the column index, you can read also from ExcelFile that have no header row.
 In this case, you need to set the property <code>HasNoHeader</code> to true when using the ExcelSource.</p>
 <p>Usage example for an excel file that contains no header. This could like this:</p>
-<p>1|Test1
-2|Test2
-3|Test3</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Test1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Test2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Test3</td>
+</tr>
+</tbody>
+</table>
+<p>This is the corresponding object creation:</p>
 <pre><code class="lang-C#">
 public class ExcelData {
     [ExcelColumn(0)]
@@ -430,6 +484,12 @@ ExcelSource&lt;ExcelData&gt; source = new ExcelSource&lt;ExcelData&gt;(&quot;src
 data can be automatically determined from the underlying ExcelDataReader.</p>
 <p>The ExcelSource has a property <code>IgnoreBlankRows</code>. This can be set to true, and all rows which cells are completely empty
 are ignored when reading data from your source.</p>
+<h4 id="using-dynamic-objects-1">Using dynamic objects</h4>
+<p>The ExcelSource comes like all other components with with the abitilty to work with dynamic object.</p>
+<p>Just define your ExcelSource like this:</p>
+<pre><code class="lang-C#">ExcelSource source = new ExcelSource(&quot;src/DataFlow/ExcelDataFile.xlsx&quot;);
+</code></pre>
+<p>This will internally create an ExpandoObject for further processing. The property name will automatically be determined by the header column. If you don't have a header column, the property names would be <code>Column1</code> for the first, <code>Column2</code> for the second column and so on.</p>
 </mysimplerow></article>
           </div>
           

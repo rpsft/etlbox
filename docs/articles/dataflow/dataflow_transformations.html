@@ -82,11 +82,12 @@
 or to destinations.
 The purpose of a transformation component is to take the data from its input(s) and post the transformed data to its outputs. This is done on a row-by-row basis.
 As soon as there is any data in the input, the transformation will start and post the result to the output.</p>
-<h2 id="buffering">Buffering</h2>
+<h2 id="transformation-concepts">Transformation concepts</h2>
+<h3 id="buffering">Buffering</h3>
 <p>Every transformation will come with an input. If the components connected to the input post data faster than the transformation
 can process it, the buffer will hold this data until the transformation can continue with the next item. This allows a source to read as fast as possible,
 allowing the already read data to be buffered in the memory - so the transformation will always have some data ready to process.</p>
-<h2 id="non-blocking-and-blocking-transformations">Non-Blocking and Blocking transformations</h2>
+<h3 id="non-blocking-and-blocking-transformations">Non-Blocking and Blocking transformations</h3>
 <p>Transformation can be either blocking or non-blocking.</p>
 <p>Non-Blocking transformations will start to process data as soon as it finds something in its input buffer.
 In the moment where it discovers data in there, it will  start to transform it and send the data to registered output components.</p>

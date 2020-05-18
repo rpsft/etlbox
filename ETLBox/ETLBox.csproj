@@ -11,15 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Preparing different packages for different source types.
-Breaking Change: ExcelSource now expects the first line to be a header row. The header row is used to find properties with matching names to get the right mapping between excel column and object. ExcelColumn attribute can modifiy this behaviour. To use the ExcelSource without Header, set the HasNoHeader property to true.</PackageReleaseNotes>
-    <Version>1.8.7</Version>
+    <PackageReleaseNotes>Fixing issue with DbMerge and EntityFramework.</PackageReleaseNotes>
+    <Version>1.8.8-alpha</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.7.0</AssemblyVersion>
-    <FileVersion>1.8.7.0</FileVersion>
+    <AssemblyVersion>1.8.8.0</AssemblyVersion>
+    <FileVersion>1.8.8.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>
