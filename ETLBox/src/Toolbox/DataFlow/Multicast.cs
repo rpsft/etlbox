@@ -34,7 +34,7 @@ namespace ALE.ETLBox.DataFlow
         ObjectCopy<TInput> ObjectCopy { get; set; }
         public Multicast()
         {
-            TypeInfo = new TypeInfo(typeof(TInput));
+            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
             BroadcastBlock = new BroadcastBlock<TInput>(Clone);
         }
@@ -51,7 +51,7 @@ namespace ALE.ETLBox.DataFlow
             return clone;
         }
 
-      
+
     }
 
     /// <summary>

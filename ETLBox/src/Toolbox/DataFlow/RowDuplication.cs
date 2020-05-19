@@ -32,7 +32,7 @@ namespace ALE.ETLBox.DataFlow
 
         public RowDuplication()
         {
-            TypeInfo = new TypeInfo(typeof(TInput));
+            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
             TransformBlock = new TransformManyBlock<TInput, TInput>(DuplicateRow);
         }

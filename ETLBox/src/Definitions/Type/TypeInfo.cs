@@ -15,14 +15,20 @@ namespace ALE.ETLBox.DataFlow
         internal bool IsDynamic { get; set; }
         internal int ArrayLength { get; set; }
 
+        internal Type Typ { get; set; }
         internal TypeInfo(Type typ)
         {
-            IsArray = typ.IsArray;
-            if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(typ))
+            Typ = typ;
+        }
+
+        internal TypeInfo GatherTypeInfo()
+        {
+            IsArray = Typ.IsArray;
+            if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(Typ))
                 IsDynamic = true;
             if (!IsArray && !IsDynamic)
             {
-                Properties = typ.GetProperties();
+                Properties = Typ.GetProperties();
                 PropertyLength = Properties.Length;
                 int index = 0;
                 foreach (var propInfo in Properties)
@@ -34,8 +40,9 @@ namespace ALE.ETLBox.DataFlow
             }
             else if (IsArray)
             {
-                ArrayLength = typ.GetArrayRank();
+                ArrayLength = Typ.GetArrayRank();
             }
+            return this;
         }
 
         internal static Type TryGetUnderlyingType(PropertyInfo propInfo)

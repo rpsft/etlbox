@@ -12,6 +12,7 @@ namespace ALE.ETLBox.DataFlow
         internal string ElementName { get;set; }
         internal XmlTypeInfo(Type typ) : base(typ)
         {
+            GatherTypeInfo();
             foreach (System.Attribute attr in Attribute.GetCustomAttributes(typ))
             {
                 if (attr is XmlRootAttribute)

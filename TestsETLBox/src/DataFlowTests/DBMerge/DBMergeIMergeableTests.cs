@@ -48,6 +48,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
+            dest.MergeProperties.IdPropertyNames.Add("UniqueId");
+            dest.UseTruncateMethod = true;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -76,7 +78,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             DbMerge<MySimpleRow> merge = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
+            merge.MergeProperties.IdPropertyNames.Add("UniqueId");
+            merge.UseTruncateMethod = true;
             DbDestination<MySimpleRow> delta = new DbDestination<MySimpleRow>(connection, "DBMergeDelta");
+
             source.LinkTo(merge);
             merge.LinkTo(delta);
             source.Execute();

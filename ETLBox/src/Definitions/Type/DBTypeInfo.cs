@@ -14,7 +14,7 @@ namespace ALE.ETLBox.DataFlow
 
         internal DBTypeInfo(Type typ) : base(typ)
         {
-
+            GatherTypeInfo();
         }
 
         protected override void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex)

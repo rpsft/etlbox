@@ -9,7 +9,7 @@ using System.Reflection;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A database destination represents a table where data from the flow is inserted. 
+    /// A database destination represents a table where data from the flow is inserted.
     /// Inserts are done in batches (using Bulk insert or an equivalent).
     /// </summary>
     /// <see cref="DbDestination"/>
@@ -22,11 +22,11 @@ namespace ALE.ETLBox.DataFlow
         /* Public properties */
         /// <summary>
         /// If you don't want ETLBox to dynamically read the destination table definition from the database,
-        /// you can provide your own table definition. 
+        /// you can provide your own table definition.
         /// </summary>
         public TableDefinition DestinationTableDefinition { get; set; }
         /// <summary>
-        /// Name of the target table that receives the data from the data flow. 
+        /// Name of the target table that receives the data from the data flow.
         /// </summary>
         public string TableName { get; set; }
 
@@ -71,7 +71,7 @@ namespace ALE.ETLBox.DataFlow
         protected override void InitObjects(int batchSize)
         {
             base.InitObjects(batchSize);
-            TypeInfo = new TypeInfo(typeof(TInput));
+            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
         }
 
         private void LoadTableDefinitionFromTableName()
@@ -172,9 +172,9 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A database destination represents a table where data from the flow is inserted. 
+    /// A database destination represents a table where data from the flow is inserted.
     /// Inserts are done in batches (using Bulk insert or an equivalent).
-    /// The DbDestination uses the dynamic ExpandoObject as input type. 
+    /// The DbDestination uses the dynamic ExpandoObject as input type.
     /// If you need other data types, use the generic DbDestination instead.
     /// </summary>
     /// <see cref="DbDestination{TInput}"/>

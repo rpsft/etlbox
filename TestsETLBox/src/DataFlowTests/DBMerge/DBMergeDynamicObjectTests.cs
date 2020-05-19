@@ -29,46 +29,74 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleMergeWithDynamic()
         {
             //Arrange
-            //Arrange
             MemorySource source = new MemorySource();
             source.DataAsList.Add(CreateDynamicRow(1, "Test1"));
             source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
-            //source.DataAsList.Add(new MyMergeRow() { Key = 4, DeleteThisRow = true });
-            //source.DataAsList.Add(new MyMergeRow() { Key = 10, DeleteThisRow = true });
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeDynamicDestination");
             d2c.InsertTestDataSet3();
 
             //Act
-            DbMerge<ExpandoObject> dest = new DbMerge<ExpandoObject>(SqlConnection, "DBMergeDynamicDestination");
-            dest.PropNames.IdColumns.Add("Col1");
-            dest.PropNames.CompareColumns.Add("Col2");
+            DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDestination");
+            dest.MergeProperties.IdPropertyNames.Add("Col1");
+            dest.MergeProperties.ComparePropertyNames.Add("Col2");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
             Assert.Equal(3, RowCountTask.Count(SqlConnection, "DBMergeDynamicDestination", $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"));
-            //Assert.True(dest.DeltaTable.Count == 7);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update).Count() == 2);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert).Count() == 3);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Exists && row.Key == 1).Count() == 1);
+            d2c.AssertTestData();
+            Assert.Collection<ExpandoObject>(dest.DeltaTable,
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Exists && r.Col1 == 1); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Update && r.Col1 == 2); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Insert && r.Col1 == 3); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Delete && r.Col1 == 4); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Delete && r.Col1 == 10); }
+                );
         }
 
-        private dynamic CreateDynamicRow(int key, string value)
+        private dynamic CreateDynamicRow(int key, string value = "", bool delete = false)
         {
             dynamic r = new ExpandoObject();
             r.Col1 = key;
-            r.Col2 = value;
-            r.AreEqual = new AreEqual( (a,b) =>
-            {
-                dynamic c = a as ExpandoObject;
-                dynamic d = b as ExpandoObject;
-                return c.Col2 == d.Col2;
-            });
+            if (!string.IsNullOrWhiteSpace(value))
+                r.Col2 = value;
+            if (delete)
+                r.Delete = true;
             return r;
         }
-        public delegate bool AreEqual(ExpandoObject a, ExpandoObject b);
+
+        [Fact]
+        public void DeltaLoadWithDeletion()
+        {
+            //Arrange
+            MemorySource source = new MemorySource();
+            source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
+            source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
+            source.DataAsList.Add(CreateDynamicRow(4, delete: true));
+            source.DataAsList.Add(CreateDynamicRow(10, delete: true));
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeDynamicDeltaDestination");
+            d2c.InsertTestDataSet3();
+
+            //Act
+            DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
+            {
+                DeltaMode = DeltaMode.Delta
+            };
+            dest.MergeProperties.IdPropertyNames.Add("Col1");
+            dest.MergeProperties.ComparePropertyNames.Add("Col2");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            d2c.AssertTestData();
+            //Assert.True(dest.DeltaTable.Count == 4);
+            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);
+            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert && row.Key == 3).Count() == 1);
+            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 4).Count() == 1);
+            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
+        }
     }
 }

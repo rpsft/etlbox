@@ -1,10 +1,12 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
 using CsvHelper.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -19,7 +21,6 @@ namespace ALE.ETLBox.DataFlow
     /// </code>
     /// </example>
     public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>, IDataFlowBatchDestination<TInput>
-    //where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
@@ -50,7 +51,8 @@ namespace ALE.ETLBox.DataFlow
             get
             {
                 if (TypeInfo?.IdColumnNames == null
-                    || TypeInfo?.IdColumnNames?.Count == 0) return true;
+                    || TypeInfo?.IdColumnNames?.Count == 0)
+                    return true;
                 return _useTruncateMethod;
             }
             set
@@ -58,6 +60,7 @@ namespace ALE.ETLBox.DataFlow
                 _useTruncateMethod = value;
             }
         }
+        bool _useTruncateMethod;
 
         public int BatchSize
         {
@@ -65,11 +68,9 @@ namespace ALE.ETLBox.DataFlow
             set => DestinationTable.BatchSize = value;
         }
 
-        public DynamicObjectPropNames PropNames { get; set; } = new DynamicObjectPropNames();
+        public MergeProperties MergeProperties { get; set; } = new MergeProperties();
 
         /* Private stuff */
-        bool _useTruncateMethod;
-
         ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DbSource<TInput> DestinationTableAsSource { get; set; }
@@ -104,7 +105,6 @@ namespace ALE.ETLBox.DataFlow
 
         private void Init(int batchSize = DbDestination.DEFAULT_BATCH_SIZE)
         {
-            TypeInfo = new DBMergeTypeInfo(typeof(TInput));
             DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
             DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName, batchSize);
             InitInternalFlow();
@@ -113,101 +113,128 @@ namespace ALE.ETLBox.DataFlow
 
         public ChangeAction? GetChangeAction(TInput row)
         {
-            if (row is IMergeableRow)
-                return ((IMergeableRow)row).ChangeAction;
-            else if (TypeInfo.IsDynamic)
+            //if (row is IMergeableRow)
+            //    return ((IMergeableRow)row).ChangeAction;
+            //else
+            if (TypeInfo.IsDynamic)
             {
                 var r = row as IDictionary<string, object>;
                 if (!r.ContainsKey("ChangeAction"))
                     r.Add("ChangeAction", null as ChangeAction?);
-                 return r["ChangeAction"] as ChangeAction?;
+                return r["ChangeAction"] as ChangeAction?;
+            }
+            else if (TypeInfo.ChangeActionProperty != null)
+            {
+                return TypeInfo.ChangeActionProperty.GetValue(row) as ChangeAction?;
             }
             else
-                throw new NotImplementedException();
+                throw new ETLBoxNotSupportedException("Objects used for merge must inherit from MergeableRow or" +
+                    "contain a property ChangeAction (public ChangeAction? ChangeAction {get;set;}");
         }
 
         public void SetChangeAction(TInput row, ChangeAction? changeAction)
         {
-            if (row is IMergeableRow)
-                ((IMergeableRow)row).ChangeAction = changeAction;
-            else if (TypeInfo.IsDynamic)
+            //if (row is IMergeableRow)
+            //    ((IMergeableRow)row).ChangeAction = changeAction;
+            if (TypeInfo.IsDynamic)
             {
                 dynamic r = row as ExpandoObject;
                 r.ChangeAction = changeAction;
             }
+            else if (TypeInfo.ChangeActionProperty != null)
+            {
+                TypeInfo.ChangeActionProperty.SetValueOrThrow(row, changeAction);
+            }
             else
-                throw new NotImplementedException();
+                throw new ETLBoxNotSupportedException("Objects used for merge must inherit from MergeableRow or" +
+    "contain a property ChangeAction (public ChangeAction? ChangeAction {get;set;}");
         }
 
         public string GetUniqueId(TInput row)
         {
-            if (row is IMergeableRow)
+            string result = "";
+            if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
             {
-                string result = "";
-                foreach (var propInfo in TypeInfo.IdAttributeProps)
-                    result += propInfo?.GetValue(this).ToString();
+                var r = row as IDictionary<string, object>;
+                foreach (string idColumn in MergeProperties.IdPropertyNames)
+                {
+                    if (!r.ContainsKey(idColumn))
+                        r.Add(idColumn, null);
+                    result += r[idColumn].ToString();
+                }
                 return result;
             }
-            else if (TypeInfo.IsDynamic)
+            else if (TypeInfo.IdAttributeProps.Count > 0)
             {
-                string idColumn = PropNames.IdColumns.FirstOrDefault();
-                var r = row as IDictionary<string, object>;
-                if (!r.ContainsKey(idColumn))
-                    r.Add(idColumn, null);
-                return r[idColumn].ToString();
+                foreach (var propInfo in TypeInfo.IdAttributeProps)
+                    result += propInfo?.GetValue(row).ToString();
+                return result;
             }
             else
-                throw new NotImplementedException();
+                throw new ETLBoxNotSupportedException("Objects used for merge must at least define a id column" +
+  "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list.");
         }
 
         public bool GetIsDeletion(TInput row)
         {
-            if (row is IMergeableRow)
+            bool result = true;
+            if (TypeInfo.IsDynamic && MergeProperties.DeletionProperties.Count > 0)
             {
-                bool result = true;
+                var r = row as IDictionary<string, object>;
+                foreach (var delColumn in MergeProperties.DeletionProperties)
+                    if (r.ContainsKey(delColumn.Key))
+                        result &= r[delColumn.Key]?.Equals(delColumn.Value) ?? false;
+                return result;
+            }
+            else if (TypeInfo.DeleteAttributeProps.Count > 0)
+            {
                 foreach (var tup in TypeInfo.DeleteAttributeProps)
-                    result &= (tup.Item1?.GetValue(this)).Equals(tup.Item2);
+                    result &= (tup.Item1?.GetValue(row)).Equals(tup.Item2);
                 return result;
             }
             else
-                throw new NotImplementedException();
+                return false;
         }
 
         public void SetChangeDate(TInput row, DateTime changeDate)
         {
-            if (row is IMergeableRow)
-                ((IMergeableRow)row).ChangeDate = changeDate;
-            else if (TypeInfo.IsDynamic)
+            if (TypeInfo.IsDynamic)
             {
                 dynamic r = row as ExpandoObject;
                 r.ChangeDate = changeDate;
             }
+            else if (TypeInfo.ChangeDateProperty != null)
+            {
+                TypeInfo.ChangeDateProperty.SetValueOrThrow(row, changeDate);
+            }
             else
-                throw new NotImplementedException();
+                throw new ETLBoxNotSupportedException("Objects used for merge must inherit from MergeableRow or " +
+    "contain a property ChangeDate (public DateTime ChangeDate {get;set;}");
         }
 
         public bool AreEqual(object self, object other)
         {
             if (other == null || self == null) return false;
-            if (self is IMergeableRow && other is IMergeableRow)
+            bool result = true;
+            if (TypeInfo.IsDynamic)
             {
-                bool result = true;
+                var s = self as IDictionary<string, object>;
+                var o = other as IDictionary<string, object>;
+                foreach (string compColumn in MergeProperties.ComparePropertyNames)
+                    result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
+                return result;
+            }
+            else if (TypeInfo.CompareAttributeProps.Count > 0)
+            {
                 foreach (var propInfo in TypeInfo.CompareAttributeProps)
                     result &= (propInfo?.GetValue(self))?.Equals(propInfo?.GetValue(other)) ?? false;
                 return result;
             }
-            else if (TypeInfo.IsDynamic)
-            {
-                string compColumn = PropNames.CompareColumns.FirstOrDefault();
-                var s = self as IDictionary<string, object>;
-                var o = other as IDictionary<string, object>;
-                return s[compColumn].Equals(o[compColumn]);
-            }
             else
-                throw new NotImplementedException();
+                return false;
         }
 
-            private void InitInternalFlow()
+        private void InitInternalFlow()
         {
             Lookup = new LookupTransformation<TInput, TInput>(
                 DestinationTableAsSource,
@@ -258,6 +285,7 @@ namespace ALE.ETLBox.DataFlow
 
         private TInput UpdateRowWithDeltaInfo(TInput row)
         {
+            if (!WasTypeInfoInitialized) InitTypeInfo();
             if (InputDataDict == null) InitInputDataDictionary();
             SetChangeDate(row, DateTime.Now);
             TInput find = default(TInput);
@@ -275,7 +303,7 @@ namespace ALE.ETLBox.DataFlow
                 SetChangeAction(row, ChangeAction.Insert);
                 if (find != null)
                 {
-                    if (AreEqual(row,find))
+                    if (AreEqual(row, find))
                     {
                         SetChangeAction(row, ChangeAction.Exists);
                         SetChangeAction(find, ChangeAction.Exists);
@@ -295,6 +323,14 @@ namespace ALE.ETLBox.DataFlow
             InputDataDict = new Dictionary<string, TInput>();
             foreach (var d in InputData)
                 InputDataDict.Add(GetUniqueId(d), d);
+        }
+
+        bool WasTypeInfoInitialized = false;
+
+        private void InitTypeInfo()
+        {
+            TypeInfo = new DBMergeTypeInfo(typeof(TInput), MergeProperties);
+            WasTypeInfoInitialized = true;
         }
 
         void TruncateDestinationOnce()
@@ -359,11 +395,27 @@ namespace ALE.ETLBox.DataFlow
         Delta = 2,
     }
 
-    public class DynamicObjectPropNames
+    public class MergeProperties
     {
-        public List<string> IdColumns { get; set; } = new List<string>();
-        public List<string> CompareColumns { get; set; } = new List<string>();
-        public Dictionary<string, object> DeletionColumns { get; set; } = new Dictionary<string, object>();
+        public List<string> IdPropertyNames { get; set; } = new List<string>();
+        public List<string> ComparePropertyNames { get; set; } = new List<string>();
+        public Dictionary<string, object> DeletionProperties { get; set; } = new Dictionary<string, object>();
+        internal string ChangeActionPropertyName { get; set; } = "ChangeAction";
+        internal string ChangeDatePropertyName { get; set; } = "ChangeDate";
+    }
 
+    public class DbMerge : DbMerge<ExpandoObject>
+    {
+        public DbMerge(string tableName) : base(tableName)
+        { }
+
+        public DbMerge(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName)
+        { }
+
+        public DbMerge(string tableName, int batchSize) : base(tableName, batchSize)
+        { }
+
+        public DbMerge(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize)
+        { }
     }
 }

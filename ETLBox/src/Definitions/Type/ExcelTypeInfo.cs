@@ -13,7 +13,7 @@ namespace ALE.ETLBox.DataFlow
 
         internal ExcelTypeInfo(Type typ) : base(typ)
         {
-
+            GatherTypeInfo();
         }
 
         protected override void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex)

@@ -31,7 +31,7 @@ namespace ALE.ETLBox.DataFlow
         {
             Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
             Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
-            TypeInfo = new TypeInfo(typeof(TInput));
+            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ResourceType = ResourceType.File;
             InitTargetAction();
         }
@@ -109,7 +109,7 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A Csv destination defines a csv file where data from the flow is inserted. 
+    /// A Csv destination defines a csv file where data from the flow is inserted.
     /// The CsvDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="CsvDestination{TInput}"/>
