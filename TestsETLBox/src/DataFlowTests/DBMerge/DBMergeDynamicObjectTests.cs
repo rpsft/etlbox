@@ -86,18 +86,19 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
             dest.MergeProperties.IdPropertyNames.Add("Col1");
             dest.MergeProperties.ComparePropertyNames.Add("Col2");
-            dest.MergeProperties.DeletionProperties.Add("Delete",true);
+            dest.MergeProperties.DeletionProperties.Add("Delete", true);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
             d2c.AssertTestData();
-            //Assert.True(dest.DeltaTable.Count == 4);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert && row.Key == 3).Count() == 1);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 4).Count() == 1);
-            //Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
+            Assert.Collection<ExpandoObject>(dest.DeltaTable,
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Update && r.Col1 == 2); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Insert && r.Col1 == 3); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Delete && r.Col1 == 4); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.ChangeAction == ChangeAction.Delete && r.Col1 == 10); }
+            );
         }
     }
 }
