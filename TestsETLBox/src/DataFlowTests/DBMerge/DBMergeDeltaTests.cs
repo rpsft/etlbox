@@ -18,6 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class DbMergeDeltaTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
         public DbMergeDeltaTests(DataFlowDatabaseFixture dbFixture)
         {
@@ -59,6 +60,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
+            Assert.True(dest.UseTruncateMethod == false);
             d2c.AssertTestData();
             Assert.True(dest.DeltaTable.Count == 4);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);
@@ -66,5 +68,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 4).Count() == 1);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
         }
+
     }
 }

@@ -86,6 +86,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
             dest.MergeProperties.IdPropertyNames.Add("Col1");
             dest.MergeProperties.ComparePropertyNames.Add("Col2");
+            dest.MergeProperties.DeletionProperties.Add("Delete",true);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

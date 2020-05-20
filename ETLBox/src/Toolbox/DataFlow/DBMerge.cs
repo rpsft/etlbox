@@ -50,8 +50,9 @@ namespace ALE.ETLBox.DataFlow
         {
             get
             {
-                if (TypeInfo?.IdColumnNames == null
-                    || TypeInfo?.IdColumnNames?.Count == 0)
+                if (IdColumnNames == null
+                    || IdColumnNames?.Count == 0
+                    )
                     return true;
                 return _useTruncateMethod;
             }
@@ -71,6 +72,16 @@ namespace ALE.ETLBox.DataFlow
         public MergeProperties MergeProperties { get; set; } = new MergeProperties();
 
         /* Private stuff */
+        List<string> IdColumnNames
+        {
+            get
+            {
+                if (MergeProperties.IdPropertyNames?.Count > 0)
+                    return MergeProperties.IdPropertyNames;
+                else
+                    return TypeInfo?.IdColumnNames;
+            }
+        }
         ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DbSource<TInput> DestinationTableAsSource { get; set; }
@@ -182,8 +193,12 @@ namespace ALE.ETLBox.DataFlow
             {
                 var r = row as IDictionary<string, object>;
                 foreach (var delColumn in MergeProperties.DeletionProperties)
+                {
                     if (r.ContainsKey(delColumn.Key))
                         result &= r[delColumn.Key]?.Equals(delColumn.Value) ?? false;
+                    else
+                        result &= false;
+                }
                 return result;
             }
             else if (TypeInfo.DeleteAttributeProps.Count > 0)
@@ -221,7 +236,8 @@ namespace ALE.ETLBox.DataFlow
                 var s = self as IDictionary<string, object>;
                 var o = other as IDictionary<string, object>;
                 foreach (string compColumn in MergeProperties.ComparePropertyNames)
-                    result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
+                    if (s.ContainsKey(compColumn) && o.ContainsKey(compColumn))
+                        result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
                 return result;
             }
             else if (TypeInfo.CompareAttributeProps.Count > 0)
@@ -257,6 +273,9 @@ namespace ALE.ETLBox.DataFlow
                 }
                 else
                 {
+                    if (DeltaMode == DeltaMode.Delta)
+                        throw new ETLBoxNotSupportedException("If you provide a delta load, you must define at least one compare column." +
+                            "Using the truncate method is not allowed. ");
                     TruncateDestinationOnce();
                     return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
                         GetChangeAction(row) == ChangeAction.Update ||
@@ -363,8 +382,8 @@ namespace ALE.ETLBox.DataFlow
         {
             if (rowsToDelete.Count() == 0) return;
             var deleteString = rowsToDelete.Select(row => $"'{GetUniqueId(row)}'");
-            string idNames = $"{QB}{TypeInfo.IdColumnNames.First()}{QE}";
-            if (TypeInfo.IdColumnNames.Count > 1)
+            string idNames = $"{QB}{IdColumnNames.First()}{QE}";
+            if (IdColumnNames.Count > 1)
                 idNames = CreateConcatSqlForNames();
             new SqlTask(this, $@"
             DELETE FROM {TN.QuotatedFullName} 
@@ -378,9 +397,9 @@ namespace ALE.ETLBox.DataFlow
 
         private string CreateConcatSqlForNames()
         {
-            string result = $"CONCAT( {string.Join(",", TypeInfo?.IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
+            string result = $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
             if (this.ConnectionType == ConnectionManagerType.SQLite)
-                result = $" {string.Join("||", TypeInfo?.IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
+                result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
             return result;
         }
 

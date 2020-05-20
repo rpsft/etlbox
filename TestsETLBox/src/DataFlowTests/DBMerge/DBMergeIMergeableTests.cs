@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void NoIdColumn(IConnectionManager connection)
+        public void IdColumnOnlyWithGetter(IConnectionManager connection)
         {
             //Arrange
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection,"DBMergeSource");
@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void WithDeltaDestination(IConnectionManager connection)
+        public void WithDeltaDestinationAndTruncate(IConnectionManager connection)
         {
             //Arrange
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "DBMergeSource");

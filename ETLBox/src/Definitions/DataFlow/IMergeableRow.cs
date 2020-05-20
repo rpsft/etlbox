@@ -21,14 +21,5 @@ namespace ALE.ETLBox.DataFlow
         /// <remarks><see cref="SetChangeTime"/> is called when this value is set</remarks>
         /// <value>null means not determined yet</value>
         ChangeAction? ChangeAction { get; set; }
-        /// <summary>
-        /// Unique row identifier (e.g. textual concatenation of id vlaues)
-        /// </summary>
-        /// <value>not white space</value>
-        //string UniqueId { get; }
-        /// <summary>
-        /// Only for delta loads: Flag to mark if the row is a deletion entry
-        /// </summary>
-        //bool IsDeletion { get; }
     }
 }
