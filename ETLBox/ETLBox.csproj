@@ -11,8 +11,9 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixing issue with DbMerge and EntityFramework.</PackageReleaseNotes>
-    <Version>1.8.8-alpha</Version>
+    <PackageReleaseNotes>Fixing issue with converting enum types (normal and nullable). DbMerge now supports ExpandoObjects.
+Preparation of moving Connection Managers into separate packages.</PackageReleaseNotes>
+    <Version>1.8.8</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
