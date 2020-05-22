@@ -34,6 +34,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public char CharCol { get; set; }
             public string DecimalStringCol { get; set; }
             public string NullCol { get; set; }
+            public EnumType EnumCol { get; set; }
+        }
+
+        public enum EnumType
+        {
+            Value1 = 1,
+            Value2 = 2
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -51,6 +58,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     new TableColumn("CharCol", "CHAR(1)", allowNulls: true),
                     new TableColumn("DecimalStringCol", "DECIMAL(12,10)", allowNulls: true),
                     new TableColumn("NullCol", "CHAR(1)", allowNulls: true),
+                    new TableColumn("EnumCol", "INT", allowNulls: true),
                 });
             //Arrange
             MemorySource<MyDataTypeRow> source = new MemorySource<MyDataTypeRow>(
@@ -65,7 +73,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                        StringCol = "Test",
                        CharCol = 'T',
                        DecimalStringCol = "13.4566",
-                       NullCol = null
+                       NullCol = null,
+                       EnumCol = EnumType.Value2
                    }
                 }) ;
 
@@ -88,7 +97,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 col => Assert.True( Convert.ToString(col) == "Test"),
                 col => Assert.True( Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),
                 col => Assert.True(Convert.ToString(col).Replace("0","") == "13.4566"),
-                col => Assert.True(col == null)
+                col => Assert.True(col == null),
+                col => Assert.True(Convert.ToInt32(col) == 2)
             );
 
         }

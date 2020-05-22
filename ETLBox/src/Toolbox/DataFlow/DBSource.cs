@@ -224,7 +224,8 @@ namespace ALE.ETLBox.DataFlow
                     if (_row != null)
                     {
                         var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
-                        
+                        //var con = colValue != null ? Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]) : colValue;
+                        //propInfo.TrySetValue(_row, con);
                         Object con = null;
                         if (colValue != null)
                         {
@@ -232,7 +233,6 @@ namespace ALE.ETLBox.DataFlow
                                 con = colValue;
                             else
                                 con = Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]);
-
                         }
 
                         propInfo.TrySetValue(_row, con, TypeInfo.UnderlyingPropType[propInfo]);
