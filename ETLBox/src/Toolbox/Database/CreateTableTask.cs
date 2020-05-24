@@ -98,7 +98,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             string nullSql = CreateNotNullSql(col);
             string defaultSql = CreateDefaultSql(col);
             string computedColumnSql = CreateComputedColumnSql(col);
-            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql}";
+            string comment = CreateCommentSql(col);
+            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql} {comment}";
         }
 
 
@@ -172,9 +173,17 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
         {
             if (col.HasComputedColumn && !DbConnectionManager.SupportComputedColumns)
                 throw new ETLBoxNotSupportedException("Computed columns are not supported.");
-            
+
             if (col.HasComputedColumn)
                 return $"AS {col.ComputedColumn}";
+            else
+                return string.Empty;
+        }
+
+        private string CreateCommentSql(ITableColumn col)
+        {
+            if (ConnectionType == ConnectionManagerType.MySql && !string.IsNullOrWhiteSpace(col.Comment))
+                return $"COMMENT '{col.Comment}'";
             else
                 return string.Empty;
         }

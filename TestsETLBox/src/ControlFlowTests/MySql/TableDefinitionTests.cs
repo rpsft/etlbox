@@ -25,7 +25,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.MySql
             //Arrange
             SqlTask.ExecuteNonQuery(MySqlConnection, "Create table", @"
 CREATE TABLE identity (
-      `Id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY     
+      `Id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY
 )"
             );
 
@@ -44,7 +44,7 @@ CREATE TABLE identity (
         {
             //Arrange
             SqlTask.ExecuteNonQuery(MySqlConnection, "Create table", @"
-CREATE TABLE length_and_precision (      
+CREATE TABLE length_and_precision (
       `Value1` VARCHAR (255) NULL,
       `Value2` NVARCHAR (200) NULL,
       `Value3` CHAR (10) NULL,
@@ -65,6 +65,25 @@ CREATE TABLE length_and_precision (
                 tc => Assert.True(tc.DataType == "char(20)" && tc.NETDataType == typeof(string)),
                 tc => Assert.True(tc.DataType == "decimal(12,3)" && tc.NETDataType == typeof(decimal)),
                 tc => Assert.True(tc.DataType == "decimal(3,2)" && tc.NETDataType == typeof(decimal))
+            );
+        }
+
+        [Fact]
+        public void TestComment()
+        {
+            //Arrange
+            SqlTask.ExecuteNonQuery(MySqlConnection, "Create table", @"
+CREATE TABLE testcomment (
+      `comment` INT NULL COMMENT 'test'
+)"
+            );
+
+            //Act
+            var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "testcomment");
+
+            //Assert
+            Assert.Collection(result.Columns,
+                tc => Assert.True(tc.DataType == "int" && tc.Comment =="test")
             );
         }
     }

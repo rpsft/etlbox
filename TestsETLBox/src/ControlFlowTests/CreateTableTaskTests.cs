@@ -15,6 +15,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class CreateTableTaskTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
+        public MySqlConnectionManager MySqlConnection => Config.MySqlConnection.ConnectionManager("ControlFlow");
+
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
         public CreateTableTaskTests(ControlFlowDatabaseFixture dbFixture)
@@ -327,9 +329,30 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             tableDefinition.PrimaryKeyConstraintName = "shortname";
             CreateTableTask.Create(connection, tableDefinition);
             var td = TableDefinition.GetDefinitionFromTableName(connection, "ThisIsAReallyLongTableWhichICantChange");
-            Assert.True(td.Columns.Where(col => col.IsPrimaryKey 
+            Assert.True(td.Columns.Where(col => col.IsPrimaryKey
                 && col.Name == "ThisIsAReallyLongAndPrettyColumnNameWhichICantChange").Count() == 1);
 
+        }
+
+        [Fact]
+        public void CreateTableWithComment()
+        {
+            //Arrange
+            var columns = new List<TableColumn>
+            {
+                new TableColumn("col1", "INT") { Comment = "test" }
+            };
+
+            //Act
+            CreateTableTask.Create(MySqlConnection, "TableWithComment", columns);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(MySqlConnection, "TableWithComment"));
+
+            var td = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "TableWithComment");
+            var description = td.Columns.Single(x => x.Name == "col1").Comment;
+
+            Assert.Equal("test", description);
         }
     }
 }

@@ -14,8 +14,6 @@ namespace ALE.ETLBox
         internal string InternalDataType { get; set; }
         public bool AllowNulls { get; set; }
         public bool IsIdentity { get; set; }
-        public int? IdentitySeed { get; set; }
-        public int? IdentityIncrement { get; set; }
         public bool IsPrimaryKey { get; set; }
         public string DefaultValue { get; set; }
         public string Collation { get; set; }
@@ -23,6 +21,9 @@ namespace ALE.ETLBox
         public bool HasComputedColumn => !String.IsNullOrWhiteSpace(ComputedColumn);
         public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
 
+        public string Comment { get; set; } //MySql only
+        public int? IdentitySeed { get; set; } //Sql Server only
+        public int? IdentityIncrement { get; set; } //Sql Server only
 
         public string DataSetColumn
         {
