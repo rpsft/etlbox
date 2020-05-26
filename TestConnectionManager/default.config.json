@@ -19,5 +19,8 @@
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlowDestination.db;Version=3;",
         "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_DataFlowDestination;Uid=root;Pwd=etlboxpassword;",
         "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_DataFlowDestination;User Id=postgres;Password=etlboxpassword;"
+    },
+    "ConnectionManager": {
+        "SqlConnectionString": "Data Source=10.211.55.2;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ConnectionManager"
     }
 }
