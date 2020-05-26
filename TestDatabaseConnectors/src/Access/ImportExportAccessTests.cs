@@ -67,7 +67,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TableDefinition testTable = RecreateAccessTestTable();
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/UseCases/AccessData.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/Access/AccessData.csv");
             DbDestination<string[]> dest = new DbDestination<string[]>(batchSize: 2)
             {
                 DestinationTableDefinition = testTable,

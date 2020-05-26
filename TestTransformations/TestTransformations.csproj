@@ -38,9 +38,6 @@
     <None Update="res\RowTransformation\TwoColumnsSwapped.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="res\UseCases\AccessData.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="res\UseCases\DuplicateCheck.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             };
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
