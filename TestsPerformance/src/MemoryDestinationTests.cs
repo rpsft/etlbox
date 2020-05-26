@@ -45,7 +45,9 @@ namespace ALE.ETLBoxTests.Performance
             var sourceDynamic = new CsvSource<ExpandoObject>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
             var destDynamic = new MemoryDestination<ExpandoObject>();
 
-
+            sourceNonGeneric.ReleaseGCPressureRowCount = 500;
+            sourceGeneric.ReleaseGCPressureRowCount = 500;
+            sourceDynamic.ReleaseGCPressureRowCount = 500;
             //Act
             var teNonGeneric = GetETLBoxTime(numberOfRows, sourceNonGeneric, destNonGeneric);
             var teGeneric = GetETLBoxTime(numberOfRows, sourceGeneric, destGeneric);

@@ -20,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="db\SQLiteDataFlow.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="default.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

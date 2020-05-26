@@ -5,9 +5,13 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>ALE.ETLBoxTestsPerformance</AssemblyName>
+    <AssemblyName>ALE.ETLBoxTestsNonParallel</AssemblyName>
 
-    <RootNamespace>ALE.ETLBoxTests.Performance</RootNamespace>
+    <RootNamespace>ALE.ETLBoxTests.NonParallel</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,10 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="db\AccessPerformance.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="db\SQLitePerformance.db">
+    <None Update="db\SQLiteLogging.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="docker.config.json">
@@ -40,8 +41,11 @@
     <None Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="res\Csv\TestData.csv">
+    <None Update="res\DataFlowLogging\TwoColumns.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\Demo\demolog_tobe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
