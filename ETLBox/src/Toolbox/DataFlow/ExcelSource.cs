@@ -109,7 +109,8 @@ namespace ALE.ETLBox.DataFlow
 
         private TOutput ParseDataRow()
         {
-            TOutput row = (TOutput)Activator.CreateInstance(typeof(TOutput));
+            TOutput row;
+            row = GetNewOutputInstance();
             bool emptyRow = true;
             for (int col = 0, colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
             {
@@ -118,26 +119,49 @@ namespace ALE.ETLBox.DataFlow
                 colNrInRange++;
                 emptyRow &= ExcelDataReader.IsDBNull(col);
                 object value = ExcelDataReader.GetValue(col);
-                if (TypeInfo.IsDynamic)
-                {
-                    var r = row as IDictionary<string, Object>;
-                    if (HasHeaderData)
-                        r.Add(HeaderColumns[colNrInRange], value);
-                    else
-                        r.Add("Column"+ (colNrInRange+1), value);
-                }
+                if (TypeInfo.IsArray)
+                    SetValueInArray(row, colNrInRange, value);
+                else if (TypeInfo.IsDynamic)
+                    SetValueInDynamic(row, colNrInRange, value);
                 else
-                {
-                    PropertyInfo propInfo = null;
-                    if (HasHeaderData  && TypeInfo.ExcelColumnName2PropertyIndex.ContainsKey(HeaderColumns[colNrInRange]))
-                        propInfo = TypeInfo.Properties[TypeInfo.ExcelColumnName2PropertyIndex[HeaderColumns[colNrInRange]]];
-                    else if (TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colNrInRange))
-                        propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colNrInRange]];
-                    propInfo?.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
-                }
+                    SetValueInObject(row, colNrInRange, value);
             }
             if (emptyRow) return default(TOutput);
             else return row;
+        }
+
+        private TOutput GetNewOutputInstance()
+        {
+            if (TypeInfo.IsArray)
+                return (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { ExcelDataReader.FieldCount });
+            else
+                return (TOutput)Activator.CreateInstance(typeof(TOutput));
+        }
+
+        private void SetValueInArray(TOutput row, int colNrInRange, object value)
+        {
+            var ar = row as System.Array;
+            var con = Convert.ChangeType(value, typeof(TOutput).GetElementType());
+            ar.SetValue(con, colNrInRange);
+        }
+
+        private void SetValueInDynamic(TOutput row, int colNrInRange, object value)
+        {
+            var r = row as IDictionary<string, Object>;
+            if (HasHeaderData)
+                r.Add(HeaderColumns[colNrInRange], value);
+            else
+                r.Add("Column" + (colNrInRange + 1), value);
+        }
+
+        private void SetValueInObject(TOutput row, int colNrInRange, object value)
+        {
+            PropertyInfo propInfo = null;
+            if (HasHeaderData && TypeInfo.ExcelColumnName2PropertyIndex.ContainsKey(HeaderColumns[colNrInRange]))
+                propInfo = TypeInfo.Properties[TypeInfo.ExcelColumnName2PropertyIndex[HeaderColumns[colNrInRange]]];
+            else if (TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colNrInRange))
+                propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colNrInRange]];
+            propInfo?.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
         }
 
         protected override void InitReader()

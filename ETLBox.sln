@@ -17,15 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDatabaseConnectors", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestShared", "TestShared\TestShared.csproj", "{F39485D8-E896-4471-BA6A-82E87E0F2224}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestControlFlowTasks", "TestControlFlowTasks\TestControlFlowTasks.csproj", "{9F526D84-3A9B-48C5-A45E-75738058C02D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestControlFlowTasks", "TestControlFlowTasks\TestControlFlowTasks.csproj", "{9F526D84-3A9B-48C5-A45E-75738058C02D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTransformations", "TestTransformations\TestTransformations.csproj", "{C16F1E21-1400-456A-A118-FD0D31849462}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTransformations", "TestTransformations\TestTransformations.csproj", "{C16F1E21-1400-456A-A118-FD0D31849462}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFlatFileConnectors", "TestFlatFileConnectors\TestFlatFileConnectors.csproj", "{F5DC3CC7-DCCD-441E-8720-D94168A3A0F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFlatFileConnectors", "TestFlatFileConnectors\TestFlatFileConnectors.csproj", "{F5DC3CC7-DCCD-441E-8720-D94168A3A0F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOtherConnectors", "TestOtherConnectors\TestOtherConnectors.csproj", "{532711D9-61BB-4329-AB72-864C140382DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOtherConnectors", "TestOtherConnectors\TestOtherConnectors.csproj", "{532711D9-61BB-4329-AB72-864C140382DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelper", "TestHelper\TestHelper.csproj", "{FE99A768-FC42-4533-AC94-BE2F61A17E00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelper", "TestHelper\TestHelper.csproj", "{FE99A768-FC42-4533-AC94-BE2F61A17E00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
