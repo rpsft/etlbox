@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="default.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\CustomDestination\simpleJson_tobe.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

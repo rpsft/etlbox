@@ -1,24 +1,24 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿//using ALE.ETLBox.Helper;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
+//using Xunit;
 
-namespace ALE.ETLBoxTests.Fixtures
-{
-    [CollectionDefinition("DataFlow Source and Destination")]
-    public class DatalFlowSourceDestinationCollectionClass : ICollectionFixture<DatabaseSourceDestinationFixture> { }
-    public class DatabaseSourceDestinationFixture
-    {
-        public DatabaseSourceDestinationFixture()
-        {
-            DatabaseHelper.RecreateSqlDatabase("DataFlowSource");
-            DatabaseHelper.RecreateSqlDatabase("DataFlowDestination");
-            DatabaseHelper.RecreateMySqlDatabase("DataFlowSource");
-            DatabaseHelper.RecreateMySqlDatabase("DataFlowDestination");
-            DatabaseHelper.RecreatePostgresDatabase("DataFlowSource");
-            DatabaseHelper.RecreatePostgresDatabase("DataFlowDestination");
-        }
-    }
+//namespace ALE.ETLBoxTests.Fixtures
+//{
+//    [CollectionDefinition("DataFlow Source and Destination")]
+//    public class DatalFlowSourceDestinationCollectionClass : ICollectionFixture<DatabaseSourceDestinationFixture> { }
+//    public class DatabaseSourceDestinationFixture
+//    {
+//        public DatabaseSourceDestinationFixture()
+//        {
+//            DatabaseHelper.RecreateSqlDatabase("DataFlowSource");
+//            DatabaseHelper.RecreateSqlDatabase("DataFlowDestination");
+//            DatabaseHelper.RecreateMySqlDatabase("DataFlowSource");
+//            DatabaseHelper.RecreateMySqlDatabase("DataFlowDestination");
+//            DatabaseHelper.RecreatePostgresDatabase("DataFlowSource");
+//            DatabaseHelper.RecreatePostgresDatabase("DataFlowDestination");
+//        }
+//    }
 
-}
+//}

@@ -20,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="default.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\Lookup\LookupSource.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
