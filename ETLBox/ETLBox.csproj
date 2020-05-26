@@ -33,7 +33,6 @@ Preparation of moving Connection Managers into separate packages.</PackageReleas
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.3" />
     <PackageReference Include="MySql.Data" Version="8.0.19" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.0" />
