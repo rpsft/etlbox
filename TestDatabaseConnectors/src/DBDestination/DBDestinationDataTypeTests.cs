@@ -81,7 +81,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DropTableTask.DropIfExists(connection, tablename);
             CreateTableTask.Create(connection, tablename,
                 new List<TableColumn>() {
-                    new TableColumn("IntCol", "INT", allowNulls: true),
+                    new TableColumn("intcol", "INT", allowNulls: true),
                     new TableColumn("LongCol", "BIGINT", allowNulls: true),
                     new TableColumn("DecimalCol", "FLOAT", allowNulls: true),
                     new TableColumn("DoubleCol", "FLOAT", allowNulls: true),
@@ -99,7 +99,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //            IntCol LongCol DecimalCol DoubleCol   DateTimeCol DateCol StringCol CharCol DecimalStringCol NullCol
             //1 - 1  2.3 5.4 2010 - 01 - 01 10:10:10.100 2020 - 01 - 01  Test T   13.4566000000   NULL
-            SqlTask.ExecuteReaderSingleLine(connection, "Check data", $"SELECT * FROM {tableName}",
+            SqlTask.ExecuteReaderSingleLine(connection, "Check data", $"SELECT * FROM {tableName} WHERE intcol = 1",
                 col => Assert.True(Convert.ToInt32(col) == 1),
                 col => Assert.True(Convert.ToInt64(col) == -1),
                 col => Assert.True(Convert.ToDecimal(col) == 2.3M),
@@ -167,7 +167,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             dynamic d2 = new ExpandoObject();
             d2.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
-            d2.IntCol = 1;
+            d2.IntCol = 2;
             d2.LongCol = -1;
             d2.DoubleCol = 5.4;
             d2.DateCol = new DateTime(2020, 1, 1);
@@ -184,6 +184,98 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         }
 
+
+        [Theory, MemberData(nameof(Connections))]
+        public void NullValuesFirst(IConnectionManager connection)
+        {
+            CreateTestTable(connection, "datatypedestinationdynamicmixed");
+            //Arrange
+            MemorySource source = new MemorySource();
+
+            dynamic d1 = new ExpandoObject();
+            d1.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d1.IntCol = 2;
+            d1.LongCol = -1;
+            d1.DoubleCol = 5.4;
+            d1.DateCol = new DateTime(2020, 1, 1);
+            source.DataAsList.Add(d1);
+
+            dynamic d2 = new ExpandoObject();
+            d2.IntCol = 1;
+            d2.LongCol = -1;
+            d2.DecimalCol = 2.3M;
+            d2.DoubleCol = 5.4;
+            d2.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d2.DateCol = new DateTime(2020, 1, 1);
+            d2.StringCol = "Test";
+            d2.CharCol = 'T';
+            d2.DecimalStringCol = "13.4566";
+            d2.NullCol = null;
+            d2.EnumCol = EnumType.Value2;
+            source.DataAsList.Add(d2);
+
+            //Act
+            DbDestination dest = new DbDestination(connection, "datatypedestinationdynamicmixed");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            AssertFirstRow(connection, "datatypedestinationdynamicmixed");
+
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void NullValuesFirstAcrossBatches(IConnectionManager connection)
+        {
+            CreateTestTable(connection, "datatypedestinationdynamicmixed");
+            //Arrange
+            MemorySource source = new MemorySource();
+
+            dynamic d1 = new ExpandoObject();
+            d1.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d1.IntCol = 2;
+            d1.LongCol = -1;
+            d1.DoubleCol = 5.4;
+            d1.DateCol = new DateTime(2020, 1, 1);
+            source.DataAsList.Add(d1);
+
+            dynamic d2 = new ExpandoObject();
+            d2.CharCol = 'X';
+            d2.DecimalStringCol = "15";
+            d2.NullCol = null;
+            d2.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d2.IntCol = 2;
+            source.DataAsList.Add(d2);
+
+            dynamic d3 = new ExpandoObject();
+            d3.StringCol = "Test";
+            source.DataAsList.Add(d3);
+
+            dynamic d4 = new ExpandoObject();
+            d4.IntCol = 1;
+            d4.LongCol = -1;
+            d4.DecimalCol = 2.3M;
+            d4.DoubleCol = 5.4;
+            d4.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d4.DateCol = new DateTime(2020, 1, 1);
+            d4.StringCol = "Test";
+            d4.CharCol = 'T';
+            d4.DecimalStringCol = "13.4566";
+            d4.NullCol = null;
+            d4.EnumCol = EnumType.Value2;
+            source.DataAsList.Add(d4);
+
+            //Act
+            DbDestination dest = new DbDestination(connection, "datatypedestinationdynamicmixed", batchSize: 2);
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            AssertFirstRow(connection, "datatypedestinationdynamicmixed");
+
+        }
 
 
 
