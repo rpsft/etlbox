@@ -5,11 +5,16 @@ using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
+using Moq;
+using Moq.Protected;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -32,7 +37,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             SqlTask.ExecuteNonQuery(Connection, "Create test table",
                 @"CREATE TABLE dbo.WebServiceDestination 
-                ( Id INT NOT NULL, UserId INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
+                ( Id INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
             );
             DbDestination<Todo> dest = new DbDestination<Todo>(Connection, "dbo.WebServiceDestination");
             WebserviceReader wsreader = new WebserviceReader();
@@ -51,7 +56,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public class Todo
         {
             public int Id { get; set; }
-            public int UserId { get; set; }
             public string Title { get; set; }
             public bool Completed { get; set; }
         }
@@ -60,25 +64,48 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             public string Json { get; set; }
             public int TodoCounter { get; set; } = 1;
+            HttpClient httpClient;
+
             public Todo ReadTodo()
             {
-                var todo = new Todo();
-                using (var httpClient = new HttpClient())
+                using (httpClient = MoqWebservice(TodoCounter))
                 {
-                    var uri = new Uri("https://jsonplaceholder.typicode.com/todos/" + TodoCounter);
+                    var todo = new Todo();
+                    var uri = new Uri("https://todos/" + TodoCounter);
                     TodoCounter++;
                     var response = httpClient.GetStringAsync(uri).Result;
                     Newtonsoft.Json.JsonConvert.PopulateObject(response, todo);
-
+                    return todo;
                 }
-                return todo;
             }
 
             public bool EndOfData()
             {
                 return TodoCounter > 5;
+            }
 
+            public HttpClient MoqWebservice(int todoCounter)
+            {
+                var handlerMock = new Mock<HttpMessageHandler>();
+                handlerMock
+                   .Protected()
+                   // Setup the PROTECTED method to mock
+                   .Setup<Task<HttpResponseMessage>>(
+                      "SendAsync",
+                      ItExpr.IsAny<HttpRequestMessage>(),
+                      ItExpr.IsAny<CancellationToken>()
+                   )
+                   // prepare the expected response of the mocked http call
+                   .ReturnsAsync(new HttpResponseMessage()
+                   {
+                       StatusCode = HttpStatusCode.OK,
+                       Content = new StringContent(@"{ 'Id':"+todoCounter+", 'Title':'Test', Completed: 'false' }"),
+                   })
+                   .Verifiable();
+                return new HttpClient(handlerMock.Object);
             }
         }
+
+
     }
 }
