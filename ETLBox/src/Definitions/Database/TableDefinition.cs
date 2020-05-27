@@ -295,8 +295,7 @@ ORDER BY cols.ordinal_position
 
         private static TableDefinition ReadTableDefinitionFromAccess(IConnectionManager connection, ObjectNameDescriptor TN)
         {
-            var accessConnection = connection as AccessOdbcConnectionManager;
-            return accessConnection?.ReadTableDefinition(TN);
+            return connection?.ReadTableDefinition(TN);
         }
     }
 }

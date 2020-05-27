@@ -15,6 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Odbc\ETLBox.Odbc.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Postgres\ETLBox.Postgres.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SQLite\ETLBox.SQLite.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SSAS\ETLBox.SSAS.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
   </ItemGroup>
 

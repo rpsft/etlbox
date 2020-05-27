@@ -25,7 +25,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOtherConnectors", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelper", "TestHelper\TestHelper.csproj", "{FE99A768-FC42-4533-AC94-BE2F61A17E00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConnectionManager", "TestConnectionManager\TestConnectionManager.csproj", "{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "TestConnectionManager\TestConnectionManager.csproj", "{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SqlServer", "..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj", "{0888554F-0B9A-4423-8E87-C88AB61D7122}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SSAS", "..\etlbox.connectors\ETLBox.SSAS\ETLBox.SSAS.csproj", "{EE07980D-9A26-4D6C-B7B3-DD7D84526610}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.MySql", "..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj", "{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Postgres", "..\etlbox.connectors\ETLBox.Postgres\ETLBox.Postgres.csproj", "{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.SQLite", "..\etlbox.connectors\ETLBox.SQLite\ETLBox.SQLite.csproj", "{EB56B396-0F2C-4003-9856-BF589C73FDA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Odbc", "..\etlbox.connectors\ETLBox.Odbc\ETLBox.Odbc.csproj", "{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +92,30 @@ Global
 		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0888554F-0B9A-4423-8E87-C88AB61D7122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0888554F-0B9A-4423-8E87-C88AB61D7122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0888554F-0B9A-4423-8E87-C88AB61D7122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0888554F-0B9A-4423-8E87-C88AB61D7122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE07980D-9A26-4D6C-B7B3-DD7D84526610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE07980D-9A26-4D6C-B7B3-DD7D84526610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE07980D-9A26-4D6C-B7B3-DD7D84526610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE07980D-9A26-4D6C-B7B3-DD7D84526610}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB56B396-0F2C-4003-9856-BF589C73FDA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB56B396-0F2C-4003-9856-BF589C73FDA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB56B396-0F2C-4003-9856-BF589C73FDA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB56B396-0F2C-4003-9856-BF589C73FDA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

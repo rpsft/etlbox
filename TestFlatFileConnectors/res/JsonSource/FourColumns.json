@@ -1,0 +1,20 @@
+[
+    {
+        "Col1": "Ignored",
+        "Col2": "Test1",
+        "Col3": -1,
+        "Col4": "1.2"
+    },
+    {
+        "Col1": "Ignored",
+        "Col2": "Test2",
+        "Col3": 4711,
+        "Col4": 1.23
+    },
+    {
+        "Col1": "Ignored",
+        "Col2": "Test3",
+        "Col3": 185,
+        "Col4": "1.234"
+    }
+]

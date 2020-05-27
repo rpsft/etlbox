@@ -11,7 +11,7 @@ namespace ALE.ETLBox
 
         public string Name { get; set; }
         public string DataType { get; set; }
-        internal string InternalDataType { get; set; }
+        public string InternalDataType { get; set; } //Postgres only
         public bool AllowNulls { get; set; }
         public bool IsIdentity { get; set; }
         public bool IsPrimaryKey { get; set; }

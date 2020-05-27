@@ -38,5 +38,7 @@ namespace ALE.ETLBox.ConnectionManager
         bool SupportProcedures { get; }
         bool SupportSchemas { get; }
         bool SupportComputedColumns { get; }
+        bool IsOdbcConnection { get; }
+        TableDefinition ReadTableDefinition(ObjectNameDescriptor TN);
     }
 }

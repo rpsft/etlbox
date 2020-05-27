@@ -8,6 +8,7 @@ using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -46,20 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void MixedTypes(IConnectionManager connection)
         {
-            CreateTableTask.Create(connection, "datatypedestination",
-                new List<TableColumn>() {
-                    new TableColumn("IntCol", "INT", allowNulls: true),
-                    new TableColumn("LongCol", "BIGINT", allowNulls: true),
-                    new TableColumn("DecimalCol", "FLOAT", allowNulls: true),
-                    new TableColumn("DoubleCol", "FLOAT", allowNulls: true),
-                    new TableColumn("DateTimeCol", "DATETIME", allowNulls: true),
-                    new TableColumn("DateCol", "DATE", allowNulls: true),
-                    new TableColumn("StringCol", "VARCHAR(200)", allowNulls: true),
-                    new TableColumn("CharCol", "CHAR(1)", allowNulls: true),
-                    new TableColumn("DecimalStringCol", "DECIMAL(12,10)", allowNulls: true),
-                    new TableColumn("NullCol", "CHAR(1)", allowNulls: true),
-                    new TableColumn("EnumCol", "INT", allowNulls: true),
-                });
+            CreateTestTable(connection, "datatypedestination");
             //Arrange
             MemorySource<MyDataTypeRow> source = new MemorySource<MyDataTypeRow>(
                 new List<MyDataTypeRow>() {
@@ -76,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                        NullCol = null,
                        EnumCol = EnumType.Value2
                    }
-                }) ;
+                });
 
             //Act
             DbDestination<MyDataTypeRow> dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
@@ -85,22 +73,119 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
+            AssertFirstRow(connection, "datatypedestination");
+        }
+
+        private static void CreateTestTable(IConnectionManager connection, string tablename)
+        {
+            DropTableTask.DropIfExists(connection, tablename);
+            CreateTableTask.Create(connection, tablename,
+                new List<TableColumn>() {
+                    new TableColumn("IntCol", "INT", allowNulls: true),
+                    new TableColumn("LongCol", "BIGINT", allowNulls: true),
+                    new TableColumn("DecimalCol", "FLOAT", allowNulls: true),
+                    new TableColumn("DoubleCol", "FLOAT", allowNulls: true),
+                    new TableColumn("DateTimeCol", "DATETIME", allowNulls: true),
+                    new TableColumn("DateCol", "DATE", allowNulls: true),
+                    new TableColumn("StringCol", "VARCHAR(200)", allowNulls: true),
+                    new TableColumn("CharCol", "CHAR(1)", allowNulls: true),
+                    new TableColumn("DecimalStringCol", "DECIMAL(12,10)", allowNulls: true),
+                    new TableColumn("NullCol", "CHAR(1)", allowNulls: true),
+                    new TableColumn("EnumCol", "INT", allowNulls: true),
+                });
+        }
+
+        private static void AssertFirstRow(IConnectionManager connection, string tableName)
+        {
             //            IntCol LongCol DecimalCol DoubleCol   DateTimeCol DateCol StringCol CharCol DecimalStringCol NullCol
             //1 - 1  2.3 5.4 2010 - 01 - 01 10:10:10.100 2020 - 01 - 01  Test T   13.4566000000   NULL
-            SqlTask.ExecuteReaderSingleLine(connection, "Check data", "SELECT * FROM datatypedestination",
-                col => Assert.True( Convert.ToInt32(col) == 1),
-                col => Assert.True( Convert.ToInt64(col) == -1),
-                col => Assert.True( Convert.ToDecimal(col) == 2.3M),
-                col => Assert.True( Convert.ToDecimal(col) == 5.4M),
-                col => Assert.True( Convert.ToDateTime(col) == new DateTime(2010, 1, 1, 10, 10, 10)),
+            SqlTask.ExecuteReaderSingleLine(connection, "Check data", $"SELECT * FROM {tableName}",
+                col => Assert.True(Convert.ToInt32(col) == 1),
+                col => Assert.True(Convert.ToInt64(col) == -1),
+                col => Assert.True(Convert.ToDecimal(col) == 2.3M),
+                col => Assert.True(Convert.ToDecimal(col) == 5.4M),
+                col => Assert.True(Convert.ToDateTime(col) == new DateTime(2010, 1, 1, 10, 10, 10)),
                 col => Assert.True(Convert.ToDateTime(col) == new DateTime(2020, 1, 1)),
-                col => Assert.True( Convert.ToString(col) == "Test"),
-                col => Assert.True( Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),
-                col => Assert.True(Convert.ToString(col).Replace("0","") == "13.4566"),
+                col => Assert.True(Convert.ToString(col) == "Test"),
+                col => Assert.True(Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),
+                col => Assert.True(Convert.ToString(col).Replace("0", "") == "13.4566"),
                 col => Assert.True(col == null),
                 col => Assert.True(Convert.ToInt32(col) == 2)
             );
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void MixedTypesWithDynamic(IConnectionManager connection)
+        {
+            CreateTestTable(connection, "datatypedestinationdynamic");
+            //Arrange
+            MemorySource source = new MemorySource();
+            dynamic d1 = new ExpandoObject();
+            d1.IntCol = 1;
+            d1.LongCol = -1;
+            d1.DecimalCol = 2.3M;
+            d1.DoubleCol = 5.4;
+            d1.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d1.DateCol = new DateTime(2020, 1, 1);
+            d1.StringCol = "Test";
+            d1.CharCol = 'T';
+            d1.DecimalStringCol = "13.4566";
+            d1.NullCol = null;
+            d1.EnumCol = EnumType.Value2;
+
+            //Act
+            DbDestination dest = new DbDestination(connection, "datatypedestinationdynamic");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            AssertFirstRow(connection,"datatypedestinationdynamic");
+        }
+
+
+
+        [Theory, MemberData(nameof(Connections))]
+        public void MixedOrderOfProps(IConnectionManager connection)
+        {
+            CreateTestTable(connection, "datatypedestinationdynamicmixed");
+            //Arrange
+            MemorySource source = new MemorySource();
+            dynamic d1 = new ExpandoObject();
+            d1.IntCol = 1;
+            d1.LongCol = -1;
+            d1.DecimalCol = 2.3M;
+            d1.DoubleCol = 5.4;
+            d1.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d1.DateCol = new DateTime(2020, 1, 1);
+            d1.StringCol = "Test";
+            d1.CharCol = 'T';
+            d1.DecimalStringCol = "13.4566";
+            d1.NullCol = null;
+            d1.EnumCol = EnumType.Value2;
+            source.DataAsList.Add(d1);
+
+            dynamic d2 = new ExpandoObject();
+            d2.DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10);
+            d2.IntCol = 1;
+            d2.LongCol = -1;
+            d2.DoubleCol = 5.4;
+            d2.DateCol = new DateTime(2020, 1, 1);
+            source.DataAsList.Add(d2);
+
+            //Act
+            DbDestination dest = new DbDestination(connection, "datatypedestinationdynamicmixed");
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            AssertFirstRow(connection, "datatypedestinationdynamicmixed");
 
         }
+
+
+
+
     }
 }

@@ -9,7 +9,7 @@ namespace ALE.ETLBox.ConnectionManager
         where Connection : class, IDbConnection, new()
     {
         public abstract ConnectionManagerType ConnectionManagerType { get; }
-        
+
         public int MaxLoginAttempts { get; set; } = 3;
         public bool LeaveOpen
         {
@@ -19,18 +19,23 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbConnectionString ConnectionString { get; set; }
 
-        internal Connection DbConnection { get; set; }
+        public Connection DbConnection { get; set; }
         public ConnectionState? State => DbConnection?.State;
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
         private bool _leaveOpen;
-        
+
         public abstract string QB { get; }
         public abstract string QE { get; }
         public virtual bool SupportDatabases { get; } = true;
         public virtual bool SupportProcedures { get; } = true;
         public virtual bool SupportSchemas { get; } = true;
         public virtual bool SupportComputedColumns { get; } = true;
+        public virtual bool IsOdbcConnection { get; } = false;
+        public virtual TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
+        {
+            throw new NotImplementedException();
+        }
 
         public DbConnectionManager()
         {

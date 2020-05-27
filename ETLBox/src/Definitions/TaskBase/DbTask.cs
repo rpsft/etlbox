@@ -3,7 +3,6 @@ using ALE.ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Odbc;
 using System.Dynamic;
 using System.Linq;
 
@@ -19,7 +18,7 @@ namespace ALE.ETLBox.ControlFlow
         public Action AfterRowReadAction { get; set; }
         public long Limit { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
-        public bool IsOdbcConnection => DbConnectionManager.GetType().IsSubclassOf(typeof(DbConnectionManager<OdbcConnection>));
+        public bool IsOdbcConnection => DbConnectionManager.IsOdbcConnection;
         public virtual bool DoXMLCommentStyle { get; set; }
         public IDbTransaction Transaction { get; set; }
         internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
@@ -149,7 +148,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
-                using (IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader) { 
+                using (IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader) {
                     for (int rowNr = 0; rowNr < Limit; rowNr++)
                     {
                         if (reader.Read())

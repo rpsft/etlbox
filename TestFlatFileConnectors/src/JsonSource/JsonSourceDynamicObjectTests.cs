@@ -48,5 +48,22 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
+
+        [Fact]
+        public void JsonWithDecimalType()
+        {
+            //Arrange
+            FourColumnsTableFixture d4c = new FourColumnsTableFixture("JsonSource4ColsDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "JsonSource4ColsDynamic");
+
+            //Act
+            JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/FourColumns.json", ResourceType.File);
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            d4c.AssertTestData();
+        }
     }
 }
