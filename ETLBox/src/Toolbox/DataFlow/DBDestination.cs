@@ -130,6 +130,7 @@ namespace ALE.ETLBox.DataFlow
             if (TypeInfo.IsDynamic && data.Length > 0)
             {
                 for (int i = 0;i<data.Length;i++) {
+                    if (data[i] == null) continue;
                     foreach (var column in (IDictionary<string, object>)data[i])
                     {
                         int newPropIndex = TableData.DynamicColumnNames.Count;
