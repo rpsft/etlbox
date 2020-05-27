@@ -92,6 +92,7 @@
     <div class="level2"><a class="xref" href="ALE.ETLBox.DataFlowTask.html">DataFlowTask</a></div>
     <div class="level3"><a class="xref" href="ALE.ETLBox.DataFlowTransformation-2.html">DataFlowTransformation</a>&lt;TInput, TInput&gt;</div>
     <div class="level4"><span class="xref">DbMerge&lt;TInput&gt;</span></div>
+      <div class="level5"><a class="xref" href="ALE.ETLBox.DataFlow.DbMerge.html">DbMerge</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -217,7 +218,7 @@
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_DbMerge_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DbMerge&lt;TInput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask where TInput : IMergeableRow, new()</code></pre>
+    <pre><code class="lang-csharp hljs">public class DbMerge&lt;TInput&gt; : DataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowTransformation&lt;TInput, TInput&gt;, IDataFlowLinkSource&lt;TInput&gt;, IDataFlowBatchDestination&lt;TInput&gt;, IDataFlowDestination&lt;TInput&gt;, IDataFlowLinkTarget&lt;TInput&gt;, ITask</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -524,6 +525,31 @@
   </table>
   
   
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_MergeProperties_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.MergeProperties*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_MergeProperties" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.MergeProperties">MergeProperties</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MergeProperties MergeProperties { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ALE.ETLBox.DataFlow.MergeProperties.html">MergeProperties</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_DataFlow_DbMerge_1_SourceBlock_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SourceBlock*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_SourceBlock" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SourceBlock">SourceBlock</h4>
   <div class="markdown level1 summary"></div>
@@ -657,6 +683,53 @@
   </h3>
   
   
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_AreEqual_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.AreEqual*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_AreEqual_System_Object_System_Object_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.AreEqual(System.Object,System.Object)">AreEqual(Object, Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool AreEqual(object self, object other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">self</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="ALE_ETLBox_DataFlow_DbMerge_1_Execute_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Execute*"></a>
   <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_Execute" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.Execute">Execute()</h4>
   <div class="markdown level1 summary"></div>
@@ -686,6 +759,196 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_GetChangeAction_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.GetChangeAction*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_GetChangeAction__0_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.GetChangeAction(`0)">GetChangeAction(TInput)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ChangeAction? GetChangeAction(TInput row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TInput</span></td>
+        <td><span class="parametername">row</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="ALE.ETLBox.DataFlow.ChangeAction.html">ChangeAction</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_GetIsDeletion_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.GetIsDeletion*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_GetIsDeletion__0_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.GetIsDeletion(`0)">GetIsDeletion(TInput)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool GetIsDeletion(TInput row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TInput</span></td>
+        <td><span class="parametername">row</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_GetUniqueId_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.GetUniqueId*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_GetUniqueId__0_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.GetUniqueId(`0)">GetUniqueId(TInput)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetUniqueId(TInput row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TInput</span></td>
+        <td><span class="parametername">row</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_SetChangeAction_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SetChangeAction*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_SetChangeAction__0_System_Nullable_ALE_ETLBox_DataFlow_ChangeAction__" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SetChangeAction(`0,System.Nullable{ALE.ETLBox.DataFlow.ChangeAction})">SetChangeAction(TInput, Nullable&lt;ChangeAction&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetChangeAction(TInput row, ChangeAction? changeAction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TInput</span></td>
+        <td><span class="parametername">row</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="ALE.ETLBox.DataFlow.ChangeAction.html">ChangeAction</a>&gt;</td>
+        <td><span class="parametername">changeAction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_DataFlow_DbMerge_1_SetChangeDate_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SetChangeDate*"></a>
+  <h4 id="ALE_ETLBox_DataFlow_DbMerge_1_SetChangeDate__0_System_DateTime_" data-uid="ALE.ETLBox.DataFlow.DbMerge`1.SetChangeDate(`0,System.DateTime)">SetChangeDate(TInput, DateTime)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetChangeDate(TInput row, DateTime changeDate)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TInput</span></td>
+        <td><span class="parametername">row</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td><span class="parametername">changeDate</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class PropertyInfoExtension
+    <title>Class ITableColumExtensions
    | ETLBox - It's all in the box </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class PropertyInfoExtension
+    <meta name="title" content="Class ITableColumExtensions
    | ETLBox - It's all in the box ">
     <meta name="generator" content="docfx 2.47.0.0">
     
@@ -77,17 +77,17 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.Helper.PropertyInfoExtension">
+            <article class="content wrap" id="_content" data-uid="ALE.ETLBox.Helper.ITableColumExtensions">
   
   
-  <h1 id="ALE_ETLBox_Helper_PropertyInfoExtension" data-uid="ALE.ETLBox.Helper.PropertyInfoExtension" class="text-break">Class PropertyInfoExtension
+  <h1 id="ALE_ETLBox_Helper_ITableColumExtensions" data-uid="ALE.ETLBox.Helper.ITableColumExtensions" class="text-break">Class ITableColumExtensions
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">PropertyInfoExtension</span></div>
+    <div class="level1"><span class="xref">ITableColumExtensions</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -115,21 +115,21 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="ALE.ETLBox.Helper.html">ALE.ETLBox.Helper</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ALE_ETLBox_Helper_PropertyInfoExtension_syntax">Syntax</h5>
+  <h5 id="ALE_ETLBox_Helper_ITableColumExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class PropertyInfoExtension</code></pre>
+    <pre><code class="lang-csharp hljs">public static class ITableColumExtensions</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   
   
-  <a id="ALE_ETLBox_Helper_PropertyInfoExtension_SetValueOrThrow_" data-uid="ALE.ETLBox.Helper.PropertyInfoExtension.SetValueOrThrow*"></a>
-  <h4 id="ALE_ETLBox_Helper_PropertyInfoExtension_SetValueOrThrow_System_Reflection_PropertyInfo_System_Object_System_Object_" data-uid="ALE.ETLBox.Helper.PropertyInfoExtension.SetValueOrThrow(System.Reflection.PropertyInfo,System.Object,System.Object)">SetValueOrThrow(PropertyInfo, Object, Object)</h4>
+  <a id="ALE_ETLBox_Helper_ITableColumExtensions_AsString_" data-uid="ALE.ETLBox.Helper.ITableColumExtensions.AsString*"></a>
+  <h4 id="ALE_ETLBox_Helper_ITableColumExtensions_AsString_ALE_ETLBox_ITableColumn_System_String_System_String_System_String_" data-uid="ALE.ETLBox.Helper.ITableColumExtensions.AsString(ALE.ETLBox.ITableColumn,System.String,System.String,System.String)">AsString(ITableColumn, String, String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetValueOrThrow(this PropertyInfo pi, object obj, object value)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string AsString(this ITableColumn column, string tblName = &quot;&quot;, string prefix = &quot;&quot;, string suffix = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -142,31 +142,51 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
-        <td><span class="parametername">pi</span></td>
+        <td><a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a></td>
+        <td><span class="parametername">column</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">obj</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tblName</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">value</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">prefix</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">suffix</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="ALE_ETLBox_Helper_PropertyInfoExtension_TrySetValue_" data-uid="ALE.ETLBox.Helper.PropertyInfoExtension.TrySetValue*"></a>
-  <h4 id="ALE_ETLBox_Helper_PropertyInfoExtension_TrySetValue_System_Reflection_PropertyInfo_System_Object_System_Object_System_Type_" data-uid="ALE.ETLBox.Helper.PropertyInfoExtension.TrySetValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Type)">TrySetValue(PropertyInfo, Object, Object, Type)</h4>
+  <a id="ALE_ETLBox_Helper_ITableColumExtensions_AsString_" data-uid="ALE.ETLBox.Helper.ITableColumExtensions.AsString*"></a>
+  <h4 id="ALE_ETLBox_Helper_ITableColumExtensions_AsString_System_Collections_Generic_IEnumerable_ALE_ETLBox_ITableColumn__System_String_System_String_System_String_" data-uid="ALE.ETLBox.Helper.ITableColumExtensions.AsString(System.Collections.Generic.IEnumerable{ALE.ETLBox.ITableColumn},System.String,System.String,System.String)">AsString(IEnumerable&lt;ITableColumn&gt;, String, String, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void TrySetValue(this PropertyInfo pi, object obj, object value, Type enumType = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string AsString(this IEnumerable&lt;ITableColumn&gt; columns, string tblName = &quot;&quot;, string prefix = &quot;&quot;, string suffix = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -179,23 +199,95 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
-        <td><span class="parametername">pi</span></td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a>&gt;</td>
+        <td><span class="parametername">columns</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">obj</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tblName</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">value</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">prefix</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">enumType</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">suffix</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ALE_ETLBox_Helper_ITableColumExtensions_AsStringWithNewLine_" data-uid="ALE.ETLBox.Helper.ITableColumExtensions.AsStringWithNewLine*"></a>
+  <h4 id="ALE_ETLBox_Helper_ITableColumExtensions_AsStringWithNewLine_System_Collections_Generic_IEnumerable_ALE_ETLBox_ITableColumn__System_String_System_String_System_String_" data-uid="ALE.ETLBox.Helper.ITableColumExtensions.AsStringWithNewLine(System.Collections.Generic.IEnumerable{ALE.ETLBox.ITableColumn},System.String,System.String,System.String)">AsStringWithNewLine(IEnumerable&lt;ITableColumn&gt;, String, String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string AsStringWithNewLine(this IEnumerable&lt;ITableColumn&gt; columns, string tblName = &quot;&quot;, string prefix = &quot;&quot;, string suffix = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="ALE.ETLBox.ITableColumn.html">ITableColumn</a>&gt;</td>
+        <td><span class="parametername">columns</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tblName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">prefix</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">suffix</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>

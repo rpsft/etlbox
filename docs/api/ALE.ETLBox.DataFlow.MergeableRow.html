@@ -82,8 +82,9 @@
   
   <h1 id="ALE_ETLBox_DataFlow_MergeableRow" data-uid="ALE.ETLBox.DataFlow.MergeableRow" class="text-break">Class MergeableRow
   </h1>
-  <div class="markdown level0 summary"><p>Inherit from this class if you want to use your data object with a DBMerge.
-This implementation needs that you have flagged the id properties with the IdColumn attribute
+  <div class="markdown level0 summary"><p>Inherit from this class if you want to use your data object with a DBMerge,
+but don't want to implement <a class="xref" href="ALE.ETLBox.DataFlow.IMergeableRow.html">IMergeableRow</a> yourself.
+You still needs that you have flagged the id properties with the IdColumn attribute
 and the properties use to identify equal object flagged with the CompareColumn attribute.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -92,14 +93,16 @@ and the properties use to identify equal object flagged with the CompareColumn a
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">MergeableRow</span></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="ALE.ETLBox.DataFlow.IMergeableRow.html">IMergeableRow</a></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -118,19 +121,7 @@ and the properties use to identify equal object flagged with the CompareColumn a
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
   <h5 id="ALE_ETLBox_DataFlow_MergeableRow_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class MergeableRow : IMergeableRow</code></pre>
-  </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_MergeableRow__ctor_" data-uid="ALE.ETLBox.DataFlow.MergeableRow.#ctor*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeableRow__ctor" data-uid="ALE.ETLBox.DataFlow.MergeableRow.#ctor">MergeableRow()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MergeableRow()</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class MergeableRow</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -187,141 +178,6 @@ and the properties use to identify equal object flagged with the CompareColumn a
       </tr>
     </tbody>
   </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_MergeableRow_IsDeletion_" data-uid="ALE.ETLBox.DataFlow.MergeableRow.IsDeletion*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeableRow_IsDeletion" data-uid="ALE.ETLBox.DataFlow.MergeableRow.IsDeletion">IsDeletion</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsDeletion { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_MergeableRow_UniqueId_" data-uid="ALE.ETLBox.DataFlow.MergeableRow.UniqueId*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeableRow_UniqueId" data-uid="ALE.ETLBox.DataFlow.MergeableRow.UniqueId">UniqueId</h4>
-  <div class="markdown level1 summary"><p>The UniqueId of the object. This is a concatenation evaluated from the properties
-which have the IdColumn attribute. if using an object as type, it is converted into a string
-using the ToString() method of the object.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string UniqueId { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_MergeableRow_Equals_" data-uid="ALE.ETLBox.DataFlow.MergeableRow.Equals*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeableRow_Equals_System_Object_" data-uid="ALE.ETLBox.DataFlow.MergeableRow.Equals(System.Object)">Equals(Object)</h4>
-  <div class="markdown level1 summary"><p>Overriding the Equals implementation. The Equals function is used identify records
-that don't need to be updated. Only properties marked with the CompareColumn attribute
-are considered for the comparison. If the property is of type object, the Equals() method of the object is used.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool Equals(object other)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">other</span></td>
-        <td><p>Object to compare with. Should be of the same type.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>True if all properties marked with CompareColumn attribute are equal.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
-  
-  
-  <a id="ALE_ETLBox_DataFlow_MergeableRow_GetHashCode_" data-uid="ALE.ETLBox.DataFlow.MergeableRow.GetHashCode*"></a>
-  <h4 id="ALE_ETLBox_DataFlow_MergeableRow_GetHashCode" data-uid="ALE.ETLBox.DataFlow.MergeableRow.GetHashCode">GetHashCode()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="ALE.ETLBox.DataFlow.IMergeableRow.html">IMergeableRow</a>
-  </div>
 </article>
           </div>
           

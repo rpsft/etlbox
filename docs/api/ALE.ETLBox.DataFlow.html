@@ -97,8 +97,6 @@ The non generic implementation uses dynamic objects.</p>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Aggregation-2.html">Aggregation&lt;TInput, TOutput&gt;</a></h4>
       <section><p>Aggregates data by the given aggregation method.</p>
 </section>
-      <h4><a class="xref" href="ALE.ETLBox.DataFlow.AttributeProperties.html">AttributeProperties</a></h4>
-      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.BlockTransformation.html">BlockTransformation</a></h4>
       <section><p>A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
 is execution and the result posted into the targets.
@@ -194,6 +192,8 @@ If you need other data types, use the generic DbDestination instead.</p>
       <section><p>A database destination represents a table where data from the flow is inserted.
 Inserts are done in batches (using Bulk insert or an equivalent).</p>
 </section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbMerge.html">DbMerge</a></h4>
+      <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.DbMerge-1.html">DbMerge&lt;TInput&gt;</a></h4>
       <section><p>Inserts, updates and (optionally) deletes data in db target.</p>
 </section>
@@ -292,8 +292,9 @@ the MemorySource&lt;TOutput&gt; object instead.</p>
 Data is read a as string from the source and dynamically converted into the corresponding data format.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeableRow.html">MergeableRow</a></h4>
-      <section><p>Inherit from this class if you want to use your data object with a DBMerge.
-This implementation needs that you have flagged the id properties with the IdColumn attribute
+      <section><p>Inherit from this class if you want to use your data object with a DBMerge,
+but don't want to implement <a class="xref" href="ALE.ETLBox.DataFlow.IMergeableRow.html">IMergeableRow</a> yourself.
+You still needs that you have flagged the id properties with the IdColumn attribute
 and the properties use to identify equal object flagged with the CompareColumn attribute.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoin.html">MergeJoin</a></h4>
@@ -308,6 +309,8 @@ a dynamic object as input and merged output.</p>
       <section><p>Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.</p>
 </section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeJoinTarget-1.html">MergeJoinTarget&lt;TInput&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="ALE.ETLBox.DataFlow.MergeProperties.html">MergeProperties</a></h4>
       <section></section>
       <h4><a class="xref" href="ALE.ETLBox.DataFlow.Multicast.html">Multicast</a></h4>
       <section><p>A multicast duplicates data from the input into two outputs. The non generic version or the multicast
