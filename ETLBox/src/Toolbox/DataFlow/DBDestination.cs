@@ -35,7 +35,7 @@ namespace ALE.ETLBox.DataFlow
         bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         TableData<TInput> TableData { get; set; }
-        bool WereDynamicColumnsAdded { get; set; }
+        int WereDynamicColumnsAdded { get; set; }
 
         public IConnectionManager BulkInsertConnectionManager { get; set; }
         public DbDestination()
@@ -127,11 +127,16 @@ namespace ALE.ETLBox.DataFlow
 
         private void TryAddDynamicColumnsToTableDef(TInput[] data)
         {
-            if (!WereDynamicColumnsAdded && TypeInfo.IsDynamic && data.Length > 0)
+            if (TypeInfo.IsDynamic && data.Length > 0)
             {
-                foreach (var column in (IDictionary<string, object>)data[0])
-                    TableData.DynamicColumnNames.Add(column.Key);
-                WereDynamicColumnsAdded = true;
+                for (int i = 0;i<data.Length;i++) {
+                    foreach (var column in (IDictionary<string, object>)data[i])
+                    {
+                        int newPropIndex = TableData.DynamicColumnNames.Count;
+                        if (!TableData.DynamicColumnNames.ContainsKey(column.Key))
+                            TableData.DynamicColumnNames.Add(column.Key, newPropIndex);
+                    }
+                }
             }
         }
 
@@ -148,12 +153,11 @@ namespace ALE.ETLBox.DataFlow
                 else if (TypeInfo.IsDynamic)
                 {
                     IDictionary<string, object> propertyValues = (IDictionary<string, object>)CurrentRow;
-                    rowResult = new object[propertyValues.Count];
-                    int index = 0;
+                    rowResult = new object[TableData.DynamicColumnNames.Count];
                     foreach (var prop in propertyValues)
                     {
-                        rowResult[index] = prop.Value;
-                        index++;
+                        int columnIndex = TableData.DynamicColumnNames[prop.Key];
+                        rowResult[columnIndex] = prop.Value;
                     }
                 }
                 else

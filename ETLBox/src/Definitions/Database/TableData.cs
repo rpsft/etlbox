@@ -38,7 +38,7 @@ namespace ALE.ETLBox
                     }
                     else if (TypeInfo.IsDynamic)
                     {
-                        if (DynamicColumnNames.Contains(col.Name))
+                        if (DynamicColumnNames.ContainsKey(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
                     }
                     else
@@ -51,7 +51,7 @@ namespace ALE.ETLBox
 
         public List<object[]> Rows { get; set; }
         public object[] CurrentRow { get; set; }
-        public List<string> DynamicColumnNames { get; set; } = new List<string>();
+        public Dictionary<string,int> DynamicColumnNames { get; set; } = new Dictionary<string,int>();
         int ReadIndex { get; set; }
         TableDefinition Definition { get; set; }
         bool HasDefinition => Definition != null;
@@ -117,7 +117,7 @@ namespace ALE.ETLBox
             }
             else if (TypeInfo.IsDynamic)
             {
-                int ix = DynamicColumnNames.FindIndex(n =>  n == name);
+                int ix = DynamicColumnNames[name];//.FindIndex(n =>  n == name);
                 if (HasIDColumnIndex)
                     if (ix >= IDColumnIndex) ix++;
                 return ix;
