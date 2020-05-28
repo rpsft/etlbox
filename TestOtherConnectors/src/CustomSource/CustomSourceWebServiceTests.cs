@@ -18,7 +18,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
     public class CustomSourceWebServiceTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CustomSourceWebServiceTests(DataFlowDatabaseFixture dbFixture)
+        public CustomSourceWebServiceTests(DataFlowDatabaseFixture _dbFixture)
         {
         }
 

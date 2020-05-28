@@ -36,7 +36,7 @@ namespace ALE.ETLBox.ConnectionManager
             InitObjects();
             TableName = tableName;
             GetSourceAndDestColumnNames(data);
-            AppendBeginSql(tableName);
+            AppendBeginSql();
             ReadDataAndCreateQuery(data);
             AppendEndSql();
             return QueryText.ToString();
@@ -118,7 +118,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        private void AppendBeginSql(string tableName)
+        private void AppendBeginSql()
         {
             QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
             if (IsAccessDatabase)

@@ -34,7 +34,6 @@ namespace ALE.ETLBox.DataFlow
         bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         TableData<TInput> TableData { get; set; }
-        int WereDynamicColumnsAdded { get; set; }
 
         public IConnectionManager BulkInsertConnectionManager { get; set; }
         public DbDestination()

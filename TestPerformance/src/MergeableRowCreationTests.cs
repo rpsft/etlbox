@@ -10,7 +10,7 @@ namespace ALE.ETLBoxTests.Performance
     {
         private readonly ITestOutputHelper output;
 
-        public MergeableRowCreationTests(PerformanceDatabaseFixture dbFixture, ITestOutputHelper output)
+        public MergeableRowCreationTests(PerformanceDatabaseFixture _dbFixture, ITestOutputHelper output)
         {
             this.output = output;
         }
@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.Performance
             public string ColKey2 { get; set; }
             public string ColValue1 { get; set; }
             public string ColValue2 { get; set; }
-            public new string UniqueId => $"{ColKey1}{ColKey2}-hidesPropThatUsesReflection";
+            public string UniqueId => $"{ColKey1}{ColKey2}-hidesPropThatUsesReflection";
             public new bool Equals(object other)
             {
                 var o = other as MergeableTestHidingRefĺection;

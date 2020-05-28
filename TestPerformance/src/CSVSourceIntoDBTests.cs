@@ -39,7 +39,7 @@ namespace ALE.ETLBoxTests.Performance
 
 
 
-        public CsvSourceIntoDBTests(PerformanceDatabaseFixture dbFixture, ITestOutputHelper output)
+        public CsvSourceIntoDBTests(PerformanceDatabaseFixture _dbFixture, ITestOutputHelper output)
         {
             this.output = output;
         }
@@ -135,16 +135,14 @@ namespace ALE.ETLBoxTests.Performance
             {
                 if (count++ % 50 == 0)
                 {
-                    using (Process proc = Process.GetCurrentProcess())
+                    using Process proc = Process.GetCurrentProcess();
+                    memAfter = proc.WorkingSet64;
+                    if (startCheck)
                     {
-                        memAfter = proc.WorkingSet64;
-                        if (startCheck)
-                        {
-                            memBefore = memAfter;
-                            startCheck = false;
-                        }
-                        Assert.True(memAfter < (memBefore + (memBefore * deviation)));
+                        memBefore = memAfter;
+                        startCheck = false;
                     }
+                    Assert.True(memAfter < (memBefore + (memBefore * deviation)));
                 }
             };
 
@@ -180,13 +178,15 @@ namespace ALE.ETLBoxTests.Performance
         }
 
         [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
-        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
+        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize)
         {
             //Arrange
             ReCreateDestinationTable(connection, "MemoryDestination");
 
-            var source = new MemorySource<CSVData>();
-            source.Data = GenerateWithYield(numberOfRows);
+            var source = new MemorySource<CSVData>
+            {
+                Data = GenerateWithYield(numberOfRows)
+            };
             var dest = new DbDestination<CSVData>(connection, "MemoryDestination", batchSize);
 
             //Act

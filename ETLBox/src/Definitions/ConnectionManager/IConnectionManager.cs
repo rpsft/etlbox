@@ -40,5 +40,6 @@ namespace ALE.ETLBox.ConnectionManager
         bool SupportComputedColumns { get; }
         bool IsOdbcConnection { get; }
         TableDefinition ReadTableDefinition(ObjectNameDescriptor TN);
+        bool CheckIfTableOrViewExists(string objectName);
     }
 }

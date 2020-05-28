@@ -37,6 +37,11 @@ namespace ALE.ETLBox.ConnectionManager
             throw new NotImplementedException();
         }
 
+        public virtual bool CheckIfTableOrViewExists(string objectName)
+        {
+            throw new NotImplementedException();
+        }
+
         public DbConnectionManager()
         {
         }
