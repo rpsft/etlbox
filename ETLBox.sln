@@ -31,13 +31,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SqlServer", "..\etlb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SSAS", "..\etlbox.connectors\ETLBox.SSAS\ETLBox.SSAS.csproj", "{EE07980D-9A26-4D6C-B7B3-DD7D84526610}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.MySql", "..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj", "{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.MySql", "..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj", "{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Postgres", "..\etlbox.connectors\ETLBox.Postgres\ETLBox.Postgres.csproj", "{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Postgres", "..\etlbox.connectors\ETLBox.Postgres\ETLBox.Postgres.csproj", "{99FE52B4-4BA4-48EF-91DF-916EF5CD3D81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.SQLite", "..\etlbox.connectors\ETLBox.SQLite\ETLBox.SQLite.csproj", "{EB56B396-0F2C-4003-9856-BF589C73FDA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SQLite", "..\etlbox.connectors\ETLBox.SQLite\ETLBox.SQLite.csproj", "{EB56B396-0F2C-4003-9856-BF589C73FDA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Odbc", "..\etlbox.connectors\ETLBox.Odbc\ETLBox.Odbc.csproj", "{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Odbc", "..\etlbox.connectors\ETLBox.Odbc\ETLBox.Odbc.csproj", "{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Csv", "ETLBox.Csv\ETLBox.Csv.csproj", "{9E056CD2-06ED-4D48-903E-533CFA02BB5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Xml", "ETLBox.Xml\ETLBox.Xml.csproj", "{4BB3F06C-CC05-4043-9D0E-9503970E1530}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Json", "ETLBox.Json\ETLBox.Json.csproj", "{B6B6AEC9-8699-40ED-B19E-CD098F77413F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Excel", "ETLBox.Excel\ETLBox.Excel.csproj", "{AF860949-A402-451D-A5CA-F8199D4FB06B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +124,22 @@ Global
 		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4F6E66E-A5EF-45D7-B0BA-98C79C1A43B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E056CD2-06ED-4D48-903E-533CFA02BB5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E056CD2-06ED-4D48-903E-533CFA02BB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E056CD2-06ED-4D48-903E-533CFA02BB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E056CD2-06ED-4D48-903E-533CFA02BB5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB3F06C-CC05-4043-9D0E-9503970E1530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB3F06C-CC05-4043-9D0E-9503970E1530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB3F06C-CC05-4043-9D0E-9503970E1530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB3F06C-CC05-4043-9D0E-9503970E1530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6B6AEC9-8699-40ED-B19E-CD098F77413F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6B6AEC9-8699-40ED-B19E-CD098F77413F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6B6AEC9-8699-40ED-B19E-CD098F77413F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6B6AEC9-8699-40ED-B19E-CD098F77413F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,7 +14,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected ActionBlock<TInput> TargetAction { get; set; }
         protected List<Task> PredecessorCompletions { get; set; } = new List<Task>();
-        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
+        public ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public void AddPredecessorCompletion(Task completion)
         {

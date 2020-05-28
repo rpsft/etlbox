@@ -5,22 +5,22 @@ using System.Reflection;
 
 namespace ALE.ETLBox.DataFlow
 {
-    internal class TypeInfo
+    public class TypeInfo
     {
-        internal PropertyInfo[] Properties { get; set; }
+        public PropertyInfo[] Properties { get; set; }
         protected Dictionary<string, int> PropertyIndex { get; set; } = new Dictionary<string, int>();
         internal int PropertyLength { get; set; }
-        internal bool IsArray { get; set; } = true;
-        internal bool IsDynamic { get; set; }
+        public bool IsArray { get; set; } = true;
+        public bool IsDynamic { get; set; }
         internal int ArrayLength { get; set; }
 
         internal Type Typ { get; set; }
-        internal TypeInfo(Type typ)
+        public TypeInfo(Type typ)
         {
             Typ = typ;
         }
 
-        internal TypeInfo GatherTypeInfo()
+        public TypeInfo GatherTypeInfo()
         {
             IsArray = Typ.IsArray;
             if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(Typ))
