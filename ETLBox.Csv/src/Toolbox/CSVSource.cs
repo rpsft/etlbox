@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using ETLBox.DataFlow;
 using System;
 using System.Dynamic;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Csv
 {
     /// <summary>
     /// Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.

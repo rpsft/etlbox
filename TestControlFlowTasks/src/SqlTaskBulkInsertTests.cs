@@ -2,6 +2,8 @@ using ETLBox;
 using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
+using ETLBox.Odbc;
+using ETLBox.SQLite;
 using ETLBoxTests.Fixtures;
 using System.Collections.Generic;
 using Xunit;

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DF = ETLBox.DataFlow;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Excel
 {
-    internal class ExcelTypeInfo : TypeInfo
+    internal class ExcelTypeInfo : DF.TypeInfo
     {
         internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; } = new Dictionary<int, int>();
         internal Dictionary<string, int> ExcelColumnName2PropertyIndex { get; set; } = new Dictionary<string, int>();

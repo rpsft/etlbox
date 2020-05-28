@@ -2,6 +2,7 @@
 using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
+using ETLBox.SQLite;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xunit;

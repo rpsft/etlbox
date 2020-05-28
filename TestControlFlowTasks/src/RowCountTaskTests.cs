@@ -1,6 +1,7 @@
 using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
+using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
 using System.Collections.Generic;
 using Xunit;

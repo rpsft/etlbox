@@ -1,10 +1,11 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using ETLBox.DataFlow;
 using System;
 using System.Dynamic;
 using System.Globalization;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Csv
 {
     /// <summary>
     /// A Csv destination defines a csv file where data from the flow is inserted.

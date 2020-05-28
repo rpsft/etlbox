@@ -3,6 +3,7 @@ using ETLBox.ControlFlow;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
 using ETLBox.Logging;
+using ETLBox.SqlServer;
 using System;
 using Xunit;
 

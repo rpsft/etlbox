@@ -2,6 +2,9 @@ using ETLBox;
 using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
+using ETLBox.MySql;
+using ETLBox.Postgres;
+using ETLBox.SqlServer;
 using System.Collections.Generic;
 using Xunit;
 

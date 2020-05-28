@@ -1,6 +1,8 @@
 using ETLBox.ConnectionManager;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
+using ETLBox.SqlServer;
+using ETLBox.Xml;
 using ETLBoxTests.Fixtures;
 using System.Dynamic;
 using System.IO;

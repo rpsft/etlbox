@@ -3,6 +3,7 @@ using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.SqlServer;
 using ETLBox.Helper;
+using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
 using Xunit;
 

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace ETLBox.Helper
+namespace ETLBox.Json
 {
     /// <summary>
     /// A JsonConverter that support json path expression in JsonProperty attributes.
@@ -22,7 +22,7 @@ namespace ETLBox.Helper
     ///     public string Col2 { get; set; }
     /// }
     /// </code>
-    /// </example>    
+    /// </example>
     /// <remarks>
     /// https://stackoverflow.com/questions/33088462/can-i-specify-a-path-in-an-attribute-to-map-a-property-in-my-class-to-a-child-pr
     /// </remarks>"

@@ -1,4 +1,4 @@
-﻿namespace ETLBox.DataFlow
+﻿namespace ETLBox.Excel
 {
     public class ExcelRange
     {

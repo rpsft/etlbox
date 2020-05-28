@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using ETLBox.DataFlow;
+using Newtonsoft.Json;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Json
 {
     /// <summary>
     /// Reads data from a json source. This can be any http resource or a file.

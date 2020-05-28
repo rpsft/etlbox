@@ -1,4 +1,5 @@
-﻿using ETLBox.Helper;
+﻿using ETLBox.DataFlow;
+using ETLBox.Helper;
 using ExcelDataReader;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Excel
 {
     /// <summary>
     /// Reads data from a excel source. While reading the data from the file, data is also asnychronously posted into the targets.

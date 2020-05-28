@@ -4,6 +4,8 @@ using ETLBox.Helper;
 using ETLBoxTests.Fixtures;
 using CsvHelper.Configuration.Attributes;
 using Xunit;
+using ETLBox.SqlServer;
+using ETLBox.Csv;
 
 namespace ETLBoxTests.DataFlowTests
 {

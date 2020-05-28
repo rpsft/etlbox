@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Excel
 {
     /// <summary>
     /// This attribute defines either which column index is mapped to the property or the

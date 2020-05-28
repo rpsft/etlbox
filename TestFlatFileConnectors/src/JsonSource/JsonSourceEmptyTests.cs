@@ -1,4 +1,5 @@
 using ETLBox.DataFlow;
+using ETLBox.Json;
 using Xunit;
 
 namespace ETLBoxTests.DataFlowTests

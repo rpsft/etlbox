@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ETLBox.DataFlow;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -7,7 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Xml
 {
     /// <summary>
     /// Reads data from a xml source. This can be any http resource or a file.

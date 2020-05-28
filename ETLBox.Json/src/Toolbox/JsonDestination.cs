@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using ETLBox.DataFlow;
+using Newtonsoft.Json;
 using System.Dynamic;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.Json
 {
     /// <summary>
     /// A Json destination defines a json file where data from the flow is inserted. 

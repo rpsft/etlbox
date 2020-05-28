@@ -2,6 +2,7 @@ using ETLBox;
 using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
+using ETLBox.MySql;
 using ETLBoxTests.Fixtures;
 using System.Collections.Generic;
 using Xunit;
