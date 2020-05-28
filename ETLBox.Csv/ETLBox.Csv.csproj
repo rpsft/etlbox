@@ -6,6 +6,9 @@
     <Authors>Andreas Lennartz</Authors>
     <Company>ETLBox Office</Company>
     <Copyright>Andeas Lennartz</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
+    <Description>ETLBox is a lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. This connector let you read and write data from csv files. Only works in combination with the ETLBox package.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
