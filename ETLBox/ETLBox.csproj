@@ -17,7 +17,7 @@ BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.</PackageRele
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
-    <Company>TheBoxOffice</Company>
+    <Company>ETLBox Office</Company>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
