@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// Define your own source block.

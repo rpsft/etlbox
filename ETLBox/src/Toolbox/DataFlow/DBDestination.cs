@@ -1,11 +1,11 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// A database destination represents a table where data from the flow is inserted.

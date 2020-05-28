@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// This destination if used as a trash.

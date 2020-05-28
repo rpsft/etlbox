@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBoxTests.Performance
+﻿namespace ETLBoxTests.Performance
 {
     public class CSVData
     {

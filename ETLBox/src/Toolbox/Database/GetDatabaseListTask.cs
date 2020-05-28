@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ETLBox.ControlFlow
 {
     /// <summary>
     /// Returns a list of all user databases on the server. Make sure to connect with the correct permissions!

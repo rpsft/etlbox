@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ETLBox.ControlFlow
 {
     /// <summary>
     /// Drops a procedure. Use DropIfExists to drop a procedure only if it exists.

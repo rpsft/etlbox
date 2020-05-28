@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute is used to identify the grouping property for aggregations. The passed column name

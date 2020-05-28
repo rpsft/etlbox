@@ -1,7 +1,7 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
+using ETLBox.ConnectionManager;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
+using ETLBoxTests.Fixtures;
 using Moq;
 using Moq.Protected;
 using System;
@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
     public class JsonDestinationWebServiceTests

@@ -1,13 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
+using ETLBox.Logging;
+using ETLBoxTests.Fixtures;
 using System;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
     public class RowTransformationErrorLinkingTests

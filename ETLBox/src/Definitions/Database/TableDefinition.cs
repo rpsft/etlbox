@@ -1,11 +1,11 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public class TableDefinition
     {

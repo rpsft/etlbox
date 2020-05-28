@@ -1,9 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow.SqlServer;
-using ALE.ETLBox.Helper;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow.SqlServer;
+using ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
+namespace ETLBoxTests.ControlFlowTests.SqlServer
 {
     [Collection("SSAS ControlFlow")]
     public class XMLATaskTests

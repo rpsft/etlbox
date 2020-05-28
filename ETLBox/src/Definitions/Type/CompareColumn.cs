@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines if the column is included in the comparison to identify

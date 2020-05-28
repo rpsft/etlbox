@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using System;
 using System.Data;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public class TableColumn : ITableColumn, IColumnMapping
     {

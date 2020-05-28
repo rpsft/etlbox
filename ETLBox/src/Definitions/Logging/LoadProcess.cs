@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
     public class LoadProcess
     {

@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.Helper;
+﻿using ETLBox;
+using ETLBox.Helper;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ALE.ETLBoxTests.Performance
+namespace ETLBoxTests.Performance
 {
     public static class BigDataCsvSource
     {

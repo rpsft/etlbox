@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     internal class XmlTypeInfo : TypeInfo
     {

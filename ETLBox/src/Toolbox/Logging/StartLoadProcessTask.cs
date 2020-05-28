@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
     /// <summary>
     /// Starts a load process.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     internal class AggregationTypeInfo : MappingTypeInfo
     {

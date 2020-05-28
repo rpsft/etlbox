@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Logging;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.Logging;
 using NLog;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ETLBox.ControlFlow
 {
     /// <summary>
     /// Contains static information which affects all ETLBox tasks.

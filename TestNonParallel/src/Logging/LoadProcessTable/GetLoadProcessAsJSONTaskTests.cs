@@ -1,12 +1,12 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.Helper;
+using ETLBox.Logging;
 using Newtonsoft.Json.Linq;
 using System;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ETLBoxTests.Logging
 {
     [Collection("Logging")]
     public class GetLoadProcessAsJSONTaskTests : IDisposable

@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ETLBox.ControlFlow
 {
     /// <summary>
     /// Creates an index if the index doesn't exists, otherwise the index is dropped and recreated.

@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
     /// <summary>
     /// Returns the content of the LoadProcess table as JSON.

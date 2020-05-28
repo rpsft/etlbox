@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Fixtures
+namespace ETLBoxTests.Fixtures
 {
     [CollectionDefinition("ControlFlow")]
     public class ControlFlowCollectionClass : ICollectionFixture<ControlFlowDatabaseFixture> { }

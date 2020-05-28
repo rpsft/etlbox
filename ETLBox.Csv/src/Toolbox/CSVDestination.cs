@@ -4,7 +4,7 @@ using System;
 using System.Dynamic;
 using System.Globalization;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// A Csv destination defines a csv file where data from the flow is inserted.

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public class JsonProperty2JsonPath
     {

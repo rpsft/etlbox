@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ETLBox.ControlFlow
 {
     /// <summary>
     /// Drops a table. Use DropIfExists to drop a table only if it exists.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines either which column index is mapped to the property or the

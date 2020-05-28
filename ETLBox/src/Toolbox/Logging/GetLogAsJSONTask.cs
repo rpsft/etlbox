@@ -1,10 +1,10 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
     /// <summary>
     /// Returns the content of the etl.Log table as a JSON string.

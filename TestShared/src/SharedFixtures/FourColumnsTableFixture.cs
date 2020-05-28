@@ -1,12 +1,12 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+﻿using ETLBox;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.Helper;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Fixtures
+namespace ETLBoxTests.Fixtures
 {
     public class FourColumnsTableFixture
     {

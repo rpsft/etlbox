@@ -1,9 +1,9 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
+using ETLBox;
+using ETLBox.ControlFlow;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
     public class NoConnectionManagerTests

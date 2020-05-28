@@ -1,10 +1,10 @@
-﻿using ALE.ETLBox.DataFlow;
+﻿using ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public abstract class DataFlowTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {

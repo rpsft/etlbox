@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public class DatabaseHelper
     {

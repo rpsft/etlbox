@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net.Http;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     public abstract class DataFlowStreamSource<TOutput> : DataFlowSource<TOutput>
     {

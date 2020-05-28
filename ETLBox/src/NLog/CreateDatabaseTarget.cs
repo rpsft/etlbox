@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using NLog.Targets;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
 
     public class CreateDatabaseTarget

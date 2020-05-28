@@ -1,7 +1,7 @@
-using ALE.ETLBox.ControlFlow;
+using ETLBox.ControlFlow;
 using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace ETLBoxTests.ControlFlowTests
 {
     [Collection("Generic ControlFlow")]
     public class CustomTaskTests

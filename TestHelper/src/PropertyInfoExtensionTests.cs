@@ -1,9 +1,9 @@
-using ALE.ETLBox.Helper;
+using ETLBox.Helper;
 using System;
 using System.Reflection;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace ETLBoxTests
 {
 
     public class PropertyInfoExtensionsTests

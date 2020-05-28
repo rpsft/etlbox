@@ -1,16 +1,16 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
+﻿using ETLBox;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
+using ETLBox.Logging;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ETLBoxTests.Logging
 {
     [Collection("Logging")]
     public class DataFlowLoggingTests : IDisposable

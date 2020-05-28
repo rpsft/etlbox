@@ -1,8 +1,8 @@
-using ALE.ETLBox.DataFlow;
+using ETLBox.DataFlow;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
     public class CustomDestinationNullHandlingTests

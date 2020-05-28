@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ETLBox.ConnectionManager
 {
     public static class DataTypeConverter
     {

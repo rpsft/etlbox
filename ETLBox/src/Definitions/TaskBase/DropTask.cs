@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.ControlFlow
+﻿namespace ETLBox.ControlFlow
 {
     public abstract class DropTask<T> : GenericTask, ITask where T : IfExistsTask, new()
     {

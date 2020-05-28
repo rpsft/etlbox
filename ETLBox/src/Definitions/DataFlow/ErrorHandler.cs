@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     public class ErrorHandler
     {

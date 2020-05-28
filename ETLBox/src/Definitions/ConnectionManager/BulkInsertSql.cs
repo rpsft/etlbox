@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ETLBox.ConnectionManager
 {
     /// <summary>
     /// This class creates the necessary sql statements that simulate the missing bulk insert function in Odbc connections.

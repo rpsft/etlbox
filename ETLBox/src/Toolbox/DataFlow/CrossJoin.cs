@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 

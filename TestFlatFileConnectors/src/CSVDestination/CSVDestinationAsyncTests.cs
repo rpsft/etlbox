@@ -1,10 +1,10 @@
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
     public class CsvDestinationAsyncTests

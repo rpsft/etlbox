@@ -2,7 +2,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace ETLBoxTests
 {
     public class CheckProjectFiles
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public static class PropertyInfoExtension
     {

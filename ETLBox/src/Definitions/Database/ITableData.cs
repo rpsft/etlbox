@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
 
     public interface ITableData : IDisposable, IDataReader

@@ -3,7 +3,7 @@ using System.Linq;
 using TSQL;
 using TSQL.Statements;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public static class SqlParser
     {

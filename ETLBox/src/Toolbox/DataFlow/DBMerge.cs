@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// Inserts, updates and (optionally) deletes data in db target.

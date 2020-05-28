@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     public abstract class DataFlowStreamDestination<TInput> : DataFlowDestination<TInput>
     {

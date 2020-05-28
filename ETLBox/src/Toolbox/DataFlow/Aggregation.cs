@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// Aggregates data by the given aggregation method.

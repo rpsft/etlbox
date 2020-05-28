@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ETLBox.ControlFlow
 {
     /// <summary>
     /// Creates or updates a procedure.

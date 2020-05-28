@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     /// <summary>
     /// The generic ETLBox Exception. See inner exception for more details.

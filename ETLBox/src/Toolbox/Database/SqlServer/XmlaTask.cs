@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using System;
 
-namespace ALE.ETLBox.ControlFlow.SqlServer
+namespace ETLBox.ControlFlow.SqlServer
 {
     /// <summary>
     /// This task can exeucte any XMLA.

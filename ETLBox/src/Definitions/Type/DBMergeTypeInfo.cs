@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     internal class DBMergeTypeInfo : TypeInfo
     {

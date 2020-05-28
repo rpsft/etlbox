@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
     /// <summary>
     /// Used this task for custom log messages.

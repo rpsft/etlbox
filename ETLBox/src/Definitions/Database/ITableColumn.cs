@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox
+﻿namespace ETLBox
 {
     public interface ITableColumn
     {

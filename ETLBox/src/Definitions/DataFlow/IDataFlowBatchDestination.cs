@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿namespace ETLBox.DataFlow
 {
     public interface IDataFlowBatchDestination<TInput> : IDataFlowDestination<TInput>
     {

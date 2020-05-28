@@ -1,14 +1,14 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
+﻿using ETLBox;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace ALE.ETLBoxTests.Performance
+namespace ETLBoxTests.Performance
 {
     [Collection("Performance")]
     public class DbMergeDeleteTests

@@ -1,12 +1,12 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
+using ETLBox;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.Helper;
+using ETLBoxTests.Fixtures;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace ETLBoxTests.ControlFlowTests
 {
     [Collection("ControlFlow")]
     public class DropSchemaTaskTests

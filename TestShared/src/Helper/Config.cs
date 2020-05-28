@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
 
     public static class Config

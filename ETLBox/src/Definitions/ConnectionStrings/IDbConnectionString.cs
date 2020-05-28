@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox
+﻿namespace ETLBox
 {
     /// <summary>
     /// The generic defintion of a connection string

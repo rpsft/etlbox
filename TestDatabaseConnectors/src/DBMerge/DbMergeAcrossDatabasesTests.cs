@@ -1,13 +1,13 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
+using ETLBox;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
+using ETLBoxTests.Fixtures;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow Source and Destination")]
     public class DbMergeAcrossDatabasesTests

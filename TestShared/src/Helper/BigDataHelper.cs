@@ -1,11 +1,11 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Logging;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public class BigDataHelper
     {

@@ -1,14 +1,14 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.ControlFlow.SqlServer;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
+using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.SqlServer;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
+using ETLBoxTests.Fixtures;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     public sealed class IgnoreOnNonAzureEnvironmentFact : FactAttribute
     {

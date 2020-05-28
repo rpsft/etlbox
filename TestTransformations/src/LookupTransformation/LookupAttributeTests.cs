@@ -1,9 +1,9 @@
-using ALE.ETLBox;
-using ALE.ETLBox.DataFlow;
+using ETLBox;
+using ETLBox.DataFlow;
 using System;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
     public class LookupAttributeTests

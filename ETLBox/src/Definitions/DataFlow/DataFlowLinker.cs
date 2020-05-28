@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks.Dataflow;
-using CF = ALE.ETLBox.ControlFlow;
+using CF = ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     public class DataFlowLinker<TOutput>
     {

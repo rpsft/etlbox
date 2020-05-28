@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     internal class AttributeMappingInfo
     {

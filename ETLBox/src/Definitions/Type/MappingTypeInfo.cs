@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     internal abstract class MappingTypeInfo
     {

@@ -1,7 +1,7 @@
-using ALE.ETLBox;
+using ETLBox;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace ETLBoxTests
 {
     public class ConnectionStringTests
     {

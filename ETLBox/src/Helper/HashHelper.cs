@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public static class HashHelper
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ALE.ETLBox.ControlFlow.SqlServer
+namespace ETLBox.ControlFlow.SqlServer
 {
     /// <summary>
     /// Restores a database from a backup.

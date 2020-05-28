@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public interface ITask
     {

@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.Logging
+namespace ETLBox.Logging
 {
     /// <summary>
     /// This task will create a table that can store exceptions (and information about the affected records)

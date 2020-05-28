@@ -1,12 +1,12 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.DataFlow;
+using ETLBox.Helper;
+using ETLBox.Logging;
 using System;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ETLBoxTests.Logging
 {
     public class OtherDBFixture
     {

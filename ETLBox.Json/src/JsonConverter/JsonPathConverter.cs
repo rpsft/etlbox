@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     /// <summary>
     /// A JsonConverter that support json path expression in JsonProperty attributes.

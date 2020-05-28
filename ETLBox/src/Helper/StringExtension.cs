@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.Helper
+﻿namespace ETLBox.Helper
 {
     public static class StringExtension
     {

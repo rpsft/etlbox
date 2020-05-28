@@ -1,8 +1,8 @@
-using ALE.ETLBox.Helper;
+using ETLBox.Helper;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace ETLBoxTests
 {
     public class SqlParserTests
     {

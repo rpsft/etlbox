@@ -1,10 +1,10 @@
-﻿using ALE.ETLBox.DataFlow;
+﻿using ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public class TableData : TableData<object[]>
     {

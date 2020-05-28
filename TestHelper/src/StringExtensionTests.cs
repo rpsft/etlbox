@@ -1,7 +1,7 @@
-using ALE.ETLBox.Helper;
+using ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace ETLBoxTests
 {
     public class StringExtensionTests
     {

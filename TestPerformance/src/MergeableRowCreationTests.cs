@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
+﻿using ETLBox.DataFlow;
+using ETLBox.Helper;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace ALE.ETLBoxTests.Performance
+namespace ETLBoxTests.Performance
 {
     [Collection("Performance")]
     public class MergeableRowCreationTests

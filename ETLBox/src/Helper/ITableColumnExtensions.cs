@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Helper
 {
     public static class ITableColumExtensions
     {

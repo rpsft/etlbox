@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a json source. This can be any http resource or a file.

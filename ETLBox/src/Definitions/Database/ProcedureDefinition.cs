@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public class ProcedureDefinition
     {

@@ -1,13 +1,13 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.ControlFlow;
+using ETLBox.Helper;
+using ETLBox.Logging;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ETLBoxTests.Logging
 {
     [Collection("Logging")]
     public class GetLogAsJsonTests : IDisposable

@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.DataFlow
 {
     internal class ObjectCopy<TInput>
     {

@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
+﻿using ETLBox.ConnectionManager;
+using ETLBox.Helper;
 using System;
-using CF = ALE.ETLBox.ControlFlow;
+using CF = ETLBox.ControlFlow;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public abstract class GenericTask : ITask
     {

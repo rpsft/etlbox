@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ALE.ETLBox
+namespace ETLBox
 {
     public class ProcedureParameter
     {

@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ETLBoxTests.Logging
 {
     [CollectionDefinition("Logging")]
     public class LoggingCollectionClass : ICollectionFixture<LoggingDatabaseFixture> { }
