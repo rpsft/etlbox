@@ -1,12 +1,3 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -32,7 +23,7 @@ namespace ALE.ETLBoxTests
                 string cleanedDirName = dir.Replace("../", "").ToLower();
                 if (cleanedDirName.StartsWith("etlbox") && cleanedDirName != "etlboxdocu")
                 {
-                    var projfile = Directory.GetFiles(dir,"*.csproj").First();
+                    var projfile = Directory.GetFiles(dir, "*.csproj").First();
                     var cont = File.ReadAllText(projfile);
                     Assert.Contains(noSymbolsPackageXml.Replace(" ", ""), cont.Replace(" ", ""));
                     found++;

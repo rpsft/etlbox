@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
@@ -134,7 +133,7 @@ namespace ALE.ETLBox.DataFlow
         public RowTransformation(Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc) { }
         public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc) : base(name, rowTransformationFunc) { }
         public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
-   }
+    }
 
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.

@@ -51,7 +51,7 @@ namespace ALE.ETLBox
 
         public List<object[]> Rows { get; set; }
         public object[] CurrentRow { get; set; }
-        public Dictionary<string,int> DynamicColumnNames { get; set; } = new Dictionary<string,int>();
+        public Dictionary<string, int> DynamicColumnNames { get; set; } = new Dictionary<string, int>();
         int ReadIndex { get; set; }
         TableDefinition Definition { get; set; }
         bool HasDefinition => Definition != null;

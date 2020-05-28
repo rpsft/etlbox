@@ -1,14 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -41,7 +35,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
-                inputData => {
+                inputData =>
+                {
                     inputData.RemoveRange(1, 2);
                     inputData.Add(new MySimpleRow() { Col1 = 4, Col2 = "Test4" });
                     return inputData;
@@ -73,7 +68,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection , "BlockTransSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "BlockTransSource");
             DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(Connection, "BlockTransDest");
 
             //Act

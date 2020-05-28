@@ -75,7 +75,7 @@ namespace ALE.ETLBox.ControlFlow
         public static void ExecuteReaderSingleLine(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions)
             => new SqlTask(name, sql, parameterList, actions) { Limit = 1 }.ExecuteReader();
         public static void ExecuteReaderSingleLine(IConnectionManager connectionManager, string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions)
-    => new SqlTask(name, sql, parameterList, actions) { ConnectionManager = connectionManager,  Limit = 1 }.ExecuteReader();
+    => new SqlTask(name, sql, parameterList, actions) { ConnectionManager = connectionManager, Limit = 1 }.ExecuteReader();
         public static void ExecuteReader(string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) => new SqlTask(name, sql, parameterList, actions).ExecuteReader();
         public static void ExecuteReader(IConnectionManager connectionManager, string name, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) => new SqlTask(name, sql, parameterList, actions) { ConnectionManager = connectionManager }.ExecuteReader();
         public static void ExecuteReader(string name, string sql, IEnumerable<QueryParameter> parameterList, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>

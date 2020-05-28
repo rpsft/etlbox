@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -38,7 +34,7 @@ namespace ALE.ETLBox.DataFlow
         public ResourceType ResourceType { get; set; }
 
         public HttpClient HttpClient { get; set; } = new HttpClient();
-        
+
         /* Internal properties */
         protected string _uri;
         protected string CurrentRequestUri { get; set; }

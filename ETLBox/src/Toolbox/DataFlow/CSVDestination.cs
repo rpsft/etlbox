@@ -3,7 +3,6 @@ using CsvHelper.Configuration;
 using System;
 using System.Dynamic;
 using System.Globalization;
-using System.IO;
 
 namespace ALE.ETLBox.DataFlow
 {

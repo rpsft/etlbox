@@ -1,6 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using System;
 using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging
@@ -57,7 +56,7 @@ namespace ALE.ETLBox.Logging
     => new CreateErrorTableTask(connectionManager, tableName) { DropAndCreateTable = true }.Execute();
 
         public static void DropAndCreate(string tableName)
-            => new CreateErrorTableTask(tableName){ DropAndCreateTable = true }.Execute();
+            => new CreateErrorTableTask(tableName) { DropAndCreateTable = true }.Execute();
 
     }
 }

@@ -1,15 +1,9 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -38,7 +32,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             MergeJoin<ExpandoObject> join = new MergeJoin<ExpandoObject>(
-                (inputRow1, inputRow2) => {
+                (inputRow1, inputRow2) =>
+                {
                     dynamic ir1 = inputRow1 as ExpandoObject;
                     dynamic ir2 = inputRow2 as ExpandoObject;
                     ir1.Col1 = ir1.Col1 + ir2.Col1;

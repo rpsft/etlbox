@@ -3,10 +3,8 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -266,7 +264,7 @@ namespace ALE.ETLBoxTests.Logging
             //Assert
             Assert.Equal(3, new RowCountTask("test_log_logtask",
                 $"message like 'Test%' AND load_process_id = {processId1}")
-                { DisableLogging = true }.Count().Rows);
+            { DisableLogging = true }.Count().Rows);
 
             //Cleanup
             DropTableTask.Drop(ControlFlow.LogTable);

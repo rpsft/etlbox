@@ -3,7 +3,6 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
@@ -95,7 +94,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Equal("2020-01-01", dest.Data.First().DateCol.ToString("yyyy-MM-dd"));
             Assert.Equal("Test", dest.Data.First().StringCol);
             Assert.Equal('T', dest.Data.First().CharCol);
-            Assert.StartsWith("13.4566",dest.Data.First().DecimalStringCol);
+            Assert.StartsWith("13.4566", dest.Data.First().DecimalStringCol);
             Assert.Null(dest.Data.First().NullCol);
             Assert.Equal(EnumType.Value2, dest.Data.First().EnumCol);
         }

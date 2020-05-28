@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Xml;
 using System.Xml.Linq;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace ALE.ETLBox.DataFlow
@@ -27,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => $"Write Xml into file {Uri ?? ""}";
 
         public string RootElementName { get; set; } = "Root";
-        public string DynamicElementName { get; set; } 
+        public string DynamicElementName { get; set; }
         public XmlWriter XmlWriter { get; set; }
         public XmlWriterSettings Settings { get; set; } = new XmlWriterSettings()
         {

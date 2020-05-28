@@ -2,7 +2,6 @@
 using ALE.ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Dynamic;
 using System.Reflection;
 
@@ -129,7 +128,8 @@ namespace ALE.ETLBox.DataFlow
         {
             if (TypeInfo.IsDynamic && data.Length > 0)
             {
-                for (int i = 0;i<data.Length;i++) {
+                for (int i = 0; i < data.Length; i++)
+                {
                     if (data[i] == null) continue;
                     foreach (var column in (IDictionary<string, object>)data[i])
                     {

@@ -3,12 +3,9 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -77,7 +74,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             List<string[]> allEntriesInDestination = new List<string[]>();
-            LookupTransformation<string[],string[]> lookup = new LookupTransformation<string[],string[]> (
+            LookupTransformation<string[], string[]> lookup = new LookupTransformation<string[], string[]>(
                 new DbSource<string[]>(SqlConnection, "dbo.HashMatchDestination"),
                 row =>
                 {

@@ -1,14 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -37,7 +31,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             MergeJoin<string[]> join = new MergeJoin<string[]>(
-                (inputRow1, inputRow2) => {
+                (inputRow1, inputRow2) =>
+                {
                     inputRow1[0] = (int.Parse(inputRow1[0]) + int.Parse(inputRow2[0])).ToString();
                     inputRow1[1] += inputRow2[1];
                     return inputRow1;

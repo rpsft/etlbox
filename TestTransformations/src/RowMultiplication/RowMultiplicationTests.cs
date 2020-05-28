@@ -1,17 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using CsvHelper;
-using Moq;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -47,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 row =>
                 {
                     List<MySimpleRow> result = new List<MySimpleRow>();
-                    for (int i= 0; i<row.Col1;i++)
+                    for (int i = 0; i < row.Col1; i++)
                     {
                         result.Add(new MySimpleRow()
                         {
@@ -92,7 +83,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     {
                         result.Add(new MyOtherRow()
                         {
-                            Col3 = i*row.Col1,
+                            Col3 = i * row.Col1,
                         });
                     }
                     return result;

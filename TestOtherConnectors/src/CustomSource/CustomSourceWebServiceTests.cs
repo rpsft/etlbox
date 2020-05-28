@@ -1,16 +1,11 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -99,7 +94,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                    .ReturnsAsync(new HttpResponseMessage()
                    {
                        StatusCode = HttpStatusCode.OK,
-                       Content = new StringContent(@"{ 'Id':"+todoCounter+", 'Title':'Test', Completed: 'false' }"),
+                       Content = new StringContent(@"{ 'Id':" + todoCounter + ", 'Title':'Test', Completed: 'false' }"),
                    })
                    .Verifiable();
                 return new HttpClient(handlerMock.Object);

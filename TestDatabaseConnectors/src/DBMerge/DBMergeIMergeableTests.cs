@@ -1,14 +1,10 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -39,10 +35,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IdColumnOnlyWithGetter(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection,"DBMergeSource");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "DBMergeSource");
             s2c.InsertTestData();
             s2c.InsertTestDataSet2();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection,"DBMergeDestination");
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
 

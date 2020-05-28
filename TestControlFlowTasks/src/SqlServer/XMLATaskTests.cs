@@ -1,11 +1,6 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
@@ -45,7 +40,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 </Delete>";
         }
 
-        [Fact(Skip="Adjust to work with tabular model")]
+        [Fact(Skip = "Adjust to work with tabular model")]
         public void TestCreateAndDelete()
         {
             string dbName = "ETLBox_TestXMLA";

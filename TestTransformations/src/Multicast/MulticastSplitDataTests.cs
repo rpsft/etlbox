@@ -1,15 +1,7 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -55,14 +47,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             var multicast = new Multicast<CSVPoco>();
 
-            var row1 = new RowTransformation<CSVPoco, Entity1>(input => {
+            var row1 = new RowTransformation<CSVPoco, Entity1>(input =>
+            {
                 return new Entity1
                 {
                     Col1 = input.CSVCol1,
                     Col2 = input.CSVCol2
                 };
             });
-            var row2 = new RowTransformation<CSVPoco, Entity2>(input => {
+            var row2 = new RowTransformation<CSVPoco, Entity2>(input =>
+            {
                 return new Entity2
                 {
                     Col2 = input.CSVCol2,

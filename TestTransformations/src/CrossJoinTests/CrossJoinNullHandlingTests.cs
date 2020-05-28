@@ -1,14 +1,5 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -27,9 +18,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<string> source1 = new MemorySource<string>();
-            source1.DataAsList = new List<string>() { "A", null, "B", "C"};
+            source1.DataAsList = new List<string>() { "A", null, "B", "C" };
             MemorySource<int?> source2 = new MemorySource<int?>();
-            source2.DataAsList = new List<int?>() { 1, null, 2 , null, 3};
+            source2.DataAsList = new List<int?>() { 1, null, 2, null, 3 };
             CrossJoin<string, int?, string> crossJoin = new CrossJoin<string, int?, string>(
                 (data1, data2) =>
                 {

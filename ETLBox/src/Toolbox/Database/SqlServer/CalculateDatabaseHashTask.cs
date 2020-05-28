@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
         {
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
-            
+
             List<string> allColumns = new List<string>();
             new SqlTask(this, Sql)
             {

@@ -1,15 +1,7 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -58,7 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 {
                     dynamic a = agg as ExpandoObject;
                     a.GroupName = (string)key;
-                } );
+                });
 
             MemoryDestination<ExpandoObject> dest = new MemoryDestination<ExpandoObject>();
 
@@ -71,11 +63,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Collection<ExpandoObject>(dest.Data,
-                ar => {
+                ar =>
+                {
                     dynamic a = ar as ExpandoObject;
                     Assert.True(a.AggValue == 10 && a.GroupName == "Class1");
                 },
-                ar => {
+                ar =>
+                {
                     dynamic a = ar as ExpandoObject;
                     Assert.True(a.AggValue == 10 && a.GroupName == "Class2");
                 }

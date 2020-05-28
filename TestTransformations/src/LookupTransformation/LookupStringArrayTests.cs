@@ -1,14 +1,9 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -28,10 +23,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleLookupWithoutObject(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"SourceNonGenericLookup");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceNonGenericLookup");
             source2Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"DestinationNonGenericLookup", -1);
-            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection,"LookupNonGeneric");
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "DestinationNonGenericLookup", -1);
+            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection, "LookupNonGeneric");
             lookup4Columns.InsertTestData();
 
             DbSource<string[]> source = new DbSource<string[]>(connection, "SourceNonGenericLookup");
@@ -41,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             List<string[]> lookupList = new List<string[]>();
 
             DbSource<string[]> lookupSource = new DbSource<string[]>(connection, "LookupNonGeneric");
-            LookupTransformation<string[], string[]> lookup = new LookupTransformation<string[], string[]> (
+            LookupTransformation<string[], string[]> lookup = new LookupTransformation<string[], string[]>(
                 lookupSource,
                 row =>
                 {

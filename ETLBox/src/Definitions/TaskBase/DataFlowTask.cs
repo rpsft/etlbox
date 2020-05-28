@@ -1,8 +1,4 @@
-﻿using ALE.ETLBox.DataFlow;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ALE.ETLBox
+﻿namespace ALE.ETLBox
 {
     public abstract class DataFlowTask : GenericTask, ITask
     {

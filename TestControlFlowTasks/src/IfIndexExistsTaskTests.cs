@@ -1,10 +1,7 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -22,7 +19,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void IfIndexExists(IConnectionManager connection)
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(connection,"Create index test table"
+            SqlTask.ExecuteNonQuery(connection, "Create index test table"
                , $@"CREATE TABLE indextable (col1 INT NULL)");
 
             //Act

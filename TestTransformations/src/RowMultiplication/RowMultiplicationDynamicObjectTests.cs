@@ -1,16 +1,9 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -31,7 +24,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
 
             DbSource source = new DbSource(SqlConnection, "RowMultiplicationSource");
-            RowMultiplication  multiplication = new RowMultiplication(
+            RowMultiplication multiplication = new RowMultiplication(
                 row =>
                 {
                     List<ExpandoObject> result = new List<ExpandoObject>();

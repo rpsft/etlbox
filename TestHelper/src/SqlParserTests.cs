@@ -1,14 +1,5 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests
@@ -33,7 +24,7 @@ namespace ALE.ETLBoxTests
         public void SqlOneColumn()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1"};
+            List<string> expected = new List<string>() { "Col1" };
             string sql = $@"SELECT Col1";
 
             //Act
@@ -79,7 +70,7 @@ FROM Table";
         public void SqlSelectStart()
         {
             //Arrange
-            List<string> expected = new List<string>() {  };
+            List<string> expected = new List<string>() { };
             string sql = $@"SELECT * FROM Table";
 
             //Act

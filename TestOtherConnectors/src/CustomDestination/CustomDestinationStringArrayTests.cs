@@ -1,14 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -32,7 +26,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "CustomDestinationNonGenericSource");
             CustomDestination<string[]> dest = new CustomDestination<string[]>(
-                row => {
+                row =>
+                {
                     SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
                         $"INSERT INTO dbo.CustomDestinationNonGenericDestination VALUES({row[0]},'{row[1]}')");
                 }

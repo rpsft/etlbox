@@ -1,12 +1,5 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -35,12 +28,12 @@ namespace ALE.ETLBox.DataFlow
         }
         /* Private stuff */
 
-        public MemorySource() 
+        public MemorySource()
         {
             Data = new List<TOutput>();
         }
 
-        public MemorySource(IEnumerable<TOutput> data) 
+        public MemorySource(IEnumerable<TOutput> data)
         {
             Data = data;
         }

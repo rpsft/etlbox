@@ -1,6 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using System;
-using System.Linq;
 
 namespace ALE.ETLBox.ControlFlow.SqlServer
 {

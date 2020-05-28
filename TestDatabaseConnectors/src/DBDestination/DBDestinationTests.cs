@@ -1,15 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -38,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection,"Source");
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection, "Source");
             source4Columns.InsertTestData();
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination", identityColumnIndex: 2);
 

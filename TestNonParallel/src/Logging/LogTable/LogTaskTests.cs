@@ -3,10 +3,8 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ALE.ETLBoxTests.Logging
@@ -48,7 +46,7 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             CreateLogTableTask.Create(connection, "test_log");
-            ControlFlow.AddLoggingDatabaseToConfig(connection,NLog.LogLevel.Trace, "test_log");
+            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Trace, "test_log");
             //Act
             LogTask.Error(connection, "Error!");
             LogTask.Warn(connection, "Warn!");
@@ -112,7 +110,7 @@ namespace ALE.ETLBoxTests.Logging
             Assert.Collection<LogEntry>(entries,
                  l => Assert.True(l.Message == "Test Task" && l.TaskAction == "START" && l.TaskType == "SqlTask"),
                  l => Assert.True(l.Message == "Test Task" && l.TaskAction == "END" && l.TaskType == "SqlTask")
-                 ) ;
+                 );
 
             //Cleanup
             DropTableTask.Drop(connection, ControlFlow.LogTable);

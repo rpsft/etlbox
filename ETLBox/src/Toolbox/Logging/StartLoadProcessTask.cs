@@ -1,6 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 
@@ -57,7 +56,7 @@ namespace ALE.ETLBox.Logging
 {LastIdSql}";
 
         ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
-        
+
         string LastIdSql
         {
             get

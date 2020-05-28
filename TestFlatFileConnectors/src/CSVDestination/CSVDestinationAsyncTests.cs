@@ -1,17 +1,6 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,14 +9,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class CsvDestinationAsyncTests
     {
-        [Theory, InlineData("AsyncTestFile.csv",5000)]
+        [Theory, InlineData("AsyncTestFile.csv", 5000)]
         public void WriteAsyncAndCheckLock(string filename, int noRecords)
         {
             //Arrange
             if (File.Exists(filename)) File.Delete(filename);
             MemorySource<string[]> source = new MemorySource<string[]>();
-            for (int i=0;i<noRecords;i++)
-                source.DataAsList.Add(new string[] { HashHelper.RandomString(100)});
+            for (int i = 0; i < noRecords; i++)
+                source.DataAsList.Add(new string[] { HashHelper.RandomString(100) });
             CsvDestination<string[]> dest = new CsvDestination<string[]>(filename);
             bool onCompletionRun = false;
 

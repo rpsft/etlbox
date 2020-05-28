@@ -1,9 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
 
 namespace ALE.ETLBox.ControlFlow
@@ -148,7 +145,8 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
-                using (IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader) {
+                using (IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader)
+                {
                     for (int rowNr = 0; rowNr < Limit; rowNr++)
                     {
                         if (reader.Read())

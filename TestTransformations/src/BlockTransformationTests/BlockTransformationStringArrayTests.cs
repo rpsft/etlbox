@@ -1,15 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -35,7 +28,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             BlockTransformation<string[]> block = new BlockTransformation<string[]>(
-                inputData => {
+                inputData =>
+                {
                     inputData.RemoveRange(1, 2);
                     inputData.Add(new string[] { "4", "Test4" });
                     return inputData;

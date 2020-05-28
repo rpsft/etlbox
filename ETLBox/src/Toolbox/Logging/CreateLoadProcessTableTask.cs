@@ -1,7 +1,6 @@
 ﻿
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using System;
 using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging

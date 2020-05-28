@@ -7,7 +7,6 @@ using ALE.ETLBox.Logging;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 

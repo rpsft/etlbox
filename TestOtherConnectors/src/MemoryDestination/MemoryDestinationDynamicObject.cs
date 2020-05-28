@@ -1,16 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -43,7 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             foreach (dynamic d in dest.Data)
             {
 
-                Assert.True(d.Col1 == index && d.Col2 == "Test"+index);
+                Assert.True(d.Col1 == index && d.Col2 == "Test" + index);
                 index++;
             }
         }

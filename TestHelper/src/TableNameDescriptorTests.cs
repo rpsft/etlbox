@@ -58,7 +58,7 @@ namespace ALE.ETLBoxTests
         [Fact]
         public void PostgresWithSchema()
         {
-            var desc = new ObjectNameDescriptor("public.Test",@"""", @"""");
+            var desc = new ObjectNameDescriptor("public.Test", @"""", @"""");
 
             Assert.Equal(@"""public""", desc.QuotatedSchemaName);
             Assert.Equal(@"""Test""", desc.QuotatedObjectName);

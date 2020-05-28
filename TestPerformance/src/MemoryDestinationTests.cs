@@ -1,17 +1,8 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+﻿using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -33,7 +24,7 @@ namespace ALE.ETLBoxTests.Performance
          */
         [Theory,
             InlineData(100000, 0.5)]
-        public void CSVIntoMemDest(int numberOfRows,  double deviation)
+        public void CSVIntoMemDest(int numberOfRows, double deviation)
         {
             //Arrange
             BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
@@ -57,8 +48,8 @@ namespace ALE.ETLBoxTests.Performance
             Assert.Equal(numberOfRows, destNonGeneric.Data.Count);
             Assert.Equal(numberOfRows, destGeneric.Data.Count);
             Assert.Equal(numberOfRows, destDynamic.Data.Count);
-            Assert.True(new [] { teGeneric.TotalMilliseconds, teNonGeneric.TotalMilliseconds, teDynamic.TotalMilliseconds }.Max() <
-                 new [] { teGeneric.TotalMilliseconds, teNonGeneric.TotalMilliseconds, teDynamic.TotalMilliseconds }.Max() * (deviation+1));
+            Assert.True(new[] { teGeneric.TotalMilliseconds, teNonGeneric.TotalMilliseconds, teDynamic.TotalMilliseconds }.Max() <
+                 new[] { teGeneric.TotalMilliseconds, teNonGeneric.TotalMilliseconds, teDynamic.TotalMilliseconds }.Max() * (deviation + 1));
         }
 
         private TimeSpan GetETLBoxTime<T>(int numberOfRows, CsvSource<T> source, MemoryDestination<T> dest)
@@ -71,7 +62,7 @@ namespace ALE.ETLBoxTests.Performance
                     dest.Wait();
                 }
             );
-            if(typeof(T) == typeof(string[]))
+            if (typeof(T) == typeof(string[]))
                 output.WriteLine("Elapsed " + timeElapsedETLBox.TotalSeconds + " seconds for ETLBox (Non generic).");
             else
                 output.WriteLine("Elapsed " + timeElapsedETLBox.TotalSeconds + " seconds for ETLBox (Generic).");

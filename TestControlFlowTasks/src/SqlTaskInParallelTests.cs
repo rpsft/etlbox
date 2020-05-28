@@ -2,9 +2,7 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -55,8 +53,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 ")
              );
             //Assert
-            Parallel.ForEach(array,curNr =>
-                Assert.Equal(5000, RowCountTask.Count(Connection, $"LongParallel{curNr}")));
+            Parallel.ForEach(array, curNr =>
+                 Assert.Equal(5000, RowCountTask.Count(Connection, $"LongParallel{curNr}")));
         }
     }
 }

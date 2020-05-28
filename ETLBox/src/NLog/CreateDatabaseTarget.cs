@@ -1,8 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using NLog.Targets;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ALE.ETLBox.Logging
 {

@@ -30,7 +30,7 @@ namespace ALE.ETLBox.DataFlow
         public int SkipRows { get; set; } = 0;
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
-        public int ReleaseGCPressureRowCount {get;set; } = 500;
+        public int ReleaseGCPressureRowCount { get; set; } = 500;
 
         /* Private stuff */
         CsvReader CsvReader { get; set; }

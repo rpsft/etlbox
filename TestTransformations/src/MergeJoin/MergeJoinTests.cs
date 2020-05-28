@@ -1,14 +1,8 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -43,7 +37,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow> join = new MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow>(
-                (inputRow1, inputRow2) => {
+                (inputRow1, inputRow2) =>
+                {
                     inputRow1.Col1 += inputRow2.Col1;
                     inputRow1.Col2 += inputRow2.Col2;
                     return inputRow1;

@@ -1,6 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 
@@ -21,7 +20,7 @@ namespace ALE.ETLBox.Logging
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,
-                Parameter = new List<QueryParameter>() { cd, em, lpk},
+                Parameter = new List<QueryParameter>() { cd, em, lpk },
             }.ExecuteNonQuery();
             var rlp = new ReadLoadProcessTableTask(this, LoadProcessId)
             {

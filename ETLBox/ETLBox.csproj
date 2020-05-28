@@ -11,17 +11,18 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixing issue with converting enum types (normal and nullable). DbMerge now supports ExpandoObjects.
-Preparation of moving Connection Managers into separate packages.</PackageReleaseNotes>
-    <Version>1.8.8-beta</Version>
+    <PackageReleaseNotes>This is ETLBox 2.0. The connection managers are moved into their own package - this reduces depencenies of the core package as you only need to pick the packages that you actually need. Please not that some packages are now closed source and have a different license model.
+BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.</PackageReleaseNotes>
+    <Version>2.0.0</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
-    <Company>ALE</Company>
-    <AssemblyVersion>1.8.8.0</AssemblyVersion>
-    <FileVersion>1.8.8.0</FileVersion>
+    <Company>TheBoxOffice</Company>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ETLBox</RootNamespace>
+    <Product>ETLBox</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

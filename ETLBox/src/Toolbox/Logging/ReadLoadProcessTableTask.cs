@@ -115,8 +115,8 @@ ORDER BY end_date desc, id DESC";
             }
         }
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable,  QB, QE);
-        
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
+
         public ReadLoadProcessTableTask()
         {
 

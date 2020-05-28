@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ALE.ETLBoxTests.Performance
+﻿namespace ALE.ETLBoxTests.Performance
 {
     public class CSVData
     {

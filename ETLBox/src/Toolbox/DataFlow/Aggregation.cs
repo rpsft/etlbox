@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 
@@ -30,14 +29,16 @@ namespace ALE.ETLBox.DataFlow
             {
                 _aggregationAction = value;
                 InputBuffer = new ActionBlock<TInput>(WrapAggregationAction);
-                InputBuffer.Completion.ContinueWith(t => {
+                InputBuffer.Completion.ContinueWith(t =>
+                {
                     if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
                     try
                     {
                         WriteIntoOutput();
                         OutputBuffer.Complete();
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         ((IDataflowBlock)OutputBuffer).Fault(e);
                         throw e;
                     }

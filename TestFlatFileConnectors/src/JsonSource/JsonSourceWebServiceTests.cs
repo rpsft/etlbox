@@ -1,18 +1,8 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration.Attributes;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -95,7 +85,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.All(dest.Data, item => Assert.True(item.Key > 0)); 
+            Assert.All(dest.Data, item => Assert.True(item.Key > 0));
             Assert.Equal(5, dest.Data.Count);
         }
     }

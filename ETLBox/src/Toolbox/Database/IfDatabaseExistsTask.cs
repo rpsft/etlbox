@@ -12,7 +12,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
-            
+
             if (this.ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ON.UnquotatedObjectName}'";

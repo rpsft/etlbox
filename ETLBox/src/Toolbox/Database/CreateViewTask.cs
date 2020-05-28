@@ -11,7 +11,7 @@ namespace ALE.ETLBox.ControlFlow
         public void Execute()
         {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if ( (ConnectionType == ConnectionManagerType.SQLite
+            if ((ConnectionType == ConnectionManagerType.SQLite
                 || ConnectionType == ConnectionManagerType.Postgres
                 || ConnectionType == ConnectionManagerType.Access
                 )

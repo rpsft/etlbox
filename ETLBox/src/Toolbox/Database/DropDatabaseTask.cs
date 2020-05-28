@@ -16,7 +16,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
-            
+
             if (ConnectionType == ConnectionManagerType.SqlServer)
             {
                 return

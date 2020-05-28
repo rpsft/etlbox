@@ -145,7 +145,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
             else if (connectionType == ConnectionManagerType.SQLite)
             {
-                if (typeName == "INT" ||typeName == "BIGINT")
+                if (typeName == "INT" || typeName == "BIGINT")
                     return "INTEGER";
                 return dbSpecificTypeName;
             }

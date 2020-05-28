@@ -1,10 +1,6 @@
-﻿using ALE.ETLBox.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -64,13 +60,13 @@ namespace ALE.ETLBox.DataFlow
     /// This transformation allow you to transform your input data into multple output data records.
     /// </summary>
     /// <see cref="RowMultiplication{TInput, TOutput}"/>
-    public class RowMultiplication : RowMultiplication<ExpandoObject,ExpandoObject>
+    public class RowMultiplication : RowMultiplication<ExpandoObject, ExpandoObject>
     {
         public RowMultiplication() : base()
         { }
 
         public RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>> multiplicationFunc)
-            : base (multiplicationFunc)
+            : base(multiplicationFunc)
         { }
     }
 

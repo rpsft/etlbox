@@ -2,10 +2,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using Xunit;
 
 namespace ALE.ETLBoxTests.Fixtures
 {

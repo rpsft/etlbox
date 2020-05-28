@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Dynamic;
-using System.IO;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -20,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Write Json into file {Uri ?? ""}";
-       
+
         public JsonSerializer JsonSerializer { get; set; }
         JsonTextWriter JsonTextWriter { get; set; }
 

@@ -1,12 +1,9 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
@@ -38,7 +35,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
             CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
-                row => {
+                row =>
+                {
                     SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
                         $"INSERT INTO dbo.CustomDestination VALUES({row.Col1},'{row.Col2}')");
                 }

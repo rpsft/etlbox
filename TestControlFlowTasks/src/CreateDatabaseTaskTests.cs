@@ -2,8 +2,6 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -25,7 +23,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void CreateSimple(IConnectionManager connection)
         {
             //Arrange
-            string dbName = "ETLBox_"+HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + HashHelper.RandomString(10);
             var dbListBefore = GetDatabaseListTask.List(connection);
             Assert.DoesNotContain<string>(dbName, dbListBefore);
 
@@ -51,7 +49,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             if (connection.GetType() == typeof(MySqlConnectionManager))
                 collation = "latin1_swedish_ci";
             //Act
-            CreateDatabaseTask.Create(connection, dbName,collation );
+            CreateDatabaseTask.Create(connection, dbName, collation);
 
             //Assert
             var dbList = GetDatabaseListTask.List(connection);
