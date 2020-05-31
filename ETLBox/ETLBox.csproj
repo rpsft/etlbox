@@ -46,4 +46,8 @@ BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.</PackageRele
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj" />
+  </ItemGroup>
+
 </Project>

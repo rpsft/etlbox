@@ -1,7 +1,10 @@
-﻿using System;
+﻿using NLog.Fluent;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.ControlFlow
 {
@@ -164,6 +167,8 @@ namespace ETLBox.ControlFlow
                                 }
                             }
                             AfterRowReadAction?.Invoke();
+                            if (rowNr > 0 && rowNr % LicenseCheck.FreeRows == 0)
+                                LicenseCheck.CheckValidLicenseOrThrow();
                         }
                         else
                         {
@@ -178,7 +183,6 @@ namespace ETLBox.ControlFlow
                 conn.CloseIfAllowed();
             }
         }
-
 
         public void BulkInsert(ITableData data, string tableName)
         {

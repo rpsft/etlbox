@@ -45,7 +45,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Xml", "ETLBox.Xml\ET
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Json", "ETLBox.Json\ETLBox.Json.csproj", "{B6B6AEC9-8699-40ED-B19E-CD098F77413F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Excel", "ETLBox.Excel\ETLBox.Excel.csproj", "{AF860949-A402-451D-A5CA-F8199D4FB06B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Excel", "ETLBox.Excel\ETLBox.Excel.csproj", "{AF860949-A402-451D-A5CA-F8199D4FB06B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseManager", "..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj", "{8524B59F-6F34-435A-A820-B3C9A510A754}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLicenseManager", "..\etlbox.license\LicenseKey\TestLicenseManager\TestLicenseManager.csproj", "{D719CFD2-A041-4848-B91C-CAB2892C419A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,6 +144,14 @@ Global
 		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF860949-A402-451D-A5CA-F8199D4FB06B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8524B59F-6F34-435A-A820-B3C9A510A754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8524B59F-6F34-435A-A820-B3C9A510A754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8524B59F-6F34-435A-A820-B3C9A510A754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8524B59F-6F34-435A-A820-B3C9A510A754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
