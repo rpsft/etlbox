@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
   </ItemGroup>
 

@@ -223,5 +223,9 @@ namespace ETLBox.ConnectionManager
         public abstract IConnectionManager Clone();
         #endregion
 
+        public virtual void CheckLicenseOrThrow(int progressCount)
+        {
+            ;
+        }
     }
 }

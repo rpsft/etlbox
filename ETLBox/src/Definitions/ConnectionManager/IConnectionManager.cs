@@ -41,5 +41,6 @@ namespace ETLBox.ConnectionManager
         bool IsOdbcConnection { get; }
         TableDefinition ReadTableDefinition(ObjectNameDescriptor TN);
         bool CheckIfTableOrViewExists(string objectName);
+        void CheckLicenseOrThrow(int count);
     }
 }

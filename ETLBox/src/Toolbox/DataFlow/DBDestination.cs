@@ -104,6 +104,7 @@ namespace ETLBox.DataFlow
                 };
                 sql
                 .BulkInsert(TableData, DestinationTableDefinition.Name);
+                BulkInsertConnectionManager.CheckLicenseOrThrow(ProgressCount);
             }
             catch (Exception e)
             {

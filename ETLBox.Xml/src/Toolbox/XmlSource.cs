@@ -7,6 +7,7 @@ using System.Threading.Tasks.Dataflow;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.Xml
 {
@@ -95,6 +96,8 @@ namespace ETLBox.Xml
                                 ErrorHandler.Send(e, el.ToString());
                             }
                             LogProgress();
+                            if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
+                                LicenseCheck.CheckValidLicenseOrThrow();
                         }
                     }
                 }

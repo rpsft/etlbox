@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.Csv
 {
@@ -74,6 +75,8 @@ namespace ETLBox.Csv
             {
                 ReadLineAndSendIntoBuffer();
                 LogProgress();
+                if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
+                    LicenseCheck.CheckValidLicenseOrThrow();
             }
         }
 

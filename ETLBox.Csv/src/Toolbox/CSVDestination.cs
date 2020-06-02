@@ -4,6 +4,7 @@ using ETLBox.DataFlow;
 using System;
 using System.Dynamic;
 using System.Globalization;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.Csv
 {
@@ -36,9 +37,9 @@ namespace ETLBox.Csv
             InitTargetAction();
         }
 
-        public CsvDestination(string uri) : this()
+        public CsvDestination(string filename) : this()
         {
-            Uri = uri;
+            Uri = filename;
         }
 
         protected override void InitStream()
@@ -55,6 +56,9 @@ namespace ETLBox.Csv
                 WriteObject(data);
 
             LogProgress();
+
+            if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
+                LicenseCheck.CheckValidLicenseOrThrow();
         }
 
         private void WriteHeaderIfRequired()

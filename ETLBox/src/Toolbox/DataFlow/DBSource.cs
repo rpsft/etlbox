@@ -183,8 +183,7 @@ namespace ETLBox.DataFlow
                 if (_row != null)
                 {
                     LogProgress();
-                    if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
-                        LicenseCheck.CheckValidLicenseOrThrow();
+                    DbConnectionManager.CheckLicenseOrThrow(ProgressCount);
                     Buffer.SendAsync(_row).Wait();
                 }
             };

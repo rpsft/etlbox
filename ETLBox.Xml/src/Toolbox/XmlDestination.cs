@@ -5,11 +5,12 @@ using System.Dynamic;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.Xml
 {
     /// <summary>
-    /// A Xml destination defines a xml file where data from the flow is inserted. 
+    /// A Xml destination defines a xml file where data from the flow is inserted.
     /// </summary>
     /// <see cref="XmlDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
@@ -86,6 +87,9 @@ namespace ETLBox.Xml
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
             }
             LogProgress();
+
+            if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
+                LicenseCheck.CheckValidLicenseOrThrow();
         }
 
         protected override void CloseStream()
@@ -97,7 +101,7 @@ namespace ETLBox.Xml
     }
 
     /// <summary>
-    /// A Xml destination defines a Xml file where data from the flow is inserted. 
+    /// A Xml destination defines a Xml file where data from the flow is inserted.
     /// The XmlDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="XmlDestination{TInput}"/>
@@ -105,7 +109,8 @@ namespace ETLBox.Xml
     {
         public XmlDestination() : base() { }
 
-        public XmlDestination(string fileName) : base(fileName) { }
+        public XmlDestination(string filename) : base(filename) { }
+        public XmlDestination(string uri, ResourceType resourceType) : base(uri, resourceType) { }
 
     }
 

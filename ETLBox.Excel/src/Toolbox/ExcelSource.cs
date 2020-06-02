@@ -7,6 +7,7 @@ using System.Dynamic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks.Dataflow;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.Excel
 {
@@ -80,6 +81,8 @@ namespace ETLBox.Excel
                             {
                                 Buffer.SendAsync(row).Wait();
                                 LogProgress();
+                                if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
+                                    LicenseCheck.CheckValidLicenseOrThrow();
                             }
                         }
                     }
