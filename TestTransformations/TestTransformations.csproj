@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj" />
-    <ProjectReference Include="..\ETLBox.Csv\ETLBox.Csv.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Csv\ETLBox.Csv.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />
   </ItemGroup>

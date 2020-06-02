@@ -16,10 +16,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj" />
-    <ProjectReference Include="..\ETLBox.Csv\ETLBox.Csv.csproj" />
-    <ProjectReference Include="..\ETLBox.Excel\ETLBox.Excel.csproj" />
-    <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
-    <ProjectReference Include="..\ETLBox.Xml\ETLBox.Xml.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Csv\ETLBox.Csv.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Excel\ETLBox.Excel.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Json\ETLBox.Json.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Xml\ETLBox.Xml.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />
   </ItemGroup>
