@@ -1,4 +1,6 @@
-﻿namespace ETLBox
+﻿using TheBoxOffice.LicenseManager;
+
+namespace ETLBox
 {
     public abstract class DataFlowTask : GenericTask, ITask
     {
@@ -54,7 +56,6 @@
             if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
                 NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
         }
-
 
     }
 

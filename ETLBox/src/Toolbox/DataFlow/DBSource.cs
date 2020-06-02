@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
+using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.DataFlow
 {
@@ -182,6 +183,8 @@ namespace ETLBox.DataFlow
                 if (_row != null)
                 {
                     LogProgress();
+                    if (ProgressCount > 0 && ProgressCount % LicenseCheck.FreeRows == 0)
+                        LicenseCheck.CheckValidLicenseOrThrow();
                     Buffer.SendAsync(_row).Wait();
                 }
             };

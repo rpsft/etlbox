@@ -167,8 +167,6 @@ namespace ETLBox.ControlFlow
                                 }
                             }
                             AfterRowReadAction?.Invoke();
-                            if (rowNr > 0 && rowNr % LicenseCheck.FreeRows == 0)
-                                LicenseCheck.CheckValidLicenseOrThrow();
                         }
                         else
                         {
