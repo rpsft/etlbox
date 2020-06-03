@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ETLBox.DataFlow.Connectors;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
-    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 
+    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
     /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
     /// The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
     /// </summary>
@@ -76,7 +77,7 @@ namespace ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 
+    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
     /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
     /// The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
     /// </summary>
@@ -91,7 +92,7 @@ namespace ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual 
+    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
     /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the given function CrossJoinFunc.
     /// The InMemory target should always have the smaller amount of data to reduce memory consumption and processing time.
     /// The non generic implementation deals with a dynamic object for both inputs and output.

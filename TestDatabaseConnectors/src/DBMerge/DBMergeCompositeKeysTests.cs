@@ -2,7 +2,7 @@ using ETLBox;
 using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
-using ETLBox.DataFlow;
+using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
 using ETLBox.Helper;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;

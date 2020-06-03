@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.

@@ -1,8 +1,8 @@
 using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
-using ETLBox.DataFlow;
-using ETLBox.DataFlow;
+using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
+using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using Newtonsoft.Json;
@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.Dynamic;
 using Xunit;
+using ETLBox.Helper;
 
 namespace ETLBoxTests.DataFlowTests
 {

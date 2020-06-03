@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Connectors
 {
     /// <summary>
     /// Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.

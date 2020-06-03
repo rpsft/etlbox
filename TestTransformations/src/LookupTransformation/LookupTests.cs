@@ -1,5 +1,5 @@
 using ETLBox.Connection;
-using ETLBox.DataFlow;
+using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace ETLBoxTests.DataFlowTests
             DbSource<MyDataRow> source = new DbSource<MyDataRow>(connection, "SourceLookupSameType");
             DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(connection, "LookupSameType");
 
-            var lookup = new ETLBox.DataFlow.LookupTransformation<MyDataRow, MyLookupRow>();
+            var lookup = new LookupTransformation<MyDataRow, MyLookupRow>();
             lookup.TransformationFunc =
                 row =>
                 {

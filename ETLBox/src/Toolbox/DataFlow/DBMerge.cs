@@ -1,6 +1,8 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
+using ETLBox.DataFlow.Connectors;
+using ETLBox.DataFlow.Transformations;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Connectors
 {
     /// <summary>
     /// Inserts, updates and (optionally) deletes data in db target.

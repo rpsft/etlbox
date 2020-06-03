@@ -1,4 +1,4 @@
-﻿using ETLBox.DataFlow;
+﻿using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
 using ETLBoxTests.Helper;
 using Xunit;
 using Xunit.Abstractions;

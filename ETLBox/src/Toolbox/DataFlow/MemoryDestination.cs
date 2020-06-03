@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Connectors
 {
     /// <summary>
     /// A destination in memory - it will store all you data in a list.

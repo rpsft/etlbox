@@ -3,7 +3,7 @@ using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.ControlFlow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.

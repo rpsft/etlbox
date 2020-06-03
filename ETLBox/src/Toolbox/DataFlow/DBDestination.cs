@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Connectors
 {
     /// <summary>
     /// A database destination represents a table where data from the flow is inserted.

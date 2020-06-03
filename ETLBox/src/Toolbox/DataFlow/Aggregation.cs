@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// Aggregates data by the given aggregation method.

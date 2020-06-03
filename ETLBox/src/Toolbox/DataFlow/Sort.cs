@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// Sort the input with the given sort function.

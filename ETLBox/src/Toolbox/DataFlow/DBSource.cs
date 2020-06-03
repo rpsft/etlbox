@@ -8,7 +8,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Connectors
 {
     /// <summary>
     /// A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted

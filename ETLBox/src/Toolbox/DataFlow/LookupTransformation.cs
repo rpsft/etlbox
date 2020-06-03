@@ -1,11 +1,12 @@
-﻿using ETLBox.Helper;
+﻿using ETLBox.DataFlow.Connectors;
+using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// A lookup task - data from the input can be enriched with data retrieved from the lookup source.

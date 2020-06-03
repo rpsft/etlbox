@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// Creates one or more duplicates of your incoming rows.

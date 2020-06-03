@@ -2,7 +2,7 @@
 using System.Threading.Tasks.Dataflow;
 
 
-namespace ETLBox.DataFlow
+namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
     /// A multicast duplicates data from the input into two outputs.
