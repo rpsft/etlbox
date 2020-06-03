@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ETLBox.ControlFlow;
+using System;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.Logging
 {
     /// <summary>
     /// A sequence is a shortcute for custom task, but with the TaskType "SEQUENCE".

@@ -1,4 +1,5 @@
 using ETLBox.ControlFlow;
+using ETLBox.Logging;
 using Xunit;
 
 namespace ETLBoxTests.ControlFlowTests

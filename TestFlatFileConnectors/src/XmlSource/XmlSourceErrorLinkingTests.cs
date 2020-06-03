@@ -1,6 +1,6 @@
 using ETLBox.Connection;
 using ETLBox.DataFlow;
-using ETLBox.Xml;
+using ETLBox.DataFlow;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using Xunit;
