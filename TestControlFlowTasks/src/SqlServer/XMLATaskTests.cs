@@ -1,7 +1,5 @@
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow.SqlServer;
-using ETLBox.Helper;
-using ETLBox.SSAS;
 using ETLBoxTests.Helper;
 using Xunit;
 

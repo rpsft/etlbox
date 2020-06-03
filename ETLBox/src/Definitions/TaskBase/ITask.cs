@@ -1,4 +1,4 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox.Connection;
 
 namespace ETLBox
 {

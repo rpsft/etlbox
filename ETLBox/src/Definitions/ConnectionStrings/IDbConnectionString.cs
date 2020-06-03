@@ -1,4 +1,4 @@
-﻿namespace ETLBox
+﻿namespace ETLBox.Connection
 {
     /// <summary>
     /// The generic defintion of a connection string

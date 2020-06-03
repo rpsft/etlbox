@@ -1,9 +1,7 @@
 using ETLBox;
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.DataFlow;
-using ETLBox.Helper;
-using ETLBox.SQLite;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System.Collections.Generic;

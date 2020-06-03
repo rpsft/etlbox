@@ -1,5 +1,5 @@
 ﻿
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using System.Collections.Generic;
 

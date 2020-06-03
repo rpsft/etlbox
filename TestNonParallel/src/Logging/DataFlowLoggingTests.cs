@@ -1,11 +1,9 @@
 ﻿using ETLBox;
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.Csv;
 using ETLBox.DataFlow;
-using ETLBox.Helper;
 using ETLBox.Logging;
-using ETLBox.SqlServer;
 using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;

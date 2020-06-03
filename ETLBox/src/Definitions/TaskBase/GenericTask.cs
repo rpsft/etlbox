@@ -1,4 +1,4 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox.Connection;
 using ETLBox.Helper;
 using System;
 using CF = ETLBox.ControlFlow;

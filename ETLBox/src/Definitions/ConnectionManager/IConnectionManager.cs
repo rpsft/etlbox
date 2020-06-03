@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace ETLBox.ConnectionManager
+namespace ETLBox.Connection
 {
     public interface IConnectionManager : IDisposable
     {

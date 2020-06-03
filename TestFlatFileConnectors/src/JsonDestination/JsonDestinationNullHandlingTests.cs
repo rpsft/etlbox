@@ -1,8 +1,6 @@
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.DataFlow;
-using ETLBox.Helper;
 using ETLBox.Json;
-using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System.Collections.Generic;

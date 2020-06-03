@@ -1,4 +1,4 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox.Connection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;

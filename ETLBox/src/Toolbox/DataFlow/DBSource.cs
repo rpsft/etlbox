@@ -1,4 +1,4 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using System;
@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
-using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.DataFlow
 {

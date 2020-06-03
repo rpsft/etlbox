@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace ETLBox.ConnectionManager
+namespace ETLBox.Connection
 {
     public abstract class DbConnectionManager<Connection> : IDisposable, IConnectionManager
         where Connection : class, IDbConnection, new()

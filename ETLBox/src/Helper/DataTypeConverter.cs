@@ -1,4 +1,4 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox.Connection;
 using System;
 using System.Data;
 using System.Text.RegularExpressions;

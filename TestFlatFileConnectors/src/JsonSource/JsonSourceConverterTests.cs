@@ -1,9 +1,7 @@
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.DataFlow;
-using ETLBox.Helper;
 using ETLBox.Json;
-using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using Newtonsoft.Json;

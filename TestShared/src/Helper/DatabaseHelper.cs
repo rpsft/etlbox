@@ -1,8 +1,5 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
-using ETLBox.MySql;
-using ETLBox.Postgres;
-using ETLBox.SqlServer;
 
 namespace ETLBoxTests.Helper
 {

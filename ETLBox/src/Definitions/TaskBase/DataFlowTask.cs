@@ -1,6 +1,4 @@
-﻿using TheBoxOffice.LicenseManager;
-
-namespace ETLBox
+﻿namespace ETLBox
 {
     public abstract class DataFlowTask : GenericTask, ITask
     {

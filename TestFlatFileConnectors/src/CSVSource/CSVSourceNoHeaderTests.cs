@@ -1,13 +1,11 @@
-using ETLBox.ConnectionManager;
-using ETLBox.DataFlow;
-using ETLBox.Helper;
-using ETLBoxTests.Fixtures;
 using CsvHelper.Configuration.Attributes;
+using ETLBox.Connection;
+using ETLBox.Csv;
+using ETLBox.DataFlow;
+using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System;
 using Xunit;
-using ETLBox.SqlServer;
-using ETLBox.Csv;
-using ETLBoxTests.Helper;
 
 namespace ETLBoxTests.DataFlowTests
 {

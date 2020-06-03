@@ -1,11 +1,6 @@
 using ETLBox;
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow;
-using ETLBox.Helper;
-using ETLBox.MySql;
-using ETLBox.Postgres;
-using ETLBox.SQLite;
-using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System.Collections.Generic;

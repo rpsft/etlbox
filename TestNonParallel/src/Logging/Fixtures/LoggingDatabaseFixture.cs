@@ -1,5 +1,4 @@
-﻿using ETLBox.Helper;
-using ETLBoxTests.Helper;
+﻿using ETLBoxTests.Helper;
 using Xunit;
 
 namespace ETLBoxTests.Logging

@@ -1,4 +1,4 @@
-﻿namespace ETLBox.ConnectionManager
+﻿namespace ETLBox.Connection
 {
     public enum ConnectionManagerType
     {

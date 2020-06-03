@@ -1,8 +1,5 @@
 using ETLBox;
-using ETLBox.MySql;
-using ETLBox.Postgres;
-using ETLBox.SQLite;
-using ETLBox.SqlServer;
+using ETLBox.Connection;
 using Xunit;
 
 namespace ETLBoxTests

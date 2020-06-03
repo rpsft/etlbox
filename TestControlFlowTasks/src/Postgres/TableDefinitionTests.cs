@@ -1,8 +1,6 @@
 using ETLBox;
-using ETLBox.ConnectionManager;
+using ETLBox.Connection;
 using ETLBox.ControlFlow;
-using ETLBox.Helper;
-using ETLBox.Postgres;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System;
