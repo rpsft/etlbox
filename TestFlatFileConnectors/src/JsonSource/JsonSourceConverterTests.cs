@@ -5,6 +5,7 @@ using ETLBox.Helper;
 using ETLBox.Json;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;

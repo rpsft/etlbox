@@ -4,7 +4,7 @@ using ETLBox.MySql;
 using ETLBox.Postgres;
 using ETLBox.SqlServer;
 
-namespace ETLBox.Helper
+namespace ETLBoxTests.Helper
 {
     public class DatabaseHelper
     {

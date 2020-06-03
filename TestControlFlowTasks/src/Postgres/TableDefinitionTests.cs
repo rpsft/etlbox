@@ -4,6 +4,7 @@ using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using ETLBox.Postgres;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System;
 using Xunit;
 

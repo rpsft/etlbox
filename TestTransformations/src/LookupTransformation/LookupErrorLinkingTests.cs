@@ -5,6 +5,7 @@ using ETLBox.DataFlow;
 using ETLBox.Helper;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,6 @@
 ﻿using ETLBox.DataFlow;
 using ETLBox.Helper;
+using ETLBoxTests.Helper;
 using Xunit;
 using Xunit.Abstractions;
 

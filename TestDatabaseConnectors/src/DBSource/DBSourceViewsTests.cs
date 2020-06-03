@@ -3,6 +3,7 @@ using ETLBox.ControlFlow;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 

@@ -4,6 +4,7 @@ using ETLBox.ControlFlow;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
 using ETLBox.SqlServer;
+using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -78,7 +79,7 @@ namespace ETLBoxTests.Performance
                 {
                     Id = Guid.NewGuid(),
                     LastUpdated = DateTime.Now,
-                    Value = HashHelper.RandomString(1)
+                    Value = TestHashHelper.RandomString(1)
                 });
             return knownGuids;
         }
@@ -102,7 +103,7 @@ namespace ETLBoxTests.Performance
                 {
                     Id = Guid.NewGuid(),
                     LastUpdated = DateTime.Now,
-                    Value = HashHelper.RandomString(1)
+                    Value = TestHashHelper.RandomString(1)
                 });
             return source;
         }

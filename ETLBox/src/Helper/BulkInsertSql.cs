@@ -1,19 +1,18 @@
-﻿using System;
+﻿using ETLBox.ConnectionManager;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 
-namespace ETLBox.ConnectionManager
+namespace ETLBox.Helper
 {
     /// <summary>
     /// This class creates the necessary sql statements that simulate the missing bulk insert function in Odbc connections.
     /// Normally this will be a insert into with multiple values.
     /// For access databases this will differ.
     /// </summary>
-    /// <see cref="OdbcConnectionManager"/>
-    /// <see cref="AccessOdbcConnectionManager"/>
     public class BulkInsertSql<T> where T : DbParameter, new()
     {
         internal bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;

@@ -5,6 +5,7 @@ using ETLBox.Helper;
 using ETLBox.Odbc;
 using ETLBox.SQLite;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 

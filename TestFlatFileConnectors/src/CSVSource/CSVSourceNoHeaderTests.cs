@@ -7,6 +7,7 @@ using System;
 using Xunit;
 using ETLBox.SqlServer;
 using ETLBox.Csv;
+using ETLBoxTests.Helper;
 
 namespace ETLBoxTests.DataFlowTests
 {

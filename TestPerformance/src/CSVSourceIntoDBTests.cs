@@ -4,6 +4,7 @@ using ETLBox.ControlFlow;
 using ETLBox.Csv;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
+using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -170,10 +171,10 @@ namespace ETLBoxTests.Performance
                 i++;
                 yield return new CSVData()
                 {
-                    Col1 = HashHelper.RandomString(255),
-                    Col2 = HashHelper.RandomString(255),
-                    Col3 = HashHelper.RandomString(255),
-                    Col4 = HashHelper.RandomString(255)
+                    Col1 = TestHashHelper.RandomString(255),
+                    Col2 = TestHashHelper.RandomString(255),
+                    Col3 = TestHashHelper.RandomString(255),
+                    Col4 = TestHashHelper.RandomString(255)
                 };
             }
         }

@@ -6,6 +6,7 @@ using ETLBox.Helper;
 using ETLBox.Logging;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System;
 using Xunit;
 

@@ -3,6 +3,7 @@ using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using ETLBox.Logging;
 using ETLBox.SqlServer;
+using ETLBoxTests.Helper;
 using Newtonsoft.Json.Linq;
 using System;
 using Xunit;

@@ -5,6 +5,7 @@ using ETLBox.ControlFlow.SqlServer;
 using ETLBox.Helper;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using Xunit;
 
 namespace ETLBoxTests.ControlFlowTests.SqlServer
@@ -20,7 +21,7 @@ namespace ETLBoxTests.ControlFlowTests.SqlServer
         public void CleanUpSchema()
         {
             //Arrange
-            string schemaName = "s" + HashHelper.RandomString(9);
+            string schemaName = "s" + TestHashHelper.RandomString(9);
             SqlTask.ExecuteNonQuery(Connection, "Create schema",
                 $"CREATE SCHEMA {schemaName}");
             SqlTask.ExecuteNonQuery(Connection, "Create table",

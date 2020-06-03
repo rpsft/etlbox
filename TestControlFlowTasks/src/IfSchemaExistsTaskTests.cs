@@ -3,6 +3,7 @@ using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using ETLBox.MySql;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 

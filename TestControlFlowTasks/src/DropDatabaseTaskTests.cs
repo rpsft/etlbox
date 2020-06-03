@@ -5,6 +5,7 @@ using ETLBox.Helper;
 using ETLBox.MySql;
 using ETLBox.Postgres;
 using ETLBox.SqlServer;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            string dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + TestHashHelper.RandomString(10);
             CreateDatabaseTask.Create(connection, dbName);
             bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
@@ -43,7 +44,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void DropIfExists(IConnectionManager connection)
         {
             //Arrange
-            string dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + TestHashHelper.RandomString(10);
             DropDatabaseTask.DropIfExists(connection, dbName);
             CreateDatabaseTask.Create(connection, dbName);
             bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);

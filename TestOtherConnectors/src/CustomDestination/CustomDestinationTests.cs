@@ -4,6 +4,7 @@ using ETLBox.DataFlow;
 using ETLBox.Helper;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;

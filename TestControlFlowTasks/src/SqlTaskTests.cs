@@ -4,6 +4,7 @@ using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using ETLBox.SQLite;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;
 using Xunit;

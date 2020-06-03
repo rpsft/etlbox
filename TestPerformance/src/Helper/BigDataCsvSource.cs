@@ -1,5 +1,6 @@
 ﻿using ETLBox;
 using ETLBox.Helper;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using System.IO;
 

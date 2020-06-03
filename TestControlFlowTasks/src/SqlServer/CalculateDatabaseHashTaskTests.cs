@@ -6,6 +6,7 @@ using ETLBox.Helper;
 using ETLBox.SQLite;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 

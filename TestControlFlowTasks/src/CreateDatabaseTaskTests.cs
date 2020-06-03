@@ -5,6 +5,7 @@ using ETLBox.Helper;
 using ETLBox.MySql;
 using ETLBox.Postgres;
 using ETLBox.SqlServer;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void CreateSimple(IConnectionManager connection)
         {
             //Arrange
-            string dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + TestHashHelper.RandomString(10);
             var dbListBefore = GetDatabaseListTask.List(connection);
             Assert.DoesNotContain<string>(dbName, dbListBefore);
 
@@ -45,7 +46,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void CreateWithCollation(IConnectionManager connection)
         {
             //Arrange
-            string dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + TestHashHelper.RandomString(10);
             string collation = "Latin1_General_CS_AS";
             if (connection.GetType() == typeof(PostgresConnectionManager))
                 collation = "en_US.utf8";

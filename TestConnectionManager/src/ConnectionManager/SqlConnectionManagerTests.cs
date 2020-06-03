@@ -4,6 +4,7 @@ using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using ETLBox.SqlServer;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

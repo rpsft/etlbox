@@ -1,6 +1,7 @@
 using ETLBox.Csv;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
+using ETLBoxTests.Helper;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,7 +18,7 @@ namespace ETLBoxTests.DataFlowTests
             if (File.Exists(filename)) File.Delete(filename);
             MemorySource<string[]> source = new MemorySource<string[]>();
             for (int i = 0; i < noRecords; i++)
-                source.DataAsList.Add(new string[] { HashHelper.RandomString(100) });
+                source.DataAsList.Add(new string[] { TestHashHelper.RandomString(100) });
             CsvDestination<string[]> dest = new CsvDestination<string[]>(filename);
             bool onCompletionRun = false;
 

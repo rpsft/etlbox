@@ -2,6 +2,7 @@ using ETLBox;
 using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void IfDatabaseExists(IConnectionManager connection)
         {
             //Arrange
-            string dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
+            string dbName = ("ETLBox_" + TestHashHelper.RandomString(10)).ToLower();
             var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
             //Act

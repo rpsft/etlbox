@@ -1,4 +1,5 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox;
+using ETLBox.ConnectionManager;
 using ETLBox.MySql;
 using ETLBox.Odbc;
 using ETLBox.Postgres;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
-namespace ETLBox.Helper
+namespace ETLBoxTests.Helper
 {
 
     public static class Config

@@ -2,6 +2,7 @@ using ETLBox.ConnectionManager;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using Xunit;
 

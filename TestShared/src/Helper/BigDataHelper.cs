@@ -1,11 +1,13 @@
-﻿using ETLBox.ConnectionManager;
+﻿using ETLBox;
+using ETLBox.ConnectionManager;
+using ETLBox.Helper;
 using ETLBox.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace ETLBox.Helper
+namespace ETLBoxTests.Helper
 {
     public class BigDataHelper
     {
@@ -25,7 +27,7 @@ namespace ETLBox.Helper
                     string line = String.Join(",", TableDefinition.Columns.Select(col =>
                     {
                         int length = DataTypeConverter.GetStringLengthFromCharString(col.DataType);
-                        return HashHelper.RandomString(length);
+                        return TestHashHelper.RandomString(length);
                     }));
                     writer.WriteLine(line);
                 }

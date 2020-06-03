@@ -3,6 +3,7 @@ using ETLBox.ConnectionManager;
 using ETLBox.ControlFlow;
 using ETLBox.Helper;
 using ETLBox.SQLite;
+using ETLBoxTests.Helper;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xunit;

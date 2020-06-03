@@ -1,6 +1,7 @@
 ﻿using ETLBox.Csv;
 using ETLBox.DataFlow;
 using ETLBox.Helper;
+using ETLBoxTests.Helper;
 using System;
 using System.Dynamic;
 using System.Linq;

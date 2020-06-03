@@ -4,6 +4,7 @@ using ETLBox.Helper;
 using ETLBox.SqlServer;
 using ETLBox.Xml;
 using ETLBoxTests.Fixtures;
+using ETLBoxTests.Helper;
 using Xunit;
 
 namespace ETLBoxTests.DataFlowTests
