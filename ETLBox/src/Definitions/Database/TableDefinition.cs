@@ -47,7 +47,7 @@ namespace ETLBox
 
         public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
 
-        public static TableDefinition GetDefinitionFromTableName(IConnectionManager connection, string tableName)
+        public static TableDefinition FromTableName(IConnectionManager connection, string tableName)
         {
             IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = connection.ConnectionManagerType;

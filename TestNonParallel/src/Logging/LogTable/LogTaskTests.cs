@@ -34,7 +34,7 @@ namespace ETLBoxTests.Logging
 
             //Assert
             IfTableOrViewExistsTask.IsExisting(connection, "etlbox_testlog");
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "etlbox_testlog");
+            var td = TableDefinition.FromTableName(connection, "etlbox_testlog");
             Assert.True(td.Columns.Count == 10);
             //Cleanup
             DropTableTask.Drop(connection, "etlbox_testlog");

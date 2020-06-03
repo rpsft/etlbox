@@ -27,7 +27,7 @@ CREATE TABLE identity (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "identity");
+            var result = TableDefinition.FromTableName(MySqlConnection, "identity");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -52,7 +52,7 @@ CREATE TABLE length_and_precision (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "length_and_precision");
+            var result = TableDefinition.FromTableName(MySqlConnection, "length_and_precision");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -76,7 +76,7 @@ CREATE TABLE testcomment (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "testcomment");
+            var result = TableDefinition.FromTableName(MySqlConnection, "testcomment");
 
             //Assert
             Assert.Collection(result.Columns,

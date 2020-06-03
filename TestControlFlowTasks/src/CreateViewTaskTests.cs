@@ -26,7 +26,7 @@ namespace ETLBoxTests.ControlFlowTests
             CreateViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS test");
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View1"));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "View1");
+            var td = TableDefinition.FromTableName(connection, "View1");
             Assert.Contains(td.Columns, col => col.Name == "test");
         }
 

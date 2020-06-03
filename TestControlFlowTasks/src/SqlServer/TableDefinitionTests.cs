@@ -28,7 +28,7 @@ CREATE TABLE BigIntIdentity (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "BigIntIdentity");
+            var result = TableDefinition.FromTableName(SqlConnection, "BigIntIdentity");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -62,7 +62,7 @@ CREATE TABLE NumericDataTypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "NumericDataTypes");
+            var result = TableDefinition.FromTableName(SqlConnection, "NumericDataTypes");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -97,7 +97,7 @@ CREATE TABLE ReadTableDefinition (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "ReadTableDefinition");
+            var result = TableDefinition.FromTableName(SqlConnection, "ReadTableDefinition");
 
             //Assert
             Assert.True(result.Columns.All(tc => tc.NETDataType == typeof(DateTime)));
@@ -123,7 +123,7 @@ CREATE TABLE LengthOrPrecisionTypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "LengthOrPrecisionTypes");
+            var result = TableDefinition.FromTableName(SqlConnection, "LengthOrPrecisionTypes");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -151,7 +151,7 @@ CREATE TABLE TextTypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "TextTypes");
+            var result = TableDefinition.FromTableName(SqlConnection, "TextTypes");
 
             //Assert
             Assert.Collection(result.Columns,
