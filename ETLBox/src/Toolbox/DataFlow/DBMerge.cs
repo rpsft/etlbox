@@ -1,8 +1,8 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
-using ETLBox.DataFlow.Connectors;
 using ETLBox.DataFlow.Transformations;
+using ETLBox.Exceptions;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace ETLBox.DataFlow.Connectors
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
         public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
-        public DeltaMode DeltaMode { get; set; }
+        public MergeMode DeltaMode { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
         public string TableName { get; set; }
 
@@ -260,7 +260,7 @@ namespace ETLBox.DataFlow.Connectors
 
             DestinationTable.BeforeBatchWrite = batch =>
             {
-                if (DeltaMode == DeltaMode.Delta)
+                if (DeltaMode == MergeMode.Delta)
                     DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) != ChangeAction.Delete));
                 else
                     DeltaTable.AddRange(batch);
@@ -274,7 +274,7 @@ namespace ETLBox.DataFlow.Connectors
                 }
                 else
                 {
-                    if (DeltaMode == DeltaMode.Delta)
+                    if (DeltaMode == MergeMode.Delta)
                         throw new ETLBoxNotSupportedException("If you provide a delta load, you must define at least one compare column." +
                             "Using the truncate method is not allowed. ");
                     TruncateDestinationOnce();
@@ -310,7 +310,7 @@ namespace ETLBox.DataFlow.Connectors
             SetChangeDate(row, DateTime.Now);
             TInput find = default(TInput);
             InputDataDict.TryGetValue(GetUniqueId(row), out find);
-            if (DeltaMode == DeltaMode.Delta && GetIsDeletion(row))
+            if (DeltaMode == MergeMode.Delta && GetIsDeletion(row))
             {
                 if (find != null)
                 {
@@ -357,15 +357,15 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (WasTruncationExecuted == true) return;
             WasTruncationExecuted = true;
-            if (DeltaMode == DeltaMode.NoDeletions == true) return;
+            if (DeltaMode == MergeMode.NoDeletions == true) return;
             TruncateTableTask.Truncate(this.ConnectionManager, TableName);
         }
 
         void IdentifyAndDeleteMissingEntries()
         {
-            if (DeltaMode == DeltaMode.NoDeletions) return;
+            if (DeltaMode == MergeMode.NoDeletions) return;
             IEnumerable<TInput> deletions = null;
-            if (DeltaMode == DeltaMode.Delta)
+            if (DeltaMode == MergeMode.Delta)
                 deletions = InputData.Where(row => GetChangeAction(row) == ChangeAction.Delete).ToList();
             else
                 deletions = InputData.Where(row => GetChangeAction(row) == null).ToList();
@@ -408,21 +408,6 @@ namespace ETLBox.DataFlow.Connectors
         public Task Completion => DestinationTable.Completion;
     }
 
-    public enum DeltaMode
-    {
-        Full = 0,
-        NoDeletions = 1,
-        Delta = 2,
-    }
-
-    public class MergeProperties
-    {
-        public List<string> IdPropertyNames { get; set; } = new List<string>();
-        public List<string> ComparePropertyNames { get; set; } = new List<string>();
-        public Dictionary<string, object> DeletionProperties { get; set; } = new Dictionary<string, object>();
-        internal string ChangeActionPropertyName { get; set; } = "ChangeAction";
-        internal string ChangeDatePropertyName { get; set; } = "ChangeDate";
-    }
 
     public class DbMerge : DbMerge<ExpandoObject>
     {

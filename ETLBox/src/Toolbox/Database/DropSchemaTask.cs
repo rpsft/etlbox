@@ -1,4 +1,5 @@
 ﻿using ETLBox.Connection;
+using ETLBox.Exceptions;
 
 namespace ETLBox.ControlFlow.Tasks
 {

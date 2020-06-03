@@ -1,5 +1,4 @@
-﻿using ETLBox;
-using ETLBox.ControlFlow;
+﻿using ETLBox.ControlFlow;
 using ETLBoxTests.Helper;
 using System.Collections.Generic;
 using System.IO;

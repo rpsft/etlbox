@@ -1,6 +1,7 @@
 using ETLBox;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
+using ETLBox.Exceptions;
 using System.Collections.Generic;
 using Xunit;
 

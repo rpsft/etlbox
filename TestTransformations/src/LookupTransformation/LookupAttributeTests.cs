@@ -1,5 +1,8 @@
 using ETLBox;
-using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
+using ETLBox.DataFlow;
+using ETLBox.DataFlow.Connectors;
+using ETLBox.DataFlow.Transformations;
+using ETLBox.Exceptions;
 using System;
 using Xunit;
 

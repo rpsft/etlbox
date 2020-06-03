@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ETLBox
+namespace ETLBox.Exceptions
 {
     /// <summary>
     /// The generic ETLBox Exception. See inner exception for more details.

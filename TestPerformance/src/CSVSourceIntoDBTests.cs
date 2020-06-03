@@ -1,9 +1,8 @@
-﻿using ETLBox;
-using ETLBox.Connection;
+﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
-using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
-using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
+using ETLBox.DataFlow.Connectors;
+using ETLBox.DataFlow.Transformations;
 using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;

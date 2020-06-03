@@ -1,6 +1,7 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
+using ETLBox.Exceptions;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;

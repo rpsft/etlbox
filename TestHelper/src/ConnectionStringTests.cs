@@ -1,5 +1,6 @@
 using ETLBox;
 using ETLBox.Connection;
+using ETLBox.Exceptions;
 using Xunit;
 
 namespace ETLBoxTests

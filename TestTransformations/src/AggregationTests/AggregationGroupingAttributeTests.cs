@@ -1,4 +1,6 @@
-using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
+using ETLBox.DataFlow;
+using ETLBox.DataFlow.Connectors;
+using ETLBox.DataFlow.Transformations;
 using System.Collections.Generic;
 using Xunit;
 

@@ -1,7 +1,7 @@
 using ETLBox.Connection;
-using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
-using ETLBox.DataFlow; using ETLBox.DataFlow.Connectors; using ETLBox.DataFlow.Transformations;
+using ETLBox.DataFlow;
+using ETLBox.DataFlow.Connectors;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System.Dynamic;
@@ -75,7 +75,7 @@ namespace ETLBoxTests.DataFlowTests
             //Act
             DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
             {
-                DeltaMode = DeltaMode.Delta
+                DeltaMode = MergeMode.Delta
             };
             dest.MergeProperties.IdPropertyNames.Add("Col1");
             dest.MergeProperties.ComparePropertyNames.Add("Col2");
