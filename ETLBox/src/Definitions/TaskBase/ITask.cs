@@ -1,6 +1,6 @@
 ﻿using ETLBox.Connection;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public interface ITask
     {

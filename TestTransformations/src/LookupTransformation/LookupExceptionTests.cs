@@ -1,4 +1,3 @@
-using ETLBox;
 using ETLBox.DataFlow;
 using ETLBox.DataFlow.Connectors;
 using ETLBox.DataFlow.Transformations;
