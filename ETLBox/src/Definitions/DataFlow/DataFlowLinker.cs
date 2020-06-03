@@ -4,7 +4,7 @@ using CF = ETLBox.ControlFlow;
 
 namespace ETLBox.DataFlow
 {
-    public class DataFlowLinker<TOutput>
+    internal class DataFlowLinker<TOutput>
     {
         public ISourceBlock<TOutput> SourceBlock { get; set; }
         public bool DisableLogging => CallingTask.DisableLogging;

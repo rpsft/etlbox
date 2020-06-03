@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Executes any sql on the database. Use ExecuteNonQuery for SQL statements returning no data, ExecuteScalar for statements with one row and one column or

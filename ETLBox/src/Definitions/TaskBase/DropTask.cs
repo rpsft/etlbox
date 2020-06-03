@@ -1,4 +1,7 @@
-﻿namespace ETLBox.ControlFlow
+﻿using ETLBox.ControlFlow.Tasks;
+using ETLBox.Helper;
+
+namespace ETLBox.ControlFlow
 {
     public abstract class DropTask<T> : GenericTask, ITask where T : IfExistsTask, new()
     {

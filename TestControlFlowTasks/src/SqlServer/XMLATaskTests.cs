@@ -1,9 +1,10 @@
 using ETLBox.Connection;
-using ETLBox.ControlFlow.SqlServer;
+using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.Tasks;
 using ETLBoxTests.Helper;
 using Xunit;
 
-namespace ETLBoxTests.ControlFlowTests.SqlServer
+namespace ETLBoxTests.ControlFlowTests
 {
     [Collection("SSAS ControlFlow")]
     public class XMLATaskTests

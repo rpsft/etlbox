@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ETLBox.ControlFlow.SqlServer
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Calculates a hash value of the database. It will use only the schemas given in the property SchemaName for the calculation.
@@ -21,8 +21,8 @@ namespace ETLBox.ControlFlow.SqlServer
         public override string TaskName => $"Calculate hash value for schema(s) {SchemaNamesAsString}";
         public void Execute()
         {
-            if (!DbConnectionManager.SupportSchemas)
-                throw new ETLBoxNotSupportedException("This task is not supported!");
+            if (ConnectionType != ConnectionManagerType.SqlServer)
+                throw new ETLBoxNotSupportedException("This task is only supported for SqlServer!");
 
             List<string> allColumns = new List<string>();
             new SqlTask(this, Sql)

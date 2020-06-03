@@ -1,4 +1,7 @@
-﻿namespace ETLBox.ControlFlow
+﻿using ETLBox.ControlFlow.Tasks;
+using ETLBox.Helper;
+
+namespace ETLBox.ControlFlow
 {
     public abstract class IfExistsTask : GenericTask, ITask
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Returns a list of all user databases on the server. Make sure to connect with the correct permissions!

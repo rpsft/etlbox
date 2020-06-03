@@ -1,6 +1,6 @@
 ﻿using ETLBox.Connection;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Drops a table. Use DropIfExists to drop a table only if it exists.

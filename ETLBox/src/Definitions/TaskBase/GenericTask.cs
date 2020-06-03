@@ -1,9 +1,8 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Helper;
 using System;
-using CF = ETLBox.ControlFlow;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public abstract class GenericTask : ITask
     {
@@ -14,7 +13,7 @@ namespace ETLBox
             set => _taskType = value;
         }
         public virtual string TaskName { get; set; } = "N/A";
-        public NLog.Logger NLogger { get; set; } = CF.ControlFlow.GetLogger();
+        public NLog.Logger NLogger { get; set; } = ControlFlow.GetLogger();
 
         public virtual IConnectionManager ConnectionManager { get; set; }
 
@@ -23,7 +22,7 @@ namespace ETLBox
             get
             {
                 if (ConnectionManager == null)
-                    return (IConnectionManager)ControlFlow.ControlFlow.DefaultDbConnection;
+                    return (IConnectionManager)ControlFlow.DefaultDbConnection;
                 else
                     return (IConnectionManager)ConnectionManager;
             }
@@ -38,10 +37,10 @@ namespace ETLBox
         {
             get
             {
-                if (ControlFlow.ControlFlow.DisableAllLogging == false)
+                if (ControlFlow.DisableAllLogging == false)
                     return _disableLogging;
                 else
-                    return ControlFlow.ControlFlow.DisableAllLogging;
+                    return ControlFlow.DisableAllLogging;
             }
             set
             {

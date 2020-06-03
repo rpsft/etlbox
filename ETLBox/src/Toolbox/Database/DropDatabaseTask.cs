@@ -1,6 +1,6 @@
 ﻿using ETLBox.Connection;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Drops a database. Use DropIfExists to drop a database only if it exists. In MySql, this will drop a schema.

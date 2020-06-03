@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace ETLBox
+namespace ETLBox.Helper
 {
     public class ObjectNameDescriptor
     {

@@ -1,4 +1,5 @@
 using ETLBox;
+using ETLBox.Helper;
 using Xunit;
 
 namespace ETLBoxTests

@@ -1,9 +1,10 @@
 ﻿using ETLBox.Connection;
+using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Creates an index if the index doesn't exists, otherwise the index is dropped and recreated.

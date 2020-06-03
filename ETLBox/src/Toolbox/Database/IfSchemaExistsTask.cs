@@ -1,6 +1,6 @@
 ﻿using ETLBox.Connection;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Checks if a schema exists. In MySql, use the IfDatabaseExistsTask instead.

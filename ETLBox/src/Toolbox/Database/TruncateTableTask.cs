@@ -1,6 +1,7 @@
 ﻿using ETLBox.Connection;
+using ETLBox.Helper;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Truncates a table.

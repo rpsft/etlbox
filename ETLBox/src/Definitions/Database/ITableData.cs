@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
 
     public interface ITableData : IDisposable, IDataReader

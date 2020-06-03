@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.Tasks;
 using ETLBox.DataFlow;
 using ETLBox.Logging;
 using ETLBoxTests.Helper;

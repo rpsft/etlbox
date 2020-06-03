@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;

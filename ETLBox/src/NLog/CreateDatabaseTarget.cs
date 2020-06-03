@@ -1,4 +1,5 @@
 ﻿using ETLBox.Connection;
+using ETLBox.Helper;
 using NLog.Targets;
 
 namespace ETLBox.Logging

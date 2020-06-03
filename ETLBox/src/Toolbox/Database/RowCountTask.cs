@@ -1,8 +1,9 @@
 ﻿using ETLBox.Connection;
+using ETLBox.Helper;
 using System;
 
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables).

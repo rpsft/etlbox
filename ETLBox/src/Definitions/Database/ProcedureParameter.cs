@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public class ProcedureParameter
     {

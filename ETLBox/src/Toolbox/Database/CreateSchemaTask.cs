@@ -1,6 +1,7 @@
 ﻿using ETLBox.Connection;
+using ETLBox.Helper;
 
-namespace ETLBox.ControlFlow
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Creates a schema if the schema doesn't exists. For MySql, use the CreateDatabaseTask instead.

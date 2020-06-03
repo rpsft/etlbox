@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.Tasks;
 
 namespace ETLBoxTests.Helper
 {

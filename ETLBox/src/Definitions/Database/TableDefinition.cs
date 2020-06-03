@@ -1,11 +1,12 @@
 ﻿using ETLBox.Connection;
 using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.Tasks;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public class TableDefinition
     {

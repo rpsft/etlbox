@@ -1,4 +1,6 @@
-﻿namespace ETLBox
+﻿using ETLBox.ControlFlow;
+
+namespace ETLBox.DataFlow
 {
     public abstract class DataFlowTask : GenericTask, ITask
     {
@@ -7,8 +9,8 @@
         {
             get
             {
-                if (DataFlow.DataFlow.HasLoggingThresholdRows)
-                    return DataFlow.DataFlow.LoggingThresholdRows;
+                if (DataFlow.HasLoggingThresholdRows)
+                    return DataFlow.LoggingThresholdRows;
                 else
                     return _loggingThresholdRows;
             }

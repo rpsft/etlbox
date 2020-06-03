@@ -1,6 +1,6 @@
 ﻿using ETLBox.Connection;
 
-namespace ETLBox.ControlFlow.SqlServer
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// Tries to remove all database objects from the given schema(s).

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public class TableData : TableData<object[]>
     {

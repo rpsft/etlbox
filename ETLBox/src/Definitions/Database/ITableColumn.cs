@@ -1,4 +1,4 @@
-﻿namespace ETLBox
+﻿namespace ETLBox.ControlFlow
 {
     public interface ITableColumn
     {

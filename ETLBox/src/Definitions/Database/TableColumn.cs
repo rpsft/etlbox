@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public class TableColumn : ITableColumn, IColumnMapping
     {

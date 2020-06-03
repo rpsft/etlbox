@@ -1,6 +1,8 @@
 ﻿using ETLBox;
 using ETLBox.Connection;
 using ETLBox.ControlFlow;
+using ETLBox.ControlFlow.Tasks;
+using ETLBox.Helper;
 using ETLBoxTests.Helper;
 using System.Collections.ObjectModel;
 using System.Linq;

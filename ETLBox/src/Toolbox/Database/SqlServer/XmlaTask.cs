@@ -1,7 +1,7 @@
 ﻿using ETLBox.Connection;
 using System;
 
-namespace ETLBox.ControlFlow.SqlServer
+namespace ETLBox.ControlFlow.Tasks
 {
     /// <summary>
     /// This task can exeucte any XMLA.

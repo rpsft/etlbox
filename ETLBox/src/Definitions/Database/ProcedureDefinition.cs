@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ETLBox
+namespace ETLBox.ControlFlow
 {
     public class ProcedureDefinition
     {
