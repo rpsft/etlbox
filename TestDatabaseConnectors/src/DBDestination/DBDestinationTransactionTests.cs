@@ -1,6 +1,7 @@
 using ETLBox.Connection;
 using ETLBox.ControlFlow.Tasks;
 using ETLBox.DataFlow.Connectors;
+using ETLBox.DataFlow.Transformations;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System;
@@ -13,6 +14,8 @@ namespace ETLBoxTests.DataFlowTests
     public class DbDestinationTransactionTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+
         public DbDestinationTransactionTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -156,8 +159,101 @@ namespace ETLBoxTests.DataFlowTests
             Assert.True(connection.State == System.Data.ConnectionState.Open);
 
             Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+        }
 
+        [Theory, MemberData(nameof(Connections))]
+        public void TwoTransactionsAndParallelWriting(IConnectionManager connection)
+        {
+            if (connection.ConnectionManagerType == ConnectionManagerType.SQLite) return;
+            //Arrange
+            var concopy = connection.Clone();
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSourceParallelWrite");
+            s2c.InsertTestData();
+            TwoColumnsTableFixture d2c1 = new TwoColumnsTableFixture(connection, "TransactionDest1");
+            TwoColumnsTableFixture d2c2 = new TwoColumnsTableFixture(connection, "TransactionDest2");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "TransactionSourceParallelWrite");
+            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(connection, "TransactionDest1", batchSize: 2);
+            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(concopy, "TransactionDest2", batchSize: 2);
+            Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
+
+            //Act & Assert
+            connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+            concopy.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+            source.LinkTo(multicast);
+            multicast.LinkTo(dest1);
+            multicast.LinkTo(dest2);
+
+            source.Execute();
+            dest1.Wait();
+            dest2.Wait();
+            connection.CommitTransaction();
+            concopy.CommitTransaction();
+
+            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest1"));
+            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest2"));
+        }
+
+        [Theory, MemberData(nameof(Connections))]
+        public void OneTransactionAndParallelWriting(IConnectionManager connection)
+        {
+            if (connection.ConnectionManagerType == ConnectionManagerType.SQLite) return;
+
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSourceParallelWrite");
+            s2c.InsertTestData();
+            TwoColumnsTableFixture d2c1 = new TwoColumnsTableFixture(connection, "TransactionDest1");
+            TwoColumnsTableFixture d2c2 = new TwoColumnsTableFixture(connection, "TransactionDest2");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "TransactionSourceParallelWrite");
+            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(connection, "TransactionDest1", batchSize: 2);
+            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(connection, "TransactionDest2", batchSize: 2);
+            Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
+
+            //Act & Assert
+            Assert.ThrowsAny<Exception>(() =>
+           {
+               connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+               source.LinkTo(multicast);
+               multicast.LinkTo(dest1);
+               multicast.LinkTo(dest2);
+
+               source.Execute();
+               dest1.Wait();
+               dest2.Wait();
+               connection.CommitTransaction();
+           });
+        }
+
+        [Fact]
+        public void OneTransactionAndParallelWritingWithMARS()
+        {
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "TransactionSourceParallelWrite");
+            s2c.InsertTestData();
+            TwoColumnsTableFixture d2c1 = new TwoColumnsTableFixture(SqlConnection, "TransactionDest1");
+            TwoColumnsTableFixture d2c2 = new TwoColumnsTableFixture(SqlConnection, "TransactionDest2");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "TransactionSourceParallelWrite");
+
+            string constring = $"{Config.SqlConnection.RawConnectionString("DataFlow")};MultipleActiveResultSets=True;";
+            var marscon = new SqlConnectionManager(constring);
+            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(marscon, "TransactionDest1", batchSize: 2);
+            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(marscon, "TransactionDest2", batchSize: 2);
+            Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
+
+            //Act & Assert
+            marscon.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+            source.LinkTo(multicast);
+            multicast.LinkTo(dest1);
+            multicast.LinkTo(dest2);
+
+            source.Execute();
+            dest1.Wait();
+            dest2.Wait();
+            marscon.CommitTransaction();
+
+            d2c1.AssertTestData();
+            d2c1.AssertTestData();
 
         }
-    }
+
+}
 }
