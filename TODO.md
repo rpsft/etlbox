@@ -10,12 +10,6 @@
 - ODBC connection managers for MySql etc. 
 - add tests that support MariaDb (there is one test failing with CreatTableTask & ComputedColumn) 
 
-## Update Docu
-
-- Improving Lookup with new set of attributes to define matching and retrieving properties. Also a new Aggretion component that simplifies creating aggregates (e.g. to calculate SUM, MIN, MAX or Count or any other custom defined calculation).
-- All text files source (Csv, Json, Xml) now accept either a file path OR an URL which is loaded with a HttpClient. 
-- Excel source now skip blank lines
-
 ## Enhancements
 
 - All sources (DbSource, CsvSource, etc. )  always read all the data from the source. For development purposes it would be benefical if only the first X rows are read from the source. A property `public int Limit` could be introduced, so that only the first X rows are read for a DBSource/CSVSource/JsonSource/. This is quite easy to implement as SqlTask already has the Limit property. For Csv/Json, there should be a counter on the lines within the stream reader...
@@ -27,3 +21,6 @@
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from "GetTableDefinitionFrom"
 - GCPressure was detected on CSVSource - verify if CSVSource really is the root cause. (See performance tests, improve tests that uses memory as source) 
 - in order to have these tests fully working, add something like MaxBufferSize as  DataFlow parameter for all DataFlowTasks and use this when creating DF components  - also have a static DefaultMaxBufferSize as Fallback value
+- Compare with sql code from dbschemareader (martinjw)
+- Issue with transactions and parallel write - add a better exception handling (check if transcation is already in progress), or check if another approach is feasable (perhaps multiple transactions?)
+- Add Oracle support
