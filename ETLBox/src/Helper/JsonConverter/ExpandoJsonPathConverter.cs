@@ -111,10 +111,31 @@ namespace ALE.ETLBox.Helper
         private object GetValueFromJsonPath(JToken jo, string path)
         {
             object val = null;
-            JToken t = jo.SelectToken(path);
-            if (t is JValue)
-                val = ((JValue)t).Value;
+            //JToken t = jo.SelectToken(path);
+            List<JToken> tokens = jo.SelectTokens(path).ToList();
+            if (tokens.Count == 1)
+            {
+                JToken t = tokens.First();
+                val = ParseToken(t);
+            }
+            else if (tokens.Count > 1)
+            {
+                List<object> result = new List<object>();
+                foreach (var t in tokens)
+                {
+                    result.Add(ParseToken(t));
+                }
+                val = result;
+            }
             return val;
+        }
+
+        private object ParseToken(JToken t)
+        {
+            if (t is JValue)
+                return ((JValue)t).Value;
+            else
+                return t.ToString();
         }
 
         /// <inheritdoc />
@@ -145,4 +166,5 @@ namespace ALE.ETLBox.Helper
             }
         }
     }
+
 }

@@ -33,9 +33,17 @@ namespace ALE.ETLBox.ControlFlow
         /* Public properties */
         public void Create() => Execute();
         public TableDefinition TableDefinition { get; set; }
-        public string TableName => TableDefinition.Name;
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
-        public List<TableColumn> Columns => TableDefinition.Columns;
+        public List<TableColumn> Columns
+        {
+            get => TableDefinition.Columns;
+            set => TableDefinition.Columns = value;
+        }
+        public string TableName
+        {
+            get => TableDefinition.Name;
+            set => TableDefinition.Name = value;
+        }
 
         public bool ThrowErrorIfTableExists { get; set; }
 

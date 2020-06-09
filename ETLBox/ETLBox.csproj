@@ -11,15 +11,14 @@
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>Fixing issue with converting enum types (normal and nullable). DbMerge now supports ExpandoObjects.
-Preparation of moving Connection Managers into separate packages. ExcelSource now supports arrays. Fixing bug when dynmic objects have different properties and/or different sequence of these props.</PackageReleaseNotes>
-    <Version>1.8.8</Version>
+    <PackageReleaseNotes>Fixing issues with ExpandoJsonConverter and TableDefinition within CreateTableTask.</PackageReleaseNotes>
+    <Version>1.8.9</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.8.0</AssemblyVersion>
-    <FileVersion>1.8.8.0</FileVersion>
+    <AssemblyVersion>1.8.9.0</AssemblyVersion>
+    <FileVersion>1.8.9.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>
