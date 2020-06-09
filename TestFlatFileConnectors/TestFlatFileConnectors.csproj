@@ -142,6 +142,9 @@
     <None Update="res\JsonSource\EmptyObject.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\JsonSource\NestedArray.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\JsonSource\NestedData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
