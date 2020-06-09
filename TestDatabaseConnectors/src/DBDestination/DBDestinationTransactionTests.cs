@@ -6,6 +6,7 @@ using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ETLBoxTests.DataFlowTests
@@ -211,16 +212,29 @@ namespace ETLBoxTests.DataFlowTests
             //Act & Assert
             Assert.ThrowsAny<Exception>(() =>
            {
-               connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-               source.LinkTo(multicast);
-               multicast.LinkTo(dest1);
-               multicast.LinkTo(dest2);
+               try
+               {
+                   connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+                   source.LinkTo(multicast);
+                   multicast.LinkTo(dest1);
+                   multicast.LinkTo(dest2);
 
-               source.Execute();
-               dest1.Wait();
-               dest2.Wait();
-               connection.CommitTransaction();
+                   source.Execute();
+                   dest1.Wait();
+                   dest2.Wait();
+               }
+               catch
+               {
+                   throw;
+               }
+               finally
+               {
+                   connection.RollbackTransaction();
+                   connection.Close();
+               }
            });
+            if (connection.GetType() == typeof(MySqlConnectionManager))
+                Task.Delay(200).Wait(); //MySql needs a little bit longer to free resources
         }
 
         [Fact]
@@ -252,8 +266,7 @@ namespace ETLBoxTests.DataFlowTests
 
             d2c1.AssertTestData();
             d2c1.AssertTestData();
-
         }
 
-}
+    }
 }
