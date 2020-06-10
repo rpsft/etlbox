@@ -1,53 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-    <Configurations>Debug;Release</Configurations>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Andreas Lennartz</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
-    <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-    <PackageReleaseNotes>This is ETLBox 2.0. The connection managers are moved into their own package - this reduces depencenies of the core package as you only need to pick the packages that you actually need. Please not that some packages are now closed source and have a different license model.
-BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.</PackageReleaseNotes>
-    <Version>2.0.0</Version>
-    <PackageIconUrl></PackageIconUrl>
-    <PackageIcon>logo_bw.png</PackageIcon>
-    <Authors>Andreas Lennartz</Authors>
-    <Company>ETLBox Office</Company>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RootNamespace>ETLBox</RootNamespace>
-    <Product>ETLBox</Product>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Configurations>Debug;Release</Configurations>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</Description>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <Copyright>Andreas Lennartz</Copyright>
+        <PackageLicenseUrl></PackageLicenseUrl>
+        <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
+        <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
+        <PackageReleaseNotes>This is ETLBox 2.0. ETLBox now is a fully featured lightweight ETL framework and data integration toolbox ready to be used in production environments.
+What's new? The connection managers are now moved into their own package - this reduces dependencies in the core package as you only need to pick the packages for the connectors that you actually need.
+Please not that some of the connectors are now closed source and have a different license model.
+BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.
+</PackageReleaseNotes>
+        <Version>2.0.0</Version>
+        <PackageIconUrl></PackageIconUrl>
+        <PackageIcon>logo_bw.png</PackageIcon>
+        <Authors>Andreas Lennartz</Authors>
+        <Company>TheBoxOffice</Company>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
+        <FileVersion>2.0.0.0</FileVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RootNamespace>ETLBox</RootNamespace>
+        <Product>ETLBox</Product>
+        <PackageId>ETLBox</PackageId>
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NLog" Version="4.7.2" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.4" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.1" />
-    <PackageReference Include="TSQL.Parser" Version="1.5.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="NLog.Extensions.Logging" Version="1.6.4" />
+        <PackageReference Include="System.Data.Common" Version="4.3.0" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.1" />
+        <PackageReference Include="TSQL.Parser" Version="1.5.2" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="img\logo_bw.png" Pack="true" PackagePath="">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="img\logo_bw.png" Pack="true" PackagePath="">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj" PrivateAssets="All" />
+    </ItemGroup>
+
+    <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
+        </ItemGroup>
+    </Target>
 
 </Project>

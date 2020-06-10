@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox", "ETLBox\ETLBox.csproj", "{03805F53-2270-44DC-AEF5-F534539EBEA1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBoxDocu", "ETLBoxDocu\ETLBoxDocu.csproj", "{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestNonParallel", "TestNonParallel\TestNonParallel.csproj", "{F5CF5138-7901-44B9-ABCC-8320717F6739}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPerformance", "TestPerformance\TestPerformance.csproj", "{6A90A684-BAFE-4E1A-A952-92B68396060A}"
@@ -29,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SqlServer", "..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj", "{0888554F-0B9A-4423-8E87-C88AB61D7122}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SSAS", "..\etlbox.connectors\ETLBox.SSAS\ETLBox.SSAS.csproj", "{EE07980D-9A26-4D6C-B7B3-DD7D84526610}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.AnalysisService", "..\etlbox.connectors\ETLBox.AnalysisServices\ETLBox.AnalysisServices.csproj", "{EE07980D-9A26-4D6C-B7B3-DD7D84526610}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.MySql", "..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj", "{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}"
 EndProject
@@ -61,9 +59,6 @@ Global
 		{03805F53-2270-44DC-AEF5-F534539EBEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03805F53-2270-44DC-AEF5-F534539EBEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03805F53-2270-44DC-AEF5-F534539EBEA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9BAD679-81F3-4D6D-BB3E-0BB3C7FA35A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5CF5138-7901-44B9-ABCC-8320717F6739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5CF5138-7901-44B9-ABCC-8320717F6739}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5CF5138-7901-44B9-ABCC-8320717F6739}.Release|Any CPU.ActiveCfg = Release|Any CPU
