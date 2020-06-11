@@ -32,6 +32,17 @@ ETLBox is a fully functional alternative to other ETL tools like Sql Server Inte
 
 **Made for big data**: ETLBox relies on [Microsoft's TPL.Dataflow library](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library) and was designed to work with big amounts of data.
 
+
+## Getting ETLBox
+
+All [ETLBox packages are available on nuget](https://www.nuget.org/packages?q=etlbox). 
+You will always need the [main ETLBox package](https://www.nuget.org/packages/ETLBox/).
+The connectors are in separate packages - depending on your needs, choose the right connector package from the list.
+E.g., if you want to connect to SqlServer, use [ETLBox.SqlServer](https://www.nuget.org/packages/ETLBox.SqlServer/).
+If you also need to read or write from Csv files then add [ETLBox.Csv](https://www.nuget.org/packages/ETLBox.Csv/).
+Having the connectors in separate packages reduces dependencies to 3rd party libraries.
+You can use ETLBox within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions of .NET)
+
 ## Data Flow and Control Flow
 
 ETLBox is split into two main components: Data Flow and Control Flow Tasks. The Data Flow part offers the core ETL components. The tasks in the Control Flow allow you to manage your databases with a simple syntax. Both components come with customizable logging functionalities.
@@ -120,10 +131,34 @@ Non-blocking|Partially blocking|Blocking|
 ------------|------------------|---------
 RowTransformation|LookupTransformation|BlockTransformation
 Aggregation|CrossJoin|Sort
-MergeJoin||
+MergeJoin||DbMerge*
 Multicast||
 RowDuplication||
 RowMultiplication||
+
+*RowTransformation*: This transformation let you modfiy each data record with your custom written C# code
+
+*Aggregation*: Aggregate your data on-the-fly  based on Grouping and Aggregation functions.
+
+*RowDuplication*: Simple duplicate your input row x times - additionally, you can add your own condition when to duplicate. 
+
+*RowMultiplication*: Allow you to create multiple rows based on your incoming rows - based on your own custom C# code. 
+
+*Multicast*: Broadcast your incoming data into 2 or more targets.
+
+*MergeJoin*: Join your incoming data into one. Works best with sorted input.
+
+*LookupTransformation*: Allows you to store lookup data in memory and use it for enriching your data in your DataFlow.
+
+*CrossJoin*: Takes two inputs and return one output with each record of both inputs joined with each other. 
+
+*BlockTransformation*: Allows you to execute your own custom written C# on your whole set of incoming data. 
+
+*Sort*: Sorts your input data by your own sort function.
+
+*DbMerge*: Allows you to insert, update or delete data in your target table depending on your incoming data.
+No more need to write your own "upsert" statement - the `DbMerge` is supported by all ETLBox databases. The output of the DbMerge
+is the changes to your target table (insertions, updates and deletions.)
 
 #### Designed for big data
 
@@ -152,30 +187,18 @@ CreateTableTask.Create(conn, "Table1", new List<TableColumn>() {
 
 By default, ETLBox uses and extends [NLog](https://nlog-project.org). ETLBox already comes with NLog as dependency - so you don't need to include additional packages from nuget. In order to have the logging activating, you just have to set up a nlog configuration called `nlog.config`, and create a target and a logger rule. After adding this, you will already get logging output for all tasks and components in ETLBox. [Read more about logging here](https://etlbox.net/articles/overview_logging.html).
 
-## Getting ETLBox
+## Where to continue
 
-You can use ETLBox within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions of .NET)
+We recommend that you try ETLBox out. All [ETLBox packages are available on nuget](https://www.nuget.org/packages?q=etlbox). 
+You will always need the [main ETLBox package](https://www.nuget.org/packages/ETLBox/).
+The connectors are in separate packages - depending on your needs, choose the right connector packages from the list.
+E.g., if you want to connect to SqlServer, use [ETLBox.SqlServer](https://www.nuget.org/packages/ETLBox.SqlServer/), and if you also
+need to access Csv files then add [ETLBox.Csv](https://www.nuget.org/packages/ETLBox.Csv/).
 
-**Variant 1:** Nuget
+The free versions allows you to process up to 10.000 records per connector in a DataFlow. 
 
-[ETLBox is available on nuget](https://www.nuget.org/packages/ETLBox). Just add the package to your project via your nuget package manager.
-
-**Variant 2:** Download the sources
-
-Clone the repository:
-
-```bash
-git clone https://github.com/roadrunnerlenny/etlbox.git
-```
-
-Then, open the downloaded solution file ETLBox.sln with Visual Studio 2019 or higher.
-Now you can build the solution, and use it as a reference in other projects.
-
-## Going further
-
-ETLBox is open source. Feel free to make changes or to fix bugs. Every particiation in this open source project is appreciated.
-
-To dig deeper into it, have a look at the test projects. There is a test for (almost) everything that you can do with ETLBox.
+If you are interest in the sources, you can clone the [main ETLBox repository from github](https://github.com/roadrunnerlenny/etlbox). 
+Please note that the connectors are not open source. If you need access to the source code, please contact us.
 
 <span class="hideOnWebsite">
 
