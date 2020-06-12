@@ -26,14 +26,6 @@
         <label for="name">Your Name</label>
         <input type="text" name="contactname" class="form-control" id="name" required="required"/>
     </div>
-    <div class="form-group">
-        <label for="company">Company name <i>(optional)</i></label>
-        <input type="text" name="company" class="form-control" id="company" />
-    </div>
-    <div class="form-group">
-        <label for="address">Your address <i>(optional)</i></label>
-        <textarea class="form-control" rows="4" name="address" id="address"></textarea>
-    </div>
 
     <div class="form-group">
         <label for="matterofconcern">You want to...</label>
@@ -47,11 +39,27 @@
     </div>
 
     <div id="purchasenotes">
-        <small>Please note that you don't need to enter your payments details yet.
-    We just request your address or company address, the name of the contact person and the payment method you prefer.
-    Your order will be processed ASAP and we will send you a license key valid for one year normally within the next business day.
-    Along with the license key you will receive an invoice that contains all necessary details how to settle it.
-        We kindly ask you to make the payment within the next 2 weeks. If you have any questions, please feel to contact us directly.</small>
+
+        <div class="form-group">
+            <label for="company">Company name</label>
+            <input type="text" name="company" class="form-control" id="company" />
+        </div>
+        <div class="form-group">
+            <label for="phone">Your phone number</label>
+            <input type="text" name="phone" class="form-control" id="phone" />
+        </div>
+        <div class="form-group">
+            <label for="address">Your address</label>
+            <textarea class="form-control" rows="4" name="address" id="address"></textarea>
+        </div>
+
+        <small>
+            Please note that you don't need to enter your payments details yet.
+            We just request your address or company address, the name of the contact person and the payment method you prefer.
+            Your order will be processed ASAP and we will send you a license key valid for one year normally within the next business day.
+            Along with the license key you will receive an invoice that contains all necessary details how to settle it.
+            We kindly ask you to make the payment within the next 2 weeks. If you have any questions, please feel to contact us directly.
+        </small>
 
         <div class="form-group">
             <label for="paymentmethod">Please choose your payment method</label>

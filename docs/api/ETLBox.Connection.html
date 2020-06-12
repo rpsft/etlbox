@@ -127,6 +127,9 @@
                             <a href="ETLBox.Connection.MySqlConnectionString.html" title="MySqlConnectionString" class="">MySqlConnectionString</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.Connection.MySqlOdbcConnectionManager.html" title="MySqlOdbcConnectionManager" class="">MySqlOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.Connection.OdbcConnectionManager.html" title="OdbcConnectionManager" class="">OdbcConnectionManager</a>
                           </li>
                           <li class="">
@@ -137,6 +140,9 @@
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.PostgresConnectionString.html" title="PostgresConnectionString" class="">PostgresConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.PostgresOdbcConnectionManager.html" title="PostgresOdbcConnectionManager" class="">PostgresOdbcConnectionManager</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.SqlConnectionManager.html" title="SqlConnectionManager" class="">SqlConnectionManager</a>
@@ -739,6 +745,15 @@ select * from (
       <section><p>A helper class for encapsulating a conection string to a MySql server in an object.
 Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.</p>
 </section>
+      <h4><a class="xref" href="ETLBox.Connection.MySqlOdbcConnectionManager.html">MySqlOdbcConnectionManager</a></h4>
+      <section><p>MySql Connection manager for an ODBC connection based on ADO.NET to Sql Server.
+ODBC by default does not support a Bulk Insert - inserting big amounts of data is translated into a</p>
+<pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
+<p>This means that inserting big amounts of data in a database via Odbc can be much slower
+than using the native connector.
+Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
+Reduce the batch size if you encounter issues here.</p>
+</section>
       <h4><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html">OdbcConnectionManager</a></h4>
       <section></section>
       <h4><a class="xref" href="ETLBox.Connection.OdbcConnectionString.html">OdbcConnectionString</a></h4>
@@ -751,6 +766,15 @@ Internally the OdbcConnectionStringBuilder is used to access the values of the g
       <h4><a class="xref" href="ETLBox.Connection.PostgresConnectionString.html">PostgresConnectionString</a></h4>
       <section><p>A helper class for encapsulating a conection string to a MySql server in an object.
 Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.</p>
+</section>
+      <h4><a class="xref" href="ETLBox.Connection.PostgresOdbcConnectionManager.html">PostgresOdbcConnectionManager</a></h4>
+      <section><p>Postgres Connection manager for an ODBC connection based on ADO.NET to Sql Server.
+ODBC by default does not support a Bulk Insert - inserting big amounts of data is translated into a</p>
+<pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
+<p>This means that inserting big amounts of data in a database via Odbc can be much slower
+than using the native connector.
+Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
+Reduce the batch size if you encounter issues here.</p>
 </section>
       <h4><a class="xref" href="ETLBox.Connection.SqlConnectionManager.html">SqlConnectionManager</a></h4>
       <section><p>Connection manager of a classic ADO.NET connection to a (Microsoft) Sql Server.</p>
@@ -767,7 +791,7 @@ Internally the SqlConnectionStringBuilder is used to access the values of the gi
 Internally the SQLiteConnectionStringBuilder is used to access the values of the given connection string.</p>
 </section>
       <h4><a class="xref" href="ETLBox.Connection.SqlOdbcConnectionManager.html">SqlOdbcConnectionManager</a></h4>
-      <section><p>Sql Connection manager for an ODBC connection based on ADO.NET to Sql Server.
+      <section><p>Sql Server Connection manager for an ODBC connection based on ADO.NET to Sql Server.
 ODBC by default does not support a Bulk Insert - inserting big amounts of data is translated into a</p>
 <pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
 <p>This means that inserting big amounts of data in a database via Odbc can be much slower

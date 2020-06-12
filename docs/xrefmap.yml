@@ -735,23 +735,23 @@ references:
   fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).IsInBulkInsert
   nameWithType: DbConnectionManager<Connection>.IsInBulkInsert
   nameWithType.vb: DbConnectionManager(Of Connection).IsInBulkInsert
-- uid: ETLBox.Connection.DbConnectionManager`1.IsOdbcConnection
-  name: IsOdbcConnection
-  href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_IsOdbcConnection
-  commentId: P:ETLBox.Connection.DbConnectionManager`1.IsOdbcConnection
-  fullName: ETLBox.Connection.DbConnectionManager<Connection>.IsOdbcConnection
-  fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).IsOdbcConnection
-  nameWithType: DbConnectionManager<Connection>.IsOdbcConnection
-  nameWithType.vb: DbConnectionManager(Of Connection).IsOdbcConnection
-- uid: ETLBox.Connection.DbConnectionManager`1.IsOdbcConnection*
-  name: IsOdbcConnection
-  href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_IsOdbcConnection_
-  commentId: Overload:ETLBox.Connection.DbConnectionManager`1.IsOdbcConnection
+- uid: ETLBox.Connection.DbConnectionManager`1.IsOdbcOrOleDbConnection
+  name: IsOdbcOrOleDbConnection
+  href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_IsOdbcOrOleDbConnection
+  commentId: P:ETLBox.Connection.DbConnectionManager`1.IsOdbcOrOleDbConnection
+  fullName: ETLBox.Connection.DbConnectionManager<Connection>.IsOdbcOrOleDbConnection
+  fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).IsOdbcOrOleDbConnection
+  nameWithType: DbConnectionManager<Connection>.IsOdbcOrOleDbConnection
+  nameWithType.vb: DbConnectionManager(Of Connection).IsOdbcOrOleDbConnection
+- uid: ETLBox.Connection.DbConnectionManager`1.IsOdbcOrOleDbConnection*
+  name: IsOdbcOrOleDbConnection
+  href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_IsOdbcOrOleDbConnection_
+  commentId: Overload:ETLBox.Connection.DbConnectionManager`1.IsOdbcOrOleDbConnection
   isSpec: "True"
-  fullName: ETLBox.Connection.DbConnectionManager<Connection>.IsOdbcConnection
-  fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).IsOdbcConnection
-  nameWithType: DbConnectionManager<Connection>.IsOdbcConnection
-  nameWithType.vb: DbConnectionManager(Of Connection).IsOdbcConnection
+  fullName: ETLBox.Connection.DbConnectionManager<Connection>.IsOdbcOrOleDbConnection
+  fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).IsOdbcOrOleDbConnection
+  nameWithType: DbConnectionManager<Connection>.IsOdbcOrOleDbConnection
+  nameWithType.vb: DbConnectionManager(Of Connection).IsOdbcOrOleDbConnection
 - uid: ETLBox.Connection.DbConnectionManager`1.LeaveOpen
   name: LeaveOpen
   href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_LeaveOpen
@@ -1535,19 +1535,19 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.IConnectionManager.IsInBulkInsert
   nameWithType: IConnectionManager.IsInBulkInsert
-- uid: ETLBox.Connection.IConnectionManager.IsOdbcConnection
-  name: IsOdbcConnection
-  href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_IsOdbcConnection
-  commentId: P:ETLBox.Connection.IConnectionManager.IsOdbcConnection
-  fullName: ETLBox.Connection.IConnectionManager.IsOdbcConnection
-  nameWithType: IConnectionManager.IsOdbcConnection
-- uid: ETLBox.Connection.IConnectionManager.IsOdbcConnection*
-  name: IsOdbcConnection
-  href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_IsOdbcConnection_
-  commentId: Overload:ETLBox.Connection.IConnectionManager.IsOdbcConnection
+- uid: ETLBox.Connection.IConnectionManager.IsOdbcOrOleDbConnection
+  name: IsOdbcOrOleDbConnection
+  href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_IsOdbcOrOleDbConnection
+  commentId: P:ETLBox.Connection.IConnectionManager.IsOdbcOrOleDbConnection
+  fullName: ETLBox.Connection.IConnectionManager.IsOdbcOrOleDbConnection
+  nameWithType: IConnectionManager.IsOdbcOrOleDbConnection
+- uid: ETLBox.Connection.IConnectionManager.IsOdbcOrOleDbConnection*
+  name: IsOdbcOrOleDbConnection
+  href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_IsOdbcOrOleDbConnection_
+  commentId: Overload:ETLBox.Connection.IConnectionManager.IsOdbcOrOleDbConnection
   isSpec: "True"
-  fullName: ETLBox.Connection.IConnectionManager.IsOdbcConnection
-  nameWithType: IConnectionManager.IsOdbcConnection
+  fullName: ETLBox.Connection.IConnectionManager.IsOdbcOrOleDbConnection
+  nameWithType: IConnectionManager.IsOdbcOrOleDbConnection
 - uid: ETLBox.Connection.IConnectionManager.LeaveOpen
   name: LeaveOpen
   href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_LeaveOpen
@@ -2084,6 +2084,102 @@ references:
   fullName.vb: ETLBox.Connection.MySqlConnectionString.Widening
   nameWithType: MySqlConnectionString.Implicit
   nameWithType.vb: MySqlConnectionString.Widening
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager
+  name: MySqlOdbcConnectionManager
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html
+  commentId: T:ETLBox.Connection.MySqlOdbcConnectionManager
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager
+  nameWithType: MySqlOdbcConnectionManager
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.#ctor
+  name: MySqlOdbcConnectionManager()
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager__ctor
+  commentId: M:ETLBox.Connection.MySqlOdbcConnectionManager.#ctor
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.MySqlOdbcConnectionManager()
+  nameWithType: MySqlOdbcConnectionManager.MySqlOdbcConnectionManager()
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.#ctor(ETLBox.Connection.OdbcConnectionString)
+  name: MySqlOdbcConnectionManager(OdbcConnectionString)
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager__ctor_ETLBox_Connection_OdbcConnectionString_
+  commentId: M:ETLBox.Connection.MySqlOdbcConnectionManager.#ctor(ETLBox.Connection.OdbcConnectionString)
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.MySqlOdbcConnectionManager(ETLBox.Connection.OdbcConnectionString)
+  nameWithType: MySqlOdbcConnectionManager.MySqlOdbcConnectionManager(OdbcConnectionString)
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.#ctor(System.String)
+  name: MySqlOdbcConnectionManager(String)
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager__ctor_System_String_
+  commentId: M:ETLBox.Connection.MySqlOdbcConnectionManager.#ctor(System.String)
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.MySqlOdbcConnectionManager(System.String)
+  nameWithType: MySqlOdbcConnectionManager.MySqlOdbcConnectionManager(String)
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.#ctor*
+  name: MySqlOdbcConnectionManager
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager__ctor_
+  commentId: Overload:ETLBox.Connection.MySqlOdbcConnectionManager.#ctor
+  isSpec: "True"
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.MySqlOdbcConnectionManager
+  nameWithType: MySqlOdbcConnectionManager.MySqlOdbcConnectionManager
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.Clone
+  name: Clone()
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_Clone
+  commentId: M:ETLBox.Connection.MySqlOdbcConnectionManager.Clone
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.Clone()
+  nameWithType: MySqlOdbcConnectionManager.Clone()
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.Clone*
+  name: Clone
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_Clone_
+  commentId: Overload:ETLBox.Connection.MySqlOdbcConnectionManager.Clone
+  isSpec: "True"
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.Clone
+  nameWithType: MySqlOdbcConnectionManager.Clone
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_ConnectionManagerType
+  commentId: P:ETLBox.Connection.MySqlOdbcConnectionManager.ConnectionManagerType
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.ConnectionManagerType
+  nameWithType: MySqlOdbcConnectionManager.ConnectionManagerType
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_ConnectionManagerType_
+  commentId: Overload:ETLBox.Connection.MySqlOdbcConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.ConnectionManagerType
+  nameWithType: MySqlOdbcConnectionManager.ConnectionManagerType
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.QB
+  name: QB
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_QB
+  commentId: P:ETLBox.Connection.MySqlOdbcConnectionManager.QB
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.QB
+  nameWithType: MySqlOdbcConnectionManager.QB
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.QB*
+  name: QB
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_QB_
+  commentId: Overload:ETLBox.Connection.MySqlOdbcConnectionManager.QB
+  isSpec: "True"
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.QB
+  nameWithType: MySqlOdbcConnectionManager.QB
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.QE
+  name: QE
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_QE
+  commentId: P:ETLBox.Connection.MySqlOdbcConnectionManager.QE
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.QE
+  nameWithType: MySqlOdbcConnectionManager.QE
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.QE*
+  name: QE
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_QE_
+  commentId: Overload:ETLBox.Connection.MySqlOdbcConnectionManager.QE
+  isSpec: "True"
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.QE
+  nameWithType: MySqlOdbcConnectionManager.QE
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.SupportSchemas
+  name: SupportSchemas
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_SupportSchemas
+  commentId: P:ETLBox.Connection.MySqlOdbcConnectionManager.SupportSchemas
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.SupportSchemas
+  nameWithType: MySqlOdbcConnectionManager.SupportSchemas
+- uid: ETLBox.Connection.MySqlOdbcConnectionManager.SupportSchemas*
+  name: SupportSchemas
+  href: api/ETLBox.Connection.MySqlOdbcConnectionManager.html#ETLBox_Connection_MySqlOdbcConnectionManager_SupportSchemas_
+  commentId: Overload:ETLBox.Connection.MySqlOdbcConnectionManager.SupportSchemas
+  isSpec: "True"
+  fullName: ETLBox.Connection.MySqlOdbcConnectionManager.SupportSchemas
+  nameWithType: MySqlOdbcConnectionManager.SupportSchemas
 - uid: ETLBox.Connection.OdbcConnectionManager
   name: OdbcConnectionManager
   href: api/ETLBox.Connection.OdbcConnectionManager.html
@@ -2109,6 +2205,45 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.OdbcConnectionManager.OdbcConnectionManager
   nameWithType: OdbcConnectionManager.OdbcConnectionManager
+- uid: ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert(System.String)
+  name: AfterBulkInsert(String)
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_AfterBulkInsert_System_String_
+  commentId: M:ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert(System.String)
+  fullName: ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert(System.String)
+  nameWithType: OdbcConnectionManager.AfterBulkInsert(String)
+- uid: ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert*
+  name: AfterBulkInsert
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_AfterBulkInsert_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert
+  nameWithType: OdbcConnectionManager.AfterBulkInsert
+- uid: ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert(System.String)
+  name: BeforeBulkInsert(String)
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BeforeBulkInsert_System_String_
+  commentId: M:ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert(System.String)
+  fullName: ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert(System.String)
+  nameWithType: OdbcConnectionManager.BeforeBulkInsert(String)
+- uid: ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert*
+  name: BeforeBulkInsert
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BeforeBulkInsert_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert
+  nameWithType: OdbcConnectionManager.BeforeBulkInsert
+- uid: ETLBox.Connection.OdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData,System.String)
+  name: BulkInsert(ITableData, String)
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BulkInsert_ETLBox_ControlFlow_ITableData_System_String_
+  commentId: M:ETLBox.Connection.OdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData,System.String)
+  fullName: ETLBox.Connection.OdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData, System.String)
+  nameWithType: OdbcConnectionManager.BulkInsert(ITableData, String)
+- uid: ETLBox.Connection.OdbcConnectionManager.BulkInsert*
+  name: BulkInsert
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BulkInsert_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.BulkInsert
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.BulkInsert
+  nameWithType: OdbcConnectionManager.BulkInsert
 - uid: ETLBox.Connection.OdbcConnectionManager.CheckLicenseOrThrow(System.Int32)
   name: CheckLicenseOrThrow(Int32)
   href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_CheckLicenseOrThrow_System_Int32_
@@ -2122,19 +2257,58 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.OdbcConnectionManager.CheckLicenseOrThrow
   nameWithType: OdbcConnectionManager.CheckLicenseOrThrow
-- uid: ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection
-  name: IsOdbcConnection
-  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcConnection
-  commentId: P:ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection
-  fullName: ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection
-  nameWithType: OdbcConnectionManager.IsOdbcConnection
-- uid: ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection*
-  name: IsOdbcConnection
-  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcConnection_
-  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection
+- uid: ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert(System.String)
+  name: CleanUpBulkInsert(String)
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_CleanUpBulkInsert_System_String_
+  commentId: M:ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert(System.String)
+  fullName: ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert(System.String)
+  nameWithType: OdbcConnectionManager.CleanUpBulkInsert(String)
+- uid: ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert*
+  name: CleanUpBulkInsert
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_CleanUpBulkInsert_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert
   isSpec: "True"
-  fullName: ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection
-  nameWithType: OdbcConnectionManager.IsOdbcConnection
+  fullName: ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert
+  nameWithType: OdbcConnectionManager.CleanUpBulkInsert
+- uid: ETLBox.Connection.OdbcConnectionManager.Clone
+  name: Clone()
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_Clone
+  commentId: M:ETLBox.Connection.OdbcConnectionManager.Clone
+  fullName: ETLBox.Connection.OdbcConnectionManager.Clone()
+  nameWithType: OdbcConnectionManager.Clone()
+- uid: ETLBox.Connection.OdbcConnectionManager.Clone*
+  name: Clone
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_Clone_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.Clone
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.Clone
+  nameWithType: OdbcConnectionManager.Clone
+- uid: ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_ConnectionManagerType
+  commentId: P:ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType
+  fullName: ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType
+  nameWithType: OdbcConnectionManager.ConnectionManagerType
+- uid: ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_ConnectionManagerType_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType
+  nameWithType: OdbcConnectionManager.ConnectionManagerType
+- uid: ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection
+  name: IsOdbcOrOleDbConnection
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcOrOleDbConnection
+  commentId: P:ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection
+  fullName: ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection
+  nameWithType: OdbcConnectionManager.IsOdbcOrOleDbConnection
+- uid: ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection*
+  name: IsOdbcOrOleDbConnection
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcOrOleDbConnection_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection
+  nameWithType: OdbcConnectionManager.IsOdbcOrOleDbConnection
 - uid: ETLBox.Connection.OdbcConnectionManager.OdbcBulkInsert(ETLBox.ControlFlow.ITableData,System.String,ETLBox.Helper.BulkInsertSql{System.Data.Odbc.OdbcParameter})
   name: OdbcBulkInsert(ITableData, String, BulkInsertSql<OdbcParameter>)
   href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_OdbcBulkInsert_ETLBox_ControlFlow_ITableData_System_String_ETLBox_Helper_BulkInsertSql_System_Data_Odbc_OdbcParameter__
@@ -2151,6 +2325,45 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.OdbcConnectionManager.OdbcBulkInsert
   nameWithType: OdbcConnectionManager.OdbcBulkInsert
+- uid: ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert(System.String)
+  name: PrepareBulkInsert(String)
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_PrepareBulkInsert_System_String_
+  commentId: M:ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert(System.String)
+  fullName: ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert(System.String)
+  nameWithType: OdbcConnectionManager.PrepareBulkInsert(String)
+- uid: ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert*
+  name: PrepareBulkInsert
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_PrepareBulkInsert_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert
+  nameWithType: OdbcConnectionManager.PrepareBulkInsert
+- uid: ETLBox.Connection.OdbcConnectionManager.QB
+  name: QB
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QB
+  commentId: P:ETLBox.Connection.OdbcConnectionManager.QB
+  fullName: ETLBox.Connection.OdbcConnectionManager.QB
+  nameWithType: OdbcConnectionManager.QB
+- uid: ETLBox.Connection.OdbcConnectionManager.QB*
+  name: QB
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QB_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.QB
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.QB
+  nameWithType: OdbcConnectionManager.QB
+- uid: ETLBox.Connection.OdbcConnectionManager.QE
+  name: QE
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QE
+  commentId: P:ETLBox.Connection.OdbcConnectionManager.QE
+  fullName: ETLBox.Connection.OdbcConnectionManager.QE
+  nameWithType: OdbcConnectionManager.QE
+- uid: ETLBox.Connection.OdbcConnectionManager.QE*
+  name: QE
+  href: api/ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QE_
+  commentId: Overload:ETLBox.Connection.OdbcConnectionManager.QE
+  isSpec: "True"
+  fullName: ETLBox.Connection.OdbcConnectionManager.QE
+  nameWithType: OdbcConnectionManager.QE
 - uid: ETLBox.Connection.OdbcConnectionString
   name: OdbcConnectionString
   href: api/ETLBox.Connection.OdbcConnectionString.html
@@ -2478,6 +2691,89 @@ references:
   fullName.vb: ETLBox.Connection.PostgresConnectionString.Widening
   nameWithType: PostgresConnectionString.Implicit
   nameWithType.vb: PostgresConnectionString.Widening
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager
+  name: PostgresOdbcConnectionManager
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html
+  commentId: T:ETLBox.Connection.PostgresOdbcConnectionManager
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager
+  nameWithType: PostgresOdbcConnectionManager
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.#ctor
+  name: PostgresOdbcConnectionManager()
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager__ctor
+  commentId: M:ETLBox.Connection.PostgresOdbcConnectionManager.#ctor
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.PostgresOdbcConnectionManager()
+  nameWithType: PostgresOdbcConnectionManager.PostgresOdbcConnectionManager()
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.#ctor(ETLBox.Connection.OdbcConnectionString)
+  name: PostgresOdbcConnectionManager(OdbcConnectionString)
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager__ctor_ETLBox_Connection_OdbcConnectionString_
+  commentId: M:ETLBox.Connection.PostgresOdbcConnectionManager.#ctor(ETLBox.Connection.OdbcConnectionString)
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.PostgresOdbcConnectionManager(ETLBox.Connection.OdbcConnectionString)
+  nameWithType: PostgresOdbcConnectionManager.PostgresOdbcConnectionManager(OdbcConnectionString)
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.#ctor(System.String)
+  name: PostgresOdbcConnectionManager(String)
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager__ctor_System_String_
+  commentId: M:ETLBox.Connection.PostgresOdbcConnectionManager.#ctor(System.String)
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.PostgresOdbcConnectionManager(System.String)
+  nameWithType: PostgresOdbcConnectionManager.PostgresOdbcConnectionManager(String)
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.#ctor*
+  name: PostgresOdbcConnectionManager
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager__ctor_
+  commentId: Overload:ETLBox.Connection.PostgresOdbcConnectionManager.#ctor
+  isSpec: "True"
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.PostgresOdbcConnectionManager
+  nameWithType: PostgresOdbcConnectionManager.PostgresOdbcConnectionManager
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.Clone
+  name: Clone()
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_Clone
+  commentId: M:ETLBox.Connection.PostgresOdbcConnectionManager.Clone
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.Clone()
+  nameWithType: PostgresOdbcConnectionManager.Clone()
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.Clone*
+  name: Clone
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_Clone_
+  commentId: Overload:ETLBox.Connection.PostgresOdbcConnectionManager.Clone
+  isSpec: "True"
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.Clone
+  nameWithType: PostgresOdbcConnectionManager.Clone
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType
+  name: ConnectionManagerType
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_ConnectionManagerType
+  commentId: P:ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType
+  nameWithType: PostgresOdbcConnectionManager.ConnectionManagerType
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType*
+  name: ConnectionManagerType
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_ConnectionManagerType_
+  commentId: Overload:ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType
+  isSpec: "True"
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType
+  nameWithType: PostgresOdbcConnectionManager.ConnectionManagerType
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.QB
+  name: QB
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_QB
+  commentId: P:ETLBox.Connection.PostgresOdbcConnectionManager.QB
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.QB
+  nameWithType: PostgresOdbcConnectionManager.QB
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.QB*
+  name: QB
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_QB_
+  commentId: Overload:ETLBox.Connection.PostgresOdbcConnectionManager.QB
+  isSpec: "True"
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.QB
+  nameWithType: PostgresOdbcConnectionManager.QB
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.QE
+  name: QE
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_QE
+  commentId: P:ETLBox.Connection.PostgresOdbcConnectionManager.QE
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.QE
+  nameWithType: PostgresOdbcConnectionManager.QE
+- uid: ETLBox.Connection.PostgresOdbcConnectionManager.QE*
+  name: QE
+  href: api/ETLBox.Connection.PostgresOdbcConnectionManager.html#ETLBox_Connection_PostgresOdbcConnectionManager_QE_
+  commentId: Overload:ETLBox.Connection.PostgresOdbcConnectionManager.QE
+  isSpec: "True"
+  fullName: ETLBox.Connection.PostgresOdbcConnectionManager.QE
+  nameWithType: PostgresOdbcConnectionManager.QE
 - uid: ETLBox.Connection.SqlConnectionManager
   name: SqlConnectionManager
   href: api/ETLBox.Connection.SqlConnectionManager.html
@@ -3088,58 +3384,6 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.SqlOdbcConnectionManager.SqlOdbcConnectionManager
   nameWithType: SqlOdbcConnectionManager.SqlOdbcConnectionManager
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.AfterBulkInsert(System.String)
-  name: AfterBulkInsert(String)
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_AfterBulkInsert_System_String_
-  commentId: M:ETLBox.Connection.SqlOdbcConnectionManager.AfterBulkInsert(System.String)
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.AfterBulkInsert(System.String)
-  nameWithType: SqlOdbcConnectionManager.AfterBulkInsert(String)
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.AfterBulkInsert*
-  name: AfterBulkInsert
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_AfterBulkInsert_
-  commentId: Overload:ETLBox.Connection.SqlOdbcConnectionManager.AfterBulkInsert
-  isSpec: "True"
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.AfterBulkInsert
-  nameWithType: SqlOdbcConnectionManager.AfterBulkInsert
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.BeforeBulkInsert(System.String)
-  name: BeforeBulkInsert(String)
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_BeforeBulkInsert_System_String_
-  commentId: M:ETLBox.Connection.SqlOdbcConnectionManager.BeforeBulkInsert(System.String)
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.BeforeBulkInsert(System.String)
-  nameWithType: SqlOdbcConnectionManager.BeforeBulkInsert(String)
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.BeforeBulkInsert*
-  name: BeforeBulkInsert
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_BeforeBulkInsert_
-  commentId: Overload:ETLBox.Connection.SqlOdbcConnectionManager.BeforeBulkInsert
-  isSpec: "True"
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.BeforeBulkInsert
-  nameWithType: SqlOdbcConnectionManager.BeforeBulkInsert
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData,System.String)
-  name: BulkInsert(ITableData, String)
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_BulkInsert_ETLBox_ControlFlow_ITableData_System_String_
-  commentId: M:ETLBox.Connection.SqlOdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData,System.String)
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData, System.String)
-  nameWithType: SqlOdbcConnectionManager.BulkInsert(ITableData, String)
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.BulkInsert*
-  name: BulkInsert
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_BulkInsert_
-  commentId: Overload:ETLBox.Connection.SqlOdbcConnectionManager.BulkInsert
-  isSpec: "True"
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.BulkInsert
-  nameWithType: SqlOdbcConnectionManager.BulkInsert
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.CleanUpBulkInsert(System.String)
-  name: CleanUpBulkInsert(String)
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_CleanUpBulkInsert_System_String_
-  commentId: M:ETLBox.Connection.SqlOdbcConnectionManager.CleanUpBulkInsert(System.String)
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.CleanUpBulkInsert(System.String)
-  nameWithType: SqlOdbcConnectionManager.CleanUpBulkInsert(String)
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.CleanUpBulkInsert*
-  name: CleanUpBulkInsert
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_CleanUpBulkInsert_
-  commentId: Overload:ETLBox.Connection.SqlOdbcConnectionManager.CleanUpBulkInsert
-  isSpec: "True"
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.CleanUpBulkInsert
-  nameWithType: SqlOdbcConnectionManager.CleanUpBulkInsert
 - uid: ETLBox.Connection.SqlOdbcConnectionManager.Clone
   name: Clone()
   href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_Clone
@@ -3166,19 +3410,6 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.SqlOdbcConnectionManager.ConnectionManagerType
   nameWithType: SqlOdbcConnectionManager.ConnectionManagerType
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.PrepareBulkInsert(System.String)
-  name: PrepareBulkInsert(String)
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_PrepareBulkInsert_System_String_
-  commentId: M:ETLBox.Connection.SqlOdbcConnectionManager.PrepareBulkInsert(System.String)
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.PrepareBulkInsert(System.String)
-  nameWithType: SqlOdbcConnectionManager.PrepareBulkInsert(String)
-- uid: ETLBox.Connection.SqlOdbcConnectionManager.PrepareBulkInsert*
-  name: PrepareBulkInsert
-  href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_PrepareBulkInsert_
-  commentId: Overload:ETLBox.Connection.SqlOdbcConnectionManager.PrepareBulkInsert
-  isSpec: "True"
-  fullName: ETLBox.Connection.SqlOdbcConnectionManager.PrepareBulkInsert
-  nameWithType: SqlOdbcConnectionManager.PrepareBulkInsert
 - uid: ETLBox.Connection.SqlOdbcConnectionManager.QB
   name: QB
   href: api/ETLBox.Connection.SqlOdbcConnectionManager.html#ETLBox_Connection_SqlOdbcConnectionManager_QB
@@ -9369,6 +9600,14 @@ references:
   fullName.vb: ETLBox.DataFlow.Connectors.DbDestination(Of TInput).DbDestination()
   nameWithType: DbDestination<TInput>.DbDestination()
   nameWithType.vb: DbDestination(Of TInput).DbDestination()
+- uid: ETLBox.DataFlow.Connectors.DbDestination`1.#ctor(ETLBox.Connection.IConnectionManager)
+  name: DbDestination(IConnectionManager)
+  href: api/ETLBox.DataFlow.Connectors.DbDestination-1.html#ETLBox_DataFlow_Connectors_DbDestination_1__ctor_ETLBox_Connection_IConnectionManager_
+  commentId: M:ETLBox.DataFlow.Connectors.DbDestination`1.#ctor(ETLBox.Connection.IConnectionManager)
+  fullName: ETLBox.DataFlow.Connectors.DbDestination<TInput>.DbDestination(ETLBox.Connection.IConnectionManager)
+  fullName.vb: ETLBox.DataFlow.Connectors.DbDestination(Of TInput).DbDestination(ETLBox.Connection.IConnectionManager)
+  nameWithType: DbDestination<TInput>.DbDestination(IConnectionManager)
+  nameWithType.vb: DbDestination(Of TInput).DbDestination(IConnectionManager)
 - uid: ETLBox.DataFlow.Connectors.DbDestination`1.#ctor(ETLBox.Connection.IConnectionManager,System.String)
   name: DbDestination(IConnectionManager, String)
   href: api/ETLBox.DataFlow.Connectors.DbDestination-1.html#ETLBox_DataFlow_Connectors_DbDestination_1__ctor_ETLBox_Connection_IConnectionManager_System_String_

@@ -126,6 +126,9 @@
                           <li class="">
                             <a href="ETLBox.Connection.MySqlConnectionString.html" title="MySqlConnectionString" class="">MySqlConnectionString</a>
                           </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.MySqlOdbcConnectionManager.html" title="MySqlOdbcConnectionManager" class="">MySqlOdbcConnectionManager</a>
+                          </li>
                           <li class="active">
                             <a href="ETLBox.Connection.OdbcConnectionManager.html" title="OdbcConnectionManager" class="active">OdbcConnectionManager</a>
                           </li>
@@ -137,6 +140,9 @@
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.PostgresConnectionString.html" title="PostgresConnectionString" class="">PostgresConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.PostgresOdbcConnectionManager.html" title="PostgresOdbcConnectionManager" class="">PostgresOdbcConnectionManager</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.SqlConnectionManager.html" title="SqlConnectionManager" class="">SqlConnectionManager</a>
@@ -717,6 +723,8 @@
     <div class="level1"><a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html">DbConnectionManager</a>&lt;<span class="xref">System.Data.Odbc.OdbcConnection</span>&gt;</div>
     <div class="level2"><span class="xref">OdbcConnectionManager</span></div>
       <div class="level3"><a class="xref" href="ETLBox.Connection.AccessOdbcConnectionManager.html">AccessOdbcConnectionManager</a></div>
+      <div class="level3"><a class="xref" href="ETLBox.Connection.MySqlOdbcConnectionManager.html">MySqlOdbcConnectionManager</a></div>
+      <div class="level3"><a class="xref" href="ETLBox.Connection.PostgresOdbcConnectionManager.html">PostgresOdbcConnectionManager</a></div>
       <div class="level3"><a class="xref" href="ETLBox.Connection.SqlOdbcConnectionManager.html">SqlOdbcConnectionManager</a></div>
   </div>
   <div classs="implements">
@@ -726,9 +734,6 @@
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_ConnectionManagerType">DbConnectionManager&lt;OdbcConnection&gt;.ConnectionManagerType</a>
-    </div>
     <div>
       <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_MaxLoginAttempts">DbConnectionManager&lt;OdbcConnection&gt;.MaxLoginAttempts</a>
     </div>
@@ -749,12 +754,6 @@
     </div>
     <div>
       <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_IsInBulkInsert">DbConnectionManager&lt;OdbcConnection&gt;.IsInBulkInsert</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_QB">DbConnectionManager&lt;OdbcConnection&gt;.QB</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_QE">DbConnectionManager&lt;OdbcConnection&gt;.QE</a>
     </div>
     <div>
       <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_SupportDatabases">DbConnectionManager&lt;OdbcConnection&gt;.SupportDatabases</a>
@@ -808,21 +807,6 @@
       <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CloseTransaction">DbConnectionManager&lt;OdbcConnection&gt;.CloseTransaction()</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_PrepareBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.PrepareBulkInsert(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CleanUpBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.CleanUpBulkInsert(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_BulkInsert_ETLBox_ControlFlow_ITableData_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.BulkInsert(ITableData, String)</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_BeforeBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.BeforeBulkInsert(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_AfterBulkInsert_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.AfterBulkInsert(String)</a>
-    </div>
-    <div>
       <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Dispose_System_Boolean_">DbConnectionManager&lt;OdbcConnection&gt;.Dispose(Boolean)</a>
     </div>
     <div>
@@ -833,9 +817,6 @@
     </div>
     <div>
       <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Close">DbConnectionManager&lt;OdbcConnection&gt;.Close()</a>
-    </div>
-    <div>
-      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Clone">DbConnectionManager&lt;OdbcConnection&gt;.Clone()</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -863,7 +844,7 @@
   <h6><strong>Assembly</strong>: ETLBox.Odbc.dll</h6>
   <h5 id="ETLBox_Connection_OdbcConnectionManager_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class OdbcConnectionManager : DbConnectionManager&lt;OdbcConnection&gt;, IConnectionManager, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public class OdbcConnectionManager : DbConnectionManager&lt;OdbcConnection&gt;, IConnectionManager, IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -908,13 +889,40 @@
   </h3>
   
   
-  <a id="ETLBox_Connection_OdbcConnectionManager_IsOdbcConnection_" data-uid="ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection*"></a>
-  <h4 id="ETLBox_Connection_OdbcConnectionManager_IsOdbcConnection" data-uid="ETLBox.Connection.OdbcConnectionManager.IsOdbcConnection">IsOdbcConnection</h4>
+  <a id="ETLBox_Connection_OdbcConnectionManager_ConnectionManagerType_" data-uid="ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_ConnectionManagerType" data-uid="ETLBox.Connection.OdbcConnectionManager.ConnectionManagerType">ConnectionManagerType</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool IsOdbcConnection { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override ConnectionManagerType ConnectionManagerType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ETLBox.Connection.ConnectionManagerType.html">ConnectionManagerType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.ConnectionManagerType</span></div>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_IsOdbcOrOleDbConnection_" data-uid="ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_IsOdbcOrOleDbConnection" data-uid="ETLBox.Connection.OdbcConnectionManager.IsOdbcOrOleDbConnection">IsOdbcOrOleDbConnection</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool IsOdbcOrOleDbConnection { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -932,9 +940,155 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.IsOdbcConnection</span></div>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.IsOdbcOrOleDbConnection</span></div>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_QB_" data-uid="ETLBox.Connection.OdbcConnectionManager.QB*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_QB" data-uid="ETLBox.Connection.OdbcConnectionManager.QB">QB</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string QB { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.QB</span></div>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_QE_" data-uid="ETLBox.Connection.OdbcConnectionManager.QE*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_QE" data-uid="ETLBox.Connection.OdbcConnectionManager.QE">QE</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string QE { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.QE</span></div>
   <h3 id="methods">Methods
   </h3>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_AfterBulkInsert_" data-uid="ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_AfterBulkInsert_System_String_" data-uid="ETLBox.Connection.OdbcConnectionManager.AfterBulkInsert(System.String)">AfterBulkInsert(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void AfterBulkInsert(string tableName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.AfterBulkInsert(System.String)</span></div>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_BeforeBulkInsert_" data-uid="ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_BeforeBulkInsert_System_String_" data-uid="ETLBox.Connection.OdbcConnectionManager.BeforeBulkInsert(System.String)">BeforeBulkInsert(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void BeforeBulkInsert(string tableName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.BeforeBulkInsert(System.String)</span></div>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_BulkInsert_" data-uid="ETLBox.Connection.OdbcConnectionManager.BulkInsert*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_BulkInsert_ETLBox_ControlFlow_ITableData_System_String_" data-uid="ETLBox.Connection.OdbcConnectionManager.BulkInsert(ETLBox.ControlFlow.ITableData,System.String)">BulkInsert(ITableData, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void BulkInsert(ITableData data, string tableName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ETLBox.ControlFlow.ITableData.html">ITableData</a></td>
+        <td><span class="parametername">data</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tableName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.BulkInsert(ETLBox.ControlFlow.ITableData, System.String)</span></div>
   
   
   <a id="ETLBox_Connection_OdbcConnectionManager_CheckLicenseOrThrow_" data-uid="ETLBox.Connection.OdbcConnectionManager.CheckLicenseOrThrow*"></a>
@@ -966,13 +1120,69 @@
   <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.CheckLicenseOrThrow(System.Int32)</span></div>
   
   
+  <a id="ETLBox_Connection_OdbcConnectionManager_CleanUpBulkInsert_" data-uid="ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_CleanUpBulkInsert_System_String_" data-uid="ETLBox.Connection.OdbcConnectionManager.CleanUpBulkInsert(System.String)">CleanUpBulkInsert(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void CleanUpBulkInsert(string tablename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tablename</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.CleanUpBulkInsert(System.String)</span></div>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_Clone_" data-uid="ETLBox.Connection.OdbcConnectionManager.Clone*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_Clone" data-uid="ETLBox.Connection.OdbcConnectionManager.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IConnectionManager Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.Clone()</span></div>
+  
+  
   <a id="ETLBox_Connection_OdbcConnectionManager_OdbcBulkInsert_" data-uid="ETLBox.Connection.OdbcConnectionManager.OdbcBulkInsert*"></a>
   <h4 id="ETLBox_Connection_OdbcConnectionManager_OdbcBulkInsert_ETLBox_ControlFlow_ITableData_System_String_ETLBox_Helper_BulkInsertSql_System_Data_Odbc_OdbcParameter__" data-uid="ETLBox.Connection.OdbcConnectionManager.OdbcBulkInsert(ETLBox.ControlFlow.ITableData,System.String,ETLBox.Helper.BulkInsertSql{System.Data.Odbc.OdbcParameter})">OdbcBulkInsert(ITableData, String, BulkInsertSql&lt;OdbcParameter&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void OdbcBulkInsert(ITableData data, string tableName, BulkInsertSql&lt;OdbcParameter&gt; bulkInsert)</code></pre>
+    <pre><code class="lang-csharp hljs">protected void OdbcBulkInsert(ITableData data, string tableName, BulkInsertSql&lt;OdbcParameter&gt; bulkInsert)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1001,6 +1211,35 @@
       </tr>
     </tbody>
   </table>
+  
+  
+  <a id="ETLBox_Connection_OdbcConnectionManager_PrepareBulkInsert_" data-uid="ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert*"></a>
+  <h4 id="ETLBox_Connection_OdbcConnectionManager_PrepareBulkInsert_System_String_" data-uid="ETLBox.Connection.OdbcConnectionManager.PrepareBulkInsert(System.String)">PrepareBulkInsert(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void PrepareBulkInsert(string tablename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">tablename</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.PrepareBulkInsert(System.String)</span></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a>

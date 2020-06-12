@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class CalculateDatabaseHashTask
+    <title>Class PostgresOdbcConnectionManager
    | ETLBox - a lightweight ETL library for C#. </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class CalculateDatabaseHashTask
+    <meta name="title" content="Class PostgresOdbcConnectionManager
    | ETLBox - a lightweight ETL library for C#. ">
     <meta name="generator" content="docfx 2.54.0.0">
     
@@ -141,8 +141,8 @@
                           <li class="">
                             <a href="ETLBox.Connection.PostgresConnectionString.html" title="PostgresConnectionString" class="">PostgresConnectionString</a>
                           </li>
-                          <li class="">
-                            <a href="ETLBox.Connection.PostgresOdbcConnectionManager.html" title="PostgresOdbcConnectionManager" class="">PostgresOdbcConnectionManager</a>
+                          <li class="active">
+                            <a href="ETLBox.Connection.PostgresOdbcConnectionManager.html" title="PostgresOdbcConnectionManager" class="active">PostgresOdbcConnectionManager</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.SqlConnectionManager.html" title="SqlConnectionManager" class="">SqlConnectionManager</a>
@@ -216,8 +216,8 @@
                       <a href="ETLBox.ControlFlow.Tasks.html" title="ETLBox.ControlFlow.Tasks" class="">ETLBox.ControlFlow.Tasks</a>
                         
                         <ul class="nav level2">
-                          <li class="active">
-                            <a href="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.html" title="CalculateDatabaseHashTask" class="active">CalculateDatabaseHashTask</a>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.html" title="CalculateDatabaseHashTask" class="">CalculateDatabaseHashTask</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.html" title="CleanUpSchemaTask" class="">CleanUpSchemaTask</a>
@@ -710,56 +710,141 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask">
+            <article class="content wrap" id="_content" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager">
   
   
-  <h1 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask" class="text-break">Class CalculateDatabaseHashTask
+  <h1 id="ETLBox_Connection_PostgresOdbcConnectionManager" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager" class="text-break">Class PostgresOdbcConnectionManager
   </h1>
-  <div class="markdown level0 summary"><p>Calculates a hash value of the database. It will use only the schemas given in the property SchemaName for the calculation.
-The hash calcualtion is based only on the user tables in the schema.</p>
+  <div class="markdown level0 summary"><p>Postgres Connection manager for an ODBC connection based on ADO.NET to Sql Server.
+ODBC by default does not support a Bulk Insert - inserting big amounts of data is translated into a</p>
+<pre><code>insert into (...) values (..),(..),(..) statementes.</code></pre>
+<p>This means that inserting big amounts of data in a database via Odbc can be much slower
+than using the native connector.
+Also be careful with the batch size - some databases have limitations regarding the length of sql statements.
+Reduce the batch size if you encounter issues here.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="ETLBox.ControlFlow.GenericTask.html">GenericTask</a></div>
-    <div class="level2"><span class="xref">CalculateDatabaseHashTask</span></div>
+    <div class="level1"><a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html">DbConnectionManager</a>&lt;<span class="xref">System.Data.Odbc.OdbcConnection</span>&gt;</div>
+    <div class="level2"><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html">OdbcConnectionManager</a></div>
+    <div class="level3"><span class="xref">PostgresOdbcConnectionManager</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="ETLBox.ControlFlow.ITask.html">ITask</a></div>
+    <div><a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a></div>
+    <div><span class="xref">System.IDisposable</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_TaskType">GenericTask.TaskType</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcOrOleDbConnection">OdbcConnectionManager.IsOdbcOrOleDbConnection</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_NLogger">GenericTask.NLogger</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_OdbcBulkInsert_ETLBox_ControlFlow_ITableData_System_String_ETLBox_Helper_BulkInsertSql_System_Data_Odbc_OdbcParameter__">OdbcConnectionManager.OdbcBulkInsert(ITableData, String, BulkInsertSql&lt;OdbcParameter&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_ConnectionManager">GenericTask.ConnectionManager</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_CheckLicenseOrThrow_System_Int32_">OdbcConnectionManager.CheckLicenseOrThrow(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_ConnectionType">GenericTask.ConnectionType</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BulkInsert_ETLBox_ControlFlow_ITableData_System_String_">OdbcConnectionManager.BulkInsert(ITableData, String)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_QB">GenericTask.QB</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BeforeBulkInsert_System_String_">OdbcConnectionManager.BeforeBulkInsert(String)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_QE">GenericTask.QE</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_AfterBulkInsert_System_String_">OdbcConnectionManager.AfterBulkInsert(String)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask__disableLogging">GenericTask._disableLogging</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_PrepareBulkInsert_System_String_">OdbcConnectionManager.PrepareBulkInsert(String)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_DisableLogging">GenericTask.DisableLogging</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_CleanUpBulkInsert_System_String_">OdbcConnectionManager.CleanUpBulkInsert(String)</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_TaskHash">GenericTask.TaskHash</a>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_MaxLoginAttempts">DbConnectionManager&lt;OdbcConnection&gt;.MaxLoginAttempts</a>
     </div>
     <div>
-      <a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_CopyTaskProperties_ETLBox_ControlFlow_ITask_">GenericTask.CopyTaskProperties(ITask)</a>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_LeaveOpen">DbConnectionManager&lt;OdbcConnection&gt;.LeaveOpen</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_ConnectionString">DbConnectionManager&lt;OdbcConnection&gt;.ConnectionString</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_DbConnection">DbConnectionManager&lt;OdbcConnection&gt;.DbConnection</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_State">DbConnectionManager&lt;OdbcConnection&gt;.State</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Transaction">DbConnectionManager&lt;OdbcConnection&gt;.Transaction</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_IsInBulkInsert">DbConnectionManager&lt;OdbcConnection&gt;.IsInBulkInsert</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_SupportDatabases">DbConnectionManager&lt;OdbcConnection&gt;.SupportDatabases</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_SupportProcedures">DbConnectionManager&lt;OdbcConnection&gt;.SupportProcedures</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_SupportSchemas">DbConnectionManager&lt;OdbcConnection&gt;.SupportSchemas</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_SupportComputedColumns">DbConnectionManager&lt;OdbcConnection&gt;.SupportComputedColumns</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_ReadTableDefinition_ETLBox_Helper_ObjectNameDescriptor_">DbConnectionManager&lt;OdbcConnection&gt;.ReadTableDefinition(ObjectNameDescriptor)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CheckIfTableOrViewExists_System_String_">DbConnectionManager&lt;OdbcConnection&gt;.CheckIfTableOrViewExists(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Open">DbConnectionManager&lt;OdbcConnection&gt;.Open()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CreateCommand_System_String_System_Collections_Generic_IEnumerable_ETLBox_ControlFlow_QueryParameter__">DbConnectionManager&lt;OdbcConnection&gt;.CreateCommand(String, IEnumerable&lt;QueryParameter&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_ExecuteNonQuery_System_String_System_Collections_Generic_IEnumerable_ETLBox_ControlFlow_QueryParameter__">DbConnectionManager&lt;OdbcConnection&gt;.ExecuteNonQuery(String, IEnumerable&lt;QueryParameter&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_ExecuteScalar_System_String_System_Collections_Generic_IEnumerable_ETLBox_ControlFlow_QueryParameter__">DbConnectionManager&lt;OdbcConnection&gt;.ExecuteScalar(String, IEnumerable&lt;QueryParameter&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_ExecuteReader_System_String_System_Collections_Generic_IEnumerable_ETLBox_ControlFlow_QueryParameter__">DbConnectionManager&lt;OdbcConnection&gt;.ExecuteReader(String, IEnumerable&lt;QueryParameter&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_BeginTransaction_System_Data_IsolationLevel_">DbConnectionManager&lt;OdbcConnection&gt;.BeginTransaction(IsolationLevel)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CloneIfAllowed">DbConnectionManager&lt;OdbcConnection&gt;.CloneIfAllowed()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_BeginTransaction">DbConnectionManager&lt;OdbcConnection&gt;.BeginTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CommitTransaction">DbConnectionManager&lt;OdbcConnection&gt;.CommitTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_RollbackTransaction">DbConnectionManager&lt;OdbcConnection&gt;.RollbackTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CloseTransaction">DbConnectionManager&lt;OdbcConnection&gt;.CloseTransaction()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Dispose_System_Boolean_">DbConnectionManager&lt;OdbcConnection&gt;.Dispose(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Dispose">DbConnectionManager&lt;OdbcConnection&gt;.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_CloseIfAllowed">DbConnectionManager&lt;OdbcConnection&gt;.CloseIfAllowed()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_Close">DbConnectionManager&lt;OdbcConnection&gt;.Close()</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -783,36 +868,33 @@ The hash calcualtion is based only on the user tables in the schema.</p>
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="ETLBox.ControlFlow.Tasks.html">ETLBox.ControlFlow.Tasks</a></h6>
-  <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_syntax">Syntax</h5>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ETLBox.Connection.html">ETLBox.Connection</a></h6>
+  <h6><strong>Assembly</strong>: ETLBox.Odbc.dll</h6>
+  <h5 id="ETLBox_Connection_PostgresOdbcConnectionManager_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CalculateDatabaseHashTask : GenericTask, ITask</code></pre>
+    <pre><code class="lang-csharp hljs">public class PostgresOdbcConnectionManager : OdbcConnectionManager, IConnectionManager, IDisposable</code></pre>
   </div>
-  <h5 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_examples"><strong>Examples</strong></h5>
-  <pre><code>CalculateDatabaseHashTask.Calculate(new List&lt;string>() { &quot;demo&quot;, &quot;dbo&quot; });</code></pre>
-
   <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask__ctor_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.#ctor*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask__ctor" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.#ctor">CalculateDatabaseHashTask()</h4>
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager__ctor_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.#ctor*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager__ctor" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.#ctor">PostgresOdbcConnectionManager()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CalculateDatabaseHashTask()</code></pre>
+    <pre><code class="lang-csharp hljs">public PostgresOdbcConnectionManager()</code></pre>
   </div>
   
   
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask__ctor_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.#ctor*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask__ctor_System_Collections_Generic_List_System_String__" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.#ctor(System.Collections.Generic.List{System.String})">CalculateDatabaseHashTask(List&lt;String&gt;)</h4>
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager__ctor_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.#ctor*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager__ctor_ETLBox_Connection_OdbcConnectionString_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.#ctor(ETLBox.Connection.OdbcConnectionString)">PostgresOdbcConnectionManager(OdbcConnectionString)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CalculateDatabaseHashTask(List&lt;string&gt; schemaNames)</code></pre>
+    <pre><code class="lang-csharp hljs">public PostgresOdbcConnectionManager(OdbcConnectionString connectionString)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -825,8 +907,35 @@ The hash calcualtion is based only on the user tables in the schema.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td><span class="parametername">schemaNames</span></td>
+        <td><a class="xref" href="ETLBox.Connection.OdbcConnectionString.html">OdbcConnectionString</a></td>
+        <td><span class="parametername">connectionString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager__ctor_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.#ctor*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager__ctor_System_String_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.#ctor(System.String)">PostgresOdbcConnectionManager(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PostgresOdbcConnectionManager(string connectionString)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">connectionString</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -835,13 +944,13 @@ The hash calcualtion is based only on the user tables in the schema.</p>
   </h3>
   
   
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_DatabaseHash_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.DatabaseHash*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_DatabaseHash" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.DatabaseHash">DatabaseHash</h4>
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager_ConnectionManagerType_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager_ConnectionManagerType" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.ConnectionManagerType">ConnectionManagerType</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DatabaseHash { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override ConnectionManagerType ConnectionManagerType { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -853,70 +962,22 @@ The hash calcualtion is based only on the user tables in the schema.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><a class="xref" href="ETLBox.Connection.ConnectionManagerType.html">ConnectionManagerType</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_ConnectionManagerType">OdbcConnectionManager.ConnectionManagerType</a></div>
   
   
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_SchemaNames_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.SchemaNames*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_SchemaNames" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.SchemaNames">SchemaNames</h4>
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager_QB_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.QB*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager_QB" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.QB">QB</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;string&gt; SchemaNames { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Sql_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Sql*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Sql" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Sql">Sql</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Sql { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_TaskName_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.TaskName*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_TaskName" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.TaskName">TaskName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string TaskName { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override string QB { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -934,20 +995,18 @@ The hash calcualtion is based only on the user tables in the schema.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="ETLBox.ControlFlow.GenericTask.html#ETLBox_ControlFlow_GenericTask_TaskName">GenericTask.TaskName</a></div>
-  <h3 id="methods">Methods
-  </h3>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QB">OdbcConnectionManager.QB</a></div>
   
   
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Calculate_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Calculate*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Calculate" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Calculate">Calculate()</h4>
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager_QE_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.QE*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager_QE" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.QE">QE</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CalculateDatabaseHashTask Calculate()</code></pre>
+    <pre><code class="lang-csharp hljs">public override string QE { get; }</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -957,113 +1016,48 @@ The hash calcualtion is based only on the user tables in the schema.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.html">CalculateDatabaseHashTask</a></td>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QE">OdbcConnectionManager.QE</a></div>
+  <h3 id="methods">Methods
+  </h3>
   
   
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Calculate_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Calculate*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Calculate_ETLBox_Connection_IConnectionManager_System_Collections_Generic_List_System_String__" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Calculate(ETLBox.Connection.IConnectionManager,System.Collections.Generic.List{System.String})">Calculate(IConnectionManager, List&lt;String&gt;)</h4>
+  <a id="ETLBox_Connection_PostgresOdbcConnectionManager_Clone_" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.Clone*"></a>
+  <h4 id="ETLBox_Connection_PostgresOdbcConnectionManager_Clone" data-uid="ETLBox.Connection.PostgresOdbcConnectionManager.Clone">Clone()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string Calculate(IConnectionManager connectionManager, List&lt;string&gt; schemaNames)</code></pre>
+    <pre><code class="lang-csharp hljs">public override IConnectionManager Clone()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a></td>
-        <td><span class="parametername">connectionManager</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td><span class="parametername">schemaNames</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Calculate_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Calculate*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Calculate_System_Collections_Generic_List_System_String__" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Calculate(System.Collections.Generic.List{System.String})">Calculate(List&lt;String&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string Calculate(List&lt;string&gt; schemaNames)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td><span class="parametername">schemaNames</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Execute_" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Execute*"></a>
-  <h4 id="ETLBox_ControlFlow_Tasks_CalculateDatabaseHashTask_Execute" data-uid="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.Execute">Execute()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Execute()</code></pre>
-  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_Clone">OdbcConnectionManager.Clone()</a></div>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="ETLBox.ControlFlow.ITask.html">ITask</a>
+      <a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a>
+  </div>
+  <div>
+      <span class="xref">System.IDisposable</span>
   </div>
 </article>
           </div>

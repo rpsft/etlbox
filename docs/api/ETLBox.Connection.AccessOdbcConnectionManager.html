@@ -127,6 +127,9 @@
                             <a href="ETLBox.Connection.MySqlConnectionString.html" title="MySqlConnectionString" class="">MySqlConnectionString</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.Connection.MySqlOdbcConnectionManager.html" title="MySqlOdbcConnectionManager" class="">MySqlOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.Connection.OdbcConnectionManager.html" title="OdbcConnectionManager" class="">OdbcConnectionManager</a>
                           </li>
                           <li class="">
@@ -137,6 +140,9 @@
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.PostgresConnectionString.html" title="PostgresConnectionString" class="">PostgresConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.PostgresOdbcConnectionManager.html" title="PostgresOdbcConnectionManager" class="">PostgresOdbcConnectionManager</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Connection.SqlConnectionManager.html" title="SqlConnectionManager" class="">SqlConnectionManager</a>
@@ -738,7 +744,7 @@ select * from (
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcConnection">OdbcConnectionManager.IsOdbcConnection</a>
+      <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_IsOdbcOrOleDbConnection">OdbcConnectionManager.IsOdbcOrOleDbConnection</a>
     </div>
     <div>
       <a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_OdbcBulkInsert_ETLBox_ControlFlow_ITableData_System_String_ETLBox_Helper_BulkInsertSql_System_Data_Odbc_OdbcParameter__">OdbcConnectionManager.OdbcBulkInsert(ITableData, String, BulkInsertSql&lt;OdbcParameter&gt;)</a>
@@ -939,7 +945,7 @@ select * from (
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.ConnectionManagerType</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_ConnectionManagerType">OdbcConnectionManager.ConnectionManagerType</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_DummyTableName_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.DummyTableName*"></a>
@@ -1018,7 +1024,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.QB</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QB">OdbcConnectionManager.QB</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_QE_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.QE*"></a>
@@ -1045,7 +1051,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.QE</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_QE">OdbcConnectionManager.QE</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_SupportComputedColumns_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.SupportComputedColumns*"></a>
@@ -1184,7 +1190,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.AfterBulkInsert(System.String)</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_AfterBulkInsert_System_String_">OdbcConnectionManager.AfterBulkInsert(String)</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_BeforeBulkInsert_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.BeforeBulkInsert*"></a>
@@ -1213,7 +1219,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.BeforeBulkInsert(System.String)</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BeforeBulkInsert_System_String_">OdbcConnectionManager.BeforeBulkInsert(String)</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_BulkInsert_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.BulkInsert*"></a>
@@ -1247,7 +1253,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.BulkInsert(ETLBox.ControlFlow.ITableData, System.String)</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_BulkInsert_ETLBox_ControlFlow_ITableData_System_String_">OdbcConnectionManager.BulkInsert(ITableData, String)</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_CheckIfTableOrViewExists_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.CheckIfTableOrViewExists*"></a>
@@ -1320,7 +1326,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.CleanUpBulkInsert(System.String)</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_CleanUpBulkInsert_System_String_">OdbcConnectionManager.CleanUpBulkInsert(String)</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_Clone_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.Clone*"></a>
@@ -1347,7 +1353,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.Clone()</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_Clone">OdbcConnectionManager.Clone()</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_PrepareBulkInsert_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.PrepareBulkInsert*"></a>
@@ -1376,7 +1382,7 @@ Contains only 1 record and is only temporarily created.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">ETLBox.Connection.DbConnectionManager&lt;System.Data.Odbc.OdbcConnection&gt;.PrepareBulkInsert(System.String)</span></div>
+  <div><a class="xref" href="ETLBox.Connection.OdbcConnectionManager.html#ETLBox_Connection_OdbcConnectionManager_PrepareBulkInsert_System_String_">OdbcConnectionManager.PrepareBulkInsert(String)</a></div>
   
   
   <a id="ETLBox_Connection_AccessOdbcConnectionManager_ReadTableDefinition_" data-uid="ETLBox.Connection.AccessOdbcConnectionManager.ReadTableDefinition*"></a>
