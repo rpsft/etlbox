@@ -13,6 +13,7 @@ namespace ETLBoxTests.DataFlowTests
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
         public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnectionsExceptAccess("DataFlow");
 
         public DbSourceWithSqlTests(DataFlowDatabaseFixture dbFixture)
         {
@@ -24,7 +25,8 @@ namespace ETLBoxTests.DataFlowTests
             public string Col2 { get; set; }
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections)),
+            MemberData(nameof(OdbcConnections))]
         public void SqlWithSelectStar(IConnectionManager connection)
         {
             //Arrange
@@ -47,7 +49,8 @@ namespace ETLBoxTests.DataFlowTests
 
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections)),
+            MemberData(nameof(OdbcConnections))]
         public void SqlWithNamedColumns(IConnectionManager connection)
         {
             //Arrange

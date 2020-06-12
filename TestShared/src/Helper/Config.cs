@@ -46,6 +46,13 @@ namespace ETLBoxTests.Helper
 
         public static ConnectionDetails<OdbcConnectionString, SqlOdbcConnectionManager> SqlOdbcConnection
         { get; set; } = new ConnectionDetails<OdbcConnectionString, SqlOdbcConnectionManager>("SqlOdbcConnectionString");
+
+        public static ConnectionDetails<OdbcConnectionString, MySqlOdbcConnectionManager> MySqlOdbcConnection
+        { get; set; } = new ConnectionDetails<OdbcConnectionString, MySqlOdbcConnectionManager>("MySqlOdbcConnectionString");
+
+        public static ConnectionDetails<OdbcConnectionString, PostgresOdbcConnectionManager> PostgresOdbcConnection
+        { get; set; } = new ConnectionDetails<OdbcConnectionString, PostgresOdbcConnectionManager>("PostgresOdbcConnectionString");
+
         public static ConnectionDetails<SqlConnectionString, SqlConnectionManager> AzureSqlConnection
         { get; set; } = new ConnectionDetails<SqlConnectionString, SqlConnectionManager>("AzureSqlConnectionString");
 
@@ -77,9 +84,10 @@ namespace ETLBoxTests.Helper
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
         };
 
-        public static IEnumerable<object[]> AllOdbcConnections(string section) => new[] {
+        public static IEnumerable<object[]> AllOdbcConnectionsExceptAccess(string section) => new[] {                    
                     new object[] { (IConnectionManager)SqlOdbcConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)AccessOdbcConnection.ConnectionManager(section) }
+                    new object[] { (IConnectionManager)MySqlOdbcConnection.ConnectionManager(section) },
+                    new object[] { (IConnectionManager)PostgresOdbcConnection.ConnectionManager(section) }
         };
 
         public static IEnumerable<object[]> AccessConnection(string section) => new[] {

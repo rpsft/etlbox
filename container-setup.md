@@ -58,6 +58,19 @@ For excel: download latest driver
  - enter a data source name,e.g. Accesss - no further configuration needed
 - Everything else is derived from Connection String
 
+SqlServer
+- just add the Odbc Driver 17 for Sql Server
+- the odbc driver is installed with Sql Server database
+- no further configuration need
+
+Postgres
+- download latests ODBC driver for Postgres https://www.postgresql.org/ftp/odbc/versions/
+- just add Postgres Sql UNICODE (x64) 
+- no further configuration needed
+- the connection string referes to UNICODE (Driver={PostgreSQL UNICODE}), if you use ANSI adapt the connection string (Driver={PostgreSQL ANSI})
+- Driver={PostgreSQL} is not supported any more?
+
+
 ## Line break settings
 
 - current tests and files for comparison are created under windows and have \r\n as LineBreak (instead of \n only)

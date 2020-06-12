@@ -24,3 +24,7 @@
 - Compare with sql code from dbschemareader (martinjw)
 - Issue with transactions and parallel write - add a better exception handling (check if transcation is already in progress), or check if another approach is feasable (perhaps multiple transactions?)
 - Add Oracle support
+
+# Odbc support:
+For better Odbc, I should look at DbSchemaReader(martinjw) in github.
+Currently, if not table definition is given, the current implementation of TableDefintion.FromTable name throws an exception that the table does not exists (though it does). It would be good if the connection manager would return the code how to find if a table exists. Then the normal conneciton managers would run some sql code, and the Odbc could use ADO.NET to retrieve if the table exists and to get the table definition (independent from the database).

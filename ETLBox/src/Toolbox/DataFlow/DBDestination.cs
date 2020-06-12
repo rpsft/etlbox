@@ -53,6 +53,11 @@ namespace ETLBox.DataFlow.Connectors
             TableName = tableName;
         }
 
+        public DbDestination(IConnectionManager connectionManager) : this()
+        {
+            ConnectionManager = connectionManager;
+        }
+
         public DbDestination(IConnectionManager connectionManager, string tableName) : this(tableName)
         {
             ConnectionManager = connectionManager;

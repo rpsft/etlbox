@@ -12,8 +12,9 @@ namespace ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class DbDestinationSpecialCharacterTests
     {
-        public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnections("DataFlow");
+        public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnectionsExceptAccess("DataFlow");
         public static IEnumerable<object[]> SqlConnections => Config.AllSqlConnections("DataFlow");
+        public static IEnumerable<object[]> AccessOdbcConnection => Config.AccessConnection("DataFlow");
 
         public DbDestinationSpecialCharacterTests(DataFlowDatabaseFixture dbFixture)
         {
@@ -34,7 +35,8 @@ namespace ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(OdbcConnections)),
-            MemberData(nameof(SqlConnections))]
+            MemberData(nameof(SqlConnections)),
+            MemberData(nameof(AccessOdbcConnection))]
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange

@@ -147,35 +147,6 @@ namespace ETLBox.Helper
                 QueryText.AppendLine(") a;");
         }
 
-
-        //internal string CreateBulkInsertStatementWithParameter(ITableData data, string tableName, List<OdbcParameter> parameters)
-        //{
-        //    QueryText.Clear();
-        //    TableName = tableName;
-        //    GetSourceAndDestColumnNames(data);
-        //    AppendBeginSql(tableName);
-        //    while (data.Read())
-        //    {
-        //        QueryText.Append("(");
-        //        string[] placeholder = new string[DestColumnNames.Count];
-        //        QueryText.Append(string.Join(",", placeholder.Select(s => s + "?")));
-        //        QueryText.AppendLine(")");
-        //        foreach (string destColumnName in DestColumnNames)
-        //        {
-        //            int colIndex = data.GetOrdinal(destColumnName);
-        //            string dataTypeName = data.GetDataTypeName(colIndex);
-        //            if (data.IsDBNull(colIndex))
-        //                parameters.Add(new OdbcParameter(destColumnName, DBNull.Value));
-        //            else
-        //                parameters.Add(new OdbcParameter(destColumnName, data.GetValue(colIndex)));
-        //        }
-        //        if (data.NextResult())
-        //            QueryText.Append(",");
-        //    }
-        //    AppendEndSql();
-        //    return QueryText.ToString();
-        //}
     }
-
 
 }
