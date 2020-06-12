@@ -15,8 +15,8 @@
 What's new? The connection managers are now moved into their own package - this reduces dependencies in the core package as you only need to pick the packages for the connectors that you actually need.
 Please not that some of the connectors are now closed source and have a different license model.
 BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.
-</PackageReleaseNotes>
-        <Version>2.0.0</Version>
+Added in 2.0.1: Support for Generic OleDb connections.</PackageReleaseNotes>
+        <Version>2.0.1</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>

@@ -13,6 +13,8 @@ namespace ETLBoxTests.DataFlowTests
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
         public static IEnumerable<object[]> OdbcConnections => Config.AllOdbcConnectionsExceptAccess("DataFlow");
 
+        public static IEnumerable<object[]> OleDbConnections => Config.AllOleDbConnections("DataFlow");
+
         public DbSourceTests(DataFlowDatabaseFixture dbFixture)
         {
         }
@@ -24,7 +26,8 @@ namespace ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections)),
-            MemberData(nameof(OdbcConnections))]
+            MemberData(nameof(OdbcConnections)),
+            MemberData(nameof(OleDbConnections))]
         public void SimpleFlow(IConnectionManager connection)
         {
             //Arrange

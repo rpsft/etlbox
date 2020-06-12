@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SQLite\ETLBox.SQLite.csproj" />
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.OleDb\ETLBox.OleDb.csproj" />
   </ItemGroup>
 
   <ItemGroup>

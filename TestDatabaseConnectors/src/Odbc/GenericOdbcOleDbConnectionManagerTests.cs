@@ -12,7 +12,7 @@ using static ETLBoxTests.Helper.Config;
 namespace ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class GenericOdbcConnectionManagerTests
+    public class GenericOdbcOleDbConnectionManagerTests
     {
 
         public static ConnectionDetails<OdbcConnectionString, OdbcConnectionManager> SqlGenericOdbcConnectionDetails
@@ -29,7 +29,14 @@ namespace ETLBoxTests.DataFlowTests
                     new object[] { (IConnectionManager)PostgresGenericOdbcConnectionDetails.ConnectionManager("DataFlow") }
         };
 
-        public GenericOdbcConnectionManagerTests(DataFlowDatabaseFixture dbFixture)
+        public static ConnectionDetails<OleDbConnectionString, OleDbConnectionManager> SqlGenericOleDbConnectionDetails
+        { get; set; } = new ConnectionDetails<OleDbConnectionString, OleDbConnectionManager>("SqlOleDbConnectionString");
+
+        public static IEnumerable<object[]> OleDbGenericConnections() => new[] {
+                    new object[] { (IConnectionManager)SqlGenericOleDbConnectionDetails.ConnectionManager("DataFlow") },
+        };
+
+        public GenericOdbcOleDbConnectionManagerTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
@@ -80,7 +87,7 @@ namespace ETLBoxTests.DataFlowTests
         }
 
 
-        [Theory, MemberData(nameof(OdbcGenericConnections))]
+        [Theory, MemberData(nameof(OleDbGenericConnections))]
         public void WithTableDefinition(IConnectionManager connection)
         {
             //Arrange

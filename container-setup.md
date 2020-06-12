@@ -71,6 +71,11 @@ Postgres
 - Driver={PostgreSQL} is not supported any more?
 
 
+## OleDb drivers
+- OleDb driver for Sql Server was installed with database
+- MySql has no official OleDb Driver
+- OleDb driver for Postgres: http://www.pgoledb.com
+
 ## Line break settings
 
 - current tests and files for comparison are created under windows and have \r\n as LineBreak (instead of \n only)

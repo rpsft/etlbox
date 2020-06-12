@@ -40,7 +40,7 @@ namespace ETLBox.Connection
         bool SupportProcedures { get; }
         bool SupportSchemas { get; }
         bool SupportComputedColumns { get; }
-        bool IsOdbcConnection { get; }
+        bool IsOdbcOrOleDbConnection { get; }
         TableDefinition ReadTableDefinition(ObjectNameDescriptor TN);
         bool CheckIfTableOrViewExists(string objectName);
         void CheckLicenseOrThrow(int count);

@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.SqlServer", "..\etlbox.connectors\ETLBox.SqlServer\ETLBox.SqlServer.csproj", "{0888554F-0B9A-4423-8E87-C88AB61D7122}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.AnalysisService", "..\etlbox.connectors\ETLBox.AnalysisServices\ETLBox.AnalysisServices.csproj", "{EE07980D-9A26-4D6C-B7B3-DD7D84526610}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.AnalysisServices", "..\etlbox.connectors\ETLBox.AnalysisServices\ETLBox.AnalysisServices.csproj", "{EE07980D-9A26-4D6C-B7B3-DD7D84526610}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.MySql", "..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj", "{99E86D5C-15D5-46AD-8D3F-B85BE696D3E0}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseManager", "..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj", "{8524B59F-6F34-435A-A820-B3C9A510A754}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLicenseManager", "..\etlbox.license\LicenseKey\TestLicenseManager\TestLicenseManager.csproj", "{D719CFD2-A041-4848-B91C-CAB2892C419A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.OleDb", "..\etlbox.connectors\ETLBox.OleDb\ETLBox.OleDb.csproj", "{693041F9-4E45-4C20-8F35-28EEACD1E781}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,10 @@ Global
 		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D719CFD2-A041-4848-B91C-CAB2892C419A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{693041F9-4E45-4C20-8F35-28EEACD1E781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{693041F9-4E45-4C20-8F35-28EEACD1E781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{693041F9-4E45-4C20-8F35-28EEACD1E781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{693041F9-4E45-4C20-8F35-28EEACD1E781}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

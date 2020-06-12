@@ -15,7 +15,7 @@ namespace ETLBox.ControlFlow
         public Action AfterRowReadAction { get; set; }
         public long Limit { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
-        public bool IsOdbcConnection => DbConnectionManager.IsOdbcConnection;
+        public bool IsOdbcConnection => DbConnectionManager.IsOdbcOrOleDbConnection;
         public virtual bool DoXMLCommentStyle { get; set; }
         public IDbTransaction Transaction { get; set; }
         internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;

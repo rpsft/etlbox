@@ -33,7 +33,7 @@ namespace ETLBox.Connection
         public virtual bool SupportProcedures { get; } = true;
         public virtual bool SupportSchemas { get; } = true;
         public virtual bool SupportComputedColumns { get; } = true;
-        public virtual bool IsOdbcConnection { get; } = false;
+        public virtual bool IsOdbcOrOleDbConnection { get; } = false;
         public virtual TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
         {
             throw new NotImplementedException();

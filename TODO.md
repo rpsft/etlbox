@@ -28,3 +28,7 @@
 # Odbc support:
 For better Odbc, I should look at DbSchemaReader(martinjw) in github.
 Currently, if not table definition is given, the current implementation of TableDefintion.FromTable name throws an exception that the table does not exists (though it does). It would be good if the connection manager would return the code how to find if a table exists. Then the normal conneciton managers would run some sql code, and the Odbc could use ADO.NET to retrieve if the table exists and to get the table definition (independent from the database).
+
+# Cleanup
+Remove SqlTask: Add task name & Comments before sql code
+Make sql task name optional
