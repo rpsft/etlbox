@@ -283,6 +283,12 @@ references:
   commentId: F:ETLBox.Connection.ConnectionManagerType.MySql
   fullName: ETLBox.Connection.ConnectionManagerType.MySql
   nameWithType: ConnectionManagerType.MySql
+- uid: ETLBox.Connection.ConnectionManagerType.Oracle
+  name: Oracle
+  href: api/ETLBox.Connection.ConnectionManagerType.html#ETLBox_Connection_ConnectionManagerType_Oracle
+  commentId: F:ETLBox.Connection.ConnectionManagerType.Oracle
+  fullName: ETLBox.Connection.ConnectionManagerType.Oracle
+  nameWithType: ConnectionManagerType.Oracle
 - uid: ETLBox.Connection.ConnectionManagerType.Postgres
   name: Postgres
   href: api/ETLBox.Connection.ConnectionManagerType.html#ETLBox_Connection_ConnectionManagerType_Postgres
