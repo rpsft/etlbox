@@ -47,6 +47,28 @@ User: sa
 Password: YourStrong@Passw0rd
 
 
+## Oracle
+
+Read the manual here: https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance
+Go to https://container-registry.oracle.com
+Sign in 
+Go to the database you want to download
+Accept license
+copy docker pull command
+
+Until license is not accepted in web interface, docker pull won't authorize download
+
+```
+docker login container-registry.oracle.com/database/standard:latest
+docker pull container-registry.oracle.com/database/standard:latest
+docker run --name localoracle -d -p 1521:1521 container-registry.oracle.com/database/standard:latest
+```
+
+For `docker login`, use same user and password as for website
+Login in to localhost
+User: sys  
+Password: Oradoc_db1
+
 ## Odbc setup
 
 For excel: download latest driver

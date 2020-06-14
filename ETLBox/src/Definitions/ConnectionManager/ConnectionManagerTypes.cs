@@ -8,6 +8,7 @@
         SQLite,
         MySql,
         Postgres,
-        Access
+        Access,
+        Oracle
     }
 }
