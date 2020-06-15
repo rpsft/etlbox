@@ -135,6 +135,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                         return "AUTO_INCREMENT";
                     else if (ConnectionType == ConnectionManagerType.Postgres)
                         return "SERIAL";
+                    else if (ConnectionType == ConnectionManagerType.Oracle)
+                        return $"GENERATED ALWAYS AS IDENTITY START WITH {col.IdentitySeed ?? 1} INCREMENT BY {col.IdentityIncrement ?? 1}";
                     return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
                 }
                 else

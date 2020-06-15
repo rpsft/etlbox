@@ -66,8 +66,16 @@ docker run --name localoracle -d -p 1521:1521 container-registry.oracle.com/data
 
 For `docker login`, use same user and password as for website
 Login in to localhost
-User: sys  
+SID: ORCLCDB
+User: sys   (as sysdba)
 Password: Oradoc_db1
+
+After logged in as DBA, create a user:
+```
+alter session set "_ORACLE_SCRIPT"=true;  
+create user etlbox identified by etlboxpassword;
+grant dba to etlbox;
+```
 
 ## Odbc setup
 

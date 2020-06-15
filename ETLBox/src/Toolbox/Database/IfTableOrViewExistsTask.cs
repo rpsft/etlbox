@@ -37,6 +37,15 @@ namespace ETLBox.ControlFlow.Tasks
     AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotatedFullName}')
 )";
             }
+            else if (this.ConnectionType == ConnectionManagerType.Oracle)
+            {
+                return $@"SELECT 
+CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS ""Count""
+FROM user_objects
+WHERE object_type IN ('TABLE', 'VIEW')
+AND object_name = '{ON.UnquotatedObjectName}'
+";
+            }
             else if (this.ConnectionType == ConnectionManagerType.Access)
             {
                 var connMan = this.DbConnectionManager.CloneIfAllowed();// as AccessOdbcConnectionManager;

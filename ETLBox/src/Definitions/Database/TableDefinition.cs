@@ -64,6 +64,8 @@ namespace ETLBox.ControlFlow
                 return ReadTableDefinitionFromPostgres(connection, TN);
             else if (connectionType == ConnectionManagerType.Access)
                 return ReadTableDefinitionFromAccess(connection, TN);
+            else if (connectionType == ConnectionManagerType.Oracle)
+                return ReadTableDefinitionFromOracle(connection, TN);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
@@ -284,6 +286,66 @@ ORDER BY cols.ordinal_position
              , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
             , column_default => curCol.DefaultValue = column_default?.ToString().ReplaceIgnoreCase("::character varying", "")
             , collation_name => curCol.Collation = collation_name?.ToString()
+            , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
+             )
+            {
+                DisableLogging = true,
+                ConnectionManager = connection
+            };
+            readMetaSql.ExecuteReader();
+            return result;
+        }
+
+        private static TableDefinition ReadTableDefinitionFromOracle(IConnectionManager connection, ObjectNameDescriptor TN)
+        {
+            TableDefinition result = new TableDefinition(TN.ObjectName);
+            TableColumn curCol = null;
+
+        //Regarding default values: The issue is described partly here
+        //https://stackoverflow.com/questions/46991132/how-to-cast-long-to-varchar2-inline/47041776
+            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
+$@" 
+SELECT cols.COLUMN_NAME
+, CASE WHEN cols.DATA_TYPE 
+            IN ('VARCHAR','CHAR', 'NCHAR', 'NVARCHAR', 'NVARCHAR2', 'NCHAR2', 'VARCHAR2', 'CHAR2' ) 
+        THEN cols.DATA_TYPE || '(' || cols.CHAR_LENGTH || ')'
+	   WHEN cols.DATA_TYPE 
+            IN ('NUMBER') 
+        THEN cols.DATA_TYPE || '(' ||cols.DATA_LENGTH ||',' || cols.DATA_SCALE || ')'
+	   ELSE cols.DATA_TYPE
+    END AS data_type
+, cols.NULLABLE
+, cols.IDENTITY_COLUMN
+, cons.status as primary_key 
+, cols.DATA_DEFAULT --not working, see restriction above
+, cols.COLLATION 
+, cols.DATA_DEFAULT AS generation_expression
+FROM USER_TAB_COLUMNS cols
+LEFT JOIN (
+  SELECT acols.table_name, acols.column_name, acols.position, acons.status, acons.owner
+  FROM USER_CONSTRAINTS acons, USER_CONS_COLUMNS acols
+  WHERE acons.CONSTRAINT_TYPE = 'P'
+  AND acons.CONSTRAINT_NAME = acols.CONSTRAINT_NAME
+  AND acons.OWNER = acols.OWNER
+) cons
+ON cons.TABLE_NAME = cols.TABLE_NAME
+AND cons.position = cols.COLUMN_ID
+AND cols.COLUMN_NAME  = cons.column_name
+WHERE
+cols.TABLE_NAME NOT LIKE 'BIN$%'
+--AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
+AND cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
+ORDER BY cols.COLUMN_ID
+"
+            , () => { curCol = new TableColumn(); }
+            , () => { result.Columns.Add(curCol); }
+            , column_name => curCol.Name = column_name.ToString()
+            , data_type => curCol.DataType = data_type.ToString()
+            , nullable => curCol.AllowNulls = nullable.ToString() == "Y" ? true : false
+            , identity_column => curCol.IsIdentity = identity_column?.ToString() == "YES" ? true : false
+             ,primary_key => curCol.IsPrimaryKey = primary_key?.ToString() == "ENABLED" ? true : false
+            , data_default => curCol.DefaultValue = data_default?.ToString()
+            , collation => curCol.Collation = collation?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
              )
             {

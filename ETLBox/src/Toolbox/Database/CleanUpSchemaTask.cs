@@ -17,7 +17,7 @@ namespace ETLBox.ControlFlow.Tasks
         public override string TaskName => $"Clean up schema {SchemaName}";
         public void Execute()
         {
-            if (ConnectionType != ConnectionManagerType.SqlServer)
+            if (ConnectionType != ConnectionManagerType.SqlServer && ConnectionType != ConnectionManagerType.Oracle)
                 throw new ETLBoxNotSupportedException("This task is only supported with SqlServer!");
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
@@ -27,7 +27,9 @@ namespace ETLBox.ControlFlow.Tasks
         {
             get
             {
-                return $@"
+                if (ConnectionType == ConnectionManagerType.SqlServer)
+                {
+                    return $@"
     declare @SchemaName nvarchar(1000) = '{SchemaName}'
     declare @SQL varchar(4000)
 	declare @msg varchar(500)
@@ -102,6 +104,65 @@ namespace ETLBox.ControlFlow.Tasks
 	close statement_cursor
 	deallocate statement_cursor	
 ";
+                }
+                else if (ConnectionType == ConnectionManagerType.Oracle)
+                {
+                    return $@"
+BEGIN
+   FOR cur_rec IN (SELECT object_name, object_type
+                   FROM user_objects
+                   WHERE object_type IN
+                             ('TABLE',
+                              'VIEW',
+                              'MATERIALIZED VIEW',
+                              'PACKAGE',
+                              'PROCEDURE',
+                              'FUNCTION',
+                              'SEQUENCE',
+                              'SYNONYM',
+                              'PACKAGE BODY'
+                             ))
+   LOOP
+      BEGIN
+         IF cur_rec.object_type = 'TABLE'
+         THEN
+            EXECUTE IMMEDIATE 'DROP '
+                              || cur_rec.object_type
+                              || ' ""'
+                              || cur_rec.object_name
+                              || '"" CASCADE CONSTRAINTS';
+                    ELSE
+                       EXECUTE IMMEDIATE 'DROP '
+                                         || cur_rec.object_type
+                                         || ' ""'
+                                         || cur_rec.object_name
+                                         || '""';
+                    END IF;
+                    EXCEPTION
+                       WHEN OTHERS
+                       THEN
+            DBMS_OUTPUT.put_line('FAILED: DROP '
+                                  || cur_rec.object_type
+                                  || ' ""'
+                                  || cur_rec.object_name
+                                  || '""'
+                                 );
+                    END;
+                    END LOOP;
+                    FOR cur_rec IN(SELECT *
+                                    FROM all_synonyms
+
+                                    WHERE table_owner IN(SELECT USER FROM dual))
+   LOOP
+      BEGIN
+         EXECUTE IMMEDIATE 'DROP PUBLIC SYNONYM ' || cur_rec.synonym_name;
+                    END;
+                    END LOOP;
+                    END;
+";
+                }
+                else
+                    return string.Empty;
             }
         }
 
@@ -117,10 +178,10 @@ namespace ETLBox.ControlFlow.Tasks
 
 
         /* Static methods for convenience */
+        public static void CleanUp() => new CleanUpSchemaTask().Execute();
+        public static void CleanUp(IConnectionManager connectionManager) => new CleanUpSchemaTask() { ConnectionManager = connectionManager }.Execute();
         public static void CleanUp(string schemaName) => new CleanUpSchemaTask(schemaName).Execute();
         public static void CleanUp(IConnectionManager connectionManager, string schemaName) => new CleanUpSchemaTask(schemaName) { ConnectionManager = connectionManager }.Execute();
-
-        /* Implementation & stuff */
 
 
     }

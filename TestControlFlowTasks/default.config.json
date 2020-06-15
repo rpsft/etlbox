@@ -7,6 +7,6 @@
         "SqlOdbcConnectionString": "Driver={SQL Server};Server=10.211.55.2;Database=ETLBox_ControlFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
         "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_ControlFlow;Uid=root;Pwd=etlboxpassword;",
         "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_ControlFlow;User Id=postgres;Password=etlboxpassword;",
-        "OracleConnectionString": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));User ID=sys;Password=Oradoc_db1;DBA Privilege=SYSDBA"
+        "OracleConnectionString": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));User ID=etlbox;Password=etlboxpassword;"
     }
 }

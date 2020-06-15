@@ -46,6 +46,15 @@ WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotatedFullName}'
             AND indexname = '{ON.UnquotatedObjectName}'
 ";
             }
+            else if(this.ConnectionType == ConnectionManagerType.Oracle)
+            {
+                return $@"
+SELECT 1 
+FROM ALL_INDEXES aidx
+WHERE aidx.TABLE_NAME  = '{OON.UnquotatedObjectName}'
+AND aidx.INDEX_NAME   = '{ON.UnquotatedObjectName}'
+";
+            }
             else
             {
                 return string.Empty;

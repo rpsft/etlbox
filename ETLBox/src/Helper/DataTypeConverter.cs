@@ -161,6 +161,19 @@ namespace ETLBox.Helper
                     return "TIMESTAMP";
                 return dbSpecificTypeName;
             }
+            else if (connectionType == ConnectionManagerType.Oracle)
+            {
+                if (IsCharTypeDefinition(typeName))
+                {
+                    if (typeName.Replace(" ","").StartsWith("NVARCHAR("))
+                        return typeName.Replace("NVARCHAR","NVARCHAR2");
+                    else if (typeName.Replace(" ", "").StartsWith("VARCHAR("))
+                        return typeName.Replace("VARCHAR", "VARCHAR2");
+                }
+                else if (typeName == "BIGINT")
+                    return "INT";
+                return dbSpecificTypeName;
+            }
             else
             {
                 return dbSpecificTypeName;

@@ -48,5 +48,11 @@ namespace ETLBoxTests.Helper
 
             DropAndCreate(connManagerMaster, dbName);
         }
+
+        public static void CleanUpOracle(string section)
+        {
+            var connManager = Config.OracleConnection.ConnectionManager(section);
+            CleanUpSchemaTask.CleanUp(connManager);
+        }
     }
 }
