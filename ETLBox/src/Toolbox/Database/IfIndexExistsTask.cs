@@ -51,7 +51,9 @@ WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotatedFullName}'
                 return $@"
 SELECT 1 
 FROM ALL_INDEXES aidx
-WHERE aidx.TABLE_NAME  = '{OON.UnquotatedObjectName}'
+WHERE ( aidx.TABLE_NAME  = '{OON.UnquotatedFullName}'
+        OR aidx.TABLE_OWNER || '.' || aidx.TABLE_NAME = '{OON.UnquotatedFullName}'
+       )
 AND aidx.INDEX_NAME   = '{ON.UnquotatedObjectName}'
 ";
             }

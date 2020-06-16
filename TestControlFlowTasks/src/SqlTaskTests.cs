@@ -15,6 +15,8 @@ namespace ETLBoxTests.ControlFlowTests
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> ConnectionsWithValue(string value) => Config.AllSqlConnectionsWithValue("ControlFlow", value);
 
+        private string FROMDUAL(IConnectionManager connection) =>
+            connection.GetType() == typeof(OracleConnectionManager) ? "FROM DUAL" : "";
         public SqlTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }
 
@@ -58,7 +60,7 @@ namespace ETLBoxTests.ControlFlowTests
             //Act
             object result = SqlTask.ExecuteScalar(connection,
                 "Test execute scalar",
-                $@"SELECT 'Hallo Welt' AS ScalarResult");
+                $@"SELECT 'Hallo Welt' AS ScalarResult {FROMDUAL(connection)}");
             //Assert
             Assert.Equal("Hallo Welt", result.ToString());
 
@@ -83,7 +85,7 @@ namespace ETLBoxTests.ControlFlowTests
                 //Act
                 DateTime result = (DateTime)(SqlTask.ExecuteScalar(connection,
                         "Test execute scalar with datatype",
-                        $@"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"));
+                        $@"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult {FROMDUAL(connection)}"));
                 //Assert
                 Assert.Equal(DateTime.Parse("2020-02-29"), result);
             }
@@ -99,7 +101,7 @@ namespace ETLBoxTests.ControlFlowTests
             //Act
             bool result = SqlTask.ExecuteScalarAsBool(connection,
                 "Test execute scalar as bool",
-                $"SELECT {sqlBoolValue} AS Bool");
+                $"SELECT {sqlBoolValue} AS Bool {FROMDUAL(connection)}");
             //Assert
             if (sqlBoolValue == "NULL")
                 Assert.False(result);

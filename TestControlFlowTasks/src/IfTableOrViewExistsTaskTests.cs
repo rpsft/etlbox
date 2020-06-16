@@ -3,6 +3,7 @@ using ETLBox.ControlFlow.Tasks;
 using ETLBox.Exceptions;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
+using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using Xunit;
 
@@ -22,7 +23,8 @@ namespace ETLBoxTests.ControlFlowTests
         public void IfTableExists(IConnectionManager connection)
         {
             //Arrange
-            if (connection.GetType() != typeof(AccessOdbcConnectionManager))
+            if (connection.GetType() != typeof(AccessOdbcConnectionManager)
+                && connection.GetType() != typeof(OracleConnectionManager))
                 SqlTask.ExecuteNonQuery(connection, "Drop table if exists"
                    , $@"DROP TABLE IF EXISTS existtable_test");
 
@@ -30,7 +32,7 @@ namespace ETLBoxTests.ControlFlowTests
             var existsBefore = IfTableOrViewExistsTask.IsExisting(connection, "existtable_test");
 
             SqlTask.ExecuteNonQuery(connection, "Create test data table"
-                , $@"CREATE TABLE existtable_test ( Col1 INT NULL )");
+                , $@"CREATE TABLE {connection.QB}existtable_test{connection.QE} ( Col1 INT NULL )");
             var existsAfter = IfTableOrViewExistsTask.IsExisting(connection, "existtable_test");
 
             //Assert
@@ -43,15 +45,19 @@ namespace ETLBoxTests.ControlFlowTests
         public void IfViewExists(IConnectionManager connection)
         {
             //Arrange
-            if (connection.GetType() != typeof(AccessOdbcConnectionManager))
+            if (connection.GetType() != typeof(AccessOdbcConnectionManager)
+                 && connection.GetType() != typeof(OracleConnectionManager))
                 SqlTask.ExecuteNonQuery(connection, "Drop view if exists"
                 , $@"DROP VIEW IF EXISTS existview_test");
 
             //Act
             var existsBefore = IfTableOrViewExistsTask.IsExisting(connection, "existview_test");
 
+            string viewtext = $@"CREATE VIEW existview_test AS SELECT 1 AS test";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                viewtext = $@"CREATE VIEW {connection.QB}existview_test{connection.QE} AS SELECT 1 AS test FROM DUAL";
             SqlTask.ExecuteNonQuery(connection, "Create test data table"
-                , $@"CREATE VIEW existview_test AS SELECT 1 AS test");
+                , viewtext);
             var existsAfter = IfTableOrViewExistsTask.IsExisting(connection, "existview_test");
 
             //Assert

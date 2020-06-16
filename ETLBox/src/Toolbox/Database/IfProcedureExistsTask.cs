@@ -42,6 +42,17 @@ WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ON.UnquotatedFullName}'
             OR proname = '{ON.UnquotatedFullName}' )
 ";
             }
+            else if (this.ConnectionType == ConnectionManagerType.Oracle)
+            {
+                return $@"
+SELECT 1
+FROM ALL_OBJECTS
+WHERE object_type = 'PROCEDURE'
+AND ( object_name = '{ON.UnquotatedFullName}'
+ OR  owner || '.' || object_name = '{ON.UnquotatedFullName}'
+    )
+";
+            }
             else
             {
                 return string.Empty;

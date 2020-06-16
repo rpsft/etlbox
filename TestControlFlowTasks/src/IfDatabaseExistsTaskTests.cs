@@ -18,6 +18,7 @@ namespace ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void IfDatabaseExists(IConnectionManager connection)
         {
+            if (connection.GetType() == typeof(OracleConnectionManager)) return;
             //Arrange
             string dbName = ("ETLBox_" + TestHashHelper.RandomString(10)).ToLower();
             var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
@@ -39,6 +40,14 @@ namespace ETLBoxTests.ControlFlowTests
         {
             Assert.Throws<ETLBoxNotSupportedException>(
                 () => IfDatabaseExistsTask.IsExisting(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
+                );
+        }
+
+        [Fact]
+        public void NotSupportedWithOracle()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => IfDatabaseExistsTask.IsExisting(Config.OracleConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
     }

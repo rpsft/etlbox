@@ -16,21 +16,22 @@ namespace ETLBoxTests.ControlFlowTests
         { }
 
         [Theory, MemberData(nameof(Connections))]
-        public void IfSchemaeExists(IConnectionManager connection)
+        public void IfSchemaExists(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(MySqlConnectionManager))
-            {
-                //Arrange
-                var existsBefore = IfSchemaExistsTask.IsExisting(connection, "testschema");
-                CreateSchemaTask.Create(connection, "testschema");
+            if (connection.GetType() == typeof(MySqlConnectionManager)
+                || connection.GetType() == typeof(OracleConnectionManager)
+                )
+                return;
+            //Arrange
+            var existsBefore = IfSchemaExistsTask.IsExisting(connection, "testschema");
+            CreateSchemaTask.Create(connection, "testschema");
 
-                //Act
-                var existsAfter = IfSchemaExistsTask.IsExisting(connection, "testschema");
+            //Act
+            var existsAfter = IfSchemaExistsTask.IsExisting(connection, "testschema");
 
-                //Assert
-                Assert.False(existsBefore);
-                Assert.True(existsAfter);
-            }
+            //Assert
+            Assert.False(existsBefore);
+            Assert.True(existsAfter);
         }
     }
 }

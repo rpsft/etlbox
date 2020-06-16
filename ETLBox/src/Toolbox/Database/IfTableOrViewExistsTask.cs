@@ -39,11 +39,14 @@ namespace ETLBox.ControlFlow.Tasks
             }
             else if (this.ConnectionType == ConnectionManagerType.Oracle)
             {
-                return $@"SELECT 
+                return $@"
+ SELECT 
 CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS ""Count""
-FROM user_objects
-WHERE object_type IN ('TABLE', 'VIEW')
-AND object_name = '{ON.UnquotatedObjectName}'
+FROM all_objects
+WHERE object_type IN('TABLE', 'VIEW')
+AND(object_name = '{ON.UnquotatedFullName}'
+    OR owner || '.' || object_name = '{ON.UnquotatedFullName}'
+    )
 ";
             }
             else if (this.ConnectionType == ConnectionManagerType.Access)

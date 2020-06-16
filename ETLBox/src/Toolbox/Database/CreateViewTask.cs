@@ -8,15 +8,14 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public class CreateViewTask : GenericTask, ITask
     {
-        public override string TaskName => $"{CreateOrAlterSql} VIEW {ViewName}";
+        public override string TaskName => $"Create or alter view {ViewName ?? string.Empty}";
         public void Execute()
         {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if ((ConnectionType == ConnectionManagerType.SQLite
-                || ConnectionType == ConnectionManagerType.Postgres
-                || ConnectionType == ConnectionManagerType.Access
+            if (
+                (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access)
+                && IsExisting
                 )
-                && IsExisting)
                 new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
@@ -49,7 +48,22 @@ AS
         public static void CreateOrAlter(IConnectionManager connectionManager, string viewName, string definition) => new CreateViewTask(viewName, definition) { ConnectionManager = connectionManager }.Execute();
 
         bool IsExisting { get; set; }
-        string CreateOrAlterSql => IsExisting &&
-            (ConnectionType != ConnectionManagerType.SQLite && ConnectionType != ConnectionManagerType.Postgres) ? "ALTER" : "CREATE";
+        string CreateOrAlterSql {
+            get {
+                if (!IsExisting) {
+                    return "CREATE";
+                }
+                else {
+                    if (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access)
+                        return "CREATE";
+                    else if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.Oracle)
+                        return "CREATE OR REPLACE";
+                    else
+                        return "ALTER";
+                }
+            }
+        }
+
+
     }
 }

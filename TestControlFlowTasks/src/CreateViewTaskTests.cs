@@ -22,23 +22,30 @@ namespace ETLBoxTests.ControlFlowTests
         public void CreateView(IConnectionManager connection)
         {
             //Arrange
+            string viewtext = "SELECT 1 AS test";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                viewtext += " FROM DUAL";
             //Act
-            CreateViewTask.CreateOrAlter(connection, "View1", "SELECT 1 AS test");
+            CreateViewTask.CreateOrAlter(connection, "View1", viewtext);
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View1"));
             var td = TableDefinition.FromTableName(connection, "View1");
-            Assert.Contains(td.Columns, col => col.Name == "test");
+            Assert.Contains(td.Columns, col => col.Name.ToLower() == "test");
         }
 
         [Theory, MemberData(nameof(Connections))]
         public void AlterView(IConnectionManager connection)
         {
             //Arrange
-            CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 1 AS Test");
+            string viewtext = "SELECT 1 AS Test";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                viewtext += " FROM DUAL";
+
+            CreateViewTask.CreateOrAlter(connection, "View2", viewtext);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View2"));
 
             //Act
-            CreateViewTask.CreateOrAlter(connection, "View2", "SELECT 5 AS test");
+            CreateViewTask.CreateOrAlter(connection, "View2", viewtext);
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "View2"));

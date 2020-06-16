@@ -24,7 +24,7 @@ namespace ETLBoxTests.ControlFlowTests
             //Act
             CreateProcedureTask.CreateOrAlter(connection, "Proc1", "SELECT 1;");
             //Assert
-            IfProcedureExistsTask.IsExisting(connection, "Proc1");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc1"));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -32,13 +32,13 @@ namespace ETLBoxTests.ControlFlowTests
         {
             //Arrange
             CreateProcedureTask.CreateOrAlter(connection, "Proc2", "SELECT 1;");
-            IfProcedureExistsTask.IsExisting(connection, "Proc2");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc2"));
 
             //Act
             CreateProcedureTask.CreateOrAlter(connection, "Proc2", "SELECT 5;");
 
             //Assert
-            IfProcedureExistsTask.IsExisting(connection, "Proc2");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc2"));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -52,7 +52,7 @@ namespace ETLBoxTests.ControlFlowTests
             //Act
             CreateProcedureTask.CreateOrAlter(connection, "Proc3", "SELECT 1;", pars);
             //Assert
-            IfProcedureExistsTask.IsExisting(connection, "Proc3");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc3"));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -67,7 +67,7 @@ namespace ETLBoxTests.ControlFlowTests
             //Act
             CreateProcedureTask.CreateOrAlter(connection, procDef);
             //Assert
-            IfProcedureExistsTask.IsExisting(connection, "Proc4");
+            Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc4"));
         }
 
         [Fact]

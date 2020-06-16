@@ -301,17 +301,18 @@ ORDER BY cols.ordinal_position
             TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
-        //Regarding default values: The issue is described partly here
-        //https://stackoverflow.com/questions/46991132/how-to-cast-long-to-varchar2-inline/47041776
-            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
-$@" 
+            //Regarding default values: The issue is described partly here
+            //https://stackoverflow.com/questions/46991132/how-to-cast-long-to-varchar2-inline/47041776
+            string sql = $@" 
 SELECT cols.COLUMN_NAME
 , CASE WHEN cols.DATA_TYPE 
             IN ('VARCHAR','CHAR', 'NCHAR', 'NVARCHAR', 'NVARCHAR2', 'NCHAR2', 'VARCHAR2', 'CHAR2' ) 
         THEN cols.DATA_TYPE || '(' || cols.CHAR_LENGTH || ')'
 	   WHEN cols.DATA_TYPE 
             IN ('NUMBER') 
-        THEN cols.DATA_TYPE || '(' ||cols.DATA_LENGTH ||',' || cols.DATA_SCALE || ')'
+        THEN cols.DATA_TYPE || '(' ||cols.DATA_LENGTH ||',' || 
+            CASE WHEN cols.DATA_SCALE IS NULL THEN 127 ELSE cols.DATA_SCALE END
+            || ')'
 	   ELSE cols.DATA_TYPE
     END AS data_type
 , cols.NULLABLE
@@ -336,7 +337,9 @@ cols.TABLE_NAME NOT LIKE 'BIN$%'
 --AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
 AND cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
 ORDER BY cols.COLUMN_ID
-"
+";
+            var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
+sql
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
             , column_name => curCol.Name = column_name.ToString()

@@ -83,7 +83,7 @@ namespace ETLBox.ControlFlow.Tasks
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.Postgres)
+                if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.Oracle)
                     return "CREATE OR REPLACE";
                 else if (ConnectionType == ConnectionManagerType.MySql)
                     return "CREATE";

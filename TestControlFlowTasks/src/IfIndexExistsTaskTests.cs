@@ -20,13 +20,13 @@ namespace ETLBoxTests.ControlFlowTests
         {
             //Arrange
             SqlTask.ExecuteNonQuery(connection, "Create index test table"
-               , $@"CREATE TABLE indextable (col1 INT NULL)");
+               , $@"CREATE TABLE {connection.QB}indextable{connection.QE} (col1 INT NULL)");
 
             //Act
             var existsBefore = IfIndexExistsTask.IsExisting(connection, "index_test", "indextable");
-
             SqlTask.ExecuteNonQuery(connection, "Create test index"
-                , $@"CREATE INDEX index_test ON indextable (col1)");
+                , $@"CREATE INDEX {connection.QB}index_test{connection.QE} ON {connection.QB}indextable{connection.QE} (col1)");
+
             var existsAfter = IfIndexExistsTask.IsExisting(connection, "index_test", "indextable");
 
             //Assert

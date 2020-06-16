@@ -17,7 +17,9 @@ namespace ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void CreateSchema(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(MySqlConnectionManager))
+            if (connection.GetType() != typeof(MySqlConnectionManager)
+                && connection.GetType() != typeof(OracleConnectionManager)
+                )
             {
                 //Arrange
                 string schemaName = "s" + TestHashHelper.RandomString(9);
@@ -31,7 +33,9 @@ namespace ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void CreateSchemaWithSpecialChar(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(MySqlConnectionManager))
+            if (connection.GetType() != typeof(MySqlConnectionManager)
+                 && connection.GetType() != typeof(OracleConnectionManager)
+                )
             {
                 string QB = connection.QB;
                 string QE = connection.QE;

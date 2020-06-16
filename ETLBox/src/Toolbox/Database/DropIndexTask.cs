@@ -13,7 +13,10 @@ namespace ETLBox.ControlFlow.Tasks
         internal override string GetSql()
         {
             string sql = $@"DROP INDEX {ON.QuotatedFullName}";
-            if (ConnectionType != ConnectionManagerType.SQLite && ConnectionType != ConnectionManagerType.Postgres)
+            if (ConnectionType != ConnectionManagerType.SQLite
+                && ConnectionType != ConnectionManagerType.Postgres
+                && ConnectionType != ConnectionManagerType.Oracle
+                )
                 sql += $@" ON {TN.QuotatedFullName}";
             return sql;
         }

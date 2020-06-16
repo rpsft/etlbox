@@ -19,7 +19,10 @@ namespace ETLBoxTests.ControlFlowTests
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            CreateViewTask.CreateOrAlter(connection, "DropViewTest", "SELECT 1 AS Test");
+            string viewtext = "SELECT 1 AS test";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                viewtext += " FROM DUAL";
+            CreateViewTask.CreateOrAlter(connection, "DropViewTest", viewtext);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropViewTest"));
 
             //Act
@@ -32,11 +35,16 @@ namespace ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void DropIfExists(IConnectionManager connection)
         {
+            //Arrange
+            string viewtext = "SELECT 1 AS test";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                viewtext += " FROM DUAL";
+
             // Act
             DropViewTask.DropIfExists(connection, "DropIfExistsViewTest");
 
             //Arrange
-            CreateViewTask.CreateOrAlter(connection, "DropIfExistsViewTest", "SELECT 1 AS Test");
+            CreateViewTask.CreateOrAlter(connection, "DropIfExistsViewTest", viewtext);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropIfExistsViewTest"));
 
             //Act

@@ -107,11 +107,19 @@ namespace ETLBox.ControlFlow.Tasks
                 }
                 else if (ConnectionType == ConnectionManagerType.Oracle)
                 {
+                    string sourceTable = "user_objects";
+                    string ownerwhere = $"";
+                    if (!string.IsNullOrWhiteSpace(SchemaName))
+                    {
+                        sourceTable = "all_objects";
+                        ownerwhere = $"AND OWNER = UPPER('{SchemaName}')";
+                    }
                     return $@"
 BEGIN
-   FOR cur_rec IN (SELECT object_name, object_type
-                   FROM user_objects
-                   WHERE object_type IN
+   FOR cur_rec IN (
+                    SELECT object_name, object_type
+                    FROM {sourceTable}
+                    WHERE object_type IN
                              ('TABLE',
                               'VIEW',
                               'MATERIALIZED VIEW',
@@ -121,7 +129,9 @@ BEGIN
                               'SEQUENCE',
                               'SYNONYM',
                               'PACKAGE BODY'
-                             ))
+                             )
+                        {ownerwhere}
+                    )
    LOOP
       BEGIN
          IF cur_rec.object_type = 'TABLE'

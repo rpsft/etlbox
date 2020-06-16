@@ -19,36 +19,39 @@ namespace ETLBoxTests.ControlFlowTests
         [Theory, MemberData(nameof(Connections))]
         public void Drop(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(MySqlConnectionManager))
-            {
-                //Arrange
-                CreateSchemaTask.Create(connection, "testcreateschema");
-                Assert.True(IfSchemaExistsTask.IsExisting(connection, "testcreateschema"));
+            if (connection.GetType() == typeof(MySqlConnectionManager)
+                 || connection.GetType() == typeof(OracleConnectionManager)
+                )
+                return;
+            //Arrange
+            CreateSchemaTask.Create(connection, "testcreateschema");
+            Assert.True(IfSchemaExistsTask.IsExisting(connection, "testcreateschema"));
 
-                //Act
-                DropSchemaTask.Drop(connection, "testcreateschema");
+            //Act
+            DropSchemaTask.Drop(connection, "testcreateschema");
 
-                //Assert
-                Assert.False(IfSchemaExistsTask.IsExisting(connection, "testcreateschema"));
-            }
+            //Assert
+            Assert.False(IfSchemaExistsTask.IsExisting(connection, "testcreateschema"));
         }
 
         [Theory, MemberData(nameof(Connections))]
         public void DropIfExists(IConnectionManager connection)
         {
-            if (connection.GetType() != typeof(MySqlConnectionManager))
-            {
-                //Arrange
-                DropSchemaTask.DropIfExists(connection, "testcreateschema2");
-                CreateSchemaTask.Create(connection, "testcreateschema2");
-                Assert.True(IfSchemaExistsTask.IsExisting(connection, "testcreateschema2"));
+            if (connection.GetType() == typeof(MySqlConnectionManager)
+                 || connection.GetType() == typeof(OracleConnectionManager)
+                )
+                return;
 
-                //Act
-                DropSchemaTask.DropIfExists(connection, "testcreateschema2");
+            //Arrange
+            DropSchemaTask.DropIfExists(connection, "testcreateschema2");
+            CreateSchemaTask.Create(connection, "testcreateschema2");
+            Assert.True(IfSchemaExistsTask.IsExisting(connection, "testcreateschema2"));
 
-                //Assert
-                Assert.False(IfSchemaExistsTask.IsExisting(connection, "testcreateschema2"));
-            }
+            //Act
+            DropSchemaTask.DropIfExists(connection, "testcreateschema2");
+
+            //Assert
+            Assert.False(IfSchemaExistsTask.IsExisting(connection, "testcreateschema2"));
         }
 
 
@@ -65,6 +68,14 @@ namespace ETLBoxTests.ControlFlowTests
         {
             Assert.Throws<ETLBoxNotSupportedException>(
                 () => DropSchemaTask.Drop(Config.MySqlConnection.ConnectionManager("ControlFlow"), "Test")
+                );
+        }
+
+        [Fact]
+        public void NotSupportedWithOracle()
+        {
+            Assert.Throws<ETLBoxNotSupportedException>(
+                () => DropSchemaTask.Drop(Config.OracleConnection.ConnectionManager("ControlFlow"), "Test")
                 );
         }
     }
