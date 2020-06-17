@@ -46,8 +46,11 @@ namespace ETLBoxTests.ControlFlowTests
                 new QueryParameter("value1", "INT", 1),
                 new QueryParameter("value2", "NVARCHAR(100)", "Test1")
             };
+            string PP = "@";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                PP = ":";
             SqlTask.ExecuteNonQuery(connection, "Test insert with parameter",
-                $"INSERT INTO {tc.QB}ParameterTest{tc.QE} VALUES (@value1, @value2)", parameter);
+                $"INSERT INTO {tc.QB}ParameterTest{tc.QE} VALUES ({PP}value1, {PP}value2)", parameter);
 
             //Assert
             Assert.Equal(1, RowCountTask.Count(connection, "ParameterTest", $@"{tc.QB}Col1{tc.QE} = 1 AND {tc.QB}Col2{tc.QE}='Test1'"));
@@ -75,9 +78,19 @@ namespace ETLBoxTests.ControlFlowTests
                 //Act
                 double result = (double)(SqlTask.ExecuteScalar<double>(connection,
                     "Test execute scalar with datatype",
-                    $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"));
+                    $@"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult {FROMDUAL(connection)}"));
                 //Assert
                 Assert.Equal(1.343, result);
+            }
+            else  if (connection.GetType() == typeof(OracleConnectionManager))
+            {
+                //Arrange
+                //Act
+                DateTime result = (DateTime)(SqlTask.ExecuteScalar(connection,
+                    "Test execute scalar with datatype",
+                    $@"SELECT CAST('29_FEB-2020' AS DATE) AS ScalarResult FROM DUAL"));
+                //Assert
+                Assert.Equal(DateTime.Parse("2020-02-29"), result);
             }
             else
             {
@@ -85,7 +98,7 @@ namespace ETLBoxTests.ControlFlowTests
                 //Act
                 DateTime result = (DateTime)(SqlTask.ExecuteScalar(connection,
                         "Test execute scalar with datatype",
-                        $@"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult {FROMDUAL(connection)}"));
+                        $@"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"));
                 //Assert
                 Assert.Equal(DateTime.Parse("2020-02-29"), result);
             }
@@ -142,9 +155,13 @@ namespace ETLBoxTests.ControlFlowTests
             {
                 new QueryParameter("par1", "NVARCHAR(10)","Test2")
             };
+
             //Act
+            string PP = "@";
+            if (connection.GetType() == typeof(OracleConnectionManager))
+                PP = ":";
             SqlTask.ExecuteReader(connection, "Test execute reader",
-                $"SELECT {tc.QB}Col1{tc.QE} FROM {tc.QB}ExecuteReaderWithPar{tc.QE} WHERE {tc.QB}Col2{tc.QE} = @par1", parameter,
+                $"SELECT {tc.QB}Col1{tc.QE} FROM {tc.QB}ExecuteReaderWithPar{tc.QE} WHERE {tc.QB}Col2{tc.QE} = {PP}par1", parameter,
                 colA => asIsResult.Add(int.Parse(colA.ToString())));
             //Assert
             Assert.Equal(toBeResult, asIsResult);

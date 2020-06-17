@@ -16,9 +16,8 @@ namespace ETLBox.Helper
     /// </summary>
     public class BulkInsertSql<T> where T : DbParameter, new()
     {
-        internal bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
         public bool UseParameterQuery { get; set; } = true;
-        internal bool UseNamedParameters { get; set; }
+        public bool UseNamedParameters { get; set; }
         public List<T> Parameters { get; set; }
         StringBuilder QueryText { get; set; }
         List<string> SourceColumnNames { get; set; }
@@ -30,6 +29,8 @@ namespace ETLBox.Helper
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
         internal string TableName { get; set; }
         private int ParameterNameCount { get; set; }
+        string ParameterPlaceholder => ConnectionType == ConnectionManagerType.Oracle ? ":" : "@";
+        bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
 
         public string CreateBulkInsertStatement(ITableData data, string tableName)
         {
@@ -73,7 +74,7 @@ namespace ETLBox.Helper
 
         private void AddNullValue(List<string> values, string destColumnName)
         {
-            if (UseParameterQuery)
+            if (UseParameterQuery && ConnectionType != ConnectionManagerType.Oracle)
             {
                 values.Add(CreateParameterWithValue(DBNull.Value));
             }
@@ -108,7 +109,7 @@ namespace ETLBox.Helper
             Parameters.Add(par);
             if (UseNamedParameters)
             {
-                string parName = $"@P{ParameterNameCount++}";
+                string parName = $"{ParameterPlaceholder}P{ParameterNameCount++}";
                 par.ParameterName = parName;
                 return parName;
             }
@@ -123,6 +124,8 @@ namespace ETLBox.Helper
             QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
             if (IsAccessDatabase)
                 QueryText.AppendLine("  SELECT * FROM (");
+            else if (ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
             else
                 QueryText.AppendLine("VALUES");
         }
@@ -132,6 +135,18 @@ namespace ETLBox.Helper
             if (IsAccessDatabase)
             {
                 QueryText.AppendLine("SELECT " + string.Join(",", values) + $"  FROM {AccessDummyTableName} ");
+                if (lastItem) QueryText.AppendLine(" UNION ALL ");
+            }
+            else if (ConnectionType == ConnectionManagerType.Oracle)
+            {
+                QueryText.Append("SELECT ");
+                for (int i = 0; i < values.Count; i++)
+                {
+                    QueryText.Append($"{values[i]} {QB}{DestColumnNames[i]}{QE}");
+                    if (i + 1 < values.Count)
+                        QueryText.Append(",");
+                }
+                QueryText.AppendLine(" FROM DUAL");
                 if (lastItem) QueryText.AppendLine(" UNION ALL ");
             }
             else
@@ -145,6 +160,8 @@ namespace ETLBox.Helper
         {
             if (IsAccessDatabase)
                 QueryText.AppendLine(") a;");
+            else if (ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine(")");
         }
 
     }

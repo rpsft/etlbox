@@ -94,15 +94,15 @@ namespace ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void OnlyNullValue(IConnectionManager connection)
+        public void OnlyNullValue(IConnectionManager conn)
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE source_onlynulls
-                (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL)");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO source_onlynulls VALUES(NULL, NULL)");
+            SqlTask.ExecuteNonQuery(conn, "Create destination table", $@"CREATE TABLE {conn.QB}source_onlynulls{conn.QE}
+                ({conn.QB}col1{conn.QE} VARCHAR(100) NULL, {conn.QB}col2{conn.QE} VARCHAR(100) NULL)");
+            SqlTask.ExecuteNonQuery(conn, "Insert demo data"
+                , $@"INSERT INTO {conn.QB}source_onlynulls{conn.QE} VALUES(NULL, NULL)");
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "source_onlynulls");
+            DbSource<string[]> source = new DbSource<string[]>(conn, "source_onlynulls");
             MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
             source.LinkTo(dest);
             source.Execute();

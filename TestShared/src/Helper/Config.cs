@@ -79,6 +79,7 @@ namespace ETLBoxTests.Helper
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
+                    new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
                     new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
@@ -86,6 +87,7 @@ namespace ETLBoxTests.Helper
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value) => new[] {
+                    new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
                     new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},

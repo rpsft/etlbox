@@ -74,7 +74,7 @@ namespace ETLBoxTests.DataFlowTests
                 });
 
             SqlTask.ExecuteNonQuery(connection, "Insert test data",
-                @"INSERT INTO different_type_table 
+                $@"INSERT INTO different_type_table 
                     (int_col, long_col, decimal_col, double_col, datetime_col, date_col
 , string_col, char_col, decimal_string_col, null_col, enum_col) 
                 VALUES (1, -1, 2.3, 5.4, '2010-01-01 10:00:00.000', '2020-01-01', 'Test', 'T', '13.4566', NULL, 2 )");
