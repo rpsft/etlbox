@@ -2,8 +2,10 @@ using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
 using ETLBox.DataFlow.Connectors;
+using ETLBox.Helper;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
+using MySqlX.XDevAPI.Relational;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -72,10 +74,10 @@ namespace ETLBoxTests.DataFlowTests
             AssertFirstRow(connection, "datatypedestination");
         }
 
-        private static void CreateTestTable(IConnectionManager connection, string tablename)
+        private static void CreateTestTable(IConnectionManager conn, string tablename)
         {
-            DropTableTask.DropIfExists(connection, tablename);
-            CreateTableTask.Create(connection, tablename,
+            DropTableTask.DropIfExists(conn, tablename);
+            CreateTableTask.Create(conn, tablename,
                 new List<TableColumn>() {
                     new TableColumn("intcol", "INT", allowNulls: true),
                     new TableColumn("LongCol", "BIGINT", allowNulls: true),
@@ -91,11 +93,13 @@ namespace ETLBoxTests.DataFlowTests
                 });
         }
 
-        private static void AssertFirstRow(IConnectionManager connection, string tableName)
+        private static void AssertFirstRow(IConnectionManager conn, string tableName)
         {
             //            IntCol LongCol DecimalCol DoubleCol   DateTimeCol DateCol StringCol CharCol DecimalStringCol NullCol
             //1 - 1  2.3 5.4 2010 - 01 - 01 10:10:10.100 2020 - 01 - 01  Test T   13.4566000000   NULL
-            SqlTask.ExecuteReaderSingleLine(connection, "Check data", $"SELECT * FROM {tableName} WHERE intcol = 1",
+            var TN = new ObjectNameDescriptor(tableName, conn.QB, conn.QE);
+            SqlTask.ExecuteReaderSingleLine(conn, "Check data",
+                $"SELECT * FROM {TN.QuotatedFullName} WHERE {conn.QB}intcol{conn.QE} = 1",
                 col => Assert.True(Convert.ToInt32(col) == 1),
                 col => Assert.True(Convert.ToInt64(col) == -1),
                 col => Assert.True(Convert.ToDecimal(col) == 2.3M),

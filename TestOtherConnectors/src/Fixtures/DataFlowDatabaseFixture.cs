@@ -10,8 +10,6 @@ namespace ETLBoxTests.Fixtures
         public DataFlowDatabaseFixture()
         {
             DatabaseHelper.RecreateSqlDatabase("DataFlow");
-            DatabaseHelper.RecreateMySqlDatabase("DataFlow");
-            DatabaseHelper.RecreatePostgresDatabase("DataFlow");
         }
 
 

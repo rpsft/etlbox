@@ -42,34 +42,34 @@ namespace ETLBoxTests.Logging
 
 
         [Theory, MemberData(nameof(Connections))]
-        public void TestErrorLogging(IConnectionManager connection)
+        public void TestErrorLogging(IConnectionManager conn)
         {
             //Arrange
-            CreateLogTableTask.Create(connection, "test_log");
-            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Trace, "test_log");
+            CreateLogTableTask.Create(conn, "test_log");
+            ControlFlow.AddLoggingDatabaseToConfig(conn, NLog.LogLevel.Trace, "test_log");
             //Act
-            LogTask.Error(connection, "Error!");
-            LogTask.Warn(connection, "Warn!");
-            LogTask.Info(connection, "Info!");
-            LogTask.Debug(connection, "Debug!");
-            LogTask.Trace(connection, "Trace!");
-            LogTask.Fatal(connection, "Fatal!");
+            LogTask.Error(conn, "Error!");
+            LogTask.Warn(conn, "Warn!");
+            LogTask.Info(conn, "Info!");
+            LogTask.Debug(conn, "Debug!");
+            LogTask.Trace(conn, "Trace!");
+            LogTask.Fatal(conn, "Fatal!");
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
-                "message = 'Error!' AND level = 'Error' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
-                "message = 'Warn!' AND level = 'Warn' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
-                "message = 'Info!' AND level = 'Info' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
-                "message = 'Debug!' AND level = 'Debug' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
-                "message = 'Trace!' AND level = 'Trace' and task_action = 'LOG'"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LogTable,
-                "message = 'Fatal!' AND level = 'Fatal' and task_action = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LogTable,
+                $"{conn.QB}message{conn.QE} = 'Error!' AND {conn.QB}level{conn.QE} = 'Error' AND {conn.QB}task_action{conn.QE} = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LogTable,
+                $"{conn.QB}message{conn.QE} = 'Warn!' AND {conn.QB}level{conn.QE} = 'Warn' AND {conn.QB}task_action{conn.QE} = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LogTable,
+                $"{conn.QB}message{conn.QE} = 'Info!' AND {conn.QB}level{conn.QE} = 'Info' AND {conn.QB}task_action{conn.QE} = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LogTable,
+                $"{conn.QB}message{conn.QE} = 'Debug!' AND {conn.QB}level{conn.QE} = 'Debug' AND {conn.QB}task_action{conn.QE} = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LogTable,
+                $"{conn.QB}message{conn.QE} = 'Trace!' AND {conn.QB}level{conn.QE} = 'Trace' AND {conn.QB}task_action{conn.QE} = 'LOG'"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LogTable,
+                $"{conn.QB}message{conn.QE} = 'Fatal!' AND {conn.QB}level{conn.QE} = 'Fatal' AND {conn.QB}task_action{conn.QE} = 'LOG'"));
 
             //Cleanup
-            DropTableTask.Drop(connection, ControlFlow.LogTable);
+            DropTableTask.Drop(conn, ControlFlow.LogTable);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace ETLBoxTests.Logging
 
             //Assert
             Assert.Equal(2, new RowCountTask("test_log_stage",
-                           $"message='Test Task' and stage = 'SETUP'")
+                           $"message='Test Task' AND stage = 'SETUP'")
             {
                 DisableLogging = true,
                 ConnectionManager = SqlConnection
@@ -101,7 +101,8 @@ namespace ETLBoxTests.Logging
             //Arrange
             CreateLogTableTask.Create(connection, "test_readlog");
             ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Info, "test_readlog");
-            SqlTask.ExecuteNonQuery(connection, "Test Task", "Select 1 as test");
+            string fromdual = connection.GetType() == typeof(OracleConnectionManager) ? " FROM DUAL" : "";
+            SqlTask.ExecuteNonQuery(connection, "Test Task", $"Select 1 as test {fromdual}");
 
             //Act
             List<LogEntry> entries = ReadLogTableTask.Read(connection);

@@ -44,55 +44,55 @@ namespace ETLBoxTests.Logging
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void StartLoadProcess(IConnectionManager connection)
+        public void StartLoadProcess(IConnectionManager conn)
         {
             //Arrange
-            CreateLoadProcessTableTask.Create(connection, "test_load_process");
+            CreateLoadProcessTableTask.Create(conn, "test_load_process");
 
             //Act
-            StartLoadProcessTask.Start(connection, "Test process 1");
+            StartLoadProcessTask.Start(conn, "Test process 1");
 
             //Assert
             Assert.True(ControlFlow.CurrentLoadProcess != null);
             Assert.Equal("Test process 1", ControlFlow.CurrentLoadProcess.ProcessName);
             Assert.True(ControlFlow.CurrentLoadProcess.StartDate >= DateTime.Now.AddSeconds(-1));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LoadProcessTable,
-                "start_message IS NULL and end_message IS NULL and abort_message IS NULL"));
-            Assert.Equal(1, RowCountTask.Count(connection, ControlFlow.LoadProcessTable,
-                "is_running = 1 AND was_successful=0 AND was_aborted=0"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LoadProcessTable,
+                $"{conn.QB}start_message{conn.QE} IS NULL and {conn.QB}end_message{conn.QE} IS NULL and {conn.QB}abort_message{conn.QE} IS NULL"));
+            Assert.Equal(1, RowCountTask.Count(conn, ControlFlow.LoadProcessTable,
+                $"{conn.QB}is_running{conn.QE} = 1 AND {conn.QB}was_successful{conn.QE}=0 AND {conn.QB}was_aborted{conn.QE}=0"));
 
             //Cleanup
-            DropTableTask.Drop(connection, "test_load_process");
+            DropTableTask.Drop(conn, "test_load_process");
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void StartLoadProcessWithMessage(IConnectionManager connection)
+        public void StartLoadProcessWithMessage(IConnectionManager conn)
         {
             //Arrange
-            CreateLoadProcessTableTask.Create(connection, "test_lp_withmessage");
+            CreateLoadProcessTableTask.Create(conn, "test_lp_withmessage");
 
             //Act
-            StartLoadProcessTask.Start(connection, "Test process 1", "Message 1", "SourceA");
+            StartLoadProcessTask.Start(conn, "Test process 1", "Message 1", "SourceA");
 
             //Assert
-            Assert.Equal(1, RowCountTask.Count(connection, "test_lp_withmessage",
-                "start_message = 'Message 1' AND source='SourceA' AND end_message IS NULL AND abort_message IS NULL"));
+            Assert.Equal(1, RowCountTask.Count(conn, "test_lp_withmessage",
+                $"{conn.QB}start_message{conn.QE} = 'Message 1' AND {conn.QB}source{conn.QE}='SourceA' AND {conn.QB}end_message{conn.QE} IS NULL AND {conn.QB}abort_message{conn.QE} IS NULL"));
 
             //Cleanup
-            DropTableTask.Drop(connection, "test_lp_withmessage");
+            DropTableTask.Drop(conn, "test_lp_withmessage");
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void EndLoadProcess(IConnectionManager connection)
+        public void EndLoadProcess(IConnectionManager conn)
         {
             //Arrange
-            CreateLoadProcessTableTask.Create(connection, "test_lp_end");
+            CreateLoadProcessTableTask.Create(conn, "test_lp_end");
 
-            StartLoadProcessTask.Start(connection, "Test process 2");
+            StartLoadProcessTask.Start(conn, "Test process 2");
             Assert.True(ControlFlow.CurrentLoadProcess.IsRunning == true);
 
             //Act
-            EndLoadProcessTask.End(connection, "End process 2");
+            EndLoadProcessTask.End(conn, "End process 2");
 
             //Assert
             Assert.True(ControlFlow.CurrentLoadProcess.IsRunning == false);
@@ -100,19 +100,20 @@ namespace ETLBoxTests.Logging
             Assert.True(ControlFlow.CurrentLoadProcess.IsFinished == true);
             Assert.True(ControlFlow.CurrentLoadProcess.EndDate >= DateTime.Now.AddSeconds(-1));
 
-            Assert.Equal(1, RowCountTask.Count(connection, "test_lp_end",
-                "is_running=0 and was_successful=1 and was_aborted=0"));
-            Assert.Equal(1, RowCountTask.Count(connection, "test_lp_end",
-                 "start_message IS NULL AND end_message = 'End process 2' AND abort_message IS NULL"));
+            Assert.Equal(1, RowCountTask.Count(conn, "test_lp_end",
+                $"{conn.QB}is_running{conn.QE}=0 and {conn.QB}was_successful{conn.QE}=1 and {conn.QB}was_aborted{conn.QE}=0"));
+            Assert.Equal(1, RowCountTask.Count(conn, "test_lp_end",
+                 $"{conn.QB}start_message{conn.QE} IS NULL AND {conn.QB}end_message{conn.QE} = 'End process 2' AND {conn.QB}abort_message{conn.QE} IS NULL"));
 
             //Cleanup
-            DropTableTask.Drop(connection, "test_lp_end");
+            DropTableTask.Drop(conn, "test_lp_end");
         }
 
-        [Fact]
-        public void AbortLoadProcess()
+        [Theory, MemberData(nameof(Connections))]
+        public void AbortLoadProcess(IConnectionManager connection)
         {
             //Arrange
+            var conn = SqlConnection;
             CreateLoadProcessTableTask.Create(SqlConnection, "test_lp_abort");
 
             StartLoadProcessTask.Start(SqlConnection, "Test process 3");
@@ -126,35 +127,36 @@ namespace ETLBoxTests.Logging
             Assert.True(ControlFlow.CurrentLoadProcess.WasAborted == true);
             Assert.True(ControlFlow.CurrentLoadProcess.AbortMessage == null);
             Assert.Equal(1, RowCountTask.Count(SqlConnection, "test_lp_abort"
-                , "is_running=0 and was_successful=0 and was_aborted=1"));
+                , $"{conn.QB}is_running{conn.QE}=0 and {conn.QB}was_successful{conn.QE}=0 and {conn.QB}was_aborted{conn.QE}=1"));
 
             //Cleanup
             DropTableTask.Drop(SqlConnection, "test_lp_abort");
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void IsLoadProcessKeyInLog(IConnectionManager connection)
+        public void IsLoadProcessKeyInLog(IConnectionManager conn)
         {
             //Arrange
-            CreateLoadProcessTableTask.Create(connection, "test_lpkey_inlog");
-            CreateLogTableTask.Create(connection, "test_lpkey_log");
-            ControlFlow.AddLoggingDatabaseToConfig(connection, NLog.LogLevel.Info, "test_lpkey_log");
-            StartLoadProcessTask.Start(connection, "Test process 5");
+            CreateLoadProcessTableTask.Create(conn, "test_lpkey_inlog");
+            CreateLogTableTask.Create(conn, "test_lpkey_log");
+            ControlFlow.AddLoggingDatabaseToConfig(conn, NLog.LogLevel.Info, "test_lpkey_log");
+            StartLoadProcessTask.Start(conn, "Test process 5");
 
             //Act
-            SqlTask.ExecuteNonQuery(connection, "Test Task", "Select 1 as test");
+            string fromdual = conn.GetType() == typeof(OracleConnectionManager) ? "FROM DUAL" : "";
+            SqlTask.ExecuteNonQuery(conn, "Test Task", $"Select 1 AS test {fromdual}");
 
             //Assert
             Assert.Equal(2, new RowCountTask("test_lpkey_log",
-                $"message='Test Task' and load_process_id = {ControlFlow.CurrentLoadProcess.Id}")
+                $"{conn.QB}message{conn.QE}='Test Task' AND {conn.QB}load_process_id{conn.QE} = {ControlFlow.CurrentLoadProcess.Id}")
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = conn
             }.Count().Rows); ;
 
             //Cleanup
-            DropTableTask.Drop(connection, ControlFlow.LogTable);
-            DropTableTask.Drop(connection, ControlFlow.LoadProcessTable);
+            DropTableTask.Drop(conn, ControlFlow.LogTable);
+            DropTableTask.Drop(conn, ControlFlow.LoadProcessTable);
         }
 
 

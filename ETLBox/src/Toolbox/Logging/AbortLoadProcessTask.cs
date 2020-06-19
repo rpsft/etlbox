@@ -46,16 +46,16 @@ namespace ETLBox.Logging
             }
         }
         public string AbortMessage { get; set; }
-
+        string PP => this.DbConnectionManager?.PP;
 
         public string Sql => $@"
  UPDATE { TN.QuotatedFullName } 
-  SET end_date = @CurrentDate
-  , is_running = 0
-  , was_successful = 0
-  , was_aborted = 1
-  , abort_message = @AbortMessage
-  WHERE id = @LoadProcessId
+  SET {QB}end_date{QE} = {PP}CurrentDate
+  , {QB}is_running{QE} = 0
+  , {QB}was_successful{QE} = 0
+  , {QB}was_aborted{QE} = 1
+  , {QB}abort_message{QE} = {PP}AbortMessage
+  WHERE {QB}id{QE} = {PP}LoadProcessId
 ";
         ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 

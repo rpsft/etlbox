@@ -6,6 +6,7 @@
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.accdb",
         "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_DataFlow;Uid=root;Pwd=etlboxpassword;",
         "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;",
-        "AzureSqlConnectionString": "Server=tcp:etlbox.database.windows.net,1433;Initial Catalog=etlbox;Persist Security Info=False;User ID=etlboxadmin;Password=ETLBoxPassw0rd!;"
+        "AzureSqlConnectionString": "Server=tcp:etlbox.database.windows.net,1433;Initial Catalog=etlbox;Persist Security Info=False;User ID=etlboxadmin;Password=ETLBoxPassw0rd!;",
+        "OracleConnectionString": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));User ID=etlbox;Password=etlboxpassword;"
     }
 }

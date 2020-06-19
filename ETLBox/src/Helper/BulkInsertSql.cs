@@ -105,6 +105,8 @@ namespace ETLBox.Helper
         private string CreateParameterWithValue(object parValue)
         {
             var par = new T();
+            if (ConnectionType == ConnectionManagerType.Oracle && parValue is Enum) //Enums don't work obviously
+                par.Value = (int)parValue;
             par.Value = parValue;
             Parameters.Add(par);
             if (UseNamedParameters)

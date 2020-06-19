@@ -48,11 +48,11 @@ namespace ETLBox.Logging
                     new TableColumn("end_date","DATETIME", allowNulls: true),
                     new TableColumn("source","NVARCHAR(20)", allowNulls: true),
                     new TableColumn("process_name","NVARCHAR(100)", allowNulls: false) { DefaultValue = "N/A" },
-                    new TableColumn("start_message","NVARCHAR(4000)", allowNulls: true)  ,
+                    new TableColumn("start_message","NVARCHAR(2000)", allowNulls: true)  ,
                     new TableColumn("is_running","SMALLINT", allowNulls: false) { DefaultValue = "1" },
-                    new TableColumn("end_message","NVARCHAR(4000)", allowNulls: true)  ,
+                    new TableColumn("end_message","NVARCHAR(2000)", allowNulls: true)  ,
                     new TableColumn("was_successful","SMALLINT", allowNulls: false) { DefaultValue = "0" },
-                    new TableColumn("abort_message","NVARCHAR(4000)", allowNulls: true) ,
+                    new TableColumn("abort_message","NVARCHAR(2000)", allowNulls: true) ,
                     new TableColumn("was_aborted","SMALLINT", allowNulls: false) { DefaultValue = "0" }
                 };
             LoadProcessTable = new CreateTableTask(LoadProcessTableName, lpColumns) { DisableLogging = true };

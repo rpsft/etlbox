@@ -19,72 +19,75 @@ namespace ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void WithSqlNotMatchingColumns(IConnectionManager connection)
+        public void WithSqlNotMatchingColumns(IConnectionManager conn)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceNotMatchingCols");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(conn, "SourceNotMatchingCols");
             s2c.InsertTestData();
-            SqlTask.ExecuteNonQuery(connection, "Create destination table",
-                $@"CREATE TABLE destination_notmatchingcols
-                ( col3 VARCHAR(100) NULL
-                , col4 VARCHAR(100) NULL
-                , {s2c.QB}Col1{s2c.QE} VARCHAR(100) NULL)");
+            SqlTask.ExecuteNonQuery(conn, "Create destination table",
+                $@"CREATE TABLE {conn.QB}destination_notmatchingcols{conn.QE}
+                ( {conn.QB}col3{conn.QE} VARCHAR(100) NULL
+                , {conn.QB}col4{conn.QE} VARCHAR(100) NULL
+                , {conn.QB}Col1{conn.QE} VARCHAR(100) NULL)");
 
             //Act
             DbSource<string[]> source = new DbSource<string[]>()
             {
                 Sql = $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceNotMatchingCols{s2c.QE}",
-                ConnectionManager = connection
+                ConnectionManager = conn
             };
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_notmatchingcols");
+            DbDestination<string[]> dest = new DbDestination<string[]>(conn, "destination_notmatchingcols");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "destination_notmatchingcols"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_notmatchingcols", $"col3 = '1' AND col4='Test1'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_notmatchingcols", $"col3 = '2' AND col4='Test2'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_notmatchingcols", $"col3 = '3' AND col4='Test3'"));
+            Assert.Equal(3, RowCountTask.Count(conn, "destination_notmatchingcols"));
+            Assert.Equal(1, RowCountTask.Count(conn, "destination_notmatchingcols", $"{conn.QB}col3{conn.QE} = '1' AND {conn.QB}col4{conn.QE}='Test1'"));
+            Assert.Equal(1, RowCountTask.Count(conn, "destination_notmatchingcols", $"{conn.QB}col3{conn.QE} = '2' AND {conn.QB}col4{conn.QE}='Test2'"));
+            Assert.Equal(1, RowCountTask.Count(conn, "destination_notmatchingcols", $"{conn.QB}col3{conn.QE} = '3' AND {conn.QB}col4{conn.QE}='Test3'"));
         }
 
 
         [Theory, MemberData(nameof(Connections))]
-        public void WithLessColumnsInDestination(IConnectionManager connection)
+        public void WithLessColumnsInDestination(IConnectionManager conn)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(conn, "SourceTwoColumns");
             s2c.InsertTestData();
-            SqlTask.ExecuteNonQuery(connection, "Create destination table",
-                @"CREATE TABLE destination_onecolumn
-                (colx varchar (100) not null )");
+            SqlTask.ExecuteNonQuery(conn, "Create destination table",
+                $@"CREATE TABLE {conn.QB}destination_onecolumn{conn.QE}
+                ({conn.QB}colx{conn.QE} varchar (100) not null )");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "SourceTwoColumns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_onecolumn");
+            DbSource<string[]> source = new DbSource<string[]>(conn, "SourceTwoColumns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(conn, "destination_onecolumn");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "destination_onecolumn"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_onecolumn", "colx = '1'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_onecolumn", "colx = '2'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_onecolumn", "colx = '3'"));
+            Assert.Equal(3, RowCountTask.Count(conn, "destination_onecolumn"));
+            Assert.Equal(1, RowCountTask.Count(conn, "destination_onecolumn", $"{conn.QB}colx{conn.QE} = '1'"));
+            Assert.Equal(1, RowCountTask.Count(conn, "destination_onecolumn", $"{conn.QB}colx{conn.QE} = '2'"));
+            Assert.Equal(1, RowCountTask.Count(conn, "destination_onecolumn", $"{conn.QB}colx{conn.QE} = '3'"));
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void WithAdditionalNullableCol(IConnectionManager connection)
+        public void WithAdditionalNullableCol(IConnectionManager conn)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "source_additionalnullcol");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(conn, "source_additionalnullcol");
             s2c.InsertTestData();
-            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE destination_additionalnullcol
-                (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NULL)");
+            SqlTask.ExecuteNonQuery(conn, "Create destination table",
+                $@"CREATE TABLE {conn.QB}destination_additionalnullcol{conn.QE}
+                ( {conn.QB}col1{conn.QE} VARCHAR(100) NULL
+                , {conn.QB}col2{conn.QE} VARCHAR(100) NULL
+                , {conn.QB}col3{conn.QE} VARCHAR(100) NULL)");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "source_additionalnullcol");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_additionalnullcol");
+            DbSource<string[]> source = new DbSource<string[]>(conn, "source_additionalnullcol");
+            DbDestination<string[]> dest = new DbDestination<string[]>(conn, "destination_additionalnullcol");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -94,17 +97,20 @@ namespace ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void WithAdditionalNotNullCol(IConnectionManager connection)
+        public void WithAdditionalNotNullCol(IConnectionManager conn)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "source_additionalnotnullcol");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(conn, "source_additionalnotnullcol");
             s2c.InsertTestData();
-            SqlTask.ExecuteNonQuery(connection, "Create destination table", @"CREATE TABLE destination_additionalnotnullcol
-                (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NOT NULL)");
+            SqlTask.ExecuteNonQuery(conn, "Create destination table",
+                $@"CREATE TABLE {conn.QB}destination_additionalnotnullcol{conn.QE}
+                ( {conn.QB}col1{conn.QE} VARCHAR(100) NULL
+                , {conn.QB}col2{conn.QE} VARCHAR(100) NULL
+                , {conn.QB}col3{conn.QE} VARCHAR(100) NOT NULL)");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "source_additionalnotnullcol");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_additionalnotnullcol");
+            DbSource<string[]> source = new DbSource<string[]>(conn, "source_additionalnotnullcol");
+            DbDestination<string[]> dest = new DbDestination<string[]>(conn, "destination_additionalnotnullcol");
             source.LinkTo(dest);
             Assert.Throws<AggregateException>(() =>
             {

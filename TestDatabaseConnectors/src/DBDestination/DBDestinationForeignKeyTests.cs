@@ -61,7 +61,7 @@ namespace ETLBoxTests.DataFlowTests
 ADD CONSTRAINT constraint_fk
 FOREIGN KEY ({TN.QB}Key2{TN.QE})
 REFERENCES {TNR.QuotatedFullName}({TNR.QB}Id{TNR.QE})
-ON DELETE CASCADE;");
+ON DELETE CASCADE");
         }
 
         void InsertTestData(IConnectionManager connection, string tableName)

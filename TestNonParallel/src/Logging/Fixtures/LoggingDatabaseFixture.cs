@@ -13,6 +13,7 @@ namespace ETLBoxTests.Logging
             DatabaseHelper.RecreateSqlDatabase("Logging");
             DatabaseHelper.RecreateMySqlDatabase("Logging");
             DatabaseHelper.RecreatePostgresDatabase("Logging");
+            DatabaseHelper.CleanUpOracle("Logging");
         }
     }
 }

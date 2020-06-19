@@ -36,6 +36,7 @@ namespace ETLBox.Connection
         void CloseTransaction();
         string QB { get; }
         string QE { get; }
+        string PP { get; }
         bool SupportDatabases { get; }
         bool SupportProcedures { get; }
         bool SupportSchemas { get; }

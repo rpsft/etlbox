@@ -29,6 +29,7 @@ namespace ETLBox.Connection
 
         public abstract string QB { get; }
         public abstract string QE { get; }
+        public virtual string PP { get; } = "@";
         public virtual bool SupportDatabases { get; } = true;
         public virtual bool SupportProcedures { get; } = true;
         public virtual bool SupportSchemas { get; } = true;

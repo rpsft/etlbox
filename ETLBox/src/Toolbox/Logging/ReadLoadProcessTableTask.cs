@@ -68,18 +68,18 @@ namespace ETLBox.Logging
             {
                 string sql = $@"
 SELECT {Top1Sql} {QB}id{QE}, {QB}start_date{QE}, {QB}end_date{QE}, {QB}source{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}is_running{QE}, {QB}end_message{QE}, {QB}was_successful{QE}, {QB}abort_message{QE}, {QB}was_aborted{QE}
-FROM {TN.QuotatedFullName}";
+FROM {TN.QuotatedFullName} ";
                 if (ReadOption == ReadOptions.ReadSingleProcess)
-                    sql += $@"WHERE id = {LoadProcessId}";
+                    sql += $@"WHERE {QB}id{QE} = {LoadProcessId}";
                 else if (ReadOption == ReadOptions.ReadLastFinishedProcess)
-                    sql += $@"WHERE was_successful = 1 || was_aborted = 1
-ORDER BY end_date desc, id DESC";
+                    sql += $@"WHERE {QB}was_successful{QE} = 1 || {QB}was_aborted{QE} = 1
+ORDER BY {QB}end_date{QE} DESC, {QB}id{QE} DESC";
                 else if (ReadOption == ReadOptions.ReadLastSuccessful)
-                    sql += $@"WHERE was_successful = 1
-ORDER BY end_date desc, id DESC";
+                    sql += $@"WHERE {QB}was_successful{QE} = 1
+ORDER BY {QB}end_date{QE} DESC, {QB}id{QE} DESC";
                 else if (ReadOption == ReadOptions.ReadLastAborted)
-                    sql += $@"WHERE was_aborted = 1
-ORDER BY end_date desc, id DESC";
+                    sql += $@"WHERE {QB}was_aborted{QE} = 1
+ORDER BY {QB}end_date{QE} DESC, {QB}id{QE} DESC";
                 sql += Environment.NewLine + Limit1Sql;
                 return sql;
             }

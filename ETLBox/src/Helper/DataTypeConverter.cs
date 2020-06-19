@@ -172,6 +172,12 @@ namespace ETLBox.Helper
                 }
                 else if (typeName == "BIGINT")
                     return "INT";
+                else if (typeName == "DATETIME")
+                    return "DATE";
+                else if (typeName == "FLOAT")
+                    return "FLOAT(126)";
+                else if (typeName == "TEXT")
+                    return "NCLOB";
                 return dbSpecificTypeName;
             }
             else

@@ -198,6 +198,7 @@ namespace ETLBoxTests.DataFlowTests
         public void OneTransactionAndParallelWriting(IConnectionManager connection)
         {
             if (connection.ConnectionManagerType == ConnectionManagerType.SQLite) return;
+            if (connection.ConnectionManagerType == ConnectionManagerType.Oracle) return;
 
             //Arrange
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSourceParallelWrite");

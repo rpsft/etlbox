@@ -20,11 +20,28 @@ namespace ETLBox.Logging
             QueryParameter pn = new QueryParameter("ProcessName", "VARCHAR(100)", ProcessName);
             QueryParameter sm = new QueryParameter("StartMessage", "VARCHAR(4000)", StartMessage);
             QueryParameter so = new QueryParameter("Source", "VARCHAR(20)", Source);
-            LoadProcessId = new SqlTask(this, Sql)
+            if (ConnectionType == ConnectionManagerType.Postgres ||
+                ConnectionType == ConnectionManagerType.SqlServer ||
+                ConnectionType == ConnectionManagerType.MySql)
             {
-                Parameter = new List<QueryParameter>() { cd, pn, sm, so },
-                DisableLogging = true,
-            }.ExecuteScalar<long>();
+                LoadProcessId = new SqlTask(this, Sql)
+                {
+                    Parameter = new List<QueryParameter>() { cd, pn, sm, so },
+                    DisableLogging = true,
+                }.ExecuteScalar<long>();
+            }
+            else
+            {
+                new SqlTask(this, Sql)
+                {
+                    Parameter = new List<QueryParameter>() { cd, pn, sm, so },
+                    DisableLogging = true,
+                }.ExecuteNonQuery();
+                LoadProcessId = new SqlTask(this, MaxIdSql)
+                {
+                    DisableLogging = true,
+                }.ExecuteScalar<long>();
+            }
             var rlp = new ReadLoadProcessTableTask(this, LoadProcessId)
             {
                 DisableLogging = true
@@ -51,10 +68,12 @@ namespace ETLBox.Logging
             }
         }
 
+        string PP => this.DbConnectionManager?.PP;
+
         public string Sql => $@"
  INSERT INTO { TN.QuotatedFullName } 
 ( {QB}start_date{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}source{QE}, {QB}is_running{QE})
- VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 ) 
+ VALUES ({PP}CurrentDate,{PP}ProcessName, {PP}StartMessage,{PP}Source, 1 )
 {LastIdSql}";
 
         ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
@@ -64,15 +83,17 @@ namespace ETLBox.Logging
             get
             {
                 if (ConnectionType == ConnectionManagerType.Postgres)
-                    return "RETURNING id";
+                    return $"RETURNING {QB}id{QE}";
                 else if (ConnectionType == ConnectionManagerType.SqlServer)
-                    return "SELECT CAST ( SCOPE_IDENTITY() AS BIGINT)";
-                //else if (ConnectionType == ConnectionManagerType.MySql)
-                //    return "; SELECT LAST_INSERT_ID();";
+                    return $"SELECT CAST ( SCOPE_IDENTITY() AS BIGINT)";
+                else if (ConnectionType == ConnectionManagerType.MySql)
+                    return "; SELECT LAST_INSERT_ID()";
                 else
-                    return $"; SELECT MAX({QB}id{QE}) FROM {TN.QuotatedFullName}";
+                    return string.Empty;
             }
         }
+
+        string MaxIdSql => $"SELECT MAX({QB}id{QE}) FROM {TN.QuotatedFullName}";
 
         public StartLoadProcessTask()
         {

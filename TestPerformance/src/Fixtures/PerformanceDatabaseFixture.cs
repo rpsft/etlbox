@@ -13,6 +13,7 @@ namespace ETLBoxTests.Performance
             DatabaseHelper.RecreateSqlDatabase("Performance");
             DatabaseHelper.RecreateMySqlDatabase("Performance");
             DatabaseHelper.RecreatePostgresDatabase("Performance");
+            DatabaseHelper.CleanUpOracle("Performance");
         }
     }
 }

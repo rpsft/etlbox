@@ -55,10 +55,10 @@ namespace ETLBoxTests.DataFlowTests
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void ReadDifferentTypes(IConnectionManager connection)
+        public void ReadDifferentTypes(IConnectionManager conn)
         {
             //Arrange
-            CreateTableTask.Create(connection, "different_type_table",
+            CreateTableTask.Create(conn, "different_type_table",
                 new List<TableColumn>() {
                     new TableColumn("int_col", "INT", allowNulls: true),
                     new TableColumn("long_col", "BIGINT", allowNulls: true),
@@ -73,13 +73,35 @@ namespace ETLBoxTests.DataFlowTests
                     new TableColumn("enum_col", "INT", allowNulls: true),
                 });
 
-            SqlTask.ExecuteNonQuery(connection, "Insert test data",
-                $@"INSERT INTO different_type_table 
-                    (int_col, long_col, decimal_col, double_col, datetime_col, date_col
-, string_col, char_col, decimal_string_col, null_col, enum_col) 
-                VALUES (1, -1, 2.3, 5.4, '2010-01-01 10:00:00.000', '2020-01-01', 'Test', 'T', '13.4566', NULL, 2 )");
+            string datetime = "'2020-01-01 10:00:00.000'";
+            string date = "'2020-01-01'";
+            if (conn.GetType() == typeof(OracleConnectionManager)) {
+                datetime = "TO_TIMESTAMP('01-JAN-2020 10:00:00')";
+                date = "'01 JAN 2020'";
+            }
+            SqlTask.ExecuteNonQuery(conn, "Insert test data",
+                $@"
+INSERT 
+    INTO {conn.QB}different_type_table{conn.QE}
+    (   
+        {conn.QB}int_col{conn.QE}
+    ,   {conn.QB}long_col{conn.QE}
+    ,   {conn.QB}decimal_col{conn.QE}
+    ,   {conn.QB}double_col{conn.QE}
+    ,   {conn.QB}datetime_col{conn.QE}
+    ,   {conn.QB}date_col{conn.QE}
+    ,   {conn.QB}string_col{conn.QE}
+    ,   {conn.QB}char_col{conn.QE}
+    ,   {conn.QB}decimal_string_col{conn.QE}
+    ,   {conn.QB}null_col{conn.QE}
+    ,   {conn.QB}enum_col{conn.QE}
+) 
+    VALUES 
+    ( 1, -1, 2.3, 5.4, {datetime}, {date}, 'Test', 'T', '13.4566', NULL, 2 )
+");
+
             //Act
-            DbSource<MyDataTypeRow> source = new DbSource<MyDataTypeRow>(connection, "different_type_table");
+            DbSource<MyDataTypeRow> source = new DbSource<MyDataTypeRow>(conn, "different_type_table");
             MemoryDestination<MyDataTypeRow> dest = new MemoryDestination<MyDataTypeRow>();
 
             source.LinkTo(dest);
@@ -91,7 +113,7 @@ namespace ETLBoxTests.DataFlowTests
             Assert.Equal(-1, dest.Data.First().LongCol);
             Assert.Equal(2.3M, dest.Data.First().DecimalCol);
             Assert.True(dest.Data.First().DoubleCol >= 5.4 && dest.Data.First().DoubleCol < 5.5);
-            Assert.Equal("2010-01-01 10:00:00.000", dest.Data.First().DateTimeCol.ToString("yyyy-MM-dd hh:mm:ss.fff"));
+            Assert.Equal("2020-01-01 10:00:00.000", dest.Data.First().DateTimeCol.ToString("yyyy-MM-dd hh:mm:ss.fff"));
             Assert.Equal("2020-01-01", dest.Data.First().DateCol.ToString("yyyy-MM-dd"));
             Assert.Equal("Test", dest.Data.First().StringCol);
             Assert.Equal('T', dest.Data.First().CharCol);
