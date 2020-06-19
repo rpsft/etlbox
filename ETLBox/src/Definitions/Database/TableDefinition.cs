@@ -321,21 +321,24 @@ SELECT cols.COLUMN_NAME
 , cols.DATA_DEFAULT --not working, see restriction above
 , cols.COLLATION 
 , cols.DATA_DEFAULT AS generation_expression
-FROM USER_TAB_COLUMNS cols
+FROM ALL_TAB_COLUMNS cols
 LEFT JOIN (
   SELECT acols.table_name, acols.column_name, acols.position, acons.status, acons.owner
-  FROM USER_CONSTRAINTS acons, USER_CONS_COLUMNS acols
+  FROM ALL_CONSTRAINTS acons, ALL_CONS_COLUMNS acols
   WHERE acons.CONSTRAINT_TYPE = 'P'
   AND acons.CONSTRAINT_NAME = acols.CONSTRAINT_NAME
   AND acons.OWNER = acols.OWNER
 ) cons
 ON cons.TABLE_NAME = cols.TABLE_NAME
+AND cons.OWNER = cols.OWNER
 AND cons.position = cols.COLUMN_ID
 AND cols.COLUMN_NAME  = cons.column_name
 WHERE
 cols.TABLE_NAME NOT LIKE 'BIN$%'
 --AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
-AND cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
+AND ( cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
+      OR (cols.OWNER || '.' || cols.TABLE_NAME ) = '{TN.UnquotatedFullName}'
+    )
 ORDER BY cols.COLUMN_ID
 ";
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
