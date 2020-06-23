@@ -156,6 +156,8 @@ namespace ETLBox.DataFlow.Connectors
         TOutput _row;
         internal void DefineActions(SqlTask sqlT, List<string> columnNames)
         {
+            if (columnNames?.Count == 0 && ( TypeInfo.IsArray || TypeInfo.PropertyNames.Count == 0) )
+                throw new ETLBoxException("The column names can't be automatically retrieved - please provide a TableDefinition with names for the columns in the source.");
             _row = default(TOutput);
             if (TypeInfo.IsArray)
             {

@@ -1,7 +1,9 @@
 using ETLBox.Connection;
 using ETLBox.DataFlow.Connectors;
+using ETLBox.Exceptions;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -73,6 +75,28 @@ FROM {s2c.QB}SourceSql{s2c.QE}",
 
             //Assert
             d2c.AssertTestData();
+        }
+
+        [Fact]
+        public void SqlWithSelectStarAndDynamicObject()
+        {
+            //Arrange
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "SourceSelectStarDynamic");
+            s2c.InsertTestData();
+            //Act
+            DbSource source = new DbSource()
+            {
+                Sql = $@"SELECT * FROM {s2c.QB}SourceSelectStarDynamic{s2c.QE}",
+                ConnectionManager = SqlConnection
+            };
+            MemoryDestination dest = new MemoryDestination();
+            source.LinkTo(dest);
+
+            Assert.Throws<ETLBoxException>(() =>
+            {
+                source.Execute();
+                dest.Wait();
+            });
         }
     }
 }

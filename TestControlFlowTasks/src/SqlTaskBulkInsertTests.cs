@@ -1,6 +1,7 @@
 using ETLBox.Connection;
 using ETLBox.ControlFlow;
 using ETLBox.ControlFlow.Tasks;
+using ETLBox.Exceptions;
 using ETLBoxTests.Fixtures;
 using ETLBoxTests.Helper;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ETLBoxTests.ControlFlowTests
         public static IEnumerable<object[]> ConnectionsWithValue(int value)
             => Config.AllSqlConnectionsWithValue("ControlFlow", value);
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
+        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
 
         public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture dbFixture)
         { }
@@ -74,6 +76,27 @@ namespace ETLBoxTests.ControlFlowTests
                 //Assert
                 destTable.AssertTestData();
             }
+        }
+
+        [Fact]
+
+        public void ExceptionWhenNoColumnMapping()
+        {
+            //Arrange
+            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "NoColumnMapping");
+
+            var td = new TableDefinition("test", new List<TableColumn>());
+            TableData<string[]> data = new TableData<string[]>(td);
+            string[] values = { "1", "Test1" };
+            data.Rows.Add(values);
+
+            //Act & Assert
+            Assert.Throws<ETLBoxException>(() =>
+            {
+               SqlTask.BulkInsert(SqlConnection, "Bulk insert demo data", data, "NoColumnMapping");
+            });
+
+
         }
 
     }

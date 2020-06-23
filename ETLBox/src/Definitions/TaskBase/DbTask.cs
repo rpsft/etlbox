@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ETLBox.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -181,6 +182,8 @@ namespace ETLBox.ControlFlow
 
         public void BulkInsert(ITableData data, string tableName)
         {
+            if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
+                "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
             var conn = DbConnectionManager.CloneIfAllowed();
             try
             {
