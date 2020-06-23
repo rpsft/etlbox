@@ -32,3 +32,7 @@ Currently, if not table definition is given, the current implementation of Table
 # Cleanup
 Remove SqlTask: Add task name & Comments before sql code
 Make sql task name optional
+
+# Neues feature
+CopyTableDefinitionTask - uses TableDefinition to retrieve the current table definiton and the creates a new table. 
+Very good for testing purposes.

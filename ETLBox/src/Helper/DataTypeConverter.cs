@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using System;
+using System.ComponentModel;
 using System.Data;
 using System.Text.RegularExpressions;
 
@@ -125,12 +126,28 @@ namespace ETLBox.Helper
         public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
         {
             var typeName = dbSpecificTypeName.Trim().ToUpper();
+            //Always normalize to some "standard" for Oracle!
+            //https://docs.microsoft.com/en-us/sql/relational-databases/replication/non-sql/data-type-mapping-for-oracle-publishers?view=sql-server-ver15
+            if (connectionType != ConnectionManagerType.Oracle)
+            {
+                if (typeName.StartsWith("NUMBER"))
+                    return typeName.Replace("NUMBER", "NUMERIC");
+                if (typeName.StartsWith("VARCHAR2"))
+                    return typeName.Replace("VARCHAR2", "VARCHAR");
+                else if (typeName.StartsWith("NVARCHAR2"))
+                    return typeName.Replace("NVARCHAR2", "NVARCHAR");
+                else if (typeName == "DATE")
+                    return "DATETIME";
+            }
+
+            //Now start with "normal" translation, other Database have many commons
             if (connectionType == ConnectionManagerType.SqlServer)
             {
                 if (typeName.Replace(" ", "") == "TEXT")
                     return "VARCHAR(MAX)";
+                return dbSpecificTypeName;
             }
-            if (connectionType == ConnectionManagerType.Access)
+            else if (connectionType == ConnectionManagerType.Access)
             {
                 if (typeName == "INT")
                     return "INTEGER";

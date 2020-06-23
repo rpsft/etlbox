@@ -49,6 +49,7 @@ namespace ETLBox.ControlFlow.Tasks
         }
 
         public bool ThrowErrorIfTableExists { get; set; }
+        public bool IgnoreCollation { get; set; }
 
         public string Sql
         {
@@ -103,16 +104,13 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             string dataType = string.Empty;
             dataType = CreateDataTypeSql(col);
             string identitySql = CreateIdentitySql(col);
-            string collationSql = !String.IsNullOrWhiteSpace(col.Collation)
-                                    ? $"COLLATE {col.Collation}"
-                                    : string.Empty;
+            string collationSql = CreateCollationSql(col);
             string nullSql = CreateNotNullSql(col);
             string defaultSql = CreateDefaultSql(col);
             string computedColumnSql = CreateComputedColumnSql(col);
             string comment = CreateCommentSql(col);
             return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql} {comment}";
         }
-
 
         private string CreateDataTypeSql(ITableColumn col)
         {
@@ -156,6 +154,17 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                             ? "NULL"
                             : "NOT NULL";
             return nullSql;
+        }
+
+        private string CreateCollationSql(ITableColumn col)
+        {
+            if (IgnoreCollation)
+                return string.Empty;
+            if (!String.IsNullOrWhiteSpace(col.Collation))
+            {
+                return $"COLLATE {col.Collation}";
+            }
+            return string.Empty;
         }
 
         private string CreatePrimaryKeyConstraint()
