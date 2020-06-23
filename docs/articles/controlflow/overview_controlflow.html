@@ -182,7 +182,7 @@
 a simple statement. Control Flow task can be split in general tasks and logging tasks. General tasks allow you to create or drop objects
 or to run some particular predefined statements that will execute on any database. Logging tasks are useful helper when you need
 to create some tables for logging or to retrieve the whole log as Json.</p>
-<p>Control Flow Tasks reside in the <code>ALE.ETLBox.ControlFlow</code> namespace - tasks for logging in the <code>ALE.ETLBox.Logging</code> namespace.</p>
+<p>Control Flow Tasks reside in the <code>ETLBox.ControlFlow.Tasks</code> namespace - tasks for logging in the <code>ETLBox.Logging</code> namespace.</p>
 <p>This article will go into the details about the general ControlFlow Tasks - <a href="overview_logging.html">see the article about logging to learn more about logging
 specific tasks</a>.</p>
 <h2 id="general-idea-behind-control-flow-task">General Idea behind Control Flow Task</h2>
@@ -264,6 +264,8 @@ auto increment for MySql). Additionaly, you could specify if the column is a com
     });
 CreateTableTask.Create(connectionManager, CustomerTableDef);
 </code></pre>
+<p><em>Implicit data type conversions</em>:</p>
+<p>CreateTableTask will automatically try to convert the given data type into a type that your database actually understands. E.g., if you pass &quot;DATETIME&quot; as datatype for a column, and you want to create your table on a Postgres connection manager, CreateTableTask will automatically convert &quot;DATETIME&quot; into &quot;TIMESTAMP&quot;.</p>
 <h4 id="droptabletask">DropTableTask</h4>
 <p>This task simple drops a table (and optionally checks if the table exists):</p>
 <pre><code class="lang-C#">DropTableTask.Drop(connectionManager, &quot;DropTableTest&quot;);
@@ -275,8 +277,8 @@ DropTableTask.DropIfExists(connectionManager, &quot;DropTableTest&quot;);
 </code></pre>
 <h4 id="table-definition">Table Definition</h4>
 <p>If you are interesting in retrieving a TableDefinition object from an existing database table, use can use
-the static method <code>GetDefinitionFromTableName</code> on the <code>TableDefinition</code> class:</p>
-<pre><code class="lang-C#">TableDefinition.GetDefinitionFromTableName(&quot;demoTable&quot;, connectionManager);
+the static method <code>FromTableName</code> on the <code>TableDefinition</code> class:</p>
+<pre><code class="lang-C#">TableDefinition.FromTableName(&quot;demoTable&quot;, connectionManager);
 </code></pre>
 <h3 id="views">Views</h3>
 <h4 id="createviewtask">CreateViewTask</h4>

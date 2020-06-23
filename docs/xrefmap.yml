@@ -809,6 +809,23 @@ references:
   fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).Open
   nameWithType: DbConnectionManager<Connection>.Open
   nameWithType.vb: DbConnectionManager(Of Connection).Open
+- uid: ETLBox.Connection.DbConnectionManager`1.PP
+  name: PP
+  href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_PP
+  commentId: P:ETLBox.Connection.DbConnectionManager`1.PP
+  fullName: ETLBox.Connection.DbConnectionManager<Connection>.PP
+  fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).PP
+  nameWithType: DbConnectionManager<Connection>.PP
+  nameWithType.vb: DbConnectionManager(Of Connection).PP
+- uid: ETLBox.Connection.DbConnectionManager`1.PP*
+  name: PP
+  href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_PP_
+  commentId: Overload:ETLBox.Connection.DbConnectionManager`1.PP
+  isSpec: "True"
+  fullName: ETLBox.Connection.DbConnectionManager<Connection>.PP
+  fullName.vb: ETLBox.Connection.DbConnectionManager(Of Connection).PP
+  nameWithType: DbConnectionManager<Connection>.PP
+  nameWithType.vb: DbConnectionManager(Of Connection).PP
 - uid: ETLBox.Connection.DbConnectionManager`1.PrepareBulkInsert(System.String)
   name: PrepareBulkInsert(String)
   href: api/ETLBox.Connection.DbConnectionManager-1.html#ETLBox_Connection_DbConnectionManager_1_PrepareBulkInsert_System_String_
@@ -1593,6 +1610,19 @@ references:
   isSpec: "True"
   fullName: ETLBox.Connection.IConnectionManager.Open
   nameWithType: IConnectionManager.Open
+- uid: ETLBox.Connection.IConnectionManager.PP
+  name: PP
+  href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_PP
+  commentId: P:ETLBox.Connection.IConnectionManager.PP
+  fullName: ETLBox.Connection.IConnectionManager.PP
+  nameWithType: IConnectionManager.PP
+- uid: ETLBox.Connection.IConnectionManager.PP*
+  name: PP
+  href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_PP_
+  commentId: Overload:ETLBox.Connection.IConnectionManager.PP
+  isSpec: "True"
+  fullName: ETLBox.Connection.IConnectionManager.PP
+  nameWithType: IConnectionManager.PP
 - uid: ETLBox.Connection.IConnectionManager.PrepareBulkInsert(System.String)
   name: PrepareBulkInsert(String)
   href: api/ETLBox.Connection.IConnectionManager.html#ETLBox_Connection_IConnectionManager_PrepareBulkInsert_System_String_
@@ -6018,6 +6048,18 @@ references:
   isSpec: "True"
   fullName: ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUpSchemaTask
   nameWithType: CleanUpSchemaTask.CleanUpSchemaTask
+- uid: ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp
+  name: CleanUp()
+  href: api/ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.html#ETLBox_ControlFlow_Tasks_CleanUpSchemaTask_CleanUp
+  commentId: M:ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp
+  fullName: ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp()
+  nameWithType: CleanUpSchemaTask.CleanUp()
+- uid: ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp(ETLBox.Connection.IConnectionManager)
+  name: CleanUp(IConnectionManager)
+  href: api/ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.html#ETLBox_ControlFlow_Tasks_CleanUpSchemaTask_CleanUp_ETLBox_Connection_IConnectionManager_
+  commentId: M:ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp(ETLBox.Connection.IConnectionManager)
+  fullName: ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp(ETLBox.Connection.IConnectionManager)
+  nameWithType: CleanUpSchemaTask.CleanUp(IConnectionManager)
 - uid: ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.CleanUp(ETLBox.Connection.IConnectionManager,System.String)
   name: CleanUp(IConnectionManager, String)
   href: api/ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.html#ETLBox_ControlFlow_Tasks_CleanUpSchemaTask_CleanUp_ETLBox_Connection_IConnectionManager_System_String_
@@ -6876,6 +6918,19 @@ references:
   isSpec: "True"
   fullName: ETLBox.ControlFlow.Tasks.CreateTableTask.Execute
   nameWithType: CreateTableTask.Execute
+- uid: ETLBox.ControlFlow.Tasks.CreateTableTask.IgnoreCollation
+  name: IgnoreCollation
+  href: api/ETLBox.ControlFlow.Tasks.CreateTableTask.html#ETLBox_ControlFlow_Tasks_CreateTableTask_IgnoreCollation
+  commentId: P:ETLBox.ControlFlow.Tasks.CreateTableTask.IgnoreCollation
+  fullName: ETLBox.ControlFlow.Tasks.CreateTableTask.IgnoreCollation
+  nameWithType: CreateTableTask.IgnoreCollation
+- uid: ETLBox.ControlFlow.Tasks.CreateTableTask.IgnoreCollation*
+  name: IgnoreCollation
+  href: api/ETLBox.ControlFlow.Tasks.CreateTableTask.html#ETLBox_ControlFlow_Tasks_CreateTableTask_IgnoreCollation_
+  commentId: Overload:ETLBox.ControlFlow.Tasks.CreateTableTask.IgnoreCollation
+  isSpec: "True"
+  fullName: ETLBox.ControlFlow.Tasks.CreateTableTask.IgnoreCollation
+  nameWithType: CreateTableTask.IgnoreCollation
 - uid: ETLBox.ControlFlow.Tasks.CreateTableTask.Sql
   name: Sql
   href: api/ETLBox.ControlFlow.Tasks.CreateTableTask.html#ETLBox_ControlFlow_Tasks_CreateTableTask_Sql
@@ -16411,6 +16466,23 @@ references:
   fullName.vb: ETLBox.Helper.BulkInsertSql(Of T).TN
   nameWithType: BulkInsertSql<T>.TN
   nameWithType.vb: BulkInsertSql(Of T).TN
+- uid: ETLBox.Helper.BulkInsertSql`1.UseNamedParameters
+  name: UseNamedParameters
+  href: api/ETLBox.Helper.BulkInsertSql-1.html#ETLBox_Helper_BulkInsertSql_1_UseNamedParameters
+  commentId: P:ETLBox.Helper.BulkInsertSql`1.UseNamedParameters
+  fullName: ETLBox.Helper.BulkInsertSql<T>.UseNamedParameters
+  fullName.vb: ETLBox.Helper.BulkInsertSql(Of T).UseNamedParameters
+  nameWithType: BulkInsertSql<T>.UseNamedParameters
+  nameWithType.vb: BulkInsertSql(Of T).UseNamedParameters
+- uid: ETLBox.Helper.BulkInsertSql`1.UseNamedParameters*
+  name: UseNamedParameters
+  href: api/ETLBox.Helper.BulkInsertSql-1.html#ETLBox_Helper_BulkInsertSql_1_UseNamedParameters_
+  commentId: Overload:ETLBox.Helper.BulkInsertSql`1.UseNamedParameters
+  isSpec: "True"
+  fullName: ETLBox.Helper.BulkInsertSql<T>.UseNamedParameters
+  fullName.vb: ETLBox.Helper.BulkInsertSql(Of T).UseNamedParameters
+  nameWithType: BulkInsertSql<T>.UseNamedParameters
+  nameWithType.vb: BulkInsertSql(Of T).UseNamedParameters
 - uid: ETLBox.Helper.BulkInsertSql`1.UseParameterQuery
   name: UseParameterQuery
   href: api/ETLBox.Helper.BulkInsertSql-1.html#ETLBox_Helper_BulkInsertSql_1_UseParameterQuery
@@ -17295,6 +17367,19 @@ references:
   isSpec: "True"
   fullName: ETLBox.Logging.CreateDatabaseTarget.ConnectionManager
   nameWithType: CreateDatabaseTarget.ConnectionManager
+- uid: ETLBox.Logging.CreateDatabaseTarget.FROMDUAL
+  name: FROMDUAL
+  href: api/ETLBox.Logging.CreateDatabaseTarget.html#ETLBox_Logging_CreateDatabaseTarget_FROMDUAL
+  commentId: P:ETLBox.Logging.CreateDatabaseTarget.FROMDUAL
+  fullName: ETLBox.Logging.CreateDatabaseTarget.FROMDUAL
+  nameWithType: CreateDatabaseTarget.FROMDUAL
+- uid: ETLBox.Logging.CreateDatabaseTarget.FROMDUAL*
+  name: FROMDUAL
+  href: api/ETLBox.Logging.CreateDatabaseTarget.html#ETLBox_Logging_CreateDatabaseTarget_FROMDUAL_
+  commentId: Overload:ETLBox.Logging.CreateDatabaseTarget.FROMDUAL
+  isSpec: "True"
+  fullName: ETLBox.Logging.CreateDatabaseTarget.FROMDUAL
+  nameWithType: CreateDatabaseTarget.FROMDUAL
 - uid: ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget
   name: GetNLogDatabaseTarget()
   href: api/ETLBox.Logging.CreateDatabaseTarget.html#ETLBox_Logging_CreateDatabaseTarget_GetNLogDatabaseTarget
@@ -17347,6 +17432,19 @@ references:
   isSpec: "True"
   fullName: ETLBox.Logging.CreateDatabaseTarget.LogTableName
   nameWithType: CreateDatabaseTarget.LogTableName
+- uid: ETLBox.Logging.CreateDatabaseTarget.PP
+  name: PP
+  href: api/ETLBox.Logging.CreateDatabaseTarget.html#ETLBox_Logging_CreateDatabaseTarget_PP
+  commentId: P:ETLBox.Logging.CreateDatabaseTarget.PP
+  fullName: ETLBox.Logging.CreateDatabaseTarget.PP
+  nameWithType: CreateDatabaseTarget.PP
+- uid: ETLBox.Logging.CreateDatabaseTarget.PP*
+  name: PP
+  href: api/ETLBox.Logging.CreateDatabaseTarget.html#ETLBox_Logging_CreateDatabaseTarget_PP_
+  commentId: Overload:ETLBox.Logging.CreateDatabaseTarget.PP
+  isSpec: "True"
+  fullName: ETLBox.Logging.CreateDatabaseTarget.PP
+  nameWithType: CreateDatabaseTarget.PP
 - uid: ETLBox.Logging.CreateDatabaseTarget.QB
   name: QB
   href: api/ETLBox.Logging.CreateDatabaseTarget.html#ETLBox_Logging_CreateDatabaseTarget_QB

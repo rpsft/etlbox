@@ -713,19 +713,17 @@
 
 <h2 id="welcome">Welcome</h2>
 <p>Welcome to the API documentation of ETLBox. This will give you access to all class and interface definitions that come with ETLBox.
-Check the <a href="https://github.com/roadrunnerlenny/etlbox">Github page</a> to see the full source code.</p>
+Check the <a href="https://github.com/roadrunnerlenny/etlbox">Github page</a> to see the full source code.
+Please note that connection managers are now closed source.</p>
 <h2 id="net-standard-app">.NET Standard App</h2>
-<p>ETLBox is .NET Standard app (.NET Standard 2.0 or higher).</p>
+<p>ETLBox is .NET Standard app (.NET Standard 2.0 or higher) and therefore works with many current .NET version. <a href="https://docs.microsoft.com/en-us/dotnet/standard/net-standard">See the official .NET implementation support for more details.</a></p>
 <h2 id="namespaces">Namespaces</h2>
 <p>ETLBox is divided in several namepsace.</p>
-<p>The important ones are the namespace for the Control Flow <code>ALE.ETLBox.ControlFlow</code> where the Control Flow Tasks reside.
-All Data Flow Tasks (sometimes referred as components) can be found in the namespace <code>ALE.ETLBox.DataFlow</code>.
-You'll find tasks related to logging in the namespace <code>ALE.ETLBox.Logging</code>.
-Classes with helpful (mostly static) methods are in the namespace <code>ALE.ETLBox.Helper</code>.
-To establish connection to a database, file or Analysis Services you'll need a connection manager from the <code>ALE.ETLBox.ConnectionManager</code> namespace.
-Everything else like generic classes or definitions are in the namespace <code>ALE.ETLBox</code>.</p>
-<h2 id="docfx">Docfx</h2>
-<p>The API documentation was created with <a href="https://dotnet.github.io/docfx/">DocFX</a>.</p>
+<p>The most important ones are: <code>ETLBox.ControlFlow.Tasks</code>,  <code>ETLBox.DataFlow.Connectors</code> and <code>ETLBox.DataFlow.Transformations</code>.
+They containt the components that you usually work with to create your data flow or control your database.</p>
+<p>To establish connection to a database, file or whereever you'll need a connection manager from the <code>ETLBox.Connection</code> namespace.</p>
+<p>You'll find tasks related to logging in the namespace <code>ETLBox.Logging</code>.</p>
+<p>Classes with some useful (mostly static) methods are in the namespace <code>ETLBox.Helper</code>.</p>
 </article>
           </div>
           

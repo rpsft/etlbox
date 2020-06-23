@@ -256,12 +256,17 @@ The following table shows which types of sources and destination are supported o
 <tbody>
 <tr>
 <td>Databases</td>
-<td>Sql Server, Postgres, SQLite, MySql</td>
+<td>Sql Server, Postgres, SQLite, MySql, Oracle</td>
 <td>Full support</td>
 </tr>
 <tr>
 <td>Flat files</td>
 <td>Csv, Json, Xml</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td>Any web api</td>
+<td>Json, Xml, Csv</td>
 <td>Full support</td>
 </tr>
 <tr>
@@ -291,7 +296,7 @@ The following table shows which types of sources and destination are supported o
 </tr>
 </tbody>
 </table>
-<p>You can choose between different sources and destination components. <code>DbSource</code> and <code>DbDestination</code> will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). <code>CsvSource</code>, <code>CsvDestination</code> give you support for flat files - <a href="https://joshclose.github.io/CsvHelper/">based on CSVHelper</a>. <code>ExcelSource</code> allows you to read data from an excel sheet. <code>JsonSource</code>, <code>JsonDestination</code>, <code>XmlSource</code> and <code>XmlDestination</code> let you read and write json from files or web service request. <code>MemorySource</code>, <code>MemoryDestinatiation</code> as well as <code>CustomSource</code> and <code>CustomDestination</code> will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.</p>
+<p>You can choose between different sources and destination components. <code>DbSource</code> and <code>DbDestination</code> will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). <code>CsvSource</code>, <code>CsvDestination</code> give you support for flat files. <code>ExcelSource</code> allows you to read data from an excel sheet. <code>JsonSource</code>, <code>JsonDestination</code>, <code>XmlSource</code> and <code>XmlDestination</code> let you read and write json from files or web service request. <code>MemorySource</code>, <code>MemoryDestinatiation</code> as well as <code>CustomSource</code> and <code>CustomDestination</code> will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.</p>
 <h3 id="transformations">Transformations</h3>
 <p>ETLBox has 3 type of transformations: Non-blocking, partially blocking and blocking transformations. Non-blocking transformations will
 only store the row that is currently processed in memory (plus some more in the buffer to optimize throughput and performance). Partially blocking transformations will load some data in the memory before they process data row-by-row. Blocking transformations will wait until all data has arrived at the component before it starts processing all records subsequently.</p>

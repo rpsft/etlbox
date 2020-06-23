@@ -20,7 +20,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.AccessOdbcConnectionManager.html",
-          "hash": "tC7b6nlx8qkMD6dSXiLbow=="
+          "hash": "yaQBy3eQmR6mnsN/8uhgkg=="
         }
       },
       "is_incremental": false,
@@ -35,7 +35,7 @@
           "hash": "b9FCTy06joXFeS1TjgBvuw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -44,7 +44,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.DbConnectionManager-1.html",
-          "hash": "a1G1pMNecx+S8OiH1seorQ=="
+          "hash": "iHcflkTep0Qe8bapnniY4A=="
         }
       },
       "is_incremental": false,
@@ -68,7 +68,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.IConnectionManager.html",
-          "hash": "ytmSKLQD9T8lFGEZnNsH3g=="
+          "hash": "GgElLOWO111qtQlijobWDw=="
         }
       },
       "is_incremental": false,
@@ -92,7 +92,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.MySqlConnectionManager.html",
-          "hash": "ORdN9rssRaPougzItfm/FQ=="
+          "hash": "bIsPlAD3wR/yI96JRrPx/Q=="
         }
       },
       "is_incremental": false,
@@ -116,7 +116,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.MySqlOdbcConnectionManager.html",
-          "hash": "RgY8KX7I//wOlqjrUwnsNQ=="
+          "hash": "UUeXdKjQucBqhby7CmvBRg=="
         }
       },
       "is_incremental": false,
@@ -128,7 +128,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.OdbcConnectionManager.html",
-          "hash": "R1ZZbF6GxoTodD3WcShzIg=="
+          "hash": "FbfL/yKQd9htwSu0XtHu2Q=="
         }
       },
       "is_incremental": false,
@@ -152,7 +152,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.PostgresConnectionManager.html",
-          "hash": "u0F7sJ7uxPKSYidWPm1slQ=="
+          "hash": "gf4umMfDmO74CdBuKgqJlg=="
         }
       },
       "is_incremental": false,
@@ -176,7 +176,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.PostgresOdbcConnectionManager.html",
-          "hash": "th8B0SKH1jV95Srab7Xbow=="
+          "hash": "EHI/pMYFBDoKq8GlaKDDEQ=="
         }
       },
       "is_incremental": false,
@@ -188,7 +188,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.SQLiteConnectionManager.html",
-          "hash": "Yx1nSUyOEWRt5wk4vE87kw=="
+          "hash": "Ixhn86EtmJ0kQTBcJT1Qdw=="
         }
       },
       "is_incremental": false,
@@ -212,7 +212,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.SqlConnectionManager.html",
-          "hash": "8uxDWhLYfsq6o4RQAZKAdg=="
+          "hash": "fC53LFhf16YRuoUg27F3Ng=="
         }
       },
       "is_incremental": false,
@@ -236,7 +236,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Connection.SqlOdbcConnectionManager.html",
-          "hash": "PUA9Kekij07TNZcn1fnc7A=="
+          "hash": "zmtr7C7KDKm6uYRtd4pokA=="
         }
       },
       "is_incremental": false,
@@ -263,7 +263,7 @@
           "hash": "7Z85YuGbeYmId5PqAQAjlQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -335,7 +335,7 @@
           "hash": "rplew/hkE9wiGUPlHXCGiA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -431,7 +431,7 @@
           "hash": "c639+Pdmh2eQ4JtVk68hqw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -452,7 +452,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.html",
-          "hash": "/qoNUnclhc1nC1fdL5DbgQ=="
+          "hash": "Y1W9yQUVP5z5MK0RexK8sA=="
         }
       },
       "is_incremental": false,
@@ -512,7 +512,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.ControlFlow.Tasks.CreateTableTask.html",
-          "hash": "gKpQcrCg1Ptdl6NRf7gs8A=="
+          "hash": "n6sJljy0giEVmfbL9dG2EA=="
         }
       },
       "is_incremental": false,
@@ -683,7 +683,7 @@
           "hash": "KeAXZeh32e7VIquJ8C3jbw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -695,7 +695,7 @@
           "hash": "4ebmHM0j3t0uTMsA6PuIRQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1367,7 +1367,7 @@
           "hash": "p5CZLVaCLg7RUmqHFC1lew=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1379,7 +1379,7 @@
           "hash": "O4Es07rlPAOJLv1t1Xdcag=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1403,7 +1403,7 @@
           "hash": "K5yl2ZCrxteWIFD6X/dQQA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1427,7 +1427,7 @@
           "hash": "pMPO21S0ePLqBGLXyyQQPw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1928,7 +1928,7 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Helper.BulkInsertSql-1.html",
-          "hash": "v4/g7rbty201g9wZ1YH9bA=="
+          "hash": "utovrsZHWwxz3osiXAXyWA=="
         }
       },
       "is_incremental": false,
@@ -2084,10 +2084,10 @@
       "output": {
         ".html": {
           "relative_path": "api/ETLBox.Logging.CreateDatabaseTarget.html",
-          "hash": "590oxlaBYvrIc+aILunk+g=="
+          "hash": "lQPxmMhP3IQ2HSXtW3Z4/Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2336,10 +2336,10 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "gy3JmBR4gWvs5q2kOPRs1A=="
+          "hash": "SE2yssHgaPEUpQP8Je+aMA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2348,10 +2348,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/controlflow/overview_controlflow.html",
-          "hash": "2KDYgC6vQphC2xuoPpNR2g=="
+          "hash": "kewAqXEh5KzeUmvAAoEITg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2471,7 +2471,7 @@
           "hash": "RHuuFiwdcKRdv5DiwfHKIw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2555,7 +2555,7 @@
           "hash": "H5miy+SvgOxKhnhB9BpH9A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2576,10 +2576,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/overview.html",
-          "hash": "L0n4sjFoP3yQbU9bUYVRZw=="
+          "hash": "HBGhxDs0Mv4I4ZyEcP/mnQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2591,7 +2591,7 @@
           "hash": "i/9HY8h74H7jm6dVM6gjeg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2619,6 +2619,18 @@
         }
       },
       "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/pricing/register_license_key.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/pricing/register_license_key.html",
+          "hash": "D9iBYl4Z/W7bNE0CLd+rpw=="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2790,14 +2802,14 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
-          "total_file_count": 26,
-          "skipped_file_count": 26
+          "total_file_count": 27,
+          "skipped_file_count": 23
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 193,
-          "skipped_file_count": 192
+          "skipped_file_count": 167
         },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
