@@ -20,6 +20,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void Drop(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(MySqlConnectionManager)
+                || connection.GetType() == typeof(MariaDbConnectionManager)
                  || connection.GetType() == typeof(OracleConnectionManager)
                 )
                 return;
@@ -38,6 +39,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void DropIfExists(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(MySqlConnectionManager)
+                 || connection.GetType() == typeof(MariaDbConnectionManager)
                  || connection.GetType() == typeof(OracleConnectionManager)
                 )
                 return;

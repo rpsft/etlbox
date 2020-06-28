@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.AnalysisServices\ETLBox.AnalysisServices.csproj" />
+    <ProjectReference Include="..\..\etlbox.connectors\ETLBox.MariaDb\ETLBox.MariaDb.csproj" />
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.MySql\ETLBox.MySql.csproj" />
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Odbc\ETLBox.Odbc.csproj" />
     <ProjectReference Include="..\..\etlbox.connectors\ETLBox.Oracle\ETLBox.Oracle.csproj" />

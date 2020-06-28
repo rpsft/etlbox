@@ -19,6 +19,10 @@ localhost (3306)
 User: root
 Password: etlboxpassword
 
+## MariaDb
+```bash
+docker run --name localmaria -p 3307:3306 -e MYSSQL_ROOT_HOST='%' -e MYSQL_ROOT_PASSWORD='etlboxpassword' -d mariadb:latest
+```
 
 ## Postgres
 

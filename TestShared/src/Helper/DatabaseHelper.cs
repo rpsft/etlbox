@@ -39,6 +39,15 @@ namespace ETLBoxTests.Helper
             DropAndCreate(connManagerMaster, dbName);
         }
 
+        public static void RecreateMariaDbDatabase(string section)
+        {
+            var connManagerMaster = new MariaDbConnectionManager(
+                            Config.MariaDbConnection.ConnectionString(section).CloneWithMasterDbName()
+                            );
+            var dbName = Config.MariaDbConnection.ConnectionString(section).DbName;
+            DropAndCreate(connManagerMaster, dbName);
+        }
+
         public static void RecreatePostgresDatabase(string section)
         {
             var connManagerMaster = new PostgresConnectionManager(

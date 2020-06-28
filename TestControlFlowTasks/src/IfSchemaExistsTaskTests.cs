@@ -19,6 +19,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void IfSchemaExists(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(MySqlConnectionManager)
+                 || connection.GetType() == typeof(MariaDbConnectionManager)
                 || connection.GetType() == typeof(OracleConnectionManager)
                 )
                 return;

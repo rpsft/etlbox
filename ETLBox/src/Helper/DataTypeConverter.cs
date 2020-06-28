@@ -136,8 +136,6 @@ namespace ETLBox.Helper
                     return typeName.Replace("VARCHAR2", "VARCHAR");
                 else if (typeName.StartsWith("NVARCHAR2"))
                     return typeName.Replace("NVARCHAR2", "NVARCHAR");
-                else if (typeName == "DATE")
-                    return "DATETIME";
             }
 
             //Now start with "normal" translation, other Database have many commons

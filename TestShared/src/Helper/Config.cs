@@ -38,6 +38,9 @@ namespace ETLBoxTests.Helper
         public static ConnectionDetails<MySqlConnectionString, MySqlConnectionManager> MySqlConnection
         { get; set; } = new ConnectionDetails<MySqlConnectionString, MySqlConnectionManager>("MySqlConnectionString");
 
+        public static ConnectionDetails<MariaDbConnectionString, MariaDbConnectionManager> MariaDbConnection
+        { get; set; } = new ConnectionDetails<MariaDbConnectionString, MariaDbConnectionManager>("MariaDbConnectionString");
+
         public static ConnectionDetails<PostgresConnectionString, PostgresConnectionManager> PostgresConnection
         { get; set; } = new ConnectionDetails<PostgresConnectionString, PostgresConnectionManager>("PostgresConnectionString");
 
@@ -64,6 +67,7 @@ namespace ETLBoxTests.Helper
 
 
         public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
+                    new object[] { (IConnectionManager)MariaDbConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
@@ -72,6 +76,7 @@ namespace ETLBoxTests.Helper
         };
 
         public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section) => new[] {
+                    new object[] { (IConnectionManager)MariaDbConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
@@ -79,6 +84,7 @@ namespace ETLBoxTests.Helper
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
+                    new object[] { (IConnectionManager)MariaDbConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
@@ -87,6 +93,7 @@ namespace ETLBoxTests.Helper
         };
 
         public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value) => new[] {
+                    new object[] { (IConnectionManager)MariaDbConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },

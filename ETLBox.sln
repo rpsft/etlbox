@@ -51,7 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLicenseManager", "..\et
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.OleDb", "..\etlbox.connectors\ETLBox.OleDb\ETLBox.OleDb.csproj", "{693041F9-4E45-4C20-8F35-28EEACD1E781}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Oracle", "..\etlbox.connectors\ETLBox.Oracle\ETLBox.Oracle.csproj", "{1B8C1229-5EFC-422E-A675-0DB9DD536EF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Oracle", "..\etlbox.connectors\ETLBox.Oracle\ETLBox.Oracle.csproj", "{1B8C1229-5EFC-422E-A675-0DB9DD536EF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.MariaDb", "..\etlbox.connectors\ETLBox.MariaDb\ETLBox.MariaDb.csproj", "{8120BB6E-C7A2-4346-9908-4F93A05D9F36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +161,10 @@ Global
 		{1B8C1229-5EFC-422E-A675-0DB9DD536EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B8C1229-5EFC-422E-A675-0DB9DD536EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B8C1229-5EFC-422E-A675-0DB9DD536EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8120BB6E-C7A2-4346-9908-4F93A05D9F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8120BB6E-C7A2-4346-9908-4F93A05D9F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8120BB6E-C7A2-4346-9908-4F93A05D9F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8120BB6E-C7A2-4346-9908-4F93A05D9F36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

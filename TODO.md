@@ -33,6 +33,12 @@ Currently, if not table definition is given, the current implementation of Table
 Remove SqlTask: Add task name & Comments before sql code
 Make sql task name optional
 
-# Neues feature
-CopyTableDefinitionTask - uses TableDefinition to retrieve the current table definiton and the creates a new table. 
+# New feature
+- CopyTableDefinitionTask - uses TableDefinition to retrieve the current table definiton and the creates a new table. 
 Very good for testing purposes.
+- Allow user to set max buffer size for buffers. E.g. for DbDestination, max buffer size could be set to 3000 rows. If buffer is full, execution stops until destination was able to write data.  Be careful: When an exception in the destination occurs, it looks like the source and previous components still read data from the source - so it could be that the previous components are not notified of the exception, and when the max buffer size is reached the execution could deadlock. 
+
+# Oracle
+Add missing tests for specific data type conversions. E.g. number(22,2) should also create the correct .net datatype. Currently the DataTypeConverter will parse it into System.String.
+
+

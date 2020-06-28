@@ -18,6 +18,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void CreateSchema(IConnectionManager connection)
         {
             if (connection.GetType() != typeof(MySqlConnectionManager)
+                && connection.GetType() != typeof(MariaDbConnectionManager)
                 && connection.GetType() != typeof(OracleConnectionManager)
                 )
             {
@@ -34,6 +35,7 @@ namespace ETLBoxTests.ControlFlowTests
         public void CreateSchemaWithSpecialChar(IConnectionManager connection)
         {
             if (connection.GetType() != typeof(MySqlConnectionManager)
+                && connection.GetType() != typeof(MariaDbConnectionManager)
                  && connection.GetType() != typeof(OracleConnectionManager)
                 )
             {
