@@ -6,37 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace ETLBox.Helper
 {
-    public static class DataTypeConverter
+    public class DataTypeConverter : IDataTypeConverter
     {
-        public const int DefaultTinyIntegerLength = 5;
-        public const int DefaultSmallIntegerLength = 7;
-        public const int DefaultIntegerLength = 11;
-        public const int DefaultBigIntegerLength = 21;
-        public const int DefaultDateTime2Length = 41;
-        public const int DefaultDateTimeLength = 27;
-        public const int DefaultDecimalLength = 41;
-        public const int DefaultStringLength = 255;
-
         public const string _REGEX = @"(.*?)char\((\d*)\)(.*?)";
-
-        public static int GetTypeLength(string dataTypeString)
-        {
-            switch (dataTypeString)
-            {
-                case "tinyint": return DefaultTinyIntegerLength;
-                case "smallint": return DefaultSmallIntegerLength;
-                case "int": return DefaultIntegerLength;
-                case "bigint": return DefaultBigIntegerLength;
-                case "decimal": return DefaultDecimalLength;
-                case "datetime": return DefaultDateTimeLength;
-                case "datetime2": return DefaultDateTime2Length;
-                default:
-                    if (IsCharTypeDefinition(dataTypeString))
-                        return GetStringLengthFromCharString(dataTypeString);
-                    else
-                        throw new Exception("Unknown data type");
-            }
-        }
 
         public static bool IsCharTypeDefinition(string value) => new Regex(_REGEX, RegexOptions.IgnoreCase).IsMatch(value);
 
@@ -44,17 +16,11 @@ namespace ETLBox.Helper
         {
             string possibleResult = Regex.Replace(value, _REGEX, "${2}", RegexOptions.IgnoreCase);
             int result = 0;
-            if (int.TryParse(possibleResult, out result))
-            {
-                return result;
-            }
-            else
-            {
-                return DefaultStringLength;
-            }
+            int.TryParse(possibleResult, out result);
+            return result;
         }
 
-        public static string GetNETObjectTypeString(string dbSpecificTypeName)
+        private static string GetNETObjectTypeString(string dbSpecificTypeName)
         {
             if (dbSpecificTypeName.IndexOf("(") > 0)
                 dbSpecificTypeName = dbSpecificTypeName.Substring(0, dbSpecificTypeName.IndexOf("("));
@@ -123,7 +89,10 @@ namespace ETLBox.Helper
             }
         }
 
-        public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
+        public string TryConvertDbDataType(string dbSpecificTypeName, ConnectionManagerType connectionType)
+            => DataTypeConverter.TryGetDbSpecificType(dbSpecificTypeName, connectionType);
+
+        public static string TryGetDbSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
         {
             var typeName = dbSpecificTypeName.Trim().ToUpper();
             //Always normalize to some "standard" for Oracle!

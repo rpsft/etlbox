@@ -47,7 +47,7 @@ namespace ETLBox.ControlFlow.Tasks
             get => TableDefinition.Name;
             set => TableDefinition.Name = value;
         }
-
+        public IDataTypeConverter DataTypeConverter { get; set; } = new DataTypeConverter();
         public bool ThrowErrorIfTableExists { get; set; }
         public bool IgnoreCollation { get; set; }
 
@@ -119,7 +119,7 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             else if (ConnectionType == ConnectionManagerType.Postgres && col.IsIdentity)
                 return string.Empty;
             else
-                return DataTypeConverter.TryGetDBSpecificType(col.DataType, this.ConnectionType);
+                return DataTypeConverter.TryConvertDbDataType(col.DataType, this.ConnectionType);
         }
 
         private string CreateIdentitySql(ITableColumn col)
