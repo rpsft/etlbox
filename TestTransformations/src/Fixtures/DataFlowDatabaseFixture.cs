@@ -13,6 +13,7 @@ namespace ETLBoxTests.Fixtures
             DatabaseHelper.RecreateMySqlDatabase("DataFlow");
             DatabaseHelper.RecreatePostgresDatabase("DataFlow");
             DatabaseHelper.CleanUpOracle("DataFlow");
+            DatabaseHelper.RecreateMariaDbDatabase("DataFlow");
         }
 
 

@@ -4,7 +4,8 @@
         "SQLiteConnectionString": "Data Source=.\\db\\SQLiteLogging.db;Version=3;",
         "MySqlConnectionString": "Server=10.211.55.2;Database=ETLBox_Logging;Uid=root;Pwd=etlboxpassword;",
         "PostgresConnectionString": "Server=10.211.55.2;Database=ETLBox_Logging;User Id=postgres;Password=etlboxpassword;",
-        "OracleConnectionString": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));User ID=etlbox;Password=etlboxpassword;"
+        "OracleConnectionString": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));User ID=etlbox;Password=etlboxpassword;",
+        "MariaDbConnectionString": "Server=10.211.55.2;Port=3307;Database=ETLBox_Logging;Uid=root;Pwd=etlboxpassword;"
     },
     "NoLog": {
         "SqlConnectionString": "Data Source=10.211.55.2;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_NoLog"
