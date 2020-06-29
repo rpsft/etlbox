@@ -175,6 +175,12 @@
     <None Update="res\JsonSource\TwoColumnsStringArray.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\TextDestination\ToBeTestFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\TextSource\Test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\XmlDestination\TwoColumnsAttributesSet3.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
