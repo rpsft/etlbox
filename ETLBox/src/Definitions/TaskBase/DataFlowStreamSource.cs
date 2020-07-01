@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 
 namespace ETLBox.DataFlow
 {
@@ -24,8 +26,8 @@ namespace ETLBox.DataFlow
             }
         }
 
-        public Func<int, string> GetNextUri { get; set; }
-        public Func<int, bool> HasNextUri { get; set; }
+        public Func<StreamMetaData, string> GetNextUri { get; set; }
+        public Func<StreamMetaData, bool> HasNextUri { get; set; }
 
         /// <summary>
         /// Specifies the resource type. By default requests are made with HttpClient.
@@ -40,6 +42,14 @@ namespace ETLBox.DataFlow
         protected string CurrentRequestUri { get; set; }
         protected StreamReader StreamReader { get; set; }
         private bool WasStreamOpened { get; set; }
+        protected StringBuilder UnparsedData { get; set; }
+
+        private StreamMetaData CreateMetaDataObject =>
+                new StreamMetaData()
+                {
+                    ProgressCount = ProgressCount,
+                    UnparsedData = UnparsedData?.ToString()
+                };
 
         public override void Execute()
         {
@@ -48,12 +58,12 @@ namespace ETLBox.DataFlow
             {
                 do
                 {
-                    CurrentRequestUri = GetNextUri(ProgressCount);
+                    CurrentRequestUri = GetNextUri(CreateMetaDataObject);
                     OpenStream(CurrentRequestUri);
                     InitReader();
                     WasStreamOpened = true;
                     ReadAll();
-                } while (HasNextUri(ProgressCount));
+                } while (HasNextUri(CreateMetaDataObject));
                 Buffer.Complete();
             }
             finally
@@ -84,5 +94,11 @@ namespace ETLBox.DataFlow
         protected abstract void InitReader();
         protected abstract void ReadAll();
         protected abstract void CloseReader();
+    }
+
+    public class StreamMetaData
+    {
+        public int ProgressCount { get; set; }
+        public string UnparsedData { get; set; }
     }
 }

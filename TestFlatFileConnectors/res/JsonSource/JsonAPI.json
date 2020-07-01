@@ -1,0 +1,31 @@
+{
+    "ignored": {
+        "ignored": "ignored"
+    },
+    "nested": {
+        "data": [
+            {
+                "Col1": 1,
+                "Col2": "Test1"
+            },
+            {
+                "Col1": 2,
+                "Col2": "Test2"
+            },
+            {
+                "Col1": 3,
+                "Col2": "Test3"
+            }
+        ]
+    },
+    "links": {
+        "self": {
+            "url": "http://test.com/JsonApi"
+        },
+        "next": "http://test.com/JsonApiNext"
+    },
+    "anotherarray": [
+        "test",
+        { "test": "test" }
+    ]
+}

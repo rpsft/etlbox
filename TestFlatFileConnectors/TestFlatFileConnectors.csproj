@@ -142,6 +142,9 @@
     <None Update="res\JsonSource\EmptyObject.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\JsonSource\JsonAPINext.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\JsonSource\NestedArray.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -149,6 +152,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="res\JsonSource\NestedData4Cols.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\JsonSource\JsonAPI.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="res\JsonSource\Todos.json">

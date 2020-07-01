@@ -89,5 +89,67 @@ namespace ETLBoxTests.DataFlowTests
             Assert.All(dest.Data, item => Assert.True(item.Key > 0));
             Assert.Equal(5, dest.Data.Count);
         }
+
+
+        string firstRequestUnparsedToBe =
+@"{
+""links"" : {
+  ""self"": {
+    ""url"": ""http://test.com/JsonApi""
+  },
+  ""next"": ""http://test.com/JsonApiNext""
+}
+""anotherarray"" : [
+  ""test"",
+  {
+    ""test"": ""test""
+  }
+]
+}
+";
+
+        string secondRequestUnparsedToBe =
+@"{
+""after"" : 2
+""unparsed"" : [
+  ""test""
+]
+""bool"" : True
+""decimal"" : 3.2
+}
+";
+        [Fact]
+        public void JsonAPIRequestWithMetaData()
+        {
+            //Arrange
+            MemoryDestination dest = new MemoryDestination();
+            bool firstRequest = true;
+
+            //Act
+            JsonSource source = new JsonSource();
+            source.GetNextUri = meta =>
+            {
+                 return firstRequest ? $"res/JsonSource/JsonAPI.json" : $"res/JsonSource/JsonAPINext.json";
+            };
+            source.HasNextUri = meta =>
+            {
+                Assert.Equal(3, meta.ProgressCount);
+                if (firstRequest)
+                    Assert.Equal(firstRequestUnparsedToBe, meta.UnparsedData, ignoreCase:true, ignoreLineEndingDifferences:true, ignoreWhiteSpaceDifferences: true);
+                else
+                    Assert.Equal(secondRequestUnparsedToBe, meta.UnparsedData, ignoreCase: true, ignoreLineEndingDifferences: true, ignoreWhiteSpaceDifferences: true);
+                bool result = firstRequest;
+                firstRequest = false;
+                return result;
+            };
+            source.ResourceType = ResourceType.File;
+
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Equal(3, dest.Data.Count);
+        }
     }
 }
