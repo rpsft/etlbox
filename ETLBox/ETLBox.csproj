@@ -15,14 +15,14 @@
 What's new? The connection managers are now moved into their own package - this reduces dependencies in the core package as you only need to pick the packages for the connectors that you actually need.
 Please not that some of the connectors are now closed source and have a different license model.
 BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.
-Added in 2.0.2: Improved support for data type conversion from oracle to other dbs. CreateTableTask now accepts an IDataTypeConverter that can influence the db type conversions. There is a connector for reading/writing into text files now available.</PackageReleaseNotes>
-        <Version>2.0.2</Version>
+Added in 2.0.3: Supporting StreamMetaData in DataFlowStreamSource.</PackageReleaseNotes>
+        <Version>2.0.3</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
         <Company>TheBoxOffice</Company>
-        <AssemblyVersion>2.0.2.0</AssemblyVersion>
-        <FileVersion>2.0.2.0</FileVersion>
+        <AssemblyVersion>2.0.3.0</AssemblyVersion>
+        <FileVersion>2.0.3.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RootNamespace>ETLBox</RootNamespace>
         <Product>ETLBox</Product>
