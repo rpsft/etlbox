@@ -11,7 +11,8 @@
         "PostgresOdbcConnectionString": "Driver={PostgreSQL UNICODE};Server=10.211.55.2;Port=5432;Database=ETLBox_DataFlow;Uid=postgres;Pwd=etlboxpassword;",
         "AzureSqlConnectionString": "Server=tcp:etlbox.database.windows.net,1433;Initial Catalog=etlbox;Persist Security Info=False;User ID=etlboxadmin;Password=ETLBoxPassw0rd!;",
         "OracleConnectionString": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));User ID=etlbox;Password=etlboxpassword;",
-        "MariaDbConnectionString": "Server=10.211.55.2;Port=3307;Database=ETLBox_DataFlow2;Uid=root;Pwd=etlboxpassword;"
+        "MariaDbConnectionString": "Server=10.211.55.2;Port=3307;Database=ETLBox_DataFlow2;Uid=root;Pwd=etlboxpassword;",
+        "OracleOdbcConnectionString": "Driver={Oracle in Oracle};DBQ=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.211.55.2)(PORT=1521)))(CONNECT_DATA=(SID=ORCLCDB)));UID=etlbox;PWD=etlboxpassword;"
     },
     "DataFlowSource": {
         "SqlConnectionString": "Data Source=10.211.55.2;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlowSource",

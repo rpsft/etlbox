@@ -104,6 +104,17 @@ Postgres
 - the connection string referes to UNICODE (Driver={PostgreSQL UNICODE}), if you use ANSI adapt the connection string (Driver={PostgreSQL ANSI})
 - Driver={PostgreSQL} is not supported any more?
 
+Oracle
+- installing this driver is really is a pain in the a**...
+- go to https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
+- download basic package 
+- download odbc package
+- unzip both, merge into one folder
+- copy somewhere on windows machine, etc. C:/Oracle
+- add an entry to the PATH system environment variable pointing to this folder
+- go into this folder, run `odbc_install.exe` as administrator
+- the odbc should now pop up in Odbc64 manager
+
 
 ## OleDb drivers
 - OleDb driver for Sql Server was installed with database

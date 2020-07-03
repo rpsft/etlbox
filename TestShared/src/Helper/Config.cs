@@ -59,6 +59,9 @@ namespace ETLBoxTests.Helper
         public static ConnectionDetails<OdbcConnectionString, PostgresOdbcConnectionManager> PostgresOdbcConnection
         { get; set; } = new ConnectionDetails<OdbcConnectionString, PostgresOdbcConnectionManager>("PostgresOdbcConnectionString");
 
+        public static ConnectionDetails<OdbcConnectionString, OracleOdbcConnectionManager> OracleOdbcConnection
+        { get; set; } = new ConnectionDetails<OdbcConnectionString, OracleOdbcConnectionManager>("OracleOdbcConnectionString");
+
         public static ConnectionDetails<OleDbConnectionString, SqlOleDbConnectionManager> SqlOleDbConnection
         { get; set; } = new ConnectionDetails<OleDbConnectionString, SqlOleDbConnectionManager>("SqlOleDbConnectionString");
 
@@ -102,6 +105,7 @@ namespace ETLBoxTests.Helper
         };
 
         public static IEnumerable<object[]> AllOdbcConnectionsExceptAccess(string section) => new[] {
+                    new object[] { (IConnectionManager)OracleOdbcConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)SqlOdbcConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)MySqlOdbcConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)PostgresOdbcConnection.ConnectionManager(section) }
