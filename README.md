@@ -110,16 +110,16 @@ The following table shows which types of sources and destination are supported o
 
 Source or Destination|Support for|Limitations|
 ---------------------|-----------|------------
-Databases|Sql Server, Postgres, SQLite, MySql, Oracle|Full support
-Flat files|Csv, Json, Xml|Full support
-Any web api|Json, Xml, Csv|Full support
+Databases|Sql Server, Postgres, SQLite, MySql, MariaDb, Oracle|Full support
+Flat files|Csv, Json, Xml, Text|Full support
+Any web api|Json, Xml, Csv, Text|Full support
 Office|Microsoft Access, Excel|Full support for Access, Excel only as source
 Cube|Sql Server Analysis Service|Only XMLA statements
 Memory|.NET IEnumerable & Collections|Full support
 Cloud Services|Tested with Azure|Full support
 Any other|integration with custom written code|No limitations
 
-You can choose between different sources and destination components. `DbSource` and `DbDestination` will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). `CsvSource`, `CsvDestination` give you support for flat files. `ExcelSource` allows you to read data from an excel sheet. `JsonSource`, `JsonDestination`, `XmlSource` and `XmlDestination` let you read and write json from files or web service request. `MemorySource`, `MemoryDestinatiation` as well as `CustomSource` and `CustomDestination` will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.
+You can choose between different sources and destination components. `DbSource` and `DbDestination` will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). `CsvSource`, `CsvDestination` give you support for flat files. `ExcelSource` allows you to read data from an excel sheet. `JsonSource`, `JsonDestination`, `XmlSource` and `XmlDestination` let you read and write json or xml from files or web service request. `TextSource` and `TextDestination` allow access to regular text files with line breaks.  `MemorySource`, `MemoryDestinatiation` as well as `CustomSource` and `CustomDestination` will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.
 
 ### Transformations
 
@@ -136,6 +136,7 @@ MergeJoin||DbMerge*
 Multicast||
 RowDuplication||
 RowMultiplication||
+XmlSchemaValidation||
 
 *RowTransformation*: This transformation let you modfiy each data record with your custom written C# code
 
@@ -160,6 +161,9 @@ RowMultiplication||
 *DbMerge*: Allows you to insert, update or delete data in your target table depending on your incoming data.
 No more need to write your own "upsert" statement - the `DbMerge` is supported by all ETLBox databases. The output of the DbMerge
 is the changes to your target table (insertions, updates and deletions.)
+
+*XmlSchemaValidation*: Validates a given string that contains xml with a defined Xml schema definition. Not valid xml is redirected to 
+the error output. 
 
 #### Designed for big data
 
