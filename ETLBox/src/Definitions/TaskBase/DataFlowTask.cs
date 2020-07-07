@@ -25,7 +25,7 @@ namespace ETLBox.DataFlow
         protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         protected int ThresholdCount { get; set; } = 1;
 
-        public virtual int MaxBufferSize
+        public int MaxBufferSize
         {
             get
             {
@@ -33,8 +33,11 @@ namespace ETLBox.DataFlow
             }
             set {
                 _maxBufferSize = value;
+                InitBufferObjects();
             }
         }
+
+        protected virtual void InitBufferObjects() { }
 
         protected int _maxBufferSize = -1;
 

@@ -36,9 +36,9 @@ namespace ETLBoxTests.DataFlowTests
                 new MyRow { Id = 3,  DetailValue = 2.0 },
                 };
 
-            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
-                (row, aggRow) => aggRow.AggValue += row.DetailValue
-                );
+            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>() {
+                AggregationAction = (row, aggRow) => aggRow.AggValue += row.DetailValue
+            };
 
             MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
 

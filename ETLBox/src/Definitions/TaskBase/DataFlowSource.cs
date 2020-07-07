@@ -10,6 +10,14 @@ namespace ETLBox.DataFlow
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
 
+        protected override void InitBufferObjects()
+        {
+            Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize
+            });
+        }
+
         public ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public abstract void Execute();

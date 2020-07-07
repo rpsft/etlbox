@@ -36,13 +36,15 @@ namespace ETLBoxTests.DataFlowTests
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "BlockTransDest");
 
             //Act
-            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
-                inputData =>
+            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>()
+            {
+                BlockTransformationFunc = inputData =>
                 {
                     inputData.RemoveRange(1, 2);
                     inputData.Add(new MySimpleRow() { Col1 = 4, Col2 = "Test4" });
                     return inputData;
-                });
+                }
+            };
             source.LinkTo(block);
             block.LinkTo(dest);
             source.Execute();

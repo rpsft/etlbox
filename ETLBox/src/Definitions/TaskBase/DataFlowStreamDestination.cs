@@ -24,7 +24,16 @@ namespace ETLBox.DataFlow
 
         protected void InitTargetAction()
         {
-            TargetAction = new ActionBlock<TInput>(WriteData);
+            InitBufferObjects();
+        }
+
+        protected override void InitBufferObjects()
+        {
+            TargetAction = new ActionBlock<TInput>(WriteData, new ExecutionDataflowBlockOptions()
+            {
+                MaxDegreeOfParallelism = 1,
+                BoundedCapacity = MaxBufferSize
+            });
             SetCompletionTask();
         }
 

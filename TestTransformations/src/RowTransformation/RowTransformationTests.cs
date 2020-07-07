@@ -57,15 +57,15 @@ namespace ETLBoxTests.DataFlowTests
 
             //Act
             int IdOffset = 0;
-            RowTransformation<MySimpleRow, MySimpleRow> trans = new RowTransformation<MySimpleRow, MySimpleRow>(
-                "RowTransformation testing init Action",
-                row =>
+            RowTransformation<MySimpleRow, MySimpleRow> trans = new RowTransformation<MySimpleRow, MySimpleRow>()
+            {
+                TransformationFunc = row =>
                 {
-                    row.Col1 += IdOffset;
-                    return row;
+                   row.Col1 += IdOffset;
+                   return row;
                 },
-                () => IdOffset += 1
-            );
+                InitAction = () => IdOffset += 1
+            };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "DestinationRowTransformation");
             source.LinkTo(trans);
             trans.LinkTo(dest);

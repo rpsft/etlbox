@@ -1,5 +1,7 @@
 ﻿using ETLBox.ControlFlow;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -47,7 +49,6 @@ namespace ETLBox.DataFlow.Transformations
             LogProgress();
             return clone;
         }
-
 
     }
 

@@ -22,6 +22,7 @@ namespace ETLBox.DataFlow.Transformations
         public override ITargetBlock<TInput> TargetBlock => TransformBlock;
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
+
         /* Private stuff */
         TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
 
@@ -29,7 +30,7 @@ namespace ETLBox.DataFlow.Transformations
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplicateRow);
+            InitBufferObjects();
         }
 
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc) : this()
@@ -37,12 +38,21 @@ namespace ETLBox.DataFlow.Transformations
             MultiplicationFunc = multiplicationFunc;
         }
 
+        protected override void InitBufferObjects()
+        {
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplicateRow, new ExecutionDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize,
+                MaxDegreeOfParallelism = MaxDegreeOfParallelism
+            });
+        }
+
         private IEnumerable<TOutput> MultiplicateRow(TInput row)
         {
             if (row == null) return null;
             try
             {
-                return MultiplicationFunc.Invoke(row);
+                return MultiplicationFunc?.Invoke(row);
             }
             catch (Exception e)
             {

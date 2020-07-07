@@ -28,46 +28,20 @@ namespace ETLBox.DataFlow.Transformations
         public override string TaskName { get; set; } = "Excecute block transformation";
 
         /* Public Properties */
-        public Func<List<TInput>, List<TOutput>> BlockTransformationFunc
-        {
-            get
-            {
-                return _blockTransformationFunc;
-            }
-            set
-            {
-                _blockTransformationFunc = value;
-                InputBuffer = new ActionBlock<TInput>(row => InputData.Add(row));
-                InputBuffer.Completion.ContinueWith(t =>
-                {
-                    if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
-                    try
-                    {
-                        WriteIntoOutput();
-                        OutputBuffer.Complete();
-                    }
-                    catch (Exception e)
-                    {
-                        ((IDataflowBlock)OutputBuffer).Fault(e);
-                        throw e;
-                    }
-                });
+        public Func<List<TInput>, List<TOutput>> BlockTransformationFunc { get; set; }
 
-            }
-        }
         public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
         /* Private stuff */
         BufferBlock<TOutput> OutputBuffer { get; set; }
         ActionBlock<TInput> InputBuffer { get; set; }
-        Func<List<TInput>, List<TOutput>> _blockTransformationFunc;
         List<TInput> InputData { get; set; }
         List<TOutput> OutputData { get; set; }
         public BlockTransformation()
         {
             InputData = new List<TInput>();
-            OutputBuffer = new BufferBlock<TOutput>();
+            InitBufferObjects();
         }
 
         public BlockTransformation(Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this()
@@ -75,14 +49,36 @@ namespace ETLBox.DataFlow.Transformations
             BlockTransformationFunc = blockTransformationFunc;
         }
 
-        public BlockTransformation(string name, Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this(blockTransformationFunc)
-        {
-            this.TaskName = name;
-        }
-
         internal BlockTransformation(ITask task, Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this(blockTransformationFunc)
         {
             CopyTaskProperties(task);
+        }
+
+        protected override void InitBufferObjects()
+        {
+            OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize
+            });
+            InputBuffer = new ActionBlock<TInput>(row => InputData.Add(row),
+                new ExecutionDataflowBlockOptions()
+                {
+                    BoundedCapacity = -1 //All data is always loaded!
+                });
+            InputBuffer.Completion.ContinueWith(t =>
+            {
+                if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
+                try
+                {
+                    WriteIntoOutput();
+                    OutputBuffer.Complete();
+                }
+                catch (Exception e)
+                {
+                    ((IDataflowBlock)OutputBuffer).Fault(e);
+                    throw e;
+                }
+            });
         }
 
         private void WriteIntoOutput()
@@ -114,10 +110,9 @@ namespace ETLBox.DataFlow.Transformations
     /// </example>
     public class BlockTransformation<TInput> : BlockTransformation<TInput, TInput>
     {
-        public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(blockTransformationFunc)
+        public BlockTransformation() : base ()
         { }
-
-        public BlockTransformation(string name, Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(name, blockTransformationFunc)
+        public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(blockTransformationFunc)
         { }
 
     }
@@ -129,10 +124,10 @@ namespace ETLBox.DataFlow.Transformations
     /// </summary>
     public class BlockTransformation : BlockTransformation<ExpandoObject>
     {
-        public BlockTransformation(Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc) : base(blockTransformationFunc)
+        public BlockTransformation() : base()
         { }
 
-        public BlockTransformation(string name, Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc) : base(name, blockTransformationFunc)
+        public BlockTransformation(Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc) : base(blockTransformationFunc)
         { }
 
     }

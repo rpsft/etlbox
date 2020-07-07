@@ -31,7 +31,7 @@ namespace ETLBox.DataFlow.Transformations
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
-            TransformBlock = new TransformManyBlock<TInput, TInput>(DuplicateRow);
+            InitBufferObjects();
         }
 
         public RowDuplication(int numberOfDuplicates) : this()
@@ -47,6 +47,15 @@ namespace ETLBox.DataFlow.Transformations
         public RowDuplication(Predicate<TInput> canDuplicate) : this()
         {
             this.CanDuplicate = canDuplicate;
+        }
+
+        protected override void InitBufferObjects()
+        {
+            TransformBlock = new TransformManyBlock<TInput, TInput>(DuplicateRow, new ExecutionDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize,
+                MaxDegreeOfParallelism = MaxDegreeOfParallelism
+            });
         }
 
         private IEnumerable<TInput> DuplicateRow(TInput row)

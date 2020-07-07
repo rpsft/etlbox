@@ -26,46 +26,21 @@ namespace ETLBox.DataFlow.Transformations
         public override string TaskName { get; set; } = "Execute row transformation";
 
         /* Public Properties */
-        public Func<TInput, TOutput> TransformationFunc
-        {
-            get
-            {
-                return _transformationFunc;
-            }
-
-            set
-            {
-                _transformationFunc = value;
-                TransformBlock = new TransformBlock<TInput, TOutput>(
-                    row =>
-                    {
-                        try
-                        {
-                            return WrapTransformation(row);
-                        }
-                        catch (Exception e)
-                        {
-                            if (!ErrorHandler.HasErrorBuffer) throw e;
-                            ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(row));
-                            return default(TOutput);
-                        }
-                    }
-                );
-            }
-        }
+        public Func<TInput, TOutput> TransformationFunc { get; set; }
         public Action InitAction { get; set; }
         public bool WasInitialized { get; private set; } = false;
+
 
         public override ITargetBlock<TInput> TargetBlock => TransformBlock;
         public override ISourceBlock<TOutput> SourceBlock => TransformBlock;
 
         /* Private stuff */
-        Func<TInput, TOutput> _transformationFunc;
         internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
         internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
 
         public RowTransformation()
         {
+            InitBufferObjects();
         }
 
         public RowTransformation(Func<TInput, TOutput> rowTransformationFunc) : this()
@@ -73,14 +48,9 @@ namespace ETLBox.DataFlow.Transformations
             TransformationFunc = rowTransformationFunc;
         }
 
-        public RowTransformation(string name, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
-        {
-            this.TaskName = name;
-        }
 
-        public RowTransformation(string name, Func<TInput, TOutput> rowTransformationFunc, Action initAction) : this(rowTransformationFunc)
+        public RowTransformation(Func<TInput, TOutput> rowTransformationFunc, Action initAction) : this(rowTransformationFunc)
         {
-            this.TaskName = name;
             this.InitAction = initAction;
         }
 
@@ -97,6 +67,28 @@ namespace ETLBox.DataFlow.Transformations
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
             => ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
+        protected override void InitBufferObjects()
+        {
+            TransformBlock = new TransformBlock<TInput, TOutput>(
+                row =>
+                {
+                    try
+                    {
+                        return WrapTransformation(row);
+                    }
+                    catch (Exception e)
+                    {
+                        if (!ErrorHandler.HasErrorBuffer) throw e;
+                        ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(row));
+                        return default(TOutput);
+                    }
+                }, new ExecutionDataflowBlockOptions()
+                {
+                    BoundedCapacity = MaxBufferSize,
+                    MaxDegreeOfParallelism = MaxDegreeOfParallelism
+                }
+            );
+        }
 
         private TOutput WrapTransformation(TInput row)
         {
@@ -131,8 +123,7 @@ namespace ETLBox.DataFlow.Transformations
     {
         public RowTransformation() : base() { }
         public RowTransformation(Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc) { }
-        public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc) : base(name, rowTransformationFunc) { }
-        public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
+        public RowTransformation(Func<TInput, TInput> rowTransformationFunc, Action initAction) : base(rowTransformationFunc, initAction) { }
     }
 
     /// <summary>
@@ -156,7 +147,6 @@ namespace ETLBox.DataFlow.Transformations
     {
         public RowTransformation() : base() { }
         public RowTransformation(Func<ExpandoObject, ExpandoObject> rowTransformationFunc) : base(rowTransformationFunc) { }
-        public RowTransformation(string name, Func<ExpandoObject, ExpandoObject> rowTransformationFunc) : base(name, rowTransformationFunc) { }
-        public RowTransformation(string name, Func<ExpandoObject, ExpandoObject> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
+        public RowTransformation(Func<ExpandoObject, ExpandoObject> rowTransformationFunc, Action initAction) : base(rowTransformationFunc, initAction) { }
     }
 }

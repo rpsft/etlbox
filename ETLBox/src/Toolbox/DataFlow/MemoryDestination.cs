@@ -19,7 +19,16 @@ namespace ETLBox.DataFlow.Connectors
 
         public MemoryDestination()
         {
-            TargetAction = new ActionBlock<TInput>(WriteRecord);
+            InitBufferObjects();
+        }
+
+        protected override void InitBufferObjects()
+        {
+            TargetAction = new ActionBlock<TInput>(WriteRecord, new ExecutionDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize,
+                MaxDegreeOfParallelism = 1
+            });
             SetCompletionTask();
         }
 

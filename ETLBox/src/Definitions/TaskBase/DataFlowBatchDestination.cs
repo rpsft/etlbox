@@ -31,24 +31,10 @@ namespace ETLBox.DataFlow
             set
             {
                 batchSize = value;
-                InitObjects();
+                InitBufferObjects();
             }
         }
         private int batchSize;
-
-        public override int MaxBufferSize
-        {
-            get
-            {
-                return base.MaxBufferSize;
-            }
-            set
-            {
-                base.MaxBufferSize = value;
-                InitObjects();
-            }
-        }
-
 
         public const int DEFAULT_BATCH_SIZE = 1000;
 
@@ -81,7 +67,7 @@ namespace ETLBox.DataFlow
 
         protected BatchBlock<TInput> Buffer { get; set; }
 
-        protected virtual void InitObjects()
+        protected override void InitBufferObjects()
         {
             Buffer = new BatchBlock<TInput>(BatchSize, new GroupingDataflowBlockOptions()
             {

@@ -20,49 +20,22 @@ namespace ETLBox.DataFlow.Transformations
         public override string TaskName { get; set; } = "Execute aggregation block.";
 
         /* Public Properties */
-        public Action<TInput, TOutput> AggregationAction
-        {
-            get
-            {
-                return _aggregationAction;
-            }
-            set
-            {
-                _aggregationAction = value;
-                InputBuffer = new ActionBlock<TInput>(WrapAggregationAction);
-                InputBuffer.Completion.ContinueWith(t =>
-                {
-                    if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
-                    try
-                    {
-                        WriteIntoOutput();
-                        OutputBuffer.Complete();
-                    }
-                    catch (Exception e)
-                    {
-                        ((IDataflowBlock)OutputBuffer).Fault(e);
-                        throw e;
-                    }
-                });
-            }
-        }
+        public Action<TInput, TOutput> AggregationAction { get; set; }
+
         public Func<TInput, object> GroupingFunc { get; set; }
         public Action<object, TOutput> StoreKeyAction { get; set; }
         public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
-
         /* Private stuff */
         BufferBlock<TOutput> OutputBuffer { get; set; }
         ActionBlock<TInput> InputBuffer { get; set; }
 
-        Action<TInput, TOutput> _aggregationAction;
         Dictionary<object, TOutput> AggregationData { get; set; } = new Dictionary<object, TOutput>();
         AggregationTypeInfo AggTypeInfo { get; set; }
 
         public Aggregation()
         {
-            OutputBuffer = new BufferBlock<TOutput>();
             AggTypeInfo = new AggregationTypeInfo(typeof(TInput), typeof(TOutput));
 
             CheckTypeInfo();
@@ -75,6 +48,35 @@ namespace ETLBox.DataFlow.Transformations
 
             if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
                 StoreKeyAction = DefineStoreKeyActionFromAttributes;
+
+            InitBufferObjects();
+        }
+
+        protected override void InitBufferObjects()
+        {
+            OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize
+            });
+            InputBuffer = new ActionBlock<TInput>(WrapAggregationAction, new ExecutionDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize,
+                MaxDegreeOfParallelism = MaxDegreeOfParallelism
+            });
+            InputBuffer.Completion.ContinueWith(t =>
+            {
+                if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
+                try
+                {
+                    WriteIntoOutput();
+                    OutputBuffer.Complete();
+                }
+                catch (Exception e)
+                {
+                    ((IDataflowBlock)OutputBuffer).Fault(e);
+                    throw e;
+                }
+            });
         }
 
         private void CheckTypeInfo()

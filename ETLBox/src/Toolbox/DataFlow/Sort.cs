@@ -32,7 +32,7 @@ namespace ETLBox.DataFlow.Transformations
             set
             {
                 _sortFunction = value;
-                BlockTransformation = new BlockTransformation<TInput, TInput>(this, SortByFunc);
+                InitBufferObjects();
             }
         }
 
@@ -52,9 +52,10 @@ namespace ETLBox.DataFlow.Transformations
             SortFunction = sortFunction;
         }
 
-        public Sort(string name, Comparison<TInput> sortFunction) : this(sortFunction)
+        protected override void InitBufferObjects()
         {
-            this.TaskName = name;
+            BlockTransformation = new BlockTransformation<TInput, TInput>(this, SortByFunc);
+            if (MaxBufferSize > 0) BlockTransformation.MaxBufferSize = this.MaxBufferSize;
         }
 
         List<TInput> SortByFunc(List<TInput> data)
@@ -73,9 +74,6 @@ namespace ETLBox.DataFlow.Transformations
         { }
 
         public Sort(Comparison<ExpandoObject> sortFunction) : base(sortFunction)
-        { }
-
-        public Sort(string name, Comparison<ExpandoObject> sortFunction) : base(name, sortFunction)
         { }
     }
 

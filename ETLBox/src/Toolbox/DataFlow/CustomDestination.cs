@@ -24,7 +24,7 @@ namespace ETLBox.DataFlow.Connectors
             set
             {
                 _writeAction = value;
-                InitObjects();
+                InitBufferObjects();
             }
         }
 
@@ -33,6 +33,7 @@ namespace ETLBox.DataFlow.Connectors
 
         public CustomDestination()
         {
+
         }
 
         public CustomDestination(Action<TInput> writeAction) : this()
@@ -50,9 +51,12 @@ namespace ETLBox.DataFlow.Connectors
             this.TaskName = taskName;
         }
 
-        private void InitObjects()
+        protected override void InitBufferObjects()
         {
-            TargetAction = new ActionBlock<TInput>(AddLoggingAndErrorHandling(_writeAction));
+            TargetAction = new ActionBlock<TInput>(AddLoggingAndErrorHandling(WriteAction), new ExecutionDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize
+            });
             SetCompletionTask();
         }
 

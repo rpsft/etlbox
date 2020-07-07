@@ -35,8 +35,14 @@ namespace ETLBox.DataFlow.Transformations
 
         public CrossJoin()
         {
+            InitBufferObjects();
+        }
+
+        protected override void InitBufferObjects()
+        {
             InMemoryTarget = new MemoryDestination<TInput1>(this);
             PassingTarget = new CustomDestination<TInput2>(this, CrossJoinData);
+            if (MaxBufferSize > 0) PassingTarget.MaxBufferSize = this.MaxBufferSize;
             PassingTarget.OnCompletion = () => Buffer.Complete();
         }
 

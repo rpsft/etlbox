@@ -81,6 +81,11 @@ namespace ETLBox.DataFlow.Transformations
             LookupData = lookupList;
         }
 
+        protected override void InitBufferObjects()
+        {
+            if (MaxBufferSize > 0) RowTransformation.MaxBufferSize = this.MaxBufferSize;
+        }
+
         private void InitRowTransformation(Action initAction)
         {
             RowTransformation = new RowTransformation<TInput, TInput>(this, _rowTransformationFunc);

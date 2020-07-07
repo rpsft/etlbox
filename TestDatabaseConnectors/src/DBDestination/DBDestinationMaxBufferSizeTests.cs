@@ -39,9 +39,9 @@ namespace ETLBoxTests.DataFlowTests
             for (int i = 0; i < 20; i++)
                 source.DataAsList.Add(new string[] { i.ToString() });
 
-            var dest = new DbDestination<string[]>(connection, "test", batchSize: 4)
+            var dest = new DbDestination<string[]>(connection, "test", batchSize: 2)
             {
-                MaxBufferSize = 4
+                MaxBufferSize = 6
             };
 
             source.LinkTo(dest);

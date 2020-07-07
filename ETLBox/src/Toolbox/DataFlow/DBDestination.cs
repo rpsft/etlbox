@@ -73,9 +73,9 @@ namespace ETLBox.DataFlow.Connectors
             ConnectionManager = connectionManager;
         }
 
-        protected override void InitObjects()
+        protected override void InitBufferObjects()
         {
-            base.InitObjects();
+            base.InitBufferObjects();
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
         }
 

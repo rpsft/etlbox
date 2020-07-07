@@ -51,10 +51,19 @@ namespace ETLBox.DataFlow.Transformations
 
         public MergeJoin()
         {
-            Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
-            JoinBlock = new JoinBlock<TInput1, TInput2>();
+            InitBufferObjects();
             Target1 = new MergeJoinTarget<TInput1>(this, JoinBlock.Target1);
             Target2 = new MergeJoinTarget<TInput2>(this, JoinBlock.Target2);
+        }
+
+        protected override void InitBufferObjects()
+        {
+            Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
+            if (MaxBufferSize > 0) Transformation.MaxBufferSize = this.MaxBufferSize;
+            JoinBlock = new JoinBlock<TInput1, TInput2>(new GroupingDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize
+            });
         }
 
         public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc) : this()
