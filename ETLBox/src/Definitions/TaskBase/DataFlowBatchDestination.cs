@@ -8,8 +8,8 @@ namespace ETLBox.DataFlow
     public abstract class DataFlowBatchDestination<TInput> : DataFlowDestination<TInput[]>, ITask, IDataFlowBatchDestination<TInput>
     {
         /// <summary>
-        /// This function is called every time before a batch is inserted into the destination. 
-        /// It receives an array that represents the batch - you can modify the data itself if needed. 
+        /// This function is called every time before a batch is inserted into the destination.
+        /// It receives an array that represents the batch - you can modify the data itself if needed.
         /// </summary>
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
         /// <summary>
@@ -18,7 +18,7 @@ namespace ETLBox.DataFlow
         /// </summary>
         public Action<TInput[]> AfterBatchWrite { get; set; }
         /// <summary>
-        /// The buffer component used as target for linking. 
+        /// The buffer component used as target for linking.
         /// </summary>
         public new ITargetBlock<TInput> TargetBlock => Buffer;
         /// <summary>
@@ -31,10 +31,24 @@ namespace ETLBox.DataFlow
             set
             {
                 batchSize = value;
-                InitObjects(batchSize);
+                InitObjects();
             }
         }
         private int batchSize;
+
+        public override int MaxBufferSize
+        {
+            get
+            {
+                return base.MaxBufferSize;
+            }
+            set
+            {
+                base.MaxBufferSize = value;
+                InitObjects();
+            }
+        }
+
 
         public const int DEFAULT_BATCH_SIZE = 1000;
 
@@ -42,8 +56,8 @@ namespace ETLBox.DataFlow
 
         /// <summary>
         /// Use this method if you want to register a task that needs to be completed
-        /// before the destination itself can complete. Normally you don't have to do anything - 
-        /// all linked components will automatically register using this method. 
+        /// before the destination itself can complete. Normally you don't have to do anything -
+        /// all linked components will automatically register using this method.
         /// Simple use the LinkTo() method of source components or transformations.
         /// </summary>
         /// <param name="completion">A task to wait for before this destination can complete.</param>
@@ -67,10 +81,20 @@ namespace ETLBox.DataFlow
 
         protected BatchBlock<TInput> Buffer { get; set; }
 
-        protected virtual void InitObjects(int batchSize)
+        protected virtual void InitObjects()
         {
-            Buffer = new BatchBlock<TInput>(batchSize);
-            TargetAction = new ActionBlock<TInput[]>(WriteBatch);
+            Buffer = new BatchBlock<TInput>(BatchSize, new GroupingDataflowBlockOptions()
+            {
+                BoundedCapacity = MaxBufferSize
+            });
+            int boundedCapacity = -1;
+            if (MaxBufferSize > 0 && BatchSize > 0)
+                boundedCapacity = Math.Abs(MaxBufferSize / BatchSize);
+            TargetAction = new ActionBlock<TInput[]>(WriteBatch, new ExecutionDataflowBlockOptions()
+            {
+                MaxDegreeOfParallelism = 1, //No parallel inserts on Db!
+                BoundedCapacity = boundedCapacity
+            });
             SetCompletionTask();
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
         }

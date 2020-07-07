@@ -25,6 +25,34 @@ namespace ETLBox.DataFlow
         protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         protected int ThresholdCount { get; set; } = 1;
 
+        public virtual int MaxBufferSize
+        {
+            get
+            {
+                return _maxBufferSize > 0 ? _maxBufferSize : DataFlow.MaxBufferSize;
+            }
+            set {
+                _maxBufferSize = value;
+            }
+        }
+
+        protected int _maxBufferSize = -1;
+
+        public int MaxDegreeOfParallelism
+        {
+            get
+            {
+                return _maxDegreeOfParallelism > 0 ? _maxDegreeOfParallelism : DataFlow.MaxDegreeOfParallelism;
+            }
+            set
+            {
+                _maxDegreeOfParallelism = value;
+            }
+        }
+
+        protected int _maxDegreeOfParallelism = -1;
+
+
 
         protected void NLogStart()
         {
