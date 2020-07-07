@@ -53,6 +53,7 @@ namespace ETLBox.DataFlow.Connectors
             foreach (TOutput record in Data)
             {
                 Buffer.SendAsync(record).Wait();
+                LogProgress();
             }
         }
 
