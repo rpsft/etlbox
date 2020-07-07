@@ -18,6 +18,9 @@ that the bounded capacity can only be set when creating the TPL objects. It woul
 
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from "GetTableDefinitionFrom"
 - GCPressure was detected on CSVSource - verify if CSVSource really is the root cause. (See performance tests, improve tests that uses memory as source) 
+- Multicast: When DataFlow has set a MaxBufferSize, the Multicast will loose messages if the buffer of the linked target is "full":
+https://stackoverflow.com/questions/22127660/broadcastblock-with-guaranteed-delivery-in-tpl-dataflow/22128371#22128371
+This should be avoided, e.g. by replacing the BroadcastBlock
 
 # Improved Odbc support:
 
@@ -26,15 +29,14 @@ Currently, if not table definition is given, the current implementation of Table
 For known Odbc connection (like Sql Server), the sql is known, but for the "default" odbc connection there can't be a sql to get the table definition. But this could be done using the Ado.NET schema objects. 
 It would be good if the connection manager would return the code how to find if a table exists. Then the normal conneciton managers would run some sql code, and the Odbc could use ADO.NET to retrieve if the table exists and to get the table definition (independent from the database).
 
-# Cleanup
-
-
 # New feature
+
 - CopyTableDefinitionTask - uses TableDefinition to retrieve the current table definiton and the creates a new table. 
 Very good for testing purposes.
-- Allow user to set max buffer size for buffers. E.g. for DbDestination, max buffer size could be set to 3000 rows. If buffer is full, execution stops until destination was able to write data.  Be careful: When an exception in the destination occurs, it looks like the source and previous components still read data from the source - so it could be that the previous components are not notified of the exception, and when the max buffer size is reached the execution could deadlock. 
+
 
 # Oracle
+
 Add missing tests for specific data type conversions. E.g. number(22,2) should also create the correct .net datatype. Currently the DataTypeConverter will parse it into System.String.
 
 # Enhance Merge for UseTruncateMethod
