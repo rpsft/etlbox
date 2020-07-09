@@ -32,7 +32,7 @@ namespace ETLBox.DataFlow.Connectors
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
         public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
-        public MergeMode DeltaMode { get; set; }
+        public MergeMode MergeMode { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
         public string TableName { get; set; }
 
@@ -125,9 +125,6 @@ namespace ETLBox.DataFlow.Connectors
 
         public ChangeAction? GetChangeAction(TInput row)
         {
-            //if (row is IMergeableRow)
-            //    return ((IMergeableRow)row).ChangeAction;
-            //else
             if (TypeInfo.IsDynamic)
             {
                 var r = row as IDictionary<string, object>;
@@ -146,8 +143,6 @@ namespace ETLBox.DataFlow.Connectors
 
         public void SetChangeAction(TInput row, ChangeAction? changeAction)
         {
-            //if (row is IMergeableRow)
-            //    ((IMergeableRow)row).ChangeAction = changeAction;
             if (TypeInfo.IsDynamic)
             {
                 dynamic r = row as ExpandoObject;
@@ -260,28 +255,43 @@ namespace ETLBox.DataFlow.Connectors
 
             DestinationTable.BeforeBatchWrite = batch =>
             {
-                if (DeltaMode == MergeMode.Delta)
+                if (MergeMode == MergeMode.Delta)
                     DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) != ChangeAction.Delete));
+                else if (MergeMode == MergeMode.OnlyUpdates)
+                    DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) == ChangeAction.Exists
+                        || GetChangeAction(row) == ChangeAction.Update));
                 else
                     DeltaTable.AddRange(batch);
 
                 if (!UseTruncateMethod)
                 {
-                    SqlDeleteIds(batch.Where(row => GetChangeAction(row) != ChangeAction.Insert && GetChangeAction(row) != ChangeAction.Exists));
-                    return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
-                        GetChangeAction(row) == ChangeAction.Update)
-                    .ToArray();
+                    if (MergeMode == MergeMode.OnlyUpdates)
+                    {
+                        SqlDeleteIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
+                        return batch.Where(row => GetChangeAction(row) == ChangeAction.Update).ToArray();
+                    }
+                    else
+                    {
+                        SqlDeleteIds(batch.Where(row => GetChangeAction(row) != ChangeAction.Insert && GetChangeAction(row) != ChangeAction.Exists));
+                        return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
+                            GetChangeAction(row) == ChangeAction.Update)
+                        .ToArray();
+                    }
                 }
                 else
                 {
-                    if (DeltaMode == MergeMode.Delta)
+                    if (MergeMode == MergeMode.Delta)
                         throw new ETLBoxNotSupportedException("If you provide a delta load, you must define at least one compare column." +
                             "Using the truncate method is not allowed. ");
                     TruncateDestinationOnce();
-                    return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
-                        GetChangeAction(row) == ChangeAction.Update ||
-                        GetChangeAction(row) == ChangeAction.Exists)
-                    .ToArray();
+                    if (MergeMode == MergeMode.OnlyUpdates)
+                        return batch.Where(row => GetChangeAction(row) != ChangeAction.Delete &&
+                            GetChangeAction(row) != ChangeAction.Insert).ToArray();
+                    else
+                        return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
+                            GetChangeAction(row) == ChangeAction.Update ||
+                            GetChangeAction(row) == ChangeAction.Exists)
+                        .ToArray();
                 }
             };
 
@@ -299,6 +309,8 @@ namespace ETLBox.DataFlow.Connectors
             DestinationTable.OnCompletion = () =>
             {
                 IdentifyAndDeleteMissingEntries();
+                if (UseTruncateMethod && ( MergeMode == MergeMode.OnlyUpdates || MergeMode == MergeMode.NoDeletions))
+                    ReinsertTruncatedRecords();
                 OutputSource.Execute();
             };
         }
@@ -310,7 +322,7 @@ namespace ETLBox.DataFlow.Connectors
             SetChangeDate(row, DateTime.Now);
             TInput find = default(TInput);
             InputDataDict.TryGetValue(GetUniqueId(row), out find);
-            if (DeltaMode == MergeMode.Delta && GetIsDeletion(row))
+            if (MergeMode == MergeMode.Delta && GetIsDeletion(row))
             {
                 if (find != null)
                 {
@@ -357,15 +369,15 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (WasTruncationExecuted == true) return;
             WasTruncationExecuted = true;
-            if (DeltaMode == MergeMode.NoDeletions == true) return;
+            if (MergeMode == MergeMode.NoDeletions ||MergeMode == MergeMode.OnlyUpdates) return;
             TruncateTableTask.Truncate(this.ConnectionManager, TableName);
         }
 
         void IdentifyAndDeleteMissingEntries()
         {
-            if (DeltaMode == MergeMode.NoDeletions) return;
+            if (MergeMode == MergeMode.NoDeletions || MergeMode == MergeMode.OnlyUpdates) return;
             IEnumerable<TInput> deletions = null;
-            if (DeltaMode == MergeMode.Delta)
+            if (MergeMode == MergeMode.Delta)
                 deletions = InputData.Where(row => GetChangeAction(row) == ChangeAction.Delete).ToList();
             else
                 deletions = InputData.Where(row => GetChangeAction(row) == null).ToList();
@@ -394,6 +406,13 @@ namespace ETLBox.DataFlow.Connectors
             {
                 DisableLogging = true,
             }.ExecuteNonQuery();
+        }
+
+        private void ReinsertTruncatedRecords()
+        {
+            throw new Exception("Using MergeModes OnlyUpdate or NoDeletions is" +
+                " currently not supported when the UseTruncateMethod flag is set." +
+                " Set UseTruncateMethod to false if choosing these MergeMethods.");
         }
 
         private string CreateConcatSqlForNames()

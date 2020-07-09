@@ -75,7 +75,7 @@ namespace ETLBoxTests.DataFlowTests
             //Act
             DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
             {
-                DeltaMode = MergeMode.Delta
+                MergeMode = MergeMode.Delta
             };
             dest.MergeProperties.IdPropertyNames.Add("Col1");
             dest.MergeProperties.ComparePropertyNames.Add("Col2");

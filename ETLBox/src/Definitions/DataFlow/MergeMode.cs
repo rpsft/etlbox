@@ -6,5 +6,6 @@ namespace ETLBox.DataFlow
         Full = 0,
         NoDeletions = 1,
         Delta = 2,
+        OnlyUpdates = 3
     }
 }

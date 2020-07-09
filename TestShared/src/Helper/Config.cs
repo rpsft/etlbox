@@ -70,9 +70,9 @@ namespace ETLBoxTests.Helper
 
 
         public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
+                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)MariaDbConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)OracleConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) },
                     new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) },

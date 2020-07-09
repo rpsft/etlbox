@@ -69,8 +69,7 @@ namespace ETLBoxTests.DataFlowTests
 
             //Act
             DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
-            dest.DeltaMode = MergeMode.NoDeletions;
-            //dest.DisableDeletion = true;
+            dest.MergeMode = MergeMode.NoDeletions;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -87,21 +86,22 @@ namespace ETLBoxTests.DataFlowTests
         public void EnforcingTruncate(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "DBMergeSource");
+            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "DBMergeWTSource");
             s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeWTDestination");
             d2c.InsertTestDataSet3();
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeWTSource");
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeWTDestination");
             dest.UseTruncateMethod = true;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDestination"));
+            Assert.Equal(3, RowCountTask.Count(connection, "DBMergeWTDestination"));
+            d2c.AssertTestData();
             Assert.True(dest.DeltaTable.Count == 5);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Exists && row.Key == 1).Count() == 1);
             Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);

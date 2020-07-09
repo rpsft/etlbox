@@ -41,4 +41,13 @@ Very good for testing purposes.
 # Oracle
 Add missing tests for specific data type conversions. E.g. number(22,2) should also create the correct .net datatype. Currently the DataTypeConverter will parse it into System.String.
 
+# Enhance Merge for UseTruncateMethod
+- The current merge does suppor the "UseTruncateMethod" flag. If set to true, the table is truncated before inserted the modified data.
+In theory, this will also work for the MergeModes NoDeletions && OnlyUpdates. But then the method `ReinsertTruncatedRecords` should not 
+throw an exception - itstead, it should use the InputDataDict to reinsert the records that were truncated (but shouldn't be deleted.)
+
+# Enhance Lookup Transformation
+- A "partial lookup" could be implemented. In the DbMerge, this could be useful for the DbMerge (in full load with deletions enabled this probably will not,
+but it should work with other Merge modes NoDeltions, Delta & OnlyUpdates )
+
 
