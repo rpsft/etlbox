@@ -123,6 +123,17 @@ namespace ETLBox.DataFlow.Connectors
             InitOutputFlow();
         }
 
+        protected override void InitBufferObjects()
+        {
+            if (MaxBufferSize > 0)
+            {
+                Lookup.MaxBufferSize = this.MaxBufferSize;
+                DestinationTable.MaxBufferSize = this.MaxBufferSize;
+                OutputSource.MaxBufferSize = this.MaxBufferSize;
+                DestinationTableAsSource.MaxBufferSize = this.MaxBufferSize;
+            }
+        }
+
         public ChangeAction? GetChangeAction(TInput row)
         {
             if (TypeInfo.IsDynamic)
@@ -309,7 +320,7 @@ namespace ETLBox.DataFlow.Connectors
             DestinationTable.OnCompletion = () =>
             {
                 IdentifyAndDeleteMissingEntries();
-                if (UseTruncateMethod && ( MergeMode == MergeMode.OnlyUpdates || MergeMode == MergeMode.NoDeletions))
+                if (UseTruncateMethod && (MergeMode == MergeMode.OnlyUpdates || MergeMode == MergeMode.NoDeletions))
                     ReinsertTruncatedRecords();
                 OutputSource.Execute();
             };
@@ -369,7 +380,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (WasTruncationExecuted == true) return;
             WasTruncationExecuted = true;
-            if (MergeMode == MergeMode.NoDeletions ||MergeMode == MergeMode.OnlyUpdates) return;
+            if (MergeMode == MergeMode.NoDeletions || MergeMode == MergeMode.OnlyUpdates) return;
             TruncateTableTask.Truncate(this.ConnectionManager, TableName);
         }
 
