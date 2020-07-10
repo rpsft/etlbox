@@ -10,6 +10,7 @@ using Xunit;
 using ETLBox.DataFlow;
 using MySqlX.XDevAPI;
 using System.Dynamic;
+using System.IO;
 
 namespace ETLBoxTests.DataFlowTests
 {
@@ -94,7 +95,8 @@ namespace ETLBoxTests.DataFlowTests
 
             //Act
             XmlSchemaValidation schemaValidation = new XmlSchemaValidation();
-            schemaValidation.XmlSelector = row => {
+            schemaValidation.XmlSelector = row =>
+            {
                 dynamic r = row as ExpandoObject;
                 return r.Xml;
             };
@@ -140,6 +142,35 @@ namespace ETLBoxTests.DataFlowTests
             //Assert
             Assert.True(dest.Data.Count == 2);
             Assert.True(error.Data.Count == 1);
+
+        }
+
+        [Fact]
+        public void ErrorIntoCsv()
+        {
+            var source = new MemorySource<MyXmlRow>();
+            source.DataAsList.Add(new MyXmlRow() { Xml = _validXml });
+            source.DataAsList.Add(new MyXmlRow() { Xml = _invalidXml });
+            source.DataAsList.Add(new MyXmlRow() { Xml = _validXml });
+
+            XmlSchemaValidation<MyXmlRow> valid = new XmlSchemaValidation<MyXmlRow>(xsdMarkup, i => i.Xml);
+            CsvDestination<ETLBoxError> errDest = new CsvDestination<ETLBoxError>("res/XmlValidation/Error.csv");
+            CsvDestination<MyXmlRow> dest = new CsvDestination<MyXmlRow>("res/XmlValidation/NoError.csv");
+
+            source.LinkTo(valid);
+            valid.LinkTo(dest);
+            valid.LinkErrorTo(errDest);
+            source.Execute();
+
+            dest.Wait();
+            errDest.Wait();
+
+            Assert.Equal(File.ReadAllText("res/XmlValidation/ValidXml.csv"),
+                File.ReadAllText("res/XmlValidation/NoError.csv"), ignoreCase: true, ignoreLineEndingDifferences: true, ignoreWhiteSpaceDifferences: true);
+
+            Assert.StartsWith(@"ErrorText,ReportTime,ExceptionType,RecordAsJson
+The element 'Root' has invalid child element 'Child3'. List of possible elements expected: 'Child2'.",
+                File.ReadAllText("res/XmlValidation/Error.csv"));
 
         }
     }

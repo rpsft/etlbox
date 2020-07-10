@@ -24,7 +24,7 @@ namespace ETLBox.DataFlow
         {
             ErrorBuffer.SendAsync(new ETLBoxError()
             {
-                Exception = e,
+                ExceptionType = e.GetType().ToString(),
                 ErrorText = e.Message,
                 ReportTime = DateTime.Now,
                 RecordAsJson = jsonRow

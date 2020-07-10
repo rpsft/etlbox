@@ -35,7 +35,7 @@ namespace ETLBoxTests.Logging
             //Assert
             IfTableOrViewExistsTask.IsExisting(connection, "etlbox_error");
             var td = TableDefinition.FromTableName(connection, "etlbox_error");
-            Assert.True(td.Columns.Count == 3);
+            Assert.True(td.Columns.Count == 4);
             //Cleanup
             DropTableTask.Drop(connection, "etlbox_error");
         }
@@ -53,7 +53,7 @@ namespace ETLBoxTests.Logging
             CreateErrorTableTask.DropAndCreate(connection, "etlbox_error");
             //Assert
             var td = TableDefinition.FromTableName(connection, "etlbox_error");
-            Assert.True(td.Columns.Count == 3);
+            Assert.True(td.Columns.Count == 4);
             //Cleanup
             DropTableTask.Drop(connection, "etlbox_error");
         }

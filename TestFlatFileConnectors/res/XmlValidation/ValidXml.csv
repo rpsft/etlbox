@@ -1,0 +1,13 @@
+Xml
+"<?xml version=""1.0"" encoding=""utf-8""?>
+<Root>
+    <Child1>Content1</Child1>
+    <Child2>Content2</Child2>
+</Root>
+"
+"<?xml version=""1.0"" encoding=""utf-8""?>
+<Root>
+    <Child1>Content1</Child1>
+    <Child2>Content2</Child2>
+</Root>
+"

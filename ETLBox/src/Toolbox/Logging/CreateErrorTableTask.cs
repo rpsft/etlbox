@@ -27,6 +27,7 @@ namespace ETLBox.Logging
                 new List<TableColumn>()
                 {
                     new TableColumn("ErrorText", "TEXT", allowNulls:false),
+                    new TableColumn("ExceptionType", "VARCHAR(1000)", allowNulls:false),
                     new TableColumn("RecordAsJson", "TEXT", allowNulls:true),
                     new TableColumn("ReportTime", "DATETIME", allowNulls:false),
                 });
