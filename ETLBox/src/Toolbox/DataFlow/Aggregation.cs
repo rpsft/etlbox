@@ -61,7 +61,6 @@ namespace ETLBox.DataFlow.Transformations
             InputBuffer = new ActionBlock<TInput>(WrapAggregationAction, new ExecutionDataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                MaxDegreeOfParallelism = MaxDegreeOfParallelism
             });
             InputBuffer.Completion.ContinueWith(t =>
             {

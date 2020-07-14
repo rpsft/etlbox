@@ -41,22 +41,6 @@ namespace ETLBox.DataFlow
 
         protected int _maxBufferSize = -1;
 
-        public int MaxDegreeOfParallelism
-        {
-            get
-            {
-                return _maxDegreeOfParallelism > 0 ? _maxDegreeOfParallelism : DataFlow.MaxDegreeOfParallelism;
-            }
-            set
-            {
-                _maxDegreeOfParallelism = value;
-            }
-        }
-
-        protected int _maxDegreeOfParallelism = -1;
-
-
-
         protected void NLogStart()
         {
             if (!DisableLogging)

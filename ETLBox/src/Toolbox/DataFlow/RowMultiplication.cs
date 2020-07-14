@@ -43,7 +43,6 @@ namespace ETLBox.DataFlow.Transformations
             TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplicateRow, new ExecutionDataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                MaxDegreeOfParallelism = MaxDegreeOfParallelism
             });
         }
 

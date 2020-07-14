@@ -85,7 +85,6 @@ namespace ETLBox.DataFlow.Transformations
                 }, new ExecutionDataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
-                    MaxDegreeOfParallelism = MaxDegreeOfParallelism
                 }
             );
         }

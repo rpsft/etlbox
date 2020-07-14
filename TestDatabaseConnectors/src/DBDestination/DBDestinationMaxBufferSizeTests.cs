@@ -32,29 +32,37 @@ namespace ETLBoxTests.DataFlowTests
                 $@"CREATE TRIGGER testtrigger ON test
                     AFTER  INSERT
                     AS
-                    WAITFOR DELAY '00:00:3.000';");
+                    WAITFOR DELAY '00:00:0.500';");
 
 
-            var source = new MemorySource<string[]>();
-            for (int i = 0; i < 20; i++)
+            var source = new MemorySource<string[]>()
+            {
+                MaxBufferSize = 2
+            };
+            for (int i = 0; i < 8; i++)
                 source.DataAsList.Add(new string[] { i.ToString() });
 
-            var dest = new DbDestination<string[]>(connection, "test", batchSize: 2)
+            var dest = new DbDestination<string[]>(connection, "test", batchSize: 1)
             {
-                MaxBufferSize = 6
+                MaxBufferSize = 1
             };
 
             source.LinkTo(dest);
             var s = source.ExecuteAsync();
             var d = dest.Completion;
 
+            int count = 1;
             while (!d.IsCompleted)
             {
                 Task.Delay(500).Wait();
-               //dest.Out
+                if (count > 1 && count < 7)
+                Assert.True(source.ProgressCount > dest.ProgressCount);
+                if (count == 1)
+                   Assert.True(source.ProgressCount <= 6);
+                count++;
             }
 
-            Assert.Equal(20, dest.ProgressCount);
+            Assert.Equal(8, dest.ProgressCount);
 
 
         }

@@ -11,11 +11,14 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
-        <PackageReleaseNotes>This is ETLBox 2.0. ETLBox now is a fully featured lightweight ETL framework and data integration toolbox ready to be used in production environments.
-What's new? The connection managers are now moved into their own package - this reduces dependencies in the core package as you only need to pick the packages for the connectors that you actually need.
+        <PackageReleaseNotes>This is ETLBox 2.0. ETLBox is now a fully featured lightweight ETL framework and data integration toolbox ready to be used in any production environment.
+
+What's new? The connection managers and flat file connectors have moved into their own packages - this will reduce dependencies as you only need to pick the connector package that you actually need.
 Please not that some of the connectors are now closed source and have a different license model.
+
 BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.
-Added in 2.0.4: Supporting of MergeMode "OnlyUpdates" - this merge mode only executes takes the changes into accounts when merging with DbMerge.</PackageReleaseNotes>
+
+Added in 2.0.5: Fixing bug when writing ETLBoxError into flat file destinations. ETLBox now support MaxBufferSize to control the amounts of records that can be written into the buffer of a compononent.</PackageReleaseNotes>
         <Version>2.0.4</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
