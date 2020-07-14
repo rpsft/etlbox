@@ -19,13 +19,13 @@ Please not that some of the connectors are now closed source and have a differen
 BREAKING CHANGE: The namespace has moved from ALE.ETLBox to ETLBox.
 
 Added in 2.0.5: Fixing bug when writing ETLBoxError into flat file destinations. ETLBox now support MaxBufferSize to control the amounts of records that can be written into the buffer of a compononent.</PackageReleaseNotes>
-        <Version>2.0.4</Version>
+        <Version>2.0.5</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
         <Company>TheBoxOffice</Company>
-        <AssemblyVersion>2.0.4.0</AssemblyVersion>
-        <FileVersion>2.0.4.0</FileVersion>
+        <AssemblyVersion>2.0.5.0</AssemblyVersion>
+        <FileVersion>2.0.5.0</FileVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RootNamespace>ETLBox</RootNamespace>
         <Product>ETLBox</Product>
