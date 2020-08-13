@@ -36,6 +36,7 @@ namespace ETLBox.DataFlow
         public ResourceType ResourceType { get; set; }
 
         public HttpClient HttpClient { get; set; } = new HttpClient();
+        public HttpRequestMessage HttpRequestMessage { get; set; } = new HttpRequestMessage();
 
         /* Internal properties */
         protected string _uri;
@@ -82,7 +83,12 @@ namespace ETLBox.DataFlow
             if (ResourceType == ResourceType.File)
                 StreamReader = new StreamReader(uri);
             else
-                StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(uri)).Result);
+            {
+                HttpRequestMessage.RequestUri =  new Uri(uri);
+                var response = HttpClient.SendAsync(HttpRequestMessage, HttpCompletionOption.ResponseHeadersRead).Result;
+                response.EnsureSuccessStatusCode();
+                StreamReader = new StreamReader(response.Content.ReadAsStreamAsync().Result);
+            }
         }
 
         private void CloseStream()

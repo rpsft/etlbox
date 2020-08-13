@@ -3,11 +3,18 @@ using ETLBox.DataFlow.Connectors;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
+using WireMock.Server;
 using Xunit;
 
 namespace ETLBoxTests.DataFlowTests
@@ -28,17 +35,25 @@ namespace ETLBoxTests.DataFlowTests
 
 
         [Fact]
-        public void JsonFromWebService()
+        public void JsonFromWebServiceWithGet()
         {
             // Arrange
-            HttpClient httpClient = MoqJsonResponse(File.ReadAllText("res/JsonSource/Todos.json"));
+            var server = WireMockServer.Start();
+            server
+                .Given(Request.Create().WithPath("/test").UsingGet())
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(200)
+                        .WithHeader("Content-Type", "text/json")
+                        .WithBody(File.ReadAllText("res/JsonSource/Todos.json"))
+                );
+            var port = server.Ports.First();
 
             //Arrange
             MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
 
             //Act
-            JsonSource<Todo> source = new JsonSource<Todo>("http://test.com/");
-            source.HttpClient = httpClient;
+            JsonSource<Todo> source = new JsonSource<Todo>(@$"http://localhost:{port}/test");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -48,39 +63,32 @@ namespace ETLBoxTests.DataFlowTests
             Assert.Equal(5, dest.Data.Count);
         }
 
-        private HttpClient MoqJsonResponse(string json)
-        {
-            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
-            handlerMock
-               .Protected()
-               .Setup<Task<HttpResponseMessage>>(
-                  "SendAsync",
-                  ItExpr.IsAny<HttpRequestMessage>(),
-                  ItExpr.IsAny<CancellationToken>()
-               )
-               .ReturnsAsync(new HttpResponseMessage()
-               {
-                   StatusCode = HttpStatusCode.OK,
-                   Content = new StringContent(json),
-               })
-               .Verifiable();
-
-            return new HttpClient(handlerMock.Object);
-        }
-
         [Fact]
-        public void PaginatedRequest()
+        public void JsonFromWebServiceWithPost()
         {
+            // Arrange
+            var server = WireMockServer.Start();
+            server
+                .Given(Request.Create()
+                                .WithPath("/testpost")
+                                .UsingPost()
+                                .WithBody("TestContent")
+                        )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(200)
+                        .WithHeader("Content-Type", "text/json")
+                        .WithBody(File.ReadAllText("res/JsonSource/Todos.json"))
+                );
+            var port = server.Ports.First();
+
             //Arrange
             MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
-            int page = 1;
-            //Act
-            JsonSource<Todo> source = new JsonSource<Todo>();
-            source.GetNextUri = c => $"res/JsonSource/Todos_Page" + page++ + ".json";
-            source.HasNextUri = c => page <= 3;
-            source.ResourceType = ResourceType.File;
+            JsonSource<Todo> source = new JsonSource<Todo>(@$"http://localhost:{port}/testpost");
 
-            //source.HttpClient = httpClient;
+            //Act
+            source.HttpRequestMessage.Method = HttpMethod.Post;
+            source.HttpRequestMessage.Content = new ByteArrayContent(Encoding.UTF8.GetBytes("TestContent"));
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -90,66 +98,34 @@ namespace ETLBoxTests.DataFlowTests
             Assert.Equal(5, dest.Data.Count);
         }
 
-
-        string firstRequestUnparsedToBe =
-@"{
-""links"" : {
-  ""self"": {
-    ""url"": ""http://test.com/JsonApi""
-  },
-  ""next"": ""http://test.com/JsonApiNext""
-}
-""anotherarray"" : [
-  ""test"",
-  {
-    ""test"": ""test""
-  }
-]
-}
-";
-
-        string secondRequestUnparsedToBe =
-@"{
-""after"" : 2
-""unparsed"" : [
-  ""test""
-]
-""bool"" : True
-""decimal"" : 3.2
-}
-";
         [Fact]
-        public void JsonAPIRequestWithMetaData()
+        public void JsonFromWebServiceWith500()
         {
+            // Arrange
+            var server = WireMockServer.Start();
+            server
+                .Given(Request.Create()
+                                .WithPath("/testerror")
+                                .UsingPut()
+                        )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(500)
+                );
+            var port = server.Ports.First();
+
             //Arrange
-            MemoryDestination dest = new MemoryDestination();
-            bool firstRequest = true;
+            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
+            JsonSource<Todo> source = new JsonSource<Todo>(@$"http://localhost:{port}/testerror");
+            source.HttpRequestMessage.Method = HttpMethod.Put;
 
-            //Act
-            JsonSource source = new JsonSource();
-            source.GetNextUri = meta =>
+            //Act & Assert
+            Assert.ThrowsAny<Exception>(() =>
             {
-                 return firstRequest ? $"res/JsonSource/JsonAPI.json" : $"res/JsonSource/JsonAPINext.json";
-            };
-            source.HasNextUri = meta =>
-            {
-                Assert.Equal(3, meta.ProgressCount);
-                if (firstRequest)
-                    Assert.Equal(firstRequestUnparsedToBe, meta.UnparsedData, ignoreCase:true, ignoreLineEndingDifferences:true, ignoreWhiteSpaceDifferences: true);
-                else
-                    Assert.Equal(secondRequestUnparsedToBe, meta.UnparsedData, ignoreCase: true, ignoreLineEndingDifferences: true, ignoreWhiteSpaceDifferences: true);
-                bool result = firstRequest;
-                firstRequest = false;
-                return result;
-            };
-            source.ResourceType = ResourceType.File;
-
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            Assert.Equal(3, dest.Data.Count);
+                source.LinkTo(dest);
+                source.Execute();
+                dest.Wait();
+            });
         }
     }
 }
