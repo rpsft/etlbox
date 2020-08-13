@@ -1,3 +1,4 @@
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using ETLBox.DataFlow;
 using ETLBox.DataFlow.Connectors;
 using Moq;
@@ -61,6 +62,48 @@ namespace ETLBoxTests.DataFlowTests
             //Assert
             Assert.All(dest.Data, item => Assert.True(item.Key > 0));
             Assert.Equal(5, dest.Data.Count);
+        }
+
+        [Fact]
+        public void GetPaginatedRequest()
+        {
+            // Arrange
+            var server = WireMockServer.Start();
+            server
+                .Given(Request.Create().WithPath("/test1").UsingPost().WithBody("TestContent"))
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(200)
+                        .WithHeader("Content-Type", "text/json")
+                        .WithBody(File.ReadAllText("res/JsonSource/Todos_Page1.json"))
+                );
+            server
+                .Given(Request.Create().WithPath("/test2").UsingPost().WithBody("TestContent"))
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(200)
+                        .WithHeader("Content-Type", "text/json")
+                        .WithBody(File.ReadAllText("res/JsonSource/Todos_Page2.json"))
+                );
+            var port = server.Ports.First();
+
+            //Arrange
+            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
+
+            //Act
+            JsonSource<Todo> source = new JsonSource<Todo>();
+            int i = 1;
+            source.GetNextUri = smd => @$"http://localhost:{port}/test{i++}";
+            source.HasNextUri = smd => i <= 2;
+            source.HttpRequestMessage.Content = new ByteArrayContent(Encoding.UTF8.GetBytes("TestContent"));
+            source.HttpRequestMessage.Method = HttpMethod.Post;
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.All(dest.Data, item => Assert.True(item.Key > 0));
+            Assert.Equal(4, dest.Data.Count);
         }
 
         [Fact]
