@@ -145,7 +145,13 @@
     <None Update="res\JsonSource\JsonAPINext.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="res\JsonSource\RequeryNestedArray.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="res\JsonSource\NestedArray.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="res\JsonSource\NestedDataNullValues.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="res\JsonSource\NestedData.json">

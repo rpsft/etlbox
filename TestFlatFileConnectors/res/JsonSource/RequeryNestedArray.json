@@ -1,0 +1,43 @@
+{
+    "result": [
+        {
+            "idcolumn1": 1,
+            "arraycolumn": [
+                {
+                    "arrayvalue1": "Test1_1",
+                    "arrayvalue2": "A"
+                },
+                {
+                    "arrayvalue1": "Test1_2",
+                    "arrayvalue2": null
+
+                }
+            ]
+        },
+        {
+            "idcolumn1": 2,
+            "arraycolumn": [
+                {
+                    "arrayvalue1": "Test2_1",
+                    "arrayvalue2": "B"
+                }
+            ]
+        },
+        {
+            "idcolumn1": 3,
+            "arraycolumn": [
+                {
+                    "arrayvalue1": "Test3_1",
+                    "arrayvalue2": "C"
+                },
+                {
+                    "arrayvalue1": "Test3_2"
+                },
+                {
+                    "arrayvalue1": "Test3_3",
+                    "arrayvalue2": "D"
+                }
+            ]
+        }
+    ]
+}

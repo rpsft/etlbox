@@ -44,9 +44,9 @@ namespace ETLBoxTests.DataFlowTests
             {
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Column2",
+                    SearchPropertyName = "Column2",
                     JsonPath = "$.Value",
-                    NewPropertyName = "Col2"
+                    OutputPropertyName = "Col2"
                  }
             };
             source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
@@ -71,14 +71,14 @@ namespace ETLBoxTests.DataFlowTests
             {
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Column2",
+                    SearchPropertyName = "Column2",
                     JsonPath = "$.Value",
-                    NewPropertyName = "Value"
+                    OutputPropertyName = "Value"
                  },
                 new JsonProperty2JsonPath() {
-                    JsonPropertyName = "Column2",
+                    SearchPropertyName = "Column2",
                     JsonPath = "$['Id']",
-                    NewPropertyName = "Id"
+                    OutputPropertyName = "Id"
                  }
             };
             source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
@@ -92,6 +92,46 @@ namespace ETLBoxTests.DataFlowTests
                 row => { dynamic r = row as ExpandoObject; Assert.True(r.Column1 == 1 && r.Id == "A" && r.Value == "Test1"); },
                 row => { dynamic r = row as ExpandoObject; Assert.True(r.Column1 == 2 && r.Id == "B" && r.Value == "Test2"); },
                 row => { dynamic r = row as ExpandoObject; Assert.True(r.Column1 == 3 && r.Id == "C" && r.Value == "Test3"); }
+                );
+        }
+
+        [Fact]
+        public void NestDataWithNullValues()
+        {
+            //Arrange
+            MemoryDestination dest = new MemoryDestination();
+
+            //Act
+            JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/NestedDataNullValues.json", ResourceType.File);
+            List<JsonProperty2JsonPath> pathLookups = new List<JsonProperty2JsonPath>()
+            {
+                new JsonProperty2JsonPath()
+                {
+                    SearchPropertyName = "Column2",
+                    JsonPath = "$.Value",
+                    OutputPropertyName = "Value"
+                 },
+                new JsonProperty2JsonPath() {
+                    SearchPropertyName = "Column2",
+                    JsonPath = "$['Id']",
+                    OutputPropertyName = "Id"
+                 }
+            };
+            source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
+
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Collection<ExpandoObject>(dest.Data,
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.Column1 == 1 && r.Id == "A" && r.Value == "Test1"); },
+                row => { dynamic r = row as ExpandoObject; Assert.True(r.Column1 == 2 && r.Id == "B" && r.Value == null); },
+                row => {
+                    dynamic r = row as ExpandoObject;
+                    Assert.True(r.Column1 == 3 && r.Id == "C");
+                    Assert.False(((IDictionary<string, object>)r).ContainsKey("Value"));
+                }
                 );
         }
 
@@ -109,20 +149,20 @@ namespace ETLBoxTests.DataFlowTests
             {
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Col2",
+                    SearchPropertyName = "Col2",
                     JsonPath = "Value",
                  },
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Object",
+                    SearchPropertyName = "Object",
                     JsonPath = "Number[0]",
-                    NewPropertyName = "Col4"
+                    OutputPropertyName = "Col4"
                 },
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Array",
+                    SearchPropertyName = "Array",
                     JsonPath = "[1].Value",
-                    NewPropertyName = "Col3"
+                    OutputPropertyName = "Col3"
                  }
             };
             source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
@@ -156,15 +196,15 @@ namespace ETLBoxTests.DataFlowTests
             {
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Column2",
+                    SearchPropertyName = "Column2",
                     JsonPath = "$.[*].ArrayCol1",
-                    NewPropertyName = "ArrayCol1"
+                    OutputPropertyName = "ArrayCol1"
                  },
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Column2",
+                    SearchPropertyName = "Column2",
                     JsonPath = "$.[*].ArrayCol2",
-                    NewPropertyName = "ArrayCol2"
+                    OutputPropertyName = "ArrayCol2"
                  }
             };
             source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
@@ -207,9 +247,9 @@ namespace ETLBoxTests.DataFlowTests
             {
                 new JsonProperty2JsonPath()
                 {
-                    JsonPropertyName = "Column2",
+                    SearchPropertyName = "Column2",
                     JsonPath = "$.[*]",
-                    NewPropertyName = "ArrayCol1"
+                    OutputPropertyName = "ArrayCol1"
                  }
             };
             source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
@@ -231,6 +271,76 @@ namespace ETLBoxTests.DataFlowTests
                  },
                  row => {
                      dynamic r = row as ExpandoObject; Assert.True(r.Column1 == 3 && RemoveWhiteSpace(r.ArrayCol1) == @"{""ArrayCol1"":""E"",""ArrayCol2"":""TestE""}");
+                 }
+            );
+        }
+
+        [Fact]
+        public void ReQueryNestedArrays()
+        {
+            //Arrange
+            MemoryDestination dest = new MemoryDestination();
+            RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(
+                row =>
+                {
+                    dynamic r = row as ExpandoObject;
+                    return r;
+                });
+
+            //Act
+            JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/ReQueryNestedArray.json", ResourceType.File);
+            List<JsonProperty2JsonPath> pathLookups = new List<JsonProperty2JsonPath>()
+            {
+                new JsonProperty2JsonPath()
+                {
+                    JsonPath = "$.[*]",
+                    SearchPropertyName = "arraycolumn",
+                    ReQueryJsonPathOutput = new List<JsonProperty2JsonPath>() {
+                        new JsonProperty2JsonPath() {
+                            JsonPath = "$.arrayvalue1",
+                            OutputPropertyName = "arrayvalue1"
+                        },
+                        new JsonProperty2JsonPath() {
+                            JsonPath = "$.arrayvalue2",
+                            OutputPropertyName = "arrayvalue2"
+                        }
+                    }
+                }
+            };
+            source.JsonSerializer.Converters.Add(new ExpandoJsonPathConverter(pathLookups));
+
+            source.LinkTo(trans).LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            Assert.Collection<ExpandoObject>(dest.Data,
+                row => {
+                    dynamic r = row as ExpandoObject;
+                    Assert.True(r.idcolumn1 == 1);
+                    Assert.True(r.arraycolumn.Count == 2);
+                    Assert.True(r.arraycolumn[0].arrayvalue1 == "Test1_1");
+                    Assert.True(r.arraycolumn[0].arrayvalue2 == "A");
+                    Assert.True(r.arraycolumn[1].arrayvalue1 == "Test1_2");
+                    Assert.True(r.arraycolumn[1].arrayvalue2 == null);
+                },
+                 row => {
+                     dynamic r = row as ExpandoObject;
+                     Assert.True(r.idcolumn1 == 2);
+                     Assert.True(r.arraycolumn.Count == 1);
+                     Assert.True(r.arraycolumn[0].arrayvalue1 == "Test2_1");
+                     Assert.True(r.arraycolumn[0].arrayvalue2 == "B");
+                 },
+                 row => {
+                     dynamic r = row as ExpandoObject;
+                     Assert.True(r.idcolumn1 == 3);
+                     Assert.True(r.arraycolumn.Count == 3);
+                     Assert.True(r.arraycolumn[0].arrayvalue1 == "Test3_1");
+                     Assert.True(r.arraycolumn[0].arrayvalue2 == "C");
+                     Assert.True(r.arraycolumn[1].arrayvalue1 == "Test3_2");
+                     Assert.True(r.arraycolumn[1].arrayvalue2 == null);
+                     Assert.True(r.arraycolumn[2].arrayvalue1 == "Test3_3");
+                     Assert.True(r.arraycolumn[2].arrayvalue2 == "D");
                  }
             );
         }

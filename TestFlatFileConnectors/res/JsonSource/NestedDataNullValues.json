@@ -1,0 +1,22 @@
+[
+    {
+        "Column1": 1,
+        "Column2": {
+            "Id": "A",
+            "Value": "Test1"
+        }
+    },
+    {
+        "Column1": 2,
+        "Column2": {
+            "Id": "B",
+            "Value": null
+        }
+    },
+    {
+        "Column1": 3,
+        "Column2": {
+            "Id": "C"
+        }
+    }
+]
