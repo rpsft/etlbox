@@ -1,0 +1,424 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> ETLBox | ETLBox - a lightweight ETL library for C#. </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content=" ETLBox | ETLBox - a lightweight ETL library for C#. ">
+    <meta name="generator" content="docfx 2.54.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+  
+    <meta property="docfx:navrel" content="../toc">
+    <meta property="docfx:tocrel" content="toc">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../articles/overview.html" title="Getting started">Getting started</a>
+                      </li>
+                      <li>
+                          <a href="../api/index.html" title="API Documentation">API Documentation</a>
+                      </li>
+                      <li>
+                          <a href="../articles/pricing/pricing.html" title="Pricing">Pricing</a>
+                      </li>
+                      <li>
+                          <a href="../articles/pricing/contact.html" title="Contact">Contact</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Getting Started</a>
+                        
+                        <ul class="nav level2">
+                          <li class="active">
+                            <a href="overview.html" title="What is ETLBox" class="active">What is ETLBox</a>
+                          </li>
+                          <li class="">
+                            <a href="getting_started.html" title="Core concepts" class="">Core concepts</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">DataFlow Tutorial</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="dataflow/dataflow_simple_flow.html" title="A simple data flow" class="">A simple data flow</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_db_sources_destinations.html" title="Integrate databases" class="">Integrate databases</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_file_sources_destinations.html" title="Integrate flat files and web services" class="">Integrate flat files and web services</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_transformations.html" title="Transformations" class="">Transformations</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_linking_execution.html" title="Linking and execution" class="">Linking and execution</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_generic_nongeneric.html" title="Working with data types" class="">Working with data types</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_dbmerge.html" title="Syncing tables with Merge" class="">Syncing tables with Merge</a>
+                          </li>
+                          <li class="">
+                            <a href="dataflow/dataflow_other_sources_destinations.html" title="Other sources and destinations" class="">Other sources and destinations</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">ControlFlow and Logging</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="controlflow/overview_controlflow.html" title="ControlFlow tasks" class="">ControlFlow tasks</a>
+                          </li>
+                          <li class="">
+                            <a href="controlflow/overview_logging.html" title="Logging" class="">Logging</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a class="">Examples</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="examples/example_controlflow_dataflow_basics.html" title="Control and Data flow basics" class="">Control and Data flow basics</a>
+                          </li>
+                          <li class="">
+                            <a href="examples/example_across_files_databases.html" title="Across files and databases" class="">Across files and databases</a>
+                          </li>
+                          <li class="">
+                            <a href="examples/example_web_services.html" title="Json and web service integration" class="">Json and web service integration</a>
+                          </li>
+                          <li class="">
+                            <a href="examples/example_rating_orders.html" title="Rating Orders" class="">Rating Orders</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="-etlbox"><span><img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32"> ETLBox</span></h1>
+
+<p>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</p>
+<p>Create your own tailor-made data flow with your .NET language of choice. ETLBox is written in C# and offers full support for .NET Core.</p>
+<div class="hideOnWebsite">
+<h2 id="etlboxnet">ETLBox.net</h2>
+<p><a href="https://etlbox.net">For full documentation visit the project homepage: etlbox.net</a>. You will find a whole set of introductional articles, lots of examples and a complete API documentation.</p>
+</div>
+<h2 id="why-etlbox">Why ETLBox</h2>
+<p>ETLBox is a comprehensive C# class library that is able to manage your whole <a href="https://en.wikipedia.org/wiki/Extract,_transform,_load">ETL</a> or <a href="https://en.wikipedia.org/wiki/Extract,_load,_transform">ELT</a>.  You can use it to create your own dataflow pipelines programmatically in .NET, e.g. with C#. Besides a big set of dataflow components it comes which some control flow task that let you easily manage your database or simple execute Sql code without any boilerplate code. It also offers extended logging capabilites based on NLog to monitor and anlayze your ETL job runs.</p>
+<p>ETLBox is a fully functional alternative to other ETL tools like Sql Server Integrations Services (SSIS). Creating your ETL processes programatically has some advantages:</p>
+<p><strong>Build ETL in .NET</strong>: Code your ETL with your favorite .NET language fitting your team’s skills and that is coming with a mature toolset.</p>
+<p><strong>Runs everywhere</strong>: ETLBox runs on Linux, macOS, and Windows. It is written in the current .NET Standard and successfully tested with the latest versions of .NET Core &amp; .NET.</p>
+<p><strong>Run locally</strong>: Develop and test your ETL code locally on your desktop using your existing development &amp; debugging tools.</p>
+<p><strong>Process In-Memory</strong>: ETLBox comes with dataflow components that allow in-memory processing which is much faster than storing data on disk and processing later.</p>
+<p><strong>Manage Change</strong>: Track you changes with git (or other source controls), code review your etl logic, and use your existing CI/CD processes.</p>
+<p><strong>Data integration</strong>: While supporting different databases, flat files and web services, you can use ETLBox as a foundation for your custom made Data Integregation platform.</p>
+<p><strong>Made for big data</strong>: ETLBox relies on <a href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library">Microsoft's TPL.Dataflow library</a> and was designed to work with big amounts of data.</p>
+<h2 id="getting-etlbox">Getting ETLBox</h2>
+<p>All <a href="https://www.nuget.org/packages?q=etlbox">ETLBox packages are available on nuget</a>.
+You will always need the <a href="https://www.nuget.org/packages/ETLBox/">main ETLBox package</a>.
+The connectors are in separate packages - depending on your needs, choose the right connector package from the list.
+E.g., if you want to connect to SqlServer, use <a href="https://www.nuget.org/packages/ETLBox.SqlServer/">ETLBox.SqlServer</a>.
+If you also need to read or write from Csv files then add <a href="https://www.nuget.org/packages/ETLBox.Csv/">ETLBox.Csv</a>.
+Having the connectors in separate packages reduces dependencies to 3rd party libraries.
+You can use ETLBox within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions of .NET)</p>
+<h2 id="data-flow-and-control-flow">Data Flow and Control Flow</h2>
+<p>ETLBox is split into two main components: Data Flow and Control Flow Tasks. The Data Flow part offers the core ETL components. The tasks in the Control Flow allow you to manage your databases with a simple syntax. Both components come with customizable logging functionalities.</p>
+<h3 id="data-flow-overview">Data Flow overview</h3>
+<p>ETLBox comes with a set of Data Flow component to construct your own ETL pipeline . You can connect with different sources (e.g. a Csv file), add some transformations to manipulate that data on-the-fly (e.g. calculating a sum or combining two columns) and then store the changed data in a connected destination (e.g. a database table).</p>
+<p>To create your own data flow , you basically follow three steps:</p>
+<ul>
+<li>First you define your dataflow components (sources, optionally transformations and destinations)</li>
+<li>link these components together</li>
+<li>tell your source to start reading the data and wait for the destination to finish</li>
+</ul>
+<p>Now the source will start reading and post its data into the components connected to its output. As soon as a connected component retrieves any data in its input, the component will start with processing the data and then send it further down the line to its connected components. The dataflow will finish when all data from the source(s) are read, processed by the transformations and received in the destination(s).</p>
+<p>Transformations are not always needed - you can directly connect a source to a destination. Normally, each source has one output, each destination one input and each transformation at least one input and one or more outputs.</p>
+<p>Of course, all data is processed asynchronously by the components. Each compoment has its own set of buffers, so while the source is still reading data, the transformations  can already process it and the destinations can start writing the processed information into their target. So in an optimal flow only the current row needed for processing is stored in memory. Depending on the processing speed of your components, the buffer of each component can store additional rows to optimize throughput.</p>
+<h4 id="data-flow-example">Data Flow example</h4>
+<p>It's easy to create your own data flow pipeline. This example data flow will read data from a MySql database, modify a value and then store the modified data in a Sql Server table and a csv file, depending on a filter expression.</p>
+<p>Step 1 is to create a source, the transformations and destinations:</p>
+<pre><code class="lang-C#">var sourceCon = new MySqlConnectionManager(&quot;Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;&quot;);
+var destCon = new SqlConnectionManager(&quot;Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;&quot;);
+
+DbSource&lt;MySimpleRow&gt; source = new DbSource&lt;MySimpleRow&gt;(sourceCon, &quot;SourceTable&quot;);
+RowTransformation&lt;MySimpleRow, MySimpleRow&gt; rowTrans = new RowTransformation&lt;MySimpleRow, MySimpleRow&gt;(
+    row =&gt; {  
+        row.Value += 1;
+        return row;
+    });
+Multicast&lt;MySimpleRow&gt; multicast = new Multicast&lt;MySimpleRow&gt;();
+DbDestination&lt;MySimpleRow&gt; sqlDest = new DbDestination&lt;MySimpleRow&gt;(destCon, &quot;DestinationTable&quot;);
+CsvDestination&lt;MySimpleRow&gt; csvDest = new CsvDestination&lt;MySimpleRow&gt;(&quot;example.csv&quot;);
+</code></pre>
+<p>Now we link these elements together.</p>
+<pre><code class="lang-C#">source.LinkTo(trans);
+rowTrans.LinkTo(multicast);
+multicast.LinkTo(sqlDest, row =&gt; row.FilterValue &gt; 0);
+multicast.LinkTo(csvDest, row =&gt; row.FilterValue &lt; 0);
+</code></pre>
+<p>Finally, start the dataflow at the source and wait for the destinations to rececive all data (and the completion message from the source).</p>
+<pre><code class="lang-C#">source.Execute();
+sqlDest.Wait();
+csvDest.Wait();
+</code></pre>
+<h3 id="data-integration">Data integration</h3>
+<p>The heart of an ETL framework is it's ability to integrate with other systems.
+The following table shows which types of sources and destination are supported out-of-the box with the current version of ETLBox.
+<strong>You can <em>always</em> integrate any other system not listed here by using a <code>CustomSource</code> or <code>CustomDestination</code> - though you have to write the integration code yourself.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Source or Destination</th>
+<th>Support for</th>
+<th>Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Databases</td>
+<td>Sql Server, Postgres, SQLite, MySql, Oracle</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td>Flat files</td>
+<td>Csv, Json, Xml</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td>Any web api</td>
+<td>Json, Xml, Csv</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td>Office</td>
+<td>Microsoft Access, Excel</td>
+<td>Full support for Access, Excel only as source</td>
+</tr>
+<tr>
+<td>Cube</td>
+<td>Sql Server Analysis Service</td>
+<td>Only XMLA statements</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>.NET IEnumerable &amp; Collections</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td>Cloud Services</td>
+<td>Tested with Azure</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td>Any other</td>
+<td>integration with custom written code</td>
+<td>No limitations</td>
+</tr>
+</tbody>
+</table>
+<p>You can choose between different sources and destination components. <code>DbSource</code> and <code>DbDestination</code> will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). <code>CsvSource</code>, <code>CsvDestination</code> give you support for flat files. <code>ExcelSource</code> allows you to read data from an excel sheet. <code>JsonSource</code>, <code>JsonDestination</code>, <code>XmlSource</code> and <code>XmlDestination</code> let you read and write json from files or web service request. <code>MemorySource</code>, <code>MemoryDestinatiation</code> as well as <code>CustomSource</code> and <code>CustomDestination</code> will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.</p>
+<h3 id="transformations">Transformations</h3>
+<p>ETLBox has 3 type of transformations: Non-blocking, partially blocking and blocking transformations. Non-blocking transformations will
+only store the row that is currently processed in memory (plus some more in the buffer to optimize throughput and performance). Partially blocking transformations will load some data in the memory before they process data row-by-row. Blocking transformations will wait until all data has arrived at the component before it starts processing all records subsequently.</p>
+<p>The following table is an overview of the most common transformations in ETLBox:</p>
+<table>
+<thead>
+<tr>
+<th>Non-blocking</th>
+<th>Partially blocking</th>
+<th>Blocking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RowTransformation</td>
+<td>LookupTransformation</td>
+<td>BlockTransformation</td>
+</tr>
+<tr>
+<td>Aggregation</td>
+<td>CrossJoin</td>
+<td>Sort</td>
+</tr>
+<tr>
+<td>MergeJoin</td>
+<td></td>
+<td>DbMerge*</td>
+</tr>
+<tr>
+<td>Multicast</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>RowDuplication</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>RowMultiplication</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><em>RowTransformation</em>: This transformation let you modfiy each data record with your custom written C# code</p>
+<p><em>Aggregation</em>: Aggregate your data on-the-fly  based on Grouping and Aggregation functions.</p>
+<p><em>RowDuplication</em>: Simple duplicate your input row x times - additionally, you can add your own condition when to duplicate.</p>
+<p><em>RowMultiplication</em>: Allow you to create multiple rows based on your incoming rows - based on your own custom C# code.</p>
+<p><em>Multicast</em>: Broadcast your incoming data into 2 or more targets.</p>
+<p><em>MergeJoin</em>: Join your incoming data into one. Works best with sorted input.</p>
+<p><em>LookupTransformation</em>: Allows you to store lookup data in memory and use it for enriching your data in your DataFlow.</p>
+<p><em>CrossJoin</em>: Takes two inputs and return one output with each record of both inputs joined with each other.</p>
+<p><em>BlockTransformation</em>: Allows you to execute your own custom written C# on your whole set of incoming data.</p>
+<p><em>Sort</em>: Sorts your input data by your own sort function.</p>
+<p><em>DbMerge</em>: Allows you to insert, update or delete data in your target table depending on your incoming data.
+No more need to write your own &quot;upsert&quot; statement - the <code>DbMerge</code> is supported by all ETLBox databases. The output of the DbMerge
+is the changes to your target table (insertions, updates and deletions.)</p>
+<h4 id="designed-for-big-data">Designed for big data</h4>
+<p>ETLBox was designed for performance and is able to deal with big amounts of data. All destinations do support Bulk or Batch operations. By default, every component comes with an input and/or output buffer. You can design your data flow that only batches or your data is stored in memory, which are kept in different buffers for every component to increase throughput. All operations can be execute asynchrounously, so that your processing will run only within separate threads.</p>
+<h3 id="control-flow---overview">Control Flow - overview</h3>
+<p>Control Flow Tasks gives you control over your database: They allow you to create or delete databases, tables, procedures, schemas or other objects in your database. With these tasks you also can truncate your tables, count rows or execute <em>any</em> sql you like. Anything you can script in sql can be done here - but with only one line of easy-to-read C# code. This improves the readability of your code a lot, and gives you more time to focus on your business logic.</p>
+<p>Code tells - here is some example code, without writing the whole &quot;boilerplate&quot; code by ADO.NET.</p>
+<pre><code class="lang-C#">var conn = new SqlConnectionManager(&quot;Server=10.37.128.2;Database=ETLBox_ControlFlow;Uid=etlbox;Pwd=etlboxpassword;&quot;);
+//Execute some Sql
+SqlTask.ExecuteNonQuery(conn, &quot;Do some sql&quot;,$@&quot;EXEC myProc&quot;);
+//Count rows
+int count = RowCountTask.Count(conn, &quot;demo.table1&quot;).Value;
+//Create a table (works on all databases)
+CreateTableTask.Create(conn, &quot;Table1&quot;, new List&lt;TableColumn&gt;() {
+    new TableColumn(name:&quot;key&quot;,dataType:&quot;INT&quot;,allowNulls:false,isPrimaryKey:true, isIdentity:true),
+    new TableColumn(name:&quot;value&quot;, dataType:&quot;NVARCHAR(100)&quot;,allowNulls:true)
+});
+</code></pre>
+<h3 id="logging">Logging</h3>
+<p>By default, ETLBox uses and extends <a href="https://nlog-project.org">NLog</a>. ETLBox already comes with NLog as dependency - so you don't need to include additional packages from nuget. In order to have the logging activating, you just have to set up a nlog configuration called <code>nlog.config</code>, and create a target and a logger rule. After adding this, you will already get logging output for all tasks and components in ETLBox. <a href="https://etlbox.net/articles/overview_logging.html">Read more about logging here</a>.</p>
+<h2 id="where-to-continue">Where to continue</h2>
+<p>We recommend that you try ETLBox out. All <a href="https://www.nuget.org/packages?q=etlbox">ETLBox packages are available on nuget</a>.
+You will always need the <a href="https://www.nuget.org/packages/ETLBox/">main ETLBox package</a>.
+The connectors are in separate packages - depending on your needs, choose the right connector packages from the list.
+E.g., if you want to connect to SqlServer, use <a href="https://www.nuget.org/packages/ETLBox.SqlServer/">ETLBox.SqlServer</a>, and if you also
+need to access Csv files then add <a href="https://www.nuget.org/packages/ETLBox.Csv/">ETLBox.Csv</a>.</p>
+<p>The free versions allows you to process up to 10.000 records per connector in a DataFlow.</p>
+<p>If you are interest in the sources, you can clone the <a href="https://github.com/roadrunnerlenny/etlbox">main ETLBox repository from github</a>.
+Please note that the connectors are not open source. If you need access to the source code, please contact us.</p>
+<span class="hideOnWebsite">
+<p><a href="https://etlbox.net">See the ETLBox Project website</a> for <a href="https://etlbox.net/articles/getting_started.html">introductional articles</a> and a <a href="https://etlbox.net/api/index.html">complete API documentation</a>. Enjoy!</p>
+</span>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Crafted with &lt;3 in Berlin<br>
+<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

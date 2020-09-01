@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-42296700-2');
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Create sophisticated data flows | ETLBox - a lightweight ETL library for C#. </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Create sophisticated data flows | ETLBox - a lightweight ETL library for C#. ">
+    <meta name="generator" content="docfx 2.54.0.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+  
+    <meta property="docfx:navrel" content="toc">
+    <meta property="docfx:tocrel" content="toc">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="articles/overview.html" title="Getting started">Getting started</a>
+                      </li>
+                      <li>
+                          <a href="api/index.html" title="API Documentation">API Documentation</a>
+                      </li>
+                      <li>
+                          <a href="articles/pricing/pricing.html" title="Pricing">Pricing</a>
+                      </li>
+                      <li>
+                          <a href="articles/pricing/contact.html" title="Contact">Contact</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<style type="text/css">
+.sideaffix
+{
+    visibility: collapse !important;
+}
+.subnav
+{
+    visibility: collapse !important;
+}
+.anchorjs-link
+{
+    visibility: hidden !important;
+}
+
+@media (min-width: 768px) {
+    .col-md-10 {
+        width: 100% !important;
+    }
+    .container {
+        width: 100% !important;
+    }
+    #autocollapse .navbar-header {
+    margin-left: 80px !important;
+    }
+
+}
+
+@media (min-width: 992px) {
+    .col-md-10 {
+        width: 100% !important;
+    }
+    .container {
+        width: 100% !important;
+    }
+    #autocollapse .navbar-header {
+    margin-left: 80px !important;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 100% !important;
+    }
+    .col-md-10 {
+        width: 100% !important;
+    }
+    #autocollapse .navbar-header {
+    margin-left: 80px !important;
+    }
+
+}
+
+</style>
+<div class="hero">
+  <div class="wrap">
+    <div class="text">
+      <strong>ETLBox</strong>
+    </div>
+    <div class="buttons-unit-small">
+      <a class="version-link" href="https://www.youtube.com/watch?v=CsWZuRpl6PA"><i class="glyphicon glyphicon-film"></i>See the video</a><span> 
+      | 
+      </span><a class="github-link" href="https://github.com/roadrunnerlenny/etlbox"><i class="glyphicon glyphicon-file"></i>View in Github</a>
+    </div>
+    <div class="minitext">
+    A lightweight ETL (extract, transform, load) toolbox and data integration library for .NET
+    </div>
+    <div class="buttons-unit">
+      <a href="articles/overview.html" class="button"><i class="glyphicon glyphicon-pencil"></i>Getting Started</a>
+      <a href="https://www.nuget.org/packages/ETLBox" class="button"><i class="glyphicon glyphicon-download"></i>Download Latest</a>
+    </div>
+  </div>
+</div>
+<div class="key-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <i class="glyphicon glyphicon-random"></i>
+        <section>
+          <h2>Create sophisticated data flows</h2>
+          <p class="lead">Read and write data from flatfiles, databases (e.g. Sql Server, SQLite, MySql or Postgres) or webservices. 
+          Harmonize, filter, aggregate, validate and clean the data in-memory with 
+          highly customizable transformations and write them into any destination. 
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="counter-key-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <i class="glyphicon glyphicon-console"></i>
+        <section>
+          <h2>Use your favourite programming language</h2>
+          <p class="lead">ETLBox allows you to create advanced ETL processes with your .NET language of choice, 
+          doesn't matter if it is C#, F# or Visual Basic.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="key-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <i class="glyphicon glyphicon-transfer"></i>
+        <section>
+          <h2>Runs everywhere</h2>
+          <p class="lead">ETLBox runs on Linux, macOS, and Windows. It is written in the current .NET Standard
+          and successfully tested with the latest versions of .NET Core & .NET. 
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="counter-key-section">
+  <div class="container content">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <i class="glyphicon glyphicon-home"></i>
+        <section>
+          <h2>Develop locally</h2>
+          <p class="lead">Develop and test your ETL and data integration flows locally with your favorite development and debugging tools.
+          Use the toolset that your team is already familiar with. Track your changes with Git (or other source controls)
+          and connect your job with your existing CI/CD platform.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Crafted with &lt;3 in Berlin<br>
+<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>
