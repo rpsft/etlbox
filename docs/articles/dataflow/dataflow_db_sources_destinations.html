@@ -340,7 +340,7 @@ the pool so that it can be reused by other components or tasks when needed.</p>
 is going to be a separate pool</p>
 <p>This behavior - returning connections back to the pool when the work is done - does work very well in a scenario
 with concurrent tasks. There may be a use-case where you don't won't to query your database in parallel and you
-want to leave the connection open, avoiding the pooling. <a href="https://github.com/roadrunnerlenny/etlbox/issues/39">For this scenario you can use the <code>LeaveOpen</code> property
+want to leave the connection open, avoiding the pooling. <a href="https://github.com/etlbox/etlbox/issues/39">For this scenario you can use the <code>LeaveOpen</code> property
 on the connection managers.</a></p>
 <h3 id="table-definitions">Table Definitions</h3>
 <p>If you pass a table name to a <code>DBsource</code> or <code>DbDestination</code> or a Sql statement to a <code>DbSource</code>, the meta data
@@ -367,6 +367,9 @@ var DbSource&lt;type&gt; = new DbSource&lt;type&gt;() {
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.docu/blob/main/ETLBoxDocu/articles/dataflow/dataflow_db_sources_destinations.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

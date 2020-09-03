@@ -17,7 +17,7 @@ What's new in 2.1? The whole linking, task and exception handling of data flow c
 Also the whole interface of the data flow and control flow classes has been refined. This could lead to some minor breaking changes, which can be resolved quite easily as mostly the naming has changed. Overall it will lead in a clearer structure of the interface and classes.
 
 The MaxBufferSize property is now available on every component - it allows you to restrict the amount of records stored in the component buffer. Every data flow component now has an awaitable Completion task.</PackageReleaseNotes>
-        <Version>2.1.0</Version>
+        <Version>2.1.1</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
@@ -47,10 +47,6 @@ The MaxBufferSize property is now available on every component - it allows you t
         <None Include="img\logo_bw.png" Pack="true" PackagePath="">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\etlbox.license\LicenseManager\LicenseManager.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">

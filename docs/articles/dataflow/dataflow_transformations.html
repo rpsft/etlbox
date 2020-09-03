@@ -304,6 +304,54 @@ DbDestination&lt;OutputRow&gt; dest = new DbDestination&lt;OutputRow&gt;();
 source.LinkTo(multiplication);
 multiplication.LinkTo(dest);
 </code></pre>
+<h3 id="xmlschemavalidation">XmlSchemaValidation</h3>
+<p>Validates a given string that contains xml with a defined Xml schema definition. Not valid xml is redirected to
+the error output.</p>
+<p>Here is an example code:</p>
+<pre><code class="lang-C#">string xsdMarkup = @&quot;&lt;xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'&gt;
+   &lt;xsd:element name='Root'&gt;
+      &lt;xsd:complexType&gt;
+         &lt;xsd:sequence&gt;
+            &lt;xsd:element name='Child1' minOccurs='1' maxOccurs='1'/&gt;
+            &lt;xsd:element name='Child2' minOccurs='1' maxOccurs='1'/&gt;
+         &lt;/xsd:sequence&gt;
+     &lt;/xsd:complexType&gt;
+   &lt;/xsd:element&gt;
+&lt;/xsd:schema&gt;&quot;;
+
+public class MyXmlRow
+{
+  public string Xml { get; set; }
+}
+
+string _validXml =&gt; $@&quot;&lt;?xml version=&quot;&quot;1.0&quot;&quot; encoding=&quot;&quot;utf-8&quot;&quot;?&gt;
+&lt;Root&gt;
+  &lt;Child1&gt;Content1&lt;/Child1&gt;
+  &lt;Child2&gt;Content2&lt;/Child2&gt;
+&lt;/Root&gt;&quot;;
+
+string _invalidXml =&gt; $@&quot;&lt;?xml version=&quot;&quot;1.0&quot;&quot; encoding=&quot;&quot;utf-8&quot;&quot;?&gt;
+&lt;Root&gt;
+  &lt;Child1&gt;Content1&lt;/Child1&gt;
+  &lt;Child3&gt;Content3&lt;/Child3&gt;
+&lt;/Root&gt;&quot;;
+
+var source = new MemorySource&lt;MyXmlRow&gt;();
+source.DataAsList.Add(new MyXmlRow() { Xml = _validXml });
+source.DataAsList.Add(new MyXmlRow() { Xml = _invalidXml });
+MemoryDestination&lt;MyXmlRow&gt; dest = new MemoryDestination&lt;MyXmlRow&gt;();
+MemoryDestination&lt;ETLBoxError&gt; error = new MemoryDestination&lt;ETLBoxError&gt;();
+
+XmlSchemaValidation&lt;MyXmlRow&gt; schemaValidation = new XmlSchemaValidation&lt;MyXmlRow&gt;();
+schemaValidation.XmlSelector = r =&gt; r.Xml;
+schemaValidation.XmlSchema = xsdMarkup;
+source.LinkTo(schemaValidation);
+schemaValidation.LinkTo(dest);
+schemaValidation.LinkErrorTo(error);
+source.Execute();
+dest.Wait();
+error.Wait()
+</code></pre>
 <h3 id="splitting-data">Splitting data</h3>
 <p>In some of your data flow you may want to split the data and have it processed differently in the further flow.
 E.g. your data comes from one source and you want parts of it written into one destination and parts of it
@@ -422,6 +470,9 @@ Sort&lt;MySimpleRow&gt; block = new Sort&lt;MySimpleRow&gt;(comp);
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.docu/blob/main/ETLBoxDocu/articles/dataflow/dataflow_transformations.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

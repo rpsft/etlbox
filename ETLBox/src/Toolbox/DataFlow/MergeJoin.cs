@@ -38,11 +38,11 @@ namespace ETLBox.DataFlow.Transformations
         /// <summary>
         /// The left target of the merge join. Use this to link your source component with.
         /// </summary>
-        public ActionJoinTarget<TInput1> LeftJoinTarget { get; set; }
+        public ActionJoinTarget<TInput1> LeftInput { get; set; }
         /// <summary>
         /// The right target of the merge join. Use this to link your source component with.
         /// </summary>
-        public ActionJoinTarget<TInput2> RightJoinTarget { get; set; }
+        public ActionJoinTarget<TInput2> RightInput { get; set; }
         /// <inheritdoc/>
         public override ISourceBlock<TOutput> SourceBlock => this.Buffer;
         /// <summary>
@@ -61,8 +61,8 @@ namespace ETLBox.DataFlow.Transformations
 
         public MergeJoin()
         {
-            LeftJoinTarget = new ActionJoinTarget<TInput1>(this, LeftJoinData);
-            RightJoinTarget = new ActionJoinTarget<TInput2>(this, RightJoinData);
+            LeftInput = new ActionJoinTarget<TInput1>(this, LeftJoinData);
+            RightInput = new ActionJoinTarget<TInput2>(this, RightJoinData);
         }
 
         /// <param name="mergeJoinFunc">Sets the <see cref="MergeJoinFunc"/></param>
@@ -103,9 +103,9 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override void CompleteBufferOnPredecessorCompletion()
         {
-            LeftJoinTarget.CompleteBufferOnPredecessorCompletion();
-            RightJoinTarget.CompleteBufferOnPredecessorCompletion();
-            Task.WaitAll(LeftJoinTarget.Completion, RightJoinTarget.Completion);
+            LeftInput.CompleteBufferOnPredecessorCompletion();
+            RightInput.CompleteBufferOnPredecessorCompletion();
+            Task.WaitAll(LeftInput.Completion, RightInput.Completion);
             try
             {
                 EmptyQueues();
@@ -119,8 +119,8 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override void FaultBufferOnPredecessorCompletion(Exception e)
         {
-            LeftJoinTarget.FaultBufferOnPredecessorCompletion(e);
-            RightJoinTarget.FaultBufferOnPredecessorCompletion(e);
+            LeftInput.FaultBufferOnPredecessorCompletion(e);
+            RightInput.FaultBufferOnPredecessorCompletion(e);
             ((IDataflowBlock)Buffer).Fault(e);
         }
 

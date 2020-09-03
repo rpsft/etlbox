@@ -14,10 +14,10 @@
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class CreateDatabaseTarget
+    <title>Interface IDataTypeConverter
    | ETLBox - a lightweight ETL library for C#. </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class CreateDatabaseTarget
+    <meta name="title" content="Interface IDataTypeConverter
    | ETLBox - a lightweight ETL library for C#. ">
     <meta name="generator" content="docfx 2.54.0.0">
     
@@ -136,6 +136,9 @@
                             <a href="ETLBox.Connection.OdbcConnectionString.html" title="OdbcConnectionString" class="">OdbcConnectionString</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.Connection.OracleOdbcConnectionManager.html" title="OracleOdbcConnectionManager" class="">OracleOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.Connection.PostgresConnectionManager.html" title="PostgresConnectionManager" class="">PostgresConnectionManager</a>
                           </li>
                           <li class="">
@@ -169,25 +172,25 @@
                             <a href="ETLBox.ControlFlow.ControlFlow.html" title="ControlFlow" class="">ControlFlow</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.ControlFlow.ControlFlowTask.html" title="ControlFlowTask" class="">ControlFlowTask</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.ControlFlow.DbTask.html" title="DbTask" class="">DbTask</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.ControlFlow.DropTask-1.html" title="DropTask&lt;T&gt;" class="">DropTask&lt;T&gt;</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.ControlFlow.GenericTask.html" title="GenericTask" class="">GenericTask</a>
-                          </li>
-                          <li class="">
                             <a href="ETLBox.ControlFlow.IfExistsTask.html" title="IfExistsTask" class="">IfExistsTask</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.ControlFlow.ITableColumn.html" title="ITableColumn" class="">ITableColumn</a>
+                            <a href="ETLBox.ControlFlow.ILoggableTask.html" title="ILoggableTask" class="">ILoggableTask</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.ControlFlow.ITableData.html" title="ITableData" class="">ITableData</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.ControlFlow.ITask.html" title="ITask" class="">ITask</a>
+                            <a href="ETLBox.ControlFlow.LoggableTask.html" title="LoggableTask" class="">LoggableTask</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.ControlFlow.ProcedureDefinition.html" title="ProcedureDefinition" class="">ProcedureDefinition</a>
@@ -301,6 +304,9 @@
                         
                         <ul class="nav level2">
                           <li class="">
+                            <a href="ETLBox.DataFlow.ActionJoinTarget-1.html" title="ActionJoinTarget&lt;TInput&gt;" class="">ActionJoinTarget&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.AggregateColumn.html" title="AggregateColumn" class="">AggregateColumn</a>
                           </li>
                           <li class="">
@@ -319,7 +325,16 @@
                             <a href="ETLBox.DataFlow.DataFlowBatchDestination-1.html" title="DataFlowBatchDestination&lt;TInput&gt;" class="">DataFlowBatchDestination&lt;TInput&gt;</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowComponent.html" title="DataFlowComponent" class="">DataFlowComponent</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.DataFlowDestination-1.html" title="DataFlowDestination&lt;TInput&gt;" class="">DataFlowDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowExecutableSource-1.html" title="DataFlowExecutableSource&lt;TOutput&gt;" class="">DataFlowExecutableSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowJoinTarget-1.html" title="DataFlowJoinTarget&lt;TInput&gt;" class="">DataFlowJoinTarget&lt;TInput&gt;</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.DataFlowSource-1.html" title="DataFlowSource&lt;TOutput&gt;" class="">DataFlowSource&lt;TOutput&gt;</a>
@@ -331,16 +346,13 @@
                             <a href="ETLBox.DataFlow.DataFlowStreamSource-1.html" title="DataFlowStreamSource&lt;TOutput&gt;" class="">DataFlowStreamSource&lt;TOutput&gt;</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.DataFlow.DataFlowTask.html" title="DataFlowTask" class="">DataFlowTask</a>
-                          </li>
-                          <li class="">
                             <a href="ETLBox.DataFlow.DataFlowTransformation-2.html" title="DataFlowTransformation&lt;TInput, TOutput&gt;" class="">DataFlowTransformation&lt;TInput, TOutput&gt;</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.DeleteColumn.html" title="DeleteColumn" class="">DeleteColumn</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.DataFlow.ErrorHandler.html" title="ErrorHandler" class="">ErrorHandler</a>
+                            <a href="ETLBox.DataFlow.ErrorSource.html" title="ErrorSource" class="">ErrorSource</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.ETLBoxError.html" title="ETLBoxError" class="">ETLBoxError</a>
@@ -358,19 +370,37 @@
                             <a href="ETLBox.DataFlow.IDataFlowBatchDestination-1.html" title="IDataFlowBatchDestination&lt;TInput&gt;" class="">IDataFlowBatchDestination&lt;TInput&gt;</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowComponent.html" title="IDataFlowComponent" class="">IDataFlowComponent</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowDestination.html" title="IDataFlowDestination" class="">IDataFlowDestination</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.IDataFlowDestination-1.html" title="IDataFlowDestination&lt;TInput&gt;" class="">IDataFlowDestination&lt;TInput&gt;</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.DataFlow.IDataFlowLinkSource-1.html" title="IDataFlowLinkSource&lt;TOutput&gt;" class="">IDataFlowLinkSource&lt;TOutput&gt;</a>
+                            <a href="ETLBox.DataFlow.IDataFlowExecutableSource-1.html" title="IDataFlowExecutableSource&lt;TOutput&gt;" class="">IDataFlowExecutableSource&lt;TOutput&gt;</a>
                           </li>
                           <li class="">
-                            <a href="ETLBox.DataFlow.IDataFlowLinkTarget-1.html" title="IDataFlowLinkTarget&lt;TInput&gt;" class="">IDataFlowLinkTarget&lt;TInput&gt;</a>
+                            <a href="ETLBox.DataFlow.IDataFlowLogging.html" title="IDataFlowLogging" class="">IDataFlowLogging</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowSource.html" title="IDataFlowSource" class="">IDataFlowSource</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.IDataFlowSource-1.html" title="IDataFlowSource&lt;TOutput&gt;" class="">IDataFlowSource&lt;TOutput&gt;</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowStreamDestination-1.html" title="IDataFlowStreamDestination&lt;TInput&gt;" class="">IDataFlowStreamDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowStreamSource-1.html" title="IDataFlowStreamSource&lt;TOutput&gt;" class="">IDataFlowStreamSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.IDataFlowTransformation-2.html" title="IDataFlowTransformation&lt;TInput, TOutput&gt;" class="">IDataFlowTransformation&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowTransformation-1.html" title="IDataFlowTransformation&lt;TOutput&gt;" class="">IDataFlowTransformation&lt;TOutput&gt;</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.IdColumn.html" title="IdColumn" class="">IdColumn</a>
@@ -397,6 +427,9 @@
                             <a href="ETLBox.DataFlow.RetrieveColumn.html" title="RetrieveColumn" class="">RetrieveColumn</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.DataFlow.StreamMetaData.html" title="StreamMetaData" class="">StreamMetaData</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.TypeInfo.html" title="TypeInfo" class="">TypeInfo</a>
                           </li>
                         </ul>  </li>
@@ -405,6 +438,12 @@
                       <a href="ETLBox.DataFlow.Connectors.html" title="ETLBox.DataFlow.Connectors" class="">ETLBox.DataFlow.Connectors</a>
                         
                         <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.ConcurrentMemoryDestination.html" title="ConcurrentMemoryDestination" class="">ConcurrentMemoryDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.ConcurrentMemoryDestination-1.html" title="ConcurrentMemoryDestination&lt;TInput&gt;" class="">ConcurrentMemoryDestination&lt;TInput&gt;</a>
+                          </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.Connectors.CsvDestination.html" title="CsvDestination" class="">CsvDestination</a>
                           </li>
@@ -478,6 +517,18 @@
                             <a href="ETLBox.DataFlow.Connectors.MemorySource-1.html" title="MemorySource&lt;TOutput&gt;" class="">MemorySource&lt;TOutput&gt;</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextDestination.html" title="TextDestination" class="">TextDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextDestination-1.html" title="TextDestination&lt;TInput&gt;" class="">TextDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextSource.html" title="TextSource" class="">TextSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextSource-1.html" title="TextSource&lt;TOutput&gt;" class="">TextSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.Connectors.VoidDestination.html" title="VoidDestination" class="">VoidDestination</a>
                           </li>
                           <li class="">
@@ -529,6 +580,9 @@
                             <a href="ETLBox.DataFlow.Transformations.CrossJoin-3.html" title="CrossJoin&lt;TInput1, TInput2, TOutput&gt;" class="">CrossJoin&lt;TInput1, TInput2, TOutput&gt;</a>
                           </li>
                           <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.CrossJoin-3.InMemoryDestination-1.html" title="CrossJoin&lt;TInput1, TInput2, TOutput&gt;.InMemoryDestination&lt;TInput&gt;" class="">CrossJoin&lt;TInput1, TInput2, TOutput&gt;.InMemoryDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
                             <a href="ETLBox.DataFlow.Transformations.LookupTransformation.html" title="LookupTransformation" class="">LookupTransformation</a>
                           </li>
                           <li class="">
@@ -542,9 +596,6 @@
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.Transformations.MergeJoin-3.html" title="MergeJoin&lt;TInput1, TInput2, TOutput&gt;" class="">MergeJoin&lt;TInput1, TInput2, TOutput&gt;</a>
-                          </li>
-                          <li class="">
-                            <a href="ETLBox.DataFlow.Transformations.MergeJoinTarget-1.html" title="MergeJoinTarget&lt;TInput&gt;" class="">MergeJoinTarget&lt;TInput&gt;</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.DataFlow.Transformations.Multicast.html" title="Multicast" class="">Multicast</a>
@@ -582,6 +633,12 @@
                           <li class="">
                             <a href="ETLBox.DataFlow.Transformations.Sort-1.html" title="Sort&lt;TInput&gt;" class="">Sort&lt;TInput&gt;</a>
                           </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.XmlSchemaValidation.html" title="XmlSchemaValidation" class="">XmlSchemaValidation</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.XmlSchemaValidation-1.html" title="XmlSchemaValidation&lt;TInput&gt;" class="">XmlSchemaValidation&lt;TInput&gt;</a>
+                          </li>
                         </ul>  </li>
                     <li class="">
                       <span class="expand-stub"></span>
@@ -612,14 +669,17 @@
                           <li class="">
                             <a href="ETLBox.Helper.HashHelper.html" title="HashHelper" class="">HashHelper</a>
                           </li>
-                          <li class="">
-                            <a href="ETLBox.Helper.ITableColumExtensions.html" title="ITableColumExtensions" class="">ITableColumExtensions</a>
+                          <li class="active">
+                            <a href="ETLBox.Helper.IDataTypeConverter.html" title="IDataTypeConverter" class="active">IDataTypeConverter</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Helper.JsonPathConverter.html" title="JsonPathConverter" class="">JsonPathConverter</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Helper.JsonProperty2JsonPath.html" title="JsonProperty2JsonPath" class="">JsonProperty2JsonPath</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.JsonProperty2JsonPath.MultipleResultsInPath.html" title="JsonProperty2JsonPath.MultipleResultsInPath" class="">JsonProperty2JsonPath.MultipleResultsInPath</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Helper.ObjectNameDescriptor.html" title="ObjectNameDescriptor" class="">ObjectNameDescriptor</a>
@@ -641,9 +701,6 @@
                         <ul class="nav level2">
                           <li class="">
                             <a href="ETLBox.Logging.AbortLoadProcessTask.html" title="AbortLoadProcessTask" class="">AbortLoadProcessTask</a>
-                          </li>
-                          <li class="active">
-                            <a href="ETLBox.Logging.CreateDatabaseTarget.html" title="CreateDatabaseTarget" class="active">CreateDatabaseTarget</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Logging.CreateErrorTableTask.html" title="CreateErrorTableTask" class="">CreateErrorTableTask</a>
@@ -674,6 +731,9 @@
                           </li>
                           <li class="">
                             <a href="ETLBox.Logging.LogEntry.html" title="LogEntry" class="">LogEntry</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.Logging.html" title="Logging" class="">Logging</a>
                           </li>
                           <li class="">
                             <a href="ETLBox.Logging.LogHierarchyEntry.html" title="LogHierarchyEntry" class="">LogHierarchyEntry</a>
@@ -710,59 +770,38 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="ETLBox.Logging.CreateDatabaseTarget">
+            <article class="content wrap" id="_content" data-uid="ETLBox.Helper.IDataTypeConverter">
   
   
-  <h1 id="ETLBox_Logging_CreateDatabaseTarget" data-uid="ETLBox.Logging.CreateDatabaseTarget" class="text-break">Class CreateDatabaseTarget
+  <h1 id="ETLBox_Helper_IDataTypeConverter" data-uid="ETLBox.Helper.IDataTypeConverter" class="text-break">Interface IDataTypeConverter
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Describe methods that allows to intercept the CREATE TABLE sql generation in a CreateTableTask.
+It will convert the data type that is defined in a TableColumn into a custom database specific type.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">CreateDatabaseTarget</span></div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="ETLBox.Logging.html">ETLBox.Logging</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ETLBox.Helper.html">ETLBox.Helper</a></h6>
   <h6><strong>Assembly</strong>: ETLBox.dll</h6>
-  <h5 id="ETLBox_Logging_CreateDatabaseTarget_syntax">Syntax</h5>
+  <h5 id="ETLBox_Helper_IDataTypeConverter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CreateDatabaseTarget</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IDataTypeConverter</code></pre>
   </div>
-  <h3 id="constructors">Constructors
+  <h3 id="methods">Methods
   </h3>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget__ctor_" data-uid="ETLBox.Logging.CreateDatabaseTarget.#ctor*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget__ctor_ETLBox_Connection_IConnectionManager_System_String_" data-uid="ETLBox.Logging.CreateDatabaseTarget.#ctor(ETLBox.Connection.IConnectionManager,System.String)">CreateDatabaseTarget(IConnectionManager, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/etlbox/etlbox/new/dev/apiSpec/new?filename=ETLBox_Helper_IDataTypeConverter_TryConvertDbDataType_System_String_ETLBox_Connection_ConnectionManagerType_.md&amp;value=---%0Auid%3A%20ETLBox.Helper.IDataTypeConverter.TryConvertDbDataType(System.String%2CETLBox.Connection.ConnectionManagerType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/etlbox/etlbox/blob/dev/ETLBox/src/Helper/IDataTypeConverter.cs/#L17">View Source</a>
+  </span>
+  <a id="ETLBox_Helper_IDataTypeConverter_TryConvertDbDataType_" data-uid="ETLBox.Helper.IDataTypeConverter.TryConvertDbDataType*"></a>
+  <h4 id="ETLBox_Helper_IDataTypeConverter_TryConvertDbDataType_System_String_ETLBox_Connection_ConnectionManagerType_" data-uid="ETLBox.Helper.IDataTypeConverter.TryConvertDbDataType(System.String,ETLBox.Connection.ConnectionManagerType)">TryConvertDbDataType(String, ConnectionManagerType)</h4>
+  <div class="markdown level1 summary"><p>Tries to convert the data type from the TableColumn into a database specific type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CreateDatabaseTarget(IConnectionManager connectionManager, string logTableName)</code></pre>
+    <pre><code class="lang-csharp hljs">string TryConvertDbDataType(string dataTypeName, ConnectionManagerType connectionType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -775,306 +814,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a></td>
-        <td><span class="parametername">connectionManager</span></td>
-        <td></td>
-      </tr>
-      <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">logTableName</span></td>
-        <td></td>
+        <td><span class="parametername">dataTypeName</span></td>
+        <td><p>The specific type name from a table column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="ETLBox.Connection.ConnectionManagerType.html">ConnectionManagerType</a></td>
+        <td><span class="parametername">connectionType</span></td>
+        <td><p>The database connection type</p>
+</td>
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_CommandText_" data-uid="ETLBox.Logging.CreateDatabaseTarget.CommandText*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_CommandText" data-uid="ETLBox.Logging.CreateDatabaseTarget.CommandText">CommandText</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string CommandText { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_ConnectionManager_" data-uid="ETLBox.Logging.CreateDatabaseTarget.ConnectionManager*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_ConnectionManager" data-uid="ETLBox.Logging.CreateDatabaseTarget.ConnectionManager">ConnectionManager</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IConnectionManager ConnectionManager { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ETLBox.Connection.IConnectionManager.html">IConnectionManager</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_FROMDUAL_" data-uid="ETLBox.Logging.CreateDatabaseTarget.FROMDUAL*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_FROMDUAL" data-uid="ETLBox.Logging.CreateDatabaseTarget.FROMDUAL">FROMDUAL</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string FROMDUAL { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_INT_" data-uid="ETLBox.Logging.CreateDatabaseTarget.INT*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_INT" data-uid="ETLBox.Logging.CreateDatabaseTarget.INT">INT</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string INT { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_LogDate_" data-uid="ETLBox.Logging.CreateDatabaseTarget.LogDate*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_LogDate" data-uid="ETLBox.Logging.CreateDatabaseTarget.LogDate">LogDate</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string LogDate { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_LogTableName_" data-uid="ETLBox.Logging.CreateDatabaseTarget.LogTableName*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_LogTableName" data-uid="ETLBox.Logging.CreateDatabaseTarget.LogTableName">LogTableName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string LogTableName { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_PP_" data-uid="ETLBox.Logging.CreateDatabaseTarget.PP*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_PP" data-uid="ETLBox.Logging.CreateDatabaseTarget.PP">PP</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string PP { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_QB_" data-uid="ETLBox.Logging.CreateDatabaseTarget.QB*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_QB" data-uid="ETLBox.Logging.CreateDatabaseTarget.QB">QB</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string QB { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_QE_" data-uid="ETLBox.Logging.CreateDatabaseTarget.QE*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_QE" data-uid="ETLBox.Logging.CreateDatabaseTarget.QE">QE</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string QE { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_TN_" data-uid="ETLBox.Logging.CreateDatabaseTarget.TN*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_TN" data-uid="ETLBox.Logging.CreateDatabaseTarget.TN">TN</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ObjectNameDescriptor TN { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="ETLBox.Helper.ObjectNameDescriptor.html">ObjectNameDescriptor</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_VARCHAR_" data-uid="ETLBox.Logging.CreateDatabaseTarget.VARCHAR*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_VARCHAR" data-uid="ETLBox.Logging.CreateDatabaseTarget.VARCHAR">VARCHAR</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string VARCHAR { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  
-  
-  <a id="ETLBox_Logging_CreateDatabaseTarget_GetNLogDatabaseTarget_" data-uid="ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget*"></a>
-  <h4 id="ETLBox_Logging_CreateDatabaseTarget_GetNLogDatabaseTarget" data-uid="ETLBox.Logging.CreateDatabaseTarget.GetNLogDatabaseTarget">GetNLogDatabaseTarget()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DatabaseTarget GetNLogDatabaseTarget()</code></pre>
-  </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -1085,8 +837,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NLog.Targets.DatabaseTarget</span></td>
-        <td></td>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The type used in the CREATE TABLE statement</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1097,6 +850,12 @@
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox/new/dev/apiSpec/new?filename=ETLBox_Helper_IDataTypeConverter.md&amp;value=---%0Auid%3A%20ETLBox.Helper.IDataTypeConverter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox/blob/dev/ETLBox/src/Helper/IDataTypeConverter.cs/#L9" class="contribution-link">View Source</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

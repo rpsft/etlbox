@@ -284,8 +284,8 @@ for holding a value:</p>
 <h3 id="setting-up-the-data-flow">Setting up the data flow</h3>
 <p>No we can already set up a data flow. It would look like this:</p>
 <pre><code class="lang-C#">DbSource&lt;MyMergeRow&gt; source = new DbSource&lt;MyMergeRow&gt;(connection, &quot;SourceTable&quot;);
-DBMerge&lt;MyMergeRow&gt; merge = new DBMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
-source.LinkTo(dest);
+DbMerge&lt;MyMergeRow&gt; merge = new DbMerge&lt;MyMergeRow&gt;(connection, &quot;DestinationTable&quot;);
+source.LinkTo(merge);
 source.Execute();
 merge.Wait();
 </code></pre>
@@ -480,6 +480,9 @@ is passed, the truncate method is used to merge the data.</p>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.docu/blob/main/ETLBoxDocu/articles/dataflow/dataflow_dbmerge.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

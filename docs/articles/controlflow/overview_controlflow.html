@@ -266,6 +266,33 @@ CreateTableTask.Create(connectionManager, CustomerTableDef);
 </code></pre>
 <p><em>Implicit data type conversions</em>:</p>
 <p>CreateTableTask will automatically try to convert the given data type into a type that your database actually understands. E.g., if you pass &quot;DATETIME&quot; as datatype for a column, and you want to create your table on a Postgres connection manager, CreateTableTask will automatically convert &quot;DATETIME&quot; into &quot;TIMESTAMP&quot;.</p>
+<p><em>Adding your own data type conversion</em></p>
+<p>If you need to change the default data type conversion, you can overwrite it with your  implementation. To achieve this, you
+need to pass an object that implements IDataTypeConverter. The interface has one method: <code>TryConvertDbDataType</code> and 2 parameter. <code>dbSpecificTypeName</code> is the name that you define in your TableColumn, and connection type defines the connection manager type (e.g. SqlServer or Oracle).
+The return value is the converted data type.
+Here is an example implementation:</p>
+<pre><code class="lang-C">public class MyDataTypeConverter : IDataTypeConverter
+{
+   public string TryConvertDbDataType(string dbSpecificTypeName, ConnectionManagerType connectionType)
+  {
+     if (dbSpecificTypeName == &quot;ABC&quot;)
+       return &quot;DATETIME&quot;;
+     else
+       return DataTypeConverter.TryGetDbSpecificType(dbSpecificTypeName, connectionType);
+  }
+}
+List&lt;TableColumn&gt; columns = new List&lt;TableColumn&gt;() {
+  new TableColumn(&quot;somedate&quot;, &quot;ABC&quot;),
+  new TableColumn(&quot;sometext&quot;, &quot;TEXT&quot;)
+};
+
+var ctt = new CreateTableTask(&quot;CreateTableIDataTypeConverter&quot;, columns)
+{
+   ConnectionManager = SqlConnection,
+   DataTypeConverter = new MyDataTypeConverter()
+};
+ctt.Create();
+</code></pre>
 <h4 id="droptabletask">DropTableTask</h4>
 <p>This task simple drops a table (and optionally checks if the table exists):</p>
 <pre><code class="lang-C#">DropTableTask.Drop(connectionManager, &quot;DropTableTest&quot;);
@@ -445,6 +472,9 @@ good choice for creating ETL jobs. This is also true for other ORM tools.</p>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.docu/blob/main/ETLBoxDocu/articles/controlflow/overview_controlflow.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

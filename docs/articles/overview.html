@@ -175,7 +175,7 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="-etlbox"><span><img src="https://github.com/roadrunnerlenny/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32"> ETLBox</span></h1>
+<h1 id="-etlbox"><span><img src="https://github.com/etlbox/etlbox/raw/master/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32"> ETLBox</span></h1>
 
 <p>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</p>
 <p>Create your own tailor-made data flow with your .NET language of choice. ETLBox is written in C# and offers full support for .NET Core.</p>
@@ -256,17 +256,17 @@ The following table shows which types of sources and destination are supported o
 <tbody>
 <tr>
 <td>Databases</td>
-<td>Sql Server, Postgres, SQLite, MySql, Oracle</td>
+<td>Sql Server, Postgres, SQLite, MySql, MariaDb, Oracle</td>
 <td>Full support</td>
 </tr>
 <tr>
 <td>Flat files</td>
-<td>Csv, Json, Xml</td>
+<td>Csv, Json, Xml, Text</td>
 <td>Full support</td>
 </tr>
 <tr>
 <td>Any web api</td>
-<td>Json, Xml, Csv</td>
+<td>Json, Xml, Csv, Text</td>
 <td>Full support</td>
 </tr>
 <tr>
@@ -296,7 +296,7 @@ The following table shows which types of sources and destination are supported o
 </tr>
 </tbody>
 </table>
-<p>You can choose between different sources and destination components. <code>DbSource</code> and <code>DbDestination</code> will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). <code>CsvSource</code>, <code>CsvDestination</code> give you support for flat files. <code>ExcelSource</code> allows you to read data from an excel sheet. <code>JsonSource</code>, <code>JsonDestination</code>, <code>XmlSource</code> and <code>XmlDestination</code> let you read and write json from files or web service request. <code>MemorySource</code>, <code>MemoryDestinatiation</code> as well as <code>CustomSource</code> and <code>CustomDestination</code> will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.</p>
+<p>You can choose between different sources and destination components. <code>DbSource</code> and <code>DbDestination</code> will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). <code>CsvSource</code>, <code>CsvDestination</code> give you support for flat files. <code>ExcelSource</code> allows you to read data from an excel sheet. <code>JsonSource</code>, <code>JsonDestination</code>, <code>XmlSource</code> and <code>XmlDestination</code> let you read and write json or xml from files or web service request. <code>TextSource</code> and <code>TextDestination</code> allow access to regular text files with line breaks.  <code>MemorySource</code>, <code>MemoryDestinatiation</code> as well as <code>CustomSource</code> and <code>CustomDestination</code> will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.</p>
 <h3 id="transformations">Transformations</h3>
 <p>ETLBox has 3 type of transformations: Non-blocking, partially blocking and blocking transformations. Non-blocking transformations will
 only store the row that is currently processed in memory (plus some more in the buffer to optimize throughput and performance). Partially blocking transformations will load some data in the memory before they process data row-by-row. Blocking transformations will wait until all data has arrived at the component before it starts processing all records subsequently.</p>
@@ -340,6 +340,11 @@ only store the row that is currently processed in memory (plus some more in the 
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td>XmlSchemaValidation</td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <p><em>RowTransformation</em>: This transformation let you modfiy each data record with your custom written C# code</p>
@@ -355,6 +360,8 @@ only store the row that is currently processed in memory (plus some more in the 
 <p><em>DbMerge</em>: Allows you to insert, update or delete data in your target table depending on your incoming data.
 No more need to write your own &quot;upsert&quot; statement - the <code>DbMerge</code> is supported by all ETLBox databases. The output of the DbMerge
 is the changes to your target table (insertions, updates and deletions.)</p>
+<p><em>XmlSchemaValidation</em>: Validates a given string that contains xml with a defined Xml schema definition. Not valid xml is redirected to
+the error output.</p>
 <h4 id="designed-for-big-data">Designed for big data</h4>
 <p>ETLBox was designed for performance and is able to deal with big amounts of data. All destinations do support Bulk or Batch operations. By default, every component comes with an input and/or output buffer. You can design your data flow that only batches or your data is stored in memory, which are kept in different buffers for every component to increase throughput. All operations can be execute asynchrounously, so that your processing will run only within separate threads.</p>
 <h3 id="control-flow---overview">Control Flow - overview</h3>
@@ -380,7 +387,7 @@ The connectors are in separate packages - depending on your needs, choose the ri
 E.g., if you want to connect to SqlServer, use <a href="https://www.nuget.org/packages/ETLBox.SqlServer/">ETLBox.SqlServer</a>, and if you also
 need to access Csv files then add <a href="https://www.nuget.org/packages/ETLBox.Csv/">ETLBox.Csv</a>.</p>
 <p>The free versions allows you to process up to 10.000 records per connector in a DataFlow.</p>
-<p>If you are interest in the sources, you can clone the <a href="https://github.com/roadrunnerlenny/etlbox">main ETLBox repository from github</a>.
+<p>If you are interest in the sources, you can clone the <a href="https://github.com/etlbox/etlbox">main ETLBox repository from github</a>.
 Please note that the connectors are not open source. If you need access to the source code, please contact us.</p>
 <span class="hideOnWebsite">
 <p><a href="https://etlbox.net">See the ETLBox Project website</a> for <a href="https://etlbox.net/articles/getting_started.html">introductional articles</a> and a <a href="https://etlbox.net/api/index.html">complete API documentation</a>. Enjoy!</p>
@@ -392,6 +399,9 @@ Please note that the connectors are not open source. If you need access to the s
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.docu/blob/main/ETLBoxDocu/articles/overview.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
