@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-
-namespace ETLBox.DataFlow
+﻿namespace ETLBox.DataFlow
 {
     /// <summary>
     /// This class holds meta data about the current progress of the source.

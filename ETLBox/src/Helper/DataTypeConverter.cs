@@ -1,6 +1,5 @@
 ﻿using ETLBox.Connection;
 using System;
-using System.ComponentModel;
 using System.Data;
 using System.Text.RegularExpressions;
 
@@ -89,7 +88,7 @@ namespace ETLBox.Helper
         /// </summary>
         /// <param name="dbSpecificTypeName">The sql specific data type name</param>
         /// <returns>The corresponding .NET data type</returns>
-        public static Type GetTypeObject(string dbSpecificTypeName) =>Type.GetType(GetNETObjectTypeString(dbSpecificTypeName));
+        public static Type GetTypeObject(string dbSpecificTypeName) => Type.GetType(GetNETObjectTypeString(dbSpecificTypeName));
 
         /// <summary>
         /// Returns the ADO.NET System.Data.DbType object for a specific sql type.
@@ -178,8 +177,8 @@ namespace ETLBox.Helper
             {
                 if (IsCharTypeDefinition(typeName))
                 {
-                    if (typeName.Replace(" ","").StartsWith("NVARCHAR("))
-                        return typeName.Replace("NVARCHAR","NVARCHAR2");
+                    if (typeName.Replace(" ", "").StartsWith("NVARCHAR("))
+                        return typeName.Replace("NVARCHAR", "NVARCHAR2");
                     else if (typeName.Replace(" ", "").StartsWith("VARCHAR("))
                         return typeName.Replace("VARCHAR", "VARCHAR2");
                 }

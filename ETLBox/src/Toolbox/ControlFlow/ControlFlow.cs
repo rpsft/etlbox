@@ -1,6 +1,5 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Exceptions;
-using NLog;
 
 namespace ETLBox.ControlFlow
 {

@@ -1,7 +1,4 @@
-﻿using ETLBox.ControlFlow;
-using NLog.Targets;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -23,7 +20,7 @@ namespace ETLBox.DataFlow
         internal override void CompleteBufferOnPredecessorCompletion() => TargetBlock.Complete();
 
         internal override void FaultBufferOnPredecessorCompletion(Exception e) => TargetBlock.Fault(e);
-        
+
         protected void CreateLinkInInternalFlow(DataFlowComponent parent)
         {
             Parent = parent;

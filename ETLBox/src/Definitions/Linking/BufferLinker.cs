@@ -1,8 +1,5 @@
-﻿using ETLBox.ControlFlow;
-using ETLBox.DataFlow.Connectors;
-using System;
+﻿using System;
 using System.Threading.Tasks.Dataflow;
-using CF = ETLBox.ControlFlow;
 
 namespace ETLBox.DataFlow
 {
@@ -11,7 +8,8 @@ namespace ETLBox.DataFlow
         internal LinkPredicates LinkPredicate { get; set; }
         internal Predicate<T> GetPredicateKeep() => LinkPredicate?.PredicateKeep as Predicate<T>;
         internal Predicate<T> GetPredicateVoid() => LinkPredicate?.PredicateVoid as Predicate<T>;
-        internal BufferLinker(LinkPredicates linkPredicates = null) {
+        internal BufferLinker(LinkPredicates linkPredicates = null)
+        {
             LinkPredicate = linkPredicates;
         }
 

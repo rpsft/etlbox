@@ -50,7 +50,7 @@ The MaxBufferSize property is now available on every component - it allows you t
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\etlbox.license\LicenseKey\LicenseManager\LicenseManager.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\..\etlbox.license\LicenseManager\LicenseManager.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">

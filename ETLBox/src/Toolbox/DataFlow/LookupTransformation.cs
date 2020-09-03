@@ -1,11 +1,9 @@
-﻿using ETLBox.ControlFlow;
-using ETLBox.DataFlow.Connectors;
+﻿using ETLBox.DataFlow.Connectors;
 using ETLBox.Exceptions;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Threading.Tasks.Dataflow;
 
 
@@ -126,7 +124,7 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implementation
 
-        MemoryDestination<TSourceOutput> LookupBuffer ;
+        MemoryDestination<TSourceOutput> LookupBuffer;
         RowTransformation<TInput, TInput> RowTransformation;
         LookupTypeInfo TypeInfo;
 

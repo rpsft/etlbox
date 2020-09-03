@@ -146,11 +146,16 @@ namespace ETLBox.DataFlow.Connectors
 
         #region Implement abstract methods
 
-        internal override Task BufferCompletion => Task.WhenAll(Lookup.Completion, DestinationTable.Completion);
+        internal override Task BufferCompletion =>
+            Task.WhenAll(Lookup.Completion, DestinationTable.Completion);
 
-        internal override void CompleteBufferOnPredecessorCompletion() => Lookup.CompleteBufferOnPredecessorCompletion();
+        internal override void CompleteBufferOnPredecessorCompletion()
+        {
+            Lookup.CompleteBufferOnPredecessorCompletion();
+        }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e) {
+        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        {
             Lookup.FaultBufferOnPredecessorCompletion(e);
             OutputSource.FaultBufferOnPredecessorCompletion(e);
         }
@@ -244,7 +249,13 @@ namespace ETLBox.DataFlow.Connectors
                 IdentifyAndDeleteMissingEntries();
                 if (UseTruncateMethod && (MergeMode == MergeMode.OnlyUpdates || MergeMode == MergeMode.NoDeletions))
                     ReinsertTruncatedRecords();
-                OutputSource.Execute();
+                if (Successors.Count > 0)
+                {
+                    OutputSource.ExecuteAsync();
+                    OutputSource.Completion.Wait();
+                    //Careful: A TPL buffer never completes if it has no consumer linked to it!!!
+                    OutputSource.BufferCompletion.Wait();
+                }
             };
         }
 

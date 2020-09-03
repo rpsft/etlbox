@@ -397,7 +397,7 @@ sql
             , data_type => curCol.DataType = data_type.ToString()
             , nullable => curCol.AllowNulls = nullable.ToString() == "Y" ? true : false
             , identity_column => curCol.IsIdentity = identity_column?.ToString() == "YES" ? true : false
-             ,primary_key => curCol.IsPrimaryKey = primary_key?.ToString() == "ENABLED" ? true : false
+             , primary_key => curCol.IsPrimaryKey = primary_key?.ToString() == "ENABLED" ? true : false
             , data_default => curCol.DefaultValue = data_default?.ToString()
             , collation => curCol.Collation = collation?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()

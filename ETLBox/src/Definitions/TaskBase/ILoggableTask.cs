@@ -1,6 +1,4 @@
-﻿using ETLBox.Connection;
-
-namespace ETLBox.ControlFlow
+﻿namespace ETLBox.ControlFlow
 {
     public interface ILoggableTask
     {

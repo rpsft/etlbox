@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ETLBox.DataFlow
+﻿namespace ETLBox.DataFlow
 {
     public interface IDataFlowLogging
     {

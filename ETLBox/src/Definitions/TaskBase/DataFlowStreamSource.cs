@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ETLBox.Helper;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
-using ETLBox.Helper;
 
 namespace ETLBox.DataFlow
 {
@@ -78,7 +77,8 @@ namespace ETLBox.DataFlow
             CloseStreamsIfOpen();
         }
 
-        protected override void CleanUpOnFaulted(Exception e) {
+        protected override void CleanUpOnFaulted(Exception e)
+        {
             CloseStreamsIfOpen();
         }
 
@@ -112,7 +112,7 @@ namespace ETLBox.DataFlow
             else
             {
                 var message = HttpRequestMessage.Clone();
-                message.RequestUri =  new Uri(uri);
+                message.RequestUri = new Uri(uri);
                 var response = HttpClient.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).Result;
                 response.EnsureSuccessStatusCode();
                 StreamReader = new StreamReader(response.Content.ReadAsStreamAsync().Result);

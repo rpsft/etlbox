@@ -1,7 +1,4 @@
-﻿using ETLBox.ControlFlow;
-using NLog.Targets;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -24,7 +21,8 @@ namespace ETLBox.DataFlow
                 TargetBlock.Complete();
         }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e) {
+        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        {
             if (TargetBlock != SourceBlock)
                 throw new NotImplementedException("Component must override this method!");
             else

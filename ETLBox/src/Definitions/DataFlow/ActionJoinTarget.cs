@@ -1,8 +1,4 @@
-﻿using ETLBox.ControlFlow;
-using NLog.Targets;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
 using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow

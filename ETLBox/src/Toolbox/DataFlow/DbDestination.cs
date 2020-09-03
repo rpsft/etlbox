@@ -86,7 +86,7 @@ namespace ETLBox.DataFlow.Connectors
         /// <param name="batchSize">Sets the <see cref="DataFlowBatchDestination{TInput}.BatchSize" /></param>
         public DbDestination(string tableName, int batchSize) : this(tableName)
         {
-            BatchSize= batchSize;
+            BatchSize = batchSize;
         }
 
         /// <param name="connectionManager">Sets the <see cref="ConnectionManager" /></param>

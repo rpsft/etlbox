@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ETLBox.DataFlow
@@ -10,7 +9,7 @@ namespace ETLBox.DataFlow
         /// The completion task of the component. A component is completed when all predecessors (if any) are
         /// completed and the current component has completed its buffer.
         /// </summary>
-        Task Completion { get;}
+        Task Completion { get; }
 
         /// <summary>
         /// When a component has completed and processed all rows, the OnCompletion action is executed.

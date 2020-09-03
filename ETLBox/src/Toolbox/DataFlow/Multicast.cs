@@ -1,12 +1,10 @@
-﻿using ETLBox.ControlFlow;
-using ETLBox.Exceptions;
+﻿using ETLBox.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using System.Transactions;
 
 namespace ETLBox.DataFlow.Transformations
 {
@@ -105,7 +103,7 @@ namespace ETLBox.DataFlow.Transformations
                 if (AvoidBroadcastBlock)
                     return Task.WhenAll(OutputBuffer.Select(b => b.Completion));
                 else
-                   return ((IDataflowBlock)BroadcastBlock).Completion;
+                    return ((IDataflowBlock)BroadcastBlock).Completion;
             }
         }
 

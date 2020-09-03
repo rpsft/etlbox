@@ -1,5 +1,4 @@
-﻿using ETLBox.Connection;
-using ETLBox.Helper;
+﻿using ETLBox.Helper;
 using System;
 
 namespace ETLBox.ControlFlow

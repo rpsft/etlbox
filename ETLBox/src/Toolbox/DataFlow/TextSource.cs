@@ -1,14 +1,10 @@
 ﻿using ETLBox.ControlFlow;
 using ETLBox.Exceptions;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Dynamic;
-using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.DataFlow.Connectors
 {
@@ -98,7 +94,7 @@ namespace ETLBox.DataFlow.Connectors
             try
             {
                 if (TypeInfo.IsArray)
-                    newObject= (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { 1 });
+                    newObject = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { 1 });
                 else
                     newObject = (TOutput)Activator.CreateInstance(typeof(TOutput));
 
@@ -124,6 +120,6 @@ namespace ETLBox.DataFlow.Connectors
     public class TextSource : TextSource<ExpandoObject>
     {
         public TextSource() : base() { }
-        public TextSource(string fileName, Action<string,ExpandoObject> parseLineAction) : base(fileName, parseLineAction) { }
+        public TextSource(string fileName, Action<string, ExpandoObject> parseLineAction) : base(fileName, parseLineAction) { }
     }
 }

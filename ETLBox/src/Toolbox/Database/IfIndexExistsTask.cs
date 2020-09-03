@@ -45,7 +45,7 @@ WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotatedFullName}'
             AND indexname = '{ON.UnquotatedObjectName}'
 ";
             }
-            else if(this.ConnectionType == ConnectionManagerType.Oracle)
+            else if (this.ConnectionType == ConnectionManagerType.Oracle)
             {
                 return $@"
 SELECT 1 

@@ -85,12 +85,16 @@ AS
 
         string CreateViewName => ConnectionType == ConnectionManagerType.Access ? VN.UnquotatedFullName : VN.QuotatedFullName;
         bool IsExisting { get; set; }
-        string CreateOrAlterSql {
-            get {
-                if (!IsExisting) {
+        string CreateOrAlterSql
+        {
+            get
+            {
+                if (!IsExisting)
+                {
                     return "CREATE";
                 }
-                else {
+                else
+                {
                     if (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access)
                         return "CREATE";
                     else if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.Oracle)

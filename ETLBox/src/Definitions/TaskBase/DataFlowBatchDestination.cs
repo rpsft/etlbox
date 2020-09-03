@@ -1,11 +1,10 @@
-﻿using ETLBox.ControlFlow;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow
 {
-    public abstract class DataFlowBatchDestination<TInput> : DataFlowComponent,  IDataFlowBatchDestination<TInput>, IDataFlowDestination<TInput>
+    public abstract class DataFlowBatchDestination<TInput> : DataFlowComponent, IDataFlowBatchDestination<TInput>, IDataFlowDestination<TInput>
     {
         #region Public properties
 

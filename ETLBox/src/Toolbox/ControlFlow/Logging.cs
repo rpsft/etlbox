@@ -1,6 +1,4 @@
 ﻿using ETLBox.Connection;
-using ETLBox.Exceptions;
-using ETLBox.Logging;
 using NLog;
 
 namespace ETLBox.Logging

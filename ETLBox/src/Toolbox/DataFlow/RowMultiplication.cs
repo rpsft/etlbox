@@ -55,7 +55,8 @@ namespace ETLBox.DataFlow.Transformations
             });
         }
 
-        protected override void CleanUpOnSuccess() {
+        protected override void CleanUpOnSuccess()
+        {
             NLogFinishOnce();
         }
 

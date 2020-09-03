@@ -1,8 +1,6 @@
 ﻿using ETLBox.ControlFlow;
 using System;
 using System.Dynamic;
-using System.Globalization;
-using TheBoxOffice.LicenseManager;
 
 namespace ETLBox.DataFlow.Connectors
 {

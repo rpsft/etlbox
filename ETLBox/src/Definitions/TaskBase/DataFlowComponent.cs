@@ -1,11 +1,7 @@
 ﻿using ETLBox.ControlFlow;
-using ETLBox.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using TSQL.Clauses;
 
 namespace ETLBox.DataFlow
 {
@@ -130,7 +126,8 @@ namespace ETLBox.DataFlow
         /// Inits the underlying TPL.Dataflow buffer objects. After this, the component is ready for linking
         /// its source or target blocks.
         /// </summary>
-        public void InitBufferObjects() {
+        public void InitBufferObjects()
+        {
             InternalInitBufferObjects();
             WereBufferInitialized = true;
         }
