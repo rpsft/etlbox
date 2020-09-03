@@ -1,0 +1,992 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-177207474-1"></script>
+  	<script>
+  	  window.dataLayer = window.dataLayer || [];
+  	  function gtag(){dataLayer.push(arguments);}
+  	  gtag('js', new Date());
+  
+  	  gtag('config', 'UA-177207474-1' {
+  		'client_storage': 'none'
+  	  });
+  	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class MariaDbConnectionString
+   | ETLBox - a lightweight ETL library for C#. </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class MariaDbConnectionString
+   | ETLBox - a lightweight ETL library for C#. ">
+    <meta name="generator" content="docfx 2.54.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+  
+    <meta property="docfx:navrel" content="../toc">
+    <meta property="docfx:tocrel" content="toc">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../articles/overview.html" title="Getting started">Getting started</a>
+                      </li>
+                      <li>
+                          <a href="../api/index.html" title="API Documentation">API Documentation</a>
+                      </li>
+                      <li>
+                          <a href="../articles/pricing/pricing.html" title="Pricing">Pricing</a>
+                      </li>
+                      <li>
+                          <a href="../articles/pricing/contact.html" title="Contact">Contact</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.Connection.html" title="ETLBox.Connection" class="">ETLBox.Connection</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.Connection.AccessOdbcConnectionManager.html" title="AccessOdbcConnectionManager" class="">AccessOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.AdomdConnectionManager.html" title="AdomdConnectionManager" class="">AdomdConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.ConnectionManagerType.html" title="ConnectionManagerType" class="">ConnectionManagerType</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.DbConnectionManager-1.html" title="DbConnectionManager&lt;Connection&gt;" class="">DbConnectionManager&lt;Connection&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.DbConnectionString-2.html" title="DbConnectionString&lt;T, TBuilder&gt;" class="">DbConnectionString&lt;T, TBuilder&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.IConnectionManager.html" title="IConnectionManager" class="">IConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.IDbConnectionString.html" title="IDbConnectionString" class="">IDbConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.MariaDbConnectionManager.html" title="MariaDbConnectionManager" class="">MariaDbConnectionManager</a>
+                          </li>
+                          <li class="active">
+                            <a href="ETLBox.Connection.MariaDbConnectionString.html" title="MariaDbConnectionString" class="active">MariaDbConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.MySqlConnectionManager.html" title="MySqlConnectionManager" class="">MySqlConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.MySqlConnectionString.html" title="MySqlConnectionString" class="">MySqlConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.MySqlOdbcConnectionManager.html" title="MySqlOdbcConnectionManager" class="">MySqlOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OdbcConnectionManager.html" title="OdbcConnectionManager" class="">OdbcConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OdbcConnectionString.html" title="OdbcConnectionString" class="">OdbcConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OleDbConnectionManager.html" title="OleDbConnectionManager" class="">OleDbConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OleDbConnectionString.html" title="OleDbConnectionString" class="">OleDbConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OracleConnectionManager.html" title="OracleConnectionManager" class="">OracleConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OracleConnectionString.html" title="OracleConnectionString" class="">OracleConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.OracleOdbcConnectionManager.html" title="OracleOdbcConnectionManager" class="">OracleOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.PostgresConnectionManager.html" title="PostgresConnectionManager" class="">PostgresConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.PostgresConnectionString.html" title="PostgresConnectionString" class="">PostgresConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.PostgresOdbcConnectionManager.html" title="PostgresOdbcConnectionManager" class="">PostgresOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.SqlConnectionManager.html" title="SqlConnectionManager" class="">SqlConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.SqlConnectionString.html" title="SqlConnectionString" class="">SqlConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.SQLiteConnectionManager.html" title="SQLiteConnectionManager" class="">SQLiteConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.SQLiteConnectionString.html" title="SQLiteConnectionString" class="">SQLiteConnectionString</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.SqlOdbcConnectionManager.html" title="SqlOdbcConnectionManager" class="">SqlOdbcConnectionManager</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Connection.SqlOleDbConnectionManager.html" title="SqlOleDbConnectionManager" class="">SqlOleDbConnectionManager</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.ControlFlow.html" title="ETLBox.ControlFlow" class="">ETLBox.ControlFlow</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.ControlFlow.html" title="ControlFlow" class="">ControlFlow</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.ControlFlowTask.html" title="ControlFlowTask" class="">ControlFlowTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.DbTask.html" title="DbTask" class="">DbTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.DropTask-1.html" title="DropTask&lt;T&gt;" class="">DropTask&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.IfExistsTask.html" title="IfExistsTask" class="">IfExistsTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.ILoggableTask.html" title="ILoggableTask" class="">ILoggableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.ITableData.html" title="ITableData" class="">ITableData</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.LoggableTask.html" title="LoggableTask" class="">LoggableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.ProcedureDefinition.html" title="ProcedureDefinition" class="">ProcedureDefinition</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.ProcedureParameter.html" title="ProcedureParameter" class="">ProcedureParameter</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.QueryParameter.html" title="QueryParameter" class="">QueryParameter</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.TableColumn.html" title="TableColumn" class="">TableColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.TableData.html" title="TableData" class="">TableData</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.TableData-1.html" title="TableData&lt;T&gt;" class="">TableData&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.TableDefinition.html" title="TableDefinition" class="">TableDefinition</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.ControlFlow.Tasks.html" title="ETLBox.ControlFlow.Tasks" class="">ETLBox.ControlFlow.Tasks</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CalculateDatabaseHashTask.html" title="CalculateDatabaseHashTask" class="">CalculateDatabaseHashTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CleanUpSchemaTask.html" title="CleanUpSchemaTask" class="">CleanUpSchemaTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CreateDatabaseTask.html" title="CreateDatabaseTask" class="">CreateDatabaseTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CreateIndexTask.html" title="CreateIndexTask" class="">CreateIndexTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CreateProcedureTask.html" title="CreateProcedureTask" class="">CreateProcedureTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CreateSchemaTask.html" title="CreateSchemaTask" class="">CreateSchemaTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CreateTableTask.html" title="CreateTableTask" class="">CreateTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.CreateViewTask.html" title="CreateViewTask" class="">CreateViewTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.DropDatabaseTask.html" title="DropDatabaseTask" class="">DropDatabaseTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.DropIndexTask.html" title="DropIndexTask" class="">DropIndexTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.DropProcedureTask.html" title="DropProcedureTask" class="">DropProcedureTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.DropSchemaTask.html" title="DropSchemaTask" class="">DropSchemaTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.DropTableTask.html" title="DropTableTask" class="">DropTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.DropViewTask.html" title="DropViewTask" class="">DropViewTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.GetDatabaseListTask.html" title="GetDatabaseListTask" class="">GetDatabaseListTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.IfDatabaseExistsTask.html" title="IfDatabaseExistsTask" class="">IfDatabaseExistsTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.IfIndexExistsTask.html" title="IfIndexExistsTask" class="">IfIndexExistsTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.IfProcedureExistsTask.html" title="IfProcedureExistsTask" class="">IfProcedureExistsTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.IfSchemaExistsTask.html" title="IfSchemaExistsTask" class="">IfSchemaExistsTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.IfTableOrViewExistsTask.html" title="IfTableOrViewExistsTask" class="">IfTableOrViewExistsTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.RecoveryModel.html" title="RecoveryModel" class="">RecoveryModel</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.RowCountOptions.html" title="RowCountOptions" class="">RowCountOptions</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.RowCountTask.html" title="RowCountTask" class="">RowCountTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.SqlTask.html" title="SqlTask" class="">SqlTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.TruncateTableTask.html" title="TruncateTableTask" class="">TruncateTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.ControlFlow.Tasks.XmlaTask.html" title="XmlaTask" class="">XmlaTask</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.DataFlow.html" title="ETLBox.DataFlow" class="">ETLBox.DataFlow</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ActionJoinTarget-1.html" title="ActionJoinTarget&lt;TInput&gt;" class="">ActionJoinTarget&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.AggregateColumn.html" title="AggregateColumn" class="">AggregateColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ChangeAction.html" title="ChangeAction" class="">ChangeAction</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ColumnMap.html" title="ColumnMap" class="">ColumnMap</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.CompareColumn.html" title="CompareColumn" class="">CompareColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlow.html" title="DataFlow" class="">DataFlow</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowBatchDestination-1.html" title="DataFlowBatchDestination&lt;TInput&gt;" class="">DataFlowBatchDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowComponent.html" title="DataFlowComponent" class="">DataFlowComponent</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowDestination-1.html" title="DataFlowDestination&lt;TInput&gt;" class="">DataFlowDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowExecutableSource-1.html" title="DataFlowExecutableSource&lt;TOutput&gt;" class="">DataFlowExecutableSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowJoinTarget-1.html" title="DataFlowJoinTarget&lt;TInput&gt;" class="">DataFlowJoinTarget&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowSource-1.html" title="DataFlowSource&lt;TOutput&gt;" class="">DataFlowSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowStreamDestination-1.html" title="DataFlowStreamDestination&lt;TInput&gt;" class="">DataFlowStreamDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowStreamSource-1.html" title="DataFlowStreamSource&lt;TOutput&gt;" class="">DataFlowStreamSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DataFlowTransformation-2.html" title="DataFlowTransformation&lt;TInput, TOutput&gt;" class="">DataFlowTransformation&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.DeleteColumn.html" title="DeleteColumn" class="">DeleteColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ErrorSource.html" title="ErrorSource" class="">ErrorSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ETLBoxError.html" title="ETLBoxError" class="">ETLBoxError</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ExcelColumn.html" title="ExcelColumn" class="">ExcelColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ExcelRange.html" title="ExcelRange" class="">ExcelRange</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.GroupColumn.html" title="GroupColumn" class="">GroupColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowBatchDestination-1.html" title="IDataFlowBatchDestination&lt;TInput&gt;" class="">IDataFlowBatchDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowComponent.html" title="IDataFlowComponent" class="">IDataFlowComponent</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowDestination.html" title="IDataFlowDestination" class="">IDataFlowDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowDestination-1.html" title="IDataFlowDestination&lt;TInput&gt;" class="">IDataFlowDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowExecutableSource-1.html" title="IDataFlowExecutableSource&lt;TOutput&gt;" class="">IDataFlowExecutableSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowLogging.html" title="IDataFlowLogging" class="">IDataFlowLogging</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowSource.html" title="IDataFlowSource" class="">IDataFlowSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowSource-1.html" title="IDataFlowSource&lt;TOutput&gt;" class="">IDataFlowSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowStreamDestination-1.html" title="IDataFlowStreamDestination&lt;TInput&gt;" class="">IDataFlowStreamDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowStreamSource-1.html" title="IDataFlowStreamSource&lt;TOutput&gt;" class="">IDataFlowStreamSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowTransformation-2.html" title="IDataFlowTransformation&lt;TInput, TOutput&gt;" class="">IDataFlowTransformation&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IDataFlowTransformation-1.html" title="IDataFlowTransformation&lt;TOutput&gt;" class="">IDataFlowTransformation&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IdColumn.html" title="IdColumn" class="">IdColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.IMergeableRow.html" title="IMergeableRow" class="">IMergeableRow</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.MatchColumn.html" title="MatchColumn" class="">MatchColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.MergeableRow.html" title="MergeableRow" class="">MergeableRow</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.MergeMode.html" title="MergeMode" class="">MergeMode</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.MergeProperties.html" title="MergeProperties" class="">MergeProperties</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.ResourceType.html" title="ResourceType" class="">ResourceType</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.RetrieveColumn.html" title="RetrieveColumn" class="">RetrieveColumn</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.StreamMetaData.html" title="StreamMetaData" class="">StreamMetaData</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.TypeInfo.html" title="TypeInfo" class="">TypeInfo</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.DataFlow.Connectors.html" title="ETLBox.DataFlow.Connectors" class="">ETLBox.DataFlow.Connectors</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.ConcurrentMemoryDestination.html" title="ConcurrentMemoryDestination" class="">ConcurrentMemoryDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.ConcurrentMemoryDestination-1.html" title="ConcurrentMemoryDestination&lt;TInput&gt;" class="">ConcurrentMemoryDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CsvDestination.html" title="CsvDestination" class="">CsvDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CsvDestination-1.html" title="CsvDestination&lt;TInput&gt;" class="">CsvDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CsvSource.html" title="CsvSource" class="">CsvSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CsvSource-1.html" title="CsvSource&lt;TOutput&gt;" class="">CsvSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CustomDestination.html" title="CustomDestination" class="">CustomDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CustomDestination-1.html" title="CustomDestination&lt;TInput&gt;" class="">CustomDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CustomSource.html" title="CustomSource" class="">CustomSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.CustomSource-1.html" title="CustomSource&lt;TOutput&gt;" class="">CustomSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.DbDestination.html" title="DbDestination" class="">DbDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.DbDestination-1.html" title="DbDestination&lt;TInput&gt;" class="">DbDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.DbMerge.html" title="DbMerge" class="">DbMerge</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.DbMerge-1.html" title="DbMerge&lt;TInput&gt;" class="">DbMerge&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.DbSource.html" title="DbSource" class="">DbSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.DbSource-1.html" title="DbSource&lt;TOutput&gt;" class="">DbSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.ExcelSource.html" title="ExcelSource" class="">ExcelSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.ExcelSource-1.html" title="ExcelSource&lt;TOutput&gt;" class="">ExcelSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.JsonDestination.html" title="JsonDestination" class="">JsonDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.JsonDestination-1.html" title="JsonDestination&lt;TInput&gt;" class="">JsonDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.JsonSource.html" title="JsonSource" class="">JsonSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.JsonSource-1.html" title="JsonSource&lt;TOutput&gt;" class="">JsonSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.MemoryDestination.html" title="MemoryDestination" class="">MemoryDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.MemoryDestination-1.html" title="MemoryDestination&lt;TInput&gt;" class="">MemoryDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.MemorySource.html" title="MemorySource" class="">MemorySource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.MemorySource-1.html" title="MemorySource&lt;TOutput&gt;" class="">MemorySource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextDestination.html" title="TextDestination" class="">TextDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextDestination-1.html" title="TextDestination&lt;TInput&gt;" class="">TextDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextSource.html" title="TextSource" class="">TextSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.TextSource-1.html" title="TextSource&lt;TOutput&gt;" class="">TextSource&lt;TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.VoidDestination.html" title="VoidDestination" class="">VoidDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.VoidDestination-1.html" title="VoidDestination&lt;TInput&gt;" class="">VoidDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.XmlDestination.html" title="XmlDestination" class="">XmlDestination</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.XmlDestination-1.html" title="XmlDestination&lt;TInput&gt;" class="">XmlDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.XmlSource.html" title="XmlSource" class="">XmlSource</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Connectors.XmlSource-1.html" title="XmlSource&lt;TOutput&gt;" class="">XmlSource&lt;TOutput&gt;</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.DataFlow.Transformations.html" title="ETLBox.DataFlow.Transformations" class="">ETLBox.DataFlow.Transformations</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.Aggregation.html" title="Aggregation" class="">Aggregation</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.Aggregation-2.html" title="Aggregation&lt;TInput, TOutput&gt;" class="">Aggregation&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.AggregationMethod.html" title="AggregationMethod" class="">AggregationMethod</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.BlockTransformation.html" title="BlockTransformation" class="">BlockTransformation</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.BlockTransformation-2.html" title="BlockTransformation&lt;TInput, TOutput&gt;" class="">BlockTransformation&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.BlockTransformation-1.html" title="BlockTransformation&lt;TInput&gt;" class="">BlockTransformation&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.CrossJoin.html" title="CrossJoin" class="">CrossJoin</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.CrossJoin-1.html" title="CrossJoin&lt;TInput&gt;" class="">CrossJoin&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.CrossJoin-3.html" title="CrossJoin&lt;TInput1, TInput2, TOutput&gt;" class="">CrossJoin&lt;TInput1, TInput2, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.CrossJoin-3.InMemoryDestination-1.html" title="CrossJoin&lt;TInput1, TInput2, TOutput&gt;.InMemoryDestination&lt;TInput&gt;" class="">CrossJoin&lt;TInput1, TInput2, TOutput&gt;.InMemoryDestination&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.LookupTransformation.html" title="LookupTransformation" class="">LookupTransformation</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.LookupTransformation-2.html" title="LookupTransformation&lt;TInput, TSourceOutput&gt;" class="">LookupTransformation&lt;TInput, TSourceOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.MergeJoin.html" title="MergeJoin" class="">MergeJoin</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.MergeJoin-1.html" title="MergeJoin&lt;TInput&gt;" class="">MergeJoin&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.MergeJoin-3.html" title="MergeJoin&lt;TInput1, TInput2, TOutput&gt;" class="">MergeJoin&lt;TInput1, TInput2, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.Multicast.html" title="Multicast" class="">Multicast</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.Multicast-1.html" title="Multicast&lt;TInput&gt;" class="">Multicast&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowDuplication.html" title="RowDuplication" class="">RowDuplication</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowDuplication-1.html" title="RowDuplication&lt;TInput&gt;" class="">RowDuplication&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowMultiplication.html" title="RowMultiplication" class="">RowMultiplication</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowMultiplication-2.html" title="RowMultiplication&lt;TInput, TOutput&gt;" class="">RowMultiplication&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowMultiplication-1.html" title="RowMultiplication&lt;TInput&gt;" class="">RowMultiplication&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowTransformation.html" title="RowTransformation" class="">RowTransformation</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowTransformation-2.html" title="RowTransformation&lt;TInput, TOutput&gt;" class="">RowTransformation&lt;TInput, TOutput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.RowTransformation-1.html" title="RowTransformation&lt;TInput&gt;" class="">RowTransformation&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.Sort.html" title="Sort" class="">Sort</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.Sort-1.html" title="Sort&lt;TInput&gt;" class="">Sort&lt;TInput&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.XmlSchemaValidation.html" title="XmlSchemaValidation" class="">XmlSchemaValidation</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.DataFlow.Transformations.XmlSchemaValidation-1.html" title="XmlSchemaValidation&lt;TInput&gt;" class="">XmlSchemaValidation&lt;TInput&gt;</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.Exceptions.html" title="ETLBox.Exceptions" class="">ETLBox.Exceptions</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.Exceptions.ETLBoxException.html" title="ETLBoxException" class="">ETLBoxException</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Exceptions.ETLBoxNotSupportedException.html" title="ETLBoxNotSupportedException" class="">ETLBoxNotSupportedException</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.Helper.html" title="ETLBox.Helper" class="">ETLBox.Helper</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.Helper.BulkInsertSql-1.html" title="BulkInsertSql&lt;T&gt;" class="">BulkInsertSql&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.DataTypeConverter.html" title="DataTypeConverter" class="">DataTypeConverter</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.ExpandoJsonPathConverter.html" title="ExpandoJsonPathConverter" class="">ExpandoJsonPathConverter</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.HashHelper.html" title="HashHelper" class="">HashHelper</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.IDataTypeConverter.html" title="IDataTypeConverter" class="">IDataTypeConverter</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.JsonPathConverter.html" title="JsonPathConverter" class="">JsonPathConverter</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.JsonProperty2JsonPath.html" title="JsonProperty2JsonPath" class="">JsonProperty2JsonPath</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.JsonProperty2JsonPath.MultipleResultsInPath.html" title="JsonProperty2JsonPath.MultipleResultsInPath" class="">JsonProperty2JsonPath.MultipleResultsInPath</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.ObjectNameDescriptor.html" title="ObjectNameDescriptor" class="">ObjectNameDescriptor</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.PropertyInfoExtension.html" title="PropertyInfoExtension" class="">PropertyInfoExtension</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.SqlParser.html" title="SqlParser" class="">SqlParser</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Helper.StringExtension.html" title="StringExtension" class="">StringExtension</a>
+                          </li>
+                        </ul>  </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="ETLBox.Logging.html" title="ETLBox.Logging" class="">ETLBox.Logging</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="ETLBox.Logging.AbortLoadProcessTask.html" title="AbortLoadProcessTask" class="">AbortLoadProcessTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.CreateErrorTableTask.html" title="CreateErrorTableTask" class="">CreateErrorTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.CreateLoadProcessTableTask.html" title="CreateLoadProcessTableTask" class="">CreateLoadProcessTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.CreateLogTableTask.html" title="CreateLogTableTask" class="">CreateLogTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.CustomTask.html" title="CustomTask" class="">CustomTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.EndLoadProcessTask.html" title="EndLoadProcessTask" class="">EndLoadProcessTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.ETLLogLayoutRenderer.html" title="ETLLogLayoutRenderer" class="">ETLLogLayoutRenderer</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.GetLoadProcessAsJSONTask.html" title="GetLoadProcessAsJSONTask" class="">GetLoadProcessAsJSONTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.GetLogAsJSONTask.html" title="GetLogAsJSONTask" class="">GetLogAsJSONTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.LoadProcess.html" title="LoadProcess" class="">LoadProcess</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.LogEntry.html" title="LogEntry" class="">LogEntry</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.Logging.html" title="Logging" class="">Logging</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.LogHierarchyEntry.html" title="LogHierarchyEntry" class="">LogHierarchyEntry</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.LogTask.html" title="LogTask" class="">LogTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.Package.html" title="Package" class="">Package</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.ReadLoadProcessTableTask.html" title="ReadLoadProcessTableTask" class="">ReadLoadProcessTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.ReadLogTableTask.html" title="ReadLogTableTask" class="">ReadLogTableTask</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.ReadOptions.html" title="ReadOptions" class="">ReadOptions</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.Sequence.html" title="Sequence" class="">Sequence</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.Sequence-1.html" title="Sequence&lt;T&gt;" class="">Sequence&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="ETLBox.Logging.StartLoadProcessTask.html" title="StartLoadProcessTask" class="">StartLoadProcessTask</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="ETLBox.Connection.MariaDbConnectionString">
+  
+  
+  <h1 id="ETLBox_Connection_MariaDbConnectionString" data-uid="ETLBox.Connection.MariaDbConnectionString" class="text-break">Class MariaDbConnectionString
+  </h1>
+  <div class="markdown level0 summary"><p>A helper class for encapsulating a conection string to a Maria Db server in an object.
+Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="ETLBox.Connection.DbConnectionString-2.html">DbConnectionString</a>&lt;<a class="xref" href="ETLBox.Connection.MySqlConnectionString.html">MySqlConnectionString</a>, <span class="xref">MySql.Data.MySqlClient.MySqlConnectionStringBuilder</span>&gt;</div>
+    <div class="level2"><a class="xref" href="ETLBox.Connection.MySqlConnectionString.html">MySqlConnectionString</a></div>
+    <div class="level3"><span class="xref">MariaDbConnectionString</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="ETLBox.Connection.IDbConnectionString.html">IDbConnectionString</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="ETLBox.Connection.MySqlConnectionString.html#ETLBox_Connection_MySqlConnectionString_DbName">MySqlConnectionString.DbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.MySqlConnectionString.html#ETLBox_Connection_MySqlConnectionString_MasterDbName">MySqlConnectionString.MasterDbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.MySqlConnectionString.html#ETLBox_Connection_MySqlConnectionString_DbNameKeyword">MySqlConnectionString.DbNameKeyword</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_Builder">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.Builder</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_Value">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.Value</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_ToString">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_DbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.DbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_DbNameKeyword">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.DbNameKeyword</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_MasterDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.MasterDbName</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_ETLBox_Connection_IDbConnectionString_Clone">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.IDbConnectionString.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_ETLBox_Connection_IDbConnectionString_CloneWithNewDbName_System_String_">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_ETLBox_Connection_IDbConnectionString_CloneWithMasterDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.IDbConnectionString.CloneWithMasterDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_CloneWithNewDbName_System_String_">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.CloneWithNewDbName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_Clone">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_CloneWithoutDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.CloneWithoutDbName()</a>
+    </div>
+    <div>
+      <a class="xref" href="ETLBox.Connection.DbConnectionString-2.html#ETLBox_Connection_DbConnectionString_2_CloneWithMasterDbName">DbConnectionString&lt;MySqlConnectionString, MySqlConnectionStringBuilder&gt;.CloneWithMasterDbName()</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="ETLBox.Connection.html">ETLBox.Connection</a></h6>
+  <h6><strong>Assembly</strong>: ETLBox.MariaDb.dll</h6>
+  <h5 id="ETLBox_Connection_MariaDbConnectionString_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class MariaDbConnectionString : MySqlConnectionString, IDbConnectionString</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/etlbox/etlbox.connectors/new/dev/apiSpec/new?filename=ETLBox_Connection_MariaDbConnectionString__ctor.md&amp;value=---%0Auid%3A%20ETLBox.Connection.MariaDbConnectionString.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/etlbox/etlbox.connectors/blob/dev/ETLBox.MariaDb/src/ConnectionString/MariaDbConnectionString.cs/#L9">View Source</a>
+  </span>
+  <a id="ETLBox_Connection_MariaDbConnectionString__ctor_" data-uid="ETLBox.Connection.MariaDbConnectionString.#ctor*"></a>
+  <h4 id="ETLBox_Connection_MariaDbConnectionString__ctor" data-uid="ETLBox.Connection.MariaDbConnectionString.#ctor">MariaDbConnectionString()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MariaDbConnectionString()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/etlbox/etlbox.connectors/new/dev/apiSpec/new?filename=ETLBox_Connection_MariaDbConnectionString__ctor_System_String_.md&amp;value=---%0Auid%3A%20ETLBox.Connection.MariaDbConnectionString.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/etlbox/etlbox.connectors/blob/dev/ETLBox.MariaDb/src/ConnectionString/MariaDbConnectionString.cs/#L12">View Source</a>
+  </span>
+  <a id="ETLBox_Connection_MariaDbConnectionString__ctor_" data-uid="ETLBox.Connection.MariaDbConnectionString.#ctor*"></a>
+  <h4 id="ETLBox_Connection_MariaDbConnectionString__ctor_System_String_" data-uid="ETLBox.Connection.MariaDbConnectionString.#ctor(System.String)">MariaDbConnectionString(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MariaDbConnectionString(string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="ETLBox.Connection.IDbConnectionString.html">IDbConnectionString</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.connectors/new/dev/apiSpec/new?filename=ETLBox_Connection_MariaDbConnectionString.md&amp;value=---%0Auid%3A%20ETLBox.Connection.MariaDbConnectionString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/etlbox/etlbox.connectors/blob/dev/ETLBox.MariaDb/src/ConnectionString/MariaDbConnectionString.cs/#L7" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Crafted with &lt;3 in Berlin<br>
+<a href="https://etlbox.net/articles/imprint.html">Contact & legal information</a></span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -4,13 +4,15 @@
   
   <head>
   	<!-- Global site tag (gtag.js) - Google Analytics -->
-  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-42296700-2"></script>
+  	<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-177207474-1"></script>
   	<script>
   	  window.dataLayer = window.dataLayer || [];
   	  function gtag(){dataLayer.push(arguments);}
   	  gtag('js', new Date());
   
-  	  gtag('config', 'UA-42296700-2');
+  	  gtag('config', 'UA-177207474-1' {
+  		'client_storage': 'none'
+  	  });
   	</script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -556,15 +558,6 @@ List&lt;LogEntry&gt; allLogEntrieForLoadProcess = ReadLogTableTask.Read(connecti
 List&lt;LoadProcess&gt; allLoadProcesses = ReadLoadProcessTableTask.ReadAll();
 List&lt;LogEntry&gt; allLogEntries = ReadLogTableTask.Read(connection);
 </code></pre>
-<h2 id="etlbox-logviewer">ETLBox Logviewer</h2>
-<p><strong>Warning</strong>: ETLBox Logviewer is still in BETA, and not made for a productive use yet. Any support to improve this tool is highly appreciated.</p>
-<p>Once you have data in these log tables, you could use the <a href="https://github.com/etlbox/etlboxlogviewer">ETLBox LogViewer</a> to
-access and analyze your logs.</p>
-<p>Here are some screenshots to give you the idea:</p>
-<span>
-    <img src="https://github.com/etlbox/etlbox/raw/master/docs/images/logviewer_screen1.png" width="350" alt="Process Overview of ETLBox LogViewer">
-    <img src="https://github.com/etlbox/etlbox/raw/master/docs/images/logviewer_screen2.png" width="350" alt="Process Details of ETLBox LogViewer">
-</span>
 </article>
           </div>
           
