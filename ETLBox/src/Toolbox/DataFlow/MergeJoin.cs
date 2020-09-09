@@ -35,25 +35,33 @@ namespace ETLBox.DataFlow.Transformations
 
         /// <inheritdoc/>
         public override string TaskName { get; set; } = "Merge and join data";
+
         /// <summary>
         /// The left target of the merge join. Use this to link your source component with.
         /// </summary>
         public ActionJoinTarget<TInput1> LeftInput { get; set; }
+
         /// <summary>
         /// The right target of the merge join. Use this to link your source component with.
         /// </summary>
         public ActionJoinTarget<TInput2> RightInput { get; set; }
+
         /// <inheritdoc/>
         public override ISourceBlock<TOutput> SourceBlock => this.Buffer;
+
         /// <summary>
         /// The func that describes how both records from the left and right join target can be joined.
         /// </summary>
         public Func<TInput1, TInput2, TOutput> MergeJoinFunc { get; set; }
+
         /// <summary>
-        /// Define if records should only be joined if the match. Return true if both records do match
-        /// and should be joined.
+        /// If the ComparisonFunc is defined, records are compared regarding their sort order and only joined if they match. 
+        /// Return 0 if both records match and should be joined. 
+        /// Return a value little than 0 if the record of the left input is in the sort order before the record of the right input.
+        /// Return a value greater than 0 if the record for the right input is in the order before the record from the left input.
         /// </summary>
-        public Func<TInput1, TInput2, bool> BothMatchFunc { get; set; }
+        /// <remarks>Make sure that both inputs are sorted, and the comparison func take the sort order into account.</remarks>
+        public Func<TInput1, TInput2, int> ComparisonFunc { get; set; }
 
         #endregion
 
@@ -73,9 +81,9 @@ namespace ETLBox.DataFlow.Transformations
 
         /// <param name="mergeJoinFunc">Sets the <see cref="MergeJoinFunc"/></param>
         /// <param name="bothMatchFunc">Sets the <see cref="BothMatchFunc"/></param>
-        public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc, Func<TInput1, TInput2, bool> bothMatchFunc) : this(mergeJoinFunc)
+        public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc, Func<TInput1, TInput2, int> comparisonFunc) : this(mergeJoinFunc)
         {
-            BothMatchFunc = bothMatchFunc;
+            ComparisonFunc = comparisonFunc;
         }
 
         #endregion
@@ -139,32 +147,64 @@ namespace ETLBox.DataFlow.Transformations
             lock (joinLock)
             {
                 while (dataLeft.Count > 0 || dataRight.Count > 0)
-                {
-                    TInput1 left = default;
-                    TInput2 right = default;
-                    if (dataLeft.Count > 0)
-                        left = dataLeft.Dequeue();
-                    if (dataRight.Count > 0)
-                        right = dataRight.Dequeue();
-                    CreateOutput(left, right);
-                }
+                    CompareOrJustMerge();
             }
         }
         private void LeftJoinData(TInput1 data)
         {
             lock (joinLock)
             {
+                dataLeft.Enqueue(data);
                 if (dataRight.Count >= 1)
-                {
-                    var right = dataRight.Dequeue();
-                    CreateOutput(data, right);
-                }
-                else
-                {
-                    dataLeft.Enqueue(data);
-                }
+                    CompareOrJustMerge();
             }
         }
+
+        private void RightJoinData(TInput2 data)
+        {
+            lock (joinLock)
+            {
+                dataRight.Enqueue(data);
+                if (dataLeft.Count >= 1)
+                    CompareOrJustMerge();
+            }
+        }
+
+        private void CompareOrJustMerge()
+        {
+            if (ComparisonFunc == null)
+                AlwaysMergeBoth();
+            else
+                MergeByComparison();
+        }
+
+        private void AlwaysMergeBoth()
+        {
+            var left = dataLeft.Count > 0 ? dataLeft.Dequeue() : default;
+            var right = dataRight.Count > 0 ? dataRight.Dequeue() : default;
+            CreateOutput(left, right);
+        }
+
+        private void MergeByComparison()
+        {
+            var left = dataLeft.Count > 0 ? dataLeft.Peek() : default;
+            var right = dataRight.Count > 0 ? dataRight.Peek() : default; ;
+            if (right == null)            
+                CreateOutput(dataLeft.Dequeue(), right);
+            else if (left == null)
+                CreateOutput(left, dataRight.Dequeue());
+            else
+            {
+                int comp = ComparisonFunc.Invoke(left, right);
+                if (comp == 0)
+                    CreateOutput(dataLeft.Dequeue(), dataRight.Dequeue());
+                else if (comp < 0)
+                    CreateOutput(dataLeft.Dequeue(), default);
+                else if (comp > 0)
+                    CreateOutput(default, dataRight.Dequeue());
+            }
+        }
+
 
         private void CreateOutput(TInput1 dataLeft, TInput2 dataRight)
         {
@@ -180,41 +220,13 @@ namespace ETLBox.DataFlow.Transformations
                 ThrowOrRedirectError(e, "Left:" + ErrorSource.ConvertErrorData<TInput1>(dataLeft)
                                         + "|Right:" + ErrorSource.ConvertErrorData<TInput2>(dataRight));
             }
-
-        }
-
-        private void RightJoinData(TInput2 data)
-        {
-            lock (joinLock)
-            {
-                if (dataLeft.Count >= 1)
-                {
-                    var left = dataLeft.Dequeue();
-                    CreateOutput(left, data);
-                }
-                else
-                {
-                    dataRight.Enqueue(data);
-                }
-            }
         }
 
         #endregion
 
     }
 
-    /// <summary>
-    /// Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.
-    /// </summary>
-    /// <typeparam name="TInput">Type of data for both inputs and output.</typeparam>
-    /// <example>
-    /// <code>
-    /// MergeJoin&lt;MyDataRow&gt; join = new MergeJoin&lt;MyDataRow&gt;(mergeJoinFunc);
-    /// source1.LinkTo(join.Target1);;
-    /// source2.LinkTo(join.Target2);;
-    /// join.LinkTo(dest);
-    /// </code>
-    /// </example>
+    /// <inheritdoc />
     public class MergeJoin<TInput> : MergeJoin<TInput, TInput, TInput>
     {
         public MergeJoin() : base()
@@ -224,11 +236,7 @@ namespace ETLBox.DataFlow.Transformations
         { }
     }
 
-    /// <summary>
-    /// Will join data from the two inputs into one output - on a row by row base.
-    /// Make sure both inputs are sorted or in the right order. The non generic implementation deals with
-    /// a dynamic object as input and merged output.
-    /// </summary>
+    /// <inheritdoc />
     public class MergeJoin : MergeJoin<ExpandoObject, ExpandoObject, ExpandoObject>
     {
         public MergeJoin() : base()

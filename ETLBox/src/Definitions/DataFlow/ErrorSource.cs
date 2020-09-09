@@ -61,11 +61,12 @@ namespace ETLBox.DataFlow
         /// </summary>
         /// <typeparam name="T">Type of the row</typeparam>
         /// <param name="row">The errorneous row</param>
-        /// <returns>The faulty row serialized as json</returns>
+        /// <returns>The faulty row serialized as json or "null" if input is null</returns>
         public static string ConvertErrorData<T>(T row)
         {
             try
             {
+                if (row == null) return "null";
                 return JsonConvert.SerializeObject(row, new JsonSerializerSettings());
             }
             catch (Exception e)
