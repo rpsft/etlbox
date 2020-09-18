@@ -311,7 +311,7 @@ namespace ETLBox.DataFlow.Connectors
         LookupTransformation<TInput, TInput> Lookup;
         DbSource<TInput> DestinationTableAsSource;
         DbDestination<TInput> DestinationTable;
-        List<TInput> InputData => Lookup.LookupData;
+        IList<TInput> InputData => Lookup.LookupData;
         Dictionary<string, TInput> InputDataDict;
         CustomSource<TInput> OutputSource;
         bool WasTruncationExecuted;

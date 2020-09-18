@@ -8,8 +8,17 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
-    /// Creates one or more duplicates of your incoming row.
+    /// Creates one or more duplicates of your incoming row. Use the CanDuplicate 
+    /// property if you want to duplicate only particular rows.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// var source = new DbSource&lt;InputType&gt;("SourceTable");
+    /// RowDuplication&lt;InputType&gt; duplication = new RowDuplication&lt;InputType&gt;(3);
+    /// var dest = new CsvDestination&lt;InputType&gt;("output.csv");
+    /// source.LinkTo(duplication).LinkTo(dest);
+    /// </code>
+    /// </example>
     /// <typeparam name="TInput">Type of ingoing data.</typeparam>
     public class RowDuplication<TInput> : DataFlowTransformation<TInput, TInput>, ILoggableTask, IDataFlowTransformation<TInput, TInput>
     {

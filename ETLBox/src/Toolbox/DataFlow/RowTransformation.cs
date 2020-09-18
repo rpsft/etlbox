@@ -5,17 +5,16 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
-    /// The RowTransformation will apply the TransformationFunc to each row of data once.
+    /// The RowTransformation will apply the transformation function to each row of data.
     /// </summary>
     /// <typeparam name="TInput">The type of ingoing data.</typeparam>
     /// <typeparam name="TOutput">The type of outgoing data.</typeparam>
     /// <see cref="RowTransformation"/>
     /// <example>
     /// <code>
-    /// RowTransformation&lt;MyDataRow&gt; trans = new RowTransformation&lt;MyDataRow&gt;(
-    ///     row => {
-    ///       row.Value += 1;
-    ///       return row;
+    /// RowTransformation&lt;InputType, OutputType&gt; trans = new RowTransformation&lt;InputType, OutputType&gt;(
+    /// row => {
+    ///     return new OutputType() { Value = row.Value + 1 };
     /// });
     /// </code>
     /// </example>
@@ -44,8 +43,6 @@ namespace ETLBox.DataFlow.Transformations
         public override ISourceBlock<TOutput> SourceBlock => TransformBlock;
 
         #endregion
-
-        TransformBlock<TInput, TOutput> TransformBlock;
 
         #region Constructors
 
@@ -108,6 +105,7 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implementation
 
+        TransformBlock<TInput, TOutput> TransformBlock;
         bool WasInitActionInvoked;
 
         private TOutput WrapTransformation(TInput row)

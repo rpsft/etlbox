@@ -15,7 +15,7 @@ namespace ETLBox.DataFlow.Transformations
     ///
     /// You can define a match condition that let you only merge matching records. This will change the
     /// match behavior a little bit.
-    /// By assuming that the intput is sorted, not matching records will be joined with null then. This
+    /// By assuming that the input is sorted, not matching records will be joined with null then. This
     /// can be compared with a left or right join.
     /// </summary>
     /// <typeparam name="TInput1">Type of ingoing data for the left join target.</typeparam>
@@ -23,9 +23,15 @@ namespace ETLBox.DataFlow.Transformations
     /// <typeparam name="TOutput">Type of outgoing data.</typeparam>
     /// <example>
     /// <code>
-    /// MergeJoin&lt;MyDataRow1, MyDataRow2, MyDataRow1&gt; join = new MergeJoin&lt;MyDataRow1, MyDataRow2, MyDataRow1&gt;(Func&lt;TInput1, TInput2, TOutput&gt; mergeJoinFunc);
-    /// source1.LinkTo(join.LeftJoinTarget);
-    /// source2.LinkTo(join.RightJoinTarget);
+    /// MergeJoin&lt;InputType1, InputType2, OutputType&gt; join = new MergeJoin&lt;InputType1, InputType2, OutputType&gt;();
+    /// join.MergeJoinFunc =  (leftRow, rightRow) => {
+    ///     return new OutputType()
+    ///     {
+    ///         Result = leftRow.Value 1 + rightRow.Value2
+    ///     };
+    /// });
+    /// source1.LinkTo(join.LeftInput);
+    /// source2.LinkTo(join.RightInput);
     /// join.LinkTo(dest);
     /// </code>
     /// </example>
@@ -88,7 +94,7 @@ namespace ETLBox.DataFlow.Transformations
 
         #endregion
 
-        #region Implement abstract methods and override default behaviour
+        #region Implement abstract methods and override default behavior
 
         protected override void InternalInitBufferObjects()
         {
@@ -189,7 +195,7 @@ namespace ETLBox.DataFlow.Transformations
         {
             var left = dataLeft.Count > 0 ? dataLeft.Peek() : default;
             var right = dataRight.Count > 0 ? dataRight.Peek() : default; ;
-            if (right == null)            
+            if (right == null)
                 CreateOutput(dataLeft.Dequeue(), right);
             else if (left == null)
                 CreateOutput(left, dataRight.Dequeue());

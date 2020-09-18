@@ -10,13 +10,27 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
-    /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
-    /// join can start. After this, every incoming row will be joined with every row of the InMemory-Table by the function CrossJoinFunc.
+    /// The CrossJoin allows you to combine every record from one input with every record from the other input.
+    /// The input for the first table will be loaded into memory before join starts. 
+    /// Then every incoming row will be joined with every row of the InMemory-Table using the CrossJoinFunc function.
     /// The InMemory target should always be the target of the smaller amount of data to reduce memory consumption and processing time.
     /// </summary>
     /// <typeparam name="TInput1">Type of data for in memory input block.</typeparam>
     /// <typeparam name="TInput2">Type of data for processing input block.</typeparam>
     /// <typeparam name="TOutput">Type of output data.</typeparam>
+    /// <example>
+    /// <code>
+    /// CrossJoin&lt;InputType1, InputType2, OutputType&gt; crossJoin = new CrossJoin&lt;InputType1, InputType2, OutputType&gt;();
+    /// crossJoin.CrossJoinFunc = (inmemoryRow, passingRow) => {
+    ///     return new OutputType() {
+    ///         Result = leftRow.Value1 + rightRow.Value2
+    ///     };
+    /// });
+    /// source1.LinkTo(join.InMemoryTarget);
+    /// source2.LinkTo(join.PassingTarget);
+    /// join.LinkTo(dest);
+    /// </code>
+    /// </example>
     public class CrossJoin<TInput1, TInput2, TOutput> : DataFlowSource<TOutput>, IDataFlowTransformation<TOutput>
     {
         #region Public properties
@@ -84,7 +98,7 @@ namespace ETLBox.DataFlow.Transformations
 
         #endregion
 
-        #region Implement abstract methods and override default behaviour
+        #region Implement abstract methods and override default behavior
 
         protected override void InternalInitBufferObjects()
         {

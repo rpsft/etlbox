@@ -10,10 +10,10 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
-    /// A lookup task - incoming rows can be enriched with data retrieved from the lookup source.
-    /// For each rows that comes in, a matching records is search for in the lookup source. If one is found,
-    /// the missing properties are filled with values from the source.
-    /// Data is read from the lookup source when the first rows arrives in the LookupTransformation.
+    /// The lookup transformation enriches the incoming data with data from the lookup source.
+    /// Data from the lookup source is read into memory when the first record arrives.
+    /// For each incoming row, the lookup tries to find a matching record in the 
+    /// memory table and uses this record to add additional data to the ingoing row. 
     /// </summary>
     /// <typeparam name="TInput">Type of ingoing and outgoing data.</typeparam>
     /// <typeparam name="TSourceOutput">Type of data used in the lookup source.</typeparam>
@@ -27,11 +27,11 @@ namespace ETLBox.DataFlow.Transformations
         /// <summary>
         /// Holds the data read from the lookup source. This data is used to find data that is missing in the incoming rows.
         /// </summary>
-        public List<TSourceOutput> LookupData
+        public IList<TSourceOutput> LookupData
         {
             get
             {
-                return LookupBuffer.Data as List<TSourceOutput>;
+                return LookupBuffer.Data; //as List<TSourceOutput>;
             }
             set
             {
@@ -82,7 +82,7 @@ namespace ETLBox.DataFlow.Transformations
         /// <param name="lookupSource">Sets the <see cref="Source"/> of the lookup.</param>
         /// <param name="transformationFunc">Sets the <see cref="TransformationFunc"/></param>
         /// <param name="lookupList">Sets the list for the <see cref="LookupData"/></param>
-        public LookupTransformation(IDataFlowExecutableSource<TSourceOutput> lookupSource, Func<TInput, TInput> transformationFunc, List<TSourceOutput> lookupList)
+        public LookupTransformation(IDataFlowExecutableSource<TSourceOutput> lookupSource, Func<TInput, TInput> transformationFunc, IList<TSourceOutput> lookupList)
             : this(lookupSource, transformationFunc)
         {
             LookupData = lookupList;
@@ -154,7 +154,7 @@ namespace ETLBox.DataFlow.Transformations
 
         private TInput FindRowByAttributes(TInput row)
         {
-            var lookupHit = LookupData.Find(e =>
+            var lookupHit = FindFirst(LookupData, e =>
             {
                 bool same = true;
                 foreach (var mc in TypeInfo.MatchColumns)
@@ -173,6 +173,14 @@ namespace ETLBox.DataFlow.Transformations
                 }
             }
             return row;
+        }
+
+        public static T FindFirst<T>(IList<T> source, Func<T, bool> condition)
+        {
+            foreach (T item in source)
+                if (condition(item))
+                    return item;
+            return default(T);
         }
 
         private void LoadLookupData()
