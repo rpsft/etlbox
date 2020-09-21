@@ -7,7 +7,7 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow.Transformations
 {
     /// <summary>
-    /// Sort the incoming data with the given sort function.
+    /// Sorts the incoming data with by the given comparison function.
     /// This is a blocking transformation - no output will be produced until all input data has arrived in the transformation.
     /// </summary>
     /// <typeparam name="TInput">Type of ingoing (and also outgoing) data.</typeparam>

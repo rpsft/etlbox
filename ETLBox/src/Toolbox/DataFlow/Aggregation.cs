@@ -15,6 +15,25 @@ namespace ETLBox.DataFlow.Transformations
     /// The aggregate is a partial-blocking transformation - only the aggregation values are stored in separate memory objects.
     /// When all rows have been processed by the aggregation, the aggregated values are written into the output.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// public class MyDetailValue
+    /// {
+    ///     public int DetailValue { get; set; }
+    /// }
+    /// 
+    /// public class MyAggRow
+    /// {
+    ///     [AggregateColumn(nameof(MyDetailValue.DetailValue), AggregationMethod.Sum)]
+    ///     public int AggValue { get; set; }
+    /// }
+    /// 
+    /// var source = new DbSource&lt;MyDetailValue&gt;("DetailValues");
+    /// var agg = new Aggregation&lt;MyDetailValue, MyAggRow&gt;();
+    /// var dest = new MemoryDestination&lt;MyAggRow&gt;();
+    /// source.LinkTo&lt;MyAggRow&gt;(agg).LinkTo(dest);
+    /// </code>
+    /// </example>
     /// <typeparam name="TInput">Type of ingoing data.</typeparam>
     /// <typeparam name="TOutput">Type of outgoing data.</typeparam>
     public class Aggregation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
@@ -30,12 +49,12 @@ namespace ETLBox.DataFlow.Transformations
         public Action<TInput, TOutput> AggregationAction { get; set; }
 
         /// <summary>
-        /// This Func defines the aggregation level for the input data
+        /// This Func defines how the object for grouping data is retrieved
         /// </summary>
         public Func<TInput, object> GroupingFunc { get; set; }
 
         /// <summary>
-        /// This action will store the result of the aggregation from the input in the output object
+        /// This action defines how the grouping object is written back into the aggregated object
         /// </summary>
         public Action<object, TOutput> StoreKeyAction { get; set; }
 
@@ -87,6 +106,7 @@ namespace ETLBox.DataFlow.Transformations
         protected override void InternalInitBufferObjects()
         {
             SetAggregationFunctionsIfNecessary();
+            CheckIfAggregationActionIsSet();
 
             OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
@@ -94,7 +114,7 @@ namespace ETLBox.DataFlow.Transformations
             });
             InputBuffer = new ActionBlock<TInput>(WrapAggregationAction, new ExecutionDataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize,
+                BoundedCapacity = -1 //Always -1, as this is a blocking transformation
             });
             InputBuffer.Completion.ContinueWith(t =>
             {
@@ -149,6 +169,12 @@ namespace ETLBox.DataFlow.Transformations
 
             if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
                 StoreKeyAction = DefineStoreKeyActionFromAttributes;
+        }
+
+        private void CheckIfAggregationActionIsSet()
+        {
+            if (AggregationAction == null)
+                throw new ETLBoxException("No aggregation method found - either define an AggregationAction or use the AggregateColumn attribute");
         }
 
         private void DefineAggregationAction(TInput inputrow, TOutput aggOutput)

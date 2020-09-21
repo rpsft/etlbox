@@ -15,6 +15,32 @@ namespace ETLBox.DataFlow.Transformations
     /// For each incoming row, the lookup tries to find a matching record in the 
     /// memory table and uses this record to add additional data to the ingoing row. 
     /// </summary>
+    /// <example>
+    /// <code>
+    /// public class Order
+    /// {    
+    ///     public int OrderNumber { get; set; }
+    ///     public int CustomerId { get; set; }
+    ///     public string CustomerName { get; set; }
+    /// }
+    /// 
+    /// public class Customer
+    /// {
+    ///     [RetrieveColumn(nameof(Order.CustomerId))]
+    ///     public int Id { get; set; }
+    /// 
+    ///     [MatchColumn(nameof(Order.CustomerName))]
+    ///     public string Name { get; set; }
+    /// }
+    /// 
+    /// DbSource&lt;Order&gt; orderSource = new DbSource&lt;Order&gt;("OrderData");
+    /// CsvSource&lt;Customer&gt; lookupSource = new CsvSource&lt;Customer&gt;("CustomerData.csv");
+    /// var lookup = new LookupTransformation&lt;Order, Customer&gt;();
+    /// lookup.Source = lookupSource;
+    /// DbDestination&lt;Order&gt; dest = new DbDestination&lt;Order&gt;("OrderWithCustomerTable");
+    /// source.LinkTo(lookup).LinkTo(dest);
+    /// </code>
+    /// </example>
     /// <typeparam name="TInput">Type of ingoing and outgoing data.</typeparam>
     /// <typeparam name="TSourceOutput">Type of data used in the lookup source.</typeparam>
     public class LookupTransformation<TInput, TSourceOutput> : DataFlowTransformation<TInput, TInput>

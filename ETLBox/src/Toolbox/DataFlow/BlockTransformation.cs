@@ -18,10 +18,12 @@ namespace ETLBox.DataFlow.Transformations
     /// <typeparam name="TOutput">Type of outgoing data.</typeparam>
     /// <example>
     /// <code>
-    /// BlockTransformation&lt;MyInputRow, MyOutputRow&gt; block = new BlockTransformation&lt;MyInputRow, MyOutputRow&gt;(
-    ///     inputDataAsList => {
-    ///         return inputData.Select( inputRow => new MyOutputRow() { Value2 = inputRow.Value1 }).ToList();
-    ///     });
+    /// BlockTransformation&lt;InputType&gt; block = new BlockTransformation&lt;InputType&gt;(
+    ///     inputData => {
+    ///         inputData.RemoveRange(1, 2);
+    ///         inputData.Add(new InputType() { Value = 1 });
+    ///         return inputData;
+    /// });
     /// </code>
     /// </example>
     public class BlockTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>

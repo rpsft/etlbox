@@ -35,6 +35,11 @@ namespace ETLBox.DataFlow.Connectors
         /// </summary>
         public Action<string, TOutput> ParseLineAction { get; set; }
 
+        /// <summary>
+        /// Only needed if you use an array as InputType: Defines the maximum amount of elements in the array. 
+        /// </summary>
+        public int ArraySize { get; set; } = 10;
+
         #endregion
 
         #region Constructors
@@ -94,7 +99,7 @@ namespace ETLBox.DataFlow.Connectors
             try
             {
                 if (TypeInfo.IsArray)
-                    newObject = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { 1 });
+                    newObject = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { ArraySize });
                 else
                     newObject = (TOutput)Activator.CreateInstance(typeof(TOutput));
 
