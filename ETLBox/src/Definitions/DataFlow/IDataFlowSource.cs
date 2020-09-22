@@ -9,7 +9,7 @@ namespace ETLBox.DataFlow
     /// <summary>
     /// Shared properties of all source components
     /// </summary>
-    public interface IDataFlowSource
+    public interface IDataFlowSource : IDataFlowComponent
     {
         /// <summary>
         /// The ErrorSource is the source block used for sending errors into the linked error flow.

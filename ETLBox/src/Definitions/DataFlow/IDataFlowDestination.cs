@@ -4,7 +4,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow
 {
-    public interface IDataFlowDestination
+    public interface IDataFlowDestination : IDataFlowComponent
     {
         /// <summary>
         /// All predecessor that are linked to this component.

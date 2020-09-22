@@ -39,6 +39,8 @@ namespace ETLBox.DataFlow.Connectors
         /// </summary>
         public IConnectionManager BulkInsertConnectionManager { get; protected set; }
 
+        public const int DEFAULT_BATCH_SIZE_ODBC_OLEDB = 100;
+
         #endregion
 
         #region Connection manager
@@ -98,6 +100,23 @@ namespace ETLBox.DataFlow.Connectors
         }
 
         #endregion
+
+        #region Implement abstract methods
+        protected override void InternalInitBufferObjects()
+        {
+            ThrottleBatchSizeForNonNativeConnections();
+            base.InternalInitBufferObjects();
+        }
+
+        private void ThrottleBatchSizeForNonNativeConnections()
+        {
+            if (this.DbConnectionManager.IsOdbcOrOleDbConnection
+                            && BatchSize == DEFAULT_BATCH_SIZE)
+                BatchSize = 100;
+        }
+
+        #endregion
+
 
         #region Implementation
 
