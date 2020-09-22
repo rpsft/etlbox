@@ -83,7 +83,7 @@ namespace ETLBox.DataFlow.Connectors
 
         public DbSource()
         {
-            TypeInfo = new DBTypeInfo(typeof(TOutput));
+            TypeInfo = new DbTypeInfo(typeof(TOutput));
         }
 
         /// <param name="tableName">Sets the <see cref="TableName" /></param>
@@ -172,7 +172,7 @@ namespace ETLBox.DataFlow.Connectors
         bool HasSourceTableDefinition => SourceTableDefinition != null;
         bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         bool HasSql => !String.IsNullOrWhiteSpace(Sql);
-        DBTypeInfo TypeInfo;
+        DbTypeInfo TypeInfo;
         string SourceDescription
         {
             get

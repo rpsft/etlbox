@@ -174,7 +174,7 @@ namespace ETLBox.ControlFlow
             Definition = definition;
             IDColumnIndex = Definition.IDColumnIndex;
             Rows = new List<object[]>(estimatedBatchSize);
-            TypeInfo = new DBTypeInfo(typeof(T));
+            TypeInfo = new DbTypeInfo(typeof(T));
         }
 
         #endregion
@@ -184,7 +184,7 @@ namespace ETLBox.ControlFlow
         int ReadIndex;
         TableDefinition Definition;
         bool HasDefinition => Definition != null;
-        DBTypeInfo TypeInfo;
+        DbTypeInfo TypeInfo;
         int? IDColumnIndex;
         bool HasIDColumnIndex => IDColumnIndex != null;
         private int FindOrdinalInObject(string name)

@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace ETLBox.DataFlow
 {
-    internal class DBTypeInfo : TypeInfo
+    internal class DbTypeInfo : TypeInfo
     {
         internal List<string> PropertyNames { get; set; } = new List<string>();
         internal Dictionary<string, string> ColumnMap2Property { get; set; } = new Dictionary<string, string>();
         internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; set; } = new Dictionary<PropertyInfo, Type>();
 
-        internal DBTypeInfo(Type typ) : base(typ)
+        internal DbTypeInfo(Type typ) : base(typ)
         {
             GatherTypeInfo();
         }

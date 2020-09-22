@@ -29,7 +29,6 @@ namespace ETLBox.DataFlow
         /// Indicates if the type is an ExpandoObject
         /// </summary>
         public bool IsDynamic { get; set; }
-        internal int ArrayLength { get; set; }
 
         internal Type Typ { get; set; }
         public TypeInfo(Type typ)
@@ -57,10 +56,6 @@ namespace ETLBox.DataFlow
                     RetrieveAdditionalTypeInfo(propInfo, index);
                     index++;
                 }
-            }
-            else if (IsArray)
-            {
-                ArrayLength = Typ.GetArrayRank();
             }
             return this;
         }
