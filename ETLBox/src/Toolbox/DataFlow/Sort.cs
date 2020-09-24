@@ -36,8 +36,6 @@ namespace ETLBox.DataFlow.Transformations
         /// <inheritdoc/>
         public override ITargetBlock<TInput> TargetBlock => BlockTransformation.TargetBlock;
 
-        public new int MaxBufferSize => -1;
-
         #endregion
 
         #region Constructors
@@ -61,7 +59,7 @@ namespace ETLBox.DataFlow.Transformations
         protected override void InternalInitBufferObjects()
         {
             BlockTransformation.CopyLogTaskProperties(this);
-            BlockTransformation.MaxBufferSize = -1; //Blocking transformation
+            BlockTransformation.MaxBufferSize = MaxBufferSize; //Only output buffer!
             BlockTransformation.InitBufferObjects();
         }
 
