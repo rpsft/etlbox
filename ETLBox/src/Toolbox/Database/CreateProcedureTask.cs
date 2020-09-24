@@ -49,6 +49,8 @@ namespace ETLBox.ControlFlow.Tasks
         /// </summary>
         public string ProcedureDefinition { get; set; }
 
+        public string ProcedureOptions { get;set; }
+
         /// <summary>
         /// The parameters for the procedure
         /// </summary>
@@ -188,7 +190,7 @@ namespace ETLBox.ControlFlow.Tasks
 
         string Language => this.ConnectionType == ConnectionManagerType.Postgres ?
             Environment.NewLine + "LANGUAGE SQL" : "";
-        string BEGIN => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "BEGIN";
+        string BEGIN => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "BEGIN";        
         string END => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "END";
         string AS => this.ConnectionType == ConnectionManagerType.MySql ? "" : "AS";
     }

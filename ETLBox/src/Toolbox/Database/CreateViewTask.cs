@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Helper;
+using System;
 
 namespace ETLBox.ControlFlow.Tasks
 {
@@ -46,13 +47,20 @@ namespace ETLBox.ControlFlow.Tasks
         public string Definition { get; set; }
 
         /// <summary>
+        /// Optional, will set the view attributes, e.g. "WITH SCHEMABINDING".
+        /// This part is put after the CREATE VIEW [viewname] statement 
+        /// and before the AS statement.
+        /// </summary>
+        public string ViewAttributes { get; set; }
+
+        /// <summary>
         /// The sql that is generated to create the view
         /// </summary>
         public string Sql
         {
             get
             {
-                return $@"{CreateOrAlterSql} VIEW {CreateViewName}
+                return $@"{CreateOrAlterSql} VIEW {CreateViewName} {WITH}
 AS
 {Definition}
 ";
@@ -104,6 +112,8 @@ AS
                 }
             }
         }
+
+        string WITH => !string.IsNullOrWhiteSpace(ViewAttributes) ? Environment.NewLine + ViewAttributes.Trim() : string.Empty;
 
 
     }
