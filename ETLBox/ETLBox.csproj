@@ -11,13 +11,11 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration</PackageTags>
-        <PackageReleaseNotes>We prouldy introduce ETLBox 2.1. It is now a fully featured lightweight ETL framework and data integration toolbox ready to be used in any production environment.
+        <PackageReleaseNotes>What's new in 2.1? The whole linking, task and exception handling of data flow components was improved. Also the whole interface of the data flow and control flow classes has been refined. As these changes are mostly hidden, it was necessary to prepare the new features that will be introduced with 2.1.x and later versions.
 
-What's new in 2.1? The whole linking, task and exception handling of data flow components was improved. As these changes are mostly hidden, it was necessary to prepare the new features that will be introduced with 2.1.x.
-Also the whole interface of the data flow and control flow classes has been refined. This could lead to some minor breaking changes, which can be resolved quite easily as mostly the naming has changed. Overall it will lead in a clearer structure of the interface and classes.
-
-The MaxBufferSize property is now available on every component - it allows you to restrict the amount of records stored in the component buffer. Every data flow component now has an awaitable Completion task.</PackageReleaseNotes>
-        <Version>2.1.1</Version>
+Version 2.1.2 include a new transformation: ColumnRename, which allows you to easily rename column or properties in your flow. The ComparisonFunc on the MergeJoin is now working properly. Improved performance for Odbc/OleDb connections by reducing default BatchSize to 100. CreateViewTask now has ViewAttributes. 
+</PackageReleaseNotes>
+        <Version>2.1.2</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
