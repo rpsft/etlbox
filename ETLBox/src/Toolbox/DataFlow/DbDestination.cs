@@ -143,27 +143,20 @@ namespace ETLBox.DataFlow.Connectors
             TableData = new TableData<TInput>(DestinationTableDefinition, BatchSize);
         }
 
-        protected override void TryBulkInsertData(TInput[] data)
+        protected override void BulkInsertData(TInput[] data)
         {
-            TryAddDynamicColumnsToTableDef(data);
-            try
+            AddDynamicColumnsToTableDef(data);
+            TableData.ClearData();
+            ConvertAndAddRows(data);
+            var sql = new SqlTask($"Execute Bulk insert")
             {
-                TableData.ClearData();
-                ConvertAndAddRows(data);
-                var sql = new SqlTask($"Execute Bulk insert")
-                {
-                    DisableLogging = true,
-                    ConnectionManager = BulkInsertConnectionManager
-                };
-                sql.CopyLogTaskProperties(this);
-                sql
-                .BulkInsert(TableData, DestinationTableDefinition.Name);
-                BulkInsertConnectionManager.CheckLicenseOrThrow(ProgressCount);
-            }
-            catch (Exception e)
-            {
-                ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput[]>(data));
-            }
+                DisableLogging = true,
+                ConnectionManager = BulkInsertConnectionManager
+            };
+            sql.CopyLogTaskProperties(this);
+            sql
+            .BulkInsert(TableData, DestinationTableDefinition.Name);
+            BulkInsertConnectionManager.CheckLicenseOrThrow(ProgressCount);
         }
 
         protected override void FinishWrite()
@@ -177,7 +170,7 @@ namespace ETLBox.DataFlow.Connectors
             }
         }
 
-        private void TryAddDynamicColumnsToTableDef(TInput[] data)
+        private void AddDynamicColumnsToTableDef(TInput[] data)
         {
             if (TypeInfo.IsDynamic && data.Length > 0)
             {

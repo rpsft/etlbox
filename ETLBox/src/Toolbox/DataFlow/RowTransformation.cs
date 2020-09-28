@@ -73,13 +73,13 @@ namespace ETLBox.DataFlow.Transformations
                 row =>
                 {
                     NLogStartOnce();
-                    if (!WasInitActionInvoked)
-                    {
-                        InitAction?.Invoke();
-                        WasInitActionInvoked = true;
-                    }
                     try
                     {
+                        if (!WasInitActionInvoked)
+                        {
+                            InitAction?.Invoke();
+                            WasInitActionInvoked = true;
+                        }
                         return WrapTransformation(row);
                     }
                     catch (Exception e)

@@ -89,20 +89,27 @@ namespace ETLBox.DataFlow
         protected void WriteBatch(TInput[] data)
         {
             if (ProgressCount == 0) NLogStartOnce();
-            if (BeforeBatchWrite != null)
-                data = BeforeBatchWrite.Invoke(data);
-            if (!WasWritingPrepared)
+            try
             {
-                PrepareWrite();
-                WasWritingPrepared = true;
+                if (BeforeBatchWrite != null)
+                    data = BeforeBatchWrite.Invoke(data);
+                if (!WasWritingPrepared)
+                {
+                    PrepareWrite();
+                    WasWritingPrepared = true;
+                }
+                BulkInsertData(data);
+                LogProgressBatch(data.Length);
+                AfterBatchWrite?.Invoke(data);
             }
-            TryBulkInsertData(data);
-            LogProgressBatch(data.Length);
-            AfterBatchWrite?.Invoke(data);
+            catch (Exception e)
+            {
+                ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput[]>(data));
+            }
         }
 
         protected abstract void PrepareWrite();
-        protected abstract void TryBulkInsertData(TInput[] data);
+        protected abstract void BulkInsertData(TInput[] data);
         protected abstract void FinishWrite();
 
         #endregion
