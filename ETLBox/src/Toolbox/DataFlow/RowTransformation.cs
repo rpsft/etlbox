@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 
@@ -27,7 +28,7 @@ namespace ETLBox.DataFlow.Transformations
         public override string TaskName { get; set; } = "Execute row transformation";
 
         /// <summary>
-        /// Each ingoing row will be transformed using this Func.
+        /// Each ingoing row will be transformed using this function.
         /// </summary>
         public Func<TInput, TOutput> TransformationFunc { get; set; }
 
@@ -75,12 +76,8 @@ namespace ETLBox.DataFlow.Transformations
                     NLogStartOnce();
                     try
                     {
-                        if (!WasInitActionInvoked)
-                        {
-                            InitAction?.Invoke();
-                            WasInitActionInvoked = true;
-                        }
-                        return WrapTransformation(row);
+                        InvokeInitActionOnce();
+                        return InvokeTransformationFunc(row);
                     }
                     catch (Exception e)
                     {
@@ -108,9 +105,19 @@ namespace ETLBox.DataFlow.Transformations
         TransformBlock<TInput, TOutput> TransformBlock;
         bool WasInitActionInvoked;
 
-        private TOutput WrapTransformation(TInput row)
+        private void InvokeInitActionOnce()
         {
-            TOutput result = TransformationFunc.Invoke(row);
+            if (!WasInitActionInvoked)
+            {
+                InitAction?.Invoke();
+                WasInitActionInvoked = true;
+            }
+        }
+
+        private TOutput InvokeTransformationFunc(TInput row)
+        {
+            TOutput result = default;
+            result = TransformationFunc.Invoke(row);
             LogProgress();
             return result;
         }
