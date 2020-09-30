@@ -277,12 +277,12 @@ namespace ETLBox.DataFlow.Connectors
 
         private void SetOutputReadFunc()
         {
-            int x = 0;
-            OutputSource.ReadFunc = () =>
+            //int x = 0;
+            OutputSource.ReadFunc = progressCount =>
             {
-                return DeltaTable.ElementAt(x++);
+                return DeltaTable.ElementAt(progressCount);
             };
-            OutputSource.ReadCompletedFunc = () => x >= DeltaTable.Count;
+            OutputSource.ReadCompletedFunc = progressCount => progressCount >= DeltaTable.Count;
         }
 
         private void CreateAndRunLookupToDestinationTableFlow()

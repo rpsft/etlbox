@@ -8,6 +8,27 @@ namespace ETLBox.DataFlow.Connectors
     /// <summary>
     /// Define your own source block. This block generates data from a your own custom written functions.
     /// </summary>
+    /// <example>
+    /// <code>
+    ///  List&lt;string&gt; Data = new List&lt;string&gt;()
+    ///  {
+    ///      "Test1", "Test2", "Test3"
+    ///  };
+    ///  int index = 0;
+    ///  var source = new CustomSource&lt;MyRow&gt;();
+    ///  source.ReadFunc = () =&gt;
+    ///  {
+    ///      var result = new MyRow()
+    ///      {
+    ///          Id = index + 1,
+    ///          Value = Data[index]
+    ///      };
+    ///          index++;
+    ///    return result;
+    ///  };
+    /// source.ReadCompletedFunc =  () =&gt; index &gt;= Data.Count;
+    /// </code>
+    /// </example>
     /// <typeparam name="TOutput">Type of outgoing data.</typeparam>
     public class CustomSource<TOutput> : DataFlowExecutableSource<TOutput>
     {
@@ -19,12 +40,12 @@ namespace ETLBox.DataFlow.Connectors
         /// <summary>
         /// The Func that returns a data row as output.
         /// </summary>
-        public Func<TOutput> ReadFunc { get; set; }
+        public Func<int, TOutput> ReadFunc { get; set; }
 
         /// <summary>
         /// This Func returns true when all rows for the flow are successfully returned from the <see cref="ReadFunc"/>.
         /// </summary>
-        public Func<bool> ReadCompletedFunc { get; set; }
+        public Func<int, bool> ReadCompletedFunc { get; set; }
 
         #endregion
 
@@ -36,7 +57,7 @@ namespace ETLBox.DataFlow.Connectors
 
         /// <param name="readFunc">Sets the <see cref="ReadFunc"/></param>
         /// <param name="readCompletedFunc">Sets the <see cref="ReadCompletedFunc"/></param>
-        public CustomSource(Func<TOutput> readFunc, Func<bool> readCompletedFunc) : this()
+        public CustomSource(Func<int, TOutput> readFunc, Func<int, bool> readCompletedFunc) : this()
         {
             ReadFunc = readFunc;
             ReadCompletedFunc = readCompletedFunc;
@@ -67,12 +88,12 @@ namespace ETLBox.DataFlow.Connectors
 
         private void ReadAllRecords()
         {
-            while (!ReadCompletedFunc.Invoke())
+            while (!ReadCompletedFunc.Invoke(ProgressCount))
             {
                 TOutput result = default;
                 try
                 {
-                    result = ReadFunc.Invoke();
+                    result = ReadFunc.Invoke(ProgressCount);
                     if (!Buffer.SendAsync(result).Result)
                         throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
                 }
@@ -96,7 +117,7 @@ namespace ETLBox.DataFlow.Connectors
         public CustomSource() : base()
         { }
 
-        public CustomSource(Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc) : base(readFunc, readCompletedFunc)
+        public CustomSource(Func<int, ExpandoObject> readFunc, Func<int, bool> readCompletedFunc) : base(readFunc, readCompletedFunc)
         { }
     }
 }
