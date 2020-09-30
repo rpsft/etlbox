@@ -10,6 +10,12 @@ namespace ETLBox.DataFlow.Connectors
     /// If you need to access the data concurrently while rows are still written into the target,
     /// see the <see cref="ConcurrentMemoryDestination"/>.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+    /// //data is accessible in dest.Data         
+    /// </code>
+    /// </example>
     /// <typeparam name="TInput">Type of ingoing data.</typeparam>
     public class MemoryDestination<TInput> : DataFlowDestination<TInput>
     {

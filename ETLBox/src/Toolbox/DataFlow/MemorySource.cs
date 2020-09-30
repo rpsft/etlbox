@@ -11,6 +11,17 @@ namespace ETLBox.DataFlow.Connectors
     /// Define a source based on a generic .NET collection. This could be a List&lt;T&gt; or any other IEnumerable&lt;T&gt;.
     /// By default, an empty List&lt;T&gt; is created which can be filled with data.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// MemorySource&lt;MyRow&gt; source = new MemorySource&lt;MyRow&gt;();
+    /// source.Data = new List&lt;MyRow&gt;()
+    /// {
+    ///     new MyRow() { Id = 1, Value = "Test1" },
+    ///     new MyRow() { Id = 2, Value = "Test2" },
+    ///     new MyRow() { Id = 3, Value = "Test3" }
+    /// };
+    /// </code>
+    /// </example>
     /// <typeparam name="TOutput">Type of outgoing data.</typeparam>
     public class MemorySource<TOutput> : DataFlowExecutableSource<TOutput>
     {
