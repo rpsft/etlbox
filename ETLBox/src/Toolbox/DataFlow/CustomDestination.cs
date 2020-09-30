@@ -5,8 +5,15 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow.Connectors
 {
     /// <summary>
-    /// Define your own destination block. This block accepts all data from the flow and sends it to your custom written Action.
+    /// Define your own destination block. This block accepts all data from the flow and sends each incoming row to your custom Action, along with a count of processed rows. 
     /// </summary>
+    /// <example>
+    /// <code>
+    /// List<MyRow> rows = new List<MyRow>();
+    //  var dest = new CustomDestination<MyRow>();
+    //  dest.WriteAction = (row, progressCount) => rows.Add(row);
+    /// </code>
+    /// </example>
     /// <typeparam name="TInput">Type of ingoing data.</typeparam>
     public class CustomDestination<TInput> : DataFlowDestination<TInput>
     {
@@ -15,13 +22,13 @@ namespace ETLBox.DataFlow.Connectors
         /// <inheritdoc/>
         public override string TaskName { get; set; } = $"Write data into custom target";
         /// <summary>
-        /// Each row that the CustomDestination receives is send into this Action.
+        /// Each row that the CustomDestination receives is send into this Action as first input value. The second input value is the current progress count.
         /// </summary>
-        public Action<TInput> WriteAction { get; set; }
+        public Action<TInput,int> WriteAction { get; set; }
 
         #endregion
 
-        #region Constructros
+        #region Constructors
 
         public CustomDestination()
         {
@@ -29,7 +36,7 @@ namespace ETLBox.DataFlow.Connectors
         }
 
         /// <param name="writeAction">Sets the <see cref="WriteAction"/></param>
-        public CustomDestination(Action<TInput> writeAction) : this()
+        public CustomDestination(Action<TInput,int> writeAction) : this()
         {
             WriteAction = writeAction;
         }
@@ -56,7 +63,7 @@ namespace ETLBox.DataFlow.Connectors
 
         #region Implementation
 
-        private Action<TInput> AddLoggingAndErrorHandling(Action<TInput> writeAction)
+        private Action<TInput> AddLoggingAndErrorHandling(Action<TInput,int> writeAction)
         {
             return new Action<TInput>(
                 input =>
@@ -65,7 +72,7 @@ namespace ETLBox.DataFlow.Connectors
                     try
                     {
                         if (input != null)
-                            writeAction.Invoke(input);
+                            writeAction.Invoke(input, ProgressCount);
                     }
                     catch (Exception e)
                     {
@@ -86,7 +93,7 @@ namespace ETLBox.DataFlow.Connectors
         { }
 
         /// <inheritdoc/>
-        public CustomDestination(Action<ExpandoObject> writeAction) : base(writeAction)
+        public CustomDestination(Action<ExpandoObject,int> writeAction) : base(writeAction)
         { }
     }
 }

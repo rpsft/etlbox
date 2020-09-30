@@ -14,19 +14,17 @@ namespace ETLBox.DataFlow.Connectors
     ///  {
     ///      "Test1", "Test2", "Test3"
     ///  };
-    ///  int index = 0;
     ///  var source = new CustomSource&lt;MyRow&gt;();
-    ///  source.ReadFunc = () =&gt;
+    ///  source.ReadFunc = progressCount =&gt;
     ///  {
-    ///      var result = new MyRow()
+    ///      return new MyRow()
     ///      {
-    ///          Id = index + 1,
-    ///          Value = Data[index]
-    ///      };
-    ///          index++;
-    ///    return result;
+    ///          Id = progressCount + 1,
+    ///          Value = Data[progressCount]
+    ///      };    
+    ///     return result;
     ///  };
-    /// source.ReadCompletedFunc =  () =&gt; index &gt;= Data.Count;
+    /// source.ReadCompletedFunc =  progressCount =&gt; progressCount &gt;= Data.Count;
     /// </code>
     /// </example>
     /// <typeparam name="TOutput">Type of outgoing data.</typeparam>
@@ -38,12 +36,14 @@ namespace ETLBox.DataFlow.Connectors
         public override string TaskName => $"Read data from custom source";
 
         /// <summary>
-        /// The Func that returns a data row as output.
+        /// The function that returns a data row as output. An integer value with the
+        /// current progress count is the input of the function.
         /// </summary>
         public Func<int, TOutput> ReadFunc { get; set; }
 
         /// <summary>
-        /// This Func returns true when all rows for the flow are successfully returned from the <see cref="ReadFunc"/>.
+        /// This function returns true when all rows for the flow are successfully returned from the <see cref="ReadFunc"/>. An integer value with the
+        /// current progress count is the input of the function.
         /// </summary>
         public Func<int, bool> ReadCompletedFunc { get; set; }
 
