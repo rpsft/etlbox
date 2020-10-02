@@ -282,7 +282,7 @@ namespace ETLBox.DataFlow.Connectors
             {
                 return DeltaTable.ElementAt(progressCount);
             };
-            OutputSource.ReadCompletedFunc = progressCount => progressCount >= DeltaTable.Count;
+            OutputSource.ReadingCompleted = progressCount => progressCount >= DeltaTable.Count;
         }
 
         private void CreateAndRunLookupToDestinationTableFlow()

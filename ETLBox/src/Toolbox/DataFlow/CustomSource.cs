@@ -42,11 +42,11 @@ namespace ETLBox.DataFlow.Connectors
         public Func<int, TOutput> ReadFunc { get; set; }
 
         /// <summary>
-        /// This function returns true when all rows for the flow are successfully returned from the <see cref="ReadFunc"/>. An integer value with the
-        /// current progress count is the input of the function.
+        /// This predicate returns true when all rows for the flow are successfully returned from the <see cref="ReadFunc"/>. An integer value with the
+        /// current progress count is the input of the predicate.
         /// </summary>
-        public Func<int, bool> ReadCompletedFunc { get; set; }
-
+        public Predicate<int> ReadingCompleted { get; set; }
+        
         #endregion
 
         #region Constructors
@@ -56,11 +56,11 @@ namespace ETLBox.DataFlow.Connectors
         }
 
         /// <param name="readFunc">Sets the <see cref="ReadFunc"/></param>
-        /// <param name="readCompletedFunc">Sets the <see cref="ReadCompletedFunc"/></param>
-        public CustomSource(Func<int, TOutput> readFunc, Func<int, bool> readCompletedFunc) : this()
+        /// <param name="readingCompleted">Sets the <see cref="ReadingCompleted"/></param>
+        public CustomSource(Func<int, TOutput> readFunc, Predicate<int> readingCompleted) : this()
         {
             ReadFunc = readFunc;
-            ReadCompletedFunc = readCompletedFunc;
+            ReadingCompleted = readingCompleted;
         }
 
         #endregion
@@ -88,7 +88,7 @@ namespace ETLBox.DataFlow.Connectors
 
         private void ReadAllRecords()
         {
-            while (!ReadCompletedFunc.Invoke(ProgressCount))
+            while (!ReadingCompleted.Invoke(ProgressCount))
             {
                 TOutput result = default;
                 try
@@ -117,7 +117,7 @@ namespace ETLBox.DataFlow.Connectors
         public CustomSource() : base()
         { }
 
-        public CustomSource(Func<int, ExpandoObject> readFunc, Func<int, bool> readCompletedFunc) : base(readFunc, readCompletedFunc)
+        public CustomSource(Func<int, ExpandoObject> readFunc, Predicate<int> readingCompleted) : base(readFunc, readingCompleted)
         { }
     }
 }
