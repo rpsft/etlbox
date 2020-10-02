@@ -18,6 +18,9 @@ namespace ETLBox.DataFlow
         /// Mapping of property name and its index the <see cref="Properties"/> array.
         /// </summary>
         protected Dictionary<string, int> PropertyIndex { get; set; } = new Dictionary<string, int>();
+
+        public Dictionary<string, PropertyInfo> PropertiesByName { get; set; } = new Dictionary<string, PropertyInfo>();
+
         internal int PropertyLength { get; set; }
 
         /// <summary>
@@ -53,6 +56,7 @@ namespace ETLBox.DataFlow
                 foreach (var propInfo in Properties)
                 {
                     PropertyIndex.Add(propInfo.Name, index);
+                    PropertiesByName.Add(propInfo.Name, propInfo);
                     RetrieveAdditionalTypeInfo(propInfo, index);
                     index++;
                 }

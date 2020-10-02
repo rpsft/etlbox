@@ -29,8 +29,9 @@ namespace ETLBox.DataFlow
                 GroupColumns.Add(new AttributeMappingInfo()
                 {
                     PropInOutput = propInfo,
-                    PropNameInInput = attr.AggregationGroupingProperty
-                });
+                    PropNameInOutput = propInfo.Name,
+                    PropNameInInput = attr.InputGroupingProperty
+                }) ;
             }
         }
 
@@ -42,8 +43,10 @@ namespace ETLBox.DataFlow
                 AggregateColumns.Add(new AggregateAttributeMapping()
                 {
                     PropInOutput = propInfo,
-                    PropNameInInput = attr.AggregationProperty,
-                    AggregationMethod = attr.AggregationMethod
+                    PropNameInOutput = propInfo.Name,
+                    PropNameInInput = attr.InputProperty,
+                    AggregationMethod = attr.AggregationMethod,
+                    OutputType = TypeInfo.TryGetUnderlyingType(propInfo)
                 });
             }
         }
@@ -58,6 +61,7 @@ namespace ETLBox.DataFlow
     internal class AggregateAttributeMapping : AttributeMappingInfo
     {
         internal AggregationMethod AggregationMethod { get; set; }
+        internal Type OutputType { get; set; }
     }
 }
 

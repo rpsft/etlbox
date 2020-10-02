@@ -10,17 +10,27 @@ namespace ETLBox.DataFlow
     public class GroupColumn : Attribute
     {
         /// <summary>
-        /// Property name used for groupin in the aggregation output object.
+        /// Property name used in the input object for grouping the aggregation.
         /// </summary>
-        public string AggregationGroupingProperty { get; set; }
+        public string InputGroupingProperty { get; set; }
 
         /// <summary>
-        /// Sets the property name used for grouping in the aggregation output object
+        /// Property name that holds the grouping value in the output object
         /// </summary>
-        /// <param name="aggregationGroupingProperty">Property name used for grouping in the output object</param>
-        public GroupColumn(string aggregationGroupingProperty)
+        public string OutputGroupingProperty { get; set; }
+
+        /// <summary>
+        /// Sets the property name used for grouping in the input object
+        /// </summary>
+        /// <param name="inputGroupingProperty">Property name in the input object used for grouping the aggregation data</param>
+        public GroupColumn(string inputGroupingProperty)
         {
-            AggregationGroupingProperty = aggregationGroupingProperty;
+            InputGroupingProperty = inputGroupingProperty;
+        }
+
+        public GroupColumn()
+        {
+
         }
     }
 }

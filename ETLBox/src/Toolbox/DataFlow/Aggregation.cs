@@ -3,6 +3,7 @@ using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -44,17 +45,23 @@ namespace ETLBox.DataFlow.Transformations
         public override string TaskName { get; set; } = "Execute aggregation block";
 
         /// <summary>
-        /// This action describes how the input data is aggregated
+        /// This action describes how the input data is aggregated.
+        /// Not needed if you use the <see cref="AggregateColumn" /> in your object
+        /// or pass a list to the <see cref="AggregateColumns" /> property. 
         /// </summary>
         public Action<TInput, TOutput> AggregationAction { get; set; }
 
         /// <summary>
-        /// This Func defines how the object for grouping data is retrieved
+        /// This Func defines how the object for grouping data is retrieved.
+        /// Not needed if you use the <see cref="GroupColumn" /> in your object
+        /// or pass a list to the <see cref="GroupColumns" /> property. 
         /// </summary>
         public Func<TInput, object> GroupingFunc { get; set; }
 
         /// <summary>
-        /// This action defines how the grouping object is written back into the aggregated object
+        /// This action defines how the grouping object is written back into the aggregated object.
+        /// Not needed if you use the <see cref="GroupColumn" /> in your object
+        /// or pass a list to the <see cref="GroupColumns" /> property. 
         /// </summary>
         public Action<object, TOutput> StoreKeyAction { get; set; }
 
@@ -64,6 +71,18 @@ namespace ETLBox.DataFlow.Transformations
         /// <inheritdoc/>
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
+        /// <summary>
+        /// This list will be used to set the AggregationAction.
+        /// This also works with ExpandoObjects.
+        /// </summary>
+        public IEnumerable<AggregateColumn> AggregateColumns { get; set; }
+
+        /// <summary>
+        /// This list will be used to set the <see cref="GroupingFunc"/> and the <see cref="StoreKeyAction" />.
+        /// This also works with ExpandoObjects.
+        /// </summary>
+        public IEnumerable<GroupColumn> GroupColumns { get; set; }
+
         #endregion
 
         #region Constructors
@@ -71,6 +90,8 @@ namespace ETLBox.DataFlow.Transformations
         public Aggregation()
         {
             AggTypeInfo = new AggregationTypeInfo(typeof(TInput), typeof(TOutput));
+            InputTypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
+            OutputTypeInfo = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
             CheckTypeInfo();
         }
 
@@ -152,6 +173,10 @@ namespace ETLBox.DataFlow.Transformations
         ActionBlock<TInput> InputBuffer;
         Dictionary<object, TOutput> AggregationData = new Dictionary<object, TOutput>();
         AggregationTypeInfo AggTypeInfo;
+        TypeInfo InputTypeInfo;
+        TypeInfo OutputTypeInfo;
+        List<AggregateAttributeMapping> AggregateAttributeMapping;
+        List<AttributeMappingInfo> GroupingAttributeMapping;
 
         private void CheckTypeInfo()
         {
@@ -161,14 +186,20 @@ namespace ETLBox.DataFlow.Transformations
 
         private void SetAggregationFunctionsIfNecessary()
         {
-            if (AggregationAction == null && AggTypeInfo.AggregateColumns.Count > 0)
+            if (AggregationAction == null && (AggTypeInfo.AggregateColumns.Count > 0 || AggregateColumns?.Count() > 0))
+            {
+                FillAggregateAttributeMapping();
                 AggregationAction = DefineAggregationAction;
+            }
 
-            if (GroupingFunc == null && AggTypeInfo.GroupColumns.Count > 0)
-                GroupingFunc = DefineGroupingPropertyFromAttributes;
-
-            if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
-                StoreKeyAction = DefineStoreKeyActionFromAttributes;
+            if (GroupingFunc == null && (AggTypeInfo.GroupColumns.Count > 0 || GroupColumns?.Count() > 0))
+            {
+                FillGroupingAttributeMapping();
+                GroupingFunc = DefineGroupingProperty;
+                if (StoreKeyAction == null)
+                    StoreKeyAction = DefineStoreKeyAction;
+            }
+                
         }
 
         private void CheckIfAggregationActionIsSet()
@@ -177,12 +208,40 @@ namespace ETLBox.DataFlow.Transformations
                 throw new ETLBoxException("No aggregation method found - either define an AggregationAction or use the AggregateColumn attribute");
         }
 
+        private void FillAggregateAttributeMapping()
+        {
+            if (AggregateColumns != null)
+            {
+                AggregateAttributeMapping = new List<AggregateAttributeMapping>();
+                foreach (var ac in AggregateColumns)
+                {
+                    var newMap = new AggregateAttributeMapping();
+                    newMap.PropNameInInput = ac.InputProperty;
+                    newMap.PropNameInOutput = ac.AggregationProperty;
+                    newMap.AggregationMethod = ac.AggregationMethod;
+                    if (!InputTypeInfo.IsDynamic)
+                        newMap.PropInInput = InputTypeInfo.PropertiesByName[ac.InputProperty];
+                    if (!OutputTypeInfo.IsDynamic)
+                    {
+                        newMap.PropInOutput = OutputTypeInfo.PropertiesByName[ac.AggregationProperty];
+                        newMap.OutputType = TypeInfo.TryGetUnderlyingType(OutputTypeInfo.PropertiesByName[ac.AggregationProperty]);
+                    }
+
+                    AggregateAttributeMapping.Add(newMap);
+                }
+            }
+            else
+            {
+                AggregateAttributeMapping = AggTypeInfo.AggregateColumns;
+            }
+        }
+
         private void DefineAggregationAction(TInput inputrow, TOutput aggOutput)
         {
-            foreach (var attrmap in AggTypeInfo.AggregateColumns)
+            foreach (var attrmap in AggregateAttributeMapping)
             {
-                decimal? inputVal = ConvertToDecimal(attrmap.PropInInput.GetValue(inputrow));
-                decimal? aggVal = ConvertToDecimal(attrmap.PropInOutput.GetValue(aggOutput));
+                decimal? inputVal = ConvertToDecimalOrNull(GetValueFromInputObject(inputrow, attrmap));
+                decimal? aggVal = ConvertToDecimalOrNull(GetValueFromOutputObject(aggOutput, attrmap));
                 decimal? res = null;
                 if (aggVal == null && attrmap.AggregationMethod == AggregationMethod.Count)
                     res = 1;
@@ -197,33 +256,107 @@ namespace ETLBox.DataFlow.Transformations
                 else if (attrmap.AggregationMethod == AggregationMethod.Count)
                     res = aggVal + 1;
 
-                object output = Convert.ChangeType(
-                    res, TypeInfo.TryGetUnderlyingType(attrmap.PropInOutput));
-                attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
+                object output = default(TOutput);
+                if (OutputTypeInfo.IsDynamic)
+                    SetValueInOutputObject(aggOutput, attrmap, res);
+                else
+                    SetValueInOutputObject(aggOutput, attrmap,
+                        Convert.ChangeType(res, attrmap.OutputType)
+                    );
             }
         }
 
-        private decimal? ConvertToDecimal(object input)
+
+        private object GetValueFromInputObject(TInput inputrow, AttributeMappingInfo attrmap)
         {
-            if (input == null)
-                return null;
+            if (InputTypeInfo.IsDynamic)
+            {
+                IDictionary<string, object> dict = inputrow as IDictionary<string, object>;
+                if (dict.ContainsKey(attrmap.PropNameInInput))
+                    return dict[attrmap.PropNameInInput];
+                else
+                    return null;
+            }
             else
-                return Convert.ToDecimal(input);
+            {
+                return attrmap.PropInInput.GetValue(inputrow);
+            }
         }
 
-        private void DefineStoreKeyActionFromAttributes(object key, TOutput outputRow)
+        private object GetValueFromOutputObject(TOutput aggOutput, AttributeMappingInfo attrmap)
         {
-            var gk = key as GroupingKey;
-            foreach (var propMap in gk?.GroupingObjectsByProperty)
-                propMap.Key.TrySetValue(outputRow, propMap.Value);
+            if (OutputTypeInfo.IsDynamic)
+            {
+                IDictionary<string, object> dict = aggOutput as IDictionary<string, object>;
+                if (dict.ContainsKey(attrmap.PropNameInOutput))
+                    return dict[attrmap.PropNameInOutput];
+                else
+                    return null;
+            }
+            else
+            {
+                return attrmap.PropInOutput.GetValue(aggOutput);
+            }
         }
 
-        private object DefineGroupingPropertyFromAttributes(TInput inputrow)
+        private void SetValueInOutputObject(TOutput aggOutput, AttributeMappingInfo attrmap, object output)
+        {
+            if (OutputTypeInfo.IsDynamic)
+            {
+                IDictionary<string, object> dict = aggOutput as IDictionary<string, object>;
+                if (dict.ContainsKey(attrmap.PropNameInOutput))
+                    dict[attrmap.PropNameInOutput] = output;
+                else
+                    dict.Add(attrmap.PropNameInOutput, output);
+            }
+            else
+                attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
+        }
+
+        private decimal? ConvertToDecimalOrNull(object input) => input == null ? (decimal?)null : Convert.ToDecimal(input);
+
+
+        private void FillGroupingAttributeMapping()
+        {
+            if (GroupColumns != null)
+            {
+                GroupingAttributeMapping = new List<AttributeMappingInfo>();
+                foreach (var gc in GroupColumns)
+                {
+                    var newMap = new AttributeMappingInfo();
+                    newMap.PropNameInInput = gc.InputGroupingProperty;
+                    newMap.PropNameInOutput = gc.OutputGroupingProperty;
+
+                    if (!InputTypeInfo.IsDynamic)
+                        newMap.PropInInput = InputTypeInfo.PropertiesByName[gc.InputGroupingProperty];
+                    if (!OutputTypeInfo.IsDynamic)
+                        newMap.PropInOutput = OutputTypeInfo.PropertiesByName[gc.OutputGroupingProperty];
+
+                    GroupingAttributeMapping.Add(newMap);
+                }
+            }
+            else
+            {
+                GroupingAttributeMapping = AggTypeInfo.GroupColumns;
+            }
+        }
+
+        private object DefineGroupingProperty(TInput inputrow)
         {
             var gk = new GroupingKey();
-            foreach (var propMap in AggTypeInfo.GroupColumns)
-                gk?.GroupingObjectsByProperty.Add(propMap.PropInOutput, propMap.PropInInput.GetValue(inputrow));
+            foreach (var map in GroupingAttributeMapping)
+                gk?.GroupingObjectsByProperty.Add(map.PropNameInInput, GetValueFromInputObject(inputrow, map));
             return gk;
+        }
+
+        private void DefineStoreKeyAction(object key, TOutput outputRow)
+        {
+            var gk = key as GroupingKey;
+            foreach (var go in gk?.GroupingObjectsByProperty)
+            {
+                AttributeMappingInfo map = GroupingAttributeMapping.Find(m => m.PropNameInInput == go.Key);
+                SetValueInOutputObject(outputRow, map, go.Value);
+            }   
         }
 
         private void WrapAggregationAction(TInput row)
@@ -276,7 +409,7 @@ namespace ETLBox.DataFlow.Transformations
                     equals &= (map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true);
                 return equals;
             }
-            public Dictionary<PropertyInfo, object> GroupingObjectsByProperty { get; set; } = new Dictionary<PropertyInfo, object>();
+            public Dictionary<string, object> GroupingObjectsByProperty { get; set; } = new Dictionary<string, object>();
         }
 
         #endregion
@@ -293,6 +426,8 @@ namespace ETLBox.DataFlow.Transformations
     /// <inheritdoc />
     public class Aggregation : Aggregation<ExpandoObject, ExpandoObject>
     {
+        public Aggregation() : base() { }
+
         public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction) : base(aggregationAction)
         { }
 
