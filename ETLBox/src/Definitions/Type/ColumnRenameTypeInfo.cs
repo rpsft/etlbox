@@ -7,7 +7,7 @@ namespace ETLBox.DataFlow
 {
     internal class ColumnRenameTypeInfo : TypeInfo
     {
-        internal Dictionary<string, string> ColumnRenamingDict { get; set; } = new Dictionary<string, string>();
+        internal Dictionary<string, ColumnMap> ColumnRenamingDict { get; set; } = new Dictionary<string, ColumnMap>();
 
         internal ColumnRenameTypeInfo(Type typ) : base(typ)
         {
@@ -24,7 +24,7 @@ namespace ETLBox.DataFlow
         {
             var attr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
             if (attr != null)
-                ColumnRenamingDict.Add(propInfo.Name, attr.NewName);
+                ColumnRenamingDict.Add(propInfo.Name, attr);
         }
     }
 }

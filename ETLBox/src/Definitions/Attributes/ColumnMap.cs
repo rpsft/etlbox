@@ -47,5 +47,10 @@ namespace ETLBox.DataFlow
         /// Current name of the column or property
         /// </summary>
         public string CurrentName { get; set; }
+
+        /// <summary>
+        /// If set to true, this column is left out when using the ColumnRename transformation.
+        /// </summary>
+        public bool RemoveColumn { get; set; }
     }
 }

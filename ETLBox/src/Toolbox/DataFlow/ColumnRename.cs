@@ -38,7 +38,7 @@ namespace ETLBox.DataFlow.Transformations
         /// For arrays provide the array index and the new name. 
         /// </summary>
         public IEnumerable<ColumnMap> ColumnMapping { get; set; }
-        
+
         public IEnumerable<string> RemoveColumns { get; set; }
 
         #endregion
@@ -61,10 +61,10 @@ namespace ETLBox.DataFlow.Transformations
         #region Implement abstract methods
 
         protected override void InternalInitBufferObjects()
-        {            
+        {
             InitRowTransformationManually();
             InitMappingDict();
-            InitDefaultColumnMappingForPocos();            
+            InitDefaultColumnMappingForPocos();
         }
 
         protected override void CleanUpOnSuccess()
@@ -90,8 +90,7 @@ namespace ETLBox.DataFlow.Transformations
         #region Implementation
 
         RowTransformation<TInput, ExpandoObject> RowTransformation;
-        Dictionary<string, string> MappingDict = new Dictionary<string, string>();
-        Dictionary<int, string> ArrayMappingDict = new Dictionary<int, string>();
+        Dictionary<string, ColumnMap> MappingDict = new Dictionary<string, ColumnMap>();
         ColumnRenameTypeInfo TypeInfo;
 
         private void InitRowTransformationManually()
@@ -109,16 +108,19 @@ namespace ETLBox.DataFlow.Transformations
             {
                 if (TypeInfo.IsArray)
                 {
-                    if (map.ArrayIndex == null || string.IsNullOrEmpty(map.NewName))
-                        throw new ETLBoxException("When using arrays, ColumnMapping must provide a valid array index and new name!");
-                    ArrayMappingDict.Add((int)map.ArrayIndex, map.NewName);
+                    if (map.ArrayIndex == null || (string.IsNullOrEmpty(map.NewName)
+                        && map.RemoveColumn == false))
+                        throw new ETLBoxException("When using arrays, ColumnMapping must provide a valid array index and new name or RemoveColumn set to true!");
+                    MappingDict.Add(map.ArrayIndex.ToString(), map);
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(map.CurrentName) || string.IsNullOrEmpty(map.NewName))
-                        throw new ETLBoxException("For objects (dynamic and POCOs), ColumnMapping must provide a valid current name and new name!");
-                    MappingDict.Add(map.CurrentName, map.NewName);
+                    if (string.IsNullOrEmpty(map.CurrentName) || (string.IsNullOrEmpty(map.NewName)
+                        && map.RemoveColumn == false))
+                        throw new ETLBoxException("For objects (dynamic and POCOs), ColumnMapping must provide a valid current name and either a new name or RemoveColumn set to true!");
+                    MappingDict.Add(map.CurrentName, map);
                 }
+                
             }
         }
 
@@ -137,32 +139,35 @@ namespace ETLBox.DataFlow.Transformations
             if (TypeInfo.IsArray)
                 RenameArrayObject(row, resultAsDict);
             else if (TypeInfo.IsDynamic)
-                RenameExpandObject(row, resultAsDict);
+                RenameExpandoObject(row, resultAsDict);
             else
                 RenamePoco(row, resultAsDict);
             return result;
         }
-              
+
         private void RenameArrayObject(TInput row, IDictionary<string, object> resultAsDict)
         {
             var ar = row as Array;
             for (int i = 0; i < ar.Length; i++)
             {
-                if (!ArrayMappingDict.ContainsKey(i))
+                if (!MappingDict.ContainsKey(i.ToString()))
                     throw new ETLBoxException("When renaming arrays, provide a new name for every element in the array!");
-                resultAsDict.Add(ArrayMappingDict[i], ar.GetValue(i));
+                ColumnMap cm = MappingDict[i.ToString()];
+                if (cm == null || cm.RemoveColumn == false)
+                    resultAsDict.Add(cm.NewName, ar.GetValue(i));
             }
         }
 
-        private void RenameExpandObject(TInput row, IDictionary<string, object> resultAsDict)
+        private void RenameExpandoObject(TInput row, IDictionary<string, object> resultAsDict)
         {
             var inputAsDict = (IDictionary<string, object>)row;
             if (inputAsDict == null)
                 throw new ETLBoxException($"Can't convert row into ExpandoObject: {row?.ToString() ?? ""}");
             foreach (var kvp in inputAsDict)
             {
-                string newName = MappingDict.ContainsKey(kvp.Key) ? MappingDict[kvp.Key] : kvp.Key;
-                resultAsDict.Add(newName, kvp.Value);
+                ColumnMap cm = MappingDict.ContainsKey(kvp.Key) ? MappingDict[kvp.Key] : null;
+                if (cm == null || cm?.RemoveColumn == false)
+                    resultAsDict.Add(cm?.NewName ?? kvp.Key, kvp.Value);
             }
         }
 
@@ -170,8 +175,9 @@ namespace ETLBox.DataFlow.Transformations
         {
             for (int i = 0; i < TypeInfo.PropertyLength; i++)
             {
-                string newName = MappingDict.ContainsKey(TypeInfo.Properties[i].Name) ? MappingDict[TypeInfo.Properties[i].Name] : TypeInfo.Properties[i].Name;
-                resultAsDict.Add(newName, TypeInfo.Properties[i].GetValue(row));
+                ColumnMap cm = MappingDict.ContainsKey(TypeInfo.Properties[i].Name) ? MappingDict[TypeInfo.Properties[i].Name] : null;
+                if (cm == null || cm?.RemoveColumn == false)
+                    resultAsDict.Add(cm?.NewName ?? TypeInfo.Properties[i].Name, TypeInfo.Properties[i].GetValue(row));
             }
         }
 
