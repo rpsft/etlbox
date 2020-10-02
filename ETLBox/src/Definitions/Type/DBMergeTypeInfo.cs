@@ -41,7 +41,7 @@ namespace ETLBox.DataFlow
                 {
                     var cmattr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
                     if (cmattr != null)
-                        IdColumnNames.Add(cmattr.ColumnName);
+                        IdColumnNames.Add(cmattr.NewName);
                     else
                         IdColumnNames.Add(propInfo.Name);
                 }

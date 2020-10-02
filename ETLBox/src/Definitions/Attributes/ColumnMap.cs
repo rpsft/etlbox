@@ -7,7 +7,7 @@ namespace ETLBox.DataFlow
     /// from a database or using the ColumnRename transformation.
     /// By default, when reading from a database source the mapping which property stores data of which column
     /// is resolved by the property names. Using this attribute, you can specify the column name that maps to a property.
-    /// In the ColumnRename transformation, this property is used to rename a column
+    /// In the ColumnRename transformation, this property is used to rename a column. 
     /// </summary>
     /// <example>
     ///  public class MyPoco
@@ -22,15 +22,30 @@ namespace ETLBox.DataFlow
         /// <summary>
         /// Name of the column in the database or the new name when renaming
         /// </summary>
-        public string ColumnName { get; set; }
+        public string NewName { get; set; }
+
+        public ColumnMap()
+        {
+
+        }
 
         /// <summary>
         /// Create a mapping between the current property and a column        
         /// </summary>
-        /// <param name="columnName">Name of the column in the database or the new name when renaming</param>
-        public ColumnMap(string columnName)
+        /// <param name="newName">Name of the column in the database or the new name when renaming</param>
+        public ColumnMap(string newName)
         {
-            ColumnName = columnName;
+            NewName = newName;
         }
+
+        /// <summary>
+        /// Index of the element in the array
+        /// </summary>
+        public int? ArrayIndex { get; set; }
+
+        /// <summary>
+        /// Current name of the column or property
+        /// </summary>
+        public string CurrentName { get; set; }
     }
 }

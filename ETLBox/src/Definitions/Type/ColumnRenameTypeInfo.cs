@@ -24,7 +24,7 @@ namespace ETLBox.DataFlow
         {
             var attr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
             if (attr != null)
-                ColumnRenamingDict.Add(propInfo.Name, attr.ColumnName);
+                ColumnRenamingDict.Add(propInfo.Name, attr.NewName);
         }
     }
 }

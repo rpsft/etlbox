@@ -37,7 +37,9 @@ namespace ETLBox.DataFlow.Transformations
         /// existing ColumnMap attributes - in this case, leave it empty. 
         /// For arrays provide the array index and the new name. 
         /// </summary>
-        public IEnumerable<ColumnMapping> ColumnMapping { get; set; }
+        public IEnumerable<ColumnMap> ColumnMapping { get; set; }
+        
+        public IEnumerable<string> RemoveColumns { get; set; }
 
         #endregion
 
@@ -49,9 +51,9 @@ namespace ETLBox.DataFlow.Transformations
             TypeInfo = new ColumnRenameTypeInfo(typeof(TInput));
         }
 
-        public ColumnRename(IEnumerable<ColumnMapping> columnMapping)
+        public ColumnRename(IEnumerable<ColumnMap> columnMap)
         {
-            ColumnMapping = columnMapping;
+            ColumnMapping = columnMap;
         }
 
         #endregion
@@ -62,7 +64,7 @@ namespace ETLBox.DataFlow.Transformations
         {            
             InitRowTransformationManually();
             InitMappingDict();
-            InitDefaultColumnMappingForPocos();
+            InitDefaultColumnMappingForPocos();            
         }
 
         protected override void CleanUpOnSuccess()
@@ -183,7 +185,7 @@ namespace ETLBox.DataFlow.Transformations
         public ColumnRename() : base()
         { }
 
-        public ColumnRename(IEnumerable<ColumnMapping> columnMapping) : base(columnMapping)
+        public ColumnRename(IEnumerable<ColumnMap> columnMap) : base(columnMap)
         { }
     }
 }
