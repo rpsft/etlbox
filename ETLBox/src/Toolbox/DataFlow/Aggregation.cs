@@ -271,7 +271,7 @@ namespace ETLBox.DataFlow.Transformations
 
         private int? Count(object aggVal)
         {
-            int? aggValAsInt= TryConvertToInt(aggVal);
+            int? aggValAsInt = TryConvertToInt(aggVal);
             if (aggValAsInt == null)
                 return 1;
             else
@@ -329,7 +329,7 @@ namespace ETLBox.DataFlow.Transformations
         {
             if (!IsFirstRowProcessed)
             {
-                IsFirstRowProcessed = true; 
+                IsFirstRowProcessed = true;
                 return inputVal;
             }
             else
@@ -346,7 +346,7 @@ namespace ETLBox.DataFlow.Transformations
         private int? TryConvertToInt(object input) => input == null ? (int?)null : Convert.ToInt32(input);
 
         private object TryConvert(Type outputType, object res)
-            => res != null ?  Convert.ChangeType(res, outputType) : null;
+            => res != null ? Convert.ChangeType(res, outputType) : null;
 
         private object GetValueFromInputObject(TInput inputrow, AttributeMappingInfo attrmap)
         {
@@ -394,8 +394,6 @@ namespace ETLBox.DataFlow.Transformations
                 attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
         }
 
-       
-
 
         private void FillGroupingAttributeMapping()
         {
@@ -442,13 +440,21 @@ namespace ETLBox.DataFlow.Transformations
 
         private void WrapAggregationAction(TInput row)
         {
-            object key = GroupingFunc?.Invoke(row) ?? string.Empty;
+            try
+            {
+                object key = GroupingFunc?.Invoke(row) ?? string.Empty;
 
-            if (!AggregationData.ContainsKey(key))
-                AddRecordToDict(key);
+                if (!AggregationData.ContainsKey(key))
+                    AddRecordToDict(key);
 
-            TOutput currentAgg = AggregationData[key];
-            AggregationAction.Invoke(row, currentAgg);
+                TOutput currentAgg = AggregationData[key];
+                AggregationAction.Invoke(row, currentAgg);
+            }
+            catch (Exception e)
+            {
+                ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput>(row));
+                return;
+            }
         }
 
         private void AddRecordToDict(object key)
