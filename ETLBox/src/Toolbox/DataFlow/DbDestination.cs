@@ -39,6 +39,8 @@ namespace ETLBox.DataFlow.Connectors
         /// </summary>
         public IConnectionManager BulkInsertConnectionManager { get; protected set; }
 
+        public IEnumerable<ColumnMap> ColumnMapping { get; set; }
+
         public const int DEFAULT_BATCH_SIZE_ODBC_OLEDB = 100;
 
         #endregion
@@ -137,10 +139,29 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (!HasDestinationTableDefinition)
                 LoadTableDefinitionFromTableName();
+            InitBulkInsertConnectionManager();
+            InitTableData();
+        }
+
+        private void InitBulkInsertConnectionManager()
+        {
             BulkInsertConnectionManager = this.DbConnectionManager.CloneIfAllowed();
             BulkInsertConnectionManager.IsInBulkInsert = true;
             BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
+        }
+
+        private void InitTableData()
+        {
             TableData = new TableData<TInput>(DestinationTableDefinition, BatchSize);
+            if (ColumnMapping != null)
+                foreach (var map in ColumnMapping)
+                {
+                    if (!TypeInfo.IsArray && (map.CurrentName == null || map.NewName == null))
+                        throw new ETLBoxException("A column mapping always needs a current and a new name for object and dynamic objects!");
+                    if (TypeInfo.IsArray && (map.ArrayIndex == null || map.NewName == null))
+                        throw new ETLBoxException("A column mapping for an array always needs an array index and a new name");
+                    TableData.ColumnMaps.Add(map.NewName, map);
+                }
         }
 
         protected override void BulkInsertData(TInput[] data)

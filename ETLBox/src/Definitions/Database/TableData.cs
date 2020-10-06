@@ -41,12 +41,12 @@ namespace ETLBox.ControlFlow
                 {
                     if (TypeInfo != null && !TypeInfo.IsDynamic && !TypeInfo.IsArray)
                     {
-                        if (TypeInfo.HasPropertyOrColumnMapping(col.Name))
+                        if (TypeInfo.HasPropertyOrColumnMapping(col.Name) || ColumnMaps.ContainsKey(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
                     }
                     else if (TypeInfo.IsDynamic)
                     {
-                        if (DynamicColumnNames.ContainsKey(col.Name))
+                        if (DynamicColumnNames.ContainsKey(col.Name) || ColumnMaps.ContainsKey(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
                     }
                     else
@@ -181,6 +181,8 @@ namespace ETLBox.ControlFlow
 
         object[] CurrentRow;
         internal Dictionary<string, int> DynamicColumnNames { get; set; } = new Dictionary<string, int>();
+        internal Dictionary<string, ColumnMap> ColumnMaps { get; set; } = new Dictionary<string, ColumnMap>();
+
         int ReadIndex;
         TableDefinition Definition;
         bool HasDefinition => Definition != null;
@@ -190,12 +192,21 @@ namespace ETLBox.ControlFlow
         private int FindOrdinalInObject(string name)
         {
             if (TypeInfo == null || TypeInfo.IsArray)
-            {
-                return Definition.Columns.FindIndex(col => col.Name == name);
+            {                
+                if (ColumnMaps.ContainsKey(name))
+                {
+                    int index = ColumnMaps[name].ArrayIndex ?? 0;
+                    if (HasIDColumnIndex)
+                        index++;
+                    return index;
+                }                
+                else 
+                    return Definition.Columns.FindIndex(col => col.Name == name);
             }
             else if (TypeInfo.IsDynamic)
             {
-                int ix = DynamicColumnNames[name];
+                string mappedName = ColumnMaps.ContainsKey(name) ? ColumnMaps[name].CurrentName : name;
+                int ix = DynamicColumnNames[mappedName];
                 if (HasIDColumnIndex)
                     if (ix >= IDColumnIndex) ix++;
                 return ix;
@@ -203,7 +214,8 @@ namespace ETLBox.ControlFlow
             }
             else
             {
-                int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(name);
+                string mappedName = ColumnMaps.ContainsKey(name) ? ColumnMaps[name].CurrentName : name;
+                int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(mappedName);
                 if (HasIDColumnIndex)
                     if (ix >= IDColumnIndex) ix++;
                 return ix;
@@ -249,13 +261,13 @@ namespace ETLBox.ControlFlow
             }
         }
 
-        /// Diposes the internal list that holds data
+        /// Disposes the internal list that holds data
         public void Dispose()
         {
             Dispose(true);
         }
 
-        /// Diposes the internal list that holds data
+        /// Disposes the internal list that holds data
         public void Close()
         {
             Dispose();
