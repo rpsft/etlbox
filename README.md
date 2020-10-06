@@ -1,4 +1,4 @@
-# <span><img src="https://github.com/etlbox/etlbox/raw/main/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32" /> ETLBox</span>
+# <span><img src="https://github.com/etlbox/etlbox.docu/raw/main/docs/images/logo_orig_32x32.png" alt="ETLBox logo" height="32" /> ETLBox</span>
 
 A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.
 
