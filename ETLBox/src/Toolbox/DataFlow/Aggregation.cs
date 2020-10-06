@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -199,7 +198,7 @@ namespace ETLBox.DataFlow.Transformations
                 if (StoreKeyAction == null)
                     StoreKeyAction = DefineStoreKeyAction;
             }
-                
+
         }
 
         private void CheckIfAggregationActionIsSet()
@@ -240,32 +239,114 @@ namespace ETLBox.DataFlow.Transformations
         {
             foreach (var attrmap in AggregateAttributeMapping)
             {
-                decimal? inputVal = ConvertToDecimalOrNull(GetValueFromInputObject(inputrow, attrmap));
-                decimal? aggVal = ConvertToDecimalOrNull(GetValueFromOutputObject(aggOutput, attrmap));
-                decimal? res = null;
-                if (aggVal == null && attrmap.AggregationMethod == AggregationMethod.Count)
-                    res = 1;
-                else if (aggVal == null)
-                    res = inputVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Sum)
-                    res = (inputVal ?? 0) + aggVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Max)
-                    res = ((inputVal ?? 0) > aggVal) ? inputVal : aggVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Min)
-                    res = (inputVal ?? 0) < aggVal ? inputVal : aggVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Count)
-                    res = aggVal + 1;
+                object inputVal = GetValueFromInputObject(inputrow, attrmap);
+                object aggVal = GetValueFromOutputObject(aggOutput, attrmap);
+                object res = null;
 
-                object output = default(TOutput);
+                if (attrmap.AggregationMethod == AggregationMethod.Count)
+                    res = Count(aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.Sum)
+                    res = Sum(inputVal, aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.Max)
+                    res = Max(inputVal, aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.Min)
+                    res = Min(inputVal, aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.FirstNotNullValue)
+                    res = FirstNotNullValue(inputVal, aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.LastNotNullValue)
+                    res = LastNotNullValue(inputVal, aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.FirstValue)
+                    res = FirstValue(inputVal, aggVal);
+                else if (attrmap.AggregationMethod == AggregationMethod.LastValue)
+                    res = LastValue(inputVal, aggVal);
+
                 if (OutputTypeInfo.IsDynamic)
                     SetValueInOutputObject(aggOutput, attrmap, res);
                 else
                     SetValueInOutputObject(aggOutput, attrmap,
-                        Convert.ChangeType(res, attrmap.OutputType)
+                        TryConvert(attrmap.OutputType, res)
                     );
             }
         }
 
+        private int? Count(object aggVal)
+        {
+            int? aggValAsInt= TryConvertToInt(aggVal);
+            if (aggValAsInt == null)
+                return 1;
+            else
+                return aggValAsInt + 1;
+        }
+
+        private decimal? Sum(object inputVal, object aggVal)
+        {
+            decimal? inputValAsDec = TryConvertToDecimal(inputVal);
+            decimal? aggValAsDec = TryConvertToDecimal(aggVal);
+            if (aggValAsDec == null)
+                return inputValAsDec;
+            else
+                return (inputValAsDec ?? 0) + aggValAsDec;
+        }
+
+        private decimal? Min(object inputVal, object aggVal)
+        {
+            decimal? inputValAsDec = TryConvertToDecimal(inputVal);
+            decimal? aggValAsDec = TryConvertToDecimal(aggVal);
+            if (aggValAsDec == null)
+                return inputValAsDec;
+            else
+                return (inputValAsDec ?? 0) < aggValAsDec ? inputValAsDec : aggValAsDec;
+        }
+
+        private decimal? Max(object inputVal, object aggVal)
+        {
+            decimal? inputValAsDec = TryConvertToDecimal(inputVal);
+            decimal? aggValAsDec = TryConvertToDecimal(aggVal);
+            if (aggValAsDec == null)
+                return inputValAsDec;
+            else
+                return ((inputValAsDec ?? 0) > aggValAsDec) ? inputValAsDec : aggValAsDec;
+        }
+
+        private object FirstNotNullValue(object inputVal, object aggVal)
+        {
+            if (aggVal == null)
+                return inputVal;
+            else
+                return aggVal;
+        }
+
+        private object LastNotNullValue(object inputVal, object aggVal)
+        {
+            if (inputVal != null)
+                return inputVal;
+            else
+                return aggVal;
+        }
+
+        bool IsFirstRowProcessed;
+        private object FirstValue(object inputVal, object aggVal)
+        {
+            if (!IsFirstRowProcessed)
+            {
+                IsFirstRowProcessed = true; 
+                return inputVal;
+            }
+            else
+                return aggVal;
+        }
+
+        private object LastValue(object inputVal, object aggVal)
+        {
+            return inputVal;
+        }
+
+        private decimal? TryConvertToDecimal(object input) => input == null ? (decimal?)null : Convert.ToDecimal(input);
+
+        private int? TryConvertToInt(object input) => input == null ? (int?)null : Convert.ToInt32(input);
+
+        private object TryConvert(Type outputType, object res)
+            => res != null ?  Convert.ChangeType(res, outputType) : null;
 
         private object GetValueFromInputObject(TInput inputrow, AttributeMappingInfo attrmap)
         {
@@ -313,7 +394,7 @@ namespace ETLBox.DataFlow.Transformations
                 attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
         }
 
-        private decimal? ConvertToDecimalOrNull(object input) => input == null ? (decimal?)null : Convert.ToDecimal(input);
+       
 
 
         private void FillGroupingAttributeMapping()
@@ -356,7 +437,7 @@ namespace ETLBox.DataFlow.Transformations
             {
                 AttributeMappingInfo map = GroupingAttributeMapping.Find(m => m.PropNameInInput == go.Key);
                 SetValueInOutputObject(outputRow, map, go.Value);
-            }   
+            }
         }
 
         private void WrapAggregationAction(TInput row)
@@ -420,7 +501,11 @@ namespace ETLBox.DataFlow.Transformations
         Sum,
         Min,
         Max,
-        Count
+        Count,
+        FirstNotNullValue,
+        LastNotNullValue,
+        FirstValue,
+        LastValue
     }
 
     /// <inheritdoc />
