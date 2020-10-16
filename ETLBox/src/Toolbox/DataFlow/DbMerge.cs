@@ -114,7 +114,18 @@ namespace ETLBox.DataFlow.Connectors
 
         #endregion
 
-        public void Wait() => Completion.Wait();
+        public void Wait() {
+            try
+            {
+                Completion.Wait();
+            }
+            catch (AggregateException ae)
+            {
+                throw ae.InnerException;
+            }
+        }
+       
+
 
         #region Constructors
 
