@@ -34,7 +34,7 @@ namespace ETLBox.DataFlow.Transformations
             get
             {
                 if (AvoidBroadcastBlock)
-                    return OutputBuffer?.LastOrDefault();
+                    return OutputBuffer?.LastOrDefault().Item1;
                 else
                     return BroadcastBlock;
             }
@@ -84,7 +84,7 @@ namespace ETLBox.DataFlow.Transformations
                 {
                     BoundedCapacity = MaxBufferSize
                 });
-                OutputBuffer.Add(buffer);
+                OutputBuffer.Add(Tuple.Create(buffer, linkPredicates));
             }
             base.LinkBuffers(successor, linkPredicates);
         }
@@ -101,7 +101,7 @@ namespace ETLBox.DataFlow.Transformations
             get
             {
                 if (AvoidBroadcastBlock)
-                    return Task.WhenAll(OutputBuffer.Select(b => b.Completion));
+                    return Task.WhenAll(OutputBuffer.Select(b => b.Item1.Completion));
                 else
                     return ((IDataflowBlock)BroadcastBlock).Completion;
             }
@@ -114,7 +114,7 @@ namespace ETLBox.DataFlow.Transformations
                 OwnBroadcastBlock.Complete();
                 OwnBroadcastBlock.Completion.Wait();
                 foreach (var buffer in OutputBuffer)
-                    buffer.Complete();
+                    buffer.Item1.Complete();
             }
             else
             {
@@ -144,7 +144,7 @@ namespace ETLBox.DataFlow.Transformations
         bool AvoidBroadcastBlock;
         BroadcastBlock<TInput> BroadcastBlock;
         ActionBlock<TInput> OwnBroadcastBlock;
-        List<BufferBlock<TInput>> OutputBuffer = new List<BufferBlock<TInput>>();
+        List<Tuple<BufferBlock<TInput>,LinkPredicates>> OutputBuffer = new List<Tuple<BufferBlock<TInput>, LinkPredicates>>();
         TypeInfo TypeInfo;
         ObjectCopy<TInput> ObjectCopy;
 
@@ -157,12 +157,17 @@ namespace ETLBox.DataFlow.Transformations
         }
 
         private void Broadcast(TInput row)
-        {
+        {            
             TInput clone = Clone(row);
             foreach (var buffer in OutputBuffer)
             {
-                if (!buffer.SendAsync(clone).Result)
-                    throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
+                var lp = buffer.Item2;
+                var pk= lp.PredicateKeep as Predicate<TInput>;
+                if (!lp.HasPredicate || (lp.HasPredicate && pk.Invoke(clone)))
+                {
+                    if (!buffer.Item1.SendAsync(clone).Result)
+                        throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
+                }
             }
         }
 
