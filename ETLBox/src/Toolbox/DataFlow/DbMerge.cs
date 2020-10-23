@@ -372,14 +372,14 @@ namespace ETLBox.DataFlow.Connectors
                 {
                     if (!r.ContainsKey(idColumn))
                         r.Add(idColumn, null);
-                    result += r[idColumn].ToString();
+                    result += (r[idColumn]?.ToString() ?? "") + "|"; //add | to avoid key collisions, "12"+"3" are different than "1" + "23"
                 }
                 return result;
             }
             else if (TypeInfo.IdAttributeProps.Count > 0)
             {
                 foreach (var propInfo in TypeInfo.IdAttributeProps)
-                    result += propInfo?.GetValue(row).ToString();
+                    result += (propInfo?.GetValue(row)?.ToString() ?? "") + "|"; //add | to avoid key collisions, "12"+"3" are different than "1" + "23"
                 return result;
             }
             else
@@ -510,7 +510,7 @@ namespace ETLBox.DataFlow.Connectors
                 deletions = InputData.Where(row => GetChangeAction(row) == null).ToList();
             if (!UseTruncateMethod)
                 SqlDeleteIds(deletions);
-            foreach (var row in deletions) //.ForEach(row =>
+            foreach (var row in deletions)
             {
                 SetChangeAction(row, ChangeAction.Delete);
                 SetChangeDate(row, DateTime.Now);
@@ -522,9 +522,9 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (rowsToDelete.Count() == 0) return;
             var deleteString = rowsToDelete.Select(row => $"'{GetUniqueId(row)}'");
-            string idNames = $"{QB}{IdColumnNames.First()}{QE}";
-            if (IdColumnNames.Count > 1)
-                idNames = CreateConcatSqlForNames();
+            //string idNames = $"{QB}{IdColumnNames.First()}{QE}";
+            //if (IdColumnNames.Count > 1)
+            string   idNames = CreateConcatSqlForNames();
             var sql = new SqlTask($@"
             DELETE FROM {TN.QuotatedFullName} 
             WHERE {idNames} IN (
@@ -547,9 +547,13 @@ namespace ETLBox.DataFlow.Connectors
 
         private string CreateConcatSqlForNames()
         {
-            string result = $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
-            if (this.ConnectionType == ConnectionManagerType.SQLite)
-                result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
+            string result = $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}, '|'"))} )";
+            if (this.ConnectionType == ConnectionManagerType.MySql)
+                result = $"CONCAT_WS('', {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}, '|'"))} )";
+            else if (this.ConnectionType == ConnectionManagerType.Oracle)
+                result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE} || '|' "))} ";
+            else if (this.ConnectionType == ConnectionManagerType.SQLite)
+                result = $" {string.Join("||", IdColumnNames.Select(cn => $"COALESCE({QB}{cn}{QE},'') || '|' "))} ";
             return result;
         }
 
