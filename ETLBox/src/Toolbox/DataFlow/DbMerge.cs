@@ -209,6 +209,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             DestinationTable.ConnectionManager = ConnectionManager;
             DestinationTable.TableName = TableName;
+            DestinationTable.DestinationTableDefinition = DestinationTableDefinition;
             DestinationTable.BatchSize = BatchSize;
             DestinationTable.MaxBufferSize = this.MaxBufferSize;
 
