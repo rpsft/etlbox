@@ -88,6 +88,7 @@ namespace ETLBox.DataFlow
 
         protected void WriteBatch(TInput[] data)
         {
+            if (data == null || data.Length == 0) return; 
             if (ProgressCount == 0) NLogStartOnce();
             try
             {

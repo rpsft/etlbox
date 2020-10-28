@@ -166,9 +166,10 @@ namespace ETLBox.DataFlow.Connectors
 
         protected override void BulkInsertData(TInput[] data)
         {
-            AddDynamicColumnsToTableDef(data);
             TableData.ClearData();
+            AddDynamicColumnsToTableDef(data);
             ConvertAndAddRows(data);
+            if (TableData.Rows.Count == 0) return;
             var sql = new SqlTask($"Execute Bulk insert")
             {
                 DisableLogging = true,

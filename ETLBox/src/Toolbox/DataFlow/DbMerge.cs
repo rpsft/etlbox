@@ -43,7 +43,17 @@ namespace ETLBox.DataFlow.Connectors
         /// Provide a table definition if the definition of the target can't be read automatically or you want the DbMerge
         /// only to use the columns in the provided definition.
         /// </summary>
-        public TableDefinition DestinationTableDefinition { get; set; }
+        public TableDefinition DestinationTableDefinition
+        {
+            get
+            {
+                return DestinationTable.DestinationTableDefinition;
+            }
+            set
+            {
+                DestinationTable.DestinationTableDefinition = value;
+            }
+        }
 
         /// <summary>
         /// The name of the target database table for the merge.
@@ -209,7 +219,6 @@ namespace ETLBox.DataFlow.Connectors
         {
             DestinationTable.ConnectionManager = ConnectionManager;
             DestinationTable.TableName = TableName;
-            DestinationTable.DestinationTableDefinition = DestinationTableDefinition;
             DestinationTable.BatchSize = BatchSize;
             DestinationTable.MaxBufferSize = this.MaxBufferSize;
 
