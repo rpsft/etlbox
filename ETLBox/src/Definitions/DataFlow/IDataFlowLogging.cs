@@ -5,7 +5,7 @@
         /// <summary>
         /// The amount of rows the current component has already processed.
         /// </summary>
-        int ProgressCount { get; set; }
+        int ProgressCount { get; }
 
         /// <summary>
         /// To avoid getting log message for every message, by default only log message are produced when 1000 rows

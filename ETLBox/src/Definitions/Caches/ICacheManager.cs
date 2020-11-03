@@ -6,13 +6,10 @@ using System.Threading.Tasks.Dataflow;
 namespace ETLBox.DataFlow
 {
     public interface ICacheManager<TInput, TCache>
-
     {
-        //List<T> Memory { get; };
         ICollection<TCache> Records { get; }
         bool Contains(TInput row);
         void Add(TInput row);
-        //TCache Find(TInput row);
         void Init();
     }  
 

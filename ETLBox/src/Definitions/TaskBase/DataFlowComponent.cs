@@ -297,7 +297,7 @@ namespace ETLBox.DataFlow
         }
 
         /// <inheritdoc/>
-        public int ProgressCount { get; set; }
+        public int ProgressCount { get; protected set; }
 
         protected bool HasLoggingThresholdRows => LoggingThresholdRows != null && LoggingThresholdRows > 0;
         protected int ThresholdCount { get; set; } = 1;

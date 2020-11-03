@@ -62,6 +62,7 @@ namespace ETLBox.DataFlow.Transformations
 
         /// <inheritdoc/>
         public override ITargetBlock<TInput> TargetBlock => CachedRowTransformation.TargetBlock;
+
         /// <summary>
         /// The source component from which the lookup data is retrieved. E.g. a <see cref="DbSource"/> or a <see cref="MemorySource"/>.
         /// </summary>
@@ -83,6 +84,14 @@ namespace ETLBox.DataFlow.Transformations
         /// </summary>
         public IEnumerable<RetrieveColumn> RetrieveColumns { get; set; }
 
+        public class PartialDbCacheSettings
+        {
+            public Func<TInput, string> LoadCacheSql { get; set; }
+            public Func<TInput,TSource,bool> MatchFunc { get; set; }
+        }
+
+        public CacheMode CacheMode { get; set; } = CacheMode.Full;
+        public PartialDbCacheSettings PartialCacheSettings { get; set; } = new PartialDbCacheSettings();
 
         public new int ProgressCount => CachedRowTransformation.ProgressCount;        
 
@@ -156,12 +165,12 @@ namespace ETLBox.DataFlow.Transformations
         {
             CachedRowTransformation.TransformationFunc = TransformationFunc;
             CachedRowTransformation.CopyLogTaskProperties(this);
-            //CachedRowTransformation.InitAction = initAction;
             CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
-            CachedRowTransformation.CacheManager = new FullTableCache<TInput, TSource>();
-            var cm = CachedRowTransformation.CacheManager as FullTableCache<TInput, TSource>;
-            cm.Source = Source;
-            cm.Lookup = this;
+            if (CacheMode == CacheMode.PartialFromDb)
+                CachedRowTransformation.CacheManager = new PartialDbTableCache<TInput, TSource>();
+            else
+                CachedRowTransformation.CacheManager = new FullTableCache<TInput, TSource>();
+            (CachedRowTransformation.CacheManager as ILookupCacheManager<TInput, TSource>).Lookup = this;            
             CachedRowTransformation.InitBufferObjects();
 
         }
@@ -296,6 +305,12 @@ namespace ETLBox.DataFlow.Transformations
         public LookupTransformation(IDataFlowExecutableSource<ExpandoObject> lookupSource, Func<ExpandoObject, ICollection<ExpandoObject>, ExpandoObject> transformationFunc)
             : base(lookupSource, transformationFunc)
         { }
+    }
+
+    public enum CacheMode
+    {
+        Full,
+        PartialFromDb
     }
 
 }
