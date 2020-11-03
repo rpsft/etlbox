@@ -353,15 +353,10 @@ namespace ETLBox.DataFlow.Transformations
             if (InputTypeInfo.IsDynamic)
             {
                 IDictionary<string, object> dict = inputrow as IDictionary<string, object>;
-                if (dict.ContainsKey(attrmap.PropNameInInput))
-                    return dict[attrmap.PropNameInInput];
-                else
-                    return null;
+                return dict.ContainsKey(attrmap.PropNameInInput) ? dict[attrmap.PropNameInInput] : null; 
             }
             else
-            {
                 return attrmap.PropInInput.GetValue(inputrow);
-            }
         }
 
         private object GetValueFromOutputObject(TOutput aggOutput, AttributeMappingInfo attrmap)
@@ -369,15 +364,10 @@ namespace ETLBox.DataFlow.Transformations
             if (OutputTypeInfo.IsDynamic)
             {
                 IDictionary<string, object> dict = aggOutput as IDictionary<string, object>;
-                if (dict.ContainsKey(attrmap.PropNameInOutput))
-                    return dict[attrmap.PropNameInOutput];
-                else
-                    return null;
+                return dict.ContainsKey(attrmap.PropNameInOutput) ? dict[attrmap.PropNameInOutput] : null;
             }
             else
-            {
                 return attrmap.PropInOutput.GetValue(aggOutput);
-            }
         }
 
         private void SetValueInOutputObject(TOutput aggOutput, AttributeMappingInfo attrmap, object output)

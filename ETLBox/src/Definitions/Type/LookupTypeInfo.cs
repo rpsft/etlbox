@@ -27,7 +27,7 @@ namespace ETLBox.DataFlow
                 MatchColumns.Add(new AttributeMappingInfo()
                 {
                     PropInOutput = propInfo,
-                    PropNameInInput = attr.LookupSourcePropertyName
+                    PropNameInInput = attr.InputPropertyName
                 });
         }
 
@@ -38,7 +38,7 @@ namespace ETLBox.DataFlow
                 RetrieveColumns.Add(new AttributeMappingInfo()
                 {
                     PropInOutput = propInfo,
-                    PropNameInInput = attr.LookupSourcePropertyName
+                    PropNameInInput = attr.InputPropertyName
                 });
         }
 

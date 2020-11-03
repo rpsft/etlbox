@@ -13,7 +13,7 @@ namespace ETLBox.DataFlow.Transformations
     /// The lookup transformation enriches the incoming data with data from the lookup source.
     /// Data from the lookup source is read into memory when the first record arrives.
     /// For each incoming row, the lookup tries to find a matching record in the 
-    /// memory table and uses this record to add additional data to the ingoing row. 
+    /// loaded source data and uses this record to enrich the ingoing data.
     /// </summary>
     /// <example>
     /// <code>
@@ -73,17 +73,18 @@ namespace ETLBox.DataFlow.Transformations
         /// </summary>
         public Func<TInput, ICollection<TSource>, TInput> TransformationFunc { get; set; }
 
-        public new int ProgressCount
-        {
-            get
-            {
-                return CachedRowTransformation.ProgressCount;
-            }
-            set
-            {
-                CachedRowTransformation.ProgressCount = value;
-            }
-        }
+        /// <summary>
+        /// This collection will be used to define the matching columns - will also work with ExpandoObject.
+        /// </summary>
+        public IEnumerable<MatchColumn> MatchColumns { get; set; }
+
+        /// <summary>
+        /// This collection will be used to define the retrieve columns - will also work with ExpandoObject.
+        /// </summary>
+        public IEnumerable<RetrieveColumn> RetrieveColumns { get; set; }
+
+
+        public new int ProgressCount => CachedRowTransformation.ProgressCount;        
 
         #endregion
 
@@ -114,18 +115,14 @@ namespace ETLBox.DataFlow.Transformations
 
         protected override void InternalInitBufferObjects()
         {
+            if (Source == null)
+                throw new ETLBoxException("You need to define a lookup source before using a LookupTransformation in a data flow");
             if (TransformationFunc == null)
                 DefaultFuncWithMatchRetrieveAttributes();
-            InitRowTransformationManually();
 
-            if (Source == null) throw new ETLBoxException("You need to define a lookup source before using a LookupTransformation in a data flow");
-            var cm = CachedRowTransformation.CacheManager as FullTableCache<TInput, TSource>;
-            cm.Source = Source;
-            cm.Lookup = this;
-            //cm.TableName = "LookupSameType";
-            //cm.connMan = (Source as DbSource<TSource>).ConnectionManager;
+            InitRowTransformationManually();
         }
-             
+
 
         protected override void CleanUpOnSuccess()
         {
@@ -150,9 +147,10 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implementation
 
-
         CachedRowTransformation<TInput, TInput, TSource> CachedRowTransformation;
         LookupTypeInfo TypeInfo;
+        List<AttributeMappingInfo> MatchAttributeMapping;
+        List<AttributeMappingInfo> RetrieveAttributeMapping;
 
         private void InitRowTransformationManually()
         {
@@ -161,23 +159,57 @@ namespace ETLBox.DataFlow.Transformations
             //CachedRowTransformation.InitAction = initAction;
             CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
             CachedRowTransformation.CacheManager = new FullTableCache<TInput, TSource>();
+            var cm = CachedRowTransformation.CacheManager as FullTableCache<TInput, TSource>;
+            cm.Source = Source;
+            cm.Lookup = this;
             CachedRowTransformation.InitBufferObjects();
-            
+
         }
-
-        //private void LinkInternalLoadBufferFlow()
-        //{
-
-        //    //LookupBuffer.CopyLogTaskProperties(this);
-        //    //Source.LinkTo(LookupBuffer);
-        //}
 
         private void DefaultFuncWithMatchRetrieveAttributes()
         {
             TypeInfo = new LookupTypeInfo(typeof(TInput), typeof(TSource));
-            if (TypeInfo.MatchColumns.Count == 0 || TypeInfo.RetrieveColumns.Count == 0)
+            if (MatchColumns != null && RetrieveColumns != null)
+                FillAttributeMappingFromProperties();
+            else if (TypeInfo.MatchColumns.Count > 0 && TypeInfo.RetrieveColumns.Count > 0)
+                FillAttributeMappingFromAttributes();
+            else
                 throw new ETLBoxException("Please define either a transformation function or use the MatchColumn / RetrieveColumn attributes.");
             TransformationFunc = FindRowByAttributes;
+        }
+
+        private void FillAttributeMappingFromProperties()
+        {
+            MatchAttributeMapping = new List<AttributeMappingInfo>();
+            foreach (var mc in MatchColumns)
+            {
+                var newmap = new AttributeMappingInfo();
+                newmap.PropNameInInput = mc.InputPropertyName;
+                newmap.PropNameInOutput = mc.LookupSourcePropertyName;
+                if (!TypeInfo.IsInputDynamic)
+                    newmap.PropInInput = TypeInfo.InputPropertiesByName[mc.InputPropertyName];
+                if (!TypeInfo.IsOutputDynamic)
+                    newmap.PropInOutput = TypeInfo.OutputPropertiesByName[mc.LookupSourcePropertyName];
+                MatchAttributeMapping.Add(newmap);
+            }
+            RetrieveAttributeMapping = new List<AttributeMappingInfo>();
+            foreach (var rc in RetrieveColumns)
+            {
+                var newmap = new AttributeMappingInfo();
+                newmap.PropNameInInput = rc.InputPropertyName;
+                newmap.PropNameInOutput = rc.LookupSourcePropertyName;
+                if (!TypeInfo.IsInputDynamic)
+                    newmap.PropInInput = TypeInfo.InputPropertiesByName[rc.InputPropertyName];
+                if (!TypeInfo.IsOutputDynamic)
+                    newmap.PropInOutput = TypeInfo.OutputPropertiesByName[rc.LookupSourcePropertyName];
+                RetrieveAttributeMapping.Add(newmap);
+            }
+        }
+
+        private void FillAttributeMappingFromAttributes()
+        {
+            MatchAttributeMapping = TypeInfo.MatchColumns;
+            RetrieveAttributeMapping = TypeInfo.RetrieveColumns;
         }
 
         private TInput FindRowByAttributes(TInput row, ICollection<TSource> cache)
@@ -185,33 +217,67 @@ namespace ETLBox.DataFlow.Transformations
             var lookupHit = cache.FindFirst(e =>
             {
                 bool same = true;
-                foreach (var mc in TypeInfo.MatchColumns)
+                foreach (var mc in MatchAttributeMapping)
                 {
-                    same &= mc.PropInInput.GetValue(row).Equals(mc.PropInOutput.GetValue(e));
+                    var inputValue = GetInputValue(row, mc);
+                    var outputValue = GetLookupSourceValue(e, mc);
+                    if (inputValue == null && outputValue == null)
+                        same = true;
+                    else if ((inputValue != null && outputValue == null)
+                            || (inputValue == null && outputValue != null))
+                        same = false;
+                    else
+                        same &= inputValue.Equals(outputValue);
                     if (!same) break;
                 }
                 return same;
             });
             if (lookupHit != null)
             {
-                foreach (var rc in TypeInfo.RetrieveColumns)
+                foreach (var rc in RetrieveAttributeMapping)
                 {
-                    var retrieveValue = rc.PropInOutput.GetValue(lookupHit);
-                    rc.PropInInput.TrySetValue(row, retrieveValue);
+                    var retrieveValue = GetLookupSourceValue(lookupHit, rc);
+                    TrySetValueInInput(row, rc, retrieveValue);
                 }
             }
             return row;
+        }               
+
+        private object GetInputValue(TInput row, AttributeMappingInfo mc)
+        {
+            if (TypeInfo.IsInputDynamic)
+            {
+                IDictionary<string, object> dict = row as IDictionary<string, object>;
+                return dict.ContainsKey(mc.PropNameInInput) ? dict[mc.PropNameInInput] : null;
+            }
+            else  
+                return mc.PropInInput.GetValue(row);
         }
 
+        private object GetLookupSourceValue(TSource e, AttributeMappingInfo mc)
+        {
+            if (TypeInfo.IsOutputDynamic)
+            {
+                IDictionary<string, object> dict = e as IDictionary<string, object>;
+                return dict.ContainsKey(mc.PropNameInOutput) ? dict[mc.PropNameInOutput] : null;                
+            }
+            else 
+                return mc.PropInOutput.GetValue(e);
+        }
 
-        //private void LoadLookupData(ICache<TInput, TSourceOutput> cache)
-        //{
-        //    //NLogStartOnce();
-        //    Source.Execute();
-        //    LookupBuffer.Wait();
-        //    foreach (TSourceOutput rec in LookupBuffer.Data)
-        //        cache.Records.Add(rec);
-        //}
+        private void TrySetValueInInput(TInput row, AttributeMappingInfo rc, object retrieveValue)
+        {
+            if (TypeInfo.IsInputDynamic)
+            {
+                IDictionary<string, object> dict = row as IDictionary<string, object>;
+                if (dict.ContainsKey(rc.PropNameInInput))
+                    dict[rc.PropNameInInput] = retrieveValue;
+                else
+                    dict.Add(rc.PropNameInInput, retrieveValue);
+            }
+            else 
+                rc.PropInInput.TrySetValue(row, retrieveValue);
+        }
 
         #endregion
 

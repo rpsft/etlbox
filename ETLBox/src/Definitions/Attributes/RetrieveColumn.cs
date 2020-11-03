@@ -10,22 +10,28 @@ namespace ETLBox.DataFlow
     /// <code>
     /// public class MyLookupData
     /// {
-    ///     public string Id { get; set; }
-    ///     public string Value { get; set; }
+    ///     [MatchColumn("Id")]
+    ///     public string LookupId { get; set; }
+    ///     [RetrieveColumn("Value")]
+    ///     public string LookupValue { get; set; }
     /// }
     ///
     /// public class MyDataRow
     /// {
-    ///     [MatchColumn("Id")]
-    ///     public string MyProperty { get; set; }
-    ///     [RetrieveColumn("Value")]
-    ///     public string MyProperty { get; set; }
+    ///     public string Id { get; set; }    
+    ///     public string Value { get; set; }
     /// }
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
     public class RetrieveColumn : Attribute
     {
+        /// <summary>
+        /// Name of the property in the input data
+        /// </summary>
+                
+        public string InputPropertyName { get; set; }
+
         /// <summary>
         /// Name of the corresponding column in the lookup object.
         /// </summary>
@@ -34,10 +40,15 @@ namespace ETLBox.DataFlow
         /// <summary>
         /// This property is used to store the retrieved value from the lookup data.
         /// </summary>
-        /// <param name="lookupSourcePropertyName">Name of the property in the lookup object</param>
-        public RetrieveColumn(string lookupSourcePropertyName)
+        /// <param name="inputPropertyName">Name of the property in the lookup object</param>
+        public RetrieveColumn(string inputPropertyName)
         {
-            LookupSourcePropertyName = lookupSourcePropertyName;
+            InputPropertyName = inputPropertyName;
+        }
+
+        public RetrieveColumn()
+        {
+
         }
     }
 }
