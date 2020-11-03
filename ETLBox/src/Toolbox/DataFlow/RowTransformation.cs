@@ -103,9 +103,9 @@ namespace ETLBox.DataFlow.Transformations
         #region Implementation
 
         TransformBlock<TInput, TOutput> TransformBlock;
-        bool WasInitActionInvoked;
+        protected bool WasInitActionInvoked;
 
-        private void InvokeInitActionOnce()
+        protected virtual void InvokeInitActionOnce()
         {
             if (!WasInitActionInvoked)
             {
@@ -114,7 +114,7 @@ namespace ETLBox.DataFlow.Transformations
             }
         }
 
-        private TOutput InvokeTransformationFunc(TInput row)
+        protected virtual TOutput InvokeTransformationFunc(TInput row)
         {
             TOutput result = default;
             result = TransformationFunc.Invoke(row);

@@ -9,87 +9,42 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow.Transformations
 {
-
-    public class FullTableCache<TInput, TCache> : ICache<TInput, TCache>
-   where TCache : class
-    {
-        bool WasInitialized; 
-        public ICollection<TCache> Records => LookupBuffer.Data;
-        public FullTableCache()
-        {
-            //Memory = new List<TCache>();
-        }
-        //public List<TCache> Memory { get; set; }
-        public bool Contains(TInput row)
-        {
-            return LookupBuffer.Data.FindFirst(cr => cr.Equals(row)) != null;
-        }
-
-        //public Action<T, IList<T>> FillCache { get; set; } 
-        public void Add(TInput row)
-        {
-            if (!WasInitialized)
-            {
-                Source.LinkTo(LookupBuffer);
-                    //NLogStartOnce();
-                Source.Execute();
-                LookupBuffer.Wait();
-                //    foreach (TSourceOutput rec in LookupBuffer.Data)
-                //        cache.Records.Add(rec);
-
-                WasInitialized = true;
-            }
-        }
-        MemoryDestination<TCache> LookupBuffer = new MemoryDestination<TCache>();
-
-
-        public IDataFlowExecutableSource<TCache> Source { get; set; }
-
-        public TCache Find(TInput row)
-        {
-            var copy = row as TCache;
-            return LookupBuffer.Data.FindFirst(cr => row.Equals(copy));
-        }
-
-
-    }
-
-        /// <summary>
-        /// The lookup transformation enriches the incoming data with data from the lookup source.
-        /// Data from the lookup source is read into memory when the first record arrives.
-        /// For each incoming row, the lookup tries to find a matching record in the 
-        /// memory table and uses this record to add additional data to the ingoing row. 
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// public class Order
-        /// {    
-        ///     public int OrderNumber { get; set; }
-        ///     public int CustomerId { get; set; }
-        ///     public string CustomerName { get; set; }
-        /// }
-        /// 
-        /// public class Customer
-        /// {
-        ///     [RetrieveColumn(nameof(Order.CustomerId))]
-        ///     public int Id { get; set; }
-        /// 
-        ///     [MatchColumn(nameof(Order.CustomerName))]
-        ///     public string Name { get; set; }
-        /// }
-        /// 
-        /// DbSource&lt;Order&gt; orderSource = new DbSource&lt;Order&gt;("OrderData");
-        /// CsvSource&lt;Customer&gt; lookupSource = new CsvSource&lt;Customer&gt;("CustomerData.csv");
-        /// var lookup = new LookupTransformation&lt;Order, Customer&gt;();
-        /// lookup.Source = lookupSource;
-        /// DbDestination&lt;Order&gt; dest = new DbDestination&lt;Order&gt;("OrderWithCustomerTable");
-        /// source.LinkTo(lookup).LinkTo(dest);
-        /// </code>
-        /// </example>
-        /// <typeparam name="TInput">Type of ingoing and outgoing data.</typeparam>
-        /// <typeparam name="TSource">Type of data used in the lookup source.</typeparam>
-        public class LookupTransformation<TInput, TSource> : DataFlowTransformation<TInput, TInput>
-        where TSource : class
+    /// <summary>
+    /// The lookup transformation enriches the incoming data with data from the lookup source.
+    /// Data from the lookup source is read into memory when the first record arrives.
+    /// For each incoming row, the lookup tries to find a matching record in the 
+    /// memory table and uses this record to add additional data to the ingoing row. 
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// public class Order
+    /// {    
+    ///     public int OrderNumber { get; set; }
+    ///     public int CustomerId { get; set; }
+    ///     public string CustomerName { get; set; }
+    /// }
+    /// 
+    /// public class Customer
+    /// {
+    ///     [RetrieveColumn(nameof(Order.CustomerId))]
+    ///     public int Id { get; set; }
+    /// 
+    ///     [MatchColumn(nameof(Order.CustomerName))]
+    ///     public string Name { get; set; }
+    /// }
+    /// 
+    /// DbSource&lt;Order&gt; orderSource = new DbSource&lt;Order&gt;("OrderData");
+    /// CsvSource&lt;Customer&gt; lookupSource = new CsvSource&lt;Customer&gt;("CustomerData.csv");
+    /// var lookup = new LookupTransformation&lt;Order, Customer&gt;();
+    /// lookup.Source = lookupSource;
+    /// DbDestination&lt;Order&gt; dest = new DbDestination&lt;Order&gt;("OrderWithCustomerTable");
+    /// source.LinkTo(lookup).LinkTo(dest);
+    /// </code>
+    /// </example>
+    /// <typeparam name="TInput">Type of ingoing and outgoing data.</typeparam>
+    /// <typeparam name="TSource">Type of data used in the lookup source.</typeparam>
+    public class LookupTransformation<TInput, TSource> : DataFlowTransformation<TInput, TInput>
+    where TSource : class
     {
         #region Public properties
 
@@ -135,7 +90,7 @@ namespace ETLBox.DataFlow.Transformations
         #region Constructors
 
         public LookupTransformation()
-        {            
+        {
             CachedRowTransformation = new CachedRowTransformation<TInput, TInput, TSource>();
         }
 
@@ -166,7 +121,11 @@ namespace ETLBox.DataFlow.Transformations
             if (Source == null) throw new ETLBoxException("You need to define a lookup source before using a LookupTransformation in a data flow");
             var cm = CachedRowTransformation.CacheManager as FullTableCache<TInput, TSource>;
             cm.Source = Source;
+            cm.Lookup = this;
+            //cm.TableName = "LookupSameType";
+            //cm.connMan = (Source as DbSource<TSource>).ConnectionManager;
         }
+             
 
         protected override void CleanUpOnSuccess()
         {
@@ -183,7 +142,7 @@ namespace ETLBox.DataFlow.Transformations
         {
             var errorSource = InternalLinkErrorTo(target);
             CachedRowTransformation.ErrorSource = new ErrorSource() { Redirection = this.ErrorSource };
-            //Source.ErrorSource = new ErrorSource() { Redirection = this.ErrorSource };
+            Source.ErrorSource = new ErrorSource() { Redirection = this.ErrorSource };
             return errorSource;
         }
 
@@ -191,7 +150,7 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implementation
 
-        
+
         CachedRowTransformation<TInput, TInput, TSource> CachedRowTransformation;
         LookupTypeInfo TypeInfo;
 
@@ -201,12 +160,14 @@ namespace ETLBox.DataFlow.Transformations
             CachedRowTransformation.CopyLogTaskProperties(this);
             //CachedRowTransformation.InitAction = initAction;
             CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
+            CachedRowTransformation.CacheManager = new FullTableCache<TInput, TSource>();
             CachedRowTransformation.InitBufferObjects();
+            
         }
 
         //private void LinkInternalLoadBufferFlow()
         //{
-           
+
         //    //LookupBuffer.CopyLogTaskProperties(this);
         //    //Source.LinkTo(LookupBuffer);
         //}
