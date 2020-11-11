@@ -11,7 +11,7 @@ namespace ETLBox.Helper
 {
     /// <summary>
     /// This class creates the necessary sql statements that simulate the missing bulk insert function in various database or Odbc/OleDb connections.
-    /// Normally this will be a insert into with multiple values, but depedning on the database type this can be different.
+    /// Normally this will be a insert into with multiple values, but depending on the database type this can be different.
     /// </summary>
     /// <typeparam name="T">ADO.NET database parameter type</typeparam>
     public class BulkInsertSql<T> where T : DbParameter, new()
@@ -60,6 +60,13 @@ namespace ETLBox.Helper
         /// </summary>
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
 
+        /// <summary>
+        /// If set to true, the parameter list will contain not only the object value, but also
+        /// the DbType and Size of the parameter. This should only be necessary for SqlServer. 
+        /// Default is false.
+        /// </summary>
+        public bool AddDbTypesFromDefinition { get; set; }
+
         #endregion
 
         #region Implementation
@@ -71,7 +78,7 @@ namespace ETLBox.Helper
         StringBuilder QueryText;
         List<string> SourceColumnNames;
         List<string> DestColumnNames;
-
+        ITableData TableData;
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
         /// </summary>
@@ -82,9 +89,10 @@ namespace ETLBox.Helper
         {
             InitObjects();
             TableName = tableName;
-            GetSourceAndDestColumnNames(data);
+            TableData = data;
+            GetSourceAndDestColumnNames();
             AppendBeginSql();
-            ReadDataAndCreateQuery(data);
+            ReadDataAndCreateQuery();
             AppendEndSql();
             return QueryText.ToString();
         }
@@ -95,34 +103,34 @@ namespace ETLBox.Helper
             Parameters = new List<T>();
         }
 
-        private void GetSourceAndDestColumnNames(ITableData data)
+        private void GetSourceAndDestColumnNames()
         {
-            SourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
-            DestColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
+            SourceColumnNames = TableData.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
+            DestColumnNames = TableData.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
         }
 
-        private void ReadDataAndCreateQuery(ITableData data)
+        private void ReadDataAndCreateQuery()
         {
-            while (data.Read())
+            while (TableData.Read())
             {
                 List<string> values = new List<string>();
                 foreach (string destColumnName in DestColumnNames)
                 {
-                    int colIndex = data.GetOrdinal(destColumnName);
-                    if (data.IsDBNull(colIndex))
-                        AddNullValue(values, destColumnName);
+                    int colIndex = TableData.GetOrdinal(destColumnName);
+                    if (TableData.IsDBNull(colIndex))
+                        AddNullValue(values, destColumnName, colIndex);
                     else
-                        AddNonNullValue(data, values, destColumnName, colIndex);
+                        AddNonNullValue(values, destColumnName, colIndex);
                 }
-                AppendValueListSql(values, data.NextResult());
+                AppendValueListSql(values, TableData.NextResult());
             }
         }
 
-        private void AddNullValue(List<string> values, string destColumnName)
+        private void AddNullValue(List<string> values, string destColumnName, int colIndex)
         {
             if (UseParameterQuery && ConnectionType != ConnectionManagerType.Oracle)
             {
-                values.Add(CreateParameterWithValue(DBNull.Value));
+                values.Add(CreateParameterWithValue(DBNull.Value, colIndex));
             }
             else
             {
@@ -132,15 +140,15 @@ namespace ETLBox.Helper
 
         }
 
-        private void AddNonNullValue(ITableData data, List<string> values, string destColumnName, int colIndex)
+        private void AddNonNullValue(List<string> values, string destColumnName, int colIndex)
         {
             if (UseParameterQuery)
             {
-                values.Add(CreateParameterWithValue(data.GetValue(colIndex)));
+                values.Add(CreateParameterWithValue(TableData.GetValue(colIndex), colIndex));
             }
             else
             {
-                string value = data.GetString(colIndex).Replace("'", "''");
+                string value = TableData.GetString(colIndex).Replace("'", "''");
                 string valueSql = IsAccessDatabase ? $"'{value}' AS {destColumnName}"
                     : $"'{value}'";
                 values.Add(valueSql);
@@ -148,12 +156,20 @@ namespace ETLBox.Helper
 
         }
 
-        private string CreateParameterWithValue(object parValue)
+        private string CreateParameterWithValue(object parValue, int colIndex)
         {
             var par = new T();
             if (ConnectionType == ConnectionManagerType.Oracle && parValue is Enum) //Enums don't work obviously
                 par.Value = (int)parValue;
             par.Value = parValue;
+
+            if (AddDbTypesFromDefinition)
+            {
+                var dbtypestring = TableData.GetDataTypeName(colIndex);
+                par.DbType = DataTypeConverter.GetDBType(dbtypestring);
+                par.Size = DataTypeConverter.GetStringLengthFromCharString(dbtypestring);
+            }
+
             Parameters.Add(par);
             if (UseNamedParameters)
             {

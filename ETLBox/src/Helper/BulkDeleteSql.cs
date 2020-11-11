@@ -33,13 +33,7 @@ namespace ETLBox.Helper
         /// A list of parameters that contain the parameter objects for the generated sql query.
         /// Only has values if <see cref="UseParameterQuery"/> is true.
         /// </summary>
-        public List<T> Parameters { get; internal set; }
-
-        /// <summary>
-        /// When creating a bulk insert sql statement for Access, a dummy table is needed.
-        /// The name of the dummy table is specified here.
-        /// </summary>
-        public string AccessDummyTableName { get; set; }
+        public List<T> Parameters { get; internal set; } = new List<T>();
 
         /// <summary>
         /// The type of the database that the bulk insert statement is designed for
@@ -63,15 +57,18 @@ namespace ETLBox.Helper
 
         #endregion
 
+        public BulkDeleteSql()
+        {
+
+        }
+
         #region Implementation
 
         string TableName;
         int ParameterNameCount;
         string ParameterPlaceholder => ConnectionType == ConnectionManagerType.Oracle ? ":" : "@";
-        bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
-        StringBuilder QueryText;
-        List<string> SourceColumnNames;
-        List<string> DestColumnNames;
+        StringBuilder QueryText = new StringBuilder();
+        List<string> ColumnNames;        
 
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
@@ -79,74 +76,52 @@ namespace ETLBox.Helper
         /// <param name="data">The data that should be inserted into the destination table</param>
         /// <param name="tableName">The name of the destination table</param>
         /// <returns></returns>
-        public string CreateBulkInsertStatement(ITableData data, string tableName)
+        public string CreateBulkDeleteStatement(List<string> columnNames, string tableName, List<object[]> rows)
         {
-            InitObjects();
             TableName = tableName;
-            GetSourceAndDestColumnNames(data);
+            ColumnNames = columnNames.ToList();
             AppendBeginSql();
-            ReadDataAndCreateQuery(data);
+            ReadDataAndCreateQuery(rows);
             AppendEndSql();
             return QueryText.ToString();
         }
 
-        private void InitObjects()
+        private void ReadDataAndCreateQuery(List<object[]> rows)
         {
-            QueryText = new StringBuilder();
-            Parameters = new List<T>();
-        }
-
-        private void GetSourceAndDestColumnNames(ITableData data)
-        {
-            SourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
-            DestColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
-        }
-
-        private void ReadDataAndCreateQuery(ITableData data)
-        {
-            while (data.Read())
+            foreach (var row in rows)
             {
-                List<string> values = new List<string>();
-                foreach (string destColumnName in DestColumnNames)
+                int colIndex = 0;
+                List<string> values = new List<string>();                
+                foreach (string columnName in ColumnNames)
                 {
-                    int colIndex = data.GetOrdinal(destColumnName);
-                    if (data.IsDBNull(colIndex))
-                        AddNullValue(values, destColumnName);
+                    if (row[colIndex] == null)
+                        AddNullValue(values, columnName);
                     else
-                        AddNonNullValue(data, values, destColumnName, colIndex);
+                        AddNonNullValue(row[colIndex], values, columnName);
+                    colIndex++;
                 }
-                AppendValueListSql(values, data.NextResult());
+                AppendValueListSql(values, colIndex == row.Length);
             }
         }
 
         private void AddNullValue(List<string> values, string destColumnName)
         {
             if (UseParameterQuery && ConnectionType != ConnectionManagerType.Oracle)
-            {
                 values.Add(CreateParameterWithValue(DBNull.Value));
-            }
             else
-            {
-                string value = IsAccessDatabase ? $"NULL AS {destColumnName}" : "NULL";
-                values.Add(value);
-            }
-
+                values.Add("NULL");
         }
 
-        private void AddNonNullValue(ITableData data, List<string> values, string destColumnName, int colIndex)
+        private void AddNonNullValue(object data, List<string> values, string destColumnName)
         {
             if (UseParameterQuery)
-            {
-                values.Add(CreateParameterWithValue(data.GetValue(colIndex)));
-            }
+                values.Add(CreateParameterWithValue(data));
             else
             {
-                string value = data.GetString(colIndex).Replace("'", "''");
-                string valueSql = IsAccessDatabase ? $"'{value}' AS {destColumnName}"
-                    : $"'{value}'";
+                string value = data.ToString().Replace("'", "''");
+                string valueSql = $"'{value}'";
                 values.Add(valueSql);
             }
-
         }
 
         private string CreateParameterWithValue(object parValue)
@@ -170,28 +145,23 @@ namespace ETLBox.Helper
 
         private void AppendBeginSql()
         {
-            QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
-            if (IsAccessDatabase)
-                QueryText.AppendLine("  SELECT * FROM (");
-            else if (ConnectionType == ConnectionManagerType.Oracle)
-                QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
+            QueryText.AppendLine($@"DELETE dt FROM {TN.QuotatedFullName} dt
+INNER JOIN (");            
+            
+            if (ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine($" SELECT {string.Join(",", ColumnNames.Select(col => QB + col + QE))} FROM (");
             else
-                QueryText.AppendLine("VALUES");
+                QueryText.AppendLine("VALUES");            
         }
 
         private void AppendValueListSql(List<string> values, bool lastItem)
         {
-            if (IsAccessDatabase)
-            {
-                QueryText.AppendLine("SELECT " + string.Join(",", values) + $"  FROM {AccessDummyTableName} ");
-                if (lastItem) QueryText.AppendLine(" UNION ALL ");
-            }
-            else if (ConnectionType == ConnectionManagerType.Oracle)
+            if (ConnectionType == ConnectionManagerType.Oracle)
             {
                 QueryText.Append("SELECT ");
                 for (int i = 0; i < values.Count; i++)
                 {
-                    QueryText.Append($"{values[i]} {QB}{DestColumnNames[i]}{QE}");
+                    QueryText.Append($"{values[i]} {QB}{ColumnNames[i]}{QE}");
                     if (i + 1 < values.Count)
                         QueryText.Append(",");
                 }
@@ -207,10 +177,12 @@ namespace ETLBox.Helper
 
         private void AppendEndSql()
         {
-            if (IsAccessDatabase)
-                QueryText.AppendLine(") a;");
-            else if (ConnectionType == ConnectionManagerType.Oracle)
+            if (ConnectionType == ConnectionManagerType.Oracle)
                 QueryText.AppendLine(")");
+            QueryText.AppendLine($@") 
+AS dv ( {string.Join(", ", ColumnNames.Select(col => QB + col + QE))} )
+ON {string.Join(Environment.NewLine + " AND ", ColumnNames.Select(col => $"dt.{QB}{col}{QE} = dv.{QB}{col}{QE}"))}"); 
+            
         }
 
         #endregion

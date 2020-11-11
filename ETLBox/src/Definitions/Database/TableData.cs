@@ -110,11 +110,11 @@ namespace ETLBox.ControlFlow
         /// <inheritdoc/>
         public long GetInt64(int i) => Convert.ToInt64(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         /// <inheritdoc/>
-        public string GetName(int i) => throw new NotImplementedException();
+        public string GetName(int i) => Definition.Columns[i].Name;
         /// <inheritdoc/>
-        public string GetDataTypeName(int i) => throw new NotImplementedException();
+        public string GetDataTypeName(int i) => Definition.Columns[i].DataType;
         /// <inheritdoc/>
-        public Type GetFieldType(int i) => throw new NotImplementedException();
+        public Type GetFieldType(int i) => CurrentRow[ShiftIndexAroundIDColumn(i)].GetType();
         /// <inheritdoc/>
         public int GetOrdinal(string name) => FindOrdinalInObject(name);
 
