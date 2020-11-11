@@ -14,7 +14,7 @@ namespace ETLBox.Helper
     /// Normally this will be a insert into with multiple values, but depending on the database type this can be different.
     /// </summary>
     /// <typeparam name="T">ADO.NET database parameter type</typeparam>
-    public class BulkInsertSql<T> where T : DbParameter, new()
+    public class BulkSqlGenerator<T> where T : DbParameter, new()
     {
         #region Public properties
         /// <summary>
@@ -61,53 +61,99 @@ namespace ETLBox.Helper
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
 
         /// <summary>
+        /// Indicates if the VALUES table descriptor needs the keyword ROW (MySql only)
+        /// </summary>
+        public bool NeedsROWKeyword { get; set; }
+
+        /// <summary>
         /// If set to true, the parameter list will contain not only the object value, but also
         /// the DbType and Size of the parameter. This should only be necessary for SqlServer. 
         /// Default is false.
         /// </summary>
         public bool AddDbTypesFromDefinition { get; set; }
 
+        public string TableName { get; set; }
+        public ITableData TableData { get; set; }
+
         #endregion
+
+        public BulkSqlGenerator()
+        {
+
+        }
+
+        public BulkSqlGenerator(ITableData data, string tableName)
+        {
+            TableName = tableName;
+            TableData = data;
+        }
 
         #region Implementation
 
-        string TableName;
+
         int ParameterNameCount;
         string ParameterPlaceholder => ConnectionType == ConnectionManagerType.Oracle ? ":" : "@";
         bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
         StringBuilder QueryText;
         List<string> SourceColumnNames;
         List<string> DestColumnNames;
-        ITableData TableData;
+   
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
         /// </summary>
         /// <param name="data">The data that should be inserted into the destination table</param>
         /// <param name="tableName">The name of the destination table</param>
         /// <returns></returns>
-        public string CreateBulkInsertStatement(ITableData data, string tableName)
+        public string CreateBulkInsertStatement()
         {
             InitObjects();
-            TableName = tableName;
-            TableData = data;
-            GetSourceAndDestColumnNames();
-            AppendBeginSql();
+            BeginInsertSql();
             ReadDataAndCreateQuery();
-            AppendEndSql();
+            EndInsertSql();
             return QueryText.ToString();
         }
+
+        public string CreateBulkDeleteStatement()
+        {
+            if (IsAccessDatabase) throw new Exception("Bulk delete is currently not supported for Access!");
+            InitObjects();
+            BeginDeleteSql();
+            ReadDataAndCreateQuery();
+            EndDeleteSql();
+            return QueryText.ToString();
+        }
+
 
         private void InitObjects()
         {
             QueryText = new StringBuilder();
             Parameters = new List<T>();
-        }
-
-        private void GetSourceAndDestColumnNames()
-        {
+            ParameterNameCount = 0;
             SourceColumnNames = TableData.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
             DestColumnNames = TableData.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
         }
+
+        private void BeginInsertSql()
+        {
+            QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
+            if (IsAccessDatabase)
+                QueryText.AppendLine("  SELECT * FROM (");
+            else if (ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
+            else
+                QueryText.AppendLine("VALUES");
+        }
+
+        private void BeginDeleteSql()
+        {
+            QueryText.AppendLine($@"DELETE dt FROM {TN.QuotatedFullName} AS dt");            
+            QueryText.AppendLine("INNER JOIN (");
+            if (ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
+            else
+                QueryText.AppendLine("VALUES");
+        }
+
 
         private void ReadDataAndCreateQuery()
         {
@@ -181,18 +227,7 @@ namespace ETLBox.Helper
             {
                 return "?";
             }
-        }
-
-        private void AppendBeginSql()
-        {
-            QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
-            if (IsAccessDatabase)
-                QueryText.AppendLine("  SELECT * FROM (");
-            else if (ConnectionType == ConnectionManagerType.Oracle)
-                QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
-            else
-                QueryText.AppendLine("VALUES");
-        }
+        }    
 
         private void AppendValueListSql(List<string> values, bool lastItem)
         {
@@ -213,6 +248,11 @@ namespace ETLBox.Helper
                 QueryText.AppendLine(" FROM DUAL");
                 if (lastItem) QueryText.AppendLine(" UNION ALL ");
             }
+            else if (NeedsROWKeyword)
+            {
+                QueryText.Append("ROW(" + string.Join(",", values) + $")");
+                if (lastItem) QueryText.AppendLine(",");
+            }
             else
             {
                 QueryText.Append("(" + string.Join(",", values) + $")");
@@ -220,12 +260,22 @@ namespace ETLBox.Helper
             }
         }
 
-        private void AppendEndSql()
+        private void EndInsertSql()
         {
             if (IsAccessDatabase)
                 QueryText.AppendLine(") a;");
             else if (ConnectionType == ConnectionManagerType.Oracle)
                 QueryText.AppendLine(")");
+        }
+
+        private void EndDeleteSql()
+        {
+            QueryText.AppendLine(Environment.NewLine + ")");
+            QueryText.AppendLine($"AS vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
+            QueryText.AppendLine(" ON " + string.Join(Environment.NewLine + " AND ",
+                SourceColumnNames.Select(col => $@"( ( dt.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( dt.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
+            //if (ConnectionType == ConnectionManagerType.Oracle)
+            //    QueryText.AppendLine(")");
         }
 
         #endregion
