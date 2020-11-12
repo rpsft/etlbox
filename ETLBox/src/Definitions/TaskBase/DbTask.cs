@@ -201,6 +201,27 @@ namespace ETLBox.ControlFlow
             }
         }
 
+        public void BulkDelete(ITableData data, string tableName)
+        {
+            if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
+                "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
+            var conn = DbConnectionManager.CloneIfAllowed();
+            try
+            {
+                conn.Open();
+                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                conn.BeforeBulkDelete(tableName);
+                conn.BulkDelete(data, tableName);
+                conn.AfterBulkDelete(tableName);
+                RowsAffected = data.RecordsAffected;
+                if (!DisableLogging) LoggingEnd(LogType.Bulk);
+            }
+            finally
+            {
+                conn.CloseIfAllowed();
+            }
+        }
+
 
         /* Private implementation & stuff */
         enum LogType
@@ -215,7 +236,7 @@ namespace ETLBox.ControlFlow
         {
             NLogger.Info(TaskName, TaskType, "START", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
             if (logType == LogType.Bulk)
-                NLogger.Debug($"SQL Bulk Insert", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
+                NLogger.Debug($"SQL Bulk Operation", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
             else
                 NLogger.Debug($"{Command}", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
         }

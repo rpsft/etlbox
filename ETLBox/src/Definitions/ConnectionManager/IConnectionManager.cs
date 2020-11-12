@@ -179,6 +179,23 @@ namespace ETLBox.Connection
         void CleanUpBulkInsert(string tableName);
 
         /// <summary>
+        /// Called before every bulk delete of a batch
+        /// </summary>
+        /// <param name="tableName">Destination table name</param>
+        void BeforeBulkDelete(string tableName);
+        /// <summary>
+        /// Performs a bulk delete
+        /// </summary>
+        /// <param name="data">Batch of data</param>
+        /// <param name="tableName">Destination table name</param>
+        void BulkDelete(ITableData data, string tableName);
+        /// <summary>
+        /// Called after every bulk delete of a batch
+        /// </summary>
+        /// <param name="tableName">Destination table name</param>
+        void AfterBulkDelete(string tableName);
+
+        /// <summary>
         /// Try to create a clone of the current connection - only possible if <see cref="LeaveOpen"/> is false.
         /// </summary>
         /// <returns>The connection that was either cloned or the current connection</returns>

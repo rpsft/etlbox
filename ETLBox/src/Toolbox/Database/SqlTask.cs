@@ -101,12 +101,16 @@ namespace ETLBox.ControlFlow.Tasks
         public static void ExecuteReader(IConnectionManager connectionManager, string sql, IEnumerable<QueryParameter> parameterList, params Action<object>[] actions) => new SqlTask(sql, parameterList, actions) { ConnectionManager = connectionManager }.ExecuteReader();
         public static void ExecuteReader(string sql, IEnumerable<QueryParameter> parameterList, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>
             new SqlTask(sql, parameterList, beforeRowReadAction, afterRowReadAction, actions).ExecuteReader();
+        
         public static void BulkInsert(string name, ITableData data, string tableName) =>
             new SqlTask() { TaskName = name }.BulkInsert(data, tableName);
         public static void BulkInsert(IConnectionManager connectionManager, ITableData data, string tableName) =>
             new SqlTask() { ConnectionManager = connectionManager }.BulkInsert(data, tableName);
         public static void BulkInsert(IConnectionManager connectionManager, string name, ITableData data, string tableName) =>
             new SqlTask() { ConnectionManager = connectionManager, TaskName = name }.BulkInsert(data, tableName);
+        
+        public static void BulkDelete(IConnectionManager connectionManager, ITableData data, string tableName) =>
+            new SqlTask() { ConnectionManager = connectionManager }.BulkDelete(data, tableName);
 
     }
 

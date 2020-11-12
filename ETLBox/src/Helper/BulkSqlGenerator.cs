@@ -63,7 +63,7 @@ namespace ETLBox.Helper
         /// <summary>
         /// Indicates if the VALUES table descriptor needs the keyword ROW (MySql only)
         /// </summary>
-        public bool NeedsROWKeyword { get; set; }
+        public bool IsMariaDb { get; set; }
 
         /// <summary>
         /// If set to true, the parameter list will contain not only the object value, but also
@@ -71,6 +71,15 @@ namespace ETLBox.Helper
         /// Default is false.
         /// </summary>
         public bool AddDbTypesFromDefinition { get; set; }
+
+        /// <summary>
+        /// If set to true, the values for the parameters are tried to convert into the corresponding .NET 
+        /// data type that is suitable for the corresponding database column. If a database column is of type INTEGER,
+        /// but the input data is a string like "7", then the parameter value is converted into an System.Int32.
+        /// The most ADO.NET connectors do this automatically, but this can be useful for Postgres. 
+        /// Only works if <see cref="AddDbTypesFromDefinition"/> is set to true.
+        /// </summary>
+        public bool TryConvertParameterData { get; set; }
 
         public string TableName { get; set; }
         public ITableData TableData { get; set; }
@@ -97,7 +106,7 @@ namespace ETLBox.Helper
         StringBuilder QueryText;
         List<string> SourceColumnNames;
         List<string> DestColumnNames;
-   
+
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
         /// </summary>
@@ -146,12 +155,26 @@ namespace ETLBox.Helper
 
         private void BeginDeleteSql()
         {
-            QueryText.AppendLine($@"DELETE dt FROM {TN.QuotatedFullName} AS dt");            
-            QueryText.AppendLine("INNER JOIN (");
             if (ConnectionType == ConnectionManagerType.Oracle)
+            {
+                QueryText.AppendLine($@"DELETE FROM {TN.QuotatedFullName} dt WHERE EXISTS ( ");
                 QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
+            }
+            else if (ConnectionType == ConnectionManagerType.Postgres)
+            {
+                QueryText.AppendLine($@"DELETE FROM {TN.QuotatedFullName} dt");
+                QueryText.AppendLine($"USING ( VALUES");
+            }
             else
-                QueryText.AppendLine("VALUES");
+            {
+                QueryText.AppendLine($@"DELETE dt FROM {TN.QuotatedFullName} dt");
+                QueryText.AppendLine("INNER JOIN (");
+                if (ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
+                    //https://dba.stackexchange.com/questions/177312/does-mariadb-or-mysql-implement-the-values-expression-table-value-constructor
+                    QueryText.AppendLine($"VALUES ( {string.Join(",", SourceColumnNames.Select(col => $"'{col}'"))}  ),");
+                else
+                    QueryText.AppendLine("VALUES");
+            }
         }
 
 
@@ -205,15 +228,19 @@ namespace ETLBox.Helper
         private string CreateParameterWithValue(object parValue, int colIndex)
         {
             var par = new T();
-            if (ConnectionType == ConnectionManagerType.Oracle && parValue is Enum) //Enums don't work obviously
+
+            if (ConnectionType == ConnectionManagerType.Oracle && parValue is Enum) //Enums don't work obviously 
                 par.Value = (int)parValue;
-            par.Value = parValue;
+            else
+                par.Value = parValue;
 
             if (AddDbTypesFromDefinition)
             {
                 var dbtypestring = TableData.GetDataTypeName(colIndex);
                 par.DbType = DataTypeConverter.GetDBType(dbtypestring);
                 par.Size = DataTypeConverter.GetStringLengthFromCharString(dbtypestring);
+                if (TryConvertParameterData)
+                    TryConvertParameter(parValue, par, dbtypestring);
             }
 
             Parameters.Add(par);
@@ -227,7 +254,20 @@ namespace ETLBox.Helper
             {
                 return "?";
             }
-        }    
+        }
+
+        private static void TryConvertParameter(object parValue, T par, string dbtypestring)
+        {
+            if (parValue == DBNull.Value) return;
+            try
+            {
+                    par.Value = Convert.ChangeType(parValue, DataTypeConverter.GetTypeObject(dbtypestring));
+            }
+            catch
+            {
+
+            }
+        }
 
         private void AppendValueListSql(List<string> values, bool lastItem)
         {
@@ -248,7 +288,7 @@ namespace ETLBox.Helper
                 QueryText.AppendLine(" FROM DUAL");
                 if (lastItem) QueryText.AppendLine(" UNION ALL ");
             }
-            else if (NeedsROWKeyword)
+            else if (ConnectionType == ConnectionManagerType.MySql && !IsMariaDb)
             {
                 QueryText.Append("ROW(" + string.Join(",", values) + $")");
                 if (lastItem) QueryText.AppendLine(",");
@@ -271,11 +311,19 @@ namespace ETLBox.Helper
         private void EndDeleteSql()
         {
             QueryText.AppendLine(Environment.NewLine + ")");
-            QueryText.AppendLine($"AS vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
-            QueryText.AppendLine(" ON " + string.Join(Environment.NewLine + " AND ",
-                SourceColumnNames.Select(col => $@"( ( dt.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( dt.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
-            //if (ConnectionType == ConnectionManagerType.Oracle)
-            //    QueryText.AppendLine(")");
+            if ((ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
+                || ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine($"vt");
+            else
+                QueryText.AppendLine($"vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
+            if (ConnectionType == ConnectionManagerType.Oracle || ConnectionType == ConnectionManagerType.Postgres)
+                QueryText.Append(" WHERE ");
+            else
+                QueryText.Append(" ON ");
+            QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+                    SourceColumnNames.Select(col => $@"( ( dt.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( dt.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
+            if (ConnectionType == ConnectionManagerType.Oracle)
+                QueryText.AppendLine(")");
         }
 
         #endregion

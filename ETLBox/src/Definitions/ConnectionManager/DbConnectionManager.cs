@@ -180,6 +180,14 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public abstract void CleanUpBulkInsert(string tableName);
 
+        public abstract void BeforeBulkDelete(string tableName);
+
+        /// <inheritdoc/>
+        public abstract void BulkDelete(ITableData data, string tableName);
+
+        /// <inheritdoc/>
+        public abstract void AfterBulkDelete(string tableName);
+
         /// <inheritdoc/>
         public IConnectionManager CloneIfAllowed()
         {
