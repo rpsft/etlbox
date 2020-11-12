@@ -299,7 +299,6 @@ namespace ETLBox.DataFlow.Connectors
 
         private void SetOutputReadFunc()
         {
-            //int x = 0;
             OutputSource.ReadFunc = progressCount =>
             {
                 return DeltaTable.ElementAt(progressCount);
@@ -328,8 +327,7 @@ namespace ETLBox.DataFlow.Connectors
                 else
                     return TypeInfo?.IdColumnNames;
             }
-        }
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
+        }        
         LookupTransformation<TInput, TInput> Lookup;
         DbSource<TInput> DestinationTableAsSource;
         DbDestination<TInput> DestinationTable;
@@ -375,7 +373,16 @@ namespace ETLBox.DataFlow.Connectors
 
         private string GetUniqueId(TInput row)
         {
-            string result = "";
+            List<string> idValues = new List<string>();
+            foreach (var ob in GetIdColumnValues(row))
+                idValues.Add(ob?.ToString() ?? string.Empty);
+            string idvalstring =  string.Join("|", idValues);
+            return HashHelper.CreateChar40Hash(idvalstring);
+        }
+        
+        private List<object> GetIdColumnValues(TInput row)
+        {
+            List<object> result = new List<object>();
             if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
             {
                 var r = row as IDictionary<string, object>;
@@ -383,14 +390,14 @@ namespace ETLBox.DataFlow.Connectors
                 {
                     if (!r.ContainsKey(idColumn))
                         r.Add(idColumn, null);
-                    result += (r[idColumn]?.ToString() ?? "") + "|"; //add | to avoid key collisions, "12"+"3" are different than "1" + "23"
+                    result.Add(r[idColumn]);
                 }
                 return result;
             }
             else if (TypeInfo.IdAttributeProps.Count > 0)
             {
                 foreach (var propInfo in TypeInfo.IdAttributeProps)
-                    result += (propInfo?.GetValue(row)?.ToString() ?? "") + "|"; //add | to avoid key collisions, "12"+"3" are different than "1" + "23"
+                    result.Add(propInfo?.GetValue(row));
                 return result;
             }
             else
@@ -520,7 +527,10 @@ namespace ETLBox.DataFlow.Connectors
             else
                 deletions = InputData.Where(row => GetChangeAction(row) == null).ToList();
             if (!UseTruncateMethod)
-                SqlDeleteIds(deletions);
+            {
+                foreach (var batch in deletions.Batch(DbDestination.DEFAULT_BATCH_SIZE))
+                    SqlDeleteIds(batch);
+            }
             foreach (var row in deletions)
             {
                 SetChangeAction(row, ChangeAction.Delete);
@@ -531,22 +541,18 @@ namespace ETLBox.DataFlow.Connectors
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
-            if (rowsToDelete.Count() == 0) return;
-            var deleteString = rowsToDelete.Select(row => $"'{GetUniqueId(row)}'");
-            //string idNames = $"{QB}{IdColumnNames.First()}{QE}";
-            //if (IdColumnNames.Count > 1)
-            string   idNames = CreateConcatSqlForNames();
-            var sql = new SqlTask($@"
-            DELETE FROM {TN.QuotatedFullName} 
-            WHERE {idNames} IN (
-            {String.Join(",", deleteString)}
-            )")
-            {
-                DisableLogging = true,
-                ConnectionManager = this.ConnectionManager
-            };
-            sql.CopyLogTaskProperties(this);
-            sql.ExecuteNonQuery();
+            if (rowsToDelete == null || rowsToDelete?.Count() == 0) return;
+
+            TableDefinition idColsOnly = new TableDefinition();
+            if (DestinationTableDefinition == null)
+                DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
+            idColsOnly.Columns = DestinationTableDefinition.Columns.Where(col => IdColumnNames.Contains(col.Name)).ToList();
+            idColsOnly.Name = TableName;
+            TableData data = new TableData(idColsOnly);
+
+            foreach (var row in rowsToDelete)
+                data.Rows.Add(GetIdColumnValues(row).ToArray());           
+            SqlTask.BulkDelete(this.ConnectionManager, data, TableName);
         }
 
         private void ReinsertTruncatedRecords()
