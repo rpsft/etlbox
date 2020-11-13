@@ -28,6 +28,11 @@ namespace ETLBox.ControlFlow
         /// </summary>
         public string PrimaryKeyConstraintName { get; set; }
 
+        /// <summary>
+        /// The constraint name for the unique columns
+        /// </summary>
+        public string UniqueKeyConstraintName { get; set; }
+
         #region Constructors
 
         public TableDefinition()
@@ -47,7 +52,7 @@ namespace ETLBox.ControlFlow
 
         #endregion
 
-        internal int? IDColumnIndex
+        internal int? IdentityColumnIndex
         {
             get
             {
@@ -135,6 +140,9 @@ SELECT  cols.name
      , defconstr.definition AS default_value
      , cols.collation_name
      , compCol.definition AS computed_column_definition
+     , CONVERT (BIT, CASE WHEN uqidxcols.index_column_id IS NOT NULL THEN 1 ELSE 0 END ) AS is_unique
+     , CASE WHEN pkidxcols.index_column_id IS NOT NULL THEN pkidx.name ELSE NULL END AS pkkey_name
+     , CASE WHEN uqidxcols.index_column_id IS NOT NULL THEN uqidx.name ELSE NULL END AS uqkey_name
 FROM sys.columns cols
 INNER JOIN (
     SELECT name, type, object_id, schema_id FROM sys.tables 
@@ -155,6 +163,13 @@ LEFT JOIN sys.index_columns pkidxcols
     on pkidxcols.object_id = cols.object_id
     AND pkidxcols.column_id = cols.column_id
     AND pkidxcols.index_id = pkidx.index_id
+LEFT JOIN sys.indexes uqidx
+    ON uqidx.object_id = cols.object_id
+    AND uqidx.is_unique_constraint = 1
+LEFT JOIN sys.index_columns uqidxcols
+    on uqidxcols.object_id = cols.object_id
+    AND uqidxcols.column_id = cols.column_id
+    AND uqidxcols.index_id = uqidx.index_id
 LEFT JOIN sys.default_constraints defconstr
     ON defconstr.parent_object_id = cols.object_id
     AND defconstr.parent_column_id = cols.column_id
@@ -178,6 +193,9 @@ ORDER BY cols.column_id
                     curCol.DefaultValue = default_value?.ToString().Substring(2, (default_value.ToString().Length) - 4)
             , collation_name => curCol.Collation = collation_name?.ToString()
             , computed_column_definition => curCol.ComputedColumn = computed_column_definition?.ToString().Substring(1, (computed_column_definition.ToString().Length) - 2)
+            , uq_key => curCol.IsUnique = (bool)uq_key
+            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace( pk_name?.ToString() ) ? result.PrimaryKeyConstraintName : pk_name.ToString()
+            , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
              )
             {
                 DisableLogging = true,
@@ -231,6 +249,9 @@ SELECT cols.column_name
   , cols.collation_name
   , cols.generation_expression
   , cols.column_comment
+  , CASE WHEN tc_uq.CONSTRAINT_TYPE = 'UNIQUE' THEN 1 ELSE 0 END AS 'is_unique'
+  , tc.CONSTRAINT_NAME AS 'pk_name'
+  , tc_uq.CONSTRAINT_NAME AS 'uq_constr_name'
 FROM INFORMATION_SCHEMA.COLUMNS cols
 INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -242,6 +263,20 @@ LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
     AND cols.table_catalog = k.table_catalog
     AND cols.column_name = k.column_name
     AND k.constraint_name = 'PRIMARY'
+LEFT JOIN information_schema.TABLE_CONSTRAINTS tc
+    ON k.TABLE_SCHEMA = tc.TABLE_SCHEMA
+    AND k.TABLE_NAME = tc.TABLE_NAME
+    AND k.CONSTRAINT_NAME = tc.CONSTRAINT_NAME   
+LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE uq
+    ON cols.table_name = uq.table_name
+    AND cols.table_schema = uq.table_schema
+    AND cols.table_catalog = uq.table_catalog
+    AND cols.column_name = uq.column_name
+LEFT JOIN information_schema.TABLE_CONSTRAINTS tc_uq
+    ON uq.TABLE_SCHEMA = tc_uq.TABLE_SCHEMA
+    AND uq.TABLE_NAME = tc_uq.TABLE_NAME
+    AND uq.CONSTRAINT_NAME = tc_uq.CONSTRAINT_NAME
+    AND tc_uq.CONSTRAINT_TYPE = 'UNIQUE'
 WHERE ( cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{TN.UnquotatedFullName}')
     AND cols.table_schema = DATABASE()
 ORDER BY cols.ordinal_position
@@ -257,6 +292,9 @@ ORDER BY cols.ordinal_position
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , comment => curCol.Comment = comment?.ToString()
+            , uq_key => curCol.IsUnique = (int)uq_key == 1 ? true : false
+            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
+            , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
              )
             {
                 DisableLogging = true,
@@ -301,6 +339,9 @@ END AS ""datatype""
 , cols.column_default
 , cols.collation_name
 , cols.generation_expression
+, CASE WHEN tccu_uq.column_name IS NULL THEN 0 ELSE 1 END AS ""unique_key""
+, tccu.constraint_name
+, tccu_uq.constraint_name
 FROM INFORMATION_SCHEMA.COLUMNS cols
 INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -319,6 +360,19 @@ LEFT JOIN information_schema.constraint_column_usage tccu
     AND tccu.constraint_schema = tc.constraint_schema
     AND tccu.constraint_catalog = tc.constraint_catalog
     AND cols.column_name = tccu.column_name
+LEFT JOIN INFORMATION_SCHEMA.table_constraints tc_uq
+    ON cols.table_name = tc_uq.table_name
+    AND cols.table_schema = tc_uq.table_schema
+    AND cols.table_catalog = tc_uq.table_catalog
+	AND tc_uq.constraint_type = 'UNIQUE'
+LEFT JOIN information_schema.constraint_column_usage tccu_uq
+    ON cols.table_name = tccu_uq.table_name
+    AND cols.table_schema = tccu_uq.table_schema
+    AND cols.table_catalog = tccu_uq.table_catalog
+    AND tccu_uq.constraint_name = tc_uq.constraint_name
+    AND tccu_uq.constraint_schema = tc_uq.constraint_schema
+    AND tccu_uq.constraint_catalog = tc_uq.constraint_catalog
+    AND cols.column_name = tccu_uq.column_name   
 WHERE(cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{TN.UnquotatedFullName}')
     AND cols.table_catalog = CURRENT_DATABASE()
 ORDER BY cols.ordinal_position
@@ -330,10 +384,13 @@ ORDER BY cols.ordinal_position
             , data_type => curCol.DataType = data_type.ToString()
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
-             , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
+            , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
             , column_default => curCol.DefaultValue = column_default?.ToString().ReplaceIgnoreCase("::character varying", "")
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
+            , uq_key => curCol.IsUnique = (int)uq_key == 1 ? true : false
+            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
+            , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
              )
             {
                 DisableLogging = true,
@@ -365,25 +422,26 @@ SELECT cols.COLUMN_NAME
     END AS data_type
 , cols.NULLABLE
 , cols.IDENTITY_COLUMN
-, cons.status as primary_key 
+, CASE WHEN cons.CONSTRAINT_TYPE = 'P' THEN 'ENABLED' ELSE NULL END as primary_key
 , cols.DATA_DEFAULT --not working, see restriction above
 , cols.COLLATION 
 , cols.DATA_DEFAULT AS generation_expression
+, CASE WHEN cons.CONSTRAINT_TYPE = 'U' THEN 'ENABLED' ELSE NULL END as unique_key
 FROM ALL_TAB_COLUMNS cols
 LEFT JOIN (
-  SELECT acols.table_name, acols.column_name, acols.position, acons.status, acons.owner
+  SELECT acols.table_name, acols.column_name, acols.position, acons.status, acons.owner, acons.constraint_type
   FROM ALL_CONSTRAINTS acons, ALL_CONS_COLUMNS acols
-  WHERE acons.CONSTRAINT_TYPE = 'P'
+  WHERE acons.CONSTRAINT_TYPE IN ('U','P')
   AND acons.CONSTRAINT_NAME = acols.CONSTRAINT_NAME
   AND acons.OWNER = acols.OWNER
 ) cons
 ON cons.TABLE_NAME = cols.TABLE_NAME
 AND cons.OWNER = cols.OWNER
-AND cons.position = cols.COLUMN_ID
-AND cols.COLUMN_NAME  = cons.column_name
+--AND cons.position = cols.COLUMN_ID
+AND cons.column_name = cols.COLUMN_NAME  
 WHERE
 cols.TABLE_NAME NOT LIKE 'BIN$%'
---AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
+AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
 AND ( cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
       OR (cols.OWNER || '.' || cols.TABLE_NAME ) = '{TN.UnquotatedFullName}'
     )
@@ -401,6 +459,7 @@ sql
             , data_default => curCol.DefaultValue = data_default?.ToString()
             , collation => curCol.Collation = collation?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
+            , uq_key => curCol.IsUnique = uq_key?.ToString() == "ENABLED" ? true : false
              )
             {
                 DisableLogging = true,

@@ -97,8 +97,7 @@ namespace ETLBox.ControlFlow.Tasks
             {
                 return
 $@"CREATE TABLE {TN.QuotatedFullName} (
-{ColumnsDefinitionSql}
-{PrimaryKeySql}
+{ColumnsDefinitionSql} {PrimaryKeySql} {UniqueKeySql}
 )
 ";
             }
@@ -148,6 +147,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
 
         string ColumnsDefinitionSql
             => String.Join("  , " + Environment.NewLine, Columns?.Select(col => CreateTableDefinition(col)));
+        string PrimaryKeySql => CreatePrimaryKeyConstraint();
+        string UniqueKeySql => CreateUniqueKeyConstraint();
 
         private void CheckTableDefinition()
         {
@@ -161,7 +162,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                 throw new ETLBoxException("One of the provided columns has a datatype that is either null or empty - can't create table.");
         }
 
-        string PrimaryKeySql => CreatePrimaryKeyConstraint();
+        
+        
         string CreateTableDefinition(TableColumn col)
         {
             string dataType = string.Empty;
@@ -240,8 +242,24 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                         $"pk_{TN.UnquotatedFullName}_{string.Join("_", pkCols.Select(col => col.Name))}";
                 string constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
                 if (ConnectionType == ConnectionManagerType.SQLite) constraint = "";
-                string pkConst = $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
+                string pkConst = Environment.NewLine + $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
                 return pkConst;
+            }
+            return result;
+        }
+
+        private string CreateUniqueKeyConstraint()
+        {
+            string result = string.Empty;
+            if (Columns?.Any(col => col.IsUnique) ?? false)
+            {
+                var uqCols = Columns.Where(col => col.IsUnique);
+                string uqConstName = TableDefinition.UniqueKeyConstraintName ??
+                        $"uq_{TN.UnquotatedFullName}_{string.Join("_", uqCols.Select(col => col.Name))}";
+                string constraint = $"CONSTRAINT {QB}{uqConstName}{QE}";
+                if (ConnectionType == ConnectionManagerType.SQLite) constraint = "";
+                string uqConst = Environment.NewLine + $", {constraint} UNIQUE ({string.Join(",", uqCols.Select(col => $"{QB}{col.Name}{QE}"))})";
+                return uqConst;
             }
             return result;
         }

@@ -48,6 +48,11 @@ namespace ETLBox.ControlFlow
         public bool IsPrimaryKey { get; set; }
 
         /// <summary>
+        /// The column is part of a unique constraint
+        /// </summary>
+        public bool IsUnique { get; set; }
+
+        /// <summary>
         /// Define a default value for the column.
         /// Not all databases may support this.
         /// </summary>
@@ -70,6 +75,7 @@ namespace ETLBox.ControlFlow
         /// The corresponding .NET data type retrieved from the sql <see cref="DataType"/>.
         /// </summary>
         public System.Type NETDataType => DataTypeConverter.GetTypeObject(DataType);
+               
 
         /// <summary>
         /// Only for MySql: A comment for the column

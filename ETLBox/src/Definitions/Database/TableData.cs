@@ -172,7 +172,7 @@ namespace ETLBox.ControlFlow
         private void InitObjects(TableDefinition definition, int estimatedBatchSize = 0)
         {
             Definition = definition;
-            IDColumnIndex = Definition.IDColumnIndex;
+            IDColumnIndex = Definition.IdentityColumnIndex;
             Rows = new List<object[]>(estimatedBatchSize);
             TypeInfo = new DbTypeInfo(typeof(T));
         }
