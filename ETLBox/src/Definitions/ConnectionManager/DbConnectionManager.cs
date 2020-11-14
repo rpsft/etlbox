@@ -78,6 +78,7 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public virtual bool IsOdbcOrOleDbConnection { get; } = false;
 
+        public virtual bool DoPrepareCommand { get; set; } = false;
         /// <inheritdoc/>
         public virtual TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
         {
@@ -107,6 +108,7 @@ namespace ETLBox.Connection
                     cmd.Parameters.Add(newPar);
                 }
             }
+            if (DoPrepareCommand) cmd.Prepare();
             if (Transaction?.Connection != null && Transaction.Connection.State == ConnectionState.Open)
                 cmd.Transaction = Transaction;
             return cmd;
