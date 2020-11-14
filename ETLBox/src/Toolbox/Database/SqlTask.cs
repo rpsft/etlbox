@@ -105,12 +105,18 @@ namespace ETLBox.ControlFlow.Tasks
         public static void BulkInsert(string name, ITableData data, string tableName) =>
             new SqlTask() { TaskName = name }.BulkInsert(data, tableName);
         public static void BulkInsert(IConnectionManager connectionManager, ITableData data, string tableName) =>
-            new SqlTask() { ConnectionManager = connectionManager }.BulkInsert(data, tableName);
-        public static void BulkInsert(IConnectionManager connectionManager, string name, ITableData data, string tableName) =>
-            new SqlTask() { ConnectionManager = connectionManager, TaskName = name }.BulkInsert(data, tableName);
-        
+            new SqlTask() { ConnectionManager = connectionManager }.BulkInsert(data, tableName);        
+
+        public static void BulkDelete(string name, ITableData data, string tableName) =>
+            new SqlTask() { TaskName = name }.BulkDelete(data, tableName);
         public static void BulkDelete(IConnectionManager connectionManager, ITableData data, string tableName) =>
             new SqlTask() { ConnectionManager = connectionManager }.BulkDelete(data, tableName);
+
+        public static void BulkUpdate(string name, ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames) =>
+            new SqlTask() { TaskName = name }.BulkUpdate(data, tableName, setColumnNames, joinColumnNames);
+        public static void BulkUpdate(IConnectionManager connectionManager, ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames) =>
+            new SqlTask() { ConnectionManager = connectionManager }.BulkUpdate(data, tableName, setColumnNames, joinColumnNames);
+
 
     }
 
