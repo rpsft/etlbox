@@ -334,20 +334,20 @@ namespace ETLBox.DataFlow.Connectors
         }
 
         List<string> _idColumnNames;
-        List<string> CompareColumnNames
+        List<string> UpdateColumnNames
         {
             get
             {
-                if (MergeProperties.ComparePropertyNames?.Count > 0) { 
-                    if (_compareColumnNames == null)
-                        _compareColumnNames = MergeProperties.ComparePropertyNames.Select(compcol => compcol.ComparePropertyName).ToList();
-                    return _compareColumnNames;
+                if (MergeProperties.UpdatePropertyNames?.Count > 0) { 
+                    if (_updateColumnNames == null)
+                        _updateColumnNames = MergeProperties.UpdatePropertyNames.Select(compcol => compcol.UpdatePropertyName).ToList();
+                    return _updateColumnNames;
                 }
                 else
-                    return TypeInfo?.CompareColumnNames;
+                    return TypeInfo?.UpdateColumnNames;
             }
         }
-        List<string> _compareColumnNames;
+        List<string> _updateColumnNames;
 
         LookupTransformation<TInput, TInput> Lookup;
         DbSource<TInput> DestinationTableAsSource;
@@ -410,9 +410,9 @@ namespace ETLBox.DataFlow.Connectors
             return result;
         }
 
-        private List<object> GetCompareColumnValues(TInput row)
+        private List<object> GetUpdateColumnValues(TInput row)
         {
-            return ReadColumnValues(row, TypeInfo.CompareAttributeProps, CompareColumnNames);            
+            return ReadColumnValues(row, TypeInfo.UpdateAttributeProps, UpdateColumnNames);            
         }
 
         private List<object> ReadColumnValues(TInput row, List<PropertyInfo> attributeProps, List<string> propertyNames)
@@ -485,14 +485,14 @@ namespace ETLBox.DataFlow.Connectors
             {
                 var s = self as IDictionary<string, object>;
                 var o = other as IDictionary<string, object>;
-                foreach (string compColumn in CompareColumnNames)
+                foreach (string compColumn in UpdateColumnNames)
                     if (s.ContainsKey(compColumn) && o.ContainsKey(compColumn))
                         result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
                 return result;
             }
-            else if (TypeInfo.CompareAttributeProps.Count > 0)
+            else if (TypeInfo.UpdateAttributeProps.Count > 0)
             {
-                foreach (var propInfo in TypeInfo.CompareAttributeProps)
+                foreach (var propInfo in TypeInfo.UpdateAttributeProps)
                     result &= (propInfo?.GetValue(self))?.Equals(propInfo?.GetValue(other)) ?? false;
                 return result;
             }
@@ -579,7 +579,7 @@ namespace ETLBox.DataFlow.Connectors
                 DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
             IdColumnNames.ForEach(idcol =>
                 updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
-            CompareColumnNames.ForEach(compcol =>
+            UpdateColumnNames.ForEach(compcol =>
                 updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == compcol).FirstOrDefault()));
             TableData data = new TableData(updateDefinition);
 
@@ -587,10 +587,10 @@ namespace ETLBox.DataFlow.Connectors
             {
                 List<object> updateData = new List<object>();
                 updateData.AddRange(GetIdColumnValues(row));
-                updateData.AddRange(GetCompareColumnValues(row));
+                updateData.AddRange(GetUpdateColumnValues(row));
                 data.Rows.Add(updateData.ToArray());
             }
-            SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, CompareColumnNames, IdColumnNames);
+            SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, UpdateColumnNames, IdColumnNames);
         }
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)

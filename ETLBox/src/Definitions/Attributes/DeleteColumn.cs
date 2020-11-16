@@ -13,7 +13,7 @@ namespace ETLBox.DataFlow
     /// {
     ///     [IdColumn]
     ///     public int Key { get; set; }
-    ///     [CompareColumn]
+    ///     [UpdateColumn]
     ///     public string Value {get;set; }
     ///     [DeleteColumn(true)]
     ///     public bool IsDeletion {get;set; }

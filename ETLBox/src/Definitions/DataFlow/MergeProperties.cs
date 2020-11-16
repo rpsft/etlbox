@@ -16,7 +16,7 @@ namespace ETLBox.DataFlow
         /// Property names that should be use to compare if the values of a column are equal, so that
         /// the DbMerge can decide if the column needs to be udpated.
         /// </summary>
-        public ICollection<CompareColumn> ComparePropertyNames { get; set; } = new List<CompareColumn>();
+        public ICollection<UpdateColumn> UpdatePropertyNames { get; set; } = new List<UpdateColumn>();
 
         /// <summary>
         /// List of property names and a to-be value that tells the DbMerge if this row can be deleted.
