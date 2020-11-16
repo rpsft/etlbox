@@ -384,11 +384,11 @@ namespace ETLBox.Helper
             if (ConnectionType == ConnectionManagerType.Oracle)
             {
                 QueryText.AppendLine(") vt ");
-                QueryText.Append(" ON ");
+                QueryText.Append(" ON ( ");
                 QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
                         UpdateJoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
-                QueryText.AppendLine(" WHEN MATCHED THEN UPDATE ");
-                QueryText.AppendLine($@"SET {string.Join(", ", UpdateSetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
+                QueryText.AppendLine(") WHEN MATCHED THEN UPDATE SET");
+                QueryText.AppendLine($@"{string.Join(", ", UpdateSetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
             }
             else if (ConnectionType == ConnectionManagerType.MySql)
             {

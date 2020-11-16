@@ -7,6 +7,7 @@ namespace ETLBox.DataFlow
     internal class DBMergeTypeInfo : TypeInfo
     {
         internal List<string> IdColumnNames { get; set; } = new List<string>();
+        internal List<string> CompareColumnNames { get; set; } = new List<string>();
         internal List<PropertyInfo> IdAttributeProps { get; } = new List<PropertyInfo>();
         internal List<PropertyInfo> CompareAttributeProps { get; } = new List<PropertyInfo>();
         internal List<Tuple<PropertyInfo, object>> DeleteAttributeProps { get; } = new List<Tuple<PropertyInfo, object>>();
@@ -23,6 +24,7 @@ namespace ETLBox.DataFlow
         protected override void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex)
         {
             AddMergeIdColumnNameAttribute(propInfo);
+            AddMergeCompareColumnNameAttribute(propInfo);
             AddIdAddAttributeProps(propInfo);
             AddCompareAttributeProps(propInfo);
             AddDeleteAttributeProps(propInfo);
@@ -44,6 +46,24 @@ namespace ETLBox.DataFlow
                         IdColumnNames.Add(cmattr.NewName);
                     else
                         IdColumnNames.Add(propInfo.Name);
+                }
+            }
+        }
+
+        private void AddMergeCompareColumnNameAttribute(PropertyInfo propInfo)
+        {
+            if (MergeProps.ComparePropertyNames.Contains(propInfo.Name))
+                CompareColumnNames.Add(propInfo.Name);
+            else
+            {
+                var attr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
+                if (attr != null)
+                {
+                    var cmattr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
+                    if (cmattr != null)
+                        CompareColumnNames.Add(cmattr.NewName);
+                    else
+                        CompareColumnNames.Add(propInfo.Name);
                 }
             }
         }
