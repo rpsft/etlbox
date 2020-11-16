@@ -237,7 +237,7 @@ ORDER BY cols.column_id
 
             var readMetaSql = new SqlTask(
 $@" 
-SELECT cols.column_name
+SELECT DISTINCT cols.column_name
   , CASE WHEN cols.data_type IN ('varchar','char') THEN CONCAT (cols.data_type,'(',cols.character_maximum_length, ')')
 	     WHEN cols.data_type IN ('decimal') THEN CONCAT (cols.data_type,'(',cols.numeric_precision,',', cols.numeric_scale, ')')
 		 ELSE cols.data_type
@@ -252,6 +252,7 @@ SELECT cols.column_name
   , CASE WHEN tc_uq.CONSTRAINT_TYPE = 'UNIQUE' THEN 1 ELSE 0 END AS 'is_unique'
   , tc.CONSTRAINT_NAME AS 'pk_name'
   , tc_uq.CONSTRAINT_NAME AS 'uq_constr_name'
+  , cols.ORDINAL_POSITION 
 FROM INFORMATION_SCHEMA.COLUMNS cols
 INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -295,6 +296,7 @@ ORDER BY cols.ordinal_position
             , uq_key => curCol.IsUnique = (int)uq_key == 1 ? true : false
             , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
             , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
+            , ignore => { }
              )
             {
                 DisableLogging = true,
