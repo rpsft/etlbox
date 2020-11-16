@@ -13,17 +13,22 @@ namespace ETLBox.DataFlow
     /// {
     ///     [IdColumn]
     ///     public int Key { get; set; }
-    ///     [CompareColumn]
+    ///     [UpdateColumn]
     ///     public string Value {get;set; }
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class CompareColumn : Attribute
+    public class UpdateColumn : Attribute
     {
+        /// <summary>
+        /// Name of the property name used for the comparison if two rows match 
+        /// </summary>
+        public string UpdatePropertyName { get; set; }
+
         /// <summary>
         /// Marks this property as column used for comparison in a Merge operation
         /// </summary>
-        public CompareColumn()
+        public UpdateColumn()
         {
         }
     }

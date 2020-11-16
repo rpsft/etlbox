@@ -10,18 +10,18 @@ namespace ETLBox.DataFlow
         /// <summary>
         /// Property names that are used to check if the columns match (id values are equal).
         /// </summary>
-        public List<string> IdPropertyNames { get; set; } = new List<string>();
+        public ICollection<IdColumn> IdPropertyNames { get; set; } = new List<IdColumn>();
 
         /// <summary>
         /// Property names that should be use to compare if the values of a column are equal, so that
         /// the DbMerge can decide if the column needs to be udpated.
         /// </summary>
-        public List<string> ComparePropertyNames { get; set; } = new List<string>();
+        public ICollection<UpdateColumn> UpdatePropertyNames { get; set; } = new List<UpdateColumn>();
 
         /// <summary>
         /// List of property names and a to-be value that tells the DbMerge if this row can be deleted.
         /// </summary>
-        public Dictionary<string, object> DeletionProperties { get; set; } = new Dictionary<string, object>();
+        public ICollection<DeleteColumn> DeletionProperties { get; set; } = new List<DeleteColumn>();
 
         /// <summary>
         /// The property name where the ChangeAction is stored. Must by of type <see cref="ETLBox.DataFlow.ChangeAction"/>

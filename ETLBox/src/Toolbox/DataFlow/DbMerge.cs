@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -37,7 +38,7 @@ namespace ETLBox.DataFlow.Connectors
         /// Delta means that source has only delta information and deletions are deferred from a particular property and
         /// OnlyUpdates means that only updates are applied to the destination.
         /// </summary>
-        public MergeMode MergeMode { get; set; }
+        public MergeMode MergeMode { get; set; } = MergeMode.Delta;
 
         /// <summary>
         /// The table definition of the destination table. By default, the table definition is read from the database.
@@ -227,7 +228,7 @@ namespace ETLBox.DataFlow.Connectors
             {
                 if (MergeMode == MergeMode.Delta)
                     DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) != ChangeAction.Delete));
-                else if (MergeMode == MergeMode.OnlyUpdates)
+                else if (MergeMode == MergeMode.UpdatesOnly)
                     DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) == ChangeAction.Exists
                         || GetChangeAction(row) == ChangeAction.Update));
                 else
@@ -235,17 +236,16 @@ namespace ETLBox.DataFlow.Connectors
 
                 if (!UseTruncateMethod)
                 {
-                    if (MergeMode == MergeMode.OnlyUpdates)
+                    if (MergeMode == MergeMode.UpdatesOnly)
                     {
-                        SqlDeleteIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
-                        return batch.Where(row => GetChangeAction(row) == ChangeAction.Update).ToArray();
+                        SqlUpdateIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
+                        return batch.Where(row => false).ToArray();
                     }
                     else
                     {
-                        SqlDeleteIds(batch.Where(row => GetChangeAction(row) != ChangeAction.Insert && GetChangeAction(row) != ChangeAction.Exists));
-                        return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
-                            GetChangeAction(row) == ChangeAction.Update)
-                        .ToArray();
+                        SqlUpdateIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
+                        SqlDeleteIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Delete));
+                        return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert).ToArray();
                     }
                 }
                 else
@@ -254,7 +254,7 @@ namespace ETLBox.DataFlow.Connectors
                         throw new ETLBoxNotSupportedException("If you provide a delta load, you must define at least one compare column." +
                             "Using the truncate method is not allowed. ");
                     TruncateDestinationOnce();
-                    if (MergeMode == MergeMode.OnlyUpdates)
+                    if (MergeMode == MergeMode.UpdatesOnly)
                         return batch.Where(row => GetChangeAction(row) != ChangeAction.Delete &&
                             GetChangeAction(row) != ChangeAction.Insert).ToArray();
                     else
@@ -269,7 +269,7 @@ namespace ETLBox.DataFlow.Connectors
             {
 
                 IdentifyAndDeleteMissingEntries();
-                if (UseTruncateMethod && (MergeMode == MergeMode.OnlyUpdates || MergeMode == MergeMode.NoDeletions))
+                if (UseTruncateMethod && (MergeMode == MergeMode.UpdatesOnly || MergeMode == MergeMode.InsertsAndUpdatesOnly))
                     ReinsertTruncatedRecords();
                 if (Successors.Count > 0)
                 {
@@ -323,11 +323,32 @@ namespace ETLBox.DataFlow.Connectors
             get
             {
                 if (MergeProperties.IdPropertyNames?.Count > 0)
-                    return MergeProperties.IdPropertyNames;
+                {
+                    if (_idColumnNames == null)
+                        _idColumnNames = MergeProperties.IdPropertyNames.Select(idcol => idcol.IdPropertyName).ToList();
+                    return _idColumnNames;
+                } 
                 else
                     return TypeInfo?.IdColumnNames;
             }
-        }        
+        }
+
+        List<string> _idColumnNames;
+        List<string> UpdateColumnNames
+        {
+            get
+            {
+                if (MergeProperties.UpdatePropertyNames?.Count > 0) { 
+                    if (_updateColumnNames == null)
+                        _updateColumnNames = MergeProperties.UpdatePropertyNames.Select(compcol => compcol.UpdatePropertyName).ToList();
+                    return _updateColumnNames;
+                }
+                else
+                    return TypeInfo?.UpdateColumnNames;
+            }
+        }
+        List<string> _updateColumnNames;
+
         LookupTransformation<TInput, TInput> Lookup;
         DbSource<TInput> DestinationTableAsSource;
         DbDestination<TInput> DestinationTable;
@@ -382,27 +403,37 @@ namespace ETLBox.DataFlow.Connectors
         
         private List<object> GetIdColumnValues(TInput row)
         {
+            var result = ReadColumnValues(row, TypeInfo.IdAttributeProps, IdColumnNames);
+            if (result.Count == 0)
+                throw new ETLBoxNotSupportedException("Objects used for merge must at least define a id column" +
+  "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list.");
+            return result;
+        }
+
+        private List<object> GetUpdateColumnValues(TInput row)
+        {
+            return ReadColumnValues(row, TypeInfo.UpdateAttributeProps, UpdateColumnNames);            
+        }
+
+        private List<object> ReadColumnValues(TInput row, List<PropertyInfo> attributeProps, List<string> propertyNames)
+        {
             List<object> result = new List<object>();
-            if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
+            if (TypeInfo.IsDynamic && propertyNames.Count > 0)
             {
                 var r = row as IDictionary<string, object>;
-                foreach (string idColumn in MergeProperties.IdPropertyNames)
+                foreach (string idColumn in propertyNames)
                 {
                     if (!r.ContainsKey(idColumn))
                         r.Add(idColumn, null);
                     result.Add(r[idColumn]);
-                }
-                return result;
+                }                
             }
-            else if (TypeInfo.IdAttributeProps.Count > 0)
+            else if (attributeProps.Count > 0)
             {
-                foreach (var propInfo in TypeInfo.IdAttributeProps)
-                    result.Add(propInfo?.GetValue(row));
-                return result;
+                foreach (var propInfo in attributeProps)
+                    result.Add(propInfo?.GetValue(row));              
             }
-            else
-                throw new ETLBoxNotSupportedException("Objects used for merge must at least define a id column" +
-  "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list.");
+            return result;
         }
 
         private bool GetIsDeletion(TInput row)
@@ -413,8 +444,8 @@ namespace ETLBox.DataFlow.Connectors
                 var r = row as IDictionary<string, object>;
                 foreach (var delColumn in MergeProperties.DeletionProperties)
                 {
-                    if (r.ContainsKey(delColumn.Key))
-                        result &= r[delColumn.Key]?.Equals(delColumn.Value) ?? false;
+                    if (r.ContainsKey(delColumn.DeletePropertyName))
+                        result &= r[delColumn.DeletePropertyName]?.Equals(delColumn.DeleteOnMatchValue) ?? false;
                     else
                         result &= false;
                 }
@@ -454,14 +485,14 @@ namespace ETLBox.DataFlow.Connectors
             {
                 var s = self as IDictionary<string, object>;
                 var o = other as IDictionary<string, object>;
-                foreach (string compColumn in MergeProperties.ComparePropertyNames)
+                foreach (string compColumn in UpdateColumnNames)
                     if (s.ContainsKey(compColumn) && o.ContainsKey(compColumn))
                         result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
                 return result;
             }
-            else if (TypeInfo.CompareAttributeProps.Count > 0)
+            else if (TypeInfo.UpdateAttributeProps.Count > 0)
             {
-                foreach (var propInfo in TypeInfo.CompareAttributeProps)
+                foreach (var propInfo in TypeInfo.UpdateAttributeProps)
                     result &= (propInfo?.GetValue(self))?.Equals(propInfo?.GetValue(other)) ?? false;
                 return result;
             }
@@ -514,13 +545,13 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (WasTruncationExecuted == true) return;
             WasTruncationExecuted = true;
-            if (MergeMode == MergeMode.NoDeletions || MergeMode == MergeMode.OnlyUpdates) return;
+            if (MergeMode == MergeMode.InsertsAndUpdatesOnly || MergeMode == MergeMode.UpdatesOnly) return;
             TruncateTableTask.Truncate(this.ConnectionManager, TableName);
         }
 
         private void IdentifyAndDeleteMissingEntries()
         {
-            if (MergeMode == MergeMode.NoDeletions || MergeMode == MergeMode.OnlyUpdates) return;
+            if (MergeMode == MergeMode.InsertsAndUpdatesOnly || MergeMode == MergeMode.UpdatesOnly) return;
             IEnumerable<TInput> deletions = null;
             if (MergeMode == MergeMode.Delta)
                 deletions = InputData.Where(row => GetChangeAction(row) == ChangeAction.Delete).ToList();
@@ -539,6 +570,29 @@ namespace ETLBox.DataFlow.Connectors
             DeltaTable.AddRange(deletions);
         }
 
+        private void SqlUpdateIds(IEnumerable<TInput> rowsToUpdate)
+        {
+            if (rowsToUpdate == null || rowsToUpdate?.Count() == 0) return;
+
+            TableDefinition updateDefinition = new TableDefinition();
+            if (DestinationTableDefinition == null)
+                DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
+            IdColumnNames.ForEach(idcol =>
+                updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
+            UpdateColumnNames.ForEach(compcol =>
+                updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == compcol).FirstOrDefault()));
+            TableData data = new TableData(updateDefinition);
+
+            foreach (var row in rowsToUpdate)
+            {
+                List<object> updateData = new List<object>();
+                updateData.AddRange(GetIdColumnValues(row));
+                updateData.AddRange(GetUpdateColumnValues(row));
+                data.Rows.Add(updateData.ToArray());
+            }
+            SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, UpdateColumnNames, IdColumnNames);
+        }
+
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
             if (rowsToDelete == null || rowsToDelete?.Count() == 0) return;
@@ -546,7 +600,8 @@ namespace ETLBox.DataFlow.Connectors
             TableDefinition idColsOnly = new TableDefinition();
             if (DestinationTableDefinition == null)
                 DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
-            idColsOnly.Columns = DestinationTableDefinition.Columns.Where(col => IdColumnNames.Contains(col.Name)).ToList();
+            IdColumnNames.ForEach(idcol =>
+             idColsOnly.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
             idColsOnly.Name = TableName;
             TableData data = new TableData(idColsOnly);
 

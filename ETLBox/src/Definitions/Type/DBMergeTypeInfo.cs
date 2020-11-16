@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace ETLBox.DataFlow
@@ -7,8 +8,9 @@ namespace ETLBox.DataFlow
     internal class DBMergeTypeInfo : TypeInfo
     {
         internal List<string> IdColumnNames { get; set; } = new List<string>();
+        internal List<string> UpdateColumnNames { get; set; } = new List<string>();
         internal List<PropertyInfo> IdAttributeProps { get; } = new List<PropertyInfo>();
-        internal List<PropertyInfo> CompareAttributeProps { get; } = new List<PropertyInfo>();
+        internal List<PropertyInfo> UpdateAttributeProps { get; } = new List<PropertyInfo>();
         internal List<Tuple<PropertyInfo, object>> DeleteAttributeProps { get; } = new List<Tuple<PropertyInfo, object>>();
         internal PropertyInfo ChangeDateProperty { get; set; }
         internal PropertyInfo ChangeActionProperty { get; set; }
@@ -23,8 +25,9 @@ namespace ETLBox.DataFlow
         protected override void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex)
         {
             AddMergeIdColumnNameAttribute(propInfo);
+            AddMergeUpdateColumnNameAttribute(propInfo);
             AddIdAddAttributeProps(propInfo);
-            AddCompareAttributeProps(propInfo);
+            AddUpdateAttributeProps(propInfo);
             AddDeleteAttributeProps(propInfo);
             AddChangeActionProp(propInfo);
             AddChangeDateProp(propInfo);
@@ -32,7 +35,7 @@ namespace ETLBox.DataFlow
 
         private void AddMergeIdColumnNameAttribute(PropertyInfo propInfo)
         {
-            if (MergeProps.IdPropertyNames.Contains(propInfo.Name))
+            if (MergeProps.IdPropertyNames.Any(idcol => idcol.IdPropertyName == propInfo.Name))
                 IdColumnNames.Add(propInfo.Name);
             else
             {
@@ -48,9 +51,27 @@ namespace ETLBox.DataFlow
             }
         }
 
+        private void AddMergeUpdateColumnNameAttribute(PropertyInfo propInfo)
+        {
+            if (MergeProps.UpdatePropertyNames.Any(compcol => compcol.UpdatePropertyName == propInfo.Name))
+                UpdateColumnNames.Add(propInfo.Name);
+            else
+            {
+                var attr = propInfo.GetCustomAttribute(typeof(UpdateColumn)) as UpdateColumn;
+                if (attr != null)
+                {
+                    var cmattr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
+                    if (cmattr != null)
+                        UpdateColumnNames.Add(cmattr.NewName);
+                    else
+                        UpdateColumnNames.Add(propInfo.Name);
+                }
+            }
+        }
+
         private void AddIdAddAttributeProps(PropertyInfo propInfo)
         {
-            if (MergeProps.IdPropertyNames.Contains(propInfo.Name))
+            if (MergeProps.IdPropertyNames.Any(idcol => idcol.IdPropertyName == propInfo.Name))
                 IdAttributeProps.Add(propInfo);
             else
             {
@@ -60,22 +81,23 @@ namespace ETLBox.DataFlow
             }
         }
 
-        private void AddCompareAttributeProps(PropertyInfo propInfo)
+        private void AddUpdateAttributeProps(PropertyInfo propInfo)
         {
-            if (MergeProps.ComparePropertyNames.Contains(propInfo.Name))
-                CompareAttributeProps.Add(propInfo);
+            if (MergeProps.UpdatePropertyNames.Any(compcol => compcol.UpdatePropertyName == propInfo.Name))
+                UpdateAttributeProps.Add(propInfo);
             else
             {
-                var compAttr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
-                if (compAttr != null)
-                    CompareAttributeProps.Add(propInfo);
+                var updateAttr = propInfo.GetCustomAttribute(typeof(UpdateColumn)) as UpdateColumn;
+                if (updateAttr != null)
+                    UpdateAttributeProps.Add(propInfo);
             }
         }
 
         private void AddDeleteAttributeProps(PropertyInfo propInfo)
         {
-            if (MergeProps.DeletionProperties.ContainsKey(propInfo.Name))
-                DeleteAttributeProps.Add(Tuple.Create(propInfo, MergeProps.DeletionProperties[propInfo.Name]));
+            if (MergeProps.DeletionProperties.Any(delcol => delcol.DeletePropertyName == propInfo.Name))
+                DeleteAttributeProps.Add(Tuple.Create(propInfo, 
+                    MergeProps.DeletionProperties.Where( delcol => delcol.DeletePropertyName == propInfo.Name).First().DeleteOnMatchValue));
             else
             {
                 var deleteAttr = propInfo.GetCustomAttribute(typeof(DeleteColumn)) as DeleteColumn;

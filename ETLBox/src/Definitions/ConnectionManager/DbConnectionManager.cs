@@ -182,6 +182,7 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public abstract void CleanUpBulkInsert(string tableName);
 
+        /// <inheritdoc/>
         public abstract void BeforeBulkDelete(string tableName);
 
         /// <inheritdoc/>
@@ -189,6 +190,15 @@ namespace ETLBox.Connection
 
         /// <inheritdoc/>
         public abstract void AfterBulkDelete(string tableName);
+
+        /// <inheritdoc/>
+        public abstract void BeforeBulkUpdate(string tableName);
+
+        /// <inheritdoc/>
+        public abstract void BulkUpdate(ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
+
+        /// <inheritdoc/>
+        public abstract void AfterBulkUpdate(string tableName);
 
         /// <inheritdoc/>
         public IConnectionManager CloneIfAllowed()

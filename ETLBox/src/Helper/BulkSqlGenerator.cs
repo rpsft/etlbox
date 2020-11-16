@@ -56,11 +56,6 @@ namespace ETLBox.Helper
         public string QE { get; set; }
 
         /// <summary>
-        /// The formatted table name of the destination table
-        /// </summary>
-        public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
-
-        /// <summary>
         /// Indicates if the VALUES table descriptor needs the keyword ROW (MySql only)
         /// </summary>
         public bool IsMariaDb { get; set; }
@@ -81,8 +76,18 @@ namespace ETLBox.Helper
         /// </summary>
         public bool TryConvertParameterData { get; set; }
 
+        /// <summary>
+        /// The destination table name
+        /// </summary>
         public string TableName { get; set; }
+
+        /// <summary>
+        /// The data used for the bulk operation
+        /// </summary>
         public ITableData TableData { get; set; }
+
+        public ICollection<string> UpdateSetColumnNames { get; set; } = new List<string>();
+        public ICollection<string> UpdateJoinColumnNames { get; set; } = new List<string>();
 
         #endregion
 
@@ -106,6 +111,7 @@ namespace ETLBox.Helper
         StringBuilder QueryText;
         List<string> SourceColumnNames;
         List<string> DestColumnNames;
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
 
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
@@ -117,7 +123,7 @@ namespace ETLBox.Helper
         {
             InitObjects();
             BeginInsertSql();
-            ReadDataAndCreateQuery();
+            CreateValueSqlFromData();
             EndInsertSql();
             return QueryText.ToString();
         }
@@ -127,8 +133,18 @@ namespace ETLBox.Helper
             if (IsAccessDatabase) throw new Exception("Bulk delete is currently not supported for Access!");
             InitObjects();
             BeginDeleteSql();
-            ReadDataAndCreateQuery();
+            CreateValueSqlFromData();
             EndDeleteSql();
+            return QueryText.ToString();
+        }
+
+        public string CreateBulkUpdateStatement()
+        {
+            if (IsAccessDatabase) throw new Exception("Bulk update is currently not supported for Access!");
+            InitObjects();
+            BeginUpdateSql();
+            CreateValueSqlFromData();
+            EndUpdateSql();
             return QueryText.ToString();
         }
 
@@ -171,14 +187,49 @@ namespace ETLBox.Helper
                 QueryText.AppendLine("INNER JOIN (");
                 if (ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
                     //https://dba.stackexchange.com/questions/177312/does-mariadb-or-mysql-implement-the-values-expression-table-value-constructor
-                    QueryText.AppendLine($"VALUES ( {string.Join(",", SourceColumnNames.Select(col => $"'{col}'"))}  ),");
+                    //QueryText.AppendLine($"VALUES ( {string.Join(",", SourceColumnNames.Select(col => $"'{col}'"))}  ),");
+                    QueryText.AppendLine($@"WITH ws ( {string.Join(", ", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} ) AS ( VALUES");
                 else
                     QueryText.AppendLine("VALUES");
             }
         }
 
+        private void BeginUpdateSql()
+        {
+            if (ConnectionType == ConnectionManagerType.MySql)
+            {
+                QueryText.AppendLine($@"UPDATE {TN.QuotatedFullName} ut");
+                QueryText.AppendLine("INNER JOIN (");
+                if (IsMariaDb)
+                    QueryText.AppendLine($@"WITH ws ( {string.Join(", ", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} ) AS ( VALUES");
+                else
+                    QueryText.AppendLine("VALUES");
+            }
+            else if (ConnectionType == ConnectionManagerType.Postgres)
+            {
+                QueryText.AppendLine($@"UPDATE {TN.QuotatedFullName} ut");
+                QueryText.AppendLine($@"SET {string.Join(", ", UpdateSetColumnNames.Select(col => $"{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
+                QueryText.AppendLine($@"FROM (");
+                QueryText.AppendLine("VALUES");
+            }
+            //https://www.orafaq.com/node/2450
+            else if (ConnectionType == ConnectionManagerType.Oracle)
+            {
+                QueryText.AppendLine($@"MERGE INTO {TN.QuotatedFullName} ut");
+                QueryText.AppendLine($@"USING (");
+            }
+            else
+            {
+                QueryText.AppendLine($@"UPDATE ut");
+                QueryText.AppendLine($@"SET {string.Join(", ", UpdateSetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
+                QueryText.AppendLine($@"FROM {TN.QuotatedFullName} ut");
+                QueryText.AppendLine("INNER JOIN (");
+                QueryText.AppendLine("VALUES");
+            }
+        }
 
-        private void ReadDataAndCreateQuery()
+
+        private void CreateValueSqlFromData()
         {
             while (TableData.Read())
             {
@@ -261,7 +312,7 @@ namespace ETLBox.Helper
             if (parValue == DBNull.Value) return;
             try
             {
-                    par.Value = Convert.ChangeType(parValue, DataTypeConverter.GetTypeObject(dbtypestring));
+                par.Value = Convert.ChangeType(parValue, DataTypeConverter.GetTypeObject(dbtypestring));
             }
             catch
             {
@@ -311,8 +362,9 @@ namespace ETLBox.Helper
         private void EndDeleteSql()
         {
             QueryText.AppendLine(Environment.NewLine + ")");
-            if ((ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
-                || ConnectionType == ConnectionManagerType.Oracle)
+            if (ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
+                QueryText.AppendLine($" SELECT * FROM ws ) vt");
+            else if (ConnectionType == ConnectionManagerType.Oracle)
                 QueryText.AppendLine($"vt");
             else
                 QueryText.AppendLine($"vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
@@ -324,6 +376,45 @@ namespace ETLBox.Helper
                     SourceColumnNames.Select(col => $@"( ( dt.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( dt.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
             if (ConnectionType == ConnectionManagerType.Oracle)
                 QueryText.AppendLine(")");
+        }
+
+        private void EndUpdateSql()
+        {            
+            //https://www.orafaq.com/node/2450
+            if (ConnectionType == ConnectionManagerType.Oracle)
+            {
+                QueryText.AppendLine(") vt ");
+                QueryText.Append(" ON ( ");
+                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+                        UpdateJoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
+                QueryText.AppendLine(") WHEN MATCHED THEN UPDATE SET");
+                QueryText.AppendLine($@"{string.Join(", ", UpdateSetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
+            }
+            else if (ConnectionType == ConnectionManagerType.MySql)
+            {
+                if (IsMariaDb)
+                    QueryText.AppendLine($" ) SELECT * FROM ws ) vt");
+                else
+                    QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
+                QueryText.Append(" ON ");
+                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+        UpdateJoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
+                QueryText.AppendLine($@"SET {string.Join(", ", UpdateSetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
+            }
+            else if (ConnectionType == ConnectionManagerType.Postgres)
+            {
+                QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
+                QueryText.Append(" WHERE ");
+                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+                        UpdateJoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
+            }
+            else
+            {
+                QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
+                QueryText.Append(" ON ");
+                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+                        UpdateJoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) OR ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) )")));
+            }
         }
 
         #endregion

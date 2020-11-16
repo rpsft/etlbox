@@ -196,6 +196,23 @@ namespace ETLBox.Connection
         void AfterBulkDelete(string tableName);
 
         /// <summary>
+        /// Called before every bulk update of a batch
+        /// </summary>
+        /// <param name="tableName">Destination table name</param>
+        void BeforeBulkUpdate(string tableName);
+        /// <summary>
+        /// Performs a bulk update
+        /// </summary>
+        /// <param name="data">Batch of data</param>
+        /// <param name="tableName">Destination table name</param>
+        void BulkUpdate(ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
+        /// <summary>
+        /// Called after every bulk update of a batch
+        /// </summary>
+        /// <param name="tableName">Destination table name</param>
+        void AfterBulkUpdate(string tableName);
+
+        /// <summary>
         /// Try to create a clone of the current connection - only possible if <see cref="LeaveOpen"/> is false.
         /// </summary>
         /// <returns>The connection that was either cloned or the current connection</returns>

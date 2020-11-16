@@ -6,9 +6,9 @@ namespace ETLBox.DataFlow
     /// Inherit from this class if you want to use your data object with a DBMerge,
     /// but don't want to implement <see cref="IMergeableRow" /> yourself.
     /// You still needs that you have flagged the id properties with the IdColumn attribute
-    /// and the properties use to identify equal object flagged with the CompareColumn attribute.
+    /// and the properties use to identify equal object flagged with the UpdateColumn attribute.
     /// </summary>
-    /// <see cref="CompareColumn"/>
+    /// <see cref="UpdateColumn"/>
     /// <see cref="IdColumn"/>
     public abstract class MergeableRow
     {
