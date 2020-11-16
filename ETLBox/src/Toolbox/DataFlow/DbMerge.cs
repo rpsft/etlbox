@@ -323,21 +323,32 @@ namespace ETLBox.DataFlow.Connectors
             get
             {
                 if (MergeProperties.IdPropertyNames?.Count > 0)
-                    return MergeProperties.IdPropertyNames;
+                {
+                    if (_idColumnNames == null)
+                        _idColumnNames = MergeProperties.IdPropertyNames.Select(idcol => idcol.IdPropertyName).ToList();
+                    return _idColumnNames;
+                } 
                 else
                     return TypeInfo?.IdColumnNames;
             }
         }
+
+        List<string> _idColumnNames;
         List<string> CompareColumnNames
         {
             get
             {
-                if (MergeProperties.ComparePropertyNames?.Count > 0)
-                    return MergeProperties.ComparePropertyNames;
+                if (MergeProperties.ComparePropertyNames?.Count > 0) { 
+                    if (_compareColumnNames == null)
+                        _compareColumnNames = MergeProperties.ComparePropertyNames.Select(compcol => compcol.ComparePropertyName).ToList();
+                    return _compareColumnNames;
+                }
                 else
                     return TypeInfo?.CompareColumnNames;
             }
         }
+        List<string> _compareColumnNames;
+
         LookupTransformation<TInput, TInput> Lookup;
         DbSource<TInput> DestinationTableAsSource;
         DbDestination<TInput> DestinationTable;
@@ -392,7 +403,7 @@ namespace ETLBox.DataFlow.Connectors
         
         private List<object> GetIdColumnValues(TInput row)
         {
-            var result = ReadColumnValues(row, TypeInfo.IdAttributeProps, MergeProperties.IdPropertyNames);
+            var result = ReadColumnValues(row, TypeInfo.IdAttributeProps, IdColumnNames);
             if (result.Count == 0)
                 throw new ETLBoxNotSupportedException("Objects used for merge must at least define a id column" +
   "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list.");
@@ -401,7 +412,7 @@ namespace ETLBox.DataFlow.Connectors
 
         private List<object> GetCompareColumnValues(TInput row)
         {
-            return ReadColumnValues(row, TypeInfo.CompareAttributeProps, MergeProperties.ComparePropertyNames);            
+            return ReadColumnValues(row, TypeInfo.CompareAttributeProps, CompareColumnNames);            
         }
 
         private List<object> ReadColumnValues(TInput row, List<PropertyInfo> attributeProps, List<string> propertyNames)
@@ -433,8 +444,8 @@ namespace ETLBox.DataFlow.Connectors
                 var r = row as IDictionary<string, object>;
                 foreach (var delColumn in MergeProperties.DeletionProperties)
                 {
-                    if (r.ContainsKey(delColumn.Key))
-                        result &= r[delColumn.Key]?.Equals(delColumn.Value) ?? false;
+                    if (r.ContainsKey(delColumn.DeletePropertyName))
+                        result &= r[delColumn.DeletePropertyName]?.Equals(delColumn.DeleteOnMatchValue) ?? false;
                     else
                         result &= false;
                 }
@@ -474,7 +485,7 @@ namespace ETLBox.DataFlow.Connectors
             {
                 var s = self as IDictionary<string, object>;
                 var o = other as IDictionary<string, object>;
-                foreach (string compColumn in MergeProperties.ComparePropertyNames)
+                foreach (string compColumn in CompareColumnNames)
                     if (s.ContainsKey(compColumn) && o.ContainsKey(compColumn))
                         result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
                 return result;

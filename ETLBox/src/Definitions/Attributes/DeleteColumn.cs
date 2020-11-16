@@ -23,9 +23,19 @@ namespace ETLBox.DataFlow
     public class DeleteColumn : Attribute
     {
         /// <summary>
+        /// Name of the property that is used to decide if a row is deleted 
+        /// </summary>
+        public string DeletePropertyName { get; set; }
+
+        /// <summary>
         /// Marks this property as column used for a deletion check in a Merge operation
         /// </summary>
         public object DeleteOnMatchValue { get; set; }
+
+        public DeleteColumn()
+        {
+
+        }
 
         /// <summary>
         /// Marks this property as column that is deleted if is equal the  <see cref="DeleteOnMatchValue"/>.

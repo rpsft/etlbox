@@ -20,6 +20,11 @@ namespace ETLBox.DataFlow
     public class IdColumn : Attribute
     {
         /// <summary>
+        /// Name of the property used as Id
+        /// </summary>
+        public string IdPropertyName { get; set; }
+
+        /// <summary>
         /// This property is used as an Id column for a Merge operation.
         /// </summary>
         public IdColumn()

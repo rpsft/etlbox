@@ -21,6 +21,11 @@ namespace ETLBox.DataFlow
     public class CompareColumn : Attribute
     {
         /// <summary>
+        /// Name of the property name used for the comparison if two rows match 
+        /// </summary>
+        public string ComparePropertyName { get; set; }
+
+        /// <summary>
         /// Marks this property as column used for comparison in a Merge operation
         /// </summary>
         public CompareColumn()
