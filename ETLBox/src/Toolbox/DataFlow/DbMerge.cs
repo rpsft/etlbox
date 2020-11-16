@@ -38,7 +38,7 @@ namespace ETLBox.DataFlow.Connectors
         /// Delta means that source has only delta information and deletions are deferred from a particular property and
         /// OnlyUpdates means that only updates are applied to the destination.
         /// </summary>
-        public MergeMode MergeMode { get; set; }
+        public MergeMode MergeMode { get; set; } = MergeMode.Delta;
 
         /// <summary>
         /// The table definition of the destination table. By default, the table definition is read from the database.
@@ -228,7 +228,7 @@ namespace ETLBox.DataFlow.Connectors
             {
                 if (MergeMode == MergeMode.Delta)
                     DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) != ChangeAction.Delete));
-                else if (MergeMode == MergeMode.OnlyUpdates)
+                else if (MergeMode == MergeMode.UpdatesOnly)
                     DeltaTable.AddRange(batch.Where(row => GetChangeAction(row) == ChangeAction.Exists
                         || GetChangeAction(row) == ChangeAction.Update));
                 else
@@ -236,19 +236,13 @@ namespace ETLBox.DataFlow.Connectors
 
                 if (!UseTruncateMethod)
                 {
-                    if (MergeMode == MergeMode.OnlyUpdates)
+                    if (MergeMode == MergeMode.UpdatesOnly)
                     {
-                        //SqlDeleteIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
-                        //return batch.Where(row => GetChangeAction(row) == ChangeAction.Update).ToArray();
                         SqlUpdateIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
                         return batch.Where(row => false).ToArray();
                     }
                     else
                     {
-                        //SqlDeleteIds(batch.Where(row => GetChangeAction(row) != ChangeAction.Insert && GetChangeAction(row) != ChangeAction.Exists));
-                        //return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert ||
-                        //    GetChangeAction(row) == ChangeAction.Update)
-                        //.ToArray();
                         SqlUpdateIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Update));
                         SqlDeleteIds(batch.Where(row => GetChangeAction(row) == ChangeAction.Delete));
                         return batch.Where(row => GetChangeAction(row) == ChangeAction.Insert).ToArray();
@@ -260,7 +254,7 @@ namespace ETLBox.DataFlow.Connectors
                         throw new ETLBoxNotSupportedException("If you provide a delta load, you must define at least one compare column." +
                             "Using the truncate method is not allowed. ");
                     TruncateDestinationOnce();
-                    if (MergeMode == MergeMode.OnlyUpdates)
+                    if (MergeMode == MergeMode.UpdatesOnly)
                         return batch.Where(row => GetChangeAction(row) != ChangeAction.Delete &&
                             GetChangeAction(row) != ChangeAction.Insert).ToArray();
                     else
@@ -275,7 +269,7 @@ namespace ETLBox.DataFlow.Connectors
             {
 
                 IdentifyAndDeleteMissingEntries();
-                if (UseTruncateMethod && (MergeMode == MergeMode.OnlyUpdates || MergeMode == MergeMode.NoDeletions))
+                if (UseTruncateMethod && (MergeMode == MergeMode.UpdatesOnly || MergeMode == MergeMode.InsertsAndUpdatesOnly))
                     ReinsertTruncatedRecords();
                 if (Successors.Count > 0)
                 {
@@ -540,13 +534,13 @@ namespace ETLBox.DataFlow.Connectors
         {
             if (WasTruncationExecuted == true) return;
             WasTruncationExecuted = true;
-            if (MergeMode == MergeMode.NoDeletions || MergeMode == MergeMode.OnlyUpdates) return;
+            if (MergeMode == MergeMode.InsertsAndUpdatesOnly || MergeMode == MergeMode.UpdatesOnly) return;
             TruncateTableTask.Truncate(this.ConnectionManager, TableName);
         }
 
         private void IdentifyAndDeleteMissingEntries()
         {
-            if (MergeMode == MergeMode.NoDeletions || MergeMode == MergeMode.OnlyUpdates) return;
+            if (MergeMode == MergeMode.InsertsAndUpdatesOnly || MergeMode == MergeMode.UpdatesOnly) return;
             IEnumerable<TInput> deletions = null;
             if (MergeMode == MergeMode.Delta)
                 deletions = InputData.Where(row => GetChangeAction(row) == ChangeAction.Delete).ToList();
@@ -576,8 +570,6 @@ namespace ETLBox.DataFlow.Connectors
                 updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
             CompareColumnNames.ForEach(compcol =>
                 updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == compcol).FirstOrDefault()));
-            //updateDefinition.Columns =
-            //    DestinationTableDefinition.Columns.Where(col => IdColumnNames.Contains(col.Name) || CompareColumnNames.Contains(col.Name)).ToList();            
             TableData data = new TableData(updateDefinition);
 
             foreach (var row in rowsToUpdate)
@@ -599,7 +591,6 @@ namespace ETLBox.DataFlow.Connectors
                 DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
             IdColumnNames.ForEach(idcol =>
              idColsOnly.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
-            //idColsOnly.Columns = DestinationTableDefinition.Columns.Where(col => IdColumnNames.Contains(col.Name)).ToList();
             idColsOnly.Name = TableName;
             TableData data = new TableData(idColsOnly);
 

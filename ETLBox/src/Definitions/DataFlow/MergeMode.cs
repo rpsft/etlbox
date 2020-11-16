@@ -9,9 +9,9 @@ namespace ETLBox.DataFlow
     /// </summary>
     public enum MergeMode
     {
-        Full = 0,
-        NoDeletions = 1,
-        Delta = 2,
-        OnlyUpdates = 3
+        Delta, //does inserts & updates, deletions only with flag
+        Full, //does inserts, updates & deletions (deletions if record is missing)
+        InsertsAndUpdatesOnly, //does inserts & updates, no deletions (like delta, but deletion flag ignored)
+        UpdatesOnly //only updates, no inserts nor deletions
     }
 }
