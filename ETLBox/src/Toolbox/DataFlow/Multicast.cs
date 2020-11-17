@@ -128,8 +128,8 @@ namespace ETLBox.DataFlow.Transformations
             {
                 ((IDataflowBlock)OwnBroadcastBlock).Fault(e);
                 OwnBroadcastBlock.Completion.Wait();
-                foreach (var buffer in OutputBuffer)
-                    ((IDataflowBlock)buffer).Fault(e);
+                foreach (var buffer in OutputBuffer) 
+                    ((IDataflowBlock)buffer.Item1).Fault(e);
             }
             else
             {
