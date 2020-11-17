@@ -11,10 +11,10 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration</PackageTags>
-        <PackageReleaseNotes>What's new in 2.1.X? The whole linking, task and exception handling of data flow components was improved. Also the whole interface of the data flow and control flow classes has been refined. As these changes are mostly hidden, it was necessary to prepare the new features that will be introduced with 2.1.x and later versions.
-
-Version 2.1.4-beta: Empty batches in DbDestination &amp; DbMerge don't throw an error.</PackageReleaseNotes>
-        <Version>2.1.4-beta</Version>
+        <PackageReleaseNotes>Version 2.2 contains an improved DbMerge, a CachedRowTransformation and an improved Lookup. 
+The DbMerge now does perform bulk updates instead delete/inserts. The CachedRowTransformation is a RowTransformation that comes with a fully customizable Cache. The Lookup allows now to perform a partial lookup. TableColumns used in TableDefinitions now support unique constraints for all supported databases. 
+</PackageReleaseNotes>
+        <Version>2.2.0</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
