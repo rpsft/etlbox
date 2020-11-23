@@ -28,14 +28,14 @@ namespace ETLBox.DataFlow
                    try
                    {
                        OnExecutionDoAsyncWork();
-                       CompleteBufferOnPredecessorCompletion();
-                       ErrorSource?.CompleteBufferOnPredecessorCompletion();
+                       CompleteBuffer();
+                       ErrorSource?.CompleteBuffer();
                        CleanUpOnSuccess();
                    }
                    catch (Exception e)
                    {
-                       FaultBufferOnPredecessorCompletion(e);
-                       ErrorSource?.FaultBufferOnPredecessorCompletion(e);
+                       FaultBuffer(e);
+                       ErrorSource?.FaultBuffer(e);
                        CleanUpOnFaulted(e);
                        throw e;
                    }
@@ -43,8 +43,8 @@ namespace ETLBox.DataFlow
                , TaskCreationOptions.LongRunning);
         }
 
-        internal override void CompleteBufferOnPredecessorCompletion() => SourceBlock.Complete();
-        internal override void FaultBufferOnPredecessorCompletion(Exception e) => SourceBlock.Fault(e);
+        internal override void CompleteBuffer() => SourceBlock.Complete();
+        internal override void FaultBuffer(Exception e) => SourceBlock.Fault(e);
 
         #endregion
 

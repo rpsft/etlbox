@@ -140,9 +140,9 @@ namespace ETLBox.DataFlow.Transformations
 
         protected override void CleanUpOnFaulted(Exception e) { }
 
-        internal override void CompleteBufferOnPredecessorCompletion() => CachedRowTransformation.CompleteBufferOnPredecessorCompletion();
+        internal override void CompleteBuffer() => CachedRowTransformation.CompleteBuffer();
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e) => CachedRowTransformation.FaultBufferOnPredecessorCompletion(e);
+        internal override void FaultBuffer(Exception e) => CachedRowTransformation.FaultBuffer(e);
 
         public new IDataFlowSource<ETLBoxError> LinkErrorTo(IDataFlowDestination<ETLBoxError> target)
         {

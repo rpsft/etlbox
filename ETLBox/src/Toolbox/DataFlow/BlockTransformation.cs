@@ -97,9 +97,9 @@ namespace ETLBox.DataFlow.Transformations
 
         protected override void CleanUpOnFaulted(Exception e) { }
 
-        internal override void CompleteBufferOnPredecessorCompletion() => TargetBlock.Complete();
+        internal override void CompleteBuffer() => TargetBlock.Complete();
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e) => TargetBlock.Fault(e);
+        internal override void FaultBuffer(Exception e) => TargetBlock.Fault(e);
 
 
         #endregion

@@ -115,10 +115,10 @@ namespace ETLBox.DataFlow.Transformations
         protected BufferBlock<TOutput> Buffer { get; set; }
         internal override Task BufferCompletion => SourceBlock.Completion;
 
-        internal override void CompleteBufferOnPredecessorCompletion()
+        internal override void CompleteBuffer()
         {
-            LeftInput.CompleteBufferOnPredecessorCompletion();
-            RightInput.CompleteBufferOnPredecessorCompletion();
+            LeftInput.CompleteBuffer();
+            RightInput.CompleteBuffer();
             Task.WaitAll(LeftInput.Completion, RightInput.Completion);
             try
             {
@@ -131,10 +131,10 @@ namespace ETLBox.DataFlow.Transformations
             }
         }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        internal override void FaultBuffer(Exception e)
         {
-            LeftInput.FaultBufferOnPredecessorCompletion(e);
-            RightInput.FaultBufferOnPredecessorCompletion(e);
+            LeftInput.FaultBuffer(e);
+            RightInput.FaultBuffer(e);
             ((IDataflowBlock)Buffer).Fault(e);
         }
 

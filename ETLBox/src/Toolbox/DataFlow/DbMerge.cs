@@ -172,15 +172,15 @@ namespace ETLBox.DataFlow.Connectors
         internal override Task BufferCompletion =>
             Task.WhenAll(Lookup.Completion, DestinationTable.Completion);
 
-        internal override void CompleteBufferOnPredecessorCompletion()
+        internal override void CompleteBuffer()
         {
-            Lookup.CompleteBufferOnPredecessorCompletion();
+            Lookup.CompleteBuffer();
         }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        internal override void FaultBuffer(Exception e)
         {
-            Lookup.FaultBufferOnPredecessorCompletion(e);
-            OutputSource.FaultBufferOnPredecessorCompletion(e);
+            Lookup.FaultBuffer(e);
+            OutputSource.FaultBuffer(e);
         }
 
         protected override void InternalInitBufferObjects()

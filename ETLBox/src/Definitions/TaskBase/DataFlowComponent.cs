@@ -98,18 +98,18 @@ namespace ETLBox.DataFlow
 
         internal void InitNetworkRecursively()
         {
-            InitBufferRecursively();
+            InitBuffersRecursively();
             LinkBuffersRecursively();
             SetCompletionTaskRecursively();
             RunErrorSourceInitializationRecursively();
         }
 
 
-        protected void InitBufferRecursively()
+        protected void InitBuffersRecursively()
         {
             foreach (DataFlowComponent predecessor in Predecessors)
                 if (!predecessor.WereBufferInitialized)
-                    predecessor.InitBufferRecursively();
+                    predecessor.InitBuffersRecursively();
 
             if (!WereBufferInitialized)
             {
@@ -118,7 +118,7 @@ namespace ETLBox.DataFlow
 
             foreach (DataFlowComponent successor in Successors)
                 if (!successor.WereBufferInitialized)
-                    successor.InitBufferRecursively();
+                    successor.InitBuffersRecursively();
         }
 
         /// <summary>
@@ -168,9 +168,9 @@ namespace ETLBox.DataFlow
                 List<Task> PredecessorCompletionTasks = CollectCompletionFromPredecessors();
                 if (PredecessorCompletionTasks.Count > 0)
                 {
-                    ComponentCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultComponentOnPredecessorCompletion);
+                    ComponentCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBuffer);
                 }
-                Completion = Task.WhenAll(ComponentCompletion, BufferCompletion).ContinueWith(CompleteOrFaultOnComponentAndBufferCompletion);
+                Completion = Task.WhenAll(ComponentCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
             }
 
             foreach (DataFlowComponent successor in Successors)
@@ -194,23 +194,23 @@ namespace ETLBox.DataFlow
         /// Now complete or fault the current buffer.
         /// </summary>
         /// <param name="t">t is the continuation of Task.WhenAll of the predecessors buffer and predecessor completion tasks</param>
-        protected void CompleteOrFaultComponentOnPredecessorCompletion(Task t)
+        protected void CompleteOrFaultBuffer(Task t)
         {
             if (t.IsFaulted)
             {
-                FaultBufferOnPredecessorCompletion(t.Exception.InnerException);
+                FaultBuffer(t.Exception.InnerException);
                 throw t.Exception.InnerException;
             }
             else
             {
-                CompleteBufferOnPredecessorCompletion();
+                CompleteBuffer();
             }
         }
 
-        internal abstract void CompleteBufferOnPredecessorCompletion();
-        internal abstract void FaultBufferOnPredecessorCompletion(Exception e);
+        internal abstract void CompleteBuffer();
+        internal abstract void FaultBuffer(Exception e);
 
-        protected void CompleteOrFaultOnComponentAndBufferCompletion(Task t)
+        protected void CleanUpComponent(Task t)
         {
             LetErrorSourceFinishUp();
             if (t.IsFaulted)
@@ -232,7 +232,7 @@ namespace ETLBox.DataFlow
         protected void FaultPredecessorsRecursively(Exception e)
         {
             Exception = e;
-            FaultBufferOnPredecessorCompletion(e);
+            FaultBuffer(e);
             foreach (DataFlowComponent pre in Predecessors)
                 pre.FaultPredecessorsRecursively(e);
         }
@@ -271,7 +271,7 @@ namespace ETLBox.DataFlow
             ErrorSource?.ExecuteAsync();//.Wait();
 
         private void LetErrorSourceFinishUp() =>
-             ErrorSource?.CompleteBufferOnPredecessorCompletion();
+             ErrorSource?.CompleteBuffer();
 
         #endregion
 

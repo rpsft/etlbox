@@ -13,7 +13,7 @@ namespace ETLBox.DataFlow
 
         internal override Task BufferCompletion => SourceBlock.Completion;
 
-        internal override void CompleteBufferOnPredecessorCompletion()
+        internal override void CompleteBuffer()
         {
             if (TargetBlock != SourceBlock)
                 throw new NotImplementedException("Component must override this method!");
@@ -21,7 +21,7 @@ namespace ETLBox.DataFlow
                 TargetBlock.Complete();
         }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        internal override void FaultBuffer(Exception e)
         {
             if (TargetBlock != SourceBlock)
                 throw new NotImplementedException("Component must override this method!");

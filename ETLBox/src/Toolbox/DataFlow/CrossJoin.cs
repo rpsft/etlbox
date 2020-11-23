@@ -120,19 +120,19 @@ namespace ETLBox.DataFlow.Transformations
         protected BufferBlock<TOutput> Buffer { get; set; }
         internal override Task BufferCompletion => SourceBlock.Completion;
 
-        internal override void CompleteBufferOnPredecessorCompletion()
+        internal override void CompleteBuffer()
         {
-            InMemoryTarget.CompleteBufferOnPredecessorCompletion();
-            PassingTarget.CompleteBufferOnPredecessorCompletion();
+            InMemoryTarget.CompleteBuffer();
+            PassingTarget.CompleteBuffer();
             Task.WaitAll(InMemoryTarget.Completion, PassingTarget.Completion);
             Buffer.Complete();
 
         }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        internal override void FaultBuffer(Exception e)
         {
-            InMemoryTarget.FaultBufferOnPredecessorCompletion(e);
-            PassingTarget.FaultBufferOnPredecessorCompletion(e);
+            InMemoryTarget.FaultBuffer(e);
+            PassingTarget.FaultBuffer(e);
             ((IDataflowBlock)Buffer).Fault(e);
         }
 

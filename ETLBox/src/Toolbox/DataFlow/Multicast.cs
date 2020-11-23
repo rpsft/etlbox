@@ -107,7 +107,7 @@ namespace ETLBox.DataFlow.Transformations
             }
         }
 
-        internal override void CompleteBufferOnPredecessorCompletion()
+        internal override void CompleteBuffer()
         {
             if (AvoidBroadcastBlock)
             {
@@ -122,7 +122,7 @@ namespace ETLBox.DataFlow.Transformations
             }
         }
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e)
+        internal override void FaultBuffer(Exception e)
         {
             if (AvoidBroadcastBlock)
             {
