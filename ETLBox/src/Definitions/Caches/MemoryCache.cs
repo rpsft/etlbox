@@ -7,11 +7,18 @@ namespace ETLBox.DataFlow
     public class MemoryCache<TInput, TCache> : ICacheManager<TInput, TCache>
         where TCache : class
     {
-        public ICollection<TCache> Records => Cache;                
+        public ICollection<TCache> Records => Cache;     
+        
+        public Func<TInput, TCache,bool> CompareFunc { get; set; }
 
         public bool Contains(TInput row)
-        {
-            return Cache.Find(cr => cr.Equals(row)) != null;
+        {            
+            bool result = false;
+            if (CompareFunc != null)
+                result = Cache.Find(cr => CompareFunc.Invoke(row, cr)) != null;
+            else
+                result = Cache.Find(cr => cr.Equals(row)) != null;            
+            return result;
         }
 
         public void Add(TInput row)
@@ -21,7 +28,7 @@ namespace ETLBox.DataFlow
             
             if (copy != null)
                 Cache.Add(copy);
-            if (Cache.Count > MaxCacheSize)
+            if (MaxCacheSize > 0 && Cache.Count > MaxCacheSize)
                 Cache.RemoveAt(0);
         }
 

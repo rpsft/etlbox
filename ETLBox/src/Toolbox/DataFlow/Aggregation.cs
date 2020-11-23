@@ -467,16 +467,8 @@ namespace ETLBox.DataFlow.Transformations
 
         class GroupingKey
         {
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    int hash = 29;
-                    foreach (var map in GroupingObjectsByProperty)
-                        hash = hash * 486187739 + (map.Value?.GetHashCode() ?? 17);
-                    return hash;
-                }
-            }
+            public override int GetHashCode() => HashHelper.HashSum(GroupingObjectsByProperty.Values);
+
             public override bool Equals(object obj)
             {
                 GroupingKey comp = obj as GroupingKey;

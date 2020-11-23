@@ -20,9 +20,17 @@ namespace ETLBox.DataFlow.Transformations
         /// The init action is executed shortly before the first data row is processed.
         /// </summary>
         public new Action<ICacheManager<TInput, TCache>> InitAction { get; set; }
-
+           
+        /// <summary>
+        /// The CacheManager to use when caching data
+        /// </summary>
         public ICacheManager<TInput, TCache> CacheManager { get; set; } = new MemoryCache<TInput, TCache>();
-
+           
+        /// <summary>
+        /// If set to true, the incoming row will be added to the cache after the 
+        /// transformation func has been invoked. 
+        /// </summary>
+        public bool FillCacheAfterTranformation { get; set; } 
         #endregion
 
         #region Constructors
@@ -55,11 +63,19 @@ namespace ETLBox.DataFlow.Transformations
         {
             TOutput result = default;
 
-            if (!CacheManager.Contains(row))
-                CacheManager.Add(row);
-            result = TransformationFunc.Invoke(row, CacheManager.Records);                
+            if (!FillCacheAfterTranformation)
+                TryAddRowToCache(row);
+            result = TransformationFunc.Invoke(row, CacheManager.Records);
+            if (FillCacheAfterTranformation)
+                TryAddRowToCache(row);
             LogProgress();
             return result;
+        }
+
+        private void TryAddRowToCache(TInput row)
+        {
+            if (!CacheManager.Contains(row))
+                CacheManager.Add(row);
         }
 
         #endregion
