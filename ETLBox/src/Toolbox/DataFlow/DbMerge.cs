@@ -310,7 +310,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             Lookup.LinkTo(DestinationTable);
             Lookup.InitBufferObjects();
-            Lookup.Completion = Lookup.BufferCompletion;
+            Lookup.ComponentCompletion = Lookup.BufferCompletion;
             Lookup.InitNetworkRecursively();
         }
 

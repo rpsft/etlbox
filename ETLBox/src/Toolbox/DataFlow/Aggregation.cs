@@ -162,8 +162,10 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override void CompleteBufferOnPredecessorCompletion() => TargetBlock.Complete();
 
-        internal override void FaultBufferOnPredecessorCompletion(Exception e) => TargetBlock.Fault(e);
-
+        internal override void FaultBufferOnPredecessorCompletion(Exception e) { 
+            TargetBlock.Fault(e);
+            SourceBlock.Fault(e);
+        }
         #endregion
 
         #region Implementation

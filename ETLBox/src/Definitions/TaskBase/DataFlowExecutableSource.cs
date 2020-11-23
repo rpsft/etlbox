@@ -22,7 +22,7 @@ namespace ETLBox.DataFlow
             {
                 BoundedCapacity = MaxBufferSize
             });
-            Completion = new Task(
+            ComponentCompletion = new Task(
                () =>
                {
                    try
@@ -55,7 +55,7 @@ namespace ETLBox.DataFlow
         {
             InitNetworkRecursively();
             OnExecutionDoSynchronousWork();
-            Completion.RunSynchronously();
+            ComponentCompletion.RunSynchronously();
         }
 
         /// <inheritdoc/>
@@ -63,7 +63,7 @@ namespace ETLBox.DataFlow
         {
             InitNetworkRecursively();
             OnExecutionDoSynchronousWork();
-            Completion.Start();
+            ComponentCompletion.Start();
             return Completion;
         }
 

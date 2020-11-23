@@ -23,9 +23,10 @@ namespace ETLBox.DataFlow
         protected override void InternalInitBufferObjects()
         {
             Buffer = new BufferBlock<ETLBoxError>();
-            Completion = new Task(
+            ComponentCompletion = new Task(
                 () => { }
                 );
+            //Completion = ComponentCompletion;
         }
 
         internal override void LinkBuffers(DataFlowComponent successor, LinkPredicates linkPredicate)
