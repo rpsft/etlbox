@@ -127,7 +127,7 @@ namespace ETLBox.DataFlow.Transformations
             if (AvoidBroadcastBlock)
             {
                 ((IDataflowBlock)OwnBroadcastBlock).Fault(e);
-                OwnBroadcastBlock.Completion.Wait();
+                //OwnBroadcastBlock.Completion.Wait(); //Throws unhandled exception in another task!!
                 foreach (var buffer in OutputBuffer) 
                     ((IDataflowBlock)buffer.Item1).Fault(e);
             }
