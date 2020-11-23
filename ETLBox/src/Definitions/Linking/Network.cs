@@ -5,18 +5,18 @@ namespace ETLBox.DataFlow
 {
     public class Network
     {
-        internal static void DoRecursively(DataFlowComponent comp, Action runOnNode, Func<DataFlowComponent, bool> alreadyVisited)
+        internal static void DoRecursively(DataFlowComponent comp, Func<DataFlowComponent, bool> alreadyRun, Action<DataFlowComponent> runOnNode)
         {
             foreach (DataFlowComponent predecessor in comp.Predecessors)
-                if (!alreadyVisited(predecessor))
-                    Network.DoRecursively(predecessor, runOnNode, alreadyVisited);
+                if (!alreadyRun(predecessor))
+                    Network.DoRecursively(predecessor, alreadyRun, runOnNode);
 
-            if (!alreadyVisited(comp))
-                runOnNode();
+            if (!alreadyRun(comp))
+                runOnNode(comp);
 
             foreach (DataFlowComponent successor in comp.Successors)
-                if (!alreadyVisited(successor))
-                    Network.DoRecursively(successor, runOnNode, alreadyVisited);            
+                if (!alreadyRun(successor))
+                    Network.DoRecursively(successor, alreadyRun, runOnNode);            
         }
     }
 }

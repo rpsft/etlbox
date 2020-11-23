@@ -98,29 +98,18 @@ namespace ETLBox.DataFlow
 
         internal void InitNetworkRecursively()
         {
-            InitBuffersRecursively();
+            InitBuffersRecursively();          
             LinkBuffersRecursively();
             SetCompletionTaskRecursively();
             RunErrorSourceInitializationRecursively();
         }
 
-
-        protected void InitBuffersRecursively()
-        {
-            foreach (DataFlowComponent predecessor in Predecessors)
-                if (!predecessor.WereBufferInitialized)
-                    predecessor.InitBuffersRecursively();
-
-            if (!WereBufferInitialized)
-            {
-                InitBufferObjects();
-            }
-
-            foreach (DataFlowComponent successor in Successors)
-                if (!successor.WereBufferInitialized)
-                    successor.InitBuffersRecursively();
-        }
-
+        protected void InitBuffersRecursively() =>
+            Network.DoRecursively(this
+                , comp => comp.WereBufferInitialized
+                , comp => comp.InitBufferObjects()
+            );
+        
         /// <summary>
         /// Inits the underlying TPL.Dataflow buffer objects. After this, the component is ready for linking
         /// its source or target blocks.
@@ -133,21 +122,35 @@ namespace ETLBox.DataFlow
 
         protected abstract void InternalInitBufferObjects();
 
-        protected void RunErrorSourceInitializationRecursively()
+        protected void SetCompletionTaskRecursively() => 
+            Network.DoRecursively(this, comp => comp.Completion != null, comp => comp.SetCompletionTask());
+        
+        protected void SetCompletionTask()
         {
-            foreach (DataFlowComponent predecessor in Predecessors)
-                if (!predecessor.ReadyForProcessing)
-                    predecessor.RunErrorSourceInitializationRecursively();
-
-            if (!ReadyForProcessing)
+            List<Task> PredecessorCompletionTasks = CollectCompletionFromPredecessors();
+            if (PredecessorCompletionTasks.Count > 0)
             {
-                LetErrorSourceWaitForInput();
-                ReadyForProcessing = true;
+                ComponentCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBuffer);
             }
+            Completion = Task.WhenAll(ComponentCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
+        }
 
-            foreach (DataFlowComponent successor in Successors)
-                if (!successor.ReadyForProcessing)
-                    successor.RunErrorSourceInitializationRecursively();
+        private List<Task> CollectCompletionFromPredecessors()
+        {
+            List<Task> CompletionTasks = new List<Task>();
+            foreach (DataFlowComponent pre in Predecessors)
+            {
+                CompletionTasks.Add(pre.ComponentCompletion);
+                CompletionTasks.Add(pre.BufferCompletion);
+            }
+            return CompletionTasks;
+        }
+
+        protected void RunErrorSourceInitializationRecursively() => Network.DoRecursively(this, comp => comp.ReadyForProcessing, comp => comp.RunErrorSourceInit());
+        protected void RunErrorSourceInit()
+        {
+            LetErrorSourceWaitForInput();
+            ReadyForProcessing = true;
         }
 
         #endregion
@@ -157,43 +160,6 @@ namespace ETLBox.DataFlow
         /// <inheritdoc/>
         public Action OnCompletion { get; set; }
 
-        protected void SetCompletionTaskRecursively()
-        {
-            foreach (DataFlowComponent predecessor in Predecessors)
-                if (predecessor.Completion == null)
-                    predecessor.SetCompletionTaskRecursively();
-
-            if (Completion == null)
-            {
-                List<Task> PredecessorCompletionTasks = CollectCompletionFromPredecessors();
-                if (PredecessorCompletionTasks.Count > 0)
-                {
-                    ComponentCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBuffer);
-                }
-                Completion = Task.WhenAll(ComponentCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
-            }
-
-            foreach (DataFlowComponent successor in Successors)
-                if (successor.Completion == null)
-                    successor.SetCompletionTaskRecursively();
-        }
-
-        private List<Task> CollectCompletionFromPredecessors()
-        {
-            List<Task> CompletionTasks = new List<Task>();
-            foreach (DataFlowComponent pre in Predecessors)
-            {                
-                CompletionTasks.Add(pre.ComponentCompletion);
-                CompletionTasks.Add(pre.BufferCompletion);
-            }
-            return CompletionTasks;
-        }
-
-        /// <summary>
-        /// Predecessor completion task (Buffer of predecessors and Completion of predecessors) ran to completion or are faulted.
-        /// Now complete or fault the current buffer.
-        /// </summary>
-        /// <param name="t">t is the continuation of Task.WhenAll of the predecessors buffer and predecessor completion tasks</param>
         protected void CompleteOrFaultBuffer(Task t)
         {
             if (t.IsFaulted)
