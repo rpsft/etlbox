@@ -41,6 +41,16 @@ namespace ETLBox.DataFlow
         /// <inheritdoc/>
         public HttpRequestMessage HttpRequestMessage { get; set; } = new HttpRequestMessage();
 
+        /// <summary>
+        /// Number of rows to skip before starting reading the header and csv data
+        /// </summary>
+        public int SkipRows { get; set; } = 0;
+
+        /// <summary>
+        /// Encoding used to read data from the source file or web request. 
+        /// </summary>
+        public Encoding Encoding { get; set; }
+
         #endregion
 
         #region Internal properties
@@ -107,18 +117,31 @@ namespace ETLBox.DataFlow
 
         private void OpenStream(string uri)
         {
-            if (ResourceType == ResourceType.File)
-                StreamReader = new StreamReader(uri);
+            if (ResourceType == ResourceType.File) { 
+                if (Encoding == null)
+                    StreamReader = new StreamReader(uri,true);
+                else
+                    StreamReader = new StreamReader(uri, Encoding);
+            }
             else
             {
                 var message = HttpRequestMessage.Clone();
                 message.RequestUri = new Uri(uri);
                 var response = HttpClient.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).Result;
                 response.EnsureSuccessStatusCode();
-                StreamReader = new StreamReader(response.Content.ReadAsStreamAsync().Result);
+                if (Encoding == null)
+                    StreamReader = new StreamReader(response.Content.ReadAsStreamAsync().Result, true);
+                else
+                    StreamReader = new StreamReader(response.Content.ReadAsStreamAsync().Result, Encoding);
             }
+            SkipFirstRows();
         }
 
+        private void SkipFirstRows()
+        {
+            for (int i = 0; i < SkipRows; i++)
+                StreamReader.ReadLine();
+        }
 
         private void CloseStream()
         {

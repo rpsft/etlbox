@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow
@@ -21,6 +22,12 @@ namespace ETLBox.DataFlow
 
         /// <inheritdoc/>
         public HttpClient HttpClient { get; set; } = new HttpClient();
+
+        /// <summary>
+        /// Encoding used to write data into the source file or web request.
+        /// Default is UTF8.
+        /// </summary>
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
 
         #endregion
 
@@ -68,9 +75,10 @@ namespace ETLBox.DataFlow
         private void CreateStreamWriterByResourceType()
         {
             if (ResourceType == ResourceType.File)
-                StreamWriter = new StreamWriter(Uri);
+                StreamWriter = new StreamWriter(Uri,append:false,encoding: Encoding);
             else
-                StreamWriter = new StreamWriter(HttpClient.GetStreamAsync(new Uri(Uri)).Result);
+                StreamWriter = new StreamWriter(
+                    HttpClient.GetStreamAsync(new Uri(Uri)).Result,Encoding);
         }
 
         protected abstract void InitStream();
