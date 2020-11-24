@@ -126,9 +126,13 @@ namespace ETLBox.DataFlow.Transformations
         {
             if (AvoidBroadcastBlock)
             {
-                ((IDataflowBlock)OwnBroadcastBlock).Fault(e);
-                //OwnBroadcastBlock.Completion.Wait(); //Throws unhandled exception in another task!!
-                foreach (var buffer in OutputBuffer) 
+                ((IDataflowBlock)OwnBroadcastBlock).Fault(e); //Will fault task, but not immediately
+                try //A faulted task can't be waited on, so Exception is ignored
+                {
+                    OwnBroadcastBlock.Completion.Wait(); //Will throw exception as soon as the task is faulted!
+                }
+                catch { }
+                foreach (var buffer in OutputBuffer) //Keep order
                     ((IDataflowBlock)buffer.Item1).Fault(e);
             }
             else
@@ -144,7 +148,7 @@ namespace ETLBox.DataFlow.Transformations
         bool AvoidBroadcastBlock;
         BroadcastBlock<TInput> BroadcastBlock;
         ActionBlock<TInput> OwnBroadcastBlock;
-        List<Tuple<BufferBlock<TInput>,LinkPredicates>> OutputBuffer = new List<Tuple<BufferBlock<TInput>, LinkPredicates>>();
+        List<Tuple<BufferBlock<TInput>, LinkPredicates>> OutputBuffer = new List<Tuple<BufferBlock<TInput>, LinkPredicates>>();
         TypeInfo TypeInfo;
         ObjectCopy<TInput> ObjectCopy;
 
@@ -157,12 +161,12 @@ namespace ETLBox.DataFlow.Transformations
         }
 
         private void Broadcast(TInput row)
-        {            
+        {
             TInput clone = Clone(row);
             foreach (var buffer in OutputBuffer)
             {
                 var lp = buffer.Item2;
-                var pk= lp.PredicateKeep as Predicate<TInput>;
+                var pk = lp.PredicateKeep as Predicate<TInput>;
                 if (!lp.HasPredicate || (lp.HasPredicate && pk.Invoke(clone)))
                 {
                     if (!buffer.Item1.SendAsync(clone).Result)

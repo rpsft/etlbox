@@ -146,12 +146,17 @@ namespace ETLBox.DataFlow
             return CompletionTasks;
         }
 
-        protected void RunErrorSourceInitializationRecursively() => Network.DoRecursively(this, comp => comp.ReadyForProcessing, comp => comp.RunErrorSourceInit());
+        protected void RunErrorSourceInitializationRecursively() 
+            => Network.DoRecursively(this, comp => comp.ReadyForProcessing, comp => comp.RunErrorSourceInit());
+
         protected void RunErrorSourceInit()
         {
             LetErrorSourceWaitForInput();
             ReadyForProcessing = true;
         }
+
+        private void LetErrorSourceWaitForInput() => ErrorSource?.ExecuteAsync();//.Wait();
+
 
         #endregion
 
@@ -191,17 +196,11 @@ namespace ETLBox.DataFlow
             }
         }
 
+        private void LetErrorSourceFinishUp() => ErrorSource?.CompleteBuffer();
+
         protected virtual void CleanUpOnSuccess() { }
 
-        protected virtual void CleanUpOnFaulted(Exception e) { }
-
-        protected void FaultPredecessorsRecursively(Exception e)
-        {
-            Exception = e;
-            FaultBuffer(e);
-            foreach (DataFlowComponent pre in Predecessors)
-                pre.FaultPredecessorsRecursively(e);
-        }
+        protected virtual void CleanUpOnFaulted(Exception e) { }     
 
         #endregion
 
@@ -233,11 +232,13 @@ namespace ETLBox.DataFlow
             ErrorSource.Send(e, message);
         }
 
-        private void LetErrorSourceWaitForInput() =>
-            ErrorSource?.ExecuteAsync();//.Wait();
-
-        private void LetErrorSourceFinishUp() =>
-             ErrorSource?.CompleteBuffer();
+        protected void FaultPredecessorsRecursively(Exception e)
+        {
+            Exception = e;
+            FaultBuffer(e);
+            foreach (DataFlowComponent pre in Predecessors)
+                pre.FaultPredecessorsRecursively(e);
+        }
 
         #endregion
 
