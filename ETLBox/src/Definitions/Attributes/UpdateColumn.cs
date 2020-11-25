@@ -3,31 +3,33 @@
 namespace ETLBox.DataFlow
 {
     /// <summary>
-    /// This attribute defines if the column is included in the comparison to identify
-    /// object that exists and needs to be updated. It it supposed
-    /// to use with an object that either inherits from MergeableRow.
-    /// If you implement the IMergeable interface, you need to override the Equals-method instead.
+    /// This attribute defines if a column is the destination is updated. 
+    /// Use the CompareColumn attribute to define if a row in the source and destination
+    /// match. If they match, you can use the UpdateColumn to describe which columns
+    /// are actually updated. This is optional - if you don't provide any update columns,
+    /// all non id columns are updated. 
     /// </summary>
     /// <example>
     ///  public class MyPoco : MergeableRow
     /// {
     ///     [IdColumn]
     ///     public int Key { get; set; }
+    ///     [CompareColumn]
+    ///     public string HashValue { get;set; }
     ///     [UpdateColumn]
-    ///     public string Value {get;set; }
+    ///     public string ValueToUpdate { get;set; }
+    ///     public string IgnoredValue { get;set; }
+    ///     
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
     public class UpdateColumn : Attribute
     {
         /// <summary>
-        /// Name of the property name used for the comparison if two rows match 
+        /// Name of the property that is used in the update
         /// </summary>
         public string UpdatePropertyName { get; set; }
-
-        /// <summary>
-        /// Marks this property as column used for comparison in a Merge operation
-        /// </summary>
+                
         public UpdateColumn()
         {
         }

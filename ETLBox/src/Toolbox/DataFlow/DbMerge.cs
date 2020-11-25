@@ -126,7 +126,8 @@ namespace ETLBox.DataFlow.Connectors
 
         #endregion
 
-        public void Wait() {
+        public void Wait()
+        {
             try
             {
                 Completion.Wait();
@@ -136,7 +137,7 @@ namespace ETLBox.DataFlow.Connectors
                 throw ae.InnerException;
             }
         }
-       
+
 
 
         #region Constructors
@@ -185,8 +186,8 @@ namespace ETLBox.DataFlow.Connectors
 
         protected override void InternalInitBufferObjects()
         {
-            InitTypeInfoWithMergeProperties();
             SetDestinationTableProperties();
+            InitTypeInfoWithMergeProperties();
             SetLookupProperties();
             SetOutputFlow();
             CreateAndRunLookupToDestinationTableFlow();
@@ -214,7 +215,10 @@ namespace ETLBox.DataFlow.Connectors
 
         private void InitTypeInfoWithMergeProperties()
         {
-            TypeInfo = new DBMergeTypeInfo(typeof(TInput), MergeProperties);
+            if (DestinationTable.DestinationTableDefinition == null)
+                DestinationTable.DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
+            TypeInfo = new DBMergeTypeInfo(typeof(TInput), MergeProperties, DestinationTableDefinition);
+
         }
 
         private void SetDestinationTableProperties()
@@ -322,23 +326,40 @@ namespace ETLBox.DataFlow.Connectors
         {
             get
             {
-                if (MergeProperties.IdPropertyNames?.Count > 0)
+                if (TypeInfo.IsDynamic)// && MergeProperties.IdPropertyNames?.Count > 0)
                 {
                     if (_idColumnNames == null)
                         _idColumnNames = MergeProperties.IdPropertyNames.Select(idcol => idcol.IdPropertyName).ToList();
                     return _idColumnNames;
-                } 
+                }
                 else
                     return TypeInfo?.IdColumnNames;
             }
         }
 
         List<string> _idColumnNames;
+        List<string> CompareColumnNames
+        {
+            get
+            {
+                if (TypeInfo.IsDynamic)//(MergeProperties.ComparePropertyNames?.Count > 0)
+                {
+                    if (_compareColumnNames == null)
+                        _compareColumnNames = MergeProperties.ComparePropertyNames.Select(compcol => compcol.ComparePropertyName).ToList();
+                    return _compareColumnNames;
+                }
+                else
+                    return TypeInfo?.CompareColumnNames;
+            }
+        }
+        List<string> _compareColumnNames;
+
         List<string> UpdateColumnNames
         {
             get
             {
-                if (MergeProperties.UpdatePropertyNames?.Count > 0) { 
+                if (TypeInfo.IsDynamic) //(MergeProperties.UpdatePropertyNames?.Count > 0)
+                {
                     if (_updateColumnNames == null)
                         _updateColumnNames = MergeProperties.UpdatePropertyNames.Select(compcol => compcol.UpdatePropertyName).ToList();
                     return _updateColumnNames;
@@ -347,7 +368,35 @@ namespace ETLBox.DataFlow.Connectors
                     return TypeInfo?.UpdateColumnNames;
             }
         }
+
         List<string> _updateColumnNames;
+
+        List<string> UpdateOrNonIdColumNames
+        {
+            get
+            {
+                if (UpdateColumnNames.Count > 0)
+                    return UpdateColumnNames;
+                else
+                    return _nonIdColumnNames?.Count > 0 ? _nonIdColumnNames : TypeInfo.NonIdColumnNames;
+            }
+        }
+
+        List<string> _nonIdColumnNames;
+
+        private void TrySetNonIdColumNamesForDynamic(IEnumerable<TInput> rowsToUpdate)
+        {
+            if (_nonIdColumnNames == null && TypeInfo.IsDynamic)
+            {
+                _nonIdColumnNames = new List<string>();
+                var r = rowsToUpdate.FirstOrDefault() as IDictionary<string, object>; 
+                foreach (var propName in r.Keys)
+                {
+                    if (!IdColumnNames.Contains(propName) && DestinationTableDefinition.Columns.Any(col => col.Name == propName))
+                        _nonIdColumnNames.Add(propName);                   
+                }
+            }
+        }
 
         LookupTransformation<TInput, TInput> Lookup;
         DbSource<TInput> DestinationTableAsSource;
@@ -397,22 +446,25 @@ namespace ETLBox.DataFlow.Connectors
             List<string> idValues = new List<string>();
             foreach (var ob in GetIdColumnValues(row))
                 idValues.Add(ob?.ToString() ?? string.Empty);
-            string idvalstring =  string.Join("|", idValues);
+            string idvalstring = string.Join("|", idValues);
             return HashHelper.CreateChar40Hash(idvalstring);
         }
-        
+
         private List<object> GetIdColumnValues(TInput row)
         {
             var result = ReadColumnValues(row, TypeInfo.IdAttributeProps, IdColumnNames);
             if (result.Count == 0)
-                throw new ETLBoxNotSupportedException("Objects used for merge must at least define a id column" +
+                throw new ETLBoxNotSupportedException("Objects used for merge must at least define an id column " +
   "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list.");
             return result;
         }
 
         private List<object> GetUpdateColumnValues(TInput row)
         {
-            return ReadColumnValues(row, TypeInfo.UpdateAttributeProps, UpdateColumnNames);            
+            if (UpdateColumnNames?.Count > 0)
+                return ReadColumnValues(row, TypeInfo.UpdateAttributeProps, UpdateColumnNames);
+            else
+                return ReadColumnValues(row, TypeInfo.NonIdAttributeProps, UpdateOrNonIdColumNames);
         }
 
         private List<object> ReadColumnValues(TInput row, List<PropertyInfo> attributeProps, List<string> propertyNames)
@@ -426,12 +478,12 @@ namespace ETLBox.DataFlow.Connectors
                     if (!r.ContainsKey(idColumn))
                         r.Add(idColumn, null);
                     result.Add(r[idColumn]);
-                }                
+                }
             }
             else if (attributeProps.Count > 0)
             {
                 foreach (var propInfo in attributeProps)
-                    result.Add(propInfo?.GetValue(row));              
+                    result.Add(propInfo?.GetValue(row));
             }
             return result;
         }
@@ -485,15 +537,25 @@ namespace ETLBox.DataFlow.Connectors
             {
                 var s = self as IDictionary<string, object>;
                 var o = other as IDictionary<string, object>;
-                foreach (string compColumn in UpdateColumnNames)
+                foreach (string compColumn in CompareColumnNames)
                     if (s.ContainsKey(compColumn) && o.ContainsKey(compColumn))
-                        result &= s[compColumn]?.Equals(o[compColumn]) ?? false;
+                    {
+                        var left = s[compColumn];
+                        var right = o[compColumn];
+                        if (left == null && right == null) continue;
+                        result &= left?.Equals(right) ?? false;
+                    }
                 return result;
             }
-            else if (TypeInfo.UpdateAttributeProps.Count > 0)
+            else if (TypeInfo.CompareAttributeProps.Count > 0)
             {
-                foreach (var propInfo in TypeInfo.UpdateAttributeProps)
-                    result &= (propInfo?.GetValue(self))?.Equals(propInfo?.GetValue(other)) ?? false;
+                foreach (var propInfo in TypeInfo.CompareAttributeProps)
+                {
+                    var left = propInfo?.GetValue(self);
+                    var right = propInfo?.GetValue(other);
+                    if (left == null && right == null) continue;
+                    result &= left?.Equals(right) ?? false;
+                }
                 return result;
             }
             else
@@ -570,17 +632,25 @@ namespace ETLBox.DataFlow.Connectors
             DeltaTable.AddRange(deletions);
         }
 
+        TableDefinition updateDefinition;
+
         private void SqlUpdateIds(IEnumerable<TInput> rowsToUpdate)
         {
             if (rowsToUpdate == null || rowsToUpdate?.Count() == 0) return;
 
-            TableDefinition updateDefinition = new TableDefinition();
-            if (DestinationTableDefinition == null)
-                DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
-            IdColumnNames.ForEach(idcol =>
-                updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
-            UpdateColumnNames.ForEach(compcol =>
-                updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == compcol).FirstOrDefault()));
+            TrySetNonIdColumNamesForDynamic(rowsToUpdate);
+
+            if (updateDefinition == null)
+            {
+                updateDefinition = new TableDefinition();
+                //Keep order of idcolumns / updatecolumns in table definition!
+                IdColumnNames.ForEach(idcol =>
+                    updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
+                UpdateOrNonIdColumNames.ForEach(updcol =>
+                    updateDefinition.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == updcol).FirstOrDefault()));
+                updateDefinition.Name = TableName;
+            }
+
             TableData data = new TableData(updateDefinition);
 
             foreach (var row in rowsToUpdate)
@@ -590,43 +660,35 @@ namespace ETLBox.DataFlow.Connectors
                 updateData.AddRange(GetUpdateColumnValues(row));
                 data.Rows.Add(updateData.ToArray());
             }
-            SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, UpdateColumnNames, IdColumnNames);
+            SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, UpdateOrNonIdColumNames, IdColumnNames);
         }
+
+        TableDefinition idColsOnly; 
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
             if (rowsToDelete == null || rowsToDelete?.Count() == 0) return;
 
-            TableDefinition idColsOnly = new TableDefinition();
-            if (DestinationTableDefinition == null)
-                DestinationTableDefinition = TableDefinition.FromTableName(this.DbConnectionManager, TableName);
-            IdColumnNames.ForEach(idcol =>
-             idColsOnly.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
-            idColsOnly.Name = TableName;
+            if (idColsOnly == null)
+            {
+                idColsOnly = new TableDefinition();
+                //Keep order of id columns in table definition!
+                IdColumnNames.ForEach(idcol =>
+                    idColsOnly.Columns.Add(DestinationTableDefinition.Columns.Where(col => col.Name == idcol).FirstOrDefault()));
+                idColsOnly.Name = TableName;
+            }
             TableData data = new TableData(idColsOnly);
 
             foreach (var row in rowsToDelete)
-                data.Rows.Add(GetIdColumnValues(row).ToArray());           
+                data.Rows.Add(GetIdColumnValues(row).ToArray());
             SqlTask.BulkDelete(this.ConnectionManager, data, TableName);
         }
 
         private void ReinsertTruncatedRecords()
         {
-            throw new Exception("Using MergeModes OnlyUpdate or NoDeletions is" +
+            throw new Exception("Using MergeModes UpatesOnly or InsertUpdatesOnly is" +
                 " currently not supported when the UseTruncateMethod flag is set." +
-                " Set UseTruncateMethod to false if choosing these MergeMethods.");
-        }
-
-        private string CreateConcatSqlForNames()
-        {
-            string result = $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}, '|'"))} )";
-            if (this.ConnectionType == ConnectionManagerType.MySql)
-                result = $"CONCAT_WS('', {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}, '|'"))} )";
-            else if (this.ConnectionType == ConnectionManagerType.Oracle)
-                result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE} || '|' "))} ";
-            else if (this.ConnectionType == ConnectionManagerType.SQLite)
-                result = $" {string.Join("||", IdColumnNames.Select(cn => $"COALESCE({QB}{cn}{QE},'') || '|' "))} ";
-            return result;
+                " Set the property UseTruncateMethod to false if choosing these MergeMethods.");
         }
 
         #endregion
