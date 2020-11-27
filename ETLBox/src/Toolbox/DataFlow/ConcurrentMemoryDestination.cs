@@ -37,7 +37,8 @@ namespace ETLBox.DataFlow.Connectors
             TargetAction = new ActionBlock<TInput>(WriteRecord, new ExecutionDataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                MaxDegreeOfParallelism = 1
+                MaxDegreeOfParallelism = 1,
+                CancellationToken = this.CancellationSource.Token
             });
         }
 

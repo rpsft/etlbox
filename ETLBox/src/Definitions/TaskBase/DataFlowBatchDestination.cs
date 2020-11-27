@@ -55,7 +55,8 @@ namespace ETLBox.DataFlow
         {
             Buffer = new BatchBlock<TInput>(BatchSize, new GroupingDataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize
+                BoundedCapacity = MaxBufferSize,
+                CancellationToken = this.CancellationSource.Token
             });
             int boundedCapacity = -1;
             if (MaxBufferSize > 0 && BatchSize > 0)
@@ -63,7 +64,8 @@ namespace ETLBox.DataFlow
             TargetAction = new ActionBlock<TInput[]>(WriteBatch, new ExecutionDataflowBlockOptions()
             {
                 MaxDegreeOfParallelism = 1, //No parallel inserts on Db!
-                BoundedCapacity = boundedCapacity
+                BoundedCapacity = boundedCapacity,
+                CancellationToken = this.CancellationSource.Token
             });
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions() { PropagateCompletion = true });
         }

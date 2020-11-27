@@ -52,6 +52,7 @@ namespace ETLBox.DataFlow.Transformations
             TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplicateRow, new ExecutionDataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
+                CancellationToken = this.CancellationSource.Token
             });
         }
 

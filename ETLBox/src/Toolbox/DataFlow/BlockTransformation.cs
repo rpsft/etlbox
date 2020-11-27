@@ -65,12 +65,14 @@ namespace ETLBox.DataFlow.Transformations
         {
             OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize
+                BoundedCapacity = MaxBufferSize,
+                CancellationToken = this.CancellationSource.Token
             });
             InputBuffer = new ActionBlock<TInput>(row => InputData.Add(row),
                 new ExecutionDataflowBlockOptions()
                 {
-                    BoundedCapacity = -1 //All data is always loaded!
+                    BoundedCapacity = -1, //All data is always loaded!
+                    CancellationToken = this.CancellationSource.Token
                 });
             InputBuffer.Completion.ContinueWith(t =>
             {

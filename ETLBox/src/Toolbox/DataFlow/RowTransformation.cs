@@ -87,8 +87,9 @@ namespace ETLBox.DataFlow.Transformations
                 }, new ExecutionDataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
+                    CancellationToken = CancellationSource.Token
                 }
-            );
+            ) ; 
         }
 
         protected override void CleanUpOnSuccess()

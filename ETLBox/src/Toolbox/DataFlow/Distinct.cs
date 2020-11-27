@@ -88,6 +88,7 @@ namespace ETLBox.DataFlow.Transformations
             CachedRowTransformation.CopyLogTaskProperties(this);
             CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
             CachedRowTransformation.FillCacheAfterTranformation = true;
+            CachedRowTransformation.CancellationSource = this.CancellationSource;
             CachedRowTransformation.InitBufferObjects();
         }
 

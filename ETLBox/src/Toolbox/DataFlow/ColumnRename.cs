@@ -98,6 +98,7 @@ namespace ETLBox.DataFlow.Transformations
             RowTransformation.TransformationFunc = RenameProperties;
             RowTransformation.CopyLogTaskProperties(this);
             RowTransformation.MaxBufferSize = this.MaxBufferSize;
+            RowTransformation.CancellationSource = this.CancellationSource;
             RowTransformation.InitBufferObjects();
         }
 

@@ -166,6 +166,7 @@ namespace ETLBox.DataFlow.Transformations
             CachedRowTransformation.TransformationFunc = TransformationFunc;
             CachedRowTransformation.CopyLogTaskProperties(this);
             CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
+            CachedRowTransformation.CancellationSource = this.CancellationSource;
             if (CacheMode == CacheMode.PartialFromDb)
                 CachedRowTransformation.CacheManager = new PartialDbTableCache<TInput, TSource>();
             else

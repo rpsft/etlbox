@@ -60,6 +60,7 @@ namespace ETLBox.DataFlow.Transformations
         {
             BlockTransformation.CopyLogTaskProperties(this);
             BlockTransformation.MaxBufferSize = MaxBufferSize; //Only output buffer!
+            BlockTransformation.CancellationSource = this.CancellationSource;
             BlockTransformation.InitBufferObjects();
         }
 

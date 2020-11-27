@@ -130,11 +130,13 @@ namespace ETLBox.DataFlow.Transformations
 
             OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize
+                BoundedCapacity = MaxBufferSize,
+                CancellationToken = this.CancellationSource.Token
             });
             InputBuffer = new ActionBlock<TInput>(WrapAggregationAction, new ExecutionDataflowBlockOptions()
             {
-                BoundedCapacity = -1 //Always -1, as this is a blocking transformation
+                BoundedCapacity = -1, //Always -1, as this is a blocking transformation
+                CancellationToken = this.CancellationSource.Token
             });
             InputBuffer.Completion.ContinueWith(t =>
             {

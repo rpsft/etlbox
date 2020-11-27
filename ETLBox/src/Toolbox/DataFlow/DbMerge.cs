@@ -129,7 +129,7 @@ namespace ETLBox.DataFlow.Connectors
         public void Wait()
         {
             try
-            {
+            {               
                 Completion.Wait();
             }
             catch (AggregateException ae)
@@ -170,8 +170,7 @@ namespace ETLBox.DataFlow.Connectors
 
         #region Implement abstract methods
 
-        internal override Task BufferCompletion =>
-            Task.WhenAll(Lookup.Completion, DestinationTable.Completion);
+        internal override Task BufferCompletion => DestinationTable.Completion;
 
         internal override void CompleteBuffer()
         {
@@ -227,6 +226,7 @@ namespace ETLBox.DataFlow.Connectors
             DestinationTable.TableName = TableName;
             DestinationTable.BatchSize = BatchSize;
             DestinationTable.MaxBufferSize = this.MaxBufferSize;
+            //DestinationTable.CancellationSource = this.CancellationSource;
 
             DestinationTable.BeforeBatchWrite = batch =>
             {
@@ -275,12 +275,11 @@ namespace ETLBox.DataFlow.Connectors
                 IdentifyAndDeleteMissingEntries();
                 if (UseTruncateMethod && (MergeMode == MergeMode.UpdatesOnly || MergeMode == MergeMode.InsertsAndUpdatesOnly))
                     ReinsertTruncatedRecords();
+                //Careful: A TPL buffer never completes if it has no consumer linked to it!!!
                 if (Successors.Count > 0)
                 {
                     OutputSource.ExecuteAsync();
-                    OutputSource.Completion.Wait();
-                    //Careful: A TPL buffer never completes if it has no consumer linked to it!!!
-                    OutputSource.BufferCompletion.Wait();
+                    OutputSource.Completion.Wait();                    
                 }
             };
         }
@@ -315,7 +314,8 @@ namespace ETLBox.DataFlow.Connectors
             Lookup.LinkTo(DestinationTable);
             Lookup.InitBufferObjects();
             Lookup.ComponentCompletion = Lookup.BufferCompletion;
-            Lookup.InitNetworkRecursively();
+            //Lookup.CancellationSource = this.CancellationSource;
+            Lookup.InitNetworkRecursively();            
         }
 
         #endregion

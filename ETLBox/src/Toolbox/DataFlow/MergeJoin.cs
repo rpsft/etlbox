@@ -100,7 +100,8 @@ namespace ETLBox.DataFlow.Transformations
         {
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize
+                BoundedCapacity = MaxBufferSize,
+                CancellationToken = this.CancellationSource.Token
             });
         }
 

@@ -1,6 +1,7 @@
 ﻿using ETLBox.ControlFlow;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ETLBox.DataFlow
@@ -46,6 +47,7 @@ namespace ETLBox.DataFlow
         internal virtual Task BufferCompletion { get; }
         internal Task ComponentCompletion { get; set; }
         protected DataFlowComponent Parent { get; set; }
+        internal CancellationTokenSource CancellationSource{ get;set; } = new CancellationTokenSource();
 
         protected bool WereBufferInitialized;
         protected bool ReadyForProcessing;
@@ -226,18 +228,21 @@ namespace ETLBox.DataFlow
         {
             if (ErrorSource == null)
             {
-                FaultPredecessorsRecursively(e);
+                FaultBuffer(e);
+                CancelPredecessorsRecursively(e);
                 throw e;
             }
             ErrorSource.Send(e, message);
         }
-
-        protected void FaultPredecessorsRecursively(Exception e)
+        
+        protected void CancelPredecessorsRecursively(Exception e)
         {
             Exception = e;
-            FaultBuffer(e);
             foreach (DataFlowComponent pre in Predecessors)
-                pre.FaultPredecessorsRecursively(e);
+            {
+                pre.CancellationSource.Cancel();
+                pre.CancelPredecessorsRecursively(e);
+            }
         }
 
         #endregion

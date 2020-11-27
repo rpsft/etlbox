@@ -64,14 +64,16 @@ namespace ETLBox.DataFlow.Transformations
                 AvoidBroadcastBlock = true;
                 OwnBroadcastBlock = new ActionBlock<TInput>(Broadcast, new ExecutionDataflowBlockOptions()
                 {
-                    BoundedCapacity = MaxBufferSize
+                    BoundedCapacity = MaxBufferSize,
+                    CancellationToken = this.CancellationSource.Token
                 });
             }
             else
             {
                 BroadcastBlock = new BroadcastBlock<TInput>(Clone, new DataflowBlockOptions()
                 {
-                    BoundedCapacity = MaxBufferSize
+                    BoundedCapacity = MaxBufferSize,
+                    CancellationToken = this.CancellationSource.Token
                 });
             }
         }
@@ -82,7 +84,8 @@ namespace ETLBox.DataFlow.Transformations
             {
                 var buffer = new BufferBlock<TInput>(new DataflowBlockOptions()
                 {
-                    BoundedCapacity = MaxBufferSize
+                    BoundedCapacity = MaxBufferSize,
+                    CancellationToken = this.CancellationSource.Token
                 });
                 OutputBuffer.Add(Tuple.Create(buffer, linkPredicates));
             }

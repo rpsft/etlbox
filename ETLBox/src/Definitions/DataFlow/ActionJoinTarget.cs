@@ -12,9 +12,11 @@ namespace ETLBox.DataFlow
         /// <inheritdoc/>
         public override ITargetBlock<TInput> TargetBlock => JoinAction;
 
+        DataFlowComponent Parent;
         public ActionJoinTarget(DataFlowComponent parent, Action<TInput> action)
         {
             Action = action;
+            Parent = parent;
             CreateLinkInInternalFlow(parent);
         }
 
@@ -25,8 +27,9 @@ namespace ETLBox.DataFlow
         {
             JoinAction = new ActionBlock<TInput>(Action, new ExecutionDataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize
-            });
+                BoundedCapacity = MaxBufferSize,
+                CancellationToken = Parent.CancellationSource.Token
+            }) ;
         }
 
         protected override void CleanUpOnSuccess() { }

@@ -72,6 +72,7 @@ namespace ETLBox.DataFlow.Transformations
             {
                 InMemoryTarget.CopyLogTaskProperties(Parent);
                 InMemoryTarget.MaxBufferSize = -1;
+                InMemoryTarget.CancellationSource = Parent.CancellationSource;
                 InMemoryTarget.InitBufferObjects();
             }
 
@@ -104,7 +105,8 @@ namespace ETLBox.DataFlow.Transformations
         {
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
-                BoundedCapacity = MaxBufferSize
+                BoundedCapacity = MaxBufferSize,
+                CancellationToken = this.CancellationSource.Token
             });
         }
 
