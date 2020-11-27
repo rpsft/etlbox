@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ETLBox.Exceptions;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TSQL;
 using TSQL.Statements;
@@ -19,31 +21,38 @@ namespace ETLBox.Helper
         /// <returns>The names of the columns in the sql</returns>
         public static List<string> ParseColumnNames(string sql)
         {
-
-            var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
-
-            List<string> result = new List<string>();
-            int functionStartCount = 0;
-            string prevToken = string.Empty;
-            foreach (var token in statement.Select.Tokens)
+            try
             {
-                if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
-                    token.Text == "(")
-                    functionStartCount++;
-                else if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
-                    token.Text == ")")
-                    functionStartCount--;
-                if (token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
-                    prevToken = token.Text;
-                if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
-                    functionStartCount <= 0 &&
-                    token.Text == ","
-                    )
+                var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
+
+                List<string> result = new List<string>();
+                int functionStartCount = 0;
+                string prevToken = string.Empty;
+                foreach (var token in statement.Select.Tokens)
+                {
+                    if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
+                        token.Text == "(")
+                        functionStartCount++;
+                    else if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
+                        token.Text == ")")
+                        functionStartCount--;
+                    if (token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
+                        prevToken = token.Text;
+                    if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
+                        functionStartCount <= 0 &&
+                        token.Text == ","
+                        )
+                        result.Add(prevToken);
+                }
+                if (prevToken != string.Empty)
                     result.Add(prevToken);
+                return result;
             }
-            if (prevToken != string.Empty)
-                result.Add(prevToken);
-            return result;
+            catch (Exception e)
+            {
+                throw new ETLBoxException("The attempt to read the column names from the given sql statement failed. " +
+                    "Please provide a TableDefinition with at least column name and preferably the data type. ");
+            }
         }
     }
 }
