@@ -9,7 +9,7 @@ namespace ETLBox.Helper
     {
         public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> source, int size)
         {
-            List<T> batch = new List<T>();
+            List<T> batch = new List<T>();            
 
             foreach (var item in source)
             {

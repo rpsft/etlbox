@@ -226,6 +226,7 @@ namespace ETLBox.DataFlow.Connectors
             DestinationTable.TableName = TableName;
             DestinationTable.BatchSize = BatchSize;
             DestinationTable.MaxBufferSize = this.MaxBufferSize;
+            //Don't do this:
             //DestinationTable.CancellationSource = this.CancellationSource;
 
             DestinationTable.BeforeBatchWrite = batch =>
@@ -314,6 +315,7 @@ namespace ETLBox.DataFlow.Connectors
             Lookup.LinkTo(DestinationTable);
             Lookup.InitBufferObjects();
             Lookup.ComponentCompletion = Lookup.BufferCompletion;
+            //Don't do this:
             //Lookup.CancellationSource = this.CancellationSource;
             Lookup.InitNetworkRecursively();            
         }
@@ -326,7 +328,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             get
             {
-                if (TypeInfo.IsDynamic)// && MergeProperties.IdPropertyNames?.Count > 0)
+                if (TypeInfo.IsDynamic)
                 {
                     if (_idColumnNames == null)
                         _idColumnNames = MergeProperties.IdPropertyNames.Select(idcol => idcol.IdPropertyName).ToList();
@@ -342,7 +344,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             get
             {
-                if (TypeInfo.IsDynamic)//(MergeProperties.ComparePropertyNames?.Count > 0)
+                if (TypeInfo.IsDynamic)
                 {
                     if (_compareColumnNames == null)
                         _compareColumnNames = MergeProperties.ComparePropertyNames.Select(compcol => compcol.ComparePropertyName).ToList();
@@ -358,7 +360,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             get
             {
-                if (TypeInfo.IsDynamic) //(MergeProperties.UpdatePropertyNames?.Count > 0)
+                if (TypeInfo.IsDynamic) 
                 {
                     if (_updateColumnNames == null)
                         _updateColumnNames = MergeProperties.UpdatePropertyNames.Select(compcol => compcol.UpdatePropertyName).ToList();
@@ -652,15 +654,26 @@ namespace ETLBox.DataFlow.Connectors
             }
 
             TableData data = new TableData(updateDefinition);
-
-            foreach (var row in rowsToUpdate)
+                        
+            foreach (var batch in rowsToUpdate.Batch(CalculateMaxParameterSize(rowsToUpdate)))
             {
-                List<object> updateData = new List<object>();
-                updateData.AddRange(GetIdColumnValues(row));
-                updateData.AddRange(GetUpdateColumnValues(row));
-                data.Rows.Add(updateData.ToArray());
+                foreach (var row in batch)
+                {
+                    List<object> updateData = new List<object>();
+                    updateData.AddRange(GetIdColumnValues(row));
+                    updateData.AddRange(GetUpdateColumnValues(row));
+                    data.Rows.Add(updateData.ToArray());
+                }
+                SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, UpdateOrNonIdColumNames, IdColumnNames);
             }
-            SqlTask.BulkUpdate(this.ConnectionManager, data, TableName, UpdateOrNonIdColumNames, IdColumnNames);
+        }
+
+        private int CalculateMaxParameterSize(IEnumerable<TInput> rowsToUpdate)
+        {
+            int parameterPerBatch = rowsToUpdate.Count();
+            if (this.ConnectionManager.MaxParameterAmount < int.MaxValue)
+                parameterPerBatch = Math.Abs(this.ConnectionManager.MaxParameterAmount / updateDefinition.Columns.Count);
+            return parameterPerBatch;
         }
 
         TableDefinition idColsOnly; 
@@ -679,9 +692,14 @@ namespace ETLBox.DataFlow.Connectors
             }
             TableData data = new TableData(idColsOnly);
 
-            foreach (var row in rowsToDelete)
-                data.Rows.Add(GetIdColumnValues(row).ToArray());
-            SqlTask.BulkDelete(this.ConnectionManager, data, TableName);
+            foreach (var batch in rowsToDelete.Batch(CalculateMaxParameterSize(rowsToDelete)))
+            {
+                foreach (var row in batch)
+                {
+                    data.Rows.Add(GetIdColumnValues(row).ToArray());
+                }
+                SqlTask.BulkDelete(this.ConnectionManager, data, TableName);
+            }
         }
 
         private void ReinsertTruncatedRecords()

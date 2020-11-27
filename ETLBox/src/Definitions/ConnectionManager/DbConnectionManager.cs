@@ -78,7 +78,12 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public virtual bool IsOdbcOrOleDbConnection { get; } = false;
 
+        /// <inheritdoc/>
         public virtual bool DoPrepareCommand { get; set; } = false;
+
+        /// <inheritdoc/>
+        public virtual int MaxParameterAmount { get; } = int.MaxValue;
+
         /// <inheritdoc/>
         public virtual TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
         {

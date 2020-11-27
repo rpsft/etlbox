@@ -89,6 +89,12 @@ namespace ETLBox.Connection
         bool IsOdbcOrOleDbConnection { get; }
 
         /// <summary>
+        /// returns the maximum amount of parameters that ca be passed into a
+        /// sql query. 
+        /// </summary>
+        int MaxParameterAmount { get; }
+
+        /// <summary>
         /// Describe how the table meta data can be read from the database
         /// </summary>
         /// <param name="TN">The formatted table name</param>
