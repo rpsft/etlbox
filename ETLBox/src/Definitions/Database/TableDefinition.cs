@@ -238,7 +238,7 @@ ORDER BY cols.column_id
             var readMetaSql = new SqlTask(
 $@" 
 SELECT DISTINCT cols.column_name
-  , CASE WHEN cols.data_type IN ('varchar','char') THEN CONCAT (cols.data_type,'(',cols.character_maximum_length, ')')
+  , CASE WHEN cols.data_type IN ('varchar','char','binary') THEN CONCAT (cols.data_type,'(',cols.character_maximum_length, ')')
 	     WHEN cols.data_type IN ('decimal') THEN CONCAT (cols.data_type,'(',cols.numeric_precision,',', cols.numeric_scale, ')')
 		 ELSE cols.data_type
          END AS 'data_type'

@@ -78,6 +78,12 @@ namespace ETLBox.Helper
                 case "uniqueidentifier":
                 case "uuid":
                     return "System.Guid";
+                case "binary":
+                case "varbinary":
+                case "bytea":
+                case "blob":
+                case "image":
+                    return "System.Byte[]";
                 default:
                     return "System.String";
             }
@@ -214,6 +220,8 @@ namespace ETLBox.Helper
                 }
                 else if (typeName == "DATETIME")
                     return "TIMESTAMP";
+                else if (typeName.StartsWith("VARBINARY") || typeName.StartsWith("BINARY"))
+                    return "BYTEA";
                 return dataTypeName;
             }
             else if (connectionType == ConnectionManagerType.Oracle)
@@ -225,6 +233,8 @@ namespace ETLBox.Helper
                     else if (typeName.Replace(" ", "").StartsWith("VARCHAR("))
                         return typeName.Replace("VARCHAR", "VARCHAR2");
                 }
+                else if (typeName.StartsWith("BINARY") && !typeName.StartsWith("BINARY_"))
+                    return typeName.Replace("BINARY", "RAW");
                 else if (typeName == "BIGINT")
                     return "INT";
                 else if (typeName == "DATETIME")
