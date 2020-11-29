@@ -42,7 +42,7 @@ namespace ETLBox.DataFlow.Transformations
 
         public Sort()
         {
-            BlockTransformation = new BlockTransformation<TInput, TInput>(SortByFunc);
+            BlockTransformation = new BlockTransformation<TInput, TInput>();
         }
 
         /// <param name="sortFunction">Will set the <see cref="SortFunction"/></param>
@@ -57,8 +57,9 @@ namespace ETLBox.DataFlow.Transformations
         #region Implement abstract methods
 
         protected override void InternalInitBufferObjects()
-        {
-            BlockTransformation.CopyLogTaskProperties(this);            
+        {            
+            BlockTransformation.CopyLogTaskProperties(this);
+            BlockTransformation.BlockTransformationFunc = SortByFunc;
             BlockTransformation.CancellationSource = this.CancellationSource;
             BlockTransformation.InitBufferObjects();
         }
@@ -73,6 +74,13 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override void FaultBuffer(Exception e) => BlockTransformation.FaultBuffer(e);
 
+        public new IDataFlowSource<ETLBoxError> LinkErrorTo(IDataFlowDestination<ETLBoxError> target)
+        {
+            var errorSource = InternalLinkErrorTo(target);
+            BlockTransformation.ErrorSource = new ErrorSource() { Redirection = this.ErrorSource };            
+            return errorSource;
+        }
+
         #endregion
 
         #region Implementation
@@ -81,11 +89,19 @@ namespace ETLBox.DataFlow.Transformations
 
         TInput[] SortByFunc(TInput[] data)
         {
-            List<TInput> sortedData = new List<TInput>();
-            foreach (var row in data)
-                sortedData.Add(row);
-            sortedData.Sort(SortFunction);
-            return sortedData.ToArray();
+            try
+            {
+                List<TInput> sortedData = new List<TInput>();
+                foreach (var row in data)
+                    sortedData.Add(row);
+                sortedData.Sort(SortFunction);
+                return sortedData.ToArray();
+            }
+            catch (Exception e)
+            {
+                int i = 3;
+                return null;
+            }
         }
 
         #endregion
