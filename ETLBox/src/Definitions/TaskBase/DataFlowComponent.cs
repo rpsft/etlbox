@@ -14,7 +14,7 @@ namespace ETLBox.DataFlow
         #region Component properties
 
         /// <inheritdoc/>
-        public int MaxBufferSize
+        public virtual int MaxBufferSize
         {
             get
             {

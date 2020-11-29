@@ -58,8 +58,7 @@ namespace ETLBox.DataFlow.Transformations
 
         protected override void InternalInitBufferObjects()
         {
-            BlockTransformation.CopyLogTaskProperties(this);
-            BlockTransformation.MaxBufferSize = MaxBufferSize; //Only output buffer!
+            BlockTransformation.CopyLogTaskProperties(this);            
             BlockTransformation.CancellationSource = this.CancellationSource;
             BlockTransformation.InitBufferObjects();
         }
@@ -80,10 +79,13 @@ namespace ETLBox.DataFlow.Transformations
 
         BlockTransformation<TInput, TInput> BlockTransformation { get; set; }
 
-        List<TInput> SortByFunc(List<TInput> data)
+        TInput[] SortByFunc(TInput[] data)
         {
-            data.Sort(SortFunction);
-            return data;
+            List<TInput> sortedData = new List<TInput>();
+            foreach (var row in data)
+                sortedData.Add(row);
+            sortedData.Sort(SortFunction);
+            return sortedData.ToArray();
         }
 
         #endregion

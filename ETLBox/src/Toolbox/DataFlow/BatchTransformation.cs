@@ -12,7 +12,7 @@ namespace ETLBox.DataFlow.Transformations
     /// A batch transformation will transform batches of data. The default batch size are 100000 rows. 
     /// The batch transformation function allows you to process and modify each batch of data. 
     /// You can use the BatchSize property to choose a smaller batch size. The batch size must always be smaller
-    /// than the max buffer size (which is 100000 by default as well).
+    /// than the max buffer size. The default batch size are 1000 rows per batch.
     /// The batch transformation is a partial blocking transformation - it will always need at least enough
     /// memory to store a whole batch. 
     /// </summary>
@@ -31,15 +31,16 @@ namespace ETLBox.DataFlow.Transformations
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
         /// <summary>
-        /// The transformation Func that is executed on each batch of input data. It return
-        /// contains all output data for further processing.
+        /// The transformation Func that is executed on each array of input data. It returns
+        /// another array as output data - the output array can have a different length than
+        /// the input array. 
         /// </summary>
         public Func<TInput[], TOutput[]> BatchTransformationFunc { get; set; }
 
         /// <summary>
         /// The size of each batch that is passed to the <see cref="BatchTransformation{TInput, TOutput}"/>
         /// </summary>
-        public int BatchSize { get; set; } = DataFlow.DEFAULT_MAX_BUFFER_SIZE;
+        public virtual int BatchSize { get; set; } = 1000;
 
         /// <summary>
         /// By default, all null values in the batch returned from the batch transformation func
@@ -73,6 +74,8 @@ namespace ETLBox.DataFlow.Transformations
 
         protected override void InternalInitBufferObjects()
         {
+            CheckParameter();
+
             InputBuffer = new BatchBlock<TInput>(BatchSize,
                 new GroupingDataflowBlockOptions()
                 {
@@ -80,10 +83,10 @@ namespace ETLBox.DataFlow.Transformations
                     CancellationToken = this.CancellationSource.Token
 
                 });
-            TransformationBlock = new ActionBlock<TInput[]>(ProcessBatch,
+            TransformationBlock = new ActionBlock<TInput[]>(this.ProcessBatch,
                 new ExecutionDataflowBlockOptions()
                 {
-                    BoundedCapacity = Math.Abs(MaxBufferSize / BatchSize) > 1 ? Math.Abs(MaxBufferSize / BatchSize) : 1,
+                    BoundedCapacity = CalculateBatchedMaxBufferSize(),
                     CancellationToken = this.CancellationSource.Token
                 });
             OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
@@ -94,11 +97,27 @@ namespace ETLBox.DataFlow.Transformations
             InputBuffer.LinkTo(TransformationBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             TransformationBlock.Completion.ContinueWith(t =>
             {
-                if (t.IsFaulted) 
+                if (t.IsFaulted)
                     ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
                 else
                     OutputBuffer.Complete();
             });
+        }
+
+        private void CheckParameter()
+        {
+            if (BatchSize < 0)
+                BatchSize = int.MaxValue;
+            if (BatchSize == 0)
+                throw new ETLBoxException("A batch size of 0 is not permitted!");
+        }
+
+        private int CalculateBatchedMaxBufferSize()
+        {
+            if ( MaxBufferSize == -1) 
+                return -1;
+            else 
+                return Math.Abs(MaxBufferSize / BatchSize) > 1 ? Math.Abs(MaxBufferSize / BatchSize) : 1;
         }
 
         protected override void CleanUpOnSuccess()

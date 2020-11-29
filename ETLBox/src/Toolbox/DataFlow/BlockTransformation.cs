@@ -26,102 +26,70 @@ namespace ETLBox.DataFlow.Transformations
     /// });
     /// </code>
     /// </example>
-    public class BlockTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
+    public class BlockTransformation<TInput, TOutput> : BatchTransformation<TInput, TOutput>
     {
         #region Public properties
 
         /// <inheritdoc/>
         public override string TaskName { get; set; } = "Excecute block transformation";
+
+        /// <inheritdoc/>
+        public override int BatchSize
+        {
+            get
+            {
+                return int.MaxValue;
+            }
+            set
+            {
+                throw new ETLBoxException("The BlockTransformation will load all data into memory - use the BatchTransformation " +
+                    "if you need to access smaller portions of your data.");
+            }
+        }
+
+        /// <inheritdoc/>
+        public override int MaxBufferSize 
+        {
+            get
+            {
+                return -1;
+            }
+            set
+            {
+                throw new ETLBoxException("The BlockTransformation will load all data into memory - use the BatchTransformation " +
+                    "if you need to access smaller portions of your data.");
+            }
+        }
+
         /// <summary>
-        /// The transformation Func that is executed on the all input data. It should return a new list that
-        /// contains all output data for further processing.
+        /// The transformation Func that is executed on the complete input data. It needs
+        /// to return an array of output data, which doesn't need have to be the same length
+        /// as the input array. 
         /// </summary>
-        public Func<List<TInput>, List<TOutput>> BlockTransformationFunc { get; set; }
-        /// <inheritdoc/>
-        public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
-        /// <inheritdoc/>
-        public override ITargetBlock<TInput> TargetBlock => InputBuffer;
+        public Func<TInput[], TOutput[]> BlockTransformationFunc
+        {
+            get
+            {
+                return this.BatchTransformationFunc;
+            }
+            set
+            {
+                this.BatchTransformationFunc = value;
+            }
+        }
 
         #endregion
 
         #region Constructors
 
-        public BlockTransformation()
+        public BlockTransformation() : base()
         {
-            InputData = new List<TInput>();
         }
 
         /// <param name="blockTransformationFunc">Sets the <see cref="BlockTransformationFunc"/></param>
-        public BlockTransformation(Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this()
+        public BlockTransformation(Func<TInput[], TOutput[]> blockTransformationFunc) : this()
         {
             BlockTransformationFunc = blockTransformationFunc;
-        }
-
-        #endregion
-
-        #region Implement abstract methods
-
-        protected override void InternalInitBufferObjects()
-        {
-            OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
-            {
-                BoundedCapacity = MaxBufferSize,
-                CancellationToken = this.CancellationSource.Token
-            });
-            InputBuffer = new ActionBlock<TInput>(row => InputData.Add(row),
-                new ExecutionDataflowBlockOptions()
-                {
-                    BoundedCapacity = -1, //All data is always loaded!
-                    CancellationToken = this.CancellationSource.Token
-                });
-            InputBuffer.Completion.ContinueWith(t =>
-            {
-                if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
-                try
-                {
-                    NLogStartOnce();
-                    WriteIntoOutput();
-                    OutputBuffer.Complete();
-                }
-                catch (Exception e)
-                {
-                    ((IDataflowBlock)OutputBuffer).Fault(e);
-                    throw e;
-                }
-            });
-        }
-
-        protected override void CleanUpOnSuccess()
-        {
-            NLogFinishOnce();
-        }
-
-
-        protected override void CleanUpOnFaulted(Exception e) { }
-
-        internal override void CompleteBuffer() => TargetBlock.Complete();
-
-        internal override void FaultBuffer(Exception e) => TargetBlock.Fault(e);
-
-
-        #endregion
-
-        #region Implementation
-
-        BufferBlock<TOutput> OutputBuffer;
-        ActionBlock<TInput> InputBuffer;
-        List<TInput> InputData;
-        List<TOutput> OutputData;
-
-        private void WriteIntoOutput()
-        {
-            OutputData = BlockTransformationFunc(InputData);
-            foreach (TOutput row in OutputData)
-            {
-                if (!OutputBuffer.SendAsync(row).Result)
-                    throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
-                LogProgress();
-            }
         }
 
         #endregion
@@ -132,7 +100,7 @@ namespace ETLBox.DataFlow.Transformations
     {
         public BlockTransformation() : base()
         { }
-        public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(blockTransformationFunc)
+        public BlockTransformation(Func<TInput[], TInput[]> blockTransformationFunc) : base(blockTransformationFunc)
         { }
 
     }
@@ -143,9 +111,8 @@ namespace ETLBox.DataFlow.Transformations
         public BlockTransformation() : base()
         { }
 
-        public BlockTransformation(Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc) : base(blockTransformationFunc)
+        public BlockTransformation(Func<ExpandoObject[], ExpandoObject[]> blockTransformationFunc) : base(blockTransformationFunc)
         { }
 
     }
-
 }
