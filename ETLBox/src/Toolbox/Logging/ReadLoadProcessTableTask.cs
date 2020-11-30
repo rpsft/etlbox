@@ -10,7 +10,7 @@ namespace ETLBox.Logging
     /// <summary>
     /// Read load processes by Id, all processes or last finished/successful/aborted.
     /// </summary>
-    public class ReadLoadProcessTableTask : ControlFlowTask
+    public sealed class ReadLoadProcessTableTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Read load processes by Id, all processes or last finished/successful/aborted.";

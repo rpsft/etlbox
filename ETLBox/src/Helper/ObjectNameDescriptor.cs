@@ -8,7 +8,7 @@ namespace ETLBox.Helper
     /// Applies database specific formatting to an object names.
     /// E.g. schema.ViewName would create [schema].[ViewName] for SqlServer and "schema"."ViewName" for Postgres
     /// </summary>
-    public class ObjectNameDescriptor
+    public sealed class ObjectNameDescriptor
     {
         private string _schema;
         private string _table;

@@ -23,7 +23,7 @@ namespace ETLBox.DataFlow
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class UpdateColumn : Attribute
+    public sealed class UpdateColumn : Attribute
     {
         /// <summary>
         /// Name of the property that is used in the update

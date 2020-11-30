@@ -20,7 +20,7 @@ namespace ETLBox.ControlFlow
         /// <summary>
         /// List of parameters for the procedure
         /// </summary>
-        public List<ProcedureParameter> Parameter { get; set; }
+        public ICollection<ProcedureParameter> Parameter { get; set; }
 
         public ProcedureDefinition()
         {

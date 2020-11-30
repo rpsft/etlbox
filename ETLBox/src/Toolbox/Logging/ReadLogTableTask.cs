@@ -10,7 +10,7 @@ namespace ETLBox.Logging
     /// <summary>
     /// Reads data from the etl.Log table.
     /// </summary>
-    public class ReadLogTableTask : ControlFlowTask
+    public sealed class ReadLogTableTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Read all log entries for {LoadProcessId ?? 0 }";

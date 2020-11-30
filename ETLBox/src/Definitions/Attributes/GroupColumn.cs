@@ -7,7 +7,7 @@ namespace ETLBox.DataFlow
     /// identifies the property in the aggregation output object.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GroupColumn : Attribute
+    public sealed class GroupColumn : Attribute
     {
         /// <summary>
         /// Property name used in the input object for grouping the aggregation.

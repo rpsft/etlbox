@@ -14,7 +14,7 @@ namespace ETLBox.Logging
     /// <see cref="StartLoadProcessTask"/>
     /// <see cref="EndLoadProcessTask" />
     /// <see cref="AbortLoadProcessTask" />
-    public class CreateLoadProcessTableTask : ControlFlowTask
+    public sealed class CreateLoadProcessTableTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Create default etlbox load process table";

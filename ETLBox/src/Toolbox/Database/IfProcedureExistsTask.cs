@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// <summary>
     /// Checks if a procedure exists.
     /// </summary>
-    public class IfProcedureExistsTask : IfExistsTask
+    public sealed class IfProcedureExistsTask : IfExistsTask
     {
         internal override string GetSql()
         {

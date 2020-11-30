@@ -24,7 +24,7 @@ namespace ETLBox.DataFlow
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class MatchColumn : Attribute
+    public sealed class MatchColumn : Attribute
     {
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace ETLBox.DataFlow
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class IdColumn : Attribute
+    public sealed class IdColumn : Attribute
     {
         /// <summary>
         /// Name of the property used as Id

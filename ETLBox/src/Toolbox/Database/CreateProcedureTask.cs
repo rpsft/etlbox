@@ -15,7 +15,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// CRUDProcedureTask.CreateOrAlter("demo.proc1", "select 1 as test");
     /// </code>
     /// </example>
-    public class CreateProcedureTask : ControlFlowTask
+    public sealed class CreateProcedureTask : ControlFlowTask
     {
         /// <inheritdoc/>
         public override string TaskName => $"{CreateOrAlterSql} procedure {ProcedureName}";
@@ -54,7 +54,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// The parameters for the procedure
         /// </summary>
-        public IList<ProcedureParameter> ProcedureParameters { get; set; }
+        public ICollection<ProcedureParameter> ProcedureParameters { get; set; }
 
         /// <summary>
         /// The sql code that is used to create/update the procedure.

@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// <summary>
     /// Drops a schema. Use DropIfExists to drop a schema only if it exists. For MySql or MariaDb, use the DropDatabase task instead.
     /// </summary>
-    public class DropSchemaTask : DropTask<IfSchemaExistsTask>, ILoggableTask
+    public sealed class DropSchemaTask : DropTask<IfSchemaExistsTask>, ILoggableTask
     {
         internal override string GetSql()
         {

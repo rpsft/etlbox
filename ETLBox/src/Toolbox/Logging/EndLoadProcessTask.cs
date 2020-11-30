@@ -10,7 +10,7 @@ namespace ETLBox.Logging
     /// <summary>
     /// Will set the table entry for current load process to ended.
     /// </summary>
-    public class EndLoadProcessTask : ControlFlowTask
+    public sealed class EndLoadProcessTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"End process with key {LoadProcessId}";

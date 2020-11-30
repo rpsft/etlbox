@@ -10,7 +10,7 @@ namespace ETLBox.Logging
     /// <summary>
     /// Starts a load process.
     /// </summary>
-    public class StartLoadProcessTask : ControlFlowTask
+    public sealed class StartLoadProcessTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Start load process {ProcessName}";

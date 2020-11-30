@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// <summary>
     /// Drops an index. Use DropIfExists to drop an index only if it exists.
     /// </summary>
-    public class DropIndexTask : DropTask<IfIndexExistsTask>, ILoggableTask
+    public sealed class DropIndexTask : DropTask<IfIndexExistsTask>, ILoggableTask
     {
         /// <summary>
         /// The table name on which the index is based on.

@@ -6,7 +6,7 @@ namespace ETLBox.DataFlow
     /// This attribute is used to identify distinct properties in an object.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class DistinctColumn : Attribute
+    public sealed class DistinctColumn : Attribute
     {
         /// <summary>
         /// Property name used in the object to identify distinct values

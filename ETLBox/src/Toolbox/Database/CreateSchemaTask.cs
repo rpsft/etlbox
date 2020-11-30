@@ -12,7 +12,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// CreateSchemaTask.Create("demo");
     /// </code>
     /// </example>
-    public class CreateSchemaTask : ControlFlowTask
+    public sealed class CreateSchemaTask : ControlFlowTask
     {
         /// <inheritdoc/>
         public override string TaskName => $"Create schema {SchemaName}";

@@ -14,7 +14,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// SqlTask.ExecuteNonQuery("Description","insert into demo.table1 select * from demo.table2");
     /// </code>
     /// </example>
-    public class SqlTask : DbTask
+    public sealed class SqlTask : DbTask
     {
         /// <inheritdoc/>
         public override string TaskName { get; set; } = "Run some sql";

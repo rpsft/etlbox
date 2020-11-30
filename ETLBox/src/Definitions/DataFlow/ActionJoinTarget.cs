@@ -7,7 +7,7 @@ namespace ETLBox.DataFlow
     /// A target block that serves as a destination for components that can have multiple inputs.
     /// </summary>
     /// <typeparam name="TInput">Type of ingoing data</typeparam>
-    public class ActionJoinTarget<TInput> : DataFlowJoinTarget<TInput>
+    public sealed class ActionJoinTarget<TInput> : DataFlowJoinTarget<TInput>
     {
         /// <inheritdoc/>
         public override ITargetBlock<TInput> TargetBlock => JoinAction;

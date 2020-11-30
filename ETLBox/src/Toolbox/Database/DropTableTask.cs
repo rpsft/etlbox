@@ -5,7 +5,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// <summary>
     /// Drops a table. Use DropIfExists to drop a table only if it exists.
     /// </summary>
-    public class DropTableTask : DropTask<IfTableOrViewExistsTask>, ILoggableTask
+    public sealed class DropTableTask : DropTask<IfTableOrViewExistsTask>, ILoggableTask
     {
         internal override string GetSql()
         {

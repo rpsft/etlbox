@@ -6,7 +6,7 @@ namespace ETLBox.Logging
     /// <summary>
     /// Used this task for custom log messages.
     /// </summary>
-    public class LogTask : ControlFlowTask
+    public sealed class LogTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Logs message";

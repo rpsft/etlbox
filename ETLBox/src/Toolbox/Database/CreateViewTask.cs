@@ -12,7 +12,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// CreateViewTask.CreateOrAlter("viewname","SELECT value FROM table");
     /// </code>
     /// </example>
-    public class CreateViewTask : ControlFlowTask
+    public sealed class CreateViewTask : ControlFlowTask
     {
         /// <inheritdoc/>
         public override string TaskName => $"Create or alter view {ViewName ?? string.Empty}";

@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// <summary>
     /// Checks if a database exists.
     /// </summary>
-    public class IfDatabaseExistsTask : IfExistsTask
+    public sealed class IfDatabaseExistsTask : IfExistsTask
     {
         internal override string GetSql()
         {

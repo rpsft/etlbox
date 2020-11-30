@@ -9,7 +9,7 @@ namespace ETLBox.Logging
     /// This task will create a table that can store exceptions (and information about the affected records)
     /// that occur during a data flow execution
     /// </summary>
-    public class CreateErrorTableTask : ControlFlowTask
+    public sealed class CreateErrorTableTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Create error table";

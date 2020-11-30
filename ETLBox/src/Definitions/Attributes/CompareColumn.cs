@@ -18,7 +18,7 @@ namespace ETLBox.DataFlow
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class CompareColumn : Attribute
+    public sealed class CompareColumn : Attribute
     {
         /// <summary>
         /// Name of the property name used for the comparison if two rows match 

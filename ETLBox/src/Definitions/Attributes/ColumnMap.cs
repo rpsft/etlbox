@@ -17,7 +17,7 @@ namespace ETLBox.DataFlow
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ColumnMap : Attribute
+    public sealed class ColumnMap : Attribute
     {
         /// <summary>
         /// Name of the column in the database or the new name when renaming

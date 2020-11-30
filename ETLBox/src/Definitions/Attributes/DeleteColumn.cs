@@ -20,7 +20,7 @@ namespace ETLBox.DataFlow
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class DeleteColumn : Attribute
+    public sealed class DeleteColumn : Attribute
     {
         /// <summary>
         /// Name of the property that is used to decide if a row is deleted 

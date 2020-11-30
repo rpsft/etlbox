@@ -24,7 +24,7 @@ namespace ETLBox.DataFlow
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class RetrieveColumn : Attribute
+    public sealed class RetrieveColumn : Attribute
     {
         /// <summary>
         /// Name of the property in the input data

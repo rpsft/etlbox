@@ -19,7 +19,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// });
     /// </code>
     /// </example>
-    public class CreateTableTask : ControlFlowTask
+    public sealed class CreateTableTask : ControlFlowTask
     {
         /// <inheritdoc />
         public override string TaskName => $"Create table {TableName}";

@@ -92,7 +92,7 @@ namespace ETLBox.ControlFlow
         /// </summary>
         public int? IdentityIncrement { get; set; } //Sql Server only
 
-        #region IColumnMapping implemtation
+        #region IColumnMapping implementation
 
         /// <inheritdoc/>
         public string DataSetColumn

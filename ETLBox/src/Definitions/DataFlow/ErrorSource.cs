@@ -9,7 +9,7 @@ namespace ETLBox.DataFlow
     /// Works as a source component for any errors. Another component
     /// can use this source to redirect errors into the error data flow.
     /// </summary>
-    public class ErrorSource : DataFlowExecutableSource<ETLBoxError>
+    public sealed class ErrorSource : DataFlowExecutableSource<ETLBoxError>
     {
         /// <summary>
         /// If set to another error source, all message send to this source will redirected.

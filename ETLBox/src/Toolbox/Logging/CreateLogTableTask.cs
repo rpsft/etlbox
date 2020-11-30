@@ -11,7 +11,7 @@ namespace ETLBox.Logging
     /// update your nlog.config add add this table as database target automatically.
     /// Or you can update your nlog.config manually.
     /// </summary>
-    public class CreateLogTableTask : ControlFlowTask
+    public sealed class CreateLogTableTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Create default etlbox log table";

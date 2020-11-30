@@ -10,7 +10,7 @@ namespace ETLBox.Logging
     /// Returns the content of the LoadProcess table as JSON.
     /// The table name is read from `ControlFlow.LoadProcessTable`. The default table name is etlbox_log.
     /// </summary>
-    public class GetLoadProcessAsJSONTask : ControlFlowTask
+    public sealed class GetLoadProcessAsJSONTask : ControlFlowTask
     {
         /* ITask Interface */
         public override string TaskName => $"Get load process list as JSON";

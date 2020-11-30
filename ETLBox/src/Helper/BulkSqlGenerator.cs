@@ -14,7 +14,7 @@ namespace ETLBox.Helper
     /// Normally this will be a insert into with multiple values, but depending on the database type this can be different.
     /// </summary>
     /// <typeparam name="T">ADO.NET database parameter type</typeparam>
-    public class BulkSqlGenerator<T> where T : DbParameter, new()
+    public sealed class BulkSqlGenerator<T> where T : DbParameter, new()
     {
         #region Public properties
         /// <summary>

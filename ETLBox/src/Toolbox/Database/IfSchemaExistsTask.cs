@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// <summary>
     /// Checks if a schema exists. In MySql or MariaDb, use the IfDatabaseExistsTask instead.
     /// </summary>
-    public class IfSchemaExistsTask : IfExistsTask
+    public sealed class IfSchemaExistsTask : IfExistsTask
     {
         internal override string GetSql()
         {

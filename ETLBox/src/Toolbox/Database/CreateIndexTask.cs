@@ -14,7 +14,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// CreateIndexTask.Create("indexname","tablename", indexColumns)
     /// </code>
     /// </example>
-    public class CreateIndexTask : ControlFlowTask
+    public sealed class CreateIndexTask : ControlFlowTask
     {
         /// <inheritdoc />
         public override string TaskName => $"Create index {IndexName} on table {TableName}";

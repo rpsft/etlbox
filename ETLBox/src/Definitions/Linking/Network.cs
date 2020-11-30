@@ -3,7 +3,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow
 {
-    public class Network
+    public sealed class Network
     {
         internal static void DoRecursively(DataFlowComponent comp, Func<DataFlowComponent, bool> alreadyRun, Action<DataFlowComponent> runOnNode)
         {
