@@ -26,6 +26,9 @@ namespace ETLBox.DataFlow.Transformations
         /// <inheritdoc/>
         public override string TaskName { get; set; } = "Sort";
 
+        /// <inheritdoc/>
+        public new int MaxBufferSize => -1;
+        
         /// <summary>
         /// A System.Comparison used to sort the data.
         /// </summary>
@@ -57,7 +60,7 @@ namespace ETLBox.DataFlow.Transformations
         #region Implement abstract methods
 
         protected override void InternalInitBufferObjects()
-        {            
+        {
             BlockTransformation.CopyLogTaskProperties(this);
             BlockTransformation.BlockTransformationFunc = SortByFunc;
             BlockTransformation.CancellationSource = this.CancellationSource;
@@ -77,7 +80,7 @@ namespace ETLBox.DataFlow.Transformations
         public new IDataFlowSource<ETLBoxError> LinkErrorTo(IDataFlowDestination<ETLBoxError> target)
         {
             var errorSource = InternalLinkErrorTo(target);
-            BlockTransformation.ErrorSource = new ErrorSource() { Redirection = this.ErrorSource };            
+            BlockTransformation.ErrorSource = new ErrorSource() { Redirection = this.ErrorSource };
             return errorSource;
         }
 
@@ -89,19 +92,11 @@ namespace ETLBox.DataFlow.Transformations
 
         TInput[] SortByFunc(TInput[] data)
         {
-            try
-            {
-                List<TInput> sortedData = new List<TInput>();
-                foreach (var row in data)
-                    sortedData.Add(row);
-                sortedData.Sort(SortFunction);
-                return sortedData.ToArray();
-            }
-            catch (Exception e)
-            {
-                int i = 3;
-                return null;
-            }
+            List<TInput> sortedData = new List<TInput>();
+            foreach (var row in data)
+                sortedData.Add(row);
+            sortedData.Sort(SortFunction);
+            return sortedData.ToArray();
         }
 
         #endregion
