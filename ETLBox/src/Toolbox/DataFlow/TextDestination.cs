@@ -49,6 +49,12 @@ namespace ETLBox.DataFlow.Connectors
 
         #endregion
 
+        #region Implement abstract methods
+
+        protected override void CheckParameter() { }
+
+        #endregion
+
         #region Implementation
 
         protected override void InitStream()

@@ -57,7 +57,9 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implement abstract methods
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             if (Successors.Any(suc => suc.MaxBufferSize > 0))
             {

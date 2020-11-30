@@ -109,6 +109,8 @@ namespace ETLBox.DataFlow.Connectors
 
         #region Implement abstract methods
 
+        protected override void CheckParameter() { }
+
         protected override void OnExecutionDoSynchronousWork()
         {
             NLogStartOnce();

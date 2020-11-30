@@ -20,7 +20,9 @@ namespace ETLBox.DataFlow
         {
         }
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             Buffer = new BufferBlock<ETLBoxError>();
             ComponentCompletion = new Task(

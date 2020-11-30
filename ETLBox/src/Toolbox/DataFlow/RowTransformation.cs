@@ -68,28 +68,18 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implement abstract methods
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             TransformBlock = new TransformBlock<TInput, TOutput>(
-                row =>
-                {
-                    NLogStartOnce();
-                    try
-                    {
-                        InvokeInitActionOnce();
-                        return InvokeTransformationFunc(row);
-                    }
-                    catch (Exception e)
-                    {
-                        ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput>(row));
-                        return default;
-                    }
-                }, new ExecutionDataflowBlockOptions()
+                WrapTransformationFunc, 
+                new ExecutionDataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
                     CancellationToken = CancellationSource.Token
                 }
-            ) ; 
+            );
         }
 
         protected override void CleanUpOnSuccess()
@@ -105,6 +95,21 @@ namespace ETLBox.DataFlow.Transformations
 
         TransformBlock<TInput, TOutput> TransformBlock;
         protected bool WasInitActionInvoked;
+
+        private TOutput WrapTransformationFunc(TInput row)
+        {
+            NLogStartOnce();
+            try
+            {
+                InvokeInitActionOnce();
+                return InvokeTransformationFunc(row);
+            }
+            catch (Exception e)
+            {
+                ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput>(row));
+                return default;
+            }
+        }
 
         protected virtual void InvokeInitActionOnce()
         {

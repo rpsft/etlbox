@@ -63,6 +63,8 @@ namespace ETLBox.DataFlow
 
         #region Implement abstract methods
 
+        protected override void CheckParameter() {  }
+
         protected override void OnExecutionDoSynchronousWork()
         {
 

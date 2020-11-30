@@ -96,7 +96,9 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implement abstract methods and override default behavior
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {

@@ -72,10 +72,16 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implement abstract methods
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter()
         {
-            CheckParameter();
+            if (BatchSize < 0)
+                BatchSize = int.MaxValue;
+            if (BatchSize == 0)
+                throw new ETLBoxException("A batch size of 0 is not permitted!");
+        }
 
+        protected override void InitComponent()
+        {
             InputBuffer = new BatchBlock<TInput>(BatchSize,
                 new GroupingDataflowBlockOptions()
                 {
@@ -102,14 +108,6 @@ namespace ETLBox.DataFlow.Transformations
                 else
                     OutputBuffer.Complete();
             });
-        }
-
-        private void CheckParameter()
-        {
-            if (BatchSize < 0)
-                BatchSize = int.MaxValue;
-            if (BatchSize == 0)
-                throw new ETLBoxException("A batch size of 0 is not permitted!");
         }
 
         private int CalculateBatchedMaxBufferSize()

@@ -123,10 +123,17 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override Task BufferCompletion => SourceBlock.Completion;
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() {
+            if (AggregationAction == null ||
+                    (AggTypeInfo.AggregateColumns.Count == 0 && (AggregateColumns?.Count() ?? 0) == 0)
+                )
+                throw new ETLBoxException("No aggregation method found - either define an AggregationAction or use the AggregateColumn attributes " +
+                    "or AggregateColumns property.");
+        }
+
+        protected override void InitComponent()
         {
-            SetAggregationFunctionsIfNecessary();
-            CheckIfAggregationActionIsSet();
+            SetAggregationFunctionsIfNecessary();            
 
             OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
@@ -205,11 +212,7 @@ namespace ETLBox.DataFlow.Transformations
 
         }
 
-        private void CheckIfAggregationActionIsSet()
-        {
-            if (AggregationAction == null)
-                throw new ETLBoxException("No aggregation method found - either define an AggregationAction or use the AggregateColumn attribute");
-        }
+
 
         private void FillAggregateAttributeMapping()
         {

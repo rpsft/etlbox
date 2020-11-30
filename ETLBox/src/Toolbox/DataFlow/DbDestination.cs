@@ -104,10 +104,13 @@ namespace ETLBox.DataFlow.Connectors
         #endregion
 
         #region Implement abstract methods
-        protected override void InternalInitBufferObjects()
+
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             ThrottleBatchSizeForNonNativeConnections();
-            base.InternalInitBufferObjects();
+            base.InitComponent();
         }
 
         private void ThrottleBatchSizeForNonNativeConnections()

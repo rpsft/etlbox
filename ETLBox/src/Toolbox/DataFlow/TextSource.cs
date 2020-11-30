@@ -60,6 +60,12 @@ namespace ETLBox.DataFlow.Connectors
 
         #endregion
 
+        #region Implement abstrct methods
+
+        protected override void CheckParameter() { }
+
+        #endregion 
+
         #region Implementation
 
         TypeInfo TypeInfo { get; set; }

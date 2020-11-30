@@ -122,10 +122,13 @@ namespace ETLBox.DataFlow.Transformations
 
         #region Implement abstract methods
 
-        protected override void InternalInitBufferObjects()
-        {
+        protected override void CheckParameter() {
             if (Source == null)
                 throw new ETLBoxException("You need to define a lookup source before using a LookupTransformation in a data flow");
+        }
+
+        protected override void InitComponent()
+        {
             if (TransformationFunc == null)
                 DefaultFuncWithMatchRetrieveAttributes();
 

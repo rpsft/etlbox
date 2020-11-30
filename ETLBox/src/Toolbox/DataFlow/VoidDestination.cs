@@ -30,7 +30,8 @@ namespace ETLBox.DataFlow.Connectors
 
         #region Implement abstract interfaces
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+        protected override void InitComponent()
         {
             TargetAction = new ActionBlock<TInput>(r => { });
         }

@@ -23,7 +23,9 @@ namespace ETLBox.DataFlow
         ActionBlock<TInput> JoinAction;
         Action<TInput> Action;
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             JoinAction = new ActionBlock<TInput>(Action, new ExecutionDataflowBlockOptions()
             {

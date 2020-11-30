@@ -16,7 +16,7 @@ namespace ETLBox.DataFlow
         public override ISourceBlock<TOutput> SourceBlock => this.Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
         internal override Task BufferCompletion => Buffer.Completion;
-        protected override void InternalInitBufferObjects()
+        protected override void InitComponent()
         {
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {

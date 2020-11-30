@@ -183,7 +183,9 @@ namespace ETLBox.DataFlow.Connectors
             OutputSource.FaultBuffer(e);
         }
 
-        protected override void InternalInitBufferObjects()
+        protected override void CheckParameter() { }
+
+        protected override void InitComponent()
         {
             SetDestinationTableProperties();
             InitTypeInfoWithMergeProperties();

@@ -118,11 +118,13 @@ namespace ETLBox.DataFlow
         /// </summary>
         public void InitBufferObjects()
         {
-            InternalInitBufferObjects();
+            CheckParameter();
+            InitComponent();
             WereBufferInitialized = true;
         }
 
-        protected abstract void InternalInitBufferObjects();
+        protected abstract void CheckParameter();
+        protected abstract void InitComponent();
 
         protected void SetCompletionTaskRecursively() => 
             Network.DoRecursively(this, comp => comp.Completion != null, comp => comp.SetCompletionTask());

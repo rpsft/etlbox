@@ -42,15 +42,24 @@ namespace ETLBox.DataFlow.Transformations
             CachedRowTransformation = new CachedRowTransformation<TInput, TInput, HashValue>();
             TypeInfo = new DistinctTypeInfo(typeof(TInput));
         }
-       
+
         #endregion
 
         #region Implement abstract methods
 
-        protected override void InternalInitBufferObjects()
-        {
+        protected override void CheckParameter() { }
 
-            InitRowTransformationManually();
+        protected override void InitComponent()
+        {
+            var hashCache = new HashCache<TInput>();
+            hashCache.HashSumFunc = HashSumCalculation;
+            CachedRowTransformation.CacheManager = hashCache;
+            CachedRowTransformation.TransformationFunc = MakeRowDistinct;
+            CachedRowTransformation.CopyLogTaskProperties(this);
+            CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
+            CachedRowTransformation.FillCacheAfterTranformation = true;
+            CachedRowTransformation.CancellationSource = this.CancellationSource;
+            CachedRowTransformation.InitBufferObjects();
         }
 
 
@@ -78,19 +87,6 @@ namespace ETLBox.DataFlow.Transformations
 
         CachedRowTransformation<TInput, TInput, HashValue> CachedRowTransformation;
         DistinctTypeInfo TypeInfo;
-
-        private void InitRowTransformationManually()
-        {
-            var hashCache = new HashCache<TInput>();
-            hashCache.HashSumFunc = HashSumCalculation;
-            CachedRowTransformation.CacheManager = hashCache;
-            CachedRowTransformation.TransformationFunc = MakeRowDistinct;
-            CachedRowTransformation.CopyLogTaskProperties(this);
-            CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
-            CachedRowTransformation.FillCacheAfterTranformation = true;
-            CachedRowTransformation.CancellationSource = this.CancellationSource;
-            CachedRowTransformation.InitBufferObjects();
-        }
 
         private TInput MakeRowDistinct(TInput row, ICollection<HashValue> cache)
         {
