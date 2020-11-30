@@ -124,8 +124,9 @@ namespace ETLBox.DataFlow.Transformations
         internal override Task BufferCompletion => SourceBlock.Completion;
 
         protected override void CheckParameter() {
-            if (AggregationAction == null ||
-                    (AggTypeInfo.AggregateColumns.Count == 0 && (AggregateColumns?.Count() ?? 0) == 0)
+            if (AggregationAction == null &&
+                AggTypeInfo.AggregateColumns.Count == 0 && 
+                (AggregateColumns?.Count() ?? 0) == 0
                 )
                 throw new ETLBoxException("No aggregation method found - either define an AggregationAction or use the AggregateColumn attributes " +
                     "or AggregateColumns property.");
