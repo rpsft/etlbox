@@ -656,8 +656,9 @@ namespace ETLBox.DataFlow.Connectors
             }
 
             TableData data = new TableData(updateDefinition);
-                        
-            foreach (var batch in rowsToUpdate.Batch(CalculateMaxParameterSize(rowsToUpdate)))
+
+            int calculatedbatchSize = CalculateMaxParameterSize(rowsToUpdate.Count(), updateDefinition.Columns.Count);
+            foreach (var batch in rowsToUpdate.Batch(calculatedbatchSize))
             {
                 foreach (var row in batch)
                 {
@@ -670,11 +671,11 @@ namespace ETLBox.DataFlow.Connectors
             }
         }
 
-        private int CalculateMaxParameterSize(IEnumerable<TInput> rowsToUpdate)
+        private int CalculateMaxParameterSize(int amountRows, int columnCount)
         {
-            int parameterPerBatch = rowsToUpdate.Count();
+            int parameterPerBatch = amountRows;
             if (this.ConnectionManager.MaxParameterAmount < int.MaxValue)
-                parameterPerBatch = Math.Abs(this.ConnectionManager.MaxParameterAmount / updateDefinition.Columns.Count);
+                parameterPerBatch = Math.Abs(this.ConnectionManager.MaxParameterAmount / columnCount);
             return parameterPerBatch;
         }
 
@@ -694,7 +695,8 @@ namespace ETLBox.DataFlow.Connectors
             }
             TableData data = new TableData(idColsOnly);
 
-            foreach (var batch in rowsToDelete.Batch(CalculateMaxParameterSize(rowsToDelete)))
+            int calculatedbatchSize = CalculateMaxParameterSize(rowsToDelete.Count(), idColsOnly.Columns.Count);
+            foreach (var batch in rowsToDelete.Batch(calculatedbatchSize))
             {
                 foreach (var row in batch)
                 {
