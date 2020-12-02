@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ETLBox.Exceptions;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -15,7 +17,7 @@ namespace ETLBox.DataFlow
         /// Waits for the completion of the component.
         /// </summary>
         public void Wait() => Completion.Wait();
-
+          
         #endregion
 
         #region Buffer handling

@@ -28,6 +28,5 @@ namespace ETLBox.DataFlow
             else
                 TargetBlock.Fault(e);
         }
-
     }
 }

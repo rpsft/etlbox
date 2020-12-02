@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ETLBox.Exceptions;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -34,17 +36,13 @@ namespace ETLBox.DataFlow
 
         #region Implement abstract methods
 
-        public void Wait() => Completion.Wait();
+        public void Wait() => Completion.Wait();            
 
         protected ActionBlock<TInput[]> TargetAction { get; set; }
 
         internal override Task BufferCompletion => TargetAction.Completion;
 
-        internal override void CompleteBuffer()
-        {
-
-            TargetBlock.Complete();
-        }
+        internal override void CompleteBuffer() => TargetBlock.Complete();
 
         internal override void FaultBuffer(Exception e) => TargetBlock.Fault(e);
 
@@ -90,7 +88,7 @@ namespace ETLBox.DataFlow
 
         protected void WriteBatch(TInput[] data)
         {
-            if (data == null || data.Length == 0) return; 
+            if (data == null || data.Length == 0) return;
             if (ProgressCount == 0) NLogStartOnce();
             try
             {

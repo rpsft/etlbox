@@ -150,9 +150,10 @@ namespace ETLBox.DataFlow.Transformations
                 {
                     if (!SuppressNullValueFilter && row == null) continue;
                     if (!OutputBuffer.SendAsync(row).Result)
-                        throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);                    
+                        throw new ETLBoxFaultedBufferException();
                 }
             }
+            catch (ETLBoxFaultedBufferException) { throw;  }
             catch (Exception e)
             {
                 ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput[]>(batch));                

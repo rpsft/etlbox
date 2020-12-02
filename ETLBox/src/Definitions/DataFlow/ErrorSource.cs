@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ETLBox.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -18,18 +19,23 @@ namespace ETLBox.DataFlow
 
         public ErrorSource()
         {
+          
         }
-
+        
         protected override void CheckParameter() { }
-
+                
         protected override void InitComponent()
         {
-            Buffer = new BufferBlock<ETLBoxError>();
-            ComponentCompletion = new Task(
-                () => { }
-                );
-            //Completion = ComponentCompletion;
+            base.InitComponent();
+            SourceOrPredecessorCompletion = SourceTask;         
         }
+
+        //The complete is called explicit in the DataFlowComponent
+        protected override bool CompleteManually { get; set; } = true;
+
+        protected override void OnExecutionDoSynchronousWork() { } 
+
+        protected override void OnExecutionDoAsyncWork() { } 
 
         internal override void LinkBuffers(DataFlowComponent successor, LinkPredicates linkPredicate)
         {
@@ -37,6 +43,13 @@ namespace ETLBox.DataFlow
             var lp = new BufferLinker<ETLBoxError>(linkPredicate);
             lp.LinkBlocksWithPredicates(SourceBlock, s.TargetBlock);
         }
+
+        /// Called from DataFlowComponent - after network init the error source are
+        /// startet with manual completion
+        internal void LetErrorSourceWaitForInput() => this.ExecuteAsync();
+
+        /// This is called when a component completes
+        internal void LetErrorSourceFinishUp() => this.CompleteBuffer();
 
         /// <summary>
         /// Sends the error message into the error data flow
@@ -55,7 +68,9 @@ namespace ETLBox.DataFlow
                     ReportTime = DateTime.Now,
                     RecordAsJson = jsonRow
                 }).Result)
-                    throw this.Exception;
+                    throw new ETLBoxFaultedBufferException("This was not supposed to happen - " +
+                        "the error buffer faulted & no data " +
+                        "can be written into the error output anymore.",e);
             }
         }
 

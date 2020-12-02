@@ -122,7 +122,11 @@ namespace ETLBox.DataFlow.Transformations
         {
             LeftInput.CompleteBuffer();
             RightInput.CompleteBuffer();
-            Task.WaitAll(LeftInput.Completion, RightInput.Completion);
+            try //A faulted task can't be waited on, so Exception is ignored
+            {
+                Task.WaitAll(LeftInput.Completion, RightInput.Completion);
+            }
+            catch { }            
             try
             {
                 EmptyQueues();
@@ -138,6 +142,11 @@ namespace ETLBox.DataFlow.Transformations
         {
             LeftInput.FaultBuffer(e);
             RightInput.FaultBuffer(e);
+            try //A faulted task can't be waited on, so Exception is ignored
+            {
+                Task.WaitAll(LeftInput.Completion, RightInput.Completion);
+            }
+            catch { }
             ((IDataflowBlock)Buffer).Fault(e);
         }
 
@@ -221,9 +230,9 @@ namespace ETLBox.DataFlow.Transformations
             {
                 joinOutput = MergeJoinFunc.Invoke(dataLeft, dataRight);
                 if (!Buffer.SendAsync(joinOutput).Result)
-                    throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
+                    throw new ETLBoxFaultedBufferException();
             }
-            catch (ETLBoxException) { throw; }
+            catch (ETLBoxFaultedBufferException) { throw; }
             catch (Exception e)
             {
                 ThrowOrRedirectError(e, "Left:" + ErrorSource.ConvertErrorData<TInput1>(dataLeft)

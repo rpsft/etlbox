@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ETLBox.Exceptions;
+using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -16,6 +17,10 @@ namespace ETLBox.DataFlow
         public override ISourceBlock<TOutput> SourceBlock => this.Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
         internal override Task BufferCompletion => Buffer.Completion;
+        
+        protected Task SourceTask;
+        protected virtual bool CompleteManually { get; set; }
+
         protected override void InitComponent()
         {
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
@@ -23,25 +28,22 @@ namespace ETLBox.DataFlow
                 BoundedCapacity = MaxBufferSize,
                 CancellationToken = this.CancellationSource.Token
             });
-            ComponentCompletion = new Task(
-               () =>
-               {
-                   try
-                   {
-                       OnExecutionDoAsyncWork();
-                       CompleteBuffer();
-                       ErrorSource?.CompleteBuffer();
-                       CleanUpOnSuccess();
-                   }
-                   catch (Exception e)
-                   {
-                       FaultBuffer(e);
-                       ErrorSource?.FaultBuffer(e);
-                       CleanUpOnFaulted(e);
-                       throw e;
-                   }
-               }
-               , TaskCreationOptions.LongRunning);
+
+            SourceTask = new Task(
+             () =>
+             {
+                 OnExecutionDoAsyncWork();
+             }
+             , CancellationSource.Token, TaskCreationOptions.LongRunning);
+
+            if (this.GetType() == typeof(ErrorSource) && CompleteManually == false)
+                throw new InvalidOperationException("Errors Source is always completed manually!");
+            if (CompleteManually) 
+                SourceOrPredecessorCompletion = SourceTask;
+            else
+                SourceOrPredecessorCompletion = SourceTask.ContinueWith(t =>
+             this.CompleteOrFaultBufferOnPredecessorCompletion(t), CancellationSource.Token);
+
         }
 
         internal override void CompleteBuffer() => SourceBlock.Complete();
@@ -56,7 +58,8 @@ namespace ETLBox.DataFlow
         {
             InitNetworkRecursively();
             OnExecutionDoSynchronousWork();
-            ComponentCompletion.RunSynchronously();
+            if (!SourceTask.IsCompleted) //Needed if other parts of the network already canceled this source
+                SourceTask.RunSynchronously();
         }
 
         /// <inheritdoc/>
@@ -64,13 +67,14 @@ namespace ETLBox.DataFlow
         {
             InitNetworkRecursively();
             OnExecutionDoSynchronousWork();
-            ComponentCompletion.Start();
+            if (!SourceTask.IsCompleted) //Needed if other parts of the network already canceled this source
+                SourceTask.Start();
             return Completion;
         }
 
-        protected virtual void OnExecutionDoSynchronousWork() { } //abstract? Corner-case for ErrorSource
+        protected abstract void OnExecutionDoSynchronousWork();
 
-        protected virtual void OnExecutionDoAsyncWork() { } //abstract? Corner-Case for ErrorSource
+        protected abstract void OnExecutionDoAsyncWork();
 
         #endregion
     }

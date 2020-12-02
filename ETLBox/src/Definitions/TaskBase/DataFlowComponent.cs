@@ -1,4 +1,5 @@
 ﻿using ETLBox.ControlFlow;
+using ETLBox.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -45,11 +46,11 @@ namespace ETLBox.DataFlow
         /// <inheritdoc/>
         public Task Completion { get; internal set; }
         internal virtual Task BufferCompletion { get; }
-        internal Task ComponentCompletion { get; set; }
-        protected DataFlowComponent Parent { get; set; }
-        internal CancellationTokenSource CancellationSource{ get;set; } = new CancellationTokenSource();
+        internal Task SourceOrPredecessorCompletion { get; set; }
+        internal DataFlowComponent Parent { get; set; }
+        internal CancellationTokenSource CancellationSource { get; set; } = new CancellationTokenSource();
 
-        protected bool WereBufferInitialized;
+        protected bool WasComponentInitialized;
         protected bool ReadyForProcessing;
         protected Dictionary<DataFlowComponent, bool> WasLinked = new Dictionary<DataFlowComponent, bool>();
         internal Dictionary<DataFlowComponent, LinkPredicates> LinkPredicates = new Dictionary<DataFlowComponent, LinkPredicates>();
@@ -100,7 +101,7 @@ namespace ETLBox.DataFlow
 
         internal void InitNetworkRecursively()
         {
-            InitBuffersRecursively();          
+            InitBuffersRecursively();
             LinkBuffersRecursively();
             SetCompletionTaskRecursively();
             RunErrorSourceInitializationRecursively();
@@ -108,10 +109,10 @@ namespace ETLBox.DataFlow
 
         protected void InitBuffersRecursively() =>
             Network.DoRecursively(this
-                , comp => comp.WereBufferInitialized
+                , comp => comp.WasComponentInitialized
                 , comp => comp.InitBufferObjects()
             );
-        
+
         /// <summary>
         /// Inits the underlying TPL.Dataflow buffer objects. After this, the component is ready for linking
         /// its source or target blocks.
@@ -120,23 +121,25 @@ namespace ETLBox.DataFlow
         {
             CheckParameter();
             InitComponent();
-            WereBufferInitialized = true;
+            WasComponentInitialized = true;
         }
 
         protected abstract void CheckParameter();
         protected abstract void InitComponent();
 
-        protected void SetCompletionTaskRecursively() => 
+        protected void SetCompletionTaskRecursively() =>
             Network.DoRecursively(this, comp => comp.Completion != null, comp => comp.SetCompletionTask());
-        
+
         protected void SetCompletionTask()
         {
             List<Task> PredecessorCompletionTasks = CollectCompletionFromPredecessors();
             if (PredecessorCompletionTasks.Count > 0)
-            {
-                ComponentCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBuffer);
+            {   
+                //ComponentCompletion is manually set in DataFlowExecutableSource
+                SourceOrPredecessorCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBufferOnPredecessorCompletion, CancellationSource.Token);
             }
-            Completion = Task.WhenAll(ComponentCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
+            //For sources: PredecessorCompletion is completion of SourceTask in DataFlowExecutableSource
+            Completion = Task.WhenAll(SourceOrPredecessorCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
         }
 
         private List<Task> CollectCompletionFromPredecessors()
@@ -144,23 +147,20 @@ namespace ETLBox.DataFlow
             List<Task> CompletionTasks = new List<Task>();
             foreach (DataFlowComponent pre in Predecessors)
             {
-                CompletionTasks.Add(pre.ComponentCompletion);
+                CompletionTasks.Add(pre.SourceOrPredecessorCompletion);
                 CompletionTasks.Add(pre.BufferCompletion);
             }
             return CompletionTasks;
         }
 
-        protected void RunErrorSourceInitializationRecursively() 
+        protected void RunErrorSourceInitializationRecursively()
             => Network.DoRecursively(this, comp => comp.ReadyForProcessing, comp => comp.RunErrorSourceInit());
 
         protected void RunErrorSourceInit()
         {
-            LetErrorSourceWaitForInput();
+            ErrorSource?.LetErrorSourceWaitForInput();
             ReadyForProcessing = true;
         }
-
-        private void LetErrorSourceWaitForInput() => ErrorSource?.ExecuteAsync();//.Wait();
-
 
         #endregion
 
@@ -169,16 +169,35 @@ namespace ETLBox.DataFlow
         /// <inheritdoc/>
         public Action OnCompletion { get; set; }
 
-        protected void CompleteOrFaultBuffer(Task t)
+        protected void CompleteOrFaultBufferOnPredecessorCompletion(Task t)
         {
             if (t.IsFaulted)
             {
                 FaultBuffer(t.Exception.InnerException);
                 throw t.Exception.InnerException;
+                //ComponentCompletion will end as faulted
+            }
+            else if (t.IsCanceled)
+            {
+                if (Exception != null)
+                    throw Exception; //This component is the source of the exception, rethrow it
+                else if (CancellationSource.IsCancellationRequested)
+                    CancellationSource.Token.ThrowIfCancellationRequested(); //This component is 
+                                                                             //canceled, so leave it canceled
+                //else //Other branches which are not canceled or faulted will simply complete
+                // CompleteBuffer();
+                else //Cancel all successor as well
+                {
+                    CancellationSource.Cancel(true);  
+                    while (CancellationSource.IsCancellationRequested != true) { }
+                    CancellationSource.Token.ThrowIfCancellationRequested();
+                }
+                
             }
             else
             {
                 CompleteBuffer();
+                //ComponentCompletion will end as RanToCompletion
             }
         }
 
@@ -187,24 +206,29 @@ namespace ETLBox.DataFlow
 
         protected void CleanUpComponent(Task t)
         {
-            LetErrorSourceFinishUp();
+            ErrorSource?.LetErrorSourceFinishUp();
             if (t.IsFaulted)
             {
                 CleanUpOnFaulted(t.Exception.InnerException);
-                throw t.Exception.InnerException; //Will fault Completion task
+                throw t.Exception.InnerException;
+                //The Completion will end as faulted
+            }
+            else if (t.IsCanceled)
+            {
+                CleanUpOnFaulted(null);
+                //The Completion will end as RanToCompletion, not canceled
             }
             else
             {
                 CleanUpOnSuccess();
                 OnCompletion?.Invoke();
+                //The Completion will end as RanToCompletion
             }
         }
 
-        private void LetErrorSourceFinishUp() => ErrorSource?.CompleteBuffer();
-
         protected virtual void CleanUpOnSuccess() { }
 
-        protected virtual void CleanUpOnFaulted(Exception e) { }     
+        protected virtual void CleanUpOnFaulted(Exception e) { }
 
         #endregion
 
@@ -226,24 +250,31 @@ namespace ETLBox.DataFlow
             return target as IDataFlowSource<ETLBoxError>;
         }
 
-        protected void ThrowOrRedirectError(Exception e, string message)
+        protected void ThrowOrRedirectError(Exception e, string erroneousData)
         {
             if (ErrorSource == null)
             {
+                this.Exception = e;
+                NLogger.Error(TaskName + $"throws Exception: {e.Message}", TaskType, "LOG", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
                 FaultBuffer(e);
-                CancelPredecessorsRecursively(e);
+                CancelPredecessorsRecursively();
+                Parent?.CancelPredecessorsRecursively();
+                Parent?.FaultBuffer(e);
+                if (Parent != null) Parent.Exception = e;
                 throw e;
             }
-            ErrorSource.Send(e, message);
+            else
+            {
+                ErrorSource.Send(e, erroneousData);
+            }
         }
-        
-        protected void CancelPredecessorsRecursively(Exception e)
+
+        protected void CancelPredecessorsRecursively()
         {
-            Exception = e;
             foreach (DataFlowComponent pre in Predecessors)
             {
-                pre.CancellationSource.Cancel();
-                pre.CancelPredecessorsRecursively(e);
+                pre.CancellationSource.Cancel(true);
+                pre.CancelPredecessorsRecursively();
             }
         }
 
@@ -319,6 +350,7 @@ namespace ETLBox.DataFlow
             if (!DisableLogging && HasLoggingThresholdRows && (ProgressCount % LoggingThresholdRows == 0))
                 NLogger.Info(TaskName + $" processed {ProgressCount} records.", TaskType, "LOG", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
         }
+
         #endregion
     }
 }

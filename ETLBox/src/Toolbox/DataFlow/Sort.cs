@@ -63,6 +63,7 @@ namespace ETLBox.DataFlow.Transformations
 
         protected override void InitComponent()
         {
+            BlockTransformation.Parent = this;
             BlockTransformation.CopyLogTaskProperties(this);
             BlockTransformation.BlockTransformationFunc = SortByFunc;
             BlockTransformation.CancellationSource = this.CancellationSource;

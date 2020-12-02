@@ -129,7 +129,11 @@ namespace ETLBox.DataFlow.Transformations
         {
             InMemoryTarget.CompleteBuffer();
             PassingTarget.CompleteBuffer();
-            Task.WaitAll(InMemoryTarget.Completion, PassingTarget.Completion);
+            try //A faulted task can't be waited on, so Exception is ignored
+            {
+                Task.WaitAll(InMemoryTarget.Completion, PassingTarget.Completion); //Will throw exception as soon as the task is faulted!                
+            }
+            catch { }
             Buffer.Complete();
 
         }
@@ -138,6 +142,11 @@ namespace ETLBox.DataFlow.Transformations
         {
             InMemoryTarget.FaultBuffer(e);
             PassingTarget.FaultBuffer(e);
+            try //A faulted task can't be waited on, so Exception is ignored
+            {
+                Task.WaitAll(InMemoryTarget.Completion, PassingTarget.Completion); //Will throw exception as soon as the task is faulted!                
+            }
+            catch { }
             ((IDataflowBlock)Buffer).Fault(e);
         }
 
@@ -166,12 +175,12 @@ namespace ETLBox.DataFlow.Transformations
                         if (result != null)
                         {
                             if (!Buffer.SendAsync(result).Result)
-                                throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
+                                throw new ETLBoxFaultedBufferException();
                             LogProgress();
                         }
                     }
                 }
-                catch (ETLBoxException) { throw; }
+                catch (ETLBoxFaultedBufferException) { throw; }
                 catch (Exception e)
                 {
                     ThrowOrRedirectError(e, string.Concat(ErrorSource.ConvertErrorData<TInput1>(inMemoryRow), "  |--| ",

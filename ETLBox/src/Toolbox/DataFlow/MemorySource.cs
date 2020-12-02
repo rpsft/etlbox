@@ -91,7 +91,7 @@ namespace ETLBox.DataFlow.Connectors
             foreach (TOutput record in Data)
             {
                 if (!Buffer.SendAsync(record).Result)
-                    throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
+                    throw new ETLBoxFaultedBufferException();                    
                 LogProgress();
             }
         }

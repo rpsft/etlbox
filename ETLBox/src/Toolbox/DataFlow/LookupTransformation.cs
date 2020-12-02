@@ -166,6 +166,7 @@ namespace ETLBox.DataFlow.Transformations
 
         private void InitRowTransformationManually()
         {
+            CachedRowTransformation.Parent = this;
             CachedRowTransformation.TransformationFunc = TransformationFunc;
             CachedRowTransformation.CopyLogTaskProperties(this);
             CachedRowTransformation.MaxBufferSize = this.MaxBufferSize;
@@ -175,8 +176,7 @@ namespace ETLBox.DataFlow.Transformations
             else
                 CachedRowTransformation.CacheManager = new FullTableCache<TInput, TSource>();
             (CachedRowTransformation.CacheManager as ILookupCacheManager<TInput, TSource>).Lookup = this;            
-            CachedRowTransformation.InitBufferObjects();
-
+            CachedRowTransformation.InitBufferObjects();           
         }
 
         private void DefaultFuncWithMatchRetrieveAttributes()

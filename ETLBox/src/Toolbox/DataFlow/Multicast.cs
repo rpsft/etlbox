@@ -117,7 +117,14 @@ namespace ETLBox.DataFlow.Transformations
             if (AvoidBroadcastBlock)
             {
                 OwnBroadcastBlock.Complete();
-                OwnBroadcastBlock.Completion.Wait();
+                //try //A faulted task can't be waited on, so Exception is ignored
+                //{
+                    OwnBroadcastBlock.Completion.Wait(); //Will throw exception as soon as the task is faulted!                
+                //}
+                //catch (Exception e) {
+                //    FaultBuffer(e);
+                //    throw e;
+                //}
                 foreach (var buffer in OutputBuffer)
                     buffer.Item1.Complete();
             }
@@ -175,7 +182,7 @@ namespace ETLBox.DataFlow.Transformations
                 if (!lp.HasPredicate || (lp.HasPredicate && pk.Invoke(clone)))
                 {
                     if (!buffer.Item1.SendAsync(clone).Result)
-                        throw new ETLBoxException("Buffer already completed or faulted!", this.Exception);
+                        throw new ETLBoxFaultedBufferException();
                 }
             }
         }

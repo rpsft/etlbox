@@ -24,8 +24,8 @@ namespace ETLBox.DataFlow
         }
 
         public void Init()
-        {            
-            Source.LinkTo(LookupBuffer);
+        {
+            Source.LinkTo(LookupBuffer);            
             Source.Execute();
             LookupBuffer.Wait();
         }

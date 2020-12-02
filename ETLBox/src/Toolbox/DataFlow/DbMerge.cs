@@ -316,7 +316,7 @@ namespace ETLBox.DataFlow.Connectors
         {
             Lookup.LinkTo(DestinationTable);
             Lookup.InitBufferObjects();
-            Lookup.ComponentCompletion = Lookup.BufferCompletion;
+            Lookup.SourceOrPredecessorCompletion = Lookup.BufferCompletion;
             //Don't do this:
             //Lookup.CancellationSource = this.CancellationSource;
             Lookup.InitNetworkRecursively();            
