@@ -152,8 +152,9 @@ INNER JOIN (
     ON cols.object_id = tbl.object_id
 INNER JOIN sys.schemas sc
     ON tbl.schema_id = sc.schema_id
-INNER JOIN sys.systypes tpes
-    ON tpes.xtype = cols.system_type_id
+INNER JOIN sys.types tpes
+    ON tpes.system_type_id = cols.system_type_id
+    AND tpes.is_user_defined = 0 
 LEFT JOIN sys.identity_columns ident
     ON ident.object_id = cols.object_id
 LEFT JOIN sys.indexes pkidx
