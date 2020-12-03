@@ -1,5 +1,6 @@
 ﻿using ETLBox.Exceptions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -22,11 +23,11 @@ namespace ETLBox.DataFlow
         protected virtual bool CompleteManually { get; set; }
 
         protected override void InitComponent()
-        {
+        {            
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                CancellationToken = this.CancellationSource.Token
+                CancellationToken = CancellationSource.Token,
             });
 
             SourceTask = new Task(

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Threading;
 using System.Threading.Tasks.Dataflow;
 
 namespace ETLBox.DataFlow.Connectors
@@ -28,7 +29,7 @@ namespace ETLBox.DataFlow.Connectors
         #region Public properties
 
         /// <inheritdoc/>
-        public override string TaskName => $"Read data from memory";
+        public override string TaskName { get; set; } = $"Read data from memory";
 
         /// The .NET collection that is used to read the data from.
         public IEnumerable<TOutput> Data { get; set; }
@@ -96,6 +97,7 @@ namespace ETLBox.DataFlow.Connectors
                 LogProgress();
             }
         }
+        
 
         #endregion
     }

@@ -117,14 +117,16 @@ namespace ETLBox.DataFlow.Transformations
             if (AvoidBroadcastBlock)
             {
                 OwnBroadcastBlock.Complete();
-                //try //A faulted task can't be waited on, so Exception is ignored
-                //{
-                    OwnBroadcastBlock.Completion.Wait(); //Will throw exception as soon as the task is faulted!                
-                //}
-                //catch (Exception e) {
+                try 
+                {
+                    //Completion may be canceled!
+                    if (!OwnBroadcastBlock.Completion.IsCanceled)
+                        OwnBroadcastBlock.Completion.Wait(); //Will throw exception as soon as the task is faulted!                
+                }
+                catch (Exception e) {
                 //    FaultBuffer(e);
                 //    throw e;
-                //}
+                }
                 foreach (var buffer in OutputBuffer)
                     buffer.Item1.Complete();
             }

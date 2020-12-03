@@ -22,7 +22,7 @@ namespace ETLBox.DataFlow.Connectors
         #region Public properties
 
         /// <inheritdoc/>
-        public override string TaskName => $"Write data into memory";
+        public override string TaskName { get; set; } = $"Write data into memory";
 
         /// <summary>
         /// The generic List&lt;T&gt; that will store all rows of incoming data in memory.
