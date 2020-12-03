@@ -91,7 +91,8 @@ namespace ETLBox.DataFlow.Connectors
             foreach (TOutput record in Data)
             {
                 if (!Buffer.SendAsync(record).Result)
-                    throw new ETLBoxFaultedBufferException();                    
+                      throw new ETLBoxFaultedBufferException();                    
+                    
                 LogProgress();
             }
         }

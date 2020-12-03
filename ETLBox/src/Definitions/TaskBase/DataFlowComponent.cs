@@ -2,6 +2,7 @@
 using ETLBox.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace ETLBox.DataFlow
     /// <summary>
     /// A base class for data flow components
     /// </summary>
+    [DebuggerDisplay("{TaskType}({TaskName})")]
     public abstract class DataFlowComponent : LoggableTask, IDataFlowComponent, IDataFlowLogging
     {
         #region Component properties

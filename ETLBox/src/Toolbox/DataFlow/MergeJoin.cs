@@ -120,13 +120,6 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override void CompleteBuffer()
         {
-            LeftInput.CompleteBuffer();
-            RightInput.CompleteBuffer();
-            try //A faulted task can't be waited on, so Exception is ignored
-            {
-                Task.WaitAll(LeftInput.Completion, RightInput.Completion);
-            }
-            catch { }            
             try
             {
                 EmptyQueues();
@@ -134,19 +127,12 @@ namespace ETLBox.DataFlow.Transformations
             }
             catch (Exception e)
             {
-                ((IDataflowBlock)Buffer).Fault(e);
+                FaultBuffer(e);
             }
         }
 
         internal override void FaultBuffer(Exception e)
         {
-            LeftInput.FaultBuffer(e);
-            RightInput.FaultBuffer(e);
-            try //A faulted task can't be waited on, so Exception is ignored
-            {
-                Task.WaitAll(LeftInput.Completion, RightInput.Completion);
-            }
-            catch { }
             ((IDataflowBlock)Buffer).Fault(e);
         }
 

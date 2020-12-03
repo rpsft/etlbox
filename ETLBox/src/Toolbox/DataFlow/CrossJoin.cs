@@ -127,26 +127,12 @@ namespace ETLBox.DataFlow.Transformations
 
         internal override void CompleteBuffer()
         {
-            InMemoryTarget.CompleteBuffer();
-            PassingTarget.CompleteBuffer();
-            try //A faulted task can't be waited on, so Exception is ignored
-            {
-                Task.WaitAll(InMemoryTarget.Completion, PassingTarget.Completion); //Will throw exception as soon as the task is faulted!                
-            }
-            catch { }
             Buffer.Complete();
 
         }
 
         internal override void FaultBuffer(Exception e)
         {
-            InMemoryTarget.FaultBuffer(e);
-            PassingTarget.FaultBuffer(e);
-            try //A faulted task can't be waited on, so Exception is ignored
-            {
-                Task.WaitAll(InMemoryTarget.Completion, PassingTarget.Completion); //Will throw exception as soon as the task is faulted!                
-            }
-            catch { }
             ((IDataflowBlock)Buffer).Fault(e);
         }
 
