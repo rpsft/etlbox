@@ -50,10 +50,8 @@ namespace ETLBox.DataFlow
         internal virtual Task BufferCompletion { get; }
         internal Task SourceOrPredecessorCompletion { get; set; }
         internal DataFlowComponent Parent { get; set; }
-        internal CancellationTokenSource CancellationSource { get; set; } = new CancellationTokenSource();
-        internal CancellationTokenSource CSSource { get; set; } = new CancellationTokenSource();
-        internal CancellationTokenSource CSCont { get; set; } = new CancellationTokenSource();
-        internal CancellationTokenSource CSCompletion { get; set; } = new CancellationTokenSource();
+        internal CancellationTokenSource BufferCancellationSource { get; set; } = new CancellationTokenSource();
+        internal CancellationTokenSource WaitForPredecessorsCancellationSource { get; set; } = new CancellationTokenSource();
 
         protected bool WasComponentInitialized;
         protected bool ReadyForProcessing;
@@ -141,7 +139,7 @@ namespace ETLBox.DataFlow
             if (PredecessorCompletionTasks.Count > 0)
             {
                 //ComponentCompletion is manually set in DataFlowExecutableSource
-                SourceOrPredecessorCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBufferOnPredecessorCompletion, CSCont.Token);
+                SourceOrPredecessorCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBufferOnPredecessorCompletion, WaitForPredecessorsCancellationSource.Token);
             }
             //For sources: PredecessorCompletion is completion of SourceTask in DataFlowExecutableSource
             Completion = Task.WhenAll(SourceOrPredecessorCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
@@ -176,40 +174,36 @@ namespace ETLBox.DataFlow
 
         protected void CompleteOrFaultBufferOnPredecessorCompletion(Task t)
         {
-            if (t.IsFaulted)
+            if (t.IsFaulted) //Finally, SourceOrPredecssorCompletion will be faulted
             {
                 FaultBuffer(t.Exception.InnerException);
                 throw t.Exception.InnerException;
-                //ComponentCompletion will end as faulted
             }
-            else if (t.IsCanceled)
+            else if (t.IsCanceled) //Finally SourceOrPredecssorCompletion will be faulted OR canceled
             {
-                if (Exception != null)
-                    throw Exception; //This component is the source of the exception, rethrow it
-                else if (CancellationSource.IsCancellationRequested) 
-                    CancellationSource.Token.ThrowIfCancellationRequested(); //This component is 
-                //canceled, so leave it canceled
-                //else //Other branches which are not canceled or faulted will simply complete
-                // CompleteBuffer();
-                else //This is a successor on a different branch on cancelled tasks - cancel all successor as well
+                if (Exception != null) //This component is the source of the exception, re-throw it
+                    throw Exception;
+                else if (WaitForPredecessorsCancellationSource.IsCancellationRequested) //This component is canceled, so leave it canceled
+                    WaitForPredecessorsCancellationSource.Token.ThrowIfCancellationRequested();
+                else //This is a successor on a different branch on canceled tasks - cancel all successor as well
                 {
-                    CancellationSource.Cancel(true);
-                    //while (CancellationSource.IsCancellationRequested != true) { }
-                    //CancellationSource.Token.ThrowIfCancellationRequested();
+                    //Always cancel with (true)
+                    WaitForPredecessorsCancellationSource.Cancel(true);
+                    BufferCancellationSource.Cancel(true);
+                    WaitForPredecessorsCancellationSource.Token.ThrowIfCancellationRequested();
                 }
-
             }
-            else
+            else //Finally, SourceOrPredecessorCompletion will end as RanToCompletion
             {
-                    CompleteBuffer();
-                //ComponentCompletion will end as RanToCompletion
+                CompleteBuffer();
+                
             }
         }
 
         internal abstract void CompleteBuffer();
         internal abstract void FaultBuffer(Exception e);
 
-        protected void CleanUpComponent(Task t)
+        private void CleanUpComponent(Task t)
         {
             ErrorSource?.LetErrorSourceFinishUp();
             if (t.IsFaulted)
@@ -221,7 +215,7 @@ namespace ETLBox.DataFlow
             else if (t.IsCanceled)
             {
                 CleanUpOnFaulted(null);
-                 //The Completion will end as RanToCompletion, not canceled
+                //The Completion will end as RanToCompletion, not canceled
             }
             else
             {
@@ -241,11 +235,26 @@ namespace ETLBox.DataFlow
 
         /// <inheritdoc/>
         public Exception Exception { get; set; }
-
+                
         /// <summary>
         /// The ErrorSource is the source block used for sending errors into the linked error flow.
         /// </summary>
         public ErrorSource ErrorSource { get; set; }
+
+        /// <summary>
+        /// If the post/send async into a buffer fails, this can be due to either a cancelled task
+        /// or a real faulted/closed buffer in the destination. This method will check if
+        /// the current task is cancelled - if so, it will create a TaskCanceledException.
+        /// Otherwise, it will raise an ETLBoxFaultedBufferException. 
+        /// </summary>
+        public void HandleCanceledOrFaultedBuffer()
+        {
+            if (BufferCancellationSource.IsCancellationRequested)
+                BufferCancellationSource.Token.ThrowIfCancellationRequested();
+            else
+                throw new ETLBoxFaultedBufferException("A buffer was closed unexpectedly. Can't write data into an already faulted buffer.");
+        }
+
 
         protected IDataFlowSource<ETLBoxError> InternalLinkErrorTo(IDataFlowDestination<ETLBoxError> target)
         {
@@ -254,6 +263,7 @@ namespace ETLBox.DataFlow
             ErrorSource.LinkTo(target);
             return target as IDataFlowSource<ETLBoxError>;
         }
+
 
         protected void ThrowOrRedirectError(Exception e, string erroneousData)
         {
@@ -266,11 +276,11 @@ namespace ETLBox.DataFlow
                 Parent?.FaultBuffer(e);
                 CancelPredecessorsRecursivelyButStartFromSource();
                 Parent?.CancelPredecessorsRecursivelyButStartFromSource();
-
-                //CSCompletion.CancelAfter(1000);
-                CSCont.CancelAfter(100);
-                //CancellationSource.CancelAfter(1000);
-
+                
+                //Safety net, sometimes the buffer or the precessor is not canceled (though the cancel was triggered)
+                //Nothing do to do about it, instead just stop waiting for the predcessor. 
+                WaitForPredecessorsCancellationSource.CancelAfter(100);
+                
                 throw e;
             }
             else
@@ -280,40 +290,17 @@ namespace ETLBox.DataFlow
         }
 
 
-        protected void CancelPredecessorsRecursivelyButStartFromSource()
+        private void CancelPredecessorsRecursivelyButStartFromSource()
         {
             foreach (DataFlowComponent pre in Predecessors)
             {
                 pre.CancelPredecessorsRecursivelyButStartFromSource();
-                //if (pre.Exception != null && !pre.CancellationSource.IsCancellationRequested)
-                //The cancellation needs to start at the source!                
-                               
+                //The cancellation needs to start at the source!                       
 
-                pre.CSCont.Cancel(true);
-                Task.Delay(10).Wait();
-
-                pre.CancellationSource.Cancel(true);
-                Task.Delay(10).Wait();
-
-                pre.CSCompletion.Cancel(true);
-                Task.Delay(10).Wait();
-
-
-                pre.CSSource.Cancel(true);
-                Task.Delay(10).Wait();
-             
-                
-                
-                
-                //while (pre.CancellationSource.IsCancellationRequested != true) { }
-                //Task.Delay(100).Wait();
+                //Always cancel with (true)
+                pre.WaitForPredecessorsCancellationSource.Cancel(true);                
+                pre.BufferCancellationSource.Cancel(true);                
             }
-
-            //foreach (DataFlowComponent suc in Successors)
-            //{
-            //    if (suc.Exception != null && !suc.CancellationSource.IsCancellationRequested)
-            //        suc.CancellationSource.Cancel();
-            //}
         }
 
         #endregion

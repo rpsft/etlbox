@@ -251,7 +251,7 @@ namespace ETLBox.DataFlow.Connectors
                     LogProgress();
                     DbConnectionManager.CheckLicenseOrThrow(ProgressCount);
                     if (!Buffer.SendAsync(_row).Result)
-                        throw new ETLBoxFaultedBufferException();
+                        HandleCanceledOrFaultedBuffer();
                 }
             };
         }

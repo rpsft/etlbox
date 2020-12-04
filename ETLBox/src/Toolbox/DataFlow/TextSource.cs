@@ -111,9 +111,9 @@ namespace ETLBox.DataFlow.Connectors
 
                 ParseLineAction(line, newObject);
                 if (!Buffer.SendAsync(newObject).Result)
-                    throw new ETLBoxFaultedBufferException();
+                    HandleCanceledOrFaultedBuffer();
             }
-            catch (ETLBoxFaultedBufferException) { throw; }
+            catch (System.Threading.Tasks.TaskCanceledException) { throw; }
             catch (Exception e)
             {
                 ThrowOrRedirectError(e, line);

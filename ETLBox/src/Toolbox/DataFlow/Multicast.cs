@@ -67,7 +67,7 @@ namespace ETLBox.DataFlow.Transformations
                 OwnBroadcastBlock = new ActionBlock<TInput>(Broadcast, new ExecutionDataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
-                    CancellationToken = this.CancellationSource.Token
+                    CancellationToken = this.BufferCancellationSource.Token
                 });                
             }
             else
@@ -75,7 +75,7 @@ namespace ETLBox.DataFlow.Transformations
                 BroadcastBlock = new BroadcastBlock<TInput>(Clone, new DataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
-                    CancellationToken = this.CancellationSource.Token
+                    CancellationToken = this.BufferCancellationSource.Token
                 });
             }
         }
@@ -87,7 +87,7 @@ namespace ETLBox.DataFlow.Transformations
                 var buffer = new BufferBlock<TInput>(new DataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
-                    CancellationToken = this.CancellationSource.Token
+                    CancellationToken = this.BufferCancellationSource.Token
                 });
                 OutputBuffer.Add(Tuple.Create(buffer, linkPredicates));
                 _bufferCompletion = Task.WhenAll(OutputBuffer.Select(b => b.Item1.Completion));
@@ -124,7 +124,7 @@ namespace ETLBox.DataFlow.Transformations
                 {
                     //Completion may be canceled!
                     if (!OwnBroadcastBlock.Completion.IsCanceled)
-                        OwnBroadcastBlock.Completion.Wait(CancellationSource.Token); //Will throw exception as soon as the task is faulted!                
+                        OwnBroadcastBlock.Completion.Wait(BufferCancellationSource.Token); //Will throw exception as soon as the task is faulted!                
                 }
                 catch (Exception e) {
                 //    FaultBuffer(e);
@@ -146,7 +146,7 @@ namespace ETLBox.DataFlow.Transformations
                 ((IDataflowBlock)OwnBroadcastBlock).Fault(e); //Will fault task, but not immediately
                 try //A faulted task can't be waited on, so Exception is ignored
                 {
-                    OwnBroadcastBlock.Completion.Wait(CancellationSource.Token); //Will throw exception as soon as the task is faulted!
+                    OwnBroadcastBlock.Completion.Wait(BufferCancellationSource.Token); //Will throw exception as soon as the task is faulted!
                 }
                 catch { }
                 foreach (var buffer in OutputBuffer) //Keep order
@@ -187,12 +187,7 @@ namespace ETLBox.DataFlow.Transformations
                 if (!lp.HasPredicate || (lp.HasPredicate && pk.Invoke(clone)))
                 {
                     if (!buffer.Item1.SendAsync(clone).Result)
-                    {
-                        if (CancellationSource.IsCancellationRequested)
-                            throw new System.Threading.Tasks.TaskCanceledException();
-                        else
-                            throw new ETLBoxFaultedBufferException();
-                    }
+                        HandleCanceledOrFaultedBuffer();
                 }
             }
         }

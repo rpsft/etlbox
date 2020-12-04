@@ -50,7 +50,7 @@ namespace ETLBox.DataFlow.Connectors
             {
                 BoundedCapacity = MaxBufferSize,
                 MaxDegreeOfParallelism = 1,
-                CancellationToken = this.CancellationSource.Token
+                CancellationToken = this.BufferCancellationSource.Token
             });
         }
 

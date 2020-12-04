@@ -92,17 +92,12 @@ namespace ETLBox.DataFlow.Connectors
             foreach (TOutput record in Data)
             {
                 if (!Buffer.SendAsync(record).Result)
-                {
-                    if (CancellationSource.IsCancellationRequested)
-                        throw new System.Threading.Tasks.TaskCanceledException();
-                    else
-                        throw new ETLBoxFaultedBufferException();
-                }
-                    
+                    HandleCanceledOrFaultedBuffer();
+
                 LogProgress();
             }
         }
-        
+       
 
         #endregion
     }

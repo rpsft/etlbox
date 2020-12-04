@@ -73,7 +73,7 @@ namespace ETLBox.DataFlow.Transformations
             {
                 InMemoryTarget.CopyLogTaskProperties(Parent);
                 InMemoryTarget.MaxBufferSize = -1;
-                InMemoryTarget.CancellationSource = Parent.CancellationSource;
+                InMemoryTarget.BufferCancellationSource = Parent.BufferCancellationSource;
                 InMemoryTarget.InitBufferObjects();
             }
 
@@ -109,7 +109,7 @@ namespace ETLBox.DataFlow.Transformations
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                CancellationToken = this.CancellationSource.Token
+                CancellationToken = this.BufferCancellationSource.Token
             });
         }
 
@@ -161,12 +161,12 @@ namespace ETLBox.DataFlow.Transformations
                         if (result != null)
                         {
                             if (!Buffer.SendAsync(result).Result)
-                                throw new ETLBoxFaultedBufferException();
+                                HandleCanceledOrFaultedBuffer();
                             LogProgress();
                         }
                     }
                 }
-                catch (ETLBoxFaultedBufferException) { throw; }
+                catch (System.Threading.Tasks.TaskCanceledException) { throw; }
                 catch (Exception e)
                 {
                     ThrowOrRedirectError(e, string.Concat(ErrorSource.ConvertErrorData<TInput1>(inMemoryRow), "  |--| ",

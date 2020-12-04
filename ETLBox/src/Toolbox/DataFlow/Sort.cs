@@ -66,7 +66,7 @@ namespace ETLBox.DataFlow.Transformations
             BlockTransformation.Parent = this;
             BlockTransformation.CopyLogTaskProperties(this);
             BlockTransformation.BlockTransformationFunc = SortByFunc;
-            BlockTransformation.CancellationSource = this.CancellationSource;
+            BlockTransformation.BufferCancellationSource = this.BufferCancellationSource;
             BlockTransformation.InitBufferObjects();
         }
 

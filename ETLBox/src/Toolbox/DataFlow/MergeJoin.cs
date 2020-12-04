@@ -103,7 +103,7 @@ namespace ETLBox.DataFlow.Transformations
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                CancellationToken = this.CancellationSource.Token
+                CancellationToken = this.BufferCancellationSource.Token
             });
         }
 
@@ -216,9 +216,9 @@ namespace ETLBox.DataFlow.Transformations
             {
                 joinOutput = MergeJoinFunc.Invoke(dataLeft, dataRight);
                 if (!Buffer.SendAsync(joinOutput).Result)
-                    throw new ETLBoxFaultedBufferException();
+                    HandleCanceledOrFaultedBuffer();
             }
-            catch (ETLBoxFaultedBufferException) { throw; }
+            catch (System.Threading.Tasks.TaskCanceledException) { throw; }
             catch (Exception e)
             {
                 ThrowOrRedirectError(e, "Left:" + ErrorSource.ConvertErrorData<TInput1>(dataLeft)

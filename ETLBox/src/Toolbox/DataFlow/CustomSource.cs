@@ -97,9 +97,9 @@ namespace ETLBox.DataFlow.Connectors
                 {
                     result = ReadFunc.Invoke(ProgressCount);
                     if (!Buffer.SendAsync(result).Result)
-                        throw new ETLBoxFaultedBufferException();
+                        HandleCanceledOrFaultedBuffer();
                 }
-                catch (ETLBoxFaultedBufferException) { throw; }
+                catch (System.Threading.Tasks.TaskCanceledException) { throw; }
                 catch (Exception e)
                 {
                     ThrowOrRedirectError(e, e.Message);

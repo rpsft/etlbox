@@ -27,7 +27,7 @@ namespace ETLBox.DataFlow
             Buffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                CancellationToken = CancellationSource.Token,
+                CancellationToken = BufferCancellationSource.Token,
             });
 
             SourceTask = new Task(
@@ -35,7 +35,7 @@ namespace ETLBox.DataFlow
              {
                  OnExecutionDoAsyncWork();
              }
-             , CSSource.Token, TaskCreationOptions.LongRunning);
+             , BufferCancellationSource.Token, TaskCreationOptions.LongRunning);
 
             if (this.GetType() == typeof(ErrorSource) && CompleteManually == false)
                 throw new InvalidOperationException("Errors Source is always completed manually!");
@@ -43,7 +43,7 @@ namespace ETLBox.DataFlow
                 SourceOrPredecessorCompletion = SourceTask;
             else
                 SourceOrPredecessorCompletion = SourceTask.ContinueWith(t =>
-             this.CompleteOrFaultBufferOnPredecessorCompletion(t), CSCont.Token);
+             this.CompleteOrFaultBufferOnPredecessorCompletion(t), WaitForPredecessorsCancellationSource.Token);
 
         }
 

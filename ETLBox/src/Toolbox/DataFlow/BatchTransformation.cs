@@ -86,19 +86,19 @@ namespace ETLBox.DataFlow.Transformations
                 new GroupingDataflowBlockOptions()
                 {
                     BoundedCapacity = MaxBufferSize,
-                    CancellationToken = this.CancellationSource.Token
+                    CancellationToken = this.BufferCancellationSource.Token
 
                 });
             TransformationBlock = new ActionBlock<TInput[]>(this.ProcessBatch,
                 new ExecutionDataflowBlockOptions()
                 {
                     BoundedCapacity = CalculateBatchedMaxBufferSize(),
-                    CancellationToken = this.CancellationSource.Token
+                    CancellationToken = this.BufferCancellationSource.Token
                 });
             OutputBuffer = new BufferBlock<TOutput>(new DataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                CancellationToken = this.CancellationSource.Token
+                CancellationToken = this.BufferCancellationSource.Token
             });
             InputBuffer.LinkTo(TransformationBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             TransformationBlock.Completion.ContinueWith(t =>
@@ -150,10 +150,10 @@ namespace ETLBox.DataFlow.Transformations
                 {
                     if (!SuppressNullValueFilter && row == null) continue;
                     if (!OutputBuffer.SendAsync(row).Result)
-                        throw new ETLBoxFaultedBufferException();
+                        HandleCanceledOrFaultedBuffer();
                 }
             }
-            catch (ETLBoxFaultedBufferException) { throw;  }
+            catch (System.Threading.Tasks.TaskCanceledException) { throw; }
             catch (Exception e)
             {
                 ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput[]>(batch));                

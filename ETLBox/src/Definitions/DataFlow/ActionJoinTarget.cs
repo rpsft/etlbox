@@ -30,7 +30,7 @@ namespace ETLBox.DataFlow
             JoinAction = new ActionBlock<TInput>(Action, new ExecutionDataflowBlockOptions()
             {
                 BoundedCapacity = MaxBufferSize,
-                CancellationToken = Parent.CancellationSource.Token
+                CancellationToken = Parent.BufferCancellationSource.Token
             }) ;
         }
 
