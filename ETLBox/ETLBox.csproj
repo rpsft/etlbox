@@ -11,8 +11,8 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration</PackageTags>
-        <PackageReleaseNotes>Version 2.2.1 introduces a Distinct transformation. When using StreamSources/Destinations, the Encoding for the stream input/output can be set.</PackageReleaseNotes>
-        <Version>2.2.1</Version>
+        <PackageReleaseNotes>Version 2.2.3 fixes various bugs that improves overall stability and performance. 2.2.3 introduces the  BatchTransformation, which transforms batches of data instead single rows like the RowTransformation.</PackageReleaseNotes>
+        <Version>2.2.3</Version>
         <PackageIconUrl></PackageIconUrl>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
