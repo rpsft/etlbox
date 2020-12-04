@@ -68,7 +68,7 @@ namespace ETLBox.DataFlow.Transformations
                 {
                     BoundedCapacity = MaxBufferSize,
                     CancellationToken = this.CancellationSource.Token
-                });
+                });                
             }
             else
             {
@@ -90,6 +90,7 @@ namespace ETLBox.DataFlow.Transformations
                     CancellationToken = this.CancellationSource.Token
                 });
                 OutputBuffer.Add(Tuple.Create(buffer, linkPredicates));
+                _bufferCompletion = Task.WhenAll(OutputBuffer.Select(b => b.Item1.Completion));
             }
             base.LinkBuffers(successor, linkPredicates);
         }
@@ -106,11 +107,13 @@ namespace ETLBox.DataFlow.Transformations
             get
             {
                 if (AvoidBroadcastBlock)
-                    return Task.WhenAll(OutputBuffer.Select(b => b.Item1.Completion));
+                    return _bufferCompletion; //BufferCompletion is called twice, make sure to return always same task!
+                    //return Task.WhenAll(OutputBuffer.Select(b => b.Item1.Completion));
                 else
                     return ((IDataflowBlock)BroadcastBlock).Completion;
             }
         }
+        Task _bufferCompletion;
 
         internal override void CompleteBuffer()
         {
@@ -121,7 +124,7 @@ namespace ETLBox.DataFlow.Transformations
                 {
                     //Completion may be canceled!
                     if (!OwnBroadcastBlock.Completion.IsCanceled)
-                        OwnBroadcastBlock.Completion.Wait(); //Will throw exception as soon as the task is faulted!                
+                        OwnBroadcastBlock.Completion.Wait(CancellationSource.Token); //Will throw exception as soon as the task is faulted!                
                 }
                 catch (Exception e) {
                 //    FaultBuffer(e);
@@ -143,7 +146,7 @@ namespace ETLBox.DataFlow.Transformations
                 ((IDataflowBlock)OwnBroadcastBlock).Fault(e); //Will fault task, but not immediately
                 try //A faulted task can't be waited on, so Exception is ignored
                 {
-                    OwnBroadcastBlock.Completion.Wait(); //Will throw exception as soon as the task is faulted!
+                    OwnBroadcastBlock.Completion.Wait(CancellationSource.Token); //Will throw exception as soon as the task is faulted!
                 }
                 catch { }
                 foreach (var buffer in OutputBuffer) //Keep order
@@ -184,7 +187,12 @@ namespace ETLBox.DataFlow.Transformations
                 if (!lp.HasPredicate || (lp.HasPredicate && pk.Invoke(clone)))
                 {
                     if (!buffer.Item1.SendAsync(clone).Result)
-                        throw new ETLBoxFaultedBufferException();
+                    {
+                        if (CancellationSource.IsCancellationRequested)
+                            throw new System.Threading.Tasks.TaskCanceledException();
+                        else
+                            throw new ETLBoxFaultedBufferException();
+                    }
                 }
             }
         }

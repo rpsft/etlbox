@@ -51,6 +51,9 @@ namespace ETLBox.DataFlow
         internal Task SourceOrPredecessorCompletion { get; set; }
         internal DataFlowComponent Parent { get; set; }
         internal CancellationTokenSource CancellationSource { get; set; } = new CancellationTokenSource();
+        internal CancellationTokenSource CSSource { get; set; } = new CancellationTokenSource();
+        internal CancellationTokenSource CSCont { get; set; } = new CancellationTokenSource();
+        internal CancellationTokenSource CSCompletion { get; set; } = new CancellationTokenSource();
 
         protected bool WasComponentInitialized;
         protected bool ReadyForProcessing;
@@ -138,7 +141,7 @@ namespace ETLBox.DataFlow
             if (PredecessorCompletionTasks.Count > 0)
             {
                 //ComponentCompletion is manually set in DataFlowExecutableSource
-                SourceOrPredecessorCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBufferOnPredecessorCompletion, CancellationSource.Token);
+                SourceOrPredecessorCompletion = Task.WhenAll(PredecessorCompletionTasks).ContinueWith(CompleteOrFaultBufferOnPredecessorCompletion, CSCont.Token);
             }
             //For sources: PredecessorCompletion is completion of SourceTask in DataFlowExecutableSource
             Completion = Task.WhenAll(SourceOrPredecessorCompletion, BufferCompletion).ContinueWith(CleanUpComponent);
@@ -183,22 +186,22 @@ namespace ETLBox.DataFlow
             {
                 if (Exception != null)
                     throw Exception; //This component is the source of the exception, rethrow it
-                else if (CancellationSource.IsCancellationRequested)
+                else if (CancellationSource.IsCancellationRequested) 
                     CancellationSource.Token.ThrowIfCancellationRequested(); //This component is 
-                                                                             //canceled, so leave it canceled
-                                                                             //else //Other branches which are not canceled or faulted will simply complete
-                                                                             // CompleteBuffer();
-                else //Cancel all successor as well
+                //canceled, so leave it canceled
+                //else //Other branches which are not canceled or faulted will simply complete
+                // CompleteBuffer();
+                else //This is a successor on a different branch on cancelled tasks - cancel all successor as well
                 {
                     CancellationSource.Cancel(true);
-                    while (CancellationSource.IsCancellationRequested != true) { }
-                    CancellationSource.Token.ThrowIfCancellationRequested();
+                    //while (CancellationSource.IsCancellationRequested != true) { }
+                    //CancellationSource.Token.ThrowIfCancellationRequested();
                 }
 
             }
             else
             {
-                CompleteBuffer();
+                    CompleteBuffer();
                 //ComponentCompletion will end as RanToCompletion
             }
         }
@@ -218,7 +221,7 @@ namespace ETLBox.DataFlow
             else if (t.IsCanceled)
             {
                 CleanUpOnFaulted(null);
-                //The Completion will end as RanToCompletion, not canceled
+                 //The Completion will end as RanToCompletion, not canceled
             }
             else
             {
@@ -263,8 +266,11 @@ namespace ETLBox.DataFlow
                 Parent?.FaultBuffer(e);
                 CancelPredecessorsRecursivelyButStartFromSource();
                 Parent?.CancelPredecessorsRecursivelyButStartFromSource();
-                //FaultPredecessorsRecursively();
-                //Parent?.FaultPredecessorsRecursively();
+
+                //CSCompletion.CancelAfter(1000);
+                CSCont.CancelAfter(100);
+                //CancellationSource.CancelAfter(1000);
+
                 throw e;
             }
             else
@@ -280,9 +286,27 @@ namespace ETLBox.DataFlow
             {
                 pre.CancelPredecessorsRecursivelyButStartFromSource();
                 //if (pre.Exception != null && !pre.CancellationSource.IsCancellationRequested)
-                //The cancellation needs to start at the source!
+                //The cancellation needs to start at the source!                
+                               
+
+                pre.CSCont.Cancel(true);
+                Task.Delay(10).Wait();
+
                 pre.CancellationSource.Cancel(true);
-                //Task.Delay(10).Wait();
+                Task.Delay(10).Wait();
+
+                pre.CSCompletion.Cancel(true);
+                Task.Delay(10).Wait();
+
+
+                pre.CSSource.Cancel(true);
+                Task.Delay(10).Wait();
+             
+                
+                
+                
+                //while (pre.CancellationSource.IsCancellationRequested != true) { }
+                //Task.Delay(100).Wait();
             }
 
             //foreach (DataFlowComponent suc in Successors)

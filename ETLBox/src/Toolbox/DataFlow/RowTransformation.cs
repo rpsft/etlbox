@@ -104,6 +104,9 @@ namespace ETLBox.DataFlow.Transformations
                 InvokeInitActionOnce();
                 return InvokeTransformationFunc(row);
             }
+            catch (System.Threading.Tasks.TaskCanceledException te) {
+                throw te;
+            }
             catch (Exception e)
             {
                 ThrowOrRedirectError(e, ErrorSource.ConvertErrorData<TInput>(row));

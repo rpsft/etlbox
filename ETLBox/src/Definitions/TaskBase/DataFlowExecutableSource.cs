@@ -35,7 +35,7 @@ namespace ETLBox.DataFlow
              {
                  OnExecutionDoAsyncWork();
              }
-             , CancellationSource.Token, TaskCreationOptions.LongRunning);
+             , CSSource.Token, TaskCreationOptions.LongRunning);
 
             if (this.GetType() == typeof(ErrorSource) && CompleteManually == false)
                 throw new InvalidOperationException("Errors Source is always completed manually!");
@@ -43,7 +43,7 @@ namespace ETLBox.DataFlow
                 SourceOrPredecessorCompletion = SourceTask;
             else
                 SourceOrPredecessorCompletion = SourceTask.ContinueWith(t =>
-             this.CompleteOrFaultBufferOnPredecessorCompletion(t), CancellationSource.Token);
+             this.CompleteOrFaultBufferOnPredecessorCompletion(t), CSCont.Token);
 
         }
 
