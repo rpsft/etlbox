@@ -176,6 +176,7 @@ LEFT JOIN sys.default_constraints defconstr
     AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
     ON compCol.object_id = cols.object_id
+    AND compCol.column_id = cols.column_id
 WHERE ( CONCAT (sc.name,'.',tbl.name) ='{TN.UnquotatedFullName}' OR  tbl.name = '{TN.UnquotatedFullName}' )
     AND tbl.type IN ('U','V')
     AND tpes.name <> 'sysname'
@@ -248,8 +249,8 @@ SELECT DISTINCT cols.column_name
   , CASE WHEN isnull(k.constraint_name) THEN 0 ELSE 1 END AS 'primary_key'
   , cols.column_default
   , cols.collation_name
-  , cols.generation_expression
-  , cols.column_comment
+  , CASE WHEN cols.generation_expression = '' THEN NULL ELSE cols.generation_expression END AS 'computed_column'
+  , CASE WHEN cols.column_comment = '' THEN NULL ELSE cols.column_comment END AS 'comment'
   , CASE WHEN tc_uq.CONSTRAINT_TYPE = 'UNIQUE' THEN 1 ELSE 0 END AS 'is_unique'
   , tc.CONSTRAINT_NAME AS 'pk_name'
   , tc_uq.CONSTRAINT_NAME AS 'uq_constr_name'

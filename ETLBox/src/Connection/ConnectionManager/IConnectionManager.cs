@@ -242,12 +242,6 @@ namespace ETLBox.Connection
         /// <summary>
         /// Closes the connection if leave open is false and no transaction or bulk insert is in progress.
         /// </summary>
-        void CloseIfAllowed();
-
-        /// <summary>
-        /// Checks for the current license after 10.000 rows. If no license found, this will throw an exception.
-        /// </summary>
-        /// <param name="progressCount">Current number of rows</param>
-        void CheckLicenseOrThrow(int count);
+        void CloseIfAllowed();       
     }
 }

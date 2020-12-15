@@ -257,12 +257,6 @@ namespace ETLBox.Connection
                 Dispose();
         }
 
-        /// <inheritdoc/>
-        public virtual void CheckLicenseOrThrow(int progressCount)
-        {
-            ;
-        }
-
         #endregion
 
         private void TryOpenConnectionXTimes()

@@ -5,19 +5,17 @@
         <Configurations>Debug;Release</Configurations>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Description>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</Description>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Copyright>Andreas Lennartz</Copyright>
-        <PackageLicenseUrl></PackageLicenseUrl>
+        <PackageLicenseFile>license.txt</PackageLicenseFile>
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration</PackageTags>
-        <PackageReleaseNotes>Version 2.2.3 fixes various bugs that improves overall stability and performance. 2.2.3 introduces the  BatchTransformation, which transforms batches of data instead single rows like the RowTransformation.</PackageReleaseNotes>
-        <Version>2.2.3</Version>
-        <PackageIconUrl></PackageIconUrl>
+        <PackageReleaseNotes>Version 2.2.4 fixes various bugs that improves overall stability and performance. Now each component has additional parameter checks that provide a more meaningful exception if not all properties are set properly. The JsonSource now stores unparsed json data in the UnparsedData property.</PackageReleaseNotes>
+        <Version>2.2.4</Version>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
         <Company>ETLBox Office</Company>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RootNamespace>ETLBox</RootNamespace>
         <Product>ETLBox</Product>
         <PackageId>ETLBox</PackageId>
@@ -39,8 +37,16 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\etlbox.license\LicenseManager\LicenseManager.csproj" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="img\logo_bw.png" Pack="true" PackagePath="">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="license.txt">
+          <Pack>True</Pack>
+          <PackagePath></PackagePath>
         </None>
     </ItemGroup>
 
