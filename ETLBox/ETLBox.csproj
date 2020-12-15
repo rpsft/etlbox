@@ -37,10 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\etlbox.license\LicenseManager\LicenseManager.csproj" PrivateAssets="all" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Include="img\logo_bw.png" Pack="true" PackagePath="">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
