@@ -129,33 +129,43 @@ only store the row that is currently processed in memory (plus some more in the 
 The following table is an overview of the most common transformations in ETLBox:  
 
 Non-blocking|Partially blocking|Blocking|
-------------|------------------|---------
+------------------------|------------------|---------
 RowTransformation|LookupTransformation|BlockTransformation
-Aggregation|CrossJoin|Sort
-MergeJoin||DbMerge*
-Multicast||
-RowDuplication||
-RowMultiplication||
-ColumnRename||
+ColumnRename|CrossJoin|Sort
+MergeJoin(always join)|MergeJoin (join on match)|DbMerge
+Multicast|Distinct|
+RowDuplication|Aggregation|
+RowMultiplication|BatchTransformation|
+CachedRowTransformation|CachedBatchTransformation|
 XmlSchemaValidation||
+
 
 *RowTransformation*: This transformation let you modfiy each data record with your custom written C# code
 
-*Aggregation*: Aggregate your data on-the-fly  based on Grouping and Aggregation functions.
+*ColumnRename*: Allows you to rename your columns or propertie names.
+
+*MergeJoin*: Join your incoming data into one. Works best with sorted input. You can either always join two rows from the inpts,
+or define a match function which determines when the incoming rows are equal and should be joined. 
 
 *RowDuplication*: Simple duplicate your input row x times - additionally, you can add your own condition when to duplicate. 
 
 *RowMultiplication*: Allow you to create multiple rows based on your incoming rows - based on your own custom C# code. 
 
-*ColumnRename*: Allows you to rename your columns or propertie names.
-
 *Multicast*: Broadcast your incoming data into 2 or more targets.
 
-*MergeJoin*: Join your incoming data into one. Works best with sorted input.
+*CachedRowTransformation*: Work the same way as the row transformations, but stores previously processed row in a cache.
 
 *LookupTransformation*: Allows you to store lookup data in memory and use it for enriching your data in your DataFlow.
 
 *CrossJoin*: Takes two inputs and return one output with each record of both inputs joined with each other. 
+
+*Distinct*: Eliminates duplicates by returning only the first unique of incoming data and discarding duplicates. 
+
+*Aggregation*: Aggregate your data on-the-fly based on Grouping and Aggregation functions.
+
+*BatchTransformation*: Execute your custom written C# code on a batch of incoming data. 
+
+*CachedBatchTransformation*: Works exactly like the BatchTransformation, but stores previously processed batches in a cache. 
 
 *BlockTransformation*: Allows you to execute your own custom written C# on your whole set of incoming data. 
 
