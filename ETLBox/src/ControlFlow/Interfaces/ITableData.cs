@@ -18,5 +18,16 @@ namespace ETLBox.ControlFlow
         /// Rows/Columns ready for bulk insert
         /// </summary>
         List<object[]> Rows { get; }
+
+        /// <summary>
+        /// The row that is currently processed when accessing the data reader
+        /// </summary>
+        object[] CurrentRow { get; }
+
+        /// <summary>
+        /// The row index of the current row
+        /// </summary>
+        int ReadIndex { get; }
+
     }
 }

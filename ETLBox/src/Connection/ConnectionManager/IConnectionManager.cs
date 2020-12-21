@@ -218,6 +218,10 @@ namespace ETLBox.Connection
         /// <param name="tableName">Destination table name</param>
         void AfterBulkUpdate(string tableName);
 
+        void BulkSelect(ITableData data, string tableName, ICollection<string> selectColumnNames
+            , Action beforeRowReadAction, Action afterRowReadAction
+            , params Action<object>[] actions);
+        
         /// <summary>
         /// Try to create a clone of the current connection - only possible if <see cref="LeaveOpen"/> is false.
         /// </summary>

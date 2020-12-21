@@ -11,8 +11,8 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration</PackageTags>
-        <PackageReleaseNotes>Version 2.2.4 fixes various bugs that improves overall stability and performance. Now each component has additional parameter checks that provide a more meaningful exception if not all properties are set properly. The JsonSource now stores unparsed json data in the UnparsedData property.</PackageReleaseNotes>
-        <Version>2.2.4</Version>
+        <PackageReleaseNotes>Version 2.2.5 fixes bug in license check in Azure Functions&amp;Web Apps. Improved error message for bulk inserts for SqlServer. Starting with PartialDbCache managers as prepartion for performance improvement in Lookups/DbMerge.</PackageReleaseNotes>
+        <Version>2.2.5</Version>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
         <Company>ETLBox Office</Company>

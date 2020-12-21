@@ -57,6 +57,10 @@ namespace ETLBox.ControlFlow
             return mapping;
         }
 
+        public object[] CurrentRow { get; private set; }
+
+        public int ReadIndex { get; private set; }
+
         /// <inheritdoc/>
         public List<object[]> Rows { get; set; }
 
@@ -179,11 +183,10 @@ namespace ETLBox.ControlFlow
 
         #endregion
 
-        object[] CurrentRow;
         internal Dictionary<string, int> DynamicColumnNames { get; set; } = new Dictionary<string, int>();
         internal Dictionary<string, ColumnMap> ColumnMaps { get; set; } = new Dictionary<string, ColumnMap>();
 
-        int ReadIndex;
+
         TableDefinition Definition;
         bool HasDefinition => Definition != null;
         DbTypeInfo TypeInfo;

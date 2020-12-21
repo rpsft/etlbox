@@ -205,6 +205,11 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public abstract void AfterBulkUpdate(string tableName);
 
+        public virtual void BulkSelect(ITableData data, string tableName, ICollection<string> selectColumnNames, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions)
+        {
+
+        }
+
         /// <inheritdoc/>
         public IConnectionManager CloneIfAllowed()
         {
