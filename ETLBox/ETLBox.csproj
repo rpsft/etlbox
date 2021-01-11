@@ -10,9 +10,9 @@
         <PackageLicenseFile>license.txt</PackageLicenseFile>
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
-        <PackageTags>ETL .NET dataflow ssis database integration</PackageTags>
-        <PackageReleaseNotes>Version 2.2.5 fixes bug in license check in Azure Functions&amp;Web Apps. Improved error message for bulk inserts for SqlServer. Starting with PartialDbCache managers as prepartion for performance improvement in Lookups/DbMerge.</PackageReleaseNotes>
-        <Version>2.2.5</Version>
+        <PackageTags>ETL .NET dataflow ssis database integration data transform</PackageTags>
+        <PackageReleaseNotes>Version 2.3.0 introduces the Network class. With Network.Execute(params DataFlowComponent[]) you can now start your whole network synchronously, without having to call separate Wait() for each destination. Network.ExecuteAsync(..) will give you a task for the whole network that can be awaited. This version introduces full support for Db2. The Lookup and DbMerge now have a partial cache for databases. Partial cache will only load data into the memory that is needed for current data processing. New transformation: Dinstinct to filter out duplicate records. Odbc and OleDb support was improved to also support DbMerge operations.</PackageReleaseNotes>
+        <Version>2.3.0</Version>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
         <Company>ETLBox Office</Company>

@@ -79,6 +79,8 @@ namespace ETLBox.Helper
         /// <param name="qe">The database specific quotation start (e.g. ']' for Sql Server)</param>
         public ObjectNameDescriptor(string objectName, string qb, string qe)
         {
+            if (string.IsNullOrEmpty(objectName))
+                throw new ETLBoxException("Can't parse an object name that is null or empty!");
             ObjectName = objectName;
             QB = qb;
             QE = qe;

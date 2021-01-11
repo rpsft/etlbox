@@ -12,6 +12,7 @@
         MySql,
         Postgres,
         Access,
-        Oracle
+        Oracle,
+        Db2
     }
 }

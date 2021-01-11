@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Exceptions;
+using System;
 
 namespace ETLBox.ControlFlow.Tasks
 {
@@ -11,7 +12,7 @@ namespace ETLBox.ControlFlow.Tasks
         internal override string GetSql()
         {
             if (!DbConnectionManager.SupportProcedures)
-                throw new ETLBoxNotSupportedException("This task is not supported!");
+                throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
             return $@"DROP PROCEDURE {ON.QuotatedFullName}";
         }

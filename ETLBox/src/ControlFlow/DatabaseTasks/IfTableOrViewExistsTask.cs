@@ -49,6 +49,13 @@ AND(object_name = '{ON.UnquotatedFullName}'
     )
 ";
             }
+            else if (this.ConnectionType == ConnectionManagerType.Db2)
+            {
+                return $@"SELECT 1 FROM syscat.tables 
+WHERE tabname = '{ON.UnquotatedFullName}'
+OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
+";
+            }
             else if (this.ConnectionType == ConnectionManagerType.Access)
             {
                 var connMan = this.DbConnectionManager.CloneIfAllowed();// as AccessOdbcConnectionManager;

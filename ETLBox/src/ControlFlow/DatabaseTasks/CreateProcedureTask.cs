@@ -26,7 +26,7 @@ namespace ETLBox.ControlFlow.Tasks
         public void Execute()
         {
             if (!DbConnectionManager.SupportProcedures)
-                throw new ETLBoxNotSupportedException("This task is not supported!");
+                throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
             IsExisting = new IfProcedureExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (IsExisting && ConnectionType == ConnectionManagerType.MySql)
@@ -178,10 +178,12 @@ namespace ETLBox.ControlFlow.Tasks
                 sql += "@";
             if (ConnectionType == ConnectionManagerType.MySql)
                 sql += par.Out ? "OUT " : "IN ";
+            if (ConnectionType == ConnectionManagerType.Postgres)
+                sql += par.Out ? "INOUT " : "";
             sql += $@"{par.Name} {par.DataType}";
             if (par.HasDefaultValue && ConnectionType != ConnectionManagerType.MySql)
                 sql += $" = {par.DefaultValue}";
-            if (par.Out && ConnectionType != ConnectionManagerType.MySql)
+            if (par.Out && ConnectionType != ConnectionManagerType.MySql && ConnectionType != ConnectionManagerType.Postgres)
                 sql += " OUT";
             if (par.ReadOnly)
                 sql += " READONLY";

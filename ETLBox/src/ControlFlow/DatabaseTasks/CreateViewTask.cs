@@ -24,7 +24,9 @@ namespace ETLBox.ControlFlow.Tasks
         {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (
-                (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access)
+                (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access
+                || ConnectionType == ConnectionManagerType.Db2
+                )
                 && IsExisting
                 )
                 new DropViewTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
@@ -103,7 +105,8 @@ AS
                 }
                 else
                 {
-                    if (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access)
+                    if (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access
+                        || ConnectionType == ConnectionManagerType.Db2)
                         return "CREATE";
                     else if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.Oracle)
                         return "CREATE OR REPLACE";

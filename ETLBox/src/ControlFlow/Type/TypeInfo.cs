@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ETLBox.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
@@ -50,11 +51,12 @@ namespace ETLBox.DataFlow
                 IsDynamic = true;
             if (!IsArray && !IsDynamic)
             {
-                Properties = Typ.GetProperties();
+                Properties = Typ.GetProperties();                
                 PropertyLength = Properties.Length;
                 int index = 0;
                 foreach (var propInfo in Properties)
                 {
+                    ThrowIfPropIsIndexer(propInfo);
                     PropertyIndex.Add(propInfo.Name, index);
                     PropertiesByName.Add(propInfo.Name, propInfo);
                     RetrieveAdditionalTypeInfo(propInfo, index);
@@ -62,6 +64,13 @@ namespace ETLBox.DataFlow
                 }
             }
             return this;
+        }
+
+        private static void ThrowIfPropIsIndexer(PropertyInfo propInfo)
+        {
+            if (propInfo.GetIndexParameters().Length > 0)
+                throw new ETLBoxNotSupportedException("Index properties (like string this[int i]) are not allow on objects" +
+                    " which are used as types for DataFlow components!");
         }
 
         internal static Type TryGetUnderlyingType(PropertyInfo propInfo)
@@ -73,6 +82,45 @@ namespace ETLBox.DataFlow
         {
             ;
         }
+
+        /// <summary>
+        /// Determines if a type is numeric.  Nullable numeric types are considered numeric.        
+        /// </summary>
+        /// <remarks>
+        /// Boolean is not considered numeric.
+        /// http://stackoverflow.com/a/5182747/172132
+        /// </remarks>        
+        public static bool IsNumericType(Type type)
+        {
+            if (type == null)
+            {
+                return false;
+            }
+
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Byte:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.SByte:
+                case TypeCode.Single:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                    return true;
+                case TypeCode.Object:
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        return IsNumericType(Nullable.GetUnderlyingType(type));
+                    }
+                    return false;
+            }
+            return false;
+        }
+
     }
 }
 

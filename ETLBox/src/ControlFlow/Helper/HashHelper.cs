@@ -1,4 +1,5 @@
 ﻿using ETLBox.ControlFlow;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -52,5 +53,16 @@ namespace ETLBox.Helper
                 return hash;
             }
         }
+
+        //public static string GetUniqueId(List<object> values)
+        //{
+        //    if (values.Count == 0)
+        //        throw new ArgumentException("Please provide at least one item to calculate a unique id",nameof(values));
+        //    List<string> idValues = new List<string>();
+        //    foreach (var ob in values)
+        //        idValues.Add(ob?.ToString() ?? string.Empty);
+        //    string idvalstring = string.Join("|", idValues);
+        //    return HashHelper.CreateChar40Hash(idvalstring);
+        //}
     }
 }

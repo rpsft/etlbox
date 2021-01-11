@@ -44,6 +44,8 @@ namespace ETLBox.ControlFlow.Tasks
                 if (ConnectionType == ConnectionManagerType.SQLite
                     || ConnectionType == ConnectionManagerType.Access)
                     return $@"DELETE FROM {TN.QuotatedFullName}";
+                else if (ConnectionType == ConnectionManagerType.Db2)
+                    return $@"TRUNCATE TABLE {TN.QuotatedFullName} IMMEDIATE";
                 else
                     return $@"TRUNCATE TABLE {TN.QuotatedFullName}";
             }

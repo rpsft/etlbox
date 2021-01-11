@@ -1,6 +1,7 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Exceptions;
 using ETLBox.Helper;
+using System;
 
 namespace ETLBox.ControlFlow.Tasks
 {
@@ -23,7 +24,7 @@ namespace ETLBox.ControlFlow.Tasks
         public void Execute()
         {
             if (!DbConnectionManager.SupportSchemas)
-                throw new ETLBoxNotSupportedException("This task is not supported!");
+                throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
             bool schemaExists = new IfSchemaExistsTask(SchemaName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (!schemaExists)

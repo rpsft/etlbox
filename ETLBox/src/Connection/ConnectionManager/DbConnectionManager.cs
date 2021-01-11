@@ -179,7 +179,7 @@ namespace ETLBox.Connection
         public abstract void BeforeBulkInsert(string tableName);
 
         /// <inheritdoc/>
-        public abstract void BulkInsert(ITableData data, string tableName);
+        public abstract void BulkInsert(ITableData data);
 
         /// <inheritdoc/>
         public abstract void AfterBulkInsert(string tableName);
@@ -188,24 +188,13 @@ namespace ETLBox.Connection
         public abstract void CleanUpBulkInsert(string tableName);
 
         /// <inheritdoc/>
-        public abstract void BeforeBulkDelete(string tableName);
+        public abstract void BulkDelete(ITableData data);
 
         /// <inheritdoc/>
-        public abstract void BulkDelete(ITableData data, string tableName);
+        public abstract void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
 
-        /// <inheritdoc/>
-        public abstract void AfterBulkDelete(string tableName);
 
-        /// <inheritdoc/>
-        public abstract void BeforeBulkUpdate(string tableName);
-
-        /// <inheritdoc/>
-        public abstract void BulkUpdate(ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
-
-        /// <inheritdoc/>
-        public abstract void AfterBulkUpdate(string tableName);
-
-        public virtual void BulkSelect(ITableData data, string tableName, ICollection<string> selectColumnNames, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions)
+        public virtual void BulkSelect(ITableData data, ICollection<string> selectColumnNames, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions)
         {
 
         }

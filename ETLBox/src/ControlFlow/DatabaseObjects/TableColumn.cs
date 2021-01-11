@@ -78,9 +78,9 @@ namespace ETLBox.ControlFlow
                
 
         /// <summary>
-        /// Only for MySql: A comment for the column
+        /// A comment for the column (not supported by every database)
         /// </summary>
-        public string Comment { get; set; } //MySql only
+        public string Comment { get; set; } //MySql,MariaDb,Db2 only
 
         /// <summary>
         /// Only SqlServer: The seed for and identity column

@@ -14,29 +14,11 @@ namespace ETLBox.ControlFlow
         public List<Action<object>> Actions { get; set; }
         public Action BeforeRowReadAction { get; set; }
         public Action AfterRowReadAction { get; set; }
-        public long Limit { get; set; } = long.MaxValue;
-        public int? RowsAffected { get; private set; }
-        public bool IsOdbcConnection => DbConnectionManager.IsOdbcOrOleDbConnection;
-        public virtual bool DoXMLCommentStyle { get; set; }
-        public IDbTransaction Transaction { get; set; }
-        internal virtual string NameAsComment => CommentStart + TaskName + CommentEnd + Environment.NewLine;
-        private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
-        private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
-        public string Command
-        {
-            get
-            {
-                if (HasSql)
-                    return HasName && !IsOdbcConnection ? NameAsComment + Sql : Sql;
-                else
-                    throw new Exception("Empty command");
-            }
-        }
+        public int Limit { get; set; } = int.MaxValue;
+        public int? RowsAffected { get; private set; }               
         public IEnumerable<QueryParameter> Parameter { get; set; }
 
         /* Internal/Private properties */
-        internal bool DoSkipSql { get; private set; }
-        bool HasSql => !(String.IsNullOrWhiteSpace(Sql));
 
         /* Some constructors */
         public DbTask()
@@ -82,7 +64,7 @@ namespace ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
-                RowsAffected = DoSkipSql ? 0 : conn.ExecuteNonQuery(Command, Parameter);
+                RowsAffected = conn.ExecuteNonQuery(Sql, Parameter);
                 if (!DisableLogging) LoggingEnd(LogType.Rows);
             }
             finally
@@ -100,7 +82,7 @@ namespace ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
-                result = conn.ExecuteScalar(Command, Parameter);
+                result = conn.ExecuteScalar(Sql, Parameter);
                 if (!DisableLogging) LoggingEnd();
             }
             finally
@@ -146,7 +128,7 @@ namespace ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart();
-                using (IDataReader reader = conn.ExecuteReader(Command, Parameter) as IDataReader)
+                using (IDataReader reader = conn.ExecuteReader(Sql, Parameter) as IDataReader)
                 {
                     for (int rowNr = 0; rowNr < Limit; rowNr++)
                     {
@@ -180,7 +162,7 @@ namespace ETLBox.ControlFlow
             }
         }
 
-        public void BulkInsert(ITableData data, string tableName)
+        public void BulkInsert(ITableData data)
         {
             if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
                 "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
@@ -189,9 +171,9 @@ namespace ETLBox.ControlFlow
             {
                 conn.Open();
                 if (!DisableLogging) LoggingStart(LogType.Bulk);
-                conn.BeforeBulkInsert(tableName);
-                conn.BulkInsert(data, tableName);
-                conn.AfterBulkInsert(tableName);
+                conn.BeforeBulkInsert(data.DestinationTableName);
+                conn.BulkInsert(data);
+                conn.AfterBulkInsert(data.DestinationTableName);
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
@@ -201,7 +183,7 @@ namespace ETLBox.ControlFlow
             }
         }
 
-        public void BulkDelete(ITableData data, string tableName)
+        public void BulkDelete(ITableData data)
         {
             if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
                 "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
@@ -209,10 +191,8 @@ namespace ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);
-                conn.BeforeBulkDelete(tableName);
-                conn.BulkDelete(data, tableName);
-                conn.AfterBulkDelete(tableName);
+                if (!DisableLogging) LoggingStart(LogType.Bulk);                
+                conn.BulkDelete(data);                
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
@@ -222,7 +202,7 @@ namespace ETLBox.ControlFlow
             }
         }
 
-        public void BulkUpdate(ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames)
+        public void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames)
         {
             if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
                 "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
@@ -230,10 +210,8 @@ namespace ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);
-                conn.BeforeBulkUpdate(tableName);
-                conn.BulkUpdate(data, tableName, setColumnNames,joinColumnNames);
-                conn.AfterBulkUpdate(tableName);
+                if (!DisableLogging) LoggingStart(LogType.Bulk);                
+                conn.BulkUpdate(data,setColumnNames,joinColumnNames);                
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
@@ -259,7 +237,7 @@ namespace ETLBox.ControlFlow
             if (logType == LogType.Bulk)
                 NLogger.Debug($"SQL Bulk Operation", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
             else
-                NLogger.Debug($"{Command}", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
+                NLogger.Debug($"{Sql}", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
         }
 
         void LoggingEnd(LogType logType = LogType.None)

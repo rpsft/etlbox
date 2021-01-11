@@ -75,6 +75,8 @@ namespace ETLBox.Helper
                 case "timestamp":
                 case "timestamptz":
                     return "System.DateTime";
+                case "interval":
+                    return "System.TimeSpan";
                 case "uniqueidentifier":
                 case "uuid":
                     return "System.Guid";
@@ -83,6 +85,7 @@ namespace ETLBox.Helper
                 case "bytea":
                 case "blob":
                 case "image":
+                case "raw":
                     return "System.Byte[]";
                 default:
                     return "System.String";
@@ -107,7 +110,8 @@ namespace ETLBox.Helper
         {
             try
             {
-                return (DbType)Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
+                //return (DbType)Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
+                return GetDBType(GetTypeObject(dbSpecificTypeName));
             }
             catch
             {
@@ -222,6 +226,12 @@ namespace ETLBox.Helper
                     return "TIMESTAMP";
                 else if (typeName.StartsWith("VARBINARY") || typeName.StartsWith("BINARY"))
                     return "BYTEA";
+                return dataTypeName;
+            }
+            else if (connectionType == ConnectionManagerType.Db2)
+            {
+                if (typeName == "TEXT")
+                    return "CLOB";
                 return dataTypeName;
             }
             else if (connectionType == ConnectionManagerType.Oracle)

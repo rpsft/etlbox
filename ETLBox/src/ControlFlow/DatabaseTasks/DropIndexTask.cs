@@ -23,6 +23,7 @@ namespace ETLBox.ControlFlow.Tasks
             if (ConnectionType != ConnectionManagerType.SQLite
                 && ConnectionType != ConnectionManagerType.Postgres
                 && ConnectionType != ConnectionManagerType.Oracle
+                && ConnectionType != ConnectionManagerType.Db2
                 )
                 sql += $@" ON {TN.QuotatedFullName}";
             return sql;

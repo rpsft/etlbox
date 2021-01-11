@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 
 namespace ETLBox.ControlFlow
 {
@@ -64,6 +65,8 @@ namespace ETLBox.ControlFlow
         /// <inheritdoc/>
         public List<object[]> Rows { get; set; }
 
+        public string DestinationTableName => Definition.Name;
+
         #endregion
 
         #region IDataReader Implementation
@@ -114,9 +117,18 @@ namespace ETLBox.ControlFlow
         /// <inheritdoc/>
         public long GetInt64(int i) => Convert.ToInt64(CurrentRow[ShiftIndexAroundIDColumn(i)]);
         /// <inheritdoc/>
-        public string GetName(int i) => Definition.Columns[i].Name;
+        public string GetName(int i)
+        {
+            //if (i >= Definition.Columns.Count)
+            //    return string.Empty; //According to interface description of IDataRecord
+            //else 
+            //    return Definition.Columns[i].Name;
+            throw new NotImplementedException();
+        }
         /// <inheritdoc/>
-        public string GetDataTypeName(int i) => Definition.Columns[i].DataType;
+        public string GetDataTypeName(int i) => throw new NotImplementedException();
+        //Definition.Columns[ShiftIndexForRead(i)].DataType;
+
         /// <inheritdoc/>
         public Type GetFieldType(int i) => CurrentRow[ShiftIndexAroundIDColumn(i)].GetType();
         /// <inheritdoc/>
@@ -134,6 +146,13 @@ namespace ETLBox.ControlFlow
         {
             values = CurrentRow as object[];
             return values.Length;
+        }
+
+        Dictionary<string,string> DataTypeNamesByColumnName;
+        public string GetDataTypeName(string columnName)
+        {
+            //Performance tested & approved
+            return Definition.Columns.Where(col => col.Name == columnName).First().DataType;          
         }
 
         public bool IsDBNull(int i)
@@ -234,6 +253,17 @@ namespace ETLBox.ControlFlow
             }
             return i;
         }
+
+        //int ShiftIndexForRead(int i)
+        //{
+        //    if (HasIDColumnIndex)
+        //    {
+        //        if (i < IDColumnIndex) return i ;
+        //        else if (i >= IDColumnIndex) return i+1;
+        //    }
+        //    return i;
+        //}
+
 
 
         /// <summary>

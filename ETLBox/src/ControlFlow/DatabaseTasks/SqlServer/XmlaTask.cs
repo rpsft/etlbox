@@ -47,7 +47,7 @@ namespace ETLBox.ControlFlow.Tasks
 
         private void Init()
         {
-            DoXMLCommentStyle = true;
+            //DoXMLCommentStyle = true;
         }
 
         /* Static methods for convenience */

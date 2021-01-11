@@ -29,5 +29,12 @@ namespace ETLBox.ControlFlow
         /// </summary>
         int ReadIndex { get; }
 
+        /// <summary>
+        /// The name of the destination table
+        /// </summary>
+        string DestinationTableName { get; }
+
+        string GetDataTypeName(string columnName);
+
     }
 }

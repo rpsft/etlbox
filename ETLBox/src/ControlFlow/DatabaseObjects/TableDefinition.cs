@@ -17,7 +17,7 @@ namespace ETLBox.ControlFlow
         /// The name of the table
         /// </summary>
         public string Name { get; set; }
-
+        
         /// <summary>
         /// The columns of the table
         /// </summary>
@@ -99,6 +99,8 @@ namespace ETLBox.ControlFlow
                 return ReadTableDefinitionFromAccess(connection, TN);
             else if (connectionType == ConnectionManagerType.Oracle)
                 return ReadTableDefinitionFromOracle(connection, TN);
+            else if (connectionType == ConnectionManagerType.Db2)
+                return ReadTableDefinitionFromDb2(connection, TN);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
@@ -451,6 +453,22 @@ AND ( cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
     )
 ORDER BY cols.COLUMN_ID
 ";
+
+//            LEFT JOIN(
+//    SELECT concol.table_name, concol.column_name, concol.position, acons.status, acons.owner, acons.constraint_type
+//    FROM ALL_CONS_COLUMNS concol
+//    INNER JOIN ALL_CONSTRAINTS acons
+//      ON acons.OWNER = concol.OWNER
+//      AND acons.CONSTRAINT_TYPE IN ('U','P')
+//      AND acons.CONSTRAINT_NAME = concol.CONSTRAINT_NAME
+//      AND acons.TABLE_NAME = concol.TABLE_NAME
+//WHERE concol.TABLE_NAME NOT LIKE 'BIN$%'
+//AND concol.OWNER NOT IN('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
+//AND(concol.TABLE_NAME = '{TN.UnquotatedFullName}'
+//      OR(concol.OWNER || '.' || concol.TABLE_NAME) = '{TN.UnquotatedFullName}'
+//    )
+//) cons
+
             var readMetaSql = new SqlTask(
 sql
             , () => { curCol = new TableColumn(); }
@@ -464,6 +482,78 @@ sql
             , collation => curCol.Collation = collation?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , uq_key => curCol.IsUnique = uq_key?.ToString() == "ENABLED" ? true : false
+             )
+            {
+                DisableLogging = true,
+                ConnectionManager = connection,
+                TaskName = $"Read column meta data for table {TN.ObjectName}"
+            };
+            readMetaSql.ExecuteReader();
+            return result;
+        }
+
+        private static TableDefinition ReadTableDefinitionFromDb2(IConnectionManager connection, ObjectNameDescriptor TN)
+        {
+            TableDefinition result = new TableDefinition(TN.ObjectName);
+            TableColumn curCol = null;
+
+            string sql = $@" 
+SELECT c.colname AS column_name
+     , CASE WHEN c.typename 
+            IN ('VARCHAR','CHARACTER','BINARY','VARBINARY','CLOB','BLOB','DBCLOB','GRAPHIC','VARGRAPHIC' ) 
+       THEN c.typename || '(' || c.length || ')'  
+	   WHEN c.typename 
+            IN ('DECIMAL','NUMERIC','DECFLOAT','REAL','DOUBLE') 
+       THEN c.typename || '(' || c.length ||',' || c.scale || ')'
+	   ELSE c.typename
+	   END AS data_type 
+     , CASE WHEN c.nulls = 'Y' THEN 1 ELSE 0 END AS nullable
+     , CASE WHEN c.identity ='Y' THEN 1 ELSE 0 END AS is_identity
+     , CASE WHEN i.uniquerule ='P' THEN 1 ELSE 0 END AS is_primary
+     , c.default AS default_value
+     , c.collationname AS collation     
+     --, c.generated as  generation_expression
+     , c.text as computed_formula
+    , CASE WHEN i.uniquerule ='U' THEN 1 ELSE 0 END AS is_unique
+     , c.remarks as description
+     , CASE WHEN i.uniquerule ='P' THEN i.indname ELSE NULL END AS pk_name
+     , CASE WHEN i.uniquerule ='U' THEN i.indname ELSE NULL END AS uk_name
+FROM syscat.columns c
+INNER JOIN syscat.tables t on 
+      t.tabschema = c.tabschema and t.tabname = c.tabname
+LEFT JOIN (
+    SELECT ix.uniquerule, ix.tabschema, ix.tabname, idxu.colname, ix.indname
+    FROM syscat.indexes ix
+    INNER JOIN syscat.indexcoluse idxu
+    ON idxu.indname = ix.indname
+    AND idxu.indschema = ix.indschema
+    ) i
+ON i.tabschema = c.tabschema 
+    AND i.tabname = c.tabname
+    AND i.colname = c.colname     
+WHERE t.type IN ('V','T')
+AND ( t.tabname = '{TN.UnquotatedFullName}'
+      OR ( TRIM(t.tabschema) || '.' || t.tabname = '{TN.UnquotatedFullName}' )
+    )
+ORDER BY c.colno;
+";            
+
+            var readMetaSql = new SqlTask(
+sql
+            , () => { curCol = new TableColumn(); }
+            , () => { result.Columns.Add(curCol); }
+            , column_name => curCol.Name = column_name.ToString()
+            , data_type => curCol.DataType = data_type.ToString()
+            , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
+            , is_identity => curCol.IsIdentity = (int)is_identity == 1 ? true : false
+            , is_primary => curCol.IsPrimaryKey = (int)is_primary == 1 ? true : false
+            , default_value => curCol.DefaultValue = default_value?.ToString()
+            , collation => curCol.Collation = collation?.ToString()
+            , computed_formula => curCol.ComputedColumn = computed_formula?.ToString()
+            , is_unique => curCol.IsUnique = (int)is_unique == 1 ? true : false
+            , remarks => curCol.Comment = remarks?.ToString()
+            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
+            , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
              )
             {
                 DisableLogging = true,

@@ -162,8 +162,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                 throw new ETLBoxException("One of the provided columns has a datatype that is either null or empty - can't create table.");
         }
 
-        
-        
+
+
         string CreateTableDefinition(TableColumn col)
         {
             string dataType = string.Empty;
@@ -200,7 +200,10 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                         return "SERIAL";
                     else if (ConnectionType == ConnectionManagerType.Oracle)
                         return $"GENERATED ALWAYS AS IDENTITY START WITH {col.IdentitySeed ?? 1} INCREMENT BY {col.IdentityIncrement ?? 1}";
-                    return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
+                    else if (ConnectionType == ConnectionManagerType.Db2)
+                        return $"GENERATED ALWAYS AS IDENTITY (START WITH {col.IdentitySeed ?? 1} INCREMENT BY {col.IdentityIncrement ?? 1})";
+                    else
+                        return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
                 }
                 else
                 {
@@ -224,6 +227,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
         private string CreateCollationSql(TableColumn col)
         {
             if (IgnoreCollation)
+                return string.Empty;
+            if (ConnectionType == ConnectionManagerType.Db2)
                 return string.Empty;
             if (!String.IsNullOrWhiteSpace(col.Collation))
             {
@@ -278,7 +283,10 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                 throw new ETLBoxNotSupportedException("Computed columns are not supported.");
 
             if (col.HasComputedColumn)
-                return $"AS {col.ComputedColumn}";
+                if (ConnectionType == ConnectionManagerType.Db2)
+                    return $"GENERATED ALWAYS AS ({col.ComputedColumn})";
+                else
+                    return $"AS {col.ComputedColumn}";
             else
                 return string.Empty;
         }

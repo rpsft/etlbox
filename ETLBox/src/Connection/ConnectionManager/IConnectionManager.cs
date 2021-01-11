@@ -172,7 +172,7 @@ namespace ETLBox.Connection
         /// </summary>
         /// <param name="data">Batch of data</param>
         /// <param name="tableName">Destination table name</param>
-        void BulkInsert(ITableData data, string tableName);
+        void BulkInsert(ITableData data);
         /// <summary>
         /// Called after every bulk insert of a batch
         /// </summary>
@@ -185,40 +185,20 @@ namespace ETLBox.Connection
         void CleanUpBulkInsert(string tableName);
 
         /// <summary>
-        /// Called before every bulk delete of a batch
-        /// </summary>
-        /// <param name="tableName">Destination table name</param>
-        void BeforeBulkDelete(string tableName);
-        /// <summary>
         /// Performs a bulk delete
         /// </summary>
         /// <param name="data">Batch of data</param>
         /// <param name="tableName">Destination table name</param>
-        void BulkDelete(ITableData data, string tableName);
-        /// <summary>
-        /// Called after every bulk delete of a batch
-        /// </summary>
-        /// <param name="tableName">Destination table name</param>
-        void AfterBulkDelete(string tableName);
+        void BulkDelete(ITableData data);
 
-        /// <summary>
-        /// Called before every bulk update of a batch
-        /// </summary>
-        /// <param name="tableName">Destination table name</param>
-        void BeforeBulkUpdate(string tableName);
         /// <summary>
         /// Performs a bulk update
         /// </summary>
         /// <param name="data">Batch of data</param>
         /// <param name="tableName">Destination table name</param>
-        void BulkUpdate(ITableData data, string tableName, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
-        /// <summary>
-        /// Called after every bulk update of a batch
-        /// </summary>
-        /// <param name="tableName">Destination table name</param>
-        void AfterBulkUpdate(string tableName);
+        void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
 
-        void BulkSelect(ITableData data, string tableName, ICollection<string> selectColumnNames
+        void BulkSelect(ITableData data, ICollection<string> selectColumnNames
             , Action beforeRowReadAction, Action afterRowReadAction
             , params Action<object>[] actions);
         

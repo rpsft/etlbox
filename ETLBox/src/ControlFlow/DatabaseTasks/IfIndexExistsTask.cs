@@ -56,6 +56,22 @@ WHERE ( aidx.TABLE_NAME  = '{OON.UnquotatedFullName}'
 AND aidx.INDEX_NAME   = '{ON.UnquotatedObjectName}'
 ";
             }
+            else if (this.ConnectionType == ConnectionManagerType.Db2)
+            {
+                return $@"
+SELECT 1
+FROM syscat.indexes i
+INNER JOIN syscat.tables t on 
+    t.tabschema = i.tabschema and t.tabname = i.tabname
+WHERE t.type IN ('T')
+AND ( t.tabname = '{OON.UnquotatedFullName}'
+      OR ( TRIM(t.tabschema) || '.' || TRIM(t.tabname) = '{OON.UnquotatedFullName}' )
+    )
+AND ( i.indname = '{ON.UnquotatedFullName}'
+      OR ( TRIM(i.indschema) || '.' || i.indname = '{ON.UnquotatedFullName}' )
+    )
+";
+            }
             else
             {
                 return string.Empty;

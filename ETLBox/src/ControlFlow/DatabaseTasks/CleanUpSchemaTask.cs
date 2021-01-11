@@ -1,5 +1,6 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Exceptions;
+using System;
 
 namespace ETLBox.ControlFlow.Tasks
 {
@@ -22,8 +23,17 @@ namespace ETLBox.ControlFlow.Tasks
         /// </summary>
         public void Execute()
         {
-            if (ConnectionType != ConnectionManagerType.SqlServer && ConnectionType != ConnectionManagerType.Oracle)
-                throw new ETLBoxNotSupportedException("This task is only supported with SqlServer or Oracle!");
+            if (ConnectionType != ConnectionManagerType.SqlServer 
+                && ConnectionType != ConnectionManagerType.Oracle
+                && ConnectionType != ConnectionManagerType.Db2
+                )
+                throw new ETLBoxNotSupportedException("This task is only supported with SqlServer, Oracle or Db2!");
+            if (ConnectionType == ConnectionManagerType.Db2) {
+                DropTableTask.DropIfExists(ConnectionManager, "ETLBOX.ERRORS");
+                if (string.IsNullOrEmpty(SchemaName))
+                    SchemaName = (string)new SqlTask(this, "SELECT CURRENT SCHEMA FROM SYSIBM.SYSDUMMY1").ExecuteScalar();
+                new SqlTask(this, Db2CleanProc).ExecuteNonQuery();                
+            }
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
@@ -183,11 +193,26 @@ BEGIN
                     END;
 ";
                 }
+                else if (ConnectionType == ConnectionManagerType.Db2)
+                {
+                    return $@"BEGIN ATOMIC
+IF (EXISTS ( SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME  = '{SchemaName}' ) )
+  THEN CALL ETLBOX.CLEANUPSCHEMA();
+END IF;
+END";
+                }
                 else
                     return string.Empty;
             }
         }
 
+        string Db2CleanProc => $@"
+CREATE OR REPLACE PROCEDURE ETLBOX.CLEANUPSCHEMA() BEGIN
+    declare varErrSchema varchar(128) default 'ETLBOX';
+    declare varErrTable varchar(128) default 'ERRORS';  	
+	call sysproc.admin_drop_schema ('{SchemaName}', NULL, varErrSchema, varErrTable);	
+END
+";
         /* Some constructors */
         public CleanUpSchemaTask()
         {

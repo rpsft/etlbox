@@ -1,6 +1,7 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Helper;
 using NLog.Targets;
+using System;
 
 namespace ETLBox.Logging
 {
@@ -28,14 +29,14 @@ $@"INSERT
         ,   {PP}LogLevel
         ,   CAST( {PP}Stage as {VARCHAR}(20) )
         ,   CAST( {PP}Message as {VARCHAR}(4000) )
-        ,   CAST( {PP}Type as {VARCHAR}(40) )
+        ,   CAST( {PP}Type as {VARCHAR}(200) )
         ,   {PP}Action
         ,   {PP}Hash
         ,   CAST( {PP}Logger as {VARCHAR}(20) )
         ,   CASE 
-                WHEN {PP}LoadProcessKey IS NULL OR {PP}LoadProcessKey = '' OR {PP}LoadProcessKey = '0'
+                WHEN {WHENLOADPROCESS}
                 THEN NULL
-                ELSE CAST( {PP}LoadProcessKey AS {INT} )
+                ELSE CAST({PP}LoadProcessKey AS {INT})
             END 
     {FROMDUAL}";
 
@@ -58,6 +59,7 @@ $@"INSERT
                     return $"{PP}LogDate";
             }
         }
+
         string VARCHAR
         {
             get
@@ -69,8 +71,42 @@ $@"INSERT
                 else return "VARCHAR";
             }
         }
-        string INT => this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql ? "UNSIGNED" : "INT";
-        string FROMDUAL => this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.Oracle ? "FROM DUAL" : "";
+        string INT
+        {
+            get
+            {
+                if (this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql)
+                    return "UNSIGNED";
+                else if (this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.Db2)
+                    return "VARCHAR(20)";
+                else
+                    return "INT";
+            }
+        }
+
+        string WHENLOADPROCESS
+        {
+            get
+            {
+                if (this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.Db2)
+                    return $@"{PP}LoadProcessKey IS NULL OR CAST({PP}LoadProcessKey AS VARCHAR(20))= '' OR CAST({PP}LoadProcessKey AS VARCHAR(20)) = '0'";
+                else
+                    return $@"{PP}LoadProcessKey IS NULL OR {PP}LoadProcessKey = '' OR {PP}LoadProcessKey = '0'";
+            }
+        }
+
+        string FROMDUAL
+        {
+            get
+            {
+                if (this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.Oracle)
+                    return "FROM DUAL";
+                else if (this.ConnectionManager.ConnectionManagerType == ConnectionManagerType.Db2)
+                    return "FROM SYSIBM.SYSDUMMY1";
+                else
+                    return "";
+            }
+        }
 
         internal IConnectionManager ConnectionManager { get; set; }
         internal string LogTableName { get; set; }
@@ -95,7 +131,9 @@ $@"INSERT
             AddParameter(dbTarget, "LoadProcessKey", @"${etllog:LogType=LoadProcessKey}");
 
             dbTarget.CommandText = new NLog.Layouts.SimpleLayout(CommandText);
-            if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.Postgres)
+            if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.SqlServer)
+                dbTarget.DBProvider = "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient";
+            else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.Postgres)
                 dbTarget.DBProvider = "Npgsql.NpgsqlConnection, Npgsql";
             else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql)
                 dbTarget.DBProvider = "MySql.Data.MySqlClient.MySqlConnection, MySql.Data";
@@ -103,8 +141,10 @@ $@"INSERT
                 dbTarget.DBProvider = "System.Data.SQLite.SQLiteConnection, System.Data.SQLite";
             else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.Oracle)
                 dbTarget.DBProvider = "Oracle.ManagedDataAccess.Client.OracleConnection, Oracle.ManagedDataAccess";
+            else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.Db2)
+                dbTarget.DBProvider = "IBM.Data.DB2.Core.DB2Connection, IBM.Data.DB2.Core";
             else
-                dbTarget.DBProvider = "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient";
+                throw new NotSupportedException("ETLBox: The used connection manager can not be used as database target for NLog!");
             dbTarget.ConnectionString = ConnectionManager.ConnectionString.Value;
             return dbTarget;
         }
