@@ -9,11 +9,8 @@ namespace ETLBox.ControlFlow
     /// <summary>
     /// A column in table
     /// </summary>
-    public class TableColumn : IColumnMapping
+    public class TableColumn
     {
-        private string _dataSetColumn;
-        private string _sourceColumn;
-
         /// <summary>
         /// Name of the column
         /// </summary>
@@ -91,30 +88,6 @@ namespace ETLBox.ControlFlow
         /// Only SqlServer: The increment value for an identity column
         /// </summary>
         public int? IdentityIncrement { get; set; } //Sql Server only
-
-        #region IColumnMapping implementation
-
-        /// <inheritdoc/>
-        public string DataSetColumn
-        {
-            get { return String.IsNullOrWhiteSpace(_dataSetColumn) ? Name : _dataSetColumn; }
-            set
-            {
-                _dataSetColumn = value;
-            }
-        }
-
-        /// <inheritdoc/>
-        public string SourceColumn
-        {
-            get { return String.IsNullOrWhiteSpace(_sourceColumn) ? Name : _sourceColumn; }
-            set
-            {
-                _sourceColumn = value;
-            }
-        }
-
-        #endregion
 
         #region Constructors
 

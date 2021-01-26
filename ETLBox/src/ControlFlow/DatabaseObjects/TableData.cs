@@ -8,68 +8,106 @@ using System.Linq;
 
 namespace ETLBox.ControlFlow
 {
-    /// <inheritdoc/>
-    public class TableData : TableData<object[]>
-    {
-        public TableData(TableDefinition definition) : base(definition) { }
-        public TableData(TableDefinition definition, int estimatedBatchSize) : base(definition, estimatedBatchSize) { }
-    }
-
     /// <summary>
     /// Defines a list of rows that can be inserted into a table
     /// </summary>
-    /// <typeparam name="T">Object type of a row</typeparam>
-    public class TableData<T> : ITableData
+    public class TableData : ITableData
     {
         #region ITableData implementation
+
         /// <inheritdoc/>
         public IColumnMappingCollection ColumnMapping
         {
             get
             {
-                if (HasDefinition)
-                    return GetColumnMappingFromDefinition();
-                else
-                    throw new ETLBoxException("No table definition found. For Bulk insert a TableDefinition is always needed.");
+                if (_columnMapping == null)
+                    _columnMapping = CreateColumnMappingFromDefinition();
+                return _columnMapping;
             }
         }
 
-        private IColumnMappingCollection GetColumnMappingFromDefinition()
-        {
-            var mapping = new DataColumnMappingCollection();
-            foreach (var col in Definition.Columns)
-                if (!col.IsIdentity)
-                {
-                    if (TypeInfo != null && !TypeInfo.IsDynamic && !TypeInfo.IsArray)
-                    {
-                        if (TypeInfo.HasPropertyOrColumnMapping(col.Name) || ColumnMaps.ContainsKey(col.Name))
-                            mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
-                    }
-                    else if (TypeInfo.IsDynamic)
-                    {
-                        if (DynamicColumnNames.ContainsKey(col.Name) || ColumnMaps.ContainsKey(col.Name))
-                            mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
-                    }
-                    else
-                    {
-                        mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
-                    }
-                }
-            return mapping;
-        }
-
+        /// <inheritdoc/>
         public object[] CurrentRow { get; private set; }
 
+        /// <inheritdoc/>
         public int ReadIndex { get; private set; }
 
         /// <inheritdoc/>
         public List<object[]> Rows { get; set; }
 
+        /// <inheritdoc/>
         public string DestinationTableName => Definition.Name;
+
+        /// <inheritdoc/>
+        public string GetDataTypeName(string columnName) =>
+            Definition.Columns.Find(col => col.Name == columnName).DataType;
+
+        /// <inheritdoc/>
+        public Dictionary<string, int> DataIndexForColumn { get; set; } = new Dictionary<string, int>();
+
+        /// <inheritdoc/>
+        public TableDefinition Definition { get; set; }
+
+        /// <inheritdoc/>
+        public bool KeepIdentity { get; set; }
+
+        public Dictionary<string, Func<object, object>> ColumnConverters { get; set; } = new Dictionary<string, Func<object, object>>();
 
         #endregion
 
-        #region IDataReader Implementation
+        #region IDataReader part I (not needed) 
+
+        /// <inheritdoc/>
+        public bool GetBoolean(int i) => Convert.ToBoolean(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public byte GetByte(int i) => Convert.ToByte(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+            => throw new NotImplementedException("GetBytes(..) is not implemented on TableData!");
+        /// <inheritdoc/>
+        public char GetChar(int i) => Convert.ToChar(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
+        {
+            string value = Convert.ToString(GetCurrentRow(i));
+            buffer = value.Substring(bufferoffset, length).ToCharArray();
+            return buffer.Length;
+        }
+        /// <inheritdoc/>
+        public DateTime GetDateTime(int i) => Convert.ToDateTime(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public IDataReader GetData(int i) => throw new NotImplementedException("GetData(..) is not implemented on TableData!");
+        /// <inheritdoc/>
+        public decimal GetDecimal(int i) => Convert.ToDecimal(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public double GetDouble(int i) => Convert.ToDouble(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public float GetFloat(int i) => float.Parse(Convert.ToString(GetCurrentRow(i)));
+        /// <inheritdoc/>
+        public Guid GetGuid(int i) => Guid.Parse(Convert.ToString(GetCurrentRow(i)));
+        /// <inheritdoc/>
+        public short GetInt16(int i) => Convert.ToInt16(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public int GetInt32(int i) => Convert.ToInt32(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public long GetInt64(int i) => Convert.ToInt64(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public string GetString(int i) => Convert.ToString(GetCurrentRow(i));
+        /// <inheritdoc/>
+        public Type GetFieldType(int i) => GetCurrentRow(i)?.GetType() ?? null;
+        /// <inheritdoc/>
+        public DataTable GetSchemaTable() //check
+            => throw new NotImplementedException("GetSchemaTable() is not implemented on TableData!");
+        /// <inheritdoc/>
+        public int GetValues(object[] values)
+        {
+            values = CurrentRow as object[];
+            return values?.Length ?? 0;
+        }
+
+        #endregion
+
+        #region IDataReader part II - Implementation
 
         /// <inheritdoc/>
         public object this[string name] => Rows[GetOrdinal(name)];
@@ -78,94 +116,55 @@ namespace ETLBox.ControlFlow
         /// <inheritdoc/>
         public int Depth => 0;
         /// <inheritdoc/>
-        public int FieldCount => Rows.Count;
+        public int FieldCount => ColumnMapping.Count;
         /// <inheritdoc/>
-        public bool IsClosed => Rows.Count == 0;
+        public bool IsClosed => ReadIndex >= Rows.Count;
         /// <inheritdoc/>
         public int RecordsAffected => Rows.Count;
-        /// <inheritdoc/>
-        public bool GetBoolean(int i) => Convert.ToBoolean(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public byte GetByte(int i) => Convert.ToByte(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length) => 0;
-        /// <inheritdoc/>
-        public char GetChar(int i) => Convert.ToChar(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
-        {
-            string value = Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-            buffer = value.Substring(bufferoffset, length).ToCharArray();
-            return buffer.Length;
-        }
-        /// <inheritdoc/>
-        public DateTime GetDateTime(int i) => Convert.ToDateTime(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public IDataReader GetData(int i) => throw new NotImplementedException();//null;
-        /// <inheritdoc/>
-        public decimal GetDecimal(int i) => Convert.ToDecimal(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public double GetDouble(int i) => Convert.ToDouble(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public float GetFloat(int i) => float.Parse(Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]));
-        /// <inheritdoc/>
-        public Guid GetGuid(int i) => Guid.Parse(Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]));
-        /// <inheritdoc/>
-        public short GetInt16(int i) => Convert.ToInt16(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public int GetInt32(int i) => Convert.ToInt32(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public long GetInt64(int i) => Convert.ToInt64(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        /// <inheritdoc/>
-        public string GetName(int i)
-        {
-            //if (i >= Definition.Columns.Count)
-            //    return string.Empty; //According to interface description of IDataRecord
-            //else 
-            //    return Definition.Columns[i].Name;
-            throw new NotImplementedException();
-        }
-        /// <inheritdoc/>
-        public string GetDataTypeName(int i) => throw new NotImplementedException();
-        //Definition.Columns[ShiftIndexForRead(i)].DataType;
 
+        Dictionary<int, string> OrdinalToName;
+        Dictionary<string, int> NameToOrdinal;
+        Dictionary<int, int> OrdinalToDataIndex;
         /// <inheritdoc/>
-        public Type GetFieldType(int i) => CurrentRow[ShiftIndexAroundIDColumn(i)].GetType();
-        /// <inheritdoc/>
-        public int GetOrdinal(string name) => FindOrdinalInObject(name);
-
-        public DataTable GetSchemaTable()
+        public string GetName(int i) //check
         {
-            throw new NotImplementedException();
+            InitDataIndexIfNeeded();
+            InitOrdinalRemappingIfNeeded();
+
+            if (i >= OrdinalToName.Count) return string.Empty;
+            if (OrdinalToName.ContainsKey(i))
+                return OrdinalToName[i];
+            else
+                return string.Empty;
         }
 
-        public string GetString(int i) => Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
-        public object GetValue(int i) => CurrentRow.Length > ShiftIndexAroundIDColumn(i) ? CurrentRow[ShiftIndexAroundIDColumn(i)] : (object)null;
+        /// <inheritdoc/>
+        public string GetDataTypeName(int i) => GetDataTypeName(GetName(i));
 
-        public int GetValues(object[] values)
+        /// <inheritdoc/>
+        public int GetOrdinal(string name)
         {
-            values = CurrentRow as object[];
-            return values.Length;
+            InitDataIndexIfNeeded();
+            InitOrdinalRemappingIfNeeded();
+
+            //https://docs.microsoft.com/en-us/dotnet/api/system.data.idatarecord.getordinal?view=net-5.0            
+            return NameToOrdinal.ContainsKey(name) ?
+                NameToOrdinal[name] : NameToOrdinal.Count; //if out of range, then GetValue returns null 
         }
 
-        Dictionary<string,string> DataTypeNamesByColumnName;
-        public string GetDataTypeName(string columnName)
-        {
-            //Performance tested & approved
-            return Definition.Columns.Where(col => col.Name == columnName).First().DataType;          
-        }
+        /// <inheritdoc/>        
+        public object GetValue(int i) => GetCurrentRow(i);  //always used, null if out of range
 
-        public bool IsDBNull(int i)
-        {
-            return CurrentRow.Length > ShiftIndexAroundIDColumn(i) ?
-                CurrentRow[ShiftIndexAroundIDColumn(i)] == null : true;
-        }
+        /// <inheritdoc/>
+        public bool IsDBNull(int i) => GetCurrentRow(i) == null; //always used, null if out of range
 
+        /// <inheritdoc/>
         public bool NextResult()
         {
             return (ReadIndex + 1) <= Rows?.Count;
         }
 
+        /// <inheritdoc/>
         public bool Read()
         {
             if (Rows?.Count > ReadIndex)
@@ -194,87 +193,94 @@ namespace ETLBox.ControlFlow
 
         private void InitObjects(TableDefinition definition, int estimatedBatchSize = 0)
         {
+            if (definition == null) throw new ArgumentNullException(nameof(Definition),
+                "ETLBox: TablDefinition is needed to create a proper TableData object!");
             Definition = definition;
-            IDColumnIndex = Definition.IdentityColumnIndex;
             Rows = new List<object[]>(estimatedBatchSize);
-            TypeInfo = new DbTypeInfo(typeof(T));
         }
 
         #endregion
 
-        internal Dictionary<string, int> DynamicColumnNames { get; set; } = new Dictionary<string, int>();
-        internal Dictionary<string, ColumnMap> ColumnMaps { get; set; } = new Dictionary<string, ColumnMap>();
+        #region Implementation
 
+        IColumnMappingCollection _columnMapping;
 
-        TableDefinition Definition;
-        bool HasDefinition => Definition != null;
-        DbTypeInfo TypeInfo;
-        int? IDColumnIndex;
-        bool HasIDColumnIndex => IDColumnIndex != null;
-        private int FindOrdinalInObject(string name)
+        private void InitDataIndexIfNeeded()
         {
-            if (TypeInfo == null || TypeInfo.IsArray)
-            {                
-                if (ColumnMaps.ContainsKey(name))
+            if (DataIndexForColumn.Count == 0)
+                CreateDefaultIndexFromColumnMapping();
+        }
+
+        private void InitOrdinalRemappingIfNeeded()
+        {
+            if (OrdinalToName != null) return;
+            OrdinalToName = new Dictionary<int, string>();
+            NameToOrdinal = new Dictionary<string, int>();
+            OrdinalToDataIndex = new Dictionary<int, int>();            
+            int newIndex = 0;
+            foreach (var dataColName in DataIndexForColumn.Keys)
+            {
+                if (Definition.Columns.Any(col => col.Name == dataColName &&
+                        (!col.IsIdentity || KeepIdentity)))
                 {
-                    int index = ColumnMaps[name].ArrayIndex ?? 0;
-                    if (HasIDColumnIndex)
-                        index++;
-                    return index;
-                }                
-                else 
-                    return Definition.Columns.FindIndex(col => col.Name == name);
+                    NameToOrdinal.Add(dataColName, newIndex);
+                    OrdinalToName.Add(newIndex, dataColName);
+                    OrdinalToDataIndex.Add(newIndex, DataIndexForColumn[dataColName]);
+                    newIndex++;
+                }
             }
-            else if (TypeInfo.IsDynamic)
-            {
-                string mappedName = ColumnMaps.ContainsKey(name) ? ColumnMaps[name].CurrentName : name;
-                int ix = DynamicColumnNames[mappedName];
-                if (HasIDColumnIndex)
-                    if (ix >= IDColumnIndex) ix++;
-                return ix;
+        }
 
-            }
+        private object GetCurrentRow(int i)
+        {
+            int shifted = Remap(i);
+            object result; 
+            if (CurrentRow.Length > shifted)
+                result = CurrentRow[shifted];
             else
-            {
-                string mappedName = ColumnMaps.ContainsKey(name) ? ColumnMaps[name].CurrentName : name;
-                int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(mappedName);
-                if (HasIDColumnIndex)
-                    if (ix >= IDColumnIndex) ix++;
-                return ix;
-            }
+                result = null;
+            if (ColumnConverters?.Count > 0 
+                && OrdinalToName.ContainsKey(i) && ColumnConverters.ContainsKey(OrdinalToName[i]))
+                return ColumnConverters[OrdinalToName[i]].Invoke(result);
+            else 
+                return result;
         }
 
-        int ShiftIndexAroundIDColumn(int i)
+        int Remap(int i) => OrdinalToDataIndex?.Count > 0 ? OrdinalToDataIndex[i] : i;
+
+        private void CreateDefaultIndexFromColumnMapping()
         {
-            if (HasIDColumnIndex)
-            {
-                if (i > IDColumnIndex) return i - 1;
-                else if (i <= IDColumnIndex) return i;
-            }
-            return i;
+            for (int i = 0; i < ColumnMapping.Count; i++)
+                DataIndexForColumn.Add(((DataColumnMapping)ColumnMapping[i]).SourceColumn, i);
         }
 
-        //int ShiftIndexForRead(int i)
-        //{
-        //    if (HasIDColumnIndex)
-        //    {
-        //        if (i < IDColumnIndex) return i ;
-        //        else if (i >= IDColumnIndex) return i+1;
-        //    }
-        //    return i;
-        //}
-
-
-
-        /// <summary>
-        /// Clears the internal list that holds the data and rewinds the pointer for the reader to the start
-        /// </summary>
-        public void ClearData()
+        private IColumnMappingCollection CreateColumnMappingFromDefinition()
         {
-            ReadIndex = 0;
-            CurrentRow = null;
-            Rows.Clear();
+            var mapping = new DataColumnMappingCollection();
+            foreach (var col in Definition.Columns)
+            {
+                if (!col.IsIdentity || KeepIdentity)
+                {
+                    if (DataIndexForColumn.Count > 0)
+                    {
+                        if (DataIndexForColumn.ContainsKey(col.Name))
+                            mapping.Add(new DataColumnMapping(col.Name, col.Name));
+                    }
+                    else //Default: always a complete mapping
+                    {
+                        mapping.Add(new DataColumnMapping(col.Name, col.Name));
+                    }
+                }
+            }
+            if (mapping.Count == 0)
+                throw new ETLBoxException($"Unable to create proper column mapping for table {Definition.Name}." +
+                    $"Column mapping could not be retrieved from table definition");
+            return mapping;
         }
+
+
+
+        #endregion
 
         #region IDisposable Support
 

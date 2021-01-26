@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ETLBox.DataFlow;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -35,6 +36,12 @@ namespace ETLBox.ControlFlow
         string DestinationTableName { get; }
 
         string GetDataTypeName(string columnName);
+
+        TableDefinition Definition { get; }
+
+        Dictionary<string, int> DataIndexForColumn { get; set; }       
+        
+        bool KeepIdentity { get; set; }
 
     }
 }
