@@ -79,7 +79,7 @@ namespace ETLBox.Connection
         public virtual bool IsOdbcOrOleDbConnection { get; } = false;
 
         /// <inheritdoc/>
-        public virtual bool DoPrepareCommand { get; set; } = false;
+        public virtual bool DoPrepareCommand { get; set; } = true;
 
         /// <inheritdoc/>
         public virtual int MaxParameterAmount { get; } = int.MaxValue;
@@ -208,6 +208,11 @@ namespace ETLBox.Connection
 
         /// <inheritdoc/>
         public abstract IConnectionManager Clone();
+
+        public void CopyBaseAttributes(DbConnectionManager<Connection> original)
+        {
+            this.DoPrepareCommand = original.DoPrepareCommand;
+        }
 
         /// <inheritdoc/>
         public void Open()
