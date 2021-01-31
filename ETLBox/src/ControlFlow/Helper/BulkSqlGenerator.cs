@@ -81,7 +81,7 @@ namespace ETLBox.Helper
         /// The datatype is the same data types used in the table definition.
         /// Only works if <see cref="AddDbTypesFromDefinition"/> is set to true.
         /// </summary>
-        public bool AddParameterCastInSql{ get; set; }
+        public bool AddParameterCastInSql { get; set; }
 
         /// <summary>
         /// If <see cref="UseParameterQuery"/> is set to true, 
@@ -290,7 +290,7 @@ namespace ETLBox.Helper
             {
                 List<string> values = new List<string>();
                 foreach (string destColumnName in DestColumnNames)
-                {                    
+                {
                     int ordinal = TableData.GetOrdinal(destColumnName);
                     if (TableData.IsDBNull(ordinal))
                         AddNullValue(values, destColumnName);
@@ -353,19 +353,23 @@ namespace ETLBox.Helper
             }
 
             Parameters.Add(par);
+            string parname;
             if (UseNamedParameters)
             {
-                string parName = $"{ParameterPlaceholder}P{ParameterNameCount++}";
-                par.ParameterName = parName;
-                //For Db2: https://stackoverflow.com/questions/13381898/how-to-resolve-sql0418n-error/13382197#13382197
-                if (AddDbTypesFromDefinition && AddParameterCastInSql) 
-                    parName = $"CAST ({parName} AS {dbTypeString})";
-                return parName;
+                parname = $"{ParameterPlaceholder}P{ParameterNameCount++}";
+                par.ParameterName = parname;
             }
             else
-            {
-                return "?";
-            }
+                parname = "?";
+
+            //For Db2: https://stackoverflow.com/questions/13381898/how-to-resolve-sql0418n-error/13382197#13382197
+            if (AddDbTypesFromDefinition && AddParameterCastInSql)
+                parname = $"CAST ({parname} AS {dbTypeString})";
+            else if (AddDbTypesFromDefinition && ConnectionType == ConnectionManagerType.Postgres &&
+                dbTypeString.ToLower().StartsWith("json"))
+                parname = $"CAST ({parname} AS {dbTypeString})";
+            return parname;
+
         }
 
         private static void TryConvertParameter(object parValue, T par, string dbtypestring)
@@ -431,15 +435,18 @@ namespace ETLBox.Helper
                 QueryText.AppendLine($"vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
             else
                 QueryText.AppendLine($"vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
-            if (ConnectionType == ConnectionManagerType.Oracle 
+            if (ConnectionType == ConnectionManagerType.Oracle
                 || ConnectionType == ConnectionManagerType.Postgres
                 || ConnectionType == ConnectionManagerType.Db2)
                 QueryText.Append(" WHERE ");
             else
                 QueryText.Append(" ON ");
-            QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+            if (ConnectionType == ConnectionManagerType.Postgres)
+                AppendMatchConditionWithJsonbConversion(SourceColumnNames, "dt");
+            else
+                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
                     SourceColumnNames.Select(col => $@"( ( dt.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( dt.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
-            if (ConnectionType == ConnectionManagerType.Oracle 
+            if (ConnectionType == ConnectionManagerType.Oracle
                 || ConnectionType == ConnectionManagerType.Db2)
                 QueryText.AppendLine(")");
         }
@@ -480,8 +487,9 @@ namespace ETLBox.Helper
             {
                 QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
                 QueryText.Append(" WHERE ");
-                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
-                        JoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
+                AppendMatchConditionWithJsonbConversion(JoinColumnNames, "ut");
+                //QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+                //        JoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
             }
             else
             {
@@ -502,8 +510,25 @@ namespace ETLBox.Helper
             else
                 QueryText.AppendLine($"vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
             QueryText.Append(" ON ");
-            QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
+            if (ConnectionType == ConnectionManagerType.Postgres)
+                AppendMatchConditionWithJsonbConversion(SourceColumnNames, "st");
+            else
+                QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
                     SourceColumnNames.Select(col => $@"( ( st.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( st.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
+        }
+
+        private void AppendMatchConditionWithJsonbConversion(ICollection<string> columnNames, string matchTableAs)
+        {
+            List<string> lines = new List<string>();
+            foreach (var col in columnNames)
+            {
+                string jsonb = "";
+                string datatype = TableData.GetDataTypeName(col);
+                if (datatype.ToLower().StartsWith("json"))
+                    jsonb = "::jsonb";
+                lines.Add($@"( ( {matchTableAs}.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( {matchTableAs}.{QB}{col}{QE}{jsonb} = vt.{QB}{col}{QE}{jsonb} ) )");
+            }
+            QueryText.AppendLine(string.Join(Environment.NewLine + " AND ", lines));
         }
 
         #endregion
