@@ -22,7 +22,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Queries the server for all user database names. The result is stored in <see cref="DatabaseNames"/>
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");

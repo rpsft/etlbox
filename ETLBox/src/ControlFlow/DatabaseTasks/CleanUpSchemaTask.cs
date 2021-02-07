@@ -21,7 +21,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Runs the sql to clean up the schema
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             if (ConnectionType != ConnectionManagerType.SqlServer 
                 && ConnectionType != ConnectionManagerType.Oracle

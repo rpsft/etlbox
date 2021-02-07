@@ -23,7 +23,7 @@ namespace ETLBox.Logging
             if (DropAndCreateTable)
                 DropTableTask.DropIfExists(this.ConnectionManager, TableName);
 
-            CreateTableTask.Create(this.ConnectionManager, TableName,
+            CreateTableTask.CreateIfNotExists(this.ConnectionManager, TableName,
                 new List<TableColumn>()
                 {
                     new TableColumn("ErrorText", "TEXT", allowNulls:false),

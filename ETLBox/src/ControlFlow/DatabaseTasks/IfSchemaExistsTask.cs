@@ -24,8 +24,11 @@ IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(sche
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {
-                return $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ON.UnquotatedObjectName}';
-";
+                return $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ON.UnquotatedObjectName}';";
+            }
+            else if (this.ConnectionType == ConnectionManagerType.Db2)
+            {
+                return $@"SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME = '{ON.UnquotatedObjectName}'";
             }
             else
             {

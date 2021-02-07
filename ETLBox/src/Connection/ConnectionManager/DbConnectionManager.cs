@@ -73,9 +73,6 @@ namespace ETLBox.Connection
         public virtual bool SupportSchemas { get; } = true;
 
         /// <inheritdoc/>
-        public virtual bool SupportComputedColumns { get; } = true;
-
-        /// <inheritdoc/>
         public virtual bool IsOdbcOrOleDbConnection { get; } = false;
 
         /// <inheritdoc/>

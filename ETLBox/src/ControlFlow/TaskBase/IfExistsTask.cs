@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow
     public abstract class IfExistsTask : ControlFlowTask
     {
         public override string TaskName { get; set; } = $"Check if object exists";
-        public void Execute()
+        internal void Execute()
         {
             if (Sql != string.Empty)
                 DoesExist = new SqlTask(this, Sql).ExecuteScalarAsBool();

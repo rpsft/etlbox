@@ -20,7 +20,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Executes the creation/altering of the view.
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (

@@ -19,7 +19,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Executes the table truncation.
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             new SqlTask(this, Sql).ExecuteNonQuery();
         }

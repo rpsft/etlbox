@@ -23,7 +23,7 @@ namespace ETLBox.Logging
             LogTable.CopyLogTaskProperties(this);
             LogTable.ConnectionManager = this.ConnectionManager;
             LogTable.DisableLogging = true;
-            LogTable.Create();
+            LogTable.CreateIfNotExists();
             Logging.LogTable = LogTableName;
         }
 

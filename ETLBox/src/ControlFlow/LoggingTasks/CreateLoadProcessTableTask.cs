@@ -26,7 +26,7 @@ namespace ETLBox.Logging
             LoadProcessTable.CopyLogTaskProperties(this);
             LoadProcessTable.ConnectionManager = this.ConnectionManager;
             LoadProcessTable.DisableLogging = true;
-            LoadProcessTable.Create();
+            LoadProcessTable.CreateIfNotExists();
             Logging.LoadProcessTable = LoadProcessTableName;
         }
 

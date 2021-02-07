@@ -79,10 +79,7 @@ namespace ETLBox.Connection
         /// Use <see cref="SupportDatabases"/> instead
         /// </summary>
         bool SupportSchemas { get; }
-        /// <summary>
-        /// Indicates if the database supports computed columns
-        /// </summary>
-        bool SupportComputedColumns { get; }
+       
         /// <summary>
         /// Indicates if the current connection mangager is used as a OleDb or Odbc Connection.
         /// </summary>

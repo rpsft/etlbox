@@ -77,7 +77,7 @@ FROM {TN.QuotatedFullName}
         /// <summary>
         /// Performs the row count
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
         }

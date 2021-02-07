@@ -23,7 +23,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Creates or updates the procedure on the database if the database does support procedures.
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             if (!DbConnectionManager.SupportProcedures)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");

@@ -6,7 +6,7 @@ namespace ETLBox.ControlFlow
     public abstract class DropTask<T> : ControlFlowTask where T : IfExistsTask, new()
     {
         public override string TaskName { get; set; } = $"Drop object";
-        public void Execute()
+        internal void Execute()
         {
             bool objectExists = new T() { ObjectName = ObjectName, OnObjectName = OnObjectName, ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (objectExists)

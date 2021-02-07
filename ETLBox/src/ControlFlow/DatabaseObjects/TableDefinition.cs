@@ -67,13 +67,13 @@ namespace ETLBox.ControlFlow
         /// <summary>
         /// Uses the CreateTableTask to create a table based on the current definition.
         /// </summary>
-        public void CreateTable() => CreateTableTask.Create(this);
+        public void CreateTable() => CreateTableTask.CreateIfNotExists(this);
 
         /// <summary>
         /// Uses the CreateTableTask to create a table based on the current definition.
         /// </summary>
         /// <param name="connectionManager">The connection manager of the database you want to connect</param>
-        public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
+        public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.CreateIfNotExists(connectionManager, this);
 
         /// <summary>
         /// Gather a table definition from an existing table in the database.
@@ -194,7 +194,9 @@ ORDER BY cols.column_id
             , increment_value => curCol.IdentityIncrement = (int?)(Convert.ToInt32(increment_value))
             , primary_key => curCol.IsPrimaryKey = (bool)primary_key
             , default_value =>
-                    curCol.DefaultValue = default_value?.ToString().Substring(2, (default_value.ToString().Length) - 4)
+                    curCol.DefaultValue = TryRemoveSingleQuotes(
+                            default_value?.ToString().Substring(2, (default_value.ToString().Length) - 4)
+                            )
             , collation_name => curCol.Collation = collation_name?.ToString()
             , computed_column_definition => curCol.ComputedColumn = computed_column_definition?.ToString().Substring(1, (computed_column_definition.ToString().Length) - 2)
             , uq_key => curCol.IsUnique = (bool)uq_key
@@ -221,8 +223,8 @@ ORDER BY cols.column_id
             , cid => {; }
             , name => curCol.Name = name.ToString()
             , type => curCol.DataType = type.ToString()
-            , notnull => curCol.AllowNulls = (long)notnull == 1 ? true : false
-            , dftl_value => curCol.DefaultValue = dftl_value?.ToString()
+            , notnull => curCol.AllowNulls = (long)notnull == 0 ? true : false
+            , dftl_value => curCol.DefaultValue = TryRemoveSingleQuotes(dftl_value?.ToString())
             , pk => curCol.IsPrimaryKey = (long)pk >= 1 ? true : false
              )
             {
@@ -293,7 +295,7 @@ ORDER BY cols.ordinal_position
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , auto_increment => curCol.IsIdentity = (int)auto_increment == 1 ? true : false
              , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
-            , column_default => curCol.DefaultValue = column_default?.ToString()
+            , column_default => curCol.DefaultValue = TryRemoveSingleQuotes(column_default?.ToString())
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , comment => curCol.Comment = comment?.ToString()
@@ -391,7 +393,7 @@ ORDER BY cols.ordinal_position
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
             , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
-            , column_default => curCol.DefaultValue = column_default?.ToString().ReplaceIgnoreCase("::character varying", "")
+            , column_default => curCol.DefaultValue = TryRemoveSingleQuotes(column_default?.ToString().ReplaceIgnoreCase("::character varying", ""))
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , uq_key => curCol.IsUnique = (int)uq_key == 1 ? true : false
@@ -414,6 +416,9 @@ ORDER BY cols.ordinal_position
 
             //Regarding default values: The issue is described partly here
             //https://stackoverflow.com/questions/46991132/how-to-cast-long-to-varchar2-inline/47041776
+            //Oracle uses for some system tables still data type "LONG" (should be replaced by LOB)
+            //Unfortunately, there is no build-in function to convert LONG into VARCHAR(2) or a LOB/CLOB or similar
+            //When running the select, the default value will be displayed, but ADO.NET can't retrieve the value from the database
             string sql = $@" 
 SELECT cols.COLUMN_NAME
 , CASE WHEN cols.DATA_TYPE 
@@ -431,11 +436,14 @@ SELECT cols.COLUMN_NAME
 , CASE WHEN cons.CONSTRAINT_TYPE = 'P' THEN 'ENABLED' ELSE NULL END as primary_key
 , cols.DATA_DEFAULT --not working, see restriction above
 , cols.COLLATION 
-, cols.DATA_DEFAULT AS generation_expression
+, cols.DATA_DEFAULT AS generation_expression  --not working, see restriction above
 , CASE WHEN cons.CONSTRAINT_TYPE = 'U' THEN 'ENABLED' ELSE NULL END as unique_key
+, CASE WHEN cons.CONSTRAINT_TYPE = 'P' THEN  cons.CONSTRAINT_NAME ELSE NULL END AS pk_constraint_name
+, CASE WHEN cons.CONSTRAINT_TYPE = 'U' THEN  cons.CONSTRAINT_NAME ELSE NULL END AS uk_constraint_name
 FROM ALL_TAB_COLUMNS cols
 LEFT JOIN (
   SELECT acols.table_name, acols.column_name, acols.position, acons.status, acons.owner, acons.constraint_type
+        , acons.CONSTRAINT_NAME
   FROM ALL_CONSTRAINTS acons, ALL_CONS_COLUMNS acols
   WHERE acons.CONSTRAINT_TYPE IN ('U','P')
   AND acons.CONSTRAINT_NAME = acols.CONSTRAINT_NAME
@@ -446,9 +454,10 @@ AND cons.OWNER = cols.OWNER
 --AND cons.position = cols.COLUMN_ID
 AND cons.column_name = cols.COLUMN_NAME  
 WHERE
-cols.TABLE_NAME NOT LIKE 'BIN$%'
-AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
-AND ( cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
+--cols.TABLE_NAME NOT LIKE 'BIN$%'
+--AND cols.OWNER NOT IN ('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
+--AND 
+    ( cols.TABLE_NAME  = '{TN.UnquotatedFullName}'
       OR (cols.OWNER || '.' || cols.TABLE_NAME ) = '{TN.UnquotatedFullName}'
     )
 ORDER BY cols.COLUMN_ID
@@ -478,10 +487,12 @@ sql
             , nullable => curCol.AllowNulls = nullable.ToString() == "Y" ? true : false
             , identity_column => curCol.IsIdentity = identity_column?.ToString() == "YES" ? true : false
              , primary_key => curCol.IsPrimaryKey = primary_key?.ToString() == "ENABLED" ? true : false
-            , data_default => curCol.DefaultValue = data_default?.ToString()
+            , data_default => curCol.DefaultValue = TryRemoveSingleQuotes(data_default?.ToString())
             , collation => curCol.Collation = collation?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , uq_key => curCol.IsUnique = uq_key?.ToString() == "ENABLED" ? true : false
+            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
+            , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
              )
             {
                 DisableLogging = true,
@@ -547,7 +558,7 @@ sql
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , is_identity => curCol.IsIdentity = (int)is_identity == 1 ? true : false
             , is_primary => curCol.IsPrimaryKey = (int)is_primary == 1 ? true : false
-            , default_value => curCol.DefaultValue = default_value?.ToString()
+            , default_value => curCol.DefaultValue = TryRemoveSingleQuotes(default_value?.ToString())
             , collation => curCol.Collation = collation?.ToString()
             , computed_formula => curCol.ComputedColumn = computed_formula?.ToString()
             , is_unique => curCol.IsUnique = (int)is_unique == 1 ? true : false
@@ -567,6 +578,14 @@ sql
         private static TableDefinition ReadTableDefinitionFromAccess(IConnectionManager connection, ObjectNameDescriptor TN)
         {
             return connection?.ReadTableDefinition(TN);
+        }
+
+        private static string TryRemoveSingleQuotes(string value)
+        {
+            if (!string.IsNullOrEmpty(value) && value.StartsWith("'") && value.EndsWith("'"))
+                return value.TrimStart('\'').TrimEnd('\'');
+            else
+                return value;
         }
     }
 }

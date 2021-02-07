@@ -19,10 +19,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <inheritdoc/>
         public override string TaskName { get; set; } = "Run some sql";
 
-        /// <summary>
-        /// Executes a non query sql
-        /// </summary>
-        public void Execute() => ExecuteNonQuery();
+        internal void Execute() => ExecuteNonQuery();
 
         public SqlTask() : base()
         { }

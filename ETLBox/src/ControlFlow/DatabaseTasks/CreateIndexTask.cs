@@ -22,7 +22,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Runs the sql to (re)create the index on a table.
         /// </summary>
-        public void Execute()
+        internal void Execute()
         {
             if (new IfIndexExistsTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists())
                 new DropIndexTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.DropIfExists();

@@ -488,8 +488,6 @@ namespace ETLBox.Helper
                 QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
                 QueryText.Append(" WHERE ");
                 AppendMatchConditionWithJsonbConversion(JoinColumnNames, "ut");
-                //QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
-                //        JoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
             }
             else
             {

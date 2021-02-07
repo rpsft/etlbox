@@ -14,9 +14,13 @@ namespace ETLBox.ControlFlow.Tasks
             if (!DbConnectionManager.SupportSchemas)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
-            string sql = $@"DROP SCHEMA {ON.QuotatedFullName}";
-            return sql;
+            if (this.ConnectionType == ConnectionManagerType.Db2)
+                return $@"DROP SCHEMA {ON.QuotatedFullName} RESTRICT";
+            else 
+                return $@"DROP SCHEMA {ON.QuotatedFullName}";
         }
+    
+
 
         public DropSchemaTask()
         {

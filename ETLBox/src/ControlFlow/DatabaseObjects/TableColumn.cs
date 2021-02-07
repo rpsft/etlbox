@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ETLBox.ControlFlow
@@ -9,8 +10,11 @@ namespace ETLBox.ControlFlow
     /// <summary>
     /// A column in table
     /// </summary>
+    [DebuggerDisplay("{DebugDisplay}")]
     public class TableColumn
     {
+        string DebugDisplay => 
+            $"{Name ?? "" } {DataType ?? ""} " + (IsComputed ? "(COMPUTED)" : (AllowNulls ? "NULL" : "NOT NULL"));
         /// <summary>
         /// Name of the column
         /// </summary>
@@ -30,7 +34,7 @@ namespace ETLBox.ControlFlow
         /// <summary>
         /// True, if the column is nullable. By default a column is not nullable.
         /// </summary>
-        public bool AllowNulls { get; set; }
+        public bool AllowNulls { get; set; }    
 
         /// <summary>
         /// True, if the column is used as an Identity column (auto increment in MySql or serial in Postgres)
@@ -66,7 +70,7 @@ namespace ETLBox.ControlFlow
         /// </summary>
         public string ComputedColumn { get; set; }
 
-        internal bool HasComputedColumn => !String.IsNullOrWhiteSpace(ComputedColumn);
+        internal bool IsComputed => !String.IsNullOrWhiteSpace(ComputedColumn);
 
         /// <summary>
         /// The corresponding .NET data type retrieved from the sql <see cref="DataType"/>.

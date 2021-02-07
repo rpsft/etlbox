@@ -31,7 +31,7 @@ namespace ETLBox.Helper
             return result;
         }
 
-        private static string GetNETObjectTypeString(string dbSpecificTypeName)
+        internal static string GetNETObjectTypeString(string dbSpecificTypeName)
         {
             if (dbSpecificTypeName.IndexOf("(") > 0)
                 dbSpecificTypeName = dbSpecificTypeName.Substring(0, dbSpecificTypeName.IndexOf("("));
