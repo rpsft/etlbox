@@ -150,7 +150,7 @@ FROM {TN.QuotatedFullName} {NOLOCK}
                 $"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;" : string.Empty;
 
         string MYSQLCOMMIT => (DirtyRead && ConnectionType == ConnectionManagerType.MySql) ?
-            $"COMMIT;" : String.Empty;
+            $"; COMMIT;" : String.Empty;
 
         string NOLOCK
         {

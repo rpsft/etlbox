@@ -312,6 +312,30 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             CreateIfNotExists();
         }
 
+        /// <summary>
+        /// Executes the table creation or execute the corresponding alter statements to adjust the table.
+        /// If the table is empty, the new table is always dropped and recreated. 
+        /// </summary>
+        public void CreateOrAlter()
+        {
+            bool tableExists = new IfTableOrViewExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
+            bool hasRows;
+            if (tableExists)
+            {
+                hasRows = RowCountTask.HasRows(this.ConnectionManager, TableName);
+                if (hasRows)
+                    Alter();
+                else
+                {
+                    DropTableTask.Drop(this.ConnectionManager, TableName);
+                    Create();
+                }
+
+            }
+            else
+                Create();
+        }
+
         #endregion
 
         #region Alter Implementation 
@@ -771,6 +795,40 @@ WHERE ( CONCAT (sc.name,'.',tbl.name) ='{TN.UnquotatedFullName}' OR  tbl.name = 
         /// <param name="connectionManager">The connection manager of the database you want to connect</param>
         /// <param name="tableDefinition">The definition of the table containing table name and columns.</param>
         public static void AlterIfNeeded(IConnectionManager connectionManager, TableDefinition tableDefinition) => new CreateTableTask(tableDefinition) { ConnectionManager = connectionManager }.AlterIfDifferent();
+
+
+        /// <summary>
+        /// Creates a table if the table doesn't exist or alters a table using ALTER TABLE statements.
+        /// If the table does not contain any rows, it will be dropped and created again. 
+        /// </summary>
+        /// <param name="tableName">The name of the table</param>
+        /// <param name="columns">The columns of the table</param>
+        public static void CreateOrAlter(string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns).CreateOrAlter();
+
+        /// <summary>
+        /// Creates a table if the table doesn't exist or alters a table using ALTER TABLE statements.
+        /// If the table does not contain any rows, it will be dropped and created again. 
+        /// </summary>
+        /// <param name="tableDefinition">The definition of the table containing table name and columns.</param>
+        public static void CreateOrAlter(TableDefinition tableDefinition) => new CreateTableTask(tableDefinition).CreateOrAlter();
+
+        /// <summary>
+        /// Creates a table if the table doesn't exist or alters a table using ALTER TABLE statements.
+        /// If the table does not contain any rows, it will be dropped and created again. 
+        /// </summary>
+        /// <param name="connectionManager">The connection manager of the database you want to connect</param>
+        /// <param name="tableName">The name of the table</param>
+        /// <param name="columns">The columns of the table</param>
+        public static void CreateOrAlter(IConnectionManager connectionManager, string tableName, List<TableColumn> columns) => new CreateTableTask(tableName, columns) { ConnectionManager = connectionManager }.CreateOrAlter();
+
+        /// <summary>
+        /// Creates a table if the table doesn't exist or alters a table using ALTER TABLE statements.
+        /// If the table does not contain any rows, it will be dropped and created again. 
+        /// </summary>
+        /// <param name="connectionManager">The connection manager of the database you want to connect</param>
+        /// <param name="tableDefinition">The definition of the table containing table name and columns.</param>
+        public static void CreateOrAlter(IConnectionManager connectionManager, TableDefinition tableDefinition) => new CreateTableTask(tableDefinition) { ConnectionManager = connectionManager }.CreateOrAlter();
+
 
         #endregion
     }
