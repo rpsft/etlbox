@@ -16,6 +16,8 @@ namespace ETLBox.ControlFlow.Tasks
     /// </example>
     public sealed class RowCountTask : ControlFlowTask
     {
+        #region Public properties
+
         /// <inheritdoc/>
         public override string TaskName { get; set; } = $"Count Rows for table";
 
@@ -42,7 +44,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Indicates if the table contains rows - only has a value after the execution
         /// </summary>
-        public bool? HasRows => Rows > 0;
+        public bool? HasAnyRows => Rows > 0;
 
         /// <summary>
         /// For Sql Server, you can set the QuickQueryMode to true. This will query the sys.partition table which can be much faster.
@@ -50,10 +52,9 @@ namespace ETLBox.ControlFlow.Tasks
         public bool QuickQueryMode { get; set; }
 
         /// <summary>
-        /// NoLock does a normal COUNT(*) using the nolock - option which avoid tables locks when reading from the table
-        /// (but while counting the tables new data could be inserted, which could lead to wrong results).
+        /// Will do the row count also on uncommitted reads.
         /// </summary>
-        public bool NoLock { get; set; }
+        public bool DirtyRead { get; set; }
 
         /// <summary>
         /// The sql that is executed to count the rows in the table - will change depending on your parameters.
@@ -67,20 +68,17 @@ SELECT SUM ([rows])
 FROM [sys].[partitions] 
 WHERE [object_id] = object_id(N'{TableName}') 
   AND [index_id] IN (0,1)" :
-                $@"
-SELECT COUNT(*)
-FROM {TN.QuotatedFullName} 
-{WhereClause} {Condition} {NoLockHint}";
+                $@"{MYSQLREADUNCOMMITTED}
+SELECT {COUNT}
+FROM {TN.QuotatedFullName} {NOLOCK} 
+{WhereClause} {LIMIT}
+{MYSQLCOMMIT}";
             }
         }
 
-        /// <summary>
-        /// Performs the row count
-        /// </summary>
-        internal void Execute()
-        {
-            Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
-        }
+        #endregion
+
+        #region Constructors
 
         public RowCountTask() { }
 
@@ -93,8 +91,8 @@ FROM {TN.QuotatedFullName}
         {
             if (options == RowCountOptions.QuickQueryMode)
                 QuickQueryMode = true;
-            if (options == RowCountOptions.NoLock)
-                NoLock = true;
+            if (options == RowCountOptions.DirtyRead)
+                DirtyRead = true;
 
         }
 
@@ -109,37 +107,137 @@ FROM {TN.QuotatedFullName}
             this.Condition = condition;
         }
 
+        #endregion
+
+        #region Implementation
+
+        /// <summary>
+        /// Performs the row count
+        /// </summary>
         public RowCountTask Count()
         {
             Execute();
             return this;
         }
 
-        public static int? Count(string tableName) => new RowCountTask(tableName).Count().Rows;
-        public static int? Count(string tableName, RowCountOptions options) => new RowCountTask(tableName, options).Count().Rows;
-        public static int? Count(string tableName, string condition) => new RowCountTask(tableName, condition).Count().Rows;
-        public static int? Count(string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options).Count().Rows;
-        public static int? Count(IConnectionManager connectionManager, string tableName) => new RowCountTask(tableName) { ConnectionManager = connectionManager }.Count().Rows;
-        public static int? Count(IConnectionManager connectionManager, string tableName, RowCountOptions options) => new RowCountTask(tableName, options) { ConnectionManager = connectionManager }.Count().Rows;
-        public static int? Count(IConnectionManager connectionManager, string tableName, string condition) => new RowCountTask(tableName, condition) { ConnectionManager = connectionManager }.Count().Rows;
-        public static int? Count(IConnectionManager connectionManager, string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options) { ConnectionManager = connectionManager }.Count().Rows;
+        /// <summary>
+        /// Checks if the table has at least one (matching) row.
+        /// </summary>
+        public RowCountTask HasRows()
+        {
+            OnlyFirstRow = true;
+            Execute();
+            return this;
+        }
+
+        bool OnlyFirstRow;
+        internal void Execute()
+        {
+            if (DirtyRead && (
+                    ConnectionType == ConnectionManagerType.Postgres ||
+                    ConnectionType == ConnectionManagerType.Oracle ||
+                    ConnectionType == ConnectionManagerType.SQLite
+                ))
+                DirtyRead = false;
+            Rows = new SqlTask(this, Sql).ExecuteScalar<int>();
+        }
 
         bool HasCondition => !String.IsNullOrWhiteSpace(Condition);
-        string WhereClause => HasCondition ? "WHERE" : String.Empty;
-        string NoLockHint => NoLock ? "WITH (NOLOCK)" : String.Empty;
+        string WhereClause => HasCondition ? $"WHERE ({Condition})" : String.Empty;
 
+        string MYSQLREADUNCOMMITTED
+            => (DirtyRead && ConnectionType == ConnectionManagerType.MySql) ?
+                $"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;" : string.Empty;
+
+        string MYSQLCOMMIT => (DirtyRead && ConnectionType == ConnectionManagerType.MySql) ?
+            $"COMMIT;" : String.Empty;
+
+        string NOLOCK
+        {
+            get
+            {
+                if (DirtyRead && ConnectionType == ConnectionManagerType.SqlServer)
+                    return "WITH (nolock)";
+                else if (DirtyRead && ConnectionType == ConnectionManagerType.Db2)
+                    return $"WITH UR";
+                else return string.Empty;
+            }
+        }
+
+        string COUNT
+        {
+            get
+            {
+                if (OnlyFirstRow)
+                {
+                    string sql = "1";
+                    if (this.ConnectionType == ConnectionManagerType.SqlServer)
+                        return sql = "TOP 1 " + sql;
+                    return sql;
+                }
+                else
+                    return "COUNT(*)";
+            }
+        }
+
+        string LIMIT
+        {
+            get
+            {
+                if (OnlyFirstRow)
+                {
+                    if (this.ConnectionType == ConnectionManagerType.SqlServer)
+                        return string.Empty;
+                    else if (this.ConnectionType == ConnectionManagerType.Oracle)
+                    {
+                        if (HasCondition)
+                            return "AND rownum = 1";
+                        else
+                            return "WHERE rownum = 1";
+                    }
+                    else
+                        return "LIMIT 1";
+                }
+                else
+                    return string.Empty;
+            }
+        }
+
+
+        #endregion
+
+        #region Static convenience methods
+
+        public static int Count(string tableName) => new RowCountTask(tableName).Count().Rows ?? 0;
+        public static int Count(string tableName, RowCountOptions options) => new RowCountTask(tableName, options).Count().Rows ?? 0;
+        public static int Count(string tableName, string condition) => new RowCountTask(tableName, condition).Count().Rows ?? 0;
+        public static int Count(string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options).Count().Rows ?? 0;
+        public static int Count(IConnectionManager connectionManager, string tableName) => new RowCountTask(tableName) { ConnectionManager = connectionManager }.Count().Rows ?? 0;
+        public static int Count(IConnectionManager connectionManager, string tableName, RowCountOptions options) => new RowCountTask(tableName, options) { ConnectionManager = connectionManager }.Count().Rows ?? 0;
+        public static int Count(IConnectionManager connectionManager, string tableName, string condition) => new RowCountTask(tableName, condition) { ConnectionManager = connectionManager }.Count().Rows ?? 0;
+        public static int Count(IConnectionManager connectionManager, string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options) { ConnectionManager = connectionManager }.Count().Rows ?? 0;
+
+        public static bool HasRows(string tableName) => new RowCountTask(tableName).HasRows().HasAnyRows ?? false;
+        public static bool HasRows(string tableName, RowCountOptions options) => new RowCountTask(tableName, options).HasRows().HasAnyRows ?? false;
+        public static bool HasRows(string tableName, string condition) => new RowCountTask(tableName, condition).HasRows().HasAnyRows ?? false;
+        public static bool HasRows(string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options).HasRows().HasAnyRows ?? false;
+        public static bool HasRows(IConnectionManager connectionManager, string tableName) => new RowCountTask(tableName) { ConnectionManager = connectionManager }.HasRows().HasAnyRows ?? false;
+        public static bool HasRows(IConnectionManager connectionManager, string tableName, RowCountOptions options) => new RowCountTask(tableName, options) { ConnectionManager = connectionManager }.HasRows().HasAnyRows ?? false;
+        public static bool HasRows(IConnectionManager connectionManager, string tableName, string condition) => new RowCountTask(tableName, condition) { ConnectionManager = connectionManager }.HasRows().HasAnyRows ?? false;
+        public static bool HasRows(IConnectionManager connectionManager, string tableName, string condition, RowCountOptions options) => new RowCountTask(tableName, condition, options) { ConnectionManager = connectionManager }.HasRows().HasAnyRows ?? false;
+
+        #endregion
     }
 
     /// <summary>
     /// Used in the RowCountTask. None forces the RowCountTask to do a normal COUNT(*) and works on all databases.
     /// QuickQueryMode only works on SqlServer and uses the partition table which can be much faster on tables with a big amount of data.
-    /// NoLock does a normal COUNT(*) using the nolock - option which avoid tables locks when reading from the table (but while counting the tables
-    /// new data could be inserted, which could lead to wrong results).
+    /// DirtyRead does a normal COUNT(*) but also reading uncommitted reads. 
     /// </summary>
     public enum RowCountOptions
     {
         None,
         QuickQueryMode,
-        NoLock
+        DirtyRead
     }
 }
