@@ -28,6 +28,7 @@ namespace ETLBox.ControlFlow
         /// The database type parsed from the parameter type
         /// </summary>
         public DbType DBType => DataTypeConverter.GetDBType(Type);
+        public int DBSize => DataTypeConverter.GetStringLengthFromCharString(Type);
 
         public QueryParameter(string name, string type, object value)
         {

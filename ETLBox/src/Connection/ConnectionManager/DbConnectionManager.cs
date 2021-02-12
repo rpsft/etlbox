@@ -4,20 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Data.Common;
 
 namespace ETLBox.Connection
 {
     /// <summary>
     /// The generic implementation on which all connection managers are based on
     /// </summary>
-    /// <typeparam name="Connection">The underlying ADO.NET connection</typeparam>
-    public abstract class DbConnectionManager<Connection> : IDisposable, IConnectionManager
-        where Connection : class, IDbConnection, new()
+    /// <typeparam name="TConnection">The underlying ADO.NET connection</typeparam>
+    public abstract class DbConnectionManager<TConnection,TTransaction, TParameter> : IDisposable, IConnectionManager<TConnection, TTransaction>
+        where TConnection : class, IDbConnection, new()
+        where TTransaction : class, IDbTransaction
+        where TParameter : class, IDbDataParameter, new()
     {
         /// <summary>
-        /// The underlying ADO.NET connection
+        /// The underlying ADO.NET connection.
+        /// Only read from this object and it's properties - by default, connections are always
+        /// acquired from the connection pool. There is no guarantee that
+        /// the same connection will be used in ETLBox components.
         /// </summary>
-        public Connection DbConnection { get; set; }
+        public TConnection DbConnection { get; protected set; }
 
         public DbConnectionManager()
         {
@@ -51,7 +58,7 @@ namespace ETLBox.Connection
         public ConnectionState? State => DbConnection?.State;
 
         /// <inheritdoc/>
-        public IDbTransaction Transaction { get; set; }
+        public TTransaction Transaction { get; set; }
 
         /// <inheritdoc/>
         public bool IsInBulkInsert { get; set; }
@@ -77,43 +84,73 @@ namespace ETLBox.Connection
 
         /// <inheritdoc/>
         public virtual bool DoPrepareCommand { get; set; } = true;
+        protected bool DisablePreparationForNextExecution { get; set; }
 
         /// <inheritdoc/>
         public virtual int MaxParameterAmount { get; } = int.MaxValue;
 
-        /// <inheritdoc/>
-        public virtual TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public virtual bool CheckIfTableOrViewExists(string objectName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        internal IDbCommand CreateCommand(string commandText, 
+            IEnumerable<QueryParameter> queryParameterList = null,
+            IEnumerable<TParameter> adonetParameterList = null
+            )
         {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
             cmd.CommandText = commandText;
-            if (parameterList != null)
+            if (queryParameterList != null)
             {
-                foreach (QueryParameter par in parameterList)
+                foreach (QueryParameter par in queryParameterList)
                 {
                     var newPar = cmd.CreateParameter();
                     newPar.ParameterName = par.Name;
                     newPar.DbType = par.DBType;
                     newPar.Value = par.Value;
+                    if (par.DBSize > 0 )
+                        newPar.Size = par.DBSize;
                     cmd.Parameters.Add(newPar);
                 }
             }
-            if (DoPrepareCommand) cmd.Prepare();
+            else if (adonetParameterList != null)
+            {
+                foreach (TParameter parameter in adonetParameterList)
+                    cmd.Parameters.Add(parameter);
+            }
             if (Transaction?.Connection != null && Transaction.Connection.State == ConnectionState.Open)
                 cmd.Transaction = Transaction;
+            if (DoPrepareCommand && !DisablePreparationForNextExecution)
+            {
+                cmd.Prepare();
+                DisablePreparationForNextExecution = true;
+            }
             return cmd;
+        }
+
+        protected int BulkNonQuery(string commandText, IEnumerable<TParameter> parameterList)
+        {
+            IDbCommand cmd = CreateCommand(commandText, adonetParameterList: parameterList);
+            return cmd.ExecuteNonQuery();
+        }
+
+        protected void BulkReader(string commandText, IEnumerable<TParameter> parameterList,
+            Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] rowActions)            
+        {
+            IDbCommand cmd = CreateCommand(commandText, adonetParameterList: parameterList);
+            using (IDataReader reader = cmd.ExecuteReader() as IDataReader)
+            {
+                while (reader.Read())
+                {
+                    beforeRowReadAction?.Invoke();
+
+                    for (int i = 0; i < rowActions?.Length; i++)
+                    {
+                        if (!reader.IsDBNull(i))
+                            rowActions?[i]?.Invoke(reader.GetValue(i));
+                        else
+                            rowActions?[i]?.Invoke(null);
+                    }
+                    afterRowReadAction?.Invoke();
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -138,11 +175,12 @@ namespace ETLBox.Connection
 
         }
 
+
         /// <inheritdoc/>
         public void BeginTransaction(IsolationLevel isolationLevel)
         {
             Open();
-            Transaction = DbConnection?.BeginTransaction(isolationLevel);
+            Transaction = DbConnection?.BeginTransaction(isolationLevel) as TTransaction;
         }
 
         /// <inheritdoc/>
@@ -173,13 +211,8 @@ namespace ETLBox.Connection
         public abstract void PrepareBulkInsert(string tableName);
 
         /// <inheritdoc/>
-        public abstract void BeforeBulkInsert(string tableName);
-
-        /// <inheritdoc/>
         public abstract void BulkInsert(ITableData data);
 
-        /// <inheritdoc/>
-        public abstract void AfterBulkInsert(string tableName);
 
         /// <inheritdoc/>
         public abstract void CleanUpBulkInsert(string tableName);
@@ -206,7 +239,7 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public abstract IConnectionManager Clone();
 
-        public void CopyBaseAttributes(DbConnectionManager<Connection> original)
+        public void CopyBaseAttributes(DbConnectionManager<TConnection, TTransaction, TParameter> original)
         {
             this.DoPrepareCommand = original.DoPrepareCommand;
         }
@@ -234,7 +267,7 @@ namespace ETLBox.Connection
         /// </summary>
         public virtual void CreateDbConnection()
         {            
-            DbConnection = new Connection
+            DbConnection = new TConnection
             {
                 ConnectionString = ConnectionString.Value
             };

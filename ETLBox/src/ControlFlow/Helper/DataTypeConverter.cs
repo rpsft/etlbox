@@ -26,7 +26,7 @@ namespace ETLBox.Helper
         public static int GetStringLengthFromCharString(string value)
         {
             string possibleResult = Regex.Replace(value, _REGEX, "${2}", RegexOptions.IgnoreCase);
-            int result = 0;
+            int result;
             int.TryParse(possibleResult, out result);
             return result;
         }
@@ -70,13 +70,16 @@ namespace ETLBox.Helper
                 case "datetime":
                 case "smalldatetime":
                 case "datetime2":
-                case "time":
-                case "timetz":
+                //case "time":                
                 case "timestamp":
                 case "timestamptz":
-                    return "System.DateTime";
+                    return "System.DateTime";                    
                 case "interval":
+                case "time":
                     return "System.TimeSpan";
+                case "timetz":
+                case "datetimeoffset":
+                    return "System.DateTimeOffset";
                 case "uniqueidentifier":
                 case "uuid":
                     return "System.Guid";
@@ -259,6 +262,68 @@ namespace ETLBox.Helper
             {
                 return dataTypeName;
             }
+        }
+
+        /// <summary>
+        /// Converts a data type alias name (e.g. an alias name
+        /// like "varchar(10)" ) to the original database type name ("character varying").
+        /// </summary>
+        /// <param name="dataTypeName">The database alias type name</param>
+        /// <param name="connectionType">Which database (e.g. Postgres, MySql, ...)</param>
+        /// <returns>The type name converted to an original database type name</returns>
+        public static string TryConvertAliasName(string dataTypeName, ConnectionManagerType connectionType)
+        {
+            if (connectionType == ConnectionManagerType.Postgres)
+            {
+                //See https://www.postgresql.org/docs/9.5/datatype.html for aliases            
+                dataTypeName = dataTypeName.ToLower().Trim();
+                if (dataTypeName == "int8")
+                    return "bigint";
+                else if (dataTypeName == "serial8")
+                    return "bigserial";
+                else if (dataTypeName.StartsWith("varbit") || dataTypeName.StartsWith("bit varying"))
+                    return "bit varying";
+                else if (dataTypeName == "bool")
+                    return "boolean";
+                else if (dataTypeName.StartsWith("char") || dataTypeName.StartsWith("nchar"))
+                    return "character";
+                else if (dataTypeName.StartsWith("varchar") || dataTypeName.StartsWith("nvarchar"))
+                    return "character varying";
+                else if (dataTypeName == "float8")
+                    return "double precision";
+                else if (dataTypeName == "int" || dataTypeName == "int4")
+                    return "integer";
+                else if (dataTypeName.StartsWith("decimal") || dataTypeName.StartsWith("numeric"))
+                    return "numeric";
+                else if (dataTypeName == "float")
+                    return "real";
+                else if (dataTypeName == "int2")
+                    return "smallint";
+                else if (dataTypeName == "serial2")
+                    return "smallserial";
+                else if (dataTypeName == "serial4")
+                    return "serial";
+                else if (dataTypeName == "timestamptz")
+                    return "timestamp with time zone";
+                else if (dataTypeName.StartsWith("timestamp") && dataTypeName.EndsWith("with time zone"))
+                    return "timestamp with time zone";
+                else if (dataTypeName.StartsWith("timestamp"))
+                    return "timestamp";
+                else if (dataTypeName == "timetz")
+                    return "time with time zone";
+                else if (dataTypeName.StartsWith("time") && dataTypeName.EndsWith("with time zone"))
+                    return "time with time zone";
+                else if (dataTypeName.StartsWith("time"))
+                    return "time";
+                else if (dataTypeName.StartsWith("bit"))
+                    return "bit";
+
+
+                else
+                    return dataTypeName;
+            }
+
+            return dataTypeName;
         }
     }
 }

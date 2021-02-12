@@ -273,8 +273,9 @@ namespace ETLBox.ControlFlow
                 }
             }
             if (mapping.Count == 0)
-                throw new ETLBoxException($"Unable to create proper column mapping for table {Definition.Name}." +
-                    $"Column mapping could not be retrieved from table definition");
+                throw new ETLBoxException($"Unable to create a column mapping between the destination table {Definition.Name} and input data type." +
+                    $" There were no matching columns found that could be used to write data from the input into the target." +                    
+                    $" Please check if either the properties of your data type match with the column names (case-sensitive!) or provide a column mapping.");
             return mapping;
         }
 

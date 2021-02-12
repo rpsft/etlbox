@@ -321,10 +321,6 @@ ORDER BY cols.ordinal_position
             var readMetaSql = new SqlTask(
 $@" 
 SELECT cols.column_name
-,CASE 
-   WHEN LEFT(cols.data_type,4) = 'time' THEN REPLACE(REPLACE(REPLACE(cols.data_type,'without time zone',''), 'with time zone', 'tz'),' ','')
-   ELSE cols.data_type
-END AS ""internaldatatype""
 ,CASE
     WHEN cols.domain_name IS NOT NULL THEN domain_name
     WHEN cols.data_type='character varying' THEN
@@ -387,8 +383,7 @@ ORDER BY cols.ordinal_position
 "
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
-            , column_name => curCol.Name = column_name.ToString()
-            , internal_type_name => curCol.InternalDataType = internal_type_name.ToString()
+            , column_name => curCol.Name = column_name.ToString()            
             , data_type => curCol.DataType = data_type.ToString()
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
@@ -577,7 +572,8 @@ sql
 
         private static TableDefinition ReadTableDefinitionFromAccess(IConnectionManager connection, ObjectNameDescriptor TN)
         {
-            return connection?.ReadTableDefinition(TN);
+            var connDbObject = connection as IConnectionManagerDbObjects;
+            return connDbObject?.ReadTableDefinition(TN);
         }
 
         private static string TryRemoveSingleQuotes(string value)

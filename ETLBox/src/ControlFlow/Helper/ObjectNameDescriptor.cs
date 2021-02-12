@@ -1,5 +1,6 @@
 ﻿using ETLBox.Exceptions;
 using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace ETLBox.Helper
@@ -8,6 +9,8 @@ namespace ETLBox.Helper
     /// Applies database specific formatting to an object names.
     /// E.g. schema.ViewName would create [schema].[ViewName] for SqlServer and "schema"."ViewName" for Postgres
     /// </summary>
+    ///   
+    [DebuggerDisplay("{QuotatedFullName}")]
     public sealed class ObjectNameDescriptor
     {
         private string _schema;

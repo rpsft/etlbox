@@ -59,7 +59,8 @@ OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
             else if (this.ConnectionType == ConnectionManagerType.Access)
             {
                 var connMan = this.DbConnectionManager.CloneIfAllowed();// as AccessOdbcConnectionManager;
-                DoesExist = connMan?.CheckIfTableOrViewExists(ON.UnquotatedFullName) ?? false;
+                var connDbObject = connMan as IConnectionManagerDbObjects;
+                DoesExist = connDbObject?.CheckIfTableOrViewExists(ON.UnquotatedFullName) ?? false;
                 connMan.CloseIfAllowed();
                 return string.Empty;
                 //return $@"SELECT * FROM MSysObjects WHERE Type=1 AND Flags=0  AND Name = '{ON.UnquotatedFullName}'";

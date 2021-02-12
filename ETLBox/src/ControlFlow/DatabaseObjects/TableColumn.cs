@@ -26,12 +26,6 @@ namespace ETLBox.ControlFlow
         public string DataType { get; set; }
 
         /// <summary>
-        /// Postgres only: The internal data type may differ from the defined <see cref="DataType"/>.
-        /// This will return the internal used data type.
-        /// </summary>
-        public string InternalDataType { get; internal set; } //Postgres only
-
-        /// <summary>
         /// True, if the column is nullable. By default a column is not nullable.
         /// </summary>
         public bool AllowNulls { get; set; }    
@@ -76,7 +70,6 @@ namespace ETLBox.ControlFlow
         /// The corresponding .NET data type retrieved from the sql <see cref="DataType"/>.
         /// </summary>
         public System.Type NETDataType => DataTypeConverter.GetTypeObject(DataType);
-               
 
         /// <summary>
         /// A comment for the column (not supported by every database)

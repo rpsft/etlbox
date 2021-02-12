@@ -170,10 +170,8 @@ namespace ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);
-                conn.BeforeBulkInsert(data.DestinationTableName);
-                conn.BulkInsert(data);
-                conn.AfterBulkInsert(data.DestinationTableName);
+                if (!DisableLogging) LoggingStart(LogType.Bulk);                
+                conn.BulkInsert(data);                
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
