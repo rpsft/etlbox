@@ -28,7 +28,7 @@ namespace ETLBox.DataFlow
         {
             var attr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
             if (attr != null)
-                ColumnMap2Property.Add(attr.NewName, propInfo.Name);
+                ColumnMap2Property.Add(attr.DbColumnName, propInfo.Name);
         }
 
         private void AddUnderlyingType(PropertyInfo propInfo)
