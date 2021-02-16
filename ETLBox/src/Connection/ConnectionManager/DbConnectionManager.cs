@@ -38,7 +38,7 @@ namespace ETLBox.Connection
         #region IConnectionManager interface
 
         /// <inheritdoc/>
-        public abstract ConnectionManagerType ConnectionManagerType { get; }
+        public abstract ConnectionManagerType ConnectionManagerType { get; protected set; }
 
         /// <inheritdoc/>
         public int MaxLoginAttempts { get; set; } = 3;
@@ -64,11 +64,11 @@ namespace ETLBox.Connection
         public bool IsInBulkInsert { get; set; }
 
         /// <inheritdoc/>
-        public abstract string QB { get; }
+        public abstract string QB { get; protected set; }
         /// <inheritdoc/>
-        public abstract string QE { get; }
+        public abstract string QE { get; protected set; }
         /// <inheritdoc/>
-        public virtual string PP { get; } = "@";
+        public virtual string PP { get; protected set; } = "@";
 
         /// <inheritdoc/>
         public virtual bool SupportDatabases { get; } = true;
