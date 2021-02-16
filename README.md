@@ -97,9 +97,7 @@ multicast.LinkTo(csvDest, row => row.FilterValue < 0);
 Finally, start the dataflow at the source and wait for the destinations to rececive all data (and the completion message from the source).
 
 ```C#
-source.Execute();
-sqlDest.Wait();
-csvDest.Wait();
+Network.Execute(source);
 ```
 
 ### Data integration
@@ -110,13 +108,13 @@ The following table shows which types of sources and destination are supported o
 
 Source or Destination|Support for|Limitations|
 ---------------------|-----------|------------
-Databases|Sql Server, Postgres, SQLite, MySql, MariaDb, Oracle|Full support
+Databases|Sql Server, Postgres, SQLite, MySql, MariaDb, Oracle, Db2|Full support
 Flat files|Csv, Json, Xml, Text|Full support
 Any web service|Json, Xml, Csv, Text|Full support
 Office|Microsoft Access, Excel|Full support for Access, Excel only as source
 Cube|Sql Server Analysis Service|Only XMLA statements
 Memory|.NET IEnumerable & Collections|Full support
-Cloud Services|Tested with Azure|Full support
+Cloud Services|Tested with Azurek|Full support
 Any other|integration with custom written code|No limitations
 
 You can choose between different sources and destination components. `DbSource` and `DbDestination` will connect to the most used databases (e.g. Sql Server, Postgres, MySql, SQLite). `CsvSource`, `CsvDestination` give you support for flat files. `ExcelSource` allows you to read data from an excel sheet. `JsonSource`, `JsonDestination`, `XmlSource` and `XmlDestination` let you read and write json or xml from files or web service requests. `TextSource` and `TextDestination` allow access to regular text files with line breaks.  `MemorySource`, `MemoryDestinatiation` as well as `CustomSource` and `CustomDestination` will give you a lot flexibility to read or write  data directly from memory or to create your own custom made source or destination component.
@@ -133,16 +131,17 @@ Non-blocking|Partially blocking|Blocking|
 RowTransformation|LookupTransformation|BlockTransformation
 ColumnRename|CrossJoin|Sort
 MergeJoin(always join)|MergeJoin (join on match)|DbMerge
-Multicast|Distinct|
-RowDuplication|Aggregation|
-RowMultiplication|BatchTransformation|
-CachedRowTransformation|CachedBatchTransformation|
+Multicast|Aggregation|
+RowDuplication|BatchTransformation|
+RowMultiplication|CachedBatchTransformation|
+CachedRowTransformation||
+Distinct||
 XmlSchemaValidation||
 
 
 *RowTransformation*: This transformation let you modfiy each data record with your custom written C# code
 
-*ColumnRename*: Allows you to rename your columns or propertie names.
+*ColumnRename*: Allows you to rename column names in your data flow.
 
 *MergeJoin*: Join your incoming data into one. Works best with sorted input. You can either always join two rows from the inpts,
 or define a match function which determines when the incoming rows are equal and should be joined. 
@@ -214,9 +213,6 @@ E.g., if you want to connect to SqlServer, use [ETLBox.SqlServer](https://www.nu
 need to access Csv files then add [ETLBox.Csv](https://www.nuget.org/packages/ETLBox.Csv/).
 
 The free versions allows you to process up to 10.000 records per connector in a DataFlow. 
-
-If you are interest in the sources, you can clone the [main ETLBox repository from github](https://github.com/etlbox/etlbox). 
-Please note that the connectors are not open source. If you need access to the source code, please contact us.
 
 <span class="hideOnWebsite">
 
