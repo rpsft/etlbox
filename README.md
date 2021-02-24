@@ -202,7 +202,7 @@ CreateTableTask.Create(conn, "Table1", new List<TableColumn>() {
 
 ### Logging
 
-By default, ETLBox uses and extends [NLog](https://nlog-project.org). ETLBox already comes with NLog as dependency - so you don't need to include additional packages from nuget. In order to have the logging activating, you just have to set up a nlog configuration called `nlog.config`, and create a target and a logger rule. After adding this, you will already get logging output for all tasks and components in ETLBox. [Read more about logging here](https://etlbox.net/articles/overview_logging.html).
+By default, ETLBox uses and extends [NLog](https://nlog-project.org). ETLBox already comes with NLog as dependency - so you don't need to include additional packages from nuget. In order to have the logging activating, you just have to set up a nlog configuration called `nlog.config`, and create a target and a logger rule. After adding this, you will already get logging output for all tasks and components in ETLBox. 
 
 ## Where to continue
 
@@ -215,6 +215,8 @@ need to access Csv files then add [ETLBox.Csv](https://www.nuget.org/packages/ET
 The free versions allows you to process up to 10.000 records per connector in a DataFlow. 
 
 <span class="hideOnWebsite">
+
+### ETLBox.net
 
 [See the ETLBox Project website](https://etlbox.net) for [introductional articles](https://etlbox.net/articles/getting_started.html) and a [complete API documentation](https://etlbox.net/api/index.html). Enjoy!
 
