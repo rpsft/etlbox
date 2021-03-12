@@ -41,7 +41,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// Works only if the database does support schema (for MySql, use the CreateDatabaseTask instead)
         /// </summary>
         public void CreateIfNotExists() => Execute();
-       
+
         /// <summary>
         /// The formatted schema name
         /// </summary>
@@ -72,7 +72,7 @@ namespace ETLBox.ControlFlow.Tasks
             $@" AUTHORIZATION {new ObjectNameDescriptor(AuthorizationUser, QB, QE).QuotatedFullName}" :
             string.Empty;
         internal bool ThrowOnError { get; set; }
-        
+
         internal void Execute()
         {
             if (!DbConnectionManager.SupportSchemas)
@@ -118,7 +118,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// </summary>
         /// <param name="schemaName">The name of the schema</param>
         /// <param name="authorizationUser">Database user which is authorized for the schema</param>
-        public static void Create(string schemaName, string authorizationUser) 
+        public static void Create(string schemaName, string authorizationUser)
             => new CreateSchemaTask(schemaName, authorizationUser) { ThrowOnError = true }.Execute();
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// </summary>
         /// <param name="schemaName">The name of the schema</param>
         /// <param name="authorizationUser">Database user which is authorized for the schema</param>
-        public static void CreateIfNotExists(string schemaName, string authorizationUser) 
+        public static void CreateIfNotExists(string schemaName, string authorizationUser)
             => new CreateSchemaTask(schemaName, authorizationUser).Execute();
 
         /// <summary>

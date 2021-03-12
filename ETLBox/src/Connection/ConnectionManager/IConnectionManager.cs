@@ -3,7 +3,6 @@ using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 
 namespace ETLBox.Connection
 {
@@ -75,7 +74,7 @@ namespace ETLBox.Connection
         /// Use <see cref="SupportDatabases"/> instead
         /// </summary>
         bool SupportSchemas { get; }
-       
+
         /// <summary>
         /// Indicates if the current connection mangager is used as a OleDb or Odbc Connection.
         /// </summary>
@@ -132,8 +131,8 @@ namespace ETLBox.Connection
         /// <summary>
         /// Rolls the current transaction back.
         /// </summary>
-        void RollbackTransaction();      
-        
+        void RollbackTransaction();
+
         /// <summary>
         /// Try to create a clone of the current connection - only possible if <see cref="LeaveOpen"/> is false.
         /// </summary>
@@ -216,7 +215,7 @@ namespace ETLBox.Connection
             , params Action<object>[] actions);
     }
 
-    public interface IConnectionManagerDbObjects 
+    public interface IConnectionManagerDbObjects
     {
         /// <summary>
         /// Describe how the table meta data can be read from the database
@@ -235,7 +234,7 @@ namespace ETLBox.Connection
 
     }
 
-    public interface IConnectionManager<TConnection, TTransaction>  : IConnectionManager
+    public interface IConnectionManager<TConnection, TTransaction> : IConnectionManager
          where TConnection : class, IDbConnection, new()
         where TTransaction : class, IDbTransaction
     {

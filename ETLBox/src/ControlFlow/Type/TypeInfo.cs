@@ -51,7 +51,7 @@ namespace ETLBox.DataFlow
                 IsDynamic = true;
             if (!IsArray && !IsDynamic)
             {
-                Properties = Typ.GetProperties();                
+                Properties = Typ.GetProperties();
                 PropertyLength = Properties.Length;
                 int index = 0;
                 foreach (var propInfo in Properties)

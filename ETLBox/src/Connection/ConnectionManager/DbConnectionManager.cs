@@ -1,11 +1,8 @@
 ﻿using ETLBox.ControlFlow;
-using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Data.Common;
 
 namespace ETLBox.Connection
 {
@@ -13,7 +10,7 @@ namespace ETLBox.Connection
     /// The generic implementation on which all connection managers are based on
     /// </summary>
     /// <typeparam name="TConnection">The underlying ADO.NET connection</typeparam>
-    public abstract class DbConnectionManager<TConnection,TTransaction, TParameter> : IDisposable, IConnectionManager<TConnection, TTransaction>
+    public abstract class DbConnectionManager<TConnection, TTransaction, TParameter> : IDisposable, IConnectionManager<TConnection, TTransaction>
         where TConnection : class, IDbConnection, new()
         where TTransaction : class, IDbTransaction
         where TParameter : class, IDbDataParameter, new()
@@ -89,7 +86,7 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public virtual int MaxParameterAmount { get; } = int.MaxValue;
 
-        internal IDbCommand CreateCommand(string commandText, 
+        internal IDbCommand CreateCommand(string commandText,
             IEnumerable<QueryParameter> queryParameterList = null,
             IEnumerable<TParameter> adonetParameterList = null
             )
@@ -105,7 +102,7 @@ namespace ETLBox.Connection
                     newPar.ParameterName = par.Name;
                     newPar.DbType = par.DBType;
                     newPar.Value = par.Value;
-                    if (par.DBSize > 0 )
+                    if (par.DBSize > 0)
                         newPar.Size = par.DBSize;
                     cmd.Parameters.Add(newPar);
                 }
@@ -132,7 +129,7 @@ namespace ETLBox.Connection
         }
 
         protected void BulkReader(string commandText, IEnumerable<TParameter> parameterList,
-            Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] rowActions)            
+            Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] rowActions)
         {
             IDbCommand cmd = CreateCommand(commandText, adonetParameterList: parameterList);
             using (IDataReader reader = cmd.ExecuteReader() as IDataReader)
@@ -266,7 +263,7 @@ namespace ETLBox.Connection
         /// Override this method if you want to pass additional properties to the specific Ado.NET db connection. 
         /// </summary>
         public virtual void CreateDbConnection()
-        {            
+        {
             DbConnection = new TConnection
             {
                 ConnectionString = ConnectionString.Value

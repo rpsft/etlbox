@@ -1,6 +1,5 @@
 ﻿using ETLBox.Connection;
 using ETLBox.Exceptions;
-using System;
 
 namespace ETLBox.ControlFlow.Tasks
 {
@@ -23,17 +22,18 @@ namespace ETLBox.ControlFlow.Tasks
         /// </summary>
         internal void Execute()
         {
-            if (ConnectionType != ConnectionManagerType.SqlServer 
+            if (ConnectionType != ConnectionManagerType.SqlServer
                 && ConnectionType != ConnectionManagerType.Oracle
                 && ConnectionType != ConnectionManagerType.Db2
                 && ConnectionType != ConnectionManagerType.Postgres
                 )
                 throw new ETLBoxNotSupportedException("This task is only supported with SqlServer, Postgres, Oracle or Db2!");
-            if (ConnectionType == ConnectionManagerType.Db2) {
+            if (ConnectionType == ConnectionManagerType.Db2)
+            {
                 DropTableTask.DropIfExists(ConnectionManager, "ETLBOX.ERRORS");
                 if (string.IsNullOrEmpty(SchemaName))
                     SchemaName = (string)new SqlTask(this, "SELECT CURRENT SCHEMA FROM SYSIBM.SYSDUMMY1").ExecuteScalar();
-                new SqlTask(this, Db2CleanProc).ExecuteNonQuery();                
+                new SqlTask(this, Db2CleanProc).ExecuteNonQuery();
             }
             new SqlTask(this, Sql).ExecuteNonQuery();
         }

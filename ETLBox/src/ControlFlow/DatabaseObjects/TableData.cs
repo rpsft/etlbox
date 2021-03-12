@@ -1,5 +1,4 @@
-﻿using ETLBox.DataFlow;
-using ETLBox.Exceptions;
+﻿using ETLBox.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -216,7 +215,7 @@ namespace ETLBox.ControlFlow
             if (OrdinalToName != null) return;
             OrdinalToName = new Dictionary<int, string>();
             NameToOrdinal = new Dictionary<string, int>();
-            OrdinalToDataIndex = new Dictionary<int, int>();            
+            OrdinalToDataIndex = new Dictionary<int, int>();
             int newIndex = 0;
             foreach (var dataColName in DataIndexForColumn.Keys)
             {
@@ -234,15 +233,15 @@ namespace ETLBox.ControlFlow
         private object GetCurrentRow(int i)
         {
             int shifted = Remap(i);
-            object result; 
+            object result;
             if (CurrentRow.Length > shifted)
                 result = CurrentRow[shifted];
             else
                 result = null;
-            if (ColumnConverters?.Count > 0 
+            if (ColumnConverters?.Count > 0
                 && OrdinalToName.ContainsKey(i) && ColumnConverters.ContainsKey(OrdinalToName[i]))
                 return ColumnConverters[OrdinalToName[i]].Invoke(result);
-            else 
+            else
                 return result;
         }
 
@@ -274,7 +273,7 @@ namespace ETLBox.ControlFlow
             }
             if (mapping.Count == 0)
                 throw new ETLBoxException($"Unable to create a column mapping between the destination table {Definition.Name} and input data type." +
-                    $" There were no matching columns found that could be used to write data from the input into the target." +                    
+                    $" There were no matching columns found that could be used to write data from the input into the target." +
                     $" Please check if either the properties of your data type match with the column names (case-sensitive!) or provide a column mapping.");
             return mapping;
         }

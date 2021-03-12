@@ -1,5 +1,4 @@
-﻿using ETLBox.DataFlow;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -39,8 +38,8 @@ namespace ETLBox.ControlFlow
 
         TableDefinition Definition { get; }
 
-        Dictionary<string, int> DataIndexForColumn { get; set; }       
-        
+        Dictionary<string, int> DataIndexForColumn { get; set; }
+
         bool KeepIdentity { get; set; }
 
     }

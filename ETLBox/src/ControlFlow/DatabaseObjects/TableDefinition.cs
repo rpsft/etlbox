@@ -17,7 +17,7 @@ namespace ETLBox.ControlFlow
         /// The name of the table
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// The columns of the table
         /// </summary>
@@ -200,7 +200,7 @@ ORDER BY cols.column_id
             , collation_name => curCol.Collation = collation_name?.ToString()
             , computed_column_definition => curCol.ComputedColumn = computed_column_definition?.ToString().Substring(1, (computed_column_definition.ToString().Length) - 2)
             , uq_key => curCol.IsUnique = (bool)uq_key
-            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace( pk_name?.ToString() ) ? result.PrimaryKeyConstraintName : pk_name.ToString()
+            , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
             , uq_name => result.UniqueKeyConstraintName = String.IsNullOrWhiteSpace(uq_name?.ToString()) ? result.UniqueKeyConstraintName : uq_name.ToString()
              )
             {
@@ -383,7 +383,7 @@ ORDER BY cols.ordinal_position
 "
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
-            , column_name => curCol.Name = column_name.ToString()            
+            , column_name => curCol.Name = column_name.ToString()
             , data_type => curCol.DataType = data_type.ToString()
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
@@ -458,20 +458,20 @@ WHERE
 ORDER BY cols.COLUMN_ID
 ";
 
-//            LEFT JOIN(
-//    SELECT concol.table_name, concol.column_name, concol.position, acons.status, acons.owner, acons.constraint_type
-//    FROM ALL_CONS_COLUMNS concol
-//    INNER JOIN ALL_CONSTRAINTS acons
-//      ON acons.OWNER = concol.OWNER
-//      AND acons.CONSTRAINT_TYPE IN ('U','P')
-//      AND acons.CONSTRAINT_NAME = concol.CONSTRAINT_NAME
-//      AND acons.TABLE_NAME = concol.TABLE_NAME
-//WHERE concol.TABLE_NAME NOT LIKE 'BIN$%'
-//AND concol.OWNER NOT IN('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
-//AND(concol.TABLE_NAME = '{TN.UnquotatedFullName}'
-//      OR(concol.OWNER || '.' || concol.TABLE_NAME) = '{TN.UnquotatedFullName}'
-//    )
-//) cons
+            //            LEFT JOIN(
+            //    SELECT concol.table_name, concol.column_name, concol.position, acons.status, acons.owner, acons.constraint_type
+            //    FROM ALL_CONS_COLUMNS concol
+            //    INNER JOIN ALL_CONSTRAINTS acons
+            //      ON acons.OWNER = concol.OWNER
+            //      AND acons.CONSTRAINT_TYPE IN ('U','P')
+            //      AND acons.CONSTRAINT_NAME = concol.CONSTRAINT_NAME
+            //      AND acons.TABLE_NAME = concol.TABLE_NAME
+            //WHERE concol.TABLE_NAME NOT LIKE 'BIN$%'
+            //AND concol.OWNER NOT IN('SYS', 'SYSMAN', 'CTXSYS', 'MDSYS', 'OLAPSYS', 'ORDSYS', 'OUTLN', 'WKSYS', 'WMSYS', 'XDB', 'ORDPLUGINS', 'SYSTEM')
+            //AND(concol.TABLE_NAME = '{TN.UnquotatedFullName}'
+            //      OR(concol.OWNER || '.' || concol.TABLE_NAME) = '{TN.UnquotatedFullName}'
+            //    )
+            //) cons
 
             var readMetaSql = new SqlTask(
 sql
@@ -542,7 +542,7 @@ AND ( t.tabname = '{TN.UnquotatedFullName}'
       OR ( TRIM(t.tabschema) || '.' || t.tabname = '{TN.UnquotatedFullName}' )
     )
 ORDER BY c.colno;
-";            
+";
 
             var readMetaSql = new SqlTask(
 sql

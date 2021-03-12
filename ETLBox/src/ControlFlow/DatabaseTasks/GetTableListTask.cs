@@ -1,5 +1,4 @@
 ﻿using ETLBox.Connection;
-using ETLBox.Exceptions;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace ETLBox.ControlFlow.Tasks
     {
         /// <inheritdoc/>
         public override string TaskName { get; set; } = $"Get a list of all tables in the current database.";
-              
+
         public GetTableListTask()
         {
 

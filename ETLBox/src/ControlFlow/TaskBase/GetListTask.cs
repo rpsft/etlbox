@@ -1,6 +1,4 @@
-﻿using ETLBox.Connection;
-using ETLBox.Exceptions;
-using ETLBox.Helper;
+﻿using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +21,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// A list containing all databases after executing.
         /// </summary>
         public List<ObjectNameDescriptor> ObjectNames { get; set; }
-               
+
 
         public GetListTask()
         {
@@ -36,7 +34,7 @@ namespace ETLBox.ControlFlow.Tasks
             return this;
         }
 
-        
+
         public string Sql
         {
             get

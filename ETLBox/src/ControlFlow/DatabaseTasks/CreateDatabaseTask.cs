@@ -172,7 +172,7 @@ END
         /// <param name="databaseName">The name of the database</param>
         /// <param name="collation">The default collation of the database.</param>
         public static void Create(IConnectionManager connectionManager, string databaseName, string collation)
-            => new CreateDatabaseTask(databaseName, collation) { ConnectionManager = connectionManager, ThrowOnError = true}.Execute();
+            => new CreateDatabaseTask(databaseName, collation) { ConnectionManager = connectionManager, ThrowOnError = true }.Execute();
 
         /// <summary>
         /// Creates a database if the database doesn't exists. In MySql or MariaDb, this will create a schema.

@@ -15,7 +15,7 @@ namespace ETLBox.ControlFlow
         public Action BeforeRowReadAction { get; set; }
         public Action AfterRowReadAction { get; set; }
         public int Limit { get; set; } = int.MaxValue;
-        public int? RowsAffected { get; private set; }               
+        public int? RowsAffected { get; private set; }
         public IEnumerable<QueryParameter> Parameter { get; set; }
 
         /* Internal/Private properties */
@@ -170,8 +170,8 @@ namespace ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);                
-                conn.BulkInsert(data);                
+                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                conn.BulkInsert(data);
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
@@ -189,8 +189,8 @@ namespace ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);                
-                conn.BulkDelete(data);                
+                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                conn.BulkDelete(data);
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }
@@ -208,8 +208,8 @@ namespace ETLBox.ControlFlow
             try
             {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);                
-                conn.BulkUpdate(data,setColumnNames,joinColumnNames);                
+                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                conn.BulkUpdate(data, setColumnNames, joinColumnNames);
                 RowsAffected = data.RecordsAffected;
                 if (!DisableLogging) LoggingEnd(LogType.Bulk);
             }

@@ -1,5 +1,4 @@
 ﻿using ETLBox.Connection;
-using ETLBox.Exceptions;
 using ETLBox.Helper;
 using System;
 using System.Collections.Generic;
@@ -49,7 +48,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// </summary>
         public string ProcedureDefinition { get; set; }
 
-        public string ProcedureOptions { get;set; }
+        public string ProcedureOptions { get; set; }
 
         /// <summary>
         /// The parameters for the procedure
@@ -192,7 +191,7 @@ namespace ETLBox.ControlFlow.Tasks
 
         string Language => this.ConnectionType == ConnectionManagerType.Postgres ?
             Environment.NewLine + "LANGUAGE SQL" : "";
-        string BEGIN => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "BEGIN";        
+        string BEGIN => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "BEGIN";
         string END => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "END";
         string AS => this.ConnectionType == ConnectionManagerType.MySql ? "" : "AS";
     }

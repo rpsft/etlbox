@@ -18,14 +18,15 @@ namespace ETLBox.ControlFlow
         {
             get
             {
-                if (String.IsNullOrEmpty(_taskType)) {
+                if (String.IsNullOrEmpty(_taskType))
+                {
                     var type = this.GetType();
                     string name = type.Name;
                     List<string> argnames = new List<string>();
                     foreach (var arg in type.GetGenericArguments())
                         argnames.Add(arg.Name);
                     if (argnames.Count > 0)
-                        return $"{name}<{string.Join(",",argnames)}>";
+                        return $"{name}<{string.Join(",", argnames)}>";
                     else
                         return name;
                 }

@@ -35,10 +35,10 @@ namespace ETLBox.ControlFlow.Tasks
 
 
         /* Static methods for convenience */
-        public static int ExecuteNonQuery(string xmla) => new XmlaTask(xmla).ExecuteNonQuery();        
-        public static object ExecuteScalar(string xmla) => new XmlaTask(xmla).ExecuteScalar();        
-        public static Nullable<T> ExecuteScalar<T>(string xmla) where T : struct => new XmlaTask(xmla).ExecuteScalar<T>();        
-        public static bool ExecuteScalarAsBool(string xmla) => new XmlaTask(xmla).ExecuteScalarAsBool();        
+        public static int ExecuteNonQuery(string xmla) => new XmlaTask(xmla).ExecuteNonQuery();
+        public static object ExecuteScalar(string xmla) => new XmlaTask(xmla).ExecuteScalar();
+        public static Nullable<T> ExecuteScalar<T>(string xmla) where T : struct => new XmlaTask(xmla).ExecuteScalar<T>();
+        public static bool ExecuteScalarAsBool(string xmla) => new XmlaTask(xmla).ExecuteScalarAsBool();
         public static void ExecuteReader(string xmla, params Action<object>[] actions) => new XmlaTask(xmla, actions).ExecuteReader();
         public static void ExecuteReader(string xmla, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) =>
             new XmlaTask(xmla, beforeRowReadAction, afterRowReadAction, actions).ExecuteReader();

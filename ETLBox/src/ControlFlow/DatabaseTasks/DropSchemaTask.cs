@@ -1,5 +1,4 @@
 ﻿using ETLBox.Connection;
-using ETLBox.Exceptions;
 using System;
 
 namespace ETLBox.ControlFlow.Tasks
@@ -16,10 +15,10 @@ namespace ETLBox.ControlFlow.Tasks
 
             if (this.ConnectionType == ConnectionManagerType.Db2)
                 return $@"DROP SCHEMA {ON.QuotatedFullName} RESTRICT";
-            else 
+            else
                 return $@"DROP SCHEMA {ON.QuotatedFullName}";
         }
-    
+
 
 
         public DropSchemaTask()

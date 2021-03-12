@@ -400,10 +400,10 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                         continue;
                     }
                     else if (newcol.IsComputed && !AreComputedValuesDifferent(newcol, existingcol))
-                            continue;
+                        continue;
 
-                    if ( (AreColumnsDataTypesDifferent(newcol, existingcol) 
-                         || AreCollationsDifferent(newcol, existingcol) 
+                    if ((AreColumnsDataTypesDifferent(newcol, existingcol)
+                         || AreCollationsDifferent(newcol, existingcol)
                          )
                         && !WasAlterColumnExecuted)
                         result.Add(CreateAlterColumnSetDataTypeSql(newcol, existingcol));

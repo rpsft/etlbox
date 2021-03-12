@@ -73,7 +73,7 @@ namespace ETLBox.Helper
                 //case "time":                
                 case "timestamp":
                 case "timestamptz":
-                    return "System.DateTime";                    
+                    return "System.DateTime";
                 case "interval":
                 case "time":
                     return "System.TimeSpan";

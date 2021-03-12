@@ -98,6 +98,11 @@ namespace ETLBox.Helper
         public string TableName { get; set; }
 
         /// <summary>
+        /// Indicates if all data was read
+        /// </summary>
+        public bool HasNextRecord { get; set; } = true;
+
+        /// <summary>
         /// The data used for the bulk operation
         /// </summary>
         public ITableData TableData { get; set; }
@@ -105,6 +110,9 @@ namespace ETLBox.Helper
         public ICollection<string> SetColumnNames { get; set; } = new List<string>();
         public ICollection<string> JoinColumnNames { get; set; } = new List<string>();
         public ICollection<string> SelectColumnNames { get; set; } = new List<string>();
+
+        public int Limit { get; set; }
+
 
         #endregion
 
@@ -116,13 +124,18 @@ namespace ETLBox.Helper
 
         #region Implementation
 
-
-        int ParameterNameCount;
-        string ParameterPlaceholder => ConnectionType == ConnectionManagerType.Oracle ? ":" : "@";
         bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
+
         StringBuilder QueryText;
         List<string> SourceColumnNames;
         List<string> DestColumnNames;
+
+        int ParameterCount;
+        int ParameterNameCount;
+        string ParameterPlaceholder => ConnectionType == ConnectionManagerType.Oracle ? ":" : "@";
+        bool IsInLimit(int count) => Limit == 0 || count < Limit;
+        int ParameterPerRow => DestColumnNames.Count;
+
         ObjectNameDescriptor TN
         {
             get
@@ -133,6 +146,7 @@ namespace ETLBox.Helper
             }
         }
         ObjectNameDescriptor _TN;
+
 
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
@@ -187,6 +201,7 @@ namespace ETLBox.Helper
             ParameterNameCount = 0;
             SourceColumnNames = TableData.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
             DestColumnNames = TableData.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
+            ParameterCount = 0;
         }
 
         private void BeginInsertSql()
@@ -286,7 +301,7 @@ namespace ETLBox.Helper
 
         private void CreateValueSqlFromData()
         {
-            while (TableData.Read())
+            while (IsInLimit(ParameterCount + ParameterPerRow) && TableData.Read()) //Sideeffect of Read(), Keep order!
             {
                 List<string> values = new List<string>();
                 foreach (string destColumnName in DestColumnNames)
@@ -296,8 +311,11 @@ namespace ETLBox.Helper
                         AddNullValue(values, destColumnName);
                     else
                         AddNonNullValue(values, destColumnName, ordinal);
+                    ParameterCount++;
                 }
-                AppendValueListSql(values, TableData.NextResult());
+                HasNextRecord = TableData.NextResult();
+
+                AppendValueListSql(values, HasNextRecord && IsInLimit(ParameterCount + ParameterPerRow));
             }
         }
 
@@ -385,12 +403,12 @@ namespace ETLBox.Helper
             }
         }
 
-        private void AppendValueListSql(List<string> values, bool lastItem)
+        private void AppendValueListSql(List<string> values, bool hasNextItem)
         {
             if (IsAccessDatabase)
             {
                 QueryText.AppendLine("SELECT " + string.Join(",", values) + $"  FROM {AccessDummyTableName} ");
-                if (lastItem) QueryText.AppendLine(" UNION ALL ");
+                if (hasNextItem) QueryText.AppendLine(" UNION ALL ");
             }
             else if (ConnectionType == ConnectionManagerType.Oracle)
             {
@@ -402,17 +420,17 @@ namespace ETLBox.Helper
                         QueryText.Append(",");
                 }
                 QueryText.AppendLine(" FROM DUAL");
-                if (lastItem) QueryText.AppendLine(" UNION ALL ");
+                if (hasNextItem) QueryText.AppendLine(" UNION ALL ");
             }
             else if (ConnectionType == ConnectionManagerType.MySql && !IsMariaDb)
             {
                 QueryText.Append("ROW(" + string.Join(",", values) + $")");
-                if (lastItem) QueryText.AppendLine(",");
+                if (hasNextItem) QueryText.AppendLine(",");
             }
             else
             {
                 QueryText.Append("(" + string.Join(",", values) + $")");
-                if (lastItem) QueryText.AppendLine(",");
+                if (hasNextItem) QueryText.AppendLine(",");
             }
         }
 
