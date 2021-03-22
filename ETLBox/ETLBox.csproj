@@ -11,31 +11,7 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration data transform</PackageTags>
-        <PackageReleaseNotes>New features in 2.3.1: 
-
-(Connections)
-ODBC/OleDb now have ConnectionManagerType property settable. 
-
-(ControlFlow)
-Db2 now has support for schemas. 
-CreateTableTask: CreateOrAlter(). 
-CreateSchemaTask supports authorization.
-Added GetTableListTask. 
-
-(DataFlow)
-DbSource: Replace List<string>ColumnNames prop with ICollection<ColumnMap> ColumnMapping
-Added ColumnConversion for DbSource. 
-UnparsedData prop for streaming sources now contains data of skipped rows. 
-All executeable sources allow to set limit for records to read.
-(Breaking change) Improved naming in ColumnMap Attribute (NewName = PropertyName, CurrentName = DbColumnName).
-(Breaking change) ColumnRename now uses RenameColumn attribute instead ColumnMapping. 
-Added property KeepIdentity to DbDestination. 
-DataConverters available for DbDestination. 
-
-Bug fixes with 2.3.1: 
-Postgres connection manager now has full support for jsonb column.  
-DbSource/Sql property: Whitespace in column aliases are now properly parsed as column names.
-</PackageReleaseNotes>
+        <PackageReleaseNotes>New features in 2.3.2</PackageReleaseNotes>
         <Version>2.3.1</Version>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
