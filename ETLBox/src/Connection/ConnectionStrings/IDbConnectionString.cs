@@ -19,7 +19,7 @@
         /// <summary>
         /// Creates a copy of the current connection
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A copy of the connection string</returns>
         IDbConnectionString Clone();
 
         /// <summary>

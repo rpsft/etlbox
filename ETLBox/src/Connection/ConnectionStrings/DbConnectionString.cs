@@ -31,7 +31,10 @@ namespace ETLBox.Connection
             set => Builder.ConnectionString = value;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Returns the connection string <see cref="Value"/>
+        /// </summary>
+        /// <returns>The new connection string</returns>
         public override string ToString() => Builder.ConnectionString;
 
         /// <inheritdoc />
@@ -45,7 +48,7 @@ namespace ETLBox.Connection
         /// <inheritdoc />
         public abstract string MasterDbName { get; }
 
-        /// <inheritdoc
+        /// <inheritdoc/>
         IDbConnectionString IDbConnectionString.Clone() => Clone();
 
         /// <inheritdoc/>

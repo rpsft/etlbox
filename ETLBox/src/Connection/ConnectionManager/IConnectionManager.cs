@@ -244,8 +244,8 @@ namespace ETLBox.Connection
         TConnection DbConnection { get; }
 
         /// <summary>
-        /// The current transaction. Use <see cref="BeginTransaction"/> to start a transaction,
-        /// and <see cref="CommitTransaction"/> or <see cref="RollbackTransaction"/> to commit or rollback.
+        /// The current transaction. Use <see cref="IConnectionManager.BeginTransaction()"/> to start a transaction,
+        /// and <see cref="IConnectionManager.CommitTransaction()"/> or <see cref="IConnectionManager.RollbackTransaction()"/> to commit or rollback.
         /// </summary>
         TTransaction Transaction { get; }
     }
