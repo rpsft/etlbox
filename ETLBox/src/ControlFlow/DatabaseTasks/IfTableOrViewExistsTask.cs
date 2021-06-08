@@ -30,12 +30,17 @@ namespace ETLBox.ControlFlow.Tasks
             }
             else if (this.ConnectionType == ConnectionManagerType.Postgres)
             {
-                return $@"SELECT EXISTS(
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_catalog = CURRENT_DATABASE()
-    AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotatedFullName}')
-)";
+                return $@"
+SELECT EXISTS(
+               SELECT pns.nspname, pc.relname
+               FROM pg_catalog.pg_class pc,
+                    pg_catalog.pg_namespace pns
+               WHERE pns.oid = pc.relnamespace
+                --AND pns.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
+                 AND pc.relkind IN ('r', 'v') --r = relations/table, v = view, m = materialized view
+                 AND (pc.relname = '{ON.UnquotatedFullName}' OR CONCAT(pns.nspname, '.', pc.relname) = '{ON.UnquotatedFullName}')
+           )
+";
             }
             else if (this.ConnectionType == ConnectionManagerType.Oracle)
             {
@@ -102,7 +107,7 @@ OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
             => new IfTableOrViewExistsTask(objectName) { ConnectionManager = connectionManager }.Exists();
 
         /// <summary>
-        /// Ćhecks if the table or view exists. If the table doesn't exists, an ETLBoxException is thrown.        ///
+        /// Ćhecks if the table or view exists. If the table doesn't exist, an ETLBoxException is thrown.      
         /// </summary>
         /// <param name="connectionManager">The connection manager of the database you want to connect</param>
         /// <param name="objectName">The table or view name that you want to check for existence</param>
@@ -115,7 +120,7 @@ OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
                 DisableLogging = true
             }.Exists();
             if (!tableExists)
-                throw new ETLBoxException($"A table {objectName} does not exists in the database!");
+                throw new ETLBoxException($"A table or view {objectName} does not exist in the database!");
         }
     }
 }
