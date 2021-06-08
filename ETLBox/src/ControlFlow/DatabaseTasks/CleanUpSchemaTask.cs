@@ -250,14 +250,24 @@ BEGIN
                 EXECUTE format('DROP INDEX %I.%I;',
                     r.nspname, r.relname);
         END LOOP;
-        -- normal and materialised views
+        -- normal views
         FOR r IN (SELECT pns.nspname, pc.relname
                 FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pns
                 WHERE pns.oid=pc.relnamespace
                     AND pns.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
-                    AND pc.relkind IN ('v', 'm')
+                    AND pc.relkind IN ('v')
             ) LOOP
                 EXECUTE format('DROP VIEW %I.%I;',
+                    r.nspname, r.relname);
+        END LOOP;
+        -- materialized views
+        FOR r IN (SELECT pns.nspname, pc.relname
+                FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pns
+                WHERE pns.oid=pc.relnamespace
+                    AND pns.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
+                    AND pc.relkind IN ('m')
+            ) LOOP
+                EXECUTE format('DROP MATERIALIZED VIEW %I.%I;',
                     r.nspname, r.relname);
         END LOOP;
         -- tables
