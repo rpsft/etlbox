@@ -48,7 +48,7 @@ namespace ETLBox.Helper
                     result.Add(prevToken);
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ETLBoxException("The attempt to read the column names from the given sql statement failed. " +
                     "Please provide a TableDefinition with at least column name and preferably the data type. ");

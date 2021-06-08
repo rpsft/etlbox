@@ -150,10 +150,7 @@ namespace ETLBox.Helper
 
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
-        /// </summary>
-        /// <param name="data">The data that should be inserted into the destination table</param>
-        /// <param name="tableName">The name of the destination table</param>
-        /// <returns></returns>
+        /// </summary>      
         public string CreateBulkInsertStatement()
         {
             InitObjects();

@@ -78,7 +78,7 @@ namespace ETLBox.ControlFlow
         /// <summary>
         /// Gather a table definition from an existing table in the database.
         /// </summary>
-        /// <param name="connectionManager">The connection manager of the database you want to connect</param>
+        /// <param name="connection">The connection manager of the database you want to connect</param>
         /// <param name="tableName">A name of an existing table in the database</param>
         /// <returns></returns>
         public static TableDefinition FromTableName(IConnectionManager connection, string tableName)

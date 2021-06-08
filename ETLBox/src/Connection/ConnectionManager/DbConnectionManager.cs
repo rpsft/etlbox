@@ -10,6 +10,8 @@ namespace ETLBox.Connection
     /// The generic implementation on which all connection managers are based on
     /// </summary>
     /// <typeparam name="TConnection">The underlying ADO.NET connection</typeparam>
+    /// <typeparam name="TTransaction">The transaction type used in the ADO.NET connector</typeparam>
+    /// <typeparam name="TParameter">The parameter type used in the ADO.NET connector</typeparam>
     public abstract class DbConnectionManager<TConnection, TTransaction, TParameter> : IDisposable, IConnectionManager<TConnection, TTransaction>
         where TConnection : class, IDbConnection, new()
         where TTransaction : class, IDbTransaction

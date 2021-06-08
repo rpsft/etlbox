@@ -89,7 +89,7 @@ namespace ETLBox.Connection
         /// <summary>
         /// Executes a query against the database that doesn't return any data.
         /// </summary>
-        /// <param name="commandText">The sql command</param>
+        /// <param name="command">The sql command</param>
         /// <param name="parameterList">The optional list of parameters</param>
         /// <returns>Number of affected rows.</returns>
         int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null);
@@ -97,7 +97,7 @@ namespace ETLBox.Connection
         /// <summary>
         /// Executes a query against the database that does return only one row in one column.
         /// </summary>
-        /// <param name="commandText">The sql command</param>
+        /// <param name="command">The sql command</param>
         /// <param name="parameterList">The optional list of parameters</param>
         /// <returns>The result</returns>
         object ExecuteScalar(string command, IEnumerable<QueryParameter> parameterList = null);
@@ -105,7 +105,7 @@ namespace ETLBox.Connection
         /// <summary>
         /// Executes a query against the database that does return multiple rows in multiple columns
         /// </summary>
-        /// <param name="commandText">The sql command</param>
+        /// <param name="command">The sql command</param>
         /// <param name="parameterList">The optional list of parameters</param>
         /// <returns>A data reader to iterate through the result set</returns>
         IDataReader ExecuteReader(string command, IEnumerable<QueryParameter> parameterList = null);
@@ -177,8 +177,7 @@ namespace ETLBox.Connection
         /// <summary>
         /// Performs a bulk insert
         /// </summary>
-        /// <param name="data">Batch of data</param>
-        /// <param name="tableName">Destination table name</param>
+        /// <param name="data">Batch of data</param>        
         void BulkInsert(ITableData data);
 
         /// <summary>
@@ -191,15 +190,15 @@ namespace ETLBox.Connection
         /// <summary>
         /// Performs a bulk delete
         /// </summary>
-        /// <param name="data">Batch of data</param>
-        /// <param name="tableName">Destination table name</param>
+        /// <param name="data">Batch of data</param>        
         void BulkDelete(ITableData data);
 
         /// <summary>
         /// Performs a bulk update
         /// </summary>
         /// <param name="data">Batch of data</param>
-        /// <param name="tableName">Destination table name</param>
+        /// <param name="setColumnNames">The column names used in the set part of the update statement</param>
+        /// <param name="joinColumnNames">The column names to join for the update</param>
         void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
 
         /// <summary>
