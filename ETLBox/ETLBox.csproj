@@ -11,8 +11,8 @@
         <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/roadrunnerlenny/etlbox</RepositoryUrl>
         <PackageTags>ETL .NET dataflow ssis database integration data transform</PackageTags>
-        <PackageReleaseNotes>New features in 2.3.2</PackageReleaseNotes>
-        <Version>2.3.1</Version>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <Version>2.4.2</Version>
         <PackageIcon>logo_bw.png</PackageIcon>
         <Authors>Andreas Lennartz</Authors>
         <Company>ETLBox Office</Company>
