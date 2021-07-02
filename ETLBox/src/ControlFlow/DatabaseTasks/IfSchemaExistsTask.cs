@@ -27,6 +27,7 @@ IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(sche
             }
             else if (this.ConnectionType == ConnectionManagerType.Db2)
             {
+                //return $@"SELECT 1 FROM SYSIBM.SYSSCHEMATA WHERE NAME = '{ON.UnquotatedObjectName}'";
                 return $@"SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME = '{ON.UnquotatedObjectName}'";
             }
             else

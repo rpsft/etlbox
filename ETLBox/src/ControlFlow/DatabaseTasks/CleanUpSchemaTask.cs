@@ -196,6 +196,11 @@ BEGIN
                 }
                 else if (ConnectionType == ConnectionManagerType.Db2)
                 {
+                    //                    return $@"BEGIN ATOMIC
+                    //IF (EXISTS ( SELECT 1 FROM SYSIBM.SYSSCHEMATA WHERE name  = '{SchemaName}' ) )
+                    //  THEN CALL ETLBOX.CLEANUPSCHEMA();
+                    //END IF;
+                    //END";
                     return $@"BEGIN ATOMIC
 IF (EXISTS ( SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME  = '{SchemaName}' ) )
   THEN CALL ETLBOX.CLEANUPSCHEMA();

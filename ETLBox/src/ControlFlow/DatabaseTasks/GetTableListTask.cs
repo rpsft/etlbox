@@ -57,6 +57,7 @@ AND table_schema NOT IN('pg_catalog', 'information_schema')
             else if (this.ConnectionType == ConnectionManagerType.Oracle)
                 return $@"SELECT TABLE_NAME FROM USER_TABLES";
             else if (this.ConnectionType == ConnectionManagerType.Db2)
+                //return $@"SELECT NAME FROM SYSIBM.SYSTABLES WHERE CREATOR = CURRENT USER AND TYPE = 'T'";
                 return $@"SELECT TABNAME FROM SYSCAT.TABLES WHERE TABSCHEMA = CURRENT USER AND TYPE = 'T'";
             else
                 throw new NotSupportedException($"The database type {this.ConnectionType} is not supported for this task!");

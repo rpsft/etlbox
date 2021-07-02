@@ -56,6 +56,10 @@ AND(object_name = '{ON.UnquotatedFullName}'
             }
             else if (this.ConnectionType == ConnectionManagerType.Db2)
             {
+                //                return $@"SELECT 1 FROM SYSIBM.SYSTABLES
+                //WHERE NAME = '{ON.UnquotatedFullName}'
+                //OR ( TRIM(CREATOR) || '.' || NAME = '{ON.UnquotatedFullName}' )
+                //";
                 return $@"SELECT 1 FROM syscat.tables 
 WHERE tabname = '{ON.UnquotatedFullName}'
 OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
@@ -120,7 +124,7 @@ OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
                 DisableLogging = true
             }.Exists();
             if (!tableExists)
-                throw new ETLBoxException($"A table or view {objectName} does not exist in the database!");
+                throw new ETLBoxException($"A table or view '{objectName}' does not exist in the database!");
         }
     }
 }

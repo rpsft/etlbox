@@ -503,6 +503,120 @@ sql
             TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
+            /*
+             *   --WHEN c.typename IN ('CHARACTER VARYING')  THEN 'VARCHAR' || '(' || c.CHARACTER_MAXIMUM_LENGTH || ')'
+                 --WHEN c.typename  IN ('GRAPHIC VARYING') THEN 'VARGRAPHIC' || '(' || c.CHARACTER_MAXIMUM_LENGTH || ')'
+                 --WHEN c.typename IN ('DOUBLE-BYTE CHARACTER LARGE OBJECT') THEN 'DBCLOB' || '(' || c.CHARACTER_MAXIMUM_LENGTH || ')'
+                 --WHEN c.typename IN ('CHARACTER LARGE OBJECT') THEN 'CLOB' || '(' || c.CHARACTER_MAXIMUM_LENGTH || ')'
+                 --WHEN c.typename IN ('BINARY LARGE OBJECT') THEN 'BLOB' || '(' || c.CHARACTER_MAXIMUM_LENGTH || ')'
+                 --WHEN c.typename IN ('DOUBLE PRECISION') THEN 'DOUBLE' || '(' || c.NUMERIC_PRECISION || ',' || c.NUMERIC_SCALE || ')'
+            */
+            //            string sql = $@" 
+            //SELECT c.colname                                                 AS column_name
+            //     , CASE
+            //           WHEN c.typename
+            //               IN ('VARCHAR', 'CHARACTER', 'BINARY', 'VARBINARY', 'CLOB', 'BLOB', 'DBCLOB', 'GRAPHIC', 'VARGRAPHIC')
+            //               THEN c.typename || '(' || c.length || ')'         
+            //           WHEN c.typename
+            //               IN ('DECIMAL', 'NUMERIC', 'DECFLOAT', 'REAL', 'DOUBLE')
+            //               THEN c.typename || '(' || c.length || ',' || c.scale || ')'
+            //           ELSE c.typename
+            //    END                                                          AS data_type
+            //     , CASE WHEN c.nulls = 'Y' THEN 1 ELSE 0 END                 AS nullable
+            //     , CASE WHEN c.identity = 'Y' THEN 1 ELSE 0 END              AS is_identity
+            //     , CASE WHEN i.uniquerule = 'P' THEN 1 ELSE 0 END            AS is_primary
+            //     , c.default                                                 AS default_value
+            //     , c.collationname                                           AS collation
+            //     --, c.generated as  generation_expression
+            //     , c.text                                                    as computed_formula
+            //     , CASE WHEN i.uniquerule = 'U' THEN 1 ELSE 0 END            AS is_unique
+            //     , c.remarks                                                 as description
+            //     , CASE WHEN i.uniquerule = 'P' THEN i.indname ELSE NULL END AS pk_name
+            //     , CASE WHEN i.uniquerule = 'U' THEN i.indname ELSE NULL END AS uk_name
+            //FROM (
+            //select sc.tbcreator as tabschema,
+            //       sc.tbname as tabname,
+            //       sc.name as colname,
+            //       sc.colno,
+            //       sc.typename,
+            //       sc.longlength as length,
+            //       case
+            //           when (sc.composite_codepage = 1208 or sc.composite_codepage = 1200) and
+            //                sc.scale <> 0 then cast(0 as SMALLINT)
+            //           else sc.scale
+            //       end as scale,
+            //       sc.default,
+            //       sc.nulls,
+            //       case
+            //           when sc.collationid is null then null
+            //           else coalesce((select col.collationschema
+            //                          from sysibm.syscollations col
+            //                          where sc.collationid = col.collationid),
+            //                         'SYSIBM')
+            //       end as collationschema,
+            //       case
+            //           when sc.collationid is null then null
+            //           else coalesce((select col.collationname
+            //                          from sysibm.syscollations col
+            //                          where sc.collationid = col.collationid),
+            //                         --syscat.collationname(sc.collationid)
+            //                         ( case when hex(sc.COLLATIONID) IN ('00000002FF00FFFF','00000002FF00FFFF') THEN 'IDENTITY'
+            //                            when hex(sc.COLLATIONID) IN ('00000005FF01FFFF') THEN 'BINARY'
+            //                            else null end)
+            //                         )
+            //        end as collationname,
+            //       cast(case
+            //                when sc.identity = 'Y' then 'Y'
+            //                else 'N' end as char(1)) as identity,
+            //       sc.generated,
+            //       case
+            //           when sc.generated = ' ' then null
+            //           else
+            //               (select case
+            //                           when posstr(ch.text, ' =  ') = 0
+            //                               then ch.text
+            //                           else 'AS' concat
+            //                                substr(ch.text,
+            //                                       posstr(ch.text, ' =  ') + 3)
+            //                           end
+            //                from sysibm.syschecks ch,
+            //                     sysibm.syscolchecks cc
+            //                where sc.tbcreator = cc.tbcreator
+            //                  and sc.tbname = cc.tbname
+            //                  and sc.name = cc.colname
+            //                  and cc.usage = 'T'
+            //                  and cc.constname = ch.name
+            //                  and cc.tbcreator = ch.tbcreator
+            //                  and cc.tbname = ch.tbname)
+            //           end as text,
+            //       sc.remarks
+            //from sysibm.syscolumns sc
+            //         ) c
+
+            //INNER JOIN (
+            //    SELECT creator as tabschema, name as tabname, type FROM sysibm.systables 
+            //)   t 
+            //    ON
+            //    t.tabschema = c.tabschema and t.tabname = c.tabname
+
+            //LEFT JOIN (
+            //    SELECT ix.UNIQUERULE, ix.TBCREATOR as tabschema, ix.TBNAME as tabname, ix.name as indname, idxu.COLNAME as colname
+            //    FROM sysibm.sysindexes ix
+            //    INNER JOIN sysibm.sysindexcoluse idxu
+            //        ON idxu.INDNAME = ix.NAME
+            //        AND idxu.INDSCHEMA = ix.CREATOR
+            //) i
+            //    ON i.tabschema = c.tabschema
+            //    AND i.tabname = c.tabname
+            //    AND i.colname = c.colname
+
+            //WHERE t.type IN ('V', 'T')
+            //  AND (t.tabname = '{TN.UnquotatedFullName}'
+            //    OR (TRIM(t.tabschema) || '.' || t.tabname = '{TN.UnquotatedFullName}')
+            //    )
+            //ORDER BY c.colno;
+            //";
+
             string sql = $@" 
 SELECT c.colname AS column_name
      , CASE WHEN c.typename 
@@ -544,8 +658,7 @@ AND ( t.tabname = '{TN.UnquotatedFullName}'
 ORDER BY c.colno;
 ";
 
-            var readMetaSql = new SqlTask(
-sql
+            var readMetaSql = new SqlTask(sql
             , () => { curCol = new TableColumn(); }
             , () => { result.Columns.Add(curCol); }
             , column_name => curCol.Name = column_name.ToString()
