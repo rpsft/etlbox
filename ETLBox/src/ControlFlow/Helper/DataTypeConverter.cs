@@ -58,10 +58,12 @@ namespace ETLBox.Helper
                 case "money":
                 case "smallmoney":
                 case "numeric":
+                case "decfloat":
                     return "System.Decimal";
-                case "real":
-                case "float":
-                case "float4":
+                case "real":                
+                case "float4":                
+                    return "System.Single";
+                case "float": //Float is 64bit inSql Server 
                 case "float8":
                 case "double":
                 case "double precision":
@@ -70,7 +72,6 @@ namespace ETLBox.Helper
                 case "datetime":
                 case "smalldatetime":
                 case "datetime2":
-                //case "time":                
                 case "timestamp":
                 case "timestamptz":
                     return "System.DateTime";
@@ -89,6 +90,8 @@ namespace ETLBox.Helper
                 case "blob":
                 case "image":
                 case "raw":
+                case "graphic":
+                case "vargraphic":
                     return "System.Byte[]";
                 default:
                     return "System.String";
@@ -324,6 +327,66 @@ namespace ETLBox.Helper
             }
 
             return dataTypeName;
+        }
+
+        private static readonly Dictionary<DbType, Type> DbType2Type = new Dictionary<DbType, Type>
+        {
+            { DbType.Byte, typeof(byte) },
+            { DbType.SByte, typeof(sbyte) },
+            { DbType.Int16, typeof(short) },
+            { DbType.UInt16, typeof(ushort) },
+            { DbType.Int32, typeof(int) },
+            { DbType.UInt32, typeof(uint) },
+            { DbType.Int64, typeof(long) },
+            { DbType.UInt64, typeof(ulong) },
+            { DbType.Single, typeof(float) },
+            { DbType.Double, typeof(double) },
+            { DbType.Decimal, typeof(decimal) },
+            { DbType.Boolean, typeof(bool) },
+            { DbType.String, typeof(string) },
+            { DbType.StringFixedLength, typeof(char) },
+            { DbType.Guid, typeof(Guid) },
+            { DbType.DateTime, typeof(DateTime) },
+            { DbType.DateTimeOffset, typeof(DateTimeOffset) },
+            { DbType.Binary, typeof(byte[]) }
+        };
+
+        public static Type GetClrType(DbType dbType) {
+            Type type;
+            if (DbType2Type.TryGetValue(dbType, out type)) {
+                return type;
+            }
+            throw new ArgumentOutOfRangeException("dbType", dbType, "Cannot map the DbType to Type");
+        }
+
+
+        private static readonly Dictionary<Type, string> Type2SqlServerType = new Dictionary<Type, string> {
+            { typeof(long),"BIGINT" },
+            { typeof(int),"INT" },
+            { typeof(short),"SMALLINT" },
+            { typeof(byte),"TINYINT" },
+            { typeof(byte[]),"VARBINARY(8000)" },
+            { typeof(bool),"BIT" },
+            { typeof(char),"CHAR" },
+            { typeof(DateTime),"DATETIME2" },
+            { typeof(DateTimeOffset),"DATETIMEOFFSET" },
+            { typeof(decimal),"DECIMAL" },
+            { typeof(double),"FLOAT" },            
+            { typeof(string),"NVARCHAR(4000)" },
+            { typeof(Guid),"UNIQUEIDENTIFIER" },
+            { typeof(TimeSpan),"TIME" },
+        };
+
+        public static string GetDatabaseType(Type clrType, ConnectionManagerType connectionType) {
+            if (connectionType == ConnectionManagerType.SqlServer) {
+                if (Type2SqlServerType.ContainsKey(clrType))
+                    return Type2SqlServerType[clrType];
+                else
+                    throw new ArgumentOutOfRangeException("clrType", clrType, "Cannot map the ClrType to database specific Type");
+            }
+            else {
+                throw new ArgumentException("This connection type is not supported yet!", nameof(connectionType));
+            }
         }
     }
 }
