@@ -19,7 +19,7 @@ Here are a few things you can do with ETLBox:
 - Power your data ingestion and integration tools.
 - Consume large CSV, Excel or Json files>
 
-## www.ETLBox.net
+## ETLBox.net
 
 [Visit the ETLBox Project website](https://www.etlbox.net) for [introductional articles](https://www.etlbox.net/docs/getting-started/quick-start/) and a [complete API documentation](https://www.etlbox.net/api/). 
 
