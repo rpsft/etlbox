@@ -2,7 +2,9 @@
 A lightweight ETL (extract, transform, load) toolbox and data integration library for .NET
 </center>
 
-**[This project has moved to a different location. For more details visit the project homepage: www.etlbox.net](https://www.etlbox.net)**
+**[This project has moved to a different location](www.etlbox.net](https://www.etlbox.net)**
+
+**Visit [www.etlbox.net](https://www.etlbox.net)**
 
 ## Why ETLBox
 
