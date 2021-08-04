@@ -2,6 +2,8 @@
 A lightweight ETL (extract, transform, load) toolbox and data integration library for .NET
 </center>
 
+# Moved
+
 **[This project has moved to a different location](https://www.etlbox.net)**
 
 **Visit [www.etlbox.net](https://www.etlbox.net)**
@@ -17,7 +19,7 @@ Here are a few things you can do with ETLBox:
 - Power your data ingestion and integration tools.
 - Consume large CSV, Excel or Json files>
 
-## ETLBox.net
+## www.ETLBox.net
 
 [Visit the ETLBox Project website](https://www.etlbox.net) for [introductional articles](https://www.etlbox.net/docs/getting-started/quick-start/) and a [complete API documentation](https://www.etlbox.net/api/). 
 
