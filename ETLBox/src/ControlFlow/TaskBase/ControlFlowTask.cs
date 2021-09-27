@@ -6,10 +6,8 @@ namespace ETLBox.ControlFlow
     {
         public virtual IConnectionManager ConnectionManager { get; set; }
 
-        internal virtual IConnectionManager DbConnectionManager
-        {
-            get
-            {
+        internal virtual IConnectionManager DbConnectionManager {
+            get {
                 if (ConnectionManager == null)
                     return (IConnectionManager)ControlFlow.DefaultDbConnection;
                 else

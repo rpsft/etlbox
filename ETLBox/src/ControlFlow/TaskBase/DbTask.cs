@@ -18,82 +18,64 @@ namespace ETLBox.ControlFlow
         public int? RowsAffected { get; private set; }
         public IEnumerable<QueryParameter> Parameter { get; set; }
 
-        /* Internal/Private properties */
-
-        /* Some constructors */
-        public DbTask()
-        {
+        public DbTask() {
 
         }
 
-        public DbTask(string sql) : this()
-        {
+        public DbTask(string sql) : this() {
             this.Sql = sql;
         }
 
-        public DbTask(string name, string sql) : this(sql)
-        {
+        public DbTask(string name, string sql) : this(sql) {
             this.TaskName = name;
         }
 
-        public DbTask(ControlFlowTask callingTask, string sql) : this(sql)
-        {
+        public DbTask(ControlFlowTask callingTask, string sql) : this(sql) {
             CopyLogTaskProperties(callingTask);
             this.ConnectionManager = callingTask.ConnectionManager;
         }
 
-        public DbTask(string sql, params Action<object>[] actions) : this(sql)
-        {
+        public DbTask(string sql, params Action<object>[] actions) : this(sql) {
             Actions = actions.ToList();
         }
 
 
-        public DbTask(string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : this(sql, actions)
-        {
+        public DbTask(string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : this(sql, actions) {
             BeforeRowReadAction = beforeRowReadAction;
             AfterRowReadAction = afterRowReadAction;
             Actions = actions.ToList();
         }
 
-
-        /* Public methods */
-        public int ExecuteNonQuery()
-        {
+        public int ExecuteNonQuery() {
             var conn = DbConnectionManager.CloneIfAllowed();
-            try
-            {
+            try {
                 conn.Open();
-                if (!DisableLogging) LoggingStart();
+                LogInfo("{action}: Executing sql.", "START");
+                LogTrace("{sql}", Sql);
                 RowsAffected = conn.ExecuteNonQuery(Sql, Parameter);
-                if (!DisableLogging) LoggingEnd(LogType.Rows);
-            }
-            finally
-            {
+                LogInfo("{action}: Sql execution completed - affected records {rowsAffected}", "END", RowsAffected);
+            } finally {
                 conn.CloseIfAllowed();
             }
             return RowsAffected ?? 0;
         }
 
-        public object ExecuteScalar()
-        {
+        public object ExecuteScalar() {
             object result = null;
             var conn = DbConnectionManager.CloneIfAllowed();
-            try
-            {
+            try {
                 conn.Open();
-                if (!DisableLogging) LoggingStart();
+                LogInfo("{action}: Executing sql.", "START");
+                LogTrace("{sql}", Sql);
                 result = conn.ExecuteScalar(Sql, Parameter);
-                if (!DisableLogging) LoggingEnd();
-            }
-            finally
-            {
+                LogInfo("{action}: Sql execution completed.", "END");
+            } finally {
                 conn.CloseIfAllowed();
             }
             return result;
         }
 
-        public Nullable<T> ExecuteScalar<T>() where T : struct
-        {
+        public Nullable<T> ExecuteScalar<T>() where T : struct {
             object result = ExecuteScalar();
             if (result == null || result == DBNull.Value)
                 return null;
@@ -102,14 +84,12 @@ namespace ETLBox.ControlFlow
         }
 
 
-        public bool ExecuteScalarAsBool()
-        {
+        public bool ExecuteScalarAsBool() {
             object result = ExecuteScalar();
             return ObjectToBool(result);
         }
 
-        static bool ObjectToBool(object result)
-        {
+        static bool ObjectToBool(object result) {
             if (result == null) return false;
             int number = 0;
             int.TryParse(result.ToString(), out number);
@@ -121,128 +101,78 @@ namespace ETLBox.ControlFlow
                 return false;
         }
 
-        public void ExecuteReader()
-        {
+        public void ExecuteReader() {
             var conn = DbConnectionManager.CloneIfAllowed();
-            try
-            {
+            try {
                 conn.Open();
-                if (!DisableLogging) LoggingStart();
-                using (IDataReader reader = conn.ExecuteReader(Sql, Parameter) as IDataReader)
-                {
-                    for (int rowNr = 0; rowNr < Limit; rowNr++)
-                    {
-                        if (reader.Read())
-                        {
+                using (IDataReader reader = conn.ExecuteReader(Sql, Parameter) as IDataReader) {
+                    LogInfo("{action}: Executing sql.", "START");
+                    LogTrace("{sql}", Sql);
+                    for (int rowNr = 0; rowNr < Limit; rowNr++) {
+                        if (reader.Read()) {
                             BeforeRowReadAction?.Invoke();
-                            for (int i = 0; i < Actions?.Count; i++)
-                            {
-                                if (!reader.IsDBNull(i))
-                                {
+                            for (int i = 0; i < Actions?.Count; i++) {
+                                if (!reader.IsDBNull(i)) {
                                     Actions?[i]?.Invoke(reader.GetValue(i));
-                                }
-                                else
-                                {
+                                } else {
                                     Actions?[i]?.Invoke(null);
                                 }
                             }
                             AfterRowReadAction?.Invoke();
-                        }
-                        else
-                        {
+                        } else {
                             break;
                         }
                     }
+                    LogInfo("{action}: Sql execution completed.", "END");
                 }
-                if (!DisableLogging) LoggingEnd();
-            }
-            finally
-            {
+            } finally {
                 conn.CloseIfAllowed();
             }
         }
 
-        public void BulkInsert(ITableData data)
-        {
+        public void BulkInsert(ITableData data) {
             if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
                 "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
             var conn = DbConnectionManager.CloneIfAllowed();
-            try
-            {
+            try {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                LogDebug("{action}: Sql bulk insert operation.", "START");
                 conn.BulkInsert(data);
                 RowsAffected = data.RecordsAffected;
-                if (!DisableLogging) LoggingEnd(LogType.Bulk);
-            }
-            finally
-            {
+                LogDebug("{action}: Sql bulk insert operation completed - affected records {rowsAffected}", "END", RowsAffected);
+            } finally {
                 conn.CloseIfAllowed();
             }
         }
 
-        public void BulkDelete(ITableData data)
-        {
+        public void BulkDelete(ITableData data) {
             if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
                 "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
             var conn = DbConnectionManager.CloneIfAllowed();
-            try
-            {
+            try {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                LogDebug("{action}: Sql bulk delete operation.", "START");
                 conn.BulkDelete(data);
                 RowsAffected = data.RecordsAffected;
-                if (!DisableLogging) LoggingEnd(LogType.Bulk);
-            }
-            finally
-            {
+                LogDebug("{action}: Sql bulk delete operation completed - affected records {rowsAffected}", "END", RowsAffected);
+            } finally {
                 conn.CloseIfAllowed();
             }
         }
 
-        public void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames)
-        {
+        public void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames) {
             if (data.ColumnMapping?.Count == 0) throw new ETLBoxException("A mapping between the columns in your destination table " +
                 "and the properties in your source data could not be automatically retrieved. There were no matching entries found.");
             var conn = DbConnectionManager.CloneIfAllowed();
-            try
-            {
+            try {
                 conn.Open();
-                if (!DisableLogging) LoggingStart(LogType.Bulk);
+                LogDebug("{action}: Sql bulk update operation.", "START");
                 conn.BulkUpdate(data, setColumnNames, joinColumnNames);
                 RowsAffected = data.RecordsAffected;
-                if (!DisableLogging) LoggingEnd(LogType.Bulk);
-            }
-            finally
-            {
+                LogDebug("{action}: Sql bulk update operation completed - affected records {rowsAffected}", "END", RowsAffected);
+            } finally {
                 conn.CloseIfAllowed();
             }
-        }
-
-
-        /* Private implementation & stuff */
-        enum LogType
-        {
-            None,
-            Rows,
-            Bulk
-        }
-
-
-        void LoggingStart(LogType logType = LogType.None)
-        {
-            NLogger.Info(TaskName, TaskType, "START", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
-            if (logType == LogType.Bulk)
-                NLogger.Debug($"SQL Bulk Operation", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
-            else
-                NLogger.Debug($"{Sql}", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
-        }
-
-        void LoggingEnd(LogType logType = LogType.None)
-        {
-            NLogger.Info(TaskName, TaskType, "END", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
-            if (logType == LogType.Rows)
-                NLogger.Debug($"Rows affected: {RowsAffected ?? 0}", TaskType, "RUN", TaskHash, Logging.Logging.STAGE, Logging.Logging.CurrentLoadProcess?.Id);
         }
     }
 }
