@@ -58,17 +58,7 @@ namespace ETLBox.DataFlow
         public Dictionary<PropertyInfo, Type> UnderlyingPropType { get; private set; } = new Dictionary<PropertyInfo, Type>();
 
         public List<ColumnMap> ColumnMapAttributes { get; set; } = new List<ColumnMap>();
-        public List<RenameColumn> RenameColumnAttributes { get; set; } = new List<RenameColumn>();
-        public List<DistinctColumn> DistinctColumnAttributes { get; set; } = new List<DistinctColumn>();
-        public List<KeyColumn> KeyColumnAttributes { get; set; } = new List<KeyColumn>();
-        public List<AggregateColumn> AggregateColumnAttributes { get; set; } = new List<AggregateColumn>();
-        public List<GroupColumn> GroupColumnAttributes { get; set; } = new List<GroupColumn>();
-        public List<MatchColumn> MatchColumnAttributes { get; set; } = new List<MatchColumn>();
-        public List<RetrieveColumn> RetrieveColumnAttributes { get; set; } = new List<RetrieveColumn>();
-        public List<IdColumn> IdColumnAttributes { get; set; } = new List<IdColumn>();
-        public List<UpdateColumn> UpdateColumnAttributes { get; set; } = new List<UpdateColumn>();
-        public List<CompareColumn> CompareColumnAttributes { get; set; } = new List<CompareColumn>();
-        public List<DeleteColumn> DeleteColumnAttributes { get; set; } = new List<DeleteColumn>();        
+ 
 
         public GenericTypeInfo(Type type) {
             GenericType = type;
@@ -110,28 +100,6 @@ namespace ETLBox.DataFlow
             if (propertyAttributes == AttributeType.None) return;
             if (propertyAttributes.HasFlag(AttributeType.ColumnMap))
                 TryAddAttribute(propInfo, ColumnMapAttributes, (cm, prop) => cm.PropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.RenameColumn))
-                TryAddAttribute(propInfo, RenameColumnAttributes, (cm, prop) => cm.CurrentName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.DistinctColumn))
-                TryAddAttribute(propInfo, DistinctColumnAttributes, (cm, prop) => cm.DistinctPropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.KeyColumn))
-                TryAddAttribute(propInfo, KeyColumnAttributes, (cm, prop) => cm.KeyPropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.AggregateColumn))
-                TryAddAttribute(propInfo, AggregateColumnAttributes, (cm, prop) => cm.AggregatedValuePropName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.GroupColumn))
-                TryAddAttribute(propInfo, GroupColumnAttributes, (cm, prop) => cm.GroupPropNameInOutput = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.MatchColumn))
-                TryAddAttribute(propInfo, MatchColumnAttributes, (cm, prop) => cm.LookupSourcePropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.RetrieveColumn))
-                TryAddAttribute(propInfo, RetrieveColumnAttributes, (cm, prop) => cm.LookupSourcePropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.IdColumn))
-                TryAddAttribute(propInfo, IdColumnAttributes, (cm, prop) => cm.IdPropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.UpdateColumn))
-                TryAddAttribute(propInfo, UpdateColumnAttributes, (cm, prop) => cm.UpdatePropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.CompareColumn))
-                TryAddAttribute(propInfo, CompareColumnAttributes, (cm, prop) => cm.ComparePropertyName = prop.Name);
-            if (propertyAttributes.HasFlag(AttributeType.DeleteColumn))
-                TryAddAttribute(propInfo, DeleteColumnAttributes, (cm, prop) => cm.DeletePropertyName = prop.Name);
         }
 
         private void TryAddAttribute<T>(PropertyInfo propInfo, IList<T> list, Action<T, PropertyInfo> propAssignment) where T : Attribute {
