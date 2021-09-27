@@ -33,18 +33,15 @@ namespace ETLBox.ControlFlow
         /// </summary>
         public bool Out { get; set; }
 
-        public ProcedureParameter()
-        {
+        public ProcedureParameter() {
         }
 
-        public ProcedureParameter(string name, string dataType) : this()
-        {
+        public ProcedureParameter(string name, string dataType) : this() {
             Name = name;
             DataType = dataType;
         }
 
-        public ProcedureParameter(string name, string dataType, string defaultValue) : this(name, dataType)
-        {
+        public ProcedureParameter(string name, string dataType, string defaultValue) : this(name, dataType) {
             DefaultValue = defaultValue;
         }
 

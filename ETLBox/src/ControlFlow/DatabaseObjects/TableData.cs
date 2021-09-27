@@ -15,10 +15,8 @@ namespace ETLBox.ControlFlow
         #region ITableData implementation
 
         /// <inheritdoc/>
-        public IColumnMappingCollection ColumnMapping
-        {
-            get
-            {
+        public IColumnMappingCollection ColumnMapping {
+            get {
                 if (_columnMapping == null)
                     _columnMapping = CreateColumnMappingFromDefinition();
                 return _columnMapping;
@@ -39,7 +37,7 @@ namespace ETLBox.ControlFlow
 
         /// <inheritdoc/>
         public string GetDataTypeName(string columnName) =>
-            Definition.Columns.Find(col => col.Name == columnName).DataType;
+            Definition.Columns.First(col => col.Name == columnName).DataType;
 
         /// <inheritdoc/>
         public Dictionary<string, int> DataIndexForColumn { get; set; } = new Dictionary<string, int>();
@@ -48,7 +46,7 @@ namespace ETLBox.ControlFlow
         public TableDefinition Definition { get; set; }
 
         /// <inheritdoc/>
-        public bool KeepIdentity { get; set; }
+        public bool AllowIdentityInsert { get; set; }
 
         public Dictionary<string, Func<object, object>> ColumnConverters { get; set; } = new Dictionary<string, Func<object, object>>();
 
@@ -66,8 +64,7 @@ namespace ETLBox.ControlFlow
         /// <inheritdoc/>
         public char GetChar(int i) => Convert.ToChar(GetCurrentRow(i));
         /// <inheritdoc/>
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
-        {
+        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length) {
             string value = Convert.ToString(GetCurrentRow(i));
             buffer = value.Substring(bufferoffset, length).ToCharArray();
             return buffer.Length;
@@ -98,8 +95,7 @@ namespace ETLBox.ControlFlow
         public DataTable GetSchemaTable() //check
             => throw new NotImplementedException("GetSchemaTable() is not implemented on TableData!");
         /// <inheritdoc/>
-        public int GetValues(object[] values)
-        {
+        public int GetValues(object[] values) {
             values = CurrentRow as object[];
             return values?.Length ?? 0;
         }
@@ -141,8 +137,7 @@ namespace ETLBox.ControlFlow
         public string GetDataTypeName(int i) => GetDataTypeName(GetName(i));
 
         /// <inheritdoc/>
-        public int GetOrdinal(string name)
-        {
+        public int GetOrdinal(string name) {
             InitDataIndexIfNeeded();
             InitOrdinalRemappingIfNeeded();
 
@@ -158,21 +153,17 @@ namespace ETLBox.ControlFlow
         public bool IsDBNull(int i) => GetCurrentRow(i) == null; //always used, null if out of range
 
         /// <inheritdoc/>
-        public bool NextResult()
-        {
+        public bool NextResult() {
             return (ReadIndex + 1) <= Rows?.Count;
         }
 
         /// <inheritdoc/>
-        public bool Read()
-        {
-            if (Rows?.Count > ReadIndex)
-            {
+        public bool Read() {
+            if (Rows?.Count > ReadIndex) {
                 CurrentRow = Rows[ReadIndex];
                 ReadIndex++;
                 return true;
-            }
-            else
+            } else
                 return false;
         }
 
@@ -180,18 +171,15 @@ namespace ETLBox.ControlFlow
 
         #region Constructors
 
-        public TableData(TableDefinition definition)
-        {
+        public TableData(TableDefinition definition) {
             InitObjects(definition);
         }
 
-        public TableData(TableDefinition definition, int estimatedBatchSize)
-        {
+        public TableData(TableDefinition definition, int estimatedBatchSize) {
             InitObjects(definition, estimatedBatchSize);
         }
 
-        private void InitObjects(TableDefinition definition, int estimatedBatchSize = 0)
-        {
+        private void InitObjects(TableDefinition definition, int estimatedBatchSize = 0) {
             if (definition == null) throw new ArgumentNullException(nameof(Definition),
                 "ETLBox: TablDefinition is needed to create a proper TableData object!");
             Definition = definition;
@@ -204,24 +192,20 @@ namespace ETLBox.ControlFlow
 
         IColumnMappingCollection _columnMapping;
 
-        private void InitDataIndexIfNeeded()
-        {
+        private void InitDataIndexIfNeeded() {
             if (DataIndexForColumn.Count == 0)
                 CreateDefaultIndexFromColumnMapping();
         }
 
-        private void InitOrdinalRemappingIfNeeded()
-        {
+        private void InitOrdinalRemappingIfNeeded() {
             if (OrdinalToName != null) return;
             OrdinalToName = new Dictionary<int, string>();
             NameToOrdinal = new Dictionary<string, int>();
             OrdinalToDataIndex = new Dictionary<int, int>();
             int newIndex = 0;
-            foreach (var dataColName in DataIndexForColumn.Keys)
-            {
+            foreach (var dataColName in DataIndexForColumn.Keys) {
                 if (Definition.Columns.Any(col => col.Name == dataColName &&
-                        (!col.IsIdentity || KeepIdentity)))
-                {
+                        (!col.IsIdentity || AllowIdentityInsert))) {
                     NameToOrdinal.Add(dataColName, newIndex);
                     OrdinalToName.Add(newIndex, dataColName);
                     OrdinalToDataIndex.Add(newIndex, DataIndexForColumn[dataColName]);
@@ -230,8 +214,7 @@ namespace ETLBox.ControlFlow
             }
         }
 
-        private object GetCurrentRow(int i)
-        {
+        private object GetCurrentRow(int i) {
             int shifted = Remap(i);
             object result;
             if (CurrentRow.Length > shifted)
@@ -247,26 +230,20 @@ namespace ETLBox.ControlFlow
 
         int Remap(int i) => OrdinalToDataIndex?.Count > 0 ? OrdinalToDataIndex[i] : i;
 
-        private void CreateDefaultIndexFromColumnMapping()
-        {
+        private void CreateDefaultIndexFromColumnMapping() {
             for (int i = 0; i < ColumnMapping.Count; i++)
                 DataIndexForColumn.Add(((DataColumnMapping)ColumnMapping[i]).SourceColumn, i);
         }
 
-        private IColumnMappingCollection CreateColumnMappingFromDefinition()
-        {
+        private IColumnMappingCollection CreateColumnMappingFromDefinition() {
             var mapping = new DataColumnMappingCollection();
-            foreach (var col in Definition.Columns)
-            {
-                if (!col.IsIdentity || KeepIdentity)
-                {
-                    if (DataIndexForColumn.Count > 0)
-                    {
+            foreach (var col in Definition.Columns) {
+                if (!col.IsIdentity || AllowIdentityInsert) {
+                    if (DataIndexForColumn.Count > 0) {
                         if (DataIndexForColumn.ContainsKey(col.Name))
                             mapping.Add(new DataColumnMapping(col.Name, col.Name));
-                    }
-                    else //Default: always a complete mapping
-                    {
+                    } else //Default: always a complete mapping
+                      {
                         mapping.Add(new DataColumnMapping(col.Name, col.Name));
                     }
                 }
@@ -286,12 +263,9 @@ namespace ETLBox.ControlFlow
 
         private bool disposedValue = false;
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
+        protected virtual void Dispose(bool disposing) {
+            if (!disposedValue) {
+                if (disposing) {
                     Rows.Clear();
                     Rows = null;
                 }
@@ -301,14 +275,12 @@ namespace ETLBox.ControlFlow
         }
 
         /// Disposes the internal list that holds data
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
         }
 
         /// Disposes the internal list that holds data
-        public void Close()
-        {
+        public void Close() {
             Dispose();
         }
 

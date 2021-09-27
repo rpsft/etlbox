@@ -42,11 +42,6 @@ namespace ETLBox.ControlFlow
         public bool IsPrimaryKey { get; set; }
 
         /// <summary>
-        /// The column is part of a unique constraint
-        /// </summary>
-        public bool IsUnique { get; set; }
-
-        /// <summary>
         /// Define a default value for the column.
         /// Not all databases may support this.
         /// </summary>
@@ -84,34 +79,28 @@ namespace ETLBox.ControlFlow
         /// Only SqlServer: The increment value for an identity column
         /// </summary>
         public int? IdentityIncrement { get; set; } //Sql Server only
-
+                
         #region Constructors
 
         public TableColumn() { }
-        public TableColumn(string name, string dataType) : this()
-        {
+
+        public TableColumn(string name, string dataType) : this() {
             Name = name;
             DataType = dataType;
         }
 
-        public TableColumn(string name, string dataType, bool allowNulls) : this(name, dataType)
-        {
+        public TableColumn(string name, string dataType, bool allowNulls) : this(name, dataType) {
             AllowNulls = allowNulls;
         }
 
-        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey) : this(name, dataType, allowNulls)
-        {
+        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey) : this(name, dataType, allowNulls) {
             IsPrimaryKey = isPrimaryKey;
         }
 
-        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey, bool isIdentity) : this(name, dataType, allowNulls, isPrimaryKey)
-        {
+        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey, bool isIdentity) : this(name, dataType, allowNulls, isPrimaryKey) {
             IsIdentity = isIdentity;
         }
 
-        #endregion
-
-        internal static string ColumnsAsString(IEnumerable<TableColumn> columns, string prefix = "", string suffix = "") =>
-            string.Join(", ", columns.Select(col => prefix + col.Name + suffix));
+        #endregion     
     }
 }
