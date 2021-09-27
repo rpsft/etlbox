@@ -15,23 +15,17 @@ namespace ETLBox.ControlFlow.Tasks
     {
         public override string TaskName { get; set; } = "Run some xmla";
 
-        public XmlaTask()
-        { }
+        public XmlaTask() { }
 
-        public XmlaTask(string xmla) : base(xmla)
-        { }
+        public XmlaTask(string xmla) : base(xmla) { }
 
-        internal XmlaTask(ControlFlowTask callingTask, string xmla) : base(callingTask, xmla)
-        { }
+        internal XmlaTask(ControlFlowTask callingTask, string xmla) : base(callingTask, xmla) { }
 
-        public XmlaTask(string name, string xmla) : base(name, xmla)
-        { }
+        public XmlaTask(string name, string xmla) : base(name, xmla) { }
 
-        public XmlaTask(string xmla, params Action<object>[] actions) : base(xmla, actions)
-        { }
+        public XmlaTask(string xmla, params Action<object>[] actions) : base(xmla, actions) { }
 
-        public XmlaTask(string xmla, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(xmla, beforeRowReadAction, afterRowReadAction, actions)
-        { }
+        public XmlaTask(string xmla, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(xmla, beforeRowReadAction, afterRowReadAction, actions) { }
 
 
         /* Static methods for convenience */

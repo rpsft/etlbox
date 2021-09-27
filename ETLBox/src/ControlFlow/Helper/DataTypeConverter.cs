@@ -23,21 +23,19 @@ namespace ETLBox.Helper
         /// </summary>
         /// <param name="value">A sql character data type</param>
         /// <returns>The string length defined in the data type - 0 if nothing could be found</returns>
-        public static int GetStringLengthFromCharString(string value)
-        {
+        public static int GetStringLengthFromCharString(string value) {
+            if (string.IsNullOrEmpty(value)) return 0;
             string possibleResult = Regex.Replace(value, _REGEX, "${2}", RegexOptions.IgnoreCase);
             int result;
             int.TryParse(possibleResult, out result);
             return result;
         }
 
-        internal static string GetNETObjectTypeString(string dbSpecificTypeName)
-        {
+        internal static string GetNETObjectTypeString(string dbSpecificTypeName) {
             if (dbSpecificTypeName.IndexOf("(") > 0)
                 dbSpecificTypeName = dbSpecificTypeName.Substring(0, dbSpecificTypeName.IndexOf("("));
             dbSpecificTypeName = dbSpecificTypeName.Trim().ToLower();
-            switch (dbSpecificTypeName)
-            {
+            switch (dbSpecificTypeName) {
                 case "bit":
                 case "boolean":
                     return "System.Boolean";
@@ -60,8 +58,8 @@ namespace ETLBox.Helper
                 case "numeric":
                 case "decfloat":
                     return "System.Decimal";
-                case "real":                
-                case "float4":                
+                case "real":
+                case "float4":
                     return "System.Single";
                 case "float": //Float is 64bit inSql Server 
                 case "float8":
@@ -112,21 +110,17 @@ namespace ETLBox.Helper
         /// </summary>
         /// <param name="dbSpecificTypeName">The sql specific data type name</param>
         /// <returns>The corresponding ADO .NET database type</returns>
-        public static DbType GetDBType(string dbSpecificTypeName)
-        {
-            try
-            {
+        public static DbType? GetDBType(string dbSpecificTypeName) {
+            if (string.IsNullOrEmpty(dbSpecificTypeName)) return null;
+            try {
                 //return (DbType)Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
                 return GetDBType(GetTypeObject(dbSpecificTypeName));
-            }
-            catch
-            {
+            } catch {
                 return DbType.String;
             }
         }
 
-        public static DbType GetDBType(Type clrType)
-        {
+        public static DbType GetDBType(Type clrType) {
             var typeMap = new Dictionary<Type, DbType>();
             typeMap[typeof(byte)] = DbType.Byte;
             typeMap[typeof(sbyte)] = DbType.SByte;
@@ -179,13 +173,11 @@ namespace ETLBox.Helper
         /// <param name="dataTypeName">A data type name</param>
         /// <param name="connectionType">The database connection type</param>
         /// <returns>The converted database specific type name</returns>
-        public static string TryGetDbSpecificType(string dataTypeName, ConnectionManagerType connectionType)
-        {
+        public static string TryGetDbSpecificType(string dataTypeName, ConnectionManagerType connectionType) {
             var typeName = dataTypeName.Trim().ToUpper();
             //Always normalize to some "standard" for Oracle!
             //https://docs.microsoft.com/en-us/sql/relational-databases/replication/non-sql/data-type-mapping-for-oracle-publishers?view=sql-server-ver15
-            if (connectionType != ConnectionManagerType.Oracle)
-            {
+            if (connectionType != ConnectionManagerType.Oracle) {
                 if (typeName.StartsWith("NUMBER"))
                     return typeName.Replace("NUMBER", "NUMERIC");
                 if (typeName.StartsWith("VARCHAR2"))
@@ -195,18 +187,14 @@ namespace ETLBox.Helper
             }
 
             //Now start with "normal" translation, other Database have many commons
-            if (connectionType == ConnectionManagerType.SqlServer)
-            {
+            if (connectionType == ConnectionManagerType.SqlServer) {
                 if (typeName.Replace(" ", "") == "TEXT")
                     return "VARCHAR(MAX)";
                 return dataTypeName;
-            }
-            else if (connectionType == ConnectionManagerType.Access)
-            {
+            } else if (connectionType == ConnectionManagerType.Access) {
                 if (typeName == "INT")
                     return "INTEGER";
-                else if (IsCharTypeDefinition(typeName))
-                {
+                else if (IsCharTypeDefinition(typeName)) {
                     if (typeName.StartsWith("N"))
                         typeName = typeName.Substring(1);
                     if (GetStringLengthFromCharString(typeName) > 255)
@@ -214,42 +202,30 @@ namespace ETLBox.Helper
                     return typeName;
                 }
                 return dataTypeName;
-            }
-            else if (connectionType == ConnectionManagerType.SQLite)
-            {
+            } else if (connectionType == ConnectionManagerType.SQLite) {
                 if (typeName == "INT" || typeName == "BIGINT")
                     return "INTEGER";
                 return dataTypeName;
-            }
-            else if (connectionType == ConnectionManagerType.Postgres)
-            {
-                if (IsCharTypeDefinition(typeName))
-                {
+            } else if (connectionType == ConnectionManagerType.Postgres) {
+                if (IsCharTypeDefinition(typeName)) {
                     if (typeName.StartsWith("N"))
                         return typeName.Substring(1);
-                }
-                else if (typeName == "DATETIME")
+                } else if (typeName == "DATETIME")
                     return "TIMESTAMP";
                 else if (typeName.StartsWith("VARBINARY") || typeName.StartsWith("BINARY"))
                     return "BYTEA";
                 return dataTypeName;
-            }
-            else if (connectionType == ConnectionManagerType.Db2)
-            {
+            } else if (connectionType == ConnectionManagerType.Db2) {
                 if (typeName == "TEXT")
                     return "CLOB";
                 return dataTypeName;
-            }
-            else if (connectionType == ConnectionManagerType.Oracle)
-            {
-                if (IsCharTypeDefinition(typeName))
-                {
+            } else if (connectionType == ConnectionManagerType.Oracle) {
+                if (IsCharTypeDefinition(typeName)) {
                     if (typeName.Replace(" ", "").StartsWith("NVARCHAR("))
                         return typeName.Replace("NVARCHAR", "NVARCHAR2");
                     else if (typeName.Replace(" ", "").StartsWith("VARCHAR("))
                         return typeName.Replace("VARCHAR", "VARCHAR2");
-                }
-                else if (typeName.StartsWith("BINARY") && !typeName.StartsWith("BINARY_"))
+                } else if (typeName.StartsWith("BINARY") && !typeName.StartsWith("BINARY_"))
                     return typeName.Replace("BINARY", "RAW");
                 else if (typeName == "BIGINT")
                     return "INT";
@@ -260,9 +236,7 @@ namespace ETLBox.Helper
                 else if (typeName == "TEXT")
                     return "NCLOB";
                 return dataTypeName;
-            }
-            else
-            {
+            } else {
                 return dataTypeName;
             }
         }
@@ -274,10 +248,8 @@ namespace ETLBox.Helper
         /// <param name="dataTypeName">The database alias type name</param>
         /// <param name="connectionType">Which database (e.g. Postgres, MySql, ...)</param>
         /// <returns>The type name converted to an original database type name</returns>
-        public static string TryConvertAliasName(string dataTypeName, ConnectionManagerType connectionType)
-        {
-            if (connectionType == ConnectionManagerType.Postgres)
-            {
+        public static string TryConvertAliasName(string dataTypeName, ConnectionManagerType connectionType) {
+            if (connectionType == ConnectionManagerType.Postgres) {
                 //See https://www.postgresql.org/docs/9.5/datatype.html for aliases            
                 dataTypeName = dataTypeName.ToLower().Trim();
                 if (dataTypeName == "int8")
@@ -311,13 +283,13 @@ namespace ETLBox.Helper
                 else if (dataTypeName.StartsWith("timestamp") && dataTypeName.EndsWith("with time zone"))
                     return "timestamp with time zone";
                 else if (dataTypeName.StartsWith("timestamp"))
-                    return "timestamp";
+                    return "timestamp without time zone";
                 else if (dataTypeName == "timetz")
                     return "time with time zone";
                 else if (dataTypeName.StartsWith("time") && dataTypeName.EndsWith("with time zone"))
                     return "time with time zone";
                 else if (dataTypeName.StartsWith("time"))
-                    return "time";
+                    return "time without time zone";
                 else if (dataTypeName.StartsWith("bit"))
                     return "bit";
 
@@ -351,6 +323,12 @@ namespace ETLBox.Helper
             { DbType.Binary, typeof(byte[]) }
         };
 
+        /// <summary>
+        /// Returns a .NET type for the provided DbType. 
+        /// E.g. DbType.Binary will return byte[]
+        /// </summary>
+        /// <param name="dbType">The DbType</param>
+        /// <returns>A .NET type</returns>
         public static Type GetClrType(DbType dbType) {
             Type type;
             if (DbType2Type.TryGetValue(dbType, out type)) {
@@ -371,20 +349,26 @@ namespace ETLBox.Helper
             { typeof(DateTime),"DATETIME2" },
             { typeof(DateTimeOffset),"DATETIMEOFFSET" },
             { typeof(decimal),"DECIMAL" },
-            { typeof(double),"FLOAT" },            
+            { typeof(double),"FLOAT" },
             { typeof(string),"NVARCHAR(4000)" },
             { typeof(Guid),"UNIQUEIDENTIFIER" },
             { typeof(TimeSpan),"TIME" },
         };
 
+        /// <summary>
+        /// Returns a database specific type for the provided .NET datat type, depending on the connection
+        /// manager. E.g. passing the .NET data type long for SqlServer will return the string BIGINT 
+        /// </summary>
+        /// <param name="clrType">The .NET data type</param>
+        /// <param name="connectionType">Database connection type, e.g. SqlServer</param>
+        /// <returns>A database specific type string</returns>
         public static string GetDatabaseType(Type clrType, ConnectionManagerType connectionType) {
             if (connectionType == ConnectionManagerType.SqlServer) {
                 if (Type2SqlServerType.ContainsKey(clrType))
                     return Type2SqlServerType[clrType];
                 else
                     throw new ArgumentOutOfRangeException("clrType", clrType, "Cannot map the ClrType to database specific Type");
-            }
-            else {
+            } else {
                 throw new ArgumentException("This connection type is not supported yet!", nameof(connectionType));
             }
         }

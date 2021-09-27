@@ -22,8 +22,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Creates or updates the procedure on the database if the database does support procedures.
         /// </summary>
-        internal void Execute()
-        {
+        internal void Execute() {
             if (!DbConnectionManager.SupportProcedures)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
@@ -67,23 +66,19 @@ namespace ETLBox.ControlFlow.Tasks
 {END}
         ";
 
-        public CreateProcedureTask()
-        {
+        public CreateProcedureTask() {
 
         }
-        public CreateProcedureTask(string procedureName, string procedureDefinition) : this()
-        {
+        public CreateProcedureTask(string procedureName, string procedureDefinition) : this() {
             this.ProcedureName = procedureName;
             this.ProcedureDefinition = procedureDefinition;
         }
 
-        public CreateProcedureTask(string procedureName, string procedureDefinition, IList<ProcedureParameter> procedureParameter) : this(procedureName, procedureDefinition)
-        {
+        public CreateProcedureTask(string procedureName, string procedureDefinition, IList<ProcedureParameter> procedureParameter) : this(procedureName, procedureDefinition) {
             this.ProcedureParameters = procedureParameter;
         }
 
-        public CreateProcedureTask(ProcedureDefinition definition) : this()
-        {
+        public CreateProcedureTask(ProcedureDefinition definition) : this() {
             this.ProcedureName = definition.Name;
             this.ProcedureDefinition = definition.Definition;
             this.ProcedureParameters = definition.Parameter;
@@ -140,10 +135,8 @@ namespace ETLBox.ControlFlow.Tasks
             => new CreateProcedureTask(procedure) { ConnectionManager = connectionManager }.Execute();
 
         bool IsExisting { get; set; }
-        string CreateOrAlterSql
-        {
-            get
-            {
+        string CreateOrAlterSql {
+            get {
                 if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.Oracle)
                     return "CREATE OR REPLACE";
                 else if (ConnectionType == ConnectionManagerType.MySql)
@@ -152,10 +145,8 @@ namespace ETLBox.ControlFlow.Tasks
                     return IsExisting ? "ALTER" : "CREATE";
             }
         }
-        string ParameterDefinition
-        {
-            get
-            {
+        string ParameterDefinition {
+            get {
                 string result = "";
                 if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.MySql
 
@@ -170,8 +161,7 @@ namespace ETLBox.ControlFlow.Tasks
             }
         }
 
-        private string ParameterSql(ProcedureParameter par)
-        {
+        private string ParameterSql(ProcedureParameter par) {
             string sql = Environment.NewLine + "";
             if (ConnectionType == ConnectionManagerType.SqlServer)
                 sql += "@";

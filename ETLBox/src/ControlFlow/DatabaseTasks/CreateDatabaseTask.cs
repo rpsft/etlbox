@@ -21,8 +21,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// Runs the sql code to create the database.
         /// Throws an exception if the database already exists. 
         /// </summary>
-        public void Create()
-        {
+        public void Create() {
             ThrowOnError = true;
             Execute();
         }
@@ -50,12 +49,9 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// The sql code that is used to generate the database
         /// </summary>
-        public string Sql
-        {
-            get
-            {
-                if (ConnectionType == ConnectionManagerType.SqlServer)
-                {
+        public string Sql {
+            get {
+                if (ConnectionType == ConnectionManagerType.SqlServer) {
                     return
         $@"
 USE [master]
@@ -70,32 +66,26 @@ BEGIN
 SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
 END
 ";
-                }
-                else
-                {
+                } else {
                     return $@"CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString}";
                 }
             }
         }
 
-        public CreateDatabaseTask()
-        {
+        public CreateDatabaseTask() {
         }
 
-        public CreateDatabaseTask(string databaseName) : this()
-        {
+        public CreateDatabaseTask(string databaseName) : this() {
             DatabaseName = databaseName;
         }
 
-        public CreateDatabaseTask(string databaseName, string collation) : this(databaseName)
-        {
+        public CreateDatabaseTask(string databaseName, string collation) : this(databaseName) {
             Collation = collation;
         }
 
         internal bool ThrowOnError { get; set; }
 
-        internal void Execute()
-        {
+        internal void Execute() {
             if (!DbConnectionManager.SupportDatabases)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
@@ -105,10 +95,8 @@ END
                 new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
-        string RecoveryModelAsString
-        {
-            get
-            {
+        string RecoveryModelAsString {
+            get {
                 if (RecoveryModel == RecoveryModel.Simple)
                     return "SIMPLE";
                 else if (RecoveryModel == RecoveryModel.BulkLogged)
@@ -119,10 +107,8 @@ END
             }
         }
         bool HasCollation => !String.IsNullOrWhiteSpace(Collation);
-        string CollationString
-        {
-            get
-            {
+        string CollationString {
+            get {
                 if (!HasCollation) return string.Empty;
                 if (ConnectionType == ConnectionManagerType.Postgres)
                     return "LC_COLLATE '" + Collation + "'";

@@ -19,36 +19,26 @@ namespace ETLBox.ControlFlow.Tasks
         /// <inheritdoc/>
         public override string TaskName { get; set; } = $"Get names of all databases";
 
-        public GetDatabaseListTask()
-        {
+        public GetDatabaseListTask() {
 
         }
 
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportDatabases)
                 throw new NotSupportedException($"The connection type {this.ConnectionType} does not support databases!");
 
-            if (ConnectionType == ConnectionManagerType.SqlServer)
-            {
+            if (ConnectionType == ConnectionManagerType.SqlServer) {
                 return $"SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4";
-            }
-            else if (ConnectionType == ConnectionManagerType.MySql)
-            {
+            } else if (ConnectionType == ConnectionManagerType.MySql) {
                 return $"SHOW DATABASES";
-            }
-            else if (ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Postgres) {
                 return "SELECT datname FROM pg_database WHERE datistemplate=false";
-            }
-            else
-            {
+            } else {
                 throw new NotSupportedException($"The database type {this.ConnectionType} is not supported!");
             }
         }
 
-        internal override void CleanUpRetrievedList()
-        {
+        internal override void CleanUpRetrievedList() {
             if (ConnectionType == ConnectionManagerType.MySql)
                 ObjectNames.RemoveAll(m => new List<string>()
                 { "information_schema", "mysql", "performance_schema","sys"}.Contains(m.UnquotatedObjectName));

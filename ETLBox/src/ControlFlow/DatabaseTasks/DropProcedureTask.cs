@@ -8,20 +8,17 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class DropProcedureTask : DropTask<IfProcedureExistsTask>, ILoggableTask
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportProcedures)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
             return $@"DROP PROCEDURE {ON.QuotatedFullName}";
         }
 
-        public DropProcedureTask()
-        {
+        public DropProcedureTask() {
         }
 
-        public DropProcedureTask(string procedureName) : this()
-        {
+        public DropProcedureTask(string procedureName) : this() {
             ObjectName = procedureName;
         }
 

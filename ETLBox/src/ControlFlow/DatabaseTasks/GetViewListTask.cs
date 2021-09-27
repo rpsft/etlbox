@@ -24,13 +24,11 @@ namespace ETLBox.ControlFlow.Tasks
         /// <inheritdoc/>
         public override string TaskName { get; set; } = $"Get a list of all views in the current database.";
 
-        public GetViewListTask()
-        {
+        public GetViewListTask() {
 
         }
 
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (this.ConnectionType == ConnectionManagerType.SQLite)
                 return $@"SELECT tbl_name FROM sqlite_master WHERE type = 'view'";
             else if (this.ConnectionType == ConnectionManagerType.SqlServer)
@@ -40,7 +38,14 @@ INNER JOIN sys.schemas sc
   ON v.schema_id = sc.schema_id
 ";
             else if (this.ConnectionType == ConnectionManagerType.MySql)
-                return $@"
+                if (this.DbConnectionManager.Compatibility?.ToLower() == "mariadb")
+                    return $@"
+SELECT CAST(TABLE_NAME AS VARCHAR(128)) COLLATE 'utf8mb4_general_ci'
+FROM information_schema.tables
+WHERE table_schema = DATABASE()
+AND TABLE_TYPE = 'VIEW'";
+                else
+                    return $@"
 SELECT TABLE_NAME
 FROM information_schema.tables
 WHERE table_schema = DATABASE()
@@ -58,13 +63,13 @@ AND table_schema NOT IN('pg_catalog', 'information_schema')
                 return $@"SELECT VIEW_NAME FROM USER_VIEWS";
             else if (this.ConnectionType == ConnectionManagerType.Db2)
                 //return $@"SELECT NAME FROM SYSIBM.SYSTABLES WHERE CREATOR = CURRENT USER AND TYPE = 'V'";
-                return $@"SELECT TABNAME FROM SYSCAT.TABLES WHERE TABSCHEMA = CURRENT USER AND TYPE = 'V'";
+                //return $@"SELECT TABNAME FROM SYSCAT.TABLES WHERE TABSCHEMA = CURRENT USER AND TYPE = 'V'";
+                return $@"SELECT TABLE_NAME FROM SYSIBM.SQLTABLES WHERE TABLE_SCHEM = CURRENT USER AND TABLE_TYPE = 'VIEW'";
             else
                 throw new NotSupportedException($"The database type {this.ConnectionType} is not supported for this task!");
         }
 
-        internal override void CleanUpRetrievedList()
-        {
+        internal override void CleanUpRetrievedList() {
 
         }
 

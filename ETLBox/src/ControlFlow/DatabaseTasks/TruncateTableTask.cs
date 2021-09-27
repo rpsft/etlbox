@@ -19,8 +19,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Executes the table truncation.
         /// </summary>
-        internal void Execute()
-        {
+        internal void Execute() {
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
@@ -37,10 +36,8 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Sql code that is used when the task is executed.
         /// </summary>
-        public string Sql
-        {
-            get
-            {
+        public string Sql {
+            get {
                 if (ConnectionType == ConnectionManagerType.SQLite
                     || ConnectionType == ConnectionManagerType.Access)
                     return $@"DELETE FROM {TN.QuotatedFullName}";
@@ -51,14 +48,12 @@ namespace ETLBox.ControlFlow.Tasks
             }
         }
 
-        public TruncateTableTask()
-        {
+        public TruncateTableTask() {
 
         }
 
         /// <param name="tableName">Sets the <see cref="TableName"/></param>
-        public TruncateTableTask(string tableName) : this()
-        {
+        public TruncateTableTask(string tableName) : this() {
             this.TableName = tableName;
         }
 

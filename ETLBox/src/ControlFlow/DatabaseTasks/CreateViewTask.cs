@@ -20,8 +20,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Executes the creation/altering of the view.
         /// </summary>
-        internal void Execute()
-        {
+        internal void Execute() {
             IsExisting = new IfTableOrViewExistsTask(ViewName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (
                 (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access
@@ -58,22 +57,18 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// The sql that is generated to create the view
         /// </summary>
-        public string Sql
-        {
-            get
-            {
+        public string Sql {
+            get {
                 return $@"{CreateOrAlterSql} VIEW {CreateViewName} {WITH}
 AS
 {Definition}
 ";
             }
         }
-        public CreateViewTask()
-        {
+        public CreateViewTask() {
 
         }
-        public CreateViewTask(string viewName, string definition) : this()
-        {
+        public CreateViewTask(string viewName, string definition) : this() {
             this.ViewName = viewName;
             this.Definition = definition;
         }
@@ -95,16 +90,11 @@ AS
 
         string CreateViewName => ConnectionType == ConnectionManagerType.Access ? VN.UnquotatedFullName : VN.QuotatedFullName;
         bool IsExisting { get; set; }
-        string CreateOrAlterSql
-        {
-            get
-            {
-                if (!IsExisting)
-                {
+        string CreateOrAlterSql {
+            get {
+                if (!IsExisting) {
                     return "CREATE";
-                }
-                else
-                {
+                } else {
                     if (ConnectionType == ConnectionManagerType.SQLite || ConnectionType == ConnectionManagerType.Access
                         || ConnectionType == ConnectionManagerType.Db2)
                         return "CREATE";

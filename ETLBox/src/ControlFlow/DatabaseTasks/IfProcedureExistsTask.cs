@@ -8,21 +8,17 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class IfProcedureExistsTask : IfExistsTask
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportProcedures)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
-            if (this.ConnectionType == ConnectionManagerType.SqlServer)
-            {
+            if (this.ConnectionType == ConnectionManagerType.SqlServer) {
                 return
     $@"
 IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ON.QuotatedFullName}'))
     SELECT 1
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.MySql)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.MySql) {
                 return $@"
  SELECT 1 
 FROM information_schema.routines 
@@ -30,9 +26,7 @@ WHERE routine_schema = DATABASE()
    AND ( routine_name = '{ON.UnquotatedFullName}' OR
         CONCAT(routine_catalog, '.', routine_name) = '{ON.UnquotatedFullName}' )  
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Postgres) {
                 return $@"
 SELECT 1
 FROM pg_catalog.pg_proc
@@ -41,9 +35,7 @@ JOIN pg_namespace
 WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ON.UnquotatedFullName}'
             OR proname = '{ON.UnquotatedFullName}' )
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Oracle)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Oracle) {
                 return $@"
 SELECT 1
 FROM ALL_OBJECTS
@@ -52,19 +44,15 @@ AND ( object_name = '{ON.UnquotatedFullName}'
  OR  owner || '.' || object_name = '{ON.UnquotatedFullName}'
     )
 ";
-            }
-            else
-            {
+            } else {
                 return string.Empty;
             }
         }
 
-        public IfProcedureExistsTask()
-        {
+        public IfProcedureExistsTask() {
         }
 
-        public IfProcedureExistsTask(string procedureName) : this()
-        {
+        public IfProcedureExistsTask(string procedureName) : this() {
             ObjectName = procedureName;
         }
 

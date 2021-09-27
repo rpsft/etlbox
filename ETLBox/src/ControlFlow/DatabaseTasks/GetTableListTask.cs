@@ -24,13 +24,11 @@ namespace ETLBox.ControlFlow.Tasks
         /// <inheritdoc/>
         public override string TaskName { get; set; } = $"Get a list of all tables in the current database.";
 
-        public GetTableListTask()
-        {
+        public GetTableListTask() {
 
         }
 
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (this.ConnectionType == ConnectionManagerType.SQLite)
                 return $@"SELECT tbl_name FROM sqlite_master WHERE type = 'table'";
             else if (this.ConnectionType == ConnectionManagerType.SqlServer)
@@ -39,14 +37,22 @@ SELECT '['+sc.name+'].['+tbl.name+']' FROM sys.tables tbl
 INNER JOIN sys.schemas sc
   ON tbl.schema_id = sc.schema_id
 ";
-            else if (this.ConnectionType == ConnectionManagerType.MySql)
-                return $@"
+            else if (this.ConnectionType == ConnectionManagerType.MySql) {
+                if (this.DbConnectionManager.Compatibility?.ToLower() == "mariadb")
+                    return $@"
+SELECT CAST(TABLE_NAME AS VARCHAR(128)) COLLATE 'utf8mb4_general_ci'
+FROM information_schema.tables
+WHERE table_schema = DATABASE()
+AND TABLE_TYPE = 'BASE TABLE'
+";
+                else
+                    return $@"
 SELECT TABLE_NAME
 FROM information_schema.tables
 WHERE table_schema = DATABASE()
 AND TABLE_TYPE = 'BASE TABLE'
 ";
-            else if (this.ConnectionType == ConnectionManagerType.Postgres)
+            } else if (this.ConnectionType == ConnectionManagerType.Postgres)
                 return $@"
 SELECT '""'||table_schema||'"".""'||table_name||'""',*
 FROM information_schema.tables
@@ -58,13 +64,13 @@ AND table_schema NOT IN('pg_catalog', 'information_schema')
                 return $@"SELECT TABLE_NAME FROM USER_TABLES";
             else if (this.ConnectionType == ConnectionManagerType.Db2)
                 //return $@"SELECT NAME FROM SYSIBM.SYSTABLES WHERE CREATOR = CURRENT USER AND TYPE = 'T'";
-                return $@"SELECT TABNAME FROM SYSCAT.TABLES WHERE TABSCHEMA = CURRENT USER AND TYPE = 'T'";
+                //return $@"SELECT TABNAME FROM SYSCAT.TABLES WHERE TABSCHEMA = CURRENT USER AND TYPE = 'T'";
+                return $@"SELECT TABLE_NAME FROM SYSIBM.SQLTABLES WHERE TABLE_SCHEM = CURRENT USER AND TABLE_TYPE = 'TABLE'";
             else
                 throw new NotSupportedException($"The database type {this.ConnectionType} is not supported for this task!");
         }
 
-        internal override void CleanUpRetrievedList()
-        {
+        internal override void CleanUpRetrievedList() {
 
         }
 

@@ -8,34 +8,24 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class IfDatabaseExistsTask : IfExistsTask
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportDatabases)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
-            if (this.ConnectionType == ConnectionManagerType.SqlServer)
-            {
+            if (this.ConnectionType == ConnectionManagerType.SqlServer) {
                 return $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ON.UnquotatedObjectName}'";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.MySql)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.MySql) {
                 return $@"SELECT COUNT(*)  FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{ON.UnquotatedObjectName}'";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Postgres) {
                 return $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ON.UnquotatedObjectName}'";
-            }
-            else
-            {
+            } else {
                 return string.Empty;
             }
         }
-        public IfDatabaseExistsTask()
-        {
+        public IfDatabaseExistsTask() {
         }
 
-        public IfDatabaseExistsTask(string databaseName) : this()
-        {
+        public IfDatabaseExistsTask(string databaseName) : this() {
             ObjectName = databaseName;
         }
 

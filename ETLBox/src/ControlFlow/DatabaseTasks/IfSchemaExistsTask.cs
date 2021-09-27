@@ -8,40 +8,31 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class IfSchemaExistsTask : IfExistsTask
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportSchemas)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
-            if (this.ConnectionType == ConnectionManagerType.SqlServer)
-            {
+            if (this.ConnectionType == ConnectionManagerType.SqlServer) {
                 return
     $@"
 IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{ON.UnquotatedObjectName}')
     SELECT 1
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Postgres) {
                 return $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ON.UnquotatedObjectName}';";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Db2)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Db2) {
                 //return $@"SELECT 1 FROM SYSIBM.SYSSCHEMATA WHERE NAME = '{ON.UnquotatedObjectName}'";
-                return $@"SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME = '{ON.UnquotatedObjectName}'";
-            }
-            else
-            {
+                //return $@"SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME = '{ON.UnquotatedObjectName}'";
+                return $@"SELECT 1 FROM SYSIBM.SQLSCHEMAS WHERE TABLE_SCHEM = '{ON.UnquotatedObjectName}'";
+            } else {
                 return string.Empty;
             }
         }
 
-        public IfSchemaExistsTask()
-        {
+        public IfSchemaExistsTask() {
         }
 
-        public IfSchemaExistsTask(string schemaName) : this()
-        {
+        public IfSchemaExistsTask(string schemaName) : this() {
             ObjectName = schemaName;
         }
 

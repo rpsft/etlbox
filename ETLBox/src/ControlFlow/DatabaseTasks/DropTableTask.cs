@@ -7,17 +7,14 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class DropTableTask : DropTask<IfTableOrViewExistsTask>, ILoggableTask
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             return $@"DROP TABLE {ON.QuotatedFullName}";
         }
 
-        public DropTableTask()
-        {
+        public DropTableTask() {
         }
 
-        public DropTableTask(string tableName) : this()
-        {
+        public DropTableTask(string tableName) : this() {
             ObjectName = tableName;
         }
 

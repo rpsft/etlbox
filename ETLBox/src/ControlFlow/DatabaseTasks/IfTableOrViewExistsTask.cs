@@ -8,28 +8,20 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class IfTableOrViewExistsTask : IfExistsTask
     {
-        internal override string GetSql()
-        {
-            if (this.ConnectionType == ConnectionManagerType.SQLite)
-            {
+        internal override string GetSql() {
+            if (this.ConnectionType == ConnectionManagerType.SQLite) {
                 return $@"SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotatedObjectName}';";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.SqlServer)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.SqlServer) {
                 return $@"IF ( OBJECT_ID('{ON.QuotatedFullName}', 'U') IS NOT NULL OR OBJECT_ID('{ON.QuotatedFullName}', 'V') IS NOT NULL)
     SELECT 1";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.MySql)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.MySql) {
                 return $@"SELECT EXISTS(
     SELECT table_name
     FROM information_schema.tables
     WHERE table_schema = DATABASE()
     AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_catalog, '.', table_name) = '{ON.UnquotatedFullName}')
 ) AS 'DoesExist'";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Postgres) {
                 return $@"
 SELECT EXISTS(
                SELECT pns.nspname, pc.relname
@@ -41,9 +33,7 @@ SELECT EXISTS(
                  AND (pc.relname = '{ON.UnquotatedFullName}' OR CONCAT(pns.nspname, '.', pc.relname) = '{ON.UnquotatedFullName}')
            )
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Oracle)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Oracle) {
                 return $@"
  SELECT 
 CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS ""Count""
@@ -53,44 +43,42 @@ AND(object_name = '{ON.UnquotatedFullName}'
     OR owner || '.' || object_name = '{ON.UnquotatedFullName}'
     )
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Db2)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Db2) {
                 //                return $@"SELECT 1 FROM SYSIBM.SYSTABLES
                 //WHERE NAME = '{ON.UnquotatedFullName}'
                 //OR ( TRIM(CREATOR) || '.' || NAME = '{ON.UnquotatedFullName}' )
                 //";
-                return $@"SELECT 1 FROM syscat.tables 
-WHERE tabname = '{ON.UnquotatedFullName}'
-OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
+                //                return $@"SELECT 1 FROM syscat.tables 
+                //WHERE tabname = '{ON.UnquotatedFullName}'
+                //OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
+                //";
+                return $@"
+SELECT 1 FROM SYSIBM.SQLTABLES
+WHERE (TABLE_NAME = '{ON.UnquotatedFullName}'
+    OR (TRIM(TABLE_SCHEM) || '.' || TABLE_NAME = '{ON.UnquotatedFullName}')
+    )
+AND TABLE_TYPE IN ('VIEW','TABLE')
 ";
-            }
-            else if (this.ConnectionType == ConnectionManagerType.Access)
-            {
+            } else if (this.ConnectionType == ConnectionManagerType.Access) {
                 var connMan = this.DbConnectionManager.CloneIfAllowed();// as AccessOdbcConnectionManager;
                 var connDbObject = connMan as IConnectionManagerDbObjects;
                 DoesExist = connDbObject?.CheckIfTableOrViewExists(ON.UnquotatedFullName) ?? false;
                 connMan.CloseIfAllowed();
                 return string.Empty;
                 //return $@"SELECT * FROM MSysObjects WHERE Type=1 AND Flags=0  AND Name = '{ON.UnquotatedFullName}'";
-            }
-            else
-            {
+            } else {
                 return string.Empty;
             }
         }
 
-        public IfTableOrViewExistsTask()
-        {
+        public IfTableOrViewExistsTask() {
         }
 
-        public IfTableOrViewExistsTask(string tableName) : this()
-        {
+        public IfTableOrViewExistsTask(string tableName) : this() {
             ObjectName = tableName;
         }
 
-        public IfTableOrViewExistsTask(IConnectionManager connectionManager, string tableName) : this(tableName)
-        {
+        public IfTableOrViewExistsTask(IConnectionManager connectionManager, string tableName) : this(tableName) {
             this.ConnectionManager = connectionManager;
         }
 
@@ -110,21 +98,5 @@ OR ( TRIM(tabschema) || '.' || tabname = '{ON.UnquotatedFullName}' )
         public static bool IsExisting(IConnectionManager connectionManager, string objectName)
             => new IfTableOrViewExistsTask(objectName) { ConnectionManager = connectionManager }.Exists();
 
-        /// <summary>
-        /// Ćhecks if the table or view exists. If the table doesn't exist, an ETLBoxException is thrown.      
-        /// </summary>
-        /// <param name="connectionManager">The connection manager of the database you want to connect</param>
-        /// <param name="objectName">The table or view name that you want to check for existence</param>
-        /// <exception cref="ETLBoxException" />
-        public static void ThrowExceptionIfNotExists(IConnectionManager connectionManager, string objectName)
-        {
-            bool tableExists = new IfTableOrViewExistsTask(objectName)
-            {
-                ConnectionManager = connectionManager,
-                DisableLogging = true
-            }.Exists();
-            if (!tableExists)
-                throw new ETLBoxException($"A table or view '{objectName}' does not exist in the database!");
-        }
     }
 }

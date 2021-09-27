@@ -22,8 +22,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Runs the sql to (re)create the index on a table.
         /// </summary>
-        internal void Execute()
-        {
+        internal void Execute() {
             if (new IfIndexExistsTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists())
                 new DropIndexTask(IndexName, TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.DropIfExists();
             new SqlTask(this, Sql).ExecuteNonQuery();
@@ -77,10 +76,8 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// The sql code used to generate the index
         /// </summary>
-        public string Sql
-        {
-            get
-            {
+        public string Sql {
+            get {
                 return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotatedFullName} ON {TN.QuotatedFullName}
 ( {String.Join(",", IndexColumns.Select(col => QB + col + QE))} )
 {IncludeSql}
@@ -88,19 +85,16 @@ namespace ETLBox.ControlFlow.Tasks
             }
         }
 
-        public CreateIndexTask()
-        {
+        public CreateIndexTask() {
 
         }
-        public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns) : this()
-        {
+        public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns) : this() {
             this.IndexName = indexName;
             this.TableName = tableName;
             this.IndexColumns = indexColumns;
         }
 
-        public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns, IList<string> includeColumns) : this(indexName, tableName, indexColumns)
-        {
+        public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns, IList<string> includeColumns) : this(indexName, tableName, indexColumns) {
             this.IncludeColumns = includeColumns;
         }
 
@@ -145,20 +139,16 @@ namespace ETLBox.ControlFlow.Tasks
             => new CreateIndexTask(indexName, tableName, indexColumns, includeColumns) { ConnectionManager = connectionManager }.Execute();
 
         string UniqueSql => IsUnique ? "UNIQUE" : string.Empty;
-        string ClusteredSql
-        {
-            get
-            {
+        string ClusteredSql {
+            get {
                 if (ConnectionType == ConnectionManagerType.SqlServer)
                     return IsClustered ? "CLUSTERED" : "NONCLUSTERED";
                 else
                     return string.Empty;
             }
         }
-        string IncludeSql
-        {
-            get
-            {
+        string IncludeSql {
+            get {
                 if (IncludeColumns == null
                     || IncludeColumns?.Count == 0
                     || ConnectionType == ConnectionManagerType.SQLite)

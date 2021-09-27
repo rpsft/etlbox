@@ -34,13 +34,27 @@ namespace ETLBox.ControlFlow
         /// </summary>
         string DestinationTableName { get; }
 
+        /// <summary>
+        /// Resolves the data type name for a column
+        /// </summary>
+        /// <param name="columnName">Column name</param>
+        /// <returns>Data type name</returns>
         string GetDataTypeName(string columnName);
 
+        /// <summary>
+        /// Definition of the destination table
+        /// </summary>
         TableDefinition Definition { get; }
 
+        /// <summary>
+        /// Resolves the index number for a column name
+        /// </summary>
         Dictionary<string, int> DataIndexForColumn { get; set; }
 
-        bool KeepIdentity { get; set; }
+        /// <summary>
+        /// If set to true, values in an indentity column are overwriten with the provided values
+        /// </summary>
+        bool AllowIdentityInsert { get; set; }
 
     }
 }

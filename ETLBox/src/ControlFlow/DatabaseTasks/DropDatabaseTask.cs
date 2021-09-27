@@ -13,13 +13,11 @@ namespace ETLBox.ControlFlow.Tasks
     /// </example>
     public sealed class DropDatabaseTask : DropTask<IfDatabaseExistsTask>
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportDatabases)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
-            if (ConnectionType == ConnectionManagerType.SqlServer)
-            {
+            if (ConnectionType == ConnectionManagerType.SqlServer) {
                 return
 $@"
 USE [master]
@@ -29,19 +27,15 @@ ALTER DATABASE [{ObjectName}]
 SET MULTI_USER
 DROP DATABASE [{ObjectName}]  
 ";
-            }
-            else
-            {
+            } else {
                 return $@"DROP DATABASE {ON.QuotatedObjectName}";
             }
         }
 
-        public DropDatabaseTask()
-        {
+        public DropDatabaseTask() {
         }
 
-        public DropDatabaseTask(string databaseName) : this()
-        {
+        public DropDatabaseTask(string databaseName) : this() {
             ObjectName = databaseName;
         }
 

@@ -59,18 +59,31 @@ AND aidx.INDEX_NAME   = '{ON.UnquotatedObjectName}'
                 //      OR ( TRIM(i.creator) || '.' || i.name= '{ON.UnquotatedFullName}' )
                 //    )
                 //";
+                //                return $@"
+                //SELECT 1
+                //FROM syscat.indexes i
+                //INNER JOIN syscat.tables t on 
+                //    t.tabschema = i.tabschema and t.tabname = i.tabname
+                //WHERE t.type IN ('T')
+                //AND ( t.tabname = '{OON.UnquotatedFullName}'
+                //      OR ( TRIM(t.tabschema) || '.' || TRIM(t.tabname) = '{OON.UnquotatedFullName}' )
+                //    )
+                //AND ( i.indname = '{ON.UnquotatedFullName}'
+                //      OR ( TRIM(i.indschema) || '.' || i.indname = '{ON.UnquotatedFullName}' )
+                //    )
+                //";
                 return $@"
 SELECT 1
-FROM syscat.indexes i
-INNER JOIN syscat.tables t on 
-    t.tabschema = i.tabschema and t.tabname = i.tabname
-WHERE t.type IN ('T')
-AND ( t.tabname = '{OON.UnquotatedFullName}'
-      OR ( TRIM(t.tabschema) || '.' || TRIM(t.tabname) = '{OON.UnquotatedFullName}' )
+FROM SYSIBM.SQLSTATISTICS i
+INNER JOIN SYSIBM.SQLTABLES t on
+    t.TABLE_SCHEM = i.TABLE_SCHEM and t.TABLE_NAME = i.TABLE_NAME
+WHERE t.TABLE_TYPE IN ('TABLE')
+AND ( t.TABLE_NAME = '{OON.UnquotatedFullName}'
+      OR ( TRIM(t.TABLE_SCHEM) || '.' || TRIM(t.TABLE_NAME) = '{OON.UnquotatedFullName}' )
     )
-AND ( i.indname = '{ON.UnquotatedFullName}'
-      OR ( TRIM(i.indschema) || '.' || i.indname = '{ON.UnquotatedFullName}' )
-    )
+AND ( i.INDEX_NAME = '{ON.UnquotatedFullName}'
+      OR ( TRIM(i.INDEX_QUALIFIER) || '.' || i.INDEX_NAME = '{ON.UnquotatedFullName}' )
+    );
 ";
             } else {
                 return string.Empty;

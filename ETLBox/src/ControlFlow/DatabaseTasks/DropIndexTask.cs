@@ -17,8 +17,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// The formatted table name on which the index is based on.
         /// </summary>
         public ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, QB, QE);
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             string sql = $@"DROP INDEX {ON.QuotatedFullName}";
             if (ConnectionType != ConnectionManagerType.SQLite
                 && ConnectionType != ConnectionManagerType.Postgres
@@ -29,12 +28,10 @@ namespace ETLBox.ControlFlow.Tasks
             return sql;
         }
 
-        public DropIndexTask()
-        {
+        public DropIndexTask() {
         }
 
-        public DropIndexTask(string indexName, string tableName) : this()
-        {
+        public DropIndexTask(string indexName, string tableName) : this() {
             OnObjectName = tableName;
             ObjectName = indexName;
         }

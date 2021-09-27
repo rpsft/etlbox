@@ -19,17 +19,14 @@ namespace ETLBox.Helper
         /// </summary>
         /// <param name="sql">The sql code from which the column names should be parsed</param>
         /// <returns>The names of the columns in the sql</returns>
-        public static List<string> ParseColumnNames(string sql)
-        {
-            try
-            {
+        public static List<string> ParseColumnNames(string sql) {
+            try {
                 var statement = TSQLStatementReader.ParseStatements(sql).FirstOrDefault() as TSQLSelectStatement;
 
                 List<string> result = new List<string>();
                 int functionStartCount = 0;
                 string prevToken = string.Empty;
-                foreach (var token in statement.Select.Tokens)
-                {
+                foreach (var token in statement.Select.Tokens) {
                     if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
                         token.Text == "(")
                         functionStartCount++;
@@ -47,9 +44,7 @@ namespace ETLBox.Helper
                 if (prevToken != string.Empty)
                     result.Add(prevToken);
                 return result;
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 throw new ETLBoxException("The attempt to read the column names from the given sql statement failed. " +
                     "Please provide a TableDefinition with at least column name and preferably the data type. ");
             }

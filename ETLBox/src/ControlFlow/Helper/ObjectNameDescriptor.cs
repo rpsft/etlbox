@@ -80,8 +80,7 @@ namespace ETLBox.Helper
         /// <param name="objectName">The full object name (e.g. Schema.ViewName)</param>
         /// <param name="qb">The database specific quotation start (e.g. '[' for Sql Server)</param>
         /// <param name="qe">The database specific quotation start (e.g. ']' for Sql Server)</param>
-        public ObjectNameDescriptor(string objectName, string qb, string qe)
-        {
+        public ObjectNameDescriptor(string objectName, string qb, string qe) {
             if (string.IsNullOrEmpty(objectName))
                 throw new ETLBoxException("Can't parse an object name that is null or empty!");
             ObjectName = objectName;
@@ -91,8 +90,7 @@ namespace ETLBox.Helper
             ParseSchemaAndTable();
         }
 
-        private void ParseSchemaAndTable()
-        {
+        private void ParseSchemaAndTable() {
             var m = Regex.Matches(ObjectName, Expr, RegexOptions.IgnoreCase);
             if (m.Count == 0)
                 throw new ETLBoxException($"Unable to retrieve object name (and possible schema) from {ObjectName}.");
@@ -100,16 +98,13 @@ namespace ETLBox.Helper
                 throw new ETLBoxException($"Unable to retrieve table and schema name from {ObjectName} - found {m.Count} possible matches.");
             else if (m.Count == 1)
                 _table = m[0].Value.Trim();
-            else if (m.Count == 2)
-            {
+            else if (m.Count == 2) {
                 _schema = m[0].Value.Trim();
                 _table = m[1].Value.Trim().StartsWith(".") ? m[1].Value.Trim().Substring(1) : m[1].Value.Trim();
             }
         }
-        private string Expr
-        {
-            get
-            {
+        private string Expr {
+            get {
                 string EQB = QB == "[" ? @"\[" : (QB == "" ? @"""" : QB);
                 string EQE = QE == "]" ? @"\]" : (QE == "" ? @"""" : QB);
 

@@ -8,8 +8,7 @@ namespace ETLBox.ControlFlow.Tasks
     /// </summary>
     public sealed class DropSchemaTask : DropTask<IfSchemaExistsTask>, ILoggableTask
     {
-        internal override string GetSql()
-        {
+        internal override string GetSql() {
             if (!DbConnectionManager.SupportSchemas)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 
@@ -21,12 +20,10 @@ namespace ETLBox.ControlFlow.Tasks
 
 
 
-        public DropSchemaTask()
-        {
+        public DropSchemaTask() {
         }
 
-        public DropSchemaTask(string schemaName) : this()
-        {
+        public DropSchemaTask(string schemaName) : this() {
             ObjectName = schemaName;
         }
 

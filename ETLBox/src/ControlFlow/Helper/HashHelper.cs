@@ -16,17 +16,14 @@ namespace ETLBox.Helper
         /// </summary>
         /// <param name="text">Text that needs to be hashed</param>
         /// <returns>A unique readable hash string with 40 characters</returns>
-        public static string CreateChar40Hash(string text)
-        {
-            if (text != null)
-            {
+        public static string CreateChar40Hash(string text) {
+            if (text != null) {
                 string hex = "";
                 byte[] hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
                 foreach (byte hashByte in hashValue)
                     hex += hashByte.ToString("x2");
                 return hex.ToUpper();
-            }
-            else
+            } else
                 return "";
         }
 
@@ -42,10 +39,8 @@ namespace ETLBox.Helper
         /// </summary>
         /// <param name="objectList">A list of objects</param>
         /// <returns>A unique hash value</returns>
-        public static int HashSum(IEnumerable<object> objectList)
-        {
-            unchecked
-            {
+        public static int HashSum(IEnumerable<object> objectList) {
+            unchecked {
                 int hash = 29;
                 foreach (var o in objectList)
                     hash = hash * 486187739 + (o?.GetHashCode() ?? 17);

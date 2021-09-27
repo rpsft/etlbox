@@ -20,16 +20,14 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// Runs the sql to clean up the schema
         /// </summary>
-        internal void Execute()
-        {
+        internal void Execute() {
             if (ConnectionType != ConnectionManagerType.SqlServer
                 && ConnectionType != ConnectionManagerType.Oracle
                 && ConnectionType != ConnectionManagerType.Db2
                 && ConnectionType != ConnectionManagerType.Postgres
                 )
                 throw new ETLBoxNotSupportedException("This task is only supported with SqlServer, Postgres, Oracle or Db2!");
-            if (ConnectionType == ConnectionManagerType.Db2)
-            {
+            if (ConnectionType == ConnectionManagerType.Db2) {
                 DropTableTask.DropIfExists(ConnectionManager, "ETLBOX.ERRORS");
                 if (string.IsNullOrEmpty(SchemaName))
                     SchemaName = (string)new SqlTask(this, "SELECT CURRENT SCHEMA FROM SYSIBM.SYSDUMMY1").ExecuteScalar();
@@ -46,12 +44,9 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// The sql code that is used to clean up the schema.
         /// </summary>
-        public string Sql
-        {
-            get
-            {
-                if (ConnectionType == ConnectionManagerType.SqlServer)
-                {
+        public string Sql {
+            get {
+                if (ConnectionType == ConnectionManagerType.SqlServer) {
                     return $@"
     declare @SchemaName nvarchar(1000) = '{SchemaName}'
     declare @SQL varchar(4000)
@@ -127,13 +122,10 @@ namespace ETLBox.ControlFlow.Tasks
 	close statement_cursor
 	deallocate statement_cursor	
 ";
-                }
-                else if (ConnectionType == ConnectionManagerType.Oracle)
-                {
+                } else if (ConnectionType == ConnectionManagerType.Oracle) {
                     string sourceTable = "user_objects";
                     string ownerwhere = $"";
-                    if (!string.IsNullOrWhiteSpace(SchemaName))
-                    {
+                    if (!string.IsNullOrWhiteSpace(SchemaName)) {
                         sourceTable = "all_objects";
                         ownerwhere = $"AND OWNER = UPPER('{SchemaName}')";
                     }
@@ -193,22 +185,23 @@ BEGIN
                     END LOOP;
                     END;
 ";
-                }
-                else if (ConnectionType == ConnectionManagerType.Db2)
-                {
+                } else if (ConnectionType == ConnectionManagerType.Db2) {
                     //                    return $@"BEGIN ATOMIC
                     //IF (EXISTS ( SELECT 1 FROM SYSIBM.SYSSCHEMATA WHERE name  = '{SchemaName}' ) )
                     //  THEN CALL ETLBOX.CLEANUPSCHEMA();
                     //END IF;
                     //END";
+                    //                    return $@"BEGIN ATOMIC
+                    //IF (EXISTS ( SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME  = '{SchemaName}' ) )
+                    //  THEN CALL ETLBOX.CLEANUPSCHEMA();
+                    //END IF;
+                    //END";
                     return $@"BEGIN ATOMIC
-IF (EXISTS ( SELECT 1 FROM syscat.SCHEMATA WHERE SCHEMANAME  = '{SchemaName}' ) )
+IF (EXISTS ( SELECT 1 FROM SYSIBM.SQLSCHEMAS WHERE TABLE_SCHEM  = '{SchemaName}' ) )
   THEN CALL ETLBOX.CLEANUPSCHEMA();
 END IF;
 END";
-                }
-                else if (ConnectionType == ConnectionManagerType.Postgres)
-                {
+                } else if (ConnectionType == ConnectionManagerType.Postgres) {
                     return $@"
 DO $$
 DECLARE
@@ -356,8 +349,7 @@ BEGIN
         --RAISE NOTICE 'Database cleared!';
 END; $$;
 ";
-                }
-                else
+                } else
                     return string.Empty;
             }
         }
@@ -370,12 +362,10 @@ CREATE OR REPLACE PROCEDURE ETLBOX.CLEANUPSCHEMA() BEGIN
 END
 ";
         /* Some constructors */
-        public CleanUpSchemaTask()
-        {
+        public CleanUpSchemaTask() {
         }
 
-        public CleanUpSchemaTask(string schemaName) : this()
-        {
+        public CleanUpSchemaTask(string schemaName) : this() {
             SchemaName = schemaName;
         }
 

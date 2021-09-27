@@ -30,8 +30,7 @@ namespace ETLBox.ControlFlow.Tasks
         /// Runs the sql that creates the schema. If the schema already exists, an Exception is thrown.
         /// Works only if the database does support schema (for MySql, use the CreateDatabaseTask instead)
         /// </summary>
-        public void Create()
-        {
+        public void Create() {
             ThrowOnError = true;
             Execute();
         }
@@ -54,17 +53,14 @@ namespace ETLBox.ControlFlow.Tasks
 
         public string AuthorizationUser { get; set; }
 
-        public CreateSchemaTask()
-        {
+        public CreateSchemaTask() {
 
         }
-        public CreateSchemaTask(string schemaName) : this()
-        {
+        public CreateSchemaTask(string schemaName) : this() {
             this.SchemaName = schemaName;
         }
 
-        public CreateSchemaTask(string schemaName, string authorizationUser) : this(schemaName)
-        {
+        public CreateSchemaTask(string schemaName, string authorizationUser) : this(schemaName) {
             this.AuthorizationUser = authorizationUser;
         }
 
@@ -73,8 +69,7 @@ namespace ETLBox.ControlFlow.Tasks
             string.Empty;
         internal bool ThrowOnError { get; set; }
 
-        internal void Execute()
-        {
+        internal void Execute() {
             if (!DbConnectionManager.SupportSchemas)
                 throw new NotSupportedException($"This task is not supported with the current connection manager ({ConnectionType})");
 

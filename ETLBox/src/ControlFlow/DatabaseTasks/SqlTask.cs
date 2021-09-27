@@ -21,8 +21,7 @@ namespace ETLBox.ControlFlow.Tasks
 
         internal void Execute() => ExecuteNonQuery();
 
-        public SqlTask() : base()
-        { }
+        public SqlTask() : base() { }
 
         /// <param name="sql">Sets the <see cref="DbTask.Sql"/></param>
         public SqlTask(string sql) : base(sql) { }
@@ -31,23 +30,20 @@ namespace ETLBox.ControlFlow.Tasks
 
         public SqlTask(string name, string sql) : base(name, sql) { }
 
-        public SqlTask(string sql, IEnumerable<QueryParameter> parameter) : base(sql)
-        {
+        public SqlTask(string sql, IEnumerable<QueryParameter> parameter) : base(sql) {
             Parameter = parameter;
         }
 
         public SqlTask(string sql, params Action<object>[] actions) : base(sql, actions) { }
 
-        public SqlTask(string sql, IEnumerable<QueryParameter> parameter, params Action<object>[] actions) : base(sql, actions)
-        {
+        public SqlTask(string sql, IEnumerable<QueryParameter> parameter, params Action<object>[] actions) : base(sql, actions) {
             Parameter = parameter;
         }
 
         public SqlTask(string sql, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions)
             : base(sql, beforeRowReadAction, afterRowReadAction, actions) { }
 
-        public SqlTask(string sql, IEnumerable<QueryParameter> parameter, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(sql, beforeRowReadAction, afterRowReadAction, actions)
-        {
+        public SqlTask(string sql, IEnumerable<QueryParameter> parameter, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) : base(sql, beforeRowReadAction, afterRowReadAction, actions) {
             Parameter = parameter;
         }
 

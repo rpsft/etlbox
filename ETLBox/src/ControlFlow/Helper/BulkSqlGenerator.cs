@@ -116,8 +116,7 @@ namespace ETLBox.Helper
 
         #endregion
 
-        public BulkSqlGenerator(ITableData data)
-        {
+        public BulkSqlGenerator(ITableData data) {
             TableName = data.DestinationTableName;
             TableData = data;
         }
@@ -136,10 +135,8 @@ namespace ETLBox.Helper
         bool IsInLimit(int count) => Limit == 0 || count < Limit;
         int ParameterPerRow => DestColumnNames.Count;
 
-        ObjectNameDescriptor TN
-        {
-            get
-            {
+        ObjectNameDescriptor TN {
+            get {
                 if (_TN == null)
                     _TN = new ObjectNameDescriptor(TableName, QB, QE);
                 return _TN;
@@ -151,8 +148,7 @@ namespace ETLBox.Helper
         /// <summary>
         /// Create the sql that can be used as a bulk insert.
         /// </summary>      
-        public string CreateBulkInsertStatement()
-        {
+        public string CreateBulkInsertStatement() {
             InitObjects();
             BeginInsertSql();
             CreateValueSqlFromData();
@@ -160,8 +156,7 @@ namespace ETLBox.Helper
             return QueryText.ToString();
         }
 
-        public string CreateBulkDeleteStatement()
-        {
+        public string CreateBulkDeleteStatement() {
             if (IsAccessDatabase) throw new Exception("Bulk delete is currently not supported for Access!");
             InitObjects();
             BeginDeleteSql();
@@ -170,8 +165,7 @@ namespace ETLBox.Helper
             return QueryText.ToString();
         }
 
-        public string CreateBulkUpdateStatement()
-        {
+        public string CreateBulkUpdateStatement() {
             if (IsAccessDatabase) throw new Exception("Bulk update is currently not supported for Access!");
             InitObjects();
             BeginUpdateSql();
@@ -180,8 +174,7 @@ namespace ETLBox.Helper
             return QueryText.ToString();
         }
 
-        public string CreateBulkSelectStatement()
-        {
+        public string CreateBulkSelectStatement() {
             if (IsAccessDatabase) throw new Exception("Bulk select is currently not supported for Access!");
             InitObjects();
             BeginSelectSql();
@@ -191,8 +184,7 @@ namespace ETLBox.Helper
         }
 
 
-        private void InitObjects()
-        {
+        private void InitObjects() {
             QueryText = new StringBuilder();
             Parameters = new List<T>();
             ParameterNameCount = 0;
@@ -201,8 +193,7 @@ namespace ETLBox.Helper
             ParameterCount = 0;
         }
 
-        private void BeginInsertSql()
-        {
+        private void BeginInsertSql() {
             QueryText.AppendLine($@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})");
             if (IsAccessDatabase)
                 QueryText.AppendLine("  SELECT * FROM (");
@@ -212,26 +203,18 @@ namespace ETLBox.Helper
                 QueryText.AppendLine("VALUES");
         }
 
-        private void BeginDeleteSql()
-        {
-            if (ConnectionType == ConnectionManagerType.Oracle)
-            {
+        private void BeginDeleteSql() {
+            if (ConnectionType == ConnectionManagerType.Oracle) {
                 QueryText.AppendLine($@"DELETE FROM {TN.QuotatedFullName} dt WHERE EXISTS ( ");
                 QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
-            }
-            else if (ConnectionType == ConnectionManagerType.Db2)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Db2) {
                 QueryText.AppendLine($@"DELETE FROM {TN.QuotatedFullName} dt WHERE EXISTS ( ");
                 QueryText.AppendLine($" SELECT {string.Join(",", SourceColumnNames.Select(col => QB + col + QE))} FROM (");
                 QueryText.AppendLine($"VALUES");
-            }
-            else if (ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Postgres) {
                 QueryText.AppendLine($@"DELETE FROM {TN.QuotatedFullName} dt");
                 QueryText.AppendLine($"USING ( VALUES");
-            }
-            else
-            {
+            } else {
                 QueryText.AppendLine($@"DELETE dt FROM {TN.QuotatedFullName} dt");
                 QueryText.AppendLine("INNER JOIN (");
                 if (ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
@@ -243,38 +226,29 @@ namespace ETLBox.Helper
             }
         }
 
-        private void BeginUpdateSql()
-        {
-            if (ConnectionType == ConnectionManagerType.MySql)
-            {
+        private void BeginUpdateSql() {
+            if (ConnectionType == ConnectionManagerType.MySql) {
                 QueryText.AppendLine($@"UPDATE {TN.QuotatedFullName} ut");
                 QueryText.AppendLine("INNER JOIN (");
                 if (IsMariaDb)
                     QueryText.AppendLine($@"WITH ws ( {string.Join(", ", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} ) AS ( VALUES");
                 else
                     QueryText.AppendLine("VALUES");
-            }
-            else if (ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Postgres) {
                 QueryText.AppendLine($@"UPDATE {TN.QuotatedFullName} ut");
                 QueryText.AppendLine($@"SET {string.Join(", ", SetColumnNames.Select(col => $"{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
                 QueryText.AppendLine($@"FROM (");
                 QueryText.AppendLine("VALUES");
             }
-            //https://www.orafaq.com/node/2450
-            else if (ConnectionType == ConnectionManagerType.Oracle)
-            {
+              //https://www.orafaq.com/node/2450
+              else if (ConnectionType == ConnectionManagerType.Oracle) {
                 QueryText.AppendLine($@"MERGE INTO {TN.QuotatedFullName} ut");
                 QueryText.AppendLine($@"USING (");
-            }
-            else if (ConnectionType == ConnectionManagerType.Db2)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Db2) {
                 QueryText.AppendLine($@"MERGE INTO {TN.QuotatedFullName} ut");
                 QueryText.AppendLine($@"USING (");
                 QueryText.AppendLine($@"VALUES");
-            }
-            else
-            {
+            } else {
                 QueryText.AppendLine($@"UPDATE ut");
                 QueryText.AppendLine($@"SET {string.Join(", ", SetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
                 QueryText.AppendLine($@"FROM {TN.QuotatedFullName} ut");
@@ -283,8 +257,7 @@ namespace ETLBox.Helper
             }
         }
 
-        private void BeginSelectSql()
-        {
+        private void BeginSelectSql() {
             QueryText.AppendLine($@"SELECT {string.Join(", ", SelectColumnNames.Select(col => $"st.{QB}{col}{QE}"))}");
             QueryText.AppendLine($@"FROM {TN.QuotatedFullName} st");
             QueryText.AppendLine("INNER JOIN (");
@@ -296,13 +269,11 @@ namespace ETLBox.Helper
                 QueryText.AppendLine("VALUES");
         }
 
-        private void CreateValueSqlFromData()
-        {
+        private void CreateValueSqlFromData() {
             while (IsInLimit(ParameterCount + ParameterPerRow) && TableData.Read()) //Sideeffect of Read(), Keep order!
             {
                 List<string> values = new List<string>();
-                foreach (string destColumnName in DestColumnNames)
-                {
+                foreach (string destColumnName in DestColumnNames) {
                     int ordinal = TableData.GetOrdinal(destColumnName);
                     if (TableData.IsDBNull(ordinal))
                         AddNullValue(values, destColumnName);
@@ -316,28 +287,20 @@ namespace ETLBox.Helper
             }
         }
 
-        private void AddNullValue(List<string> values, string destColumnName)
-        {
-            if (UseParameterQuery && !NoParameterForNulls)
-            {
+        private void AddNullValue(List<string> values, string destColumnName) {
+            if (UseParameterQuery && !NoParameterForNulls) {
                 values.Add(CreateParameterWithValue(DBNull.Value, destColumnName));
-            }
-            else
-            {
+            } else {
                 string value = IsAccessDatabase ? $"NULL AS {destColumnName}" : "NULL";
                 values.Add(value);
             }
 
         }
 
-        private void AddNonNullValue(List<string> values, string destColumnName, int ordinal)
-        {
-            if (UseParameterQuery)
-            {
+        private void AddNonNullValue(List<string> values, string destColumnName, int ordinal) {
+            if (UseParameterQuery) {
                 values.Add(CreateParameterWithValue(TableData.GetValue(ordinal), destColumnName));
-            }
-            else
-            {
+            } else {
                 string value = TableData.GetString(ordinal).Replace("'", "''");
                 string valueSql = IsAccessDatabase ? $"'{value}' AS {destColumnName}"
                     : $"'{value}'";
@@ -346,8 +309,7 @@ namespace ETLBox.Helper
 
         }
 
-        private string CreateParameterWithValue(object parValue, string destColumnName)
-        {
+        private string CreateParameterWithValue(object parValue, string destColumnName) {
             var par = new T();
 
             if (ConnectionType == ConnectionManagerType.Oracle && parValue is Enum) //Enums don't work obviously 
@@ -356,10 +318,9 @@ namespace ETLBox.Helper
                 par.Value = parValue;
 
             string dbTypeString = "";
-            if (AddDbTypesFromDefinition)
-            {
+            if (AddDbTypesFromDefinition) {
                 dbTypeString = TableData.GetDataTypeName(destColumnName);
-                par.DbType = DataTypeConverter.GetDBType(dbTypeString);
+                par.DbType = DataTypeConverter.GetDBType(dbTypeString)?? DbType.String;
                 var size = DataTypeConverter.GetStringLengthFromCharString(dbTypeString);
                 if (size > 0)
                     par.Size = size;
@@ -369,12 +330,10 @@ namespace ETLBox.Helper
 
             Parameters.Add(par);
             string parname;
-            if (UseNamedParameters)
-            {
+            if (UseNamedParameters) {
                 parname = $"{ParameterPlaceholder}P{ParameterNameCount++}";
                 par.ParameterName = parname;
-            }
-            else
+            } else
                 parname = "?";
 
             //For Db2: https://stackoverflow.com/questions/13381898/how-to-resolve-sql0418n-error/13382197#13382197
@@ -387,60 +346,45 @@ namespace ETLBox.Helper
 
         }
 
-        private static void TryConvertParameter(object parValue, T par, string dbtypestring)
-        {
+        private static void TryConvertParameter(object parValue, T par, string dbtypestring) {
             if (parValue == DBNull.Value) return;
-            try
-            {
+            try {
                 par.Value = Convert.ChangeType(parValue, DataTypeConverter.GetTypeObject(dbtypestring));
-            }
-            catch
-            {
+            } catch {
 
             }
         }
 
-        private void AppendValueListSql(List<string> values, bool hasNextItem)
-        {
-            if (IsAccessDatabase)
-            {
+        private void AppendValueListSql(List<string> values, bool hasNextItem) {
+            if (IsAccessDatabase) {
                 QueryText.AppendLine("SELECT " + string.Join(",", values) + $"  FROM {AccessDummyTableName} ");
                 if (hasNextItem) QueryText.AppendLine(" UNION ALL ");
-            }
-            else if (ConnectionType == ConnectionManagerType.Oracle)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Oracle) {
                 QueryText.Append("SELECT ");
-                for (int i = 0; i < values.Count; i++)
-                {
+                for (int i = 0; i < values.Count; i++) {
                     QueryText.Append($"{values[i]} {QB}{DestColumnNames[i]}{QE}");
                     if (i + 1 < values.Count)
                         QueryText.Append(",");
                 }
                 QueryText.AppendLine(" FROM DUAL");
                 if (hasNextItem) QueryText.AppendLine(" UNION ALL ");
-            }
-            else if (ConnectionType == ConnectionManagerType.MySql && !IsMariaDb)
-            {
+            } else if (ConnectionType == ConnectionManagerType.MySql && !IsMariaDb) {
                 QueryText.Append("ROW(" + string.Join(",", values) + $")");
                 if (hasNextItem) QueryText.AppendLine(",");
-            }
-            else
-            {
+            } else {
                 QueryText.Append("(" + string.Join(",", values) + $")");
                 if (hasNextItem) QueryText.AppendLine(",");
             }
         }
 
-        private void EndInsertSql()
-        {
+        private void EndInsertSql() {
             if (IsAccessDatabase)
                 QueryText.AppendLine(") a;");
             else if (ConnectionType == ConnectionManagerType.Oracle)
                 QueryText.AppendLine(")");
         }
 
-        private void EndDeleteSql()
-        {
+        private void EndDeleteSql() {
             QueryText.AppendLine(Environment.NewLine + ")");
             if (ConnectionType == ConnectionManagerType.MySql && IsMariaDb)
                 QueryText.AppendLine($" SELECT * FROM ws ) vt");
@@ -466,29 +410,23 @@ namespace ETLBox.Helper
                 QueryText.AppendLine(")");
         }
 
-        private void EndUpdateSql()
-        {
+        private void EndUpdateSql() {
             //https://www.orafaq.com/node/2450
-            if (ConnectionType == ConnectionManagerType.Oracle)
-            {
+            if (ConnectionType == ConnectionManagerType.Oracle) {
                 QueryText.AppendLine(") vt ");
                 QueryText.Append(" ON ( ");
                 QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
                         JoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
                 QueryText.AppendLine(") WHEN MATCHED THEN UPDATE SET");
                 QueryText.AppendLine($@"{string.Join(", ", SetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
-            }
-            else if (ConnectionType == ConnectionManagerType.Db2)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Db2) {
                 QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
                 QueryText.Append(" ON ( ");
                 QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
                         JoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
                 QueryText.AppendLine(") WHEN MATCHED THEN UPDATE SET");
                 QueryText.AppendLine($@"{string.Join(", ", SetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
-            }
-            else if (ConnectionType == ConnectionManagerType.MySql)
-            {
+            } else if (ConnectionType == ConnectionManagerType.MySql) {
                 if (IsMariaDb)
                     QueryText.AppendLine($" ) SELECT * FROM ws ) vt");
                 else
@@ -497,15 +435,11 @@ namespace ETLBox.Helper
                 QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
                     JoinColumnNames.Select(col => $@"( ( ut.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( ut.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
                 QueryText.AppendLine($@"SET {string.Join(", ", SetColumnNames.Select(col => $"ut.{QB}{col}{QE} = vt.{QB}{col}{QE}"))}");
-            }
-            else if (ConnectionType == ConnectionManagerType.Postgres)
-            {
+            } else if (ConnectionType == ConnectionManagerType.Postgres) {
                 QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
                 QueryText.Append(" WHERE ");
                 AppendMatchConditionWithJsonbConversion(JoinColumnNames, "ut");
-            }
-            else
-            {
+            } else {
                 QueryText.AppendLine($") vt ( { string.Join(",", SourceColumnNames.Select(col => $"{QB}{col}{QE}"))} )");
                 QueryText.Append(" ON ");
                 QueryText.AppendLine(string.Join(Environment.NewLine + " AND ",
@@ -513,8 +447,7 @@ namespace ETLBox.Helper
             }
         }
 
-        private void EndSelectSql()
-        {
+        private void EndSelectSql() {
             QueryText.AppendLine($")");
             if (ConnectionType == ConnectionManagerType.Oracle)
                 QueryText.AppendLine($"vt");
@@ -530,11 +463,9 @@ namespace ETLBox.Helper
                     SourceColumnNames.Select(col => $@"( ( st.{QB}{col}{QE} IS NULL AND vt.{QB}{col}{QE} IS NULL) OR ( st.{QB}{col}{QE} = vt.{QB}{col}{QE} ) )")));
         }
 
-        private void AppendMatchConditionWithJsonbConversion(ICollection<string> columnNames, string matchTableAs)
-        {
+        private void AppendMatchConditionWithJsonbConversion(ICollection<string> columnNames, string matchTableAs) {
             List<string> lines = new List<string>();
-            foreach (var col in columnNames)
-            {
+            foreach (var col in columnNames) {
                 string jsonb = "";
                 string datatype = TableData.GetDataTypeName(col);
                 if (datatype.ToLower().StartsWith("json"))

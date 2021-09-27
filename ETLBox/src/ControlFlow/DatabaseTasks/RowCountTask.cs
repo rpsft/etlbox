@@ -59,10 +59,8 @@ namespace ETLBox.ControlFlow.Tasks
         /// <summary>
         /// The sql that is executed to count the rows in the table - will change depending on your parameters.
         /// </summary>
-        public string Sql
-        {
-            get
-            {
+        public string Sql {
+            get {
                 return QuickQueryMode && !HasCondition ? $@"
 SELECT SUM ([rows]) 
 FROM [sys].[partitions] 
@@ -82,13 +80,11 @@ FROM {TN.QuotatedFullName} {NOLOCK}
 
         public RowCountTask() { }
 
-        public RowCountTask(string tableName)
-        {
+        public RowCountTask(string tableName) {
             this.TableName = tableName;
         }
 
-        public RowCountTask(string tableName, RowCountOptions options) : this(tableName)
-        {
+        public RowCountTask(string tableName, RowCountOptions options) : this(tableName) {
             if (options == RowCountOptions.QuickQueryMode)
                 QuickQueryMode = true;
             if (options == RowCountOptions.DirtyRead)
@@ -96,14 +92,12 @@ FROM {TN.QuotatedFullName} {NOLOCK}
 
         }
 
-        public RowCountTask(string tableName, string condition) : this(tableName)
-        {
+        public RowCountTask(string tableName, string condition) : this(tableName) {
             this.Condition = condition;
         }
 
 
-        public RowCountTask(string tableName, string condition, RowCountOptions options) : this(tableName, options)
-        {
+        public RowCountTask(string tableName, string condition, RowCountOptions options) : this(tableName, options) {
             this.Condition = condition;
         }
 
@@ -114,8 +108,7 @@ FROM {TN.QuotatedFullName} {NOLOCK}
         /// <summary>
         /// Performs the row count
         /// </summary>
-        public RowCountTask Count()
-        {
+        public RowCountTask Count() {
             Execute();
             return this;
         }
@@ -123,16 +116,14 @@ FROM {TN.QuotatedFullName} {NOLOCK}
         /// <summary>
         /// Checks if the table has at least one (matching) row.
         /// </summary>
-        public RowCountTask HasRows()
-        {
+        public RowCountTask HasRows() {
             OnlyFirstRow = true;
             Execute();
             return this;
         }
 
         bool OnlyFirstRow;
-        internal void Execute()
-        {
+        internal void Execute() {
             if (DirtyRead && (
                     ConnectionType == ConnectionManagerType.Postgres ||
                     ConnectionType == ConnectionManagerType.Oracle ||
@@ -152,10 +143,8 @@ FROM {TN.QuotatedFullName} {NOLOCK}
         string MYSQLCOMMIT => (DirtyRead && ConnectionType == ConnectionManagerType.MySql) ?
             $"; COMMIT;" : String.Empty;
 
-        string NOLOCK
-        {
-            get
-            {
+        string NOLOCK {
+            get {
                 if (DirtyRead && ConnectionType == ConnectionManagerType.SqlServer)
                     return "WITH (nolock)";
                 else if (DirtyRead && ConnectionType == ConnectionManagerType.Db2)
@@ -164,41 +153,31 @@ FROM {TN.QuotatedFullName} {NOLOCK}
             }
         }
 
-        string COUNT
-        {
-            get
-            {
-                if (OnlyFirstRow)
-                {
+        string COUNT {
+            get {
+                if (OnlyFirstRow) {
                     string sql = "1";
                     if (this.ConnectionType == ConnectionManagerType.SqlServer)
                         return sql = "TOP 1 " + sql;
                     return sql;
-                }
-                else
+                } else
                     return "COUNT(*)";
             }
         }
 
-        string LIMIT
-        {
-            get
-            {
-                if (OnlyFirstRow)
-                {
+        string LIMIT {
+            get {
+                if (OnlyFirstRow) {
                     if (this.ConnectionType == ConnectionManagerType.SqlServer)
                         return string.Empty;
-                    else if (this.ConnectionType == ConnectionManagerType.Oracle)
-                    {
+                    else if (this.ConnectionType == ConnectionManagerType.Oracle) {
                         if (HasCondition)
                             return "AND rownum = 1";
                         else
                             return "WHERE rownum = 1";
-                    }
-                    else
+                    } else
                         return "LIMIT 1";
-                }
-                else
+                } else
                     return string.Empty;
             }
         }
