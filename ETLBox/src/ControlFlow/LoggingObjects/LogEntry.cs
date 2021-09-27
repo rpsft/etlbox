@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace ETLBox.Logging
 {
-    [DebuggerDisplay("#{Id} {TaskType} - {TaskAction} {LogDate}")]
+    [DebuggerDisplay("#{Id} {TaskName} - {TaskAction} {LogDate}")]
     public class LogEntry
     {
         public long Id { get; set; }
@@ -15,32 +15,32 @@ namespace ETLBox.Logging
         public string Level { get; set; }
         public string Message { get; set; }
         public string TaskType { get; set; }
-        public string TaskAction { get; set; }
+        public string TaskName { get; set; }
+        public string Action { get; set; }
         public string TaskHash { get; set; }
         public string Stage { get; set; }
         public string Source { get; set; }
         public long? LoadProcessId { get; set; }
     }
 
-    [DebuggerDisplay("#{ID} {TaskType} - {TaskAction} {LogDate}")]
+    [DebuggerDisplay("#{Id} {TaskName} - {TaskAction} {LogDate}")]
     public class LogHierarchyEntry : LogEntry
     {
         public List<LogHierarchyEntry> Children { get; set; }
         [JsonIgnore]
         public LogHierarchyEntry Parent { get; set; }
-        public LogHierarchyEntry()
-        {
+        public LogHierarchyEntry() {
             Children = new List<LogHierarchyEntry>();
         }
-        public LogHierarchyEntry(LogEntry entry) : this()
-        {
+        public LogHierarchyEntry(LogEntry entry) : this() {
             this.Id = entry.Id;
             this.LogDate = entry.LogDate;
             this.EndDate = entry.EndDate;
             this.Level = entry.Level;
             this.Message = entry.Message;
             this.TaskType = entry.TaskType;
-            this.TaskAction = entry.TaskAction;
+            this.TaskName = entry.TaskName;
+            this.Action = entry.Action;
             this.TaskHash = entry.TaskHash;
             this.Stage = entry.Stage;
             this.Source = entry.Source;

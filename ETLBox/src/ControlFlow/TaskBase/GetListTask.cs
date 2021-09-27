@@ -23,32 +23,26 @@ namespace ETLBox.ControlFlow.Tasks
         public List<ObjectNameDescriptor> ObjectNames { get; set; }
 
 
-        public GetListTask()
-        {
+        public GetListTask() {
 
         }
 
-        public GetListTask RetrieveAll()
-        {
+        public GetListTask RetrieveAll() {
             Execute();
             return this;
         }
 
 
-        public string Sql
-        {
-            get
-            {
+        public string Sql {
+            get {
                 return GetSql();
             }
         }
 
-        internal void Execute()
-        {
+        internal void Execute() {
 
             ObjectNames = new List<ObjectNameDescriptor>();
-            new SqlTask(this, Sql)
-            {
+            new SqlTask(this, Sql) {
                 Actions = new List<Action<object>>() {
                     name => ObjectNames.Add(new ObjectNameDescriptor((string)name, this.DbConnectionManager.QB, this.DbConnectionManager.QE))
                 }
@@ -57,13 +51,11 @@ namespace ETLBox.ControlFlow.Tasks
             CleanUpRetrievedList();
         }
 
-        internal virtual string GetSql()
-        {
+        internal virtual string GetSql() {
             return string.Empty;
         }
 
-        internal virtual void CleanUpRetrievedList()
-        {
+        internal virtual void CleanUpRetrievedList() {
 
         }
 

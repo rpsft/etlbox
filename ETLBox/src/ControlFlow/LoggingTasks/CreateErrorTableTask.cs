@@ -18,8 +18,7 @@ namespace ETLBox.Logging
 
         public bool DropAndCreateTable { get; set; }
 
-        public void Execute()
-        {
+        public void Execute() {
             if (DropAndCreateTable)
                 DropTableTask.DropIfExists(this.ConnectionManager, TableName);
 
@@ -33,18 +32,15 @@ namespace ETLBox.Logging
                 });
         }
 
-        public CreateErrorTableTask()
-        {
+        public CreateErrorTableTask() {
 
         }
 
-        public CreateErrorTableTask(string tableName)
-        {
+        public CreateErrorTableTask(string tableName) {
             this.TableName = tableName;
         }
 
-        public CreateErrorTableTask(IConnectionManager connectionManager, string tableName) : this(tableName)
-        {
+        public CreateErrorTableTask(IConnectionManager connectionManager, string tableName) : this(tableName) {
             this.ConnectionManager = connectionManager;
         }
 
