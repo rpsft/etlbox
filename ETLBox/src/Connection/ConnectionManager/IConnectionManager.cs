@@ -22,6 +22,12 @@ namespace ETLBox.Connection
         int MaxLoginAttempts { get; set; }
 
         /// <summary>
+        /// The timeout used when executing sql commands with this connection manager. 
+        /// Default is 0 (no timeout)
+        /// </summary>
+        int CommandTimeout { get; set; }
+
+        /// <summary>
         /// By default, after every sql operation the underlying ADO.NET connection is closed and retured to the ADO.NET connection pool.
         /// (This is the recommended behavior)
         /// To keep the connection open and avoid having the connection returned to the pool, set this to true.
@@ -76,7 +82,7 @@ namespace ETLBox.Connection
         bool SupportSchemas { get; }
 
         /// <summary>
-        /// Indicates if the current connection mangager is used as a OleDb or Odbc Connection.
+        /// Indicates if the current connection manager is used as a OleDb or Odbc Connection.
         /// </summary>
         bool IsOdbcOrOleDbConnection { get; }
 
@@ -85,6 +91,11 @@ namespace ETLBox.Connection
         /// sql query. 
         /// </summary>
         int MaxParameterAmount { get; }
+
+        /// <summary>
+        /// Information about compatibility of the current connector
+        /// </summary>
+        string Compatibility { get; }
 
         /// <summary>
         /// Executes a query against the database that doesn't return any data.
@@ -153,12 +164,14 @@ namespace ETLBox.Connection
         void Open();
 
         /// <summary>
-        /// Always closes the connection
+        /// Closes the connection - this will not automatically disconnect
+        /// from the database server, it will only return the connection 
+        /// to the ADO.NET connection pool for further reuse.
         /// </summary>
         void Close();
 
         /// <summary>
-        /// Closes the connection if leave open is false and no transaction or bulk insert is in progress.
+        /// Closes the connection only if leave open is set to false and no transaction or bulk insert is in progress.
         /// </summary>
         void CloseIfAllowed();
 
@@ -211,7 +224,7 @@ namespace ETLBox.Connection
         /// <param name="actions">Pass an action for each column</param>
         void BulkSelect(ITableData data, ICollection<string> selectColumnNames
             , Action beforeRowReadAction, Action afterRowReadAction
-            , params Action<object>[] actions);
+            , params Action<object>[] actions);                
     }
 
     public interface IConnectionManagerDbObjects

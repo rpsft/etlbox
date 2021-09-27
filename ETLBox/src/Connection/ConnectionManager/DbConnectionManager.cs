@@ -1,4 +1,5 @@
 ﻿using ETLBox.ControlFlow;
+using ETLBox.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,12 +26,10 @@ namespace ETLBox.Connection
         /// </summary>
         public TConnection DbConnection { get; protected set; }
 
-        public DbConnectionManager()
-        {
+        public DbConnectionManager() {
         }
 
-        public DbConnectionManager(IDbConnectionString connectionString) : this()
-        {
+        public DbConnectionManager(IDbConnectionString connectionString) : this() {
             this.ConnectionString = connectionString;
         }
 
@@ -43,8 +42,7 @@ namespace ETLBox.Connection
         public int MaxLoginAttempts { get; set; } = 3;
 
         /// <inheritdoc/>
-        public bool LeaveOpen
-        {
+        public bool LeaveOpen {
             get => _leaveOpen || IsInBulkInsert || Transaction != null;
             set => _leaveOpen = value;
         }
@@ -61,6 +59,8 @@ namespace ETLBox.Connection
 
         /// <inheritdoc/>
         public bool IsInBulkInsert { get; set; }
+
+        public int CommandTimeout { get; set; } = 0;
 
         /// <inheritdoc/>
         public abstract string QB { get; protected set; }
@@ -80,68 +80,74 @@ namespace ETLBox.Connection
 
         /// <inheritdoc/>
         public virtual bool IsOdbcOrOleDbConnection { get; } = false;
-
-        /// <inheritdoc/>
-        public virtual bool DoPrepareCommand { get; set; } = true;
-        protected bool DisablePreparationForNextExecution { get; set; }
-
+                
         /// <inheritdoc/>
         public virtual int MaxParameterAmount { get; } = int.MaxValue;
+
+        public virtual string Compatibility { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Changes the connection manager type for the generic connector, so that
+        /// you can try to use it with not supported setups. 
+        /// If you are looking for supported Odbc connection managers, try to use the specific
+        /// connection managers (e.g. MySqlOdbcConnectionManager for MySql or 
+        /// PostgresOdbcConnectionManager for Postgres)
+        /// </summary>
+        /// <param name="connectionManagerType">The new connection type for this connection manager.</param>
+        /// <param name="QB">Quotation begin (e.g. "`" for MySql or "[" for SqlServer)</param>
+        /// <param name="QE">Quotation end (e.g. "`" for MySql or "]" for SqlServer)</param>
+        /// <param name="PP">Parameter placeholder ("@" for most databases)</param>
+        public void OverrideConnectionSpecifics(ConnectionManagerType connectionManagerType,
+            string QB, string QE, string PP = "@") {
+            this.ConnectionManagerType = connectionManagerType;
+            this.QB = QB;
+            this.QE = QE;
+            this.PP = PP;
+        }
 
         internal IDbCommand CreateCommand(string commandText,
             IEnumerable<QueryParameter> queryParameterList = null,
             IEnumerable<TParameter> adonetParameterList = null
-            )
-        {
+            ) {
             var cmd = DbConnection.CreateCommand();
-            cmd.CommandTimeout = 0;
+            cmd.CommandTimeout = CommandTimeout;
             cmd.CommandText = commandText;
-            if (queryParameterList != null)
-            {
-                foreach (QueryParameter par in queryParameterList)
-                {
+            if (queryParameterList != null) {
+                foreach (QueryParameter par in queryParameterList) {
                     var newPar = cmd.CreateParameter();
-                    newPar.ParameterName = par.Name;
-                    newPar.DbType = par.DBType;
+                    if (!string.IsNullOrEmpty(par.Name)) newPar.ParameterName = par.Name;
+                    if (par.DBType != null) newPar.DbType = par.DBType ?? DbType.String;
                     newPar.Value = par.Value;
                     if (par.DBSize > 0)
                         newPar.Size = par.DBSize;
                     cmd.Parameters.Add(newPar);
                 }
-            }
-            else if (adonetParameterList != null)
-            {
+            } else if (adonetParameterList != null) {
                 foreach (TParameter parameter in adonetParameterList)
                     cmd.Parameters.Add(parameter);
             }
             if (Transaction?.Connection != null && Transaction.Connection.State == ConnectionState.Open)
                 cmd.Transaction = Transaction;
-            if (DoPrepareCommand && !DisablePreparationForNextExecution)
-            {
-                cmd.Prepare();
-                DisablePreparationForNextExecution = true;
-            }
             return cmd;
         }
 
-        protected int BulkNonQuery(string commandText, IEnumerable<TParameter> parameterList)
-        {
+        protected int BulkNonQuery(string commandText, IEnumerable<TParameter> parameterList) {
             IDbCommand cmd = CreateCommand(commandText, adonetParameterList: parameterList);
             return cmd.ExecuteNonQuery();
         }
 
-        protected void BulkReader(string commandText, IEnumerable<TParameter> parameterList,
-            Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] rowActions)
-        {
+        protected void BulkReader(string commandText,
+            IEnumerable<TParameter> parameterList,
+            Action beforeRowReadAction,
+            Action afterRowReadAction,
+            params Action<object>[] rowActions            
+            ) {
             IDbCommand cmd = CreateCommand(commandText, adonetParameterList: parameterList);
-            using (IDataReader reader = cmd.ExecuteReader() as IDataReader)
-            {
-                while (reader.Read())
-                {
+            using (IDataReader reader = cmd.ExecuteReader() as IDataReader) {
+                while (reader.Read()) {
                     beforeRowReadAction?.Invoke();
 
-                    for (int i = 0; i < rowActions?.Length; i++)
-                    {
+                    for (int i = 0; i < rowActions?.Length; i++) {
                         if (!reader.IsDBNull(i))
                             rowActions?[i]?.Invoke(reader.GetValue(i));
                         else
@@ -153,31 +159,53 @@ namespace ETLBox.Connection
         }
 
         /// <inheritdoc/>
-        public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null)
-        {
+        public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null) {
             IDbCommand cmd = CreateCommand(commandText, parameterList);
-            return cmd.ExecuteNonQuery();
-        }
-
-        /// <inheritdoc/>
-        public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null)
-        {
-            IDbCommand cmd = CreateCommand(commandText, parameterList);
-            return cmd.ExecuteScalar();
-        }
-
-        /// <inheritdoc/>
-        public IDataReader ExecuteReader(string commandText, IEnumerable<QueryParameter> parameterList = null)
-        {
-            IDbCommand cmd = CreateCommand(commandText, parameterList);
-            return cmd.ExecuteReader();
+            int affected;
+            try {
+                affected = cmd.ExecuteNonQuery();
+            } catch (Exception e) {
+                AddSqlToDataDict(commandText, e);
+                throw e;
+            }
+            return affected;
 
         }
 
+        private void AddSqlToDataDict(string commandText, Exception e) {
+            if (e.Data != null && !e.Data.Contains("Sql")) e.Data.Add("Sql", commandText);
+            e.Source = "ETLBox note: See the Data dictionary for the sql command that caused the error. Provider source information: " + e.Source;
+        }
 
         /// <inheritdoc/>
-        public void BeginTransaction(IsolationLevel isolationLevel)
-        {
+        public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+            IDbCommand cmd = CreateCommand(commandText, parameterList);
+            object result;
+            try {
+                result = cmd.ExecuteScalar();
+            } catch (Exception e) {
+                AddSqlToDataDict(commandText, e);
+                throw e;
+            }
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public IDataReader ExecuteReader(string commandText, IEnumerable<QueryParameter> parameterList = null) {
+            IDbCommand cmd = CreateCommand(commandText, parameterList);
+            IDataReader reader;
+            try {
+                reader = cmd.ExecuteReader();
+            } catch (Exception e) {
+                AddSqlToDataDict(commandText, e);
+                throw e;
+            }
+            return reader;
+        }
+
+
+        /// <inheritdoc/>
+        public void BeginTransaction(IsolationLevel isolationLevel) {
             Open();
             Transaction = DbConnection?.BeginTransaction(isolationLevel) as TTransaction;
         }
@@ -186,21 +214,18 @@ namespace ETLBox.Connection
         public void BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
 
         /// <inheritdoc/>
-        public void CommitTransaction()
-        {
+        public void CommitTransaction() {
             Transaction?.Commit();
             CloseTransaction();
         }
 
         /// <inheritdoc/>
-        public void RollbackTransaction()
-        {
+        public void RollbackTransaction() {
             Transaction?.Rollback();
             CloseTransaction();
         }
 
-        private void CloseTransaction()
-        {
+        private void CloseTransaction() {
             Transaction.Dispose();
             Transaction = null;
             CloseIfAllowed();
@@ -223,14 +248,12 @@ namespace ETLBox.Connection
         public abstract void BulkUpdate(ITableData data, ICollection<string> setColumnNames, ICollection<string> joinColumnNames);
 
 
-        public virtual void BulkSelect(ITableData data, ICollection<string> selectColumnNames, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions)
-        {
+        public virtual void BulkSelect(ITableData data, ICollection<string> selectColumnNames, Action beforeRowReadAction, Action afterRowReadAction, params Action<object>[] actions) {
 
         }
 
         /// <inheritdoc/>
-        public IConnectionManager CloneIfAllowed()
-        {
+        public IConnectionManager CloneIfAllowed() {
             if (LeaveOpen) return this;
             else return Clone();
         }
@@ -238,21 +261,21 @@ namespace ETLBox.Connection
         /// <inheritdoc/>
         public abstract IConnectionManager Clone();
 
-        public void CopyBaseAttributes(DbConnectionManager<TConnection, TTransaction, TParameter> original)
-        {
-            this.DoPrepareCommand = original.DoPrepareCommand;
+        /// <summary>
+        /// Copeis the connection manager base attribnutes from the current 
+        /// connection manager to the target connection manager. 
+        /// </summary>
+        /// <param name="original">Target of the copy operation</param>
+        public void CopyBaseAttributes(DbConnectionManager<TConnection, TTransaction, TParameter> original) {
+            this.CommandTimeout = original.CommandTimeout;
         }
 
         /// <inheritdoc/>
-        public void Open()
-        {
-            if (LeaveOpen)
-            {
+        public void Open() {
+            if (LeaveOpen) {
                 if (DbConnection == null)
                     CreateDbConnection();
-            }
-            else
-            {
+            } else {
                 DbConnection?.Close();
                 CreateDbConnection();
             }
@@ -264,53 +287,42 @@ namespace ETLBox.Connection
         /// By default, a db connection is created with the given connection string value.
         /// Override this method if you want to pass additional properties to the specific Ado.NET db connection. 
         /// </summary>
-        public virtual void CreateDbConnection()
-        {
-            DbConnection = new TConnection
-            {
+        public virtual void CreateDbConnection() {
+            DbConnection = new TConnection {
                 ConnectionString = ConnectionString.Value
             };
         }
 
         /// <inheritdoc/>
-        public void Close()
-        {
+        public void Close() {
             Dispose();
         }
 
         /// <inheritdoc/>
-        public void CloseIfAllowed()
-        {
+        public void CloseIfAllowed() {
             if (!LeaveOpen)
                 Dispose();
         }
 
         #endregion
 
-        private void TryOpenConnectionXTimes()
-        {
+        private void TryOpenConnectionXTimes() {
             bool successfullyConnected = false;
             Exception lastException = null;
-            for (int i = 1; i <= MaxLoginAttempts; i++)
-            {
-                try
-                {
+            for (int i = 1; i <= MaxLoginAttempts; i++) {
+                try {
                     DbConnection.Open();
                     successfullyConnected = true;
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     successfullyConnected = false;
                     lastException = e;
                     Task.Delay(1000).Wait();
                 }
-                if (successfullyConnected)
-                {
+                if (successfullyConnected) {
                     break;
                 }
             }
-            if (!successfullyConnected)
-            {
+            if (!successfullyConnected) {
                 throw lastException ?? new Exception("Could not connect to database!");
             }
         }
@@ -319,12 +331,9 @@ namespace ETLBox.Connection
 
         private bool disposedValue = false; // To detect redundant calls
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
+        protected virtual void Dispose(bool disposing) {
+            if (!disposedValue) {
+                if (disposing) {
                     Transaction?.Dispose();
                     Transaction = null;
                     DbConnection?.Close();
@@ -335,10 +344,11 @@ namespace ETLBox.Connection
         }
 
         /// <summary>
-        /// Alyways closes the connection
+        /// Closes the connection - this will not automatically disconnect
+        /// from the database server, it will only return the connection 
+        /// to the ADO.NET connection pool for further reuse.
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
         }
 

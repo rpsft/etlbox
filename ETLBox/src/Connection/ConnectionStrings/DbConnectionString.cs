@@ -11,11 +11,9 @@ namespace ETLBox.Connection
         where T : DbConnectionString<T, TBuilder>, new()
         where TBuilder : DbConnectionStringBuilder, new()
     {
-        public DbConnectionString()
-        { }
+        public DbConnectionString() { }
 
-        protected DbConnectionString(string value)
-        {
+        protected DbConnectionString(string value) {
             Value = value;
         }
 
@@ -25,8 +23,7 @@ namespace ETLBox.Connection
         public TBuilder Builder { get; private set; } = new TBuilder();
 
         /// <inheritdoc/>
-        public virtual string Value
-        {
+        public virtual string Value {
             get => Builder.ConnectionString;
             set => Builder.ConnectionString = value;
         }
@@ -62,14 +59,11 @@ namespace ETLBox.Connection
         /// </summary>
         /// <param name="value">The new database name</param>
         /// <returns>The new connection string</returns>
-        public T CloneWithNewDbName(string value)
-        {
+        public T CloneWithNewDbName(string value) {
             var clone = Clone();
-            if (string.IsNullOrWhiteSpace(value))
-            {
+            if (string.IsNullOrWhiteSpace(value)) {
                 clone.Builder.Remove(DbNameKeyword);
-            }
-            else
+            } else
                 clone.DbName = value;
 
             return clone;
@@ -79,8 +73,7 @@ namespace ETLBox.Connection
         /// Clones the current connection string
         /// </summary>
         /// <returns>A copy of the current connection string</returns>
-        public virtual T Clone()
-        {
+        public virtual T Clone() {
             var clone = (T)MemberwiseClone();
             clone.Builder = new TBuilder();
             clone.Value = Value;
