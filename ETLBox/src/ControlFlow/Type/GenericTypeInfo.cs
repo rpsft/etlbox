@@ -68,23 +68,19 @@ namespace ETLBox.DataFlow
         public List<IdColumn> IdColumnAttributes { get; set; } = new List<IdColumn>();
         public List<UpdateColumn> UpdateColumnAttributes { get; set; } = new List<UpdateColumn>();
         public List<CompareColumn> CompareColumnAttributes { get; set; } = new List<CompareColumn>();
-        public List<DeleteColumn> DeleteColumnAttributes { get; set; } = new List<DeleteColumn>();
+        public List<DeleteColumn> DeleteColumnAttributes { get; set; } = new List<DeleteColumn>();        
 
-        public GenericTypeInfo(Type type)
-        {
+        public GenericTypeInfo(Type type) {
             GenericType = type;
         }
 
         private Type GenericType { get; set; }
 
-        public GenericTypeInfo GatherTypeInfo(AttributeType propertyAttributes = AttributeType.None)
-        {
+        public GenericTypeInfo GatherTypeInfo(AttributeType propertyAttributes = AttributeType.None) {
             DetermineObjectType();
-            if (IsPoco)
-            {
+            if (IsPoco) {
                 Properties = GenericType.GetProperties().ToList();
-                for (int i = 0; i < Properties.Count; i++)
-                {
+                for (int i = 0; i < Properties.Count; i++) {
                     var propInfo = Properties[i];
                     ThrowIfPropIsIndexer(propInfo);
                     PropertyNames.Add(propInfo.Name);
@@ -97,23 +93,20 @@ namespace ETLBox.DataFlow
             return this;
         }
 
-        private void DetermineObjectType()
-        {
+        private void DetermineObjectType() {
             IsArray = GenericType.IsArray;
             if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(GenericType))
                 IsDynamic = true;
         }
 
 
-        private void ThrowIfPropIsIndexer(PropertyInfo propInfo)
-        {
+        private void ThrowIfPropIsIndexer(PropertyInfo propInfo) {
             if (propInfo.GetIndexParameters().Length > 0)
                 throw new NotSupportedException("ETLBox: Index properties (like string this[int i]) are not allow on objects" +
                     " which are used as types for DataFlow components!");
         }
 
-        private void TryExtractAttribute(AttributeType propertyAttributes, PropertyInfo propInfo)
-        {
+        private void TryExtractAttribute(AttributeType propertyAttributes, PropertyInfo propInfo) {
             if (propertyAttributes == AttributeType.None) return;
             if (propertyAttributes.HasFlag(AttributeType.ColumnMap))
                 TryAddAttribute(propInfo, ColumnMapAttributes, (cm, prop) => cm.PropertyName = prop.Name);
@@ -134,30 +127,30 @@ namespace ETLBox.DataFlow
             if (propertyAttributes.HasFlag(AttributeType.IdColumn))
                 TryAddAttribute(propInfo, IdColumnAttributes, (cm, prop) => cm.IdPropertyName = prop.Name);
             if (propertyAttributes.HasFlag(AttributeType.UpdateColumn))
-                TryAddAttribute(propInfo, UpdateColumnAttributes, (cm, prop) => cm.UpdatePropertyName= prop.Name);
+                TryAddAttribute(propInfo, UpdateColumnAttributes, (cm, prop) => cm.UpdatePropertyName = prop.Name);
             if (propertyAttributes.HasFlag(AttributeType.CompareColumn))
                 TryAddAttribute(propInfo, CompareColumnAttributes, (cm, prop) => cm.ComparePropertyName = prop.Name);
             if (propertyAttributes.HasFlag(AttributeType.DeleteColumn))
                 TryAddAttribute(propInfo, DeleteColumnAttributes, (cm, prop) => cm.DeletePropertyName = prop.Name);
         }
 
-        private void TryAddAttribute<T>(PropertyInfo propInfo, IList<T> list, Action<T, PropertyInfo> propAssignment) where T : Attribute
-        {
+        private void TryAddAttribute<T>(PropertyInfo propInfo, IList<T> list, Action<T, PropertyInfo> propAssignment) where T : Attribute {
             T attr = propInfo.GetCustomAttribute(typeof(T)) as T;
-            if (attr != null)
-            {
+            if (attr != null) {
                 propAssignment(attr, propInfo);
                 list.Add(attr);
             }
         }
 
-        protected virtual void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex)
-        {
+        protected virtual void RetrieveAdditionalTypeInfo(PropertyInfo propInfo, int currentIndex) {
             ;
         }
 
         public static Type TryGetUnderlyingType(PropertyInfo propInfo)
-            => Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
+            => TryGetUnderlyingType(propInfo.PropertyType);
+
+        public static Type TryGetUnderlyingType(Type type)
+            => Nullable.GetUnderlyingType(type) ?? type;
 
         /// <summary>
         /// Determines if a type is numeric.  Nullable numeric types are considered numeric.        
@@ -166,15 +159,12 @@ namespace ETLBox.DataFlow
         /// Boolean is not considered numeric.
         /// http://stackoverflow.com/a/5182747/172132
         /// </remarks>        
-        public static bool IsNumericType(Type type)
-        {
-            if (type == null)
-            {
+        public static bool IsNumericType(Type type) {
+            if (type == null) {
                 return false;
             }
 
-            switch (Type.GetTypeCode(type))
-            {
+            switch (Type.GetTypeCode(type)) {
                 case TypeCode.Byte:
                 case TypeCode.Decimal:
                 case TypeCode.Double:
@@ -188,8 +178,7 @@ namespace ETLBox.DataFlow
                 case TypeCode.UInt64:
                     return true;
                 case TypeCode.Object:
-                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                    {
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)) {
                         return IsNumericType(Nullable.GetUnderlyingType(type));
                     }
                     return false;

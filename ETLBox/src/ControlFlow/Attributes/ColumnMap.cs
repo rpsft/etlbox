@@ -27,8 +27,7 @@ namespace ETLBox.DataFlow
         /// </summary>
         public string DbColumnName { get; set; }
 
-        public ColumnMap()
-        {
+        public ColumnMap() {
 
         }
 
@@ -36,8 +35,7 @@ namespace ETLBox.DataFlow
         /// Creates a mapping between the a property and a database column        
         /// </summary>
         /// <param name="dbColumnName">The name of the column in the database</param>
-        public ColumnMap(string dbColumnName)
-        {
+        public ColumnMap(string dbColumnName) {
             DbColumnName = dbColumnName;
         }
 

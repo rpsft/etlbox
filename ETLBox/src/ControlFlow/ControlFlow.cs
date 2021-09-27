@@ -13,10 +13,8 @@ namespace ETLBox.ControlFlow
         /// <summary>
         /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
         /// </summary>
-        public static IConnectionManager DefaultDbConnection
-        {
-            get
-            {
+        public static IConnectionManager DefaultDbConnection {
+            get {
                 if (_defaultDbConnection == null)
                     throw new ETLBoxException("No connection manager found! The component or task you are " +
                         "using expected a  connection manager to connect to the database." +
@@ -24,8 +22,7 @@ namespace ETLBox.ControlFlow
                         "ControlFlow.DefaultDbConnection property!");
                 return _defaultDbConnection;
             }
-            set
-            {
+            set {
                 _defaultDbConnection = value;
             }
         }
@@ -33,8 +30,7 @@ namespace ETLBox.ControlFlow
         /// <summary>
         /// Set all settings back to default (which is null or false)
         /// </summary>
-        public static void ClearSettings()
-        {
+        public static void ClearSettings() {
             DefaultDbConnection = null;
         }
     }
