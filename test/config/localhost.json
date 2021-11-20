@@ -1,0 +1,5 @@
+{
+  "CFG_MSSQL_IP" : "localhost",
+  "CFG_MYSQL_IP" : "localhost",
+  "CFG_POSTGRES_IP" : "localhost"
+}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -20,6 +21,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SQLite;
         public override string QB { get; } = @"""";
         public override string QE { get; } = @"""";
+        public override CultureInfo ConnectionCulture => CultureInfo.InvariantCulture;
         public override bool SupportDatabases { get; } = false;
         public override bool SupportProcedures { get; } = false;
         public override bool SupportSchemas { get; } = false;

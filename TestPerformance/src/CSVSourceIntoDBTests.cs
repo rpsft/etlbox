@@ -107,7 +107,7 @@ namespace ALE.ETLBoxTests.Performance
         }
 
 
-        [Theory, MemberData(nameof(SqlConnection), 10000000, 1000, 1.0)]
+        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
         public void CheckMemoryUsage(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
         {
             //Arrange
@@ -185,7 +185,7 @@ namespace ALE.ETLBoxTests.Performance
         }
 
         [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
-        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
+        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize)
         {
             //Arrange
             ReCreateDestinationTable(connection, "MemoryDestination");

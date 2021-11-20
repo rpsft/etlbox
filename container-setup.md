@@ -38,7 +38,7 @@ Database: postgres
 ```
 docker login
 
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourStrong@Passw0rd" -p 1433:1433 --name localmssql -d mcr.microsoft.com/mssql/server
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourStrong@Passw0rd" -e "MSSQL_PID='Developer'"" -p 1433:1433 --name localmssql -d mcr.microsoft.com/mssql/server
 ```
 
 Login to
@@ -57,6 +57,12 @@ For excel: download latest driver
 - Start "ODBC data sources 64-bit" , just add "Microsoft Access driver" as System DNS
  - enter a data source name,e.g. Accesss - no further configuration needed
 - Everything else is derived from Connection String
+
+### ODBC on Mac
+```
+brew install unixodbc
+brew install mdbtools
+```
 
 ## Line break settings
 

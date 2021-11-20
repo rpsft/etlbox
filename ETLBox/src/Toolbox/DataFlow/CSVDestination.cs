@@ -29,8 +29,11 @@ namespace ALE.ETLBox.DataFlow
 
         public CsvDestination()
         {
-            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
-            Configuration.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
+            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                LeaveOpen = true
+            };
+            
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ResourceType = ResourceType.File;
             InitTargetAction();
@@ -43,7 +46,8 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void InitStream()
         {
-            CsvWriter = new CsvWriter(StreamWriter, Configuration, leaveOpen: true);
+            CsvWriter = new CsvWriter(StreamWriter, Configuration);
+            CsvWriter.Context.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
             WriteHeaderIfRequired();
         }
 

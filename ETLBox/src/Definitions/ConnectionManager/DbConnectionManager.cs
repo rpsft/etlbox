@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -27,6 +28,7 @@ namespace ALE.ETLBox.ConnectionManager
         
         public abstract string QB { get; }
         public abstract string QE { get; }
+        public abstract CultureInfo ConnectionCulture { get; }
         public virtual bool SupportDatabases { get; } = true;
         public virtual bool SupportProcedures { get; } = true;
         public virtual bool SupportSchemas { get; } = true;

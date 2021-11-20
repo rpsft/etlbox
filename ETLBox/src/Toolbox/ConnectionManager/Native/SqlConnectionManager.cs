@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Globalization;
 using Microsoft.Data.SqlClient;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -16,6 +17,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
+        public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
         
         public bool ModifyDBSettings { get; set; } = false;
 

@@ -38,8 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 $@"SELECT COUNT(dbid) as NumberOfConnections FROM sys.sysprocesses
                     WHERE dbid > 0 and DB_NAME(dbid) = '{dbName}'")
                 { ConnectionManager = master, DisableLogging = true }
-                .ExecuteScalar<int>()
-                .Value;
+                .ExecuteScalar<int>();
             Assert.Equal(allowedOpenConnections, openConnections);
         }
 

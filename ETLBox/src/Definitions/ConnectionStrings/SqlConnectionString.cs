@@ -5,7 +5,7 @@ using System;
 namespace ALE.ETLBox
 {
     /// <summary>
-    /// A helper class for encapsulating a conection string to a sql server in an object.
+    /// A helper class for encapsulating a connection string to a sql server in an object.
     /// Internally the SqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
     public class SqlConnectionString :

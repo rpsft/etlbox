@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ALE.ETLBoxTests.Fixtures
 {
-    [CollectionDefinition("Connection Manager")]
+    [CollectionDefinition("Connection Manager", DisableParallelization = true)]
     public class CollectionConnectionManagerFixture : ICollectionFixture<ConnectionManagerFixture> { }
     public class ConnectionManagerFixture
     {

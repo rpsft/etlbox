@@ -31,11 +31,11 @@ namespace ALE.ETLBox.DataFlow
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
         public int ReleaseGCPressureRowCount {get;set; } = 500;
+        public Type ClassMapType { get; set; }
 
         /* Private stuff */
-        CsvReader CsvReader { get; set; }
-        TypeInfo TypeInfo { get; set; }
-
+        private CsvReader CsvReader { get; set; }
+        private TypeInfo TypeInfo { get; set; }
         public CsvSource()
         {
             Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
@@ -53,6 +53,10 @@ namespace ALE.ETLBox.DataFlow
             StreamReader = new StreamReader(Uri, Configuration.Encoding ?? Encoding.UTF8, true);
             SkipFirstRows();
             CsvReader = new CsvReader(StreamReader, Configuration);
+            if (ClassMapType != null)
+            {
+                CsvReader.Context.RegisterClassMap(ClassMapType);
+            }
         }
 
         private void SkipFirstRows()
@@ -67,7 +71,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 CsvReader.Read();
                 CsvReader.ReadHeader();
-                FieldHeaders = CsvReader.Context.HeaderRecord;
+                FieldHeaders = CsvReader.HeaderRecord;
             }
             while (CsvReader.Read())
             {
@@ -84,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (TypeInfo.IsArray)
                 {
-                    string[] line = CsvReader.Context.Record;
+                    string[] line = CsvReader.Parser.Record;
                     Buffer.SendAsync((TOutput)(object)line).Wait();
                 }
                 else if (TypeInfo.IsDynamic)
@@ -104,7 +108,7 @@ namespace ALE.ETLBox.DataFlow
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 if (e is CsvHelperException csvex)
                     ErrorHandler.Send(e,
-                        $"Row: {csvex.ReadingContext?.Row} -- StartPos: {csvex.ReadingContext?.RawRecordStartPosition} -- RawRecord: {csvex.ReadingContext?.RawRecord ?? string.Empty}");
+                        $"Row: {csvex.Context?.Parser.Row} -- RawRecord: {csvex.Context?.Parser.RawRecord ?? string.Empty}");
                 else
                     ErrorHandler.Send(e, "N/A");
             }

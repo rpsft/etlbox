@@ -1,4 +1,5 @@
 ﻿using System.Data.Odbc;
+using System.Globalization;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -25,6 +26,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
+        public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
         
         public SqlOdbcConnectionManager() : base() { }
 

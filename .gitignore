@@ -4,6 +4,22 @@
 #CNAME in docs
 docs/CNAME
 
+# xUnit test results
+/TestOtherConnectors/res/CustomDestination/simpleJson_tobe.json
+
+# CONFIG files (only templates are versioned)
+/TestDatabaseConnectors/default.config.json
+/TestConnectionManager/default.config.json
+/TestFlatFileConnectors/default.config.json
+/TestNonParallel/res/Demo/demolog_tobe.json
+/TestNonParallel/default.config.json
+/TestNonParallel/docker.config.json
+/TestTransformations/default.config.json
+/TestOtherConnectors/default.config.json
+/TestControlFlowTasks/default.config.json
+/TestPerformance/default.config.json
+
+
 #-------- Default template from github below -------
 
 ## Ignore Visual Studio temporary files, build results, and

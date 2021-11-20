@@ -1,0 +1,11 @@
+{
+    "DataFlow": {
+        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlow",
+        "SqlOdbcConnectionString": "Driver={SQL Server};Server=${CFG_MSSQL_IP};Database=ETLBox_DataFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
+        "SQLiteConnectionString": "Data Source=.\\db\\SQLiteDataFlow.db;Version=3;",
+        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.\\db\\AccessDataFlow.accdb",
+        "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_DataFlow;Uid=root;Pwd=etlboxpassword;",
+        "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;",
+        "AzureSqlConnectionString": "Server=tcp:etlbox.database.windows.net,1433;Initial Catalog=etlbox;Persist Security Info=False;User ID=etlboxadmin;Password=ETLBoxPassw0rd!;"
+    }
+}
