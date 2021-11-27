@@ -7,3 +7,4 @@
 *.ico   binary
 *.csv   eol=crlf
 *.json  eol=crlf
+*.xml   eol=crlf

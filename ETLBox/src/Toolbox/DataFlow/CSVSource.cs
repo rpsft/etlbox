@@ -105,7 +105,6 @@ namespace ALE.ETLBox.DataFlow
                     TOutput bufferObject = CsvReader.GetRecord<TOutput>();
                     Buffer.SendAsync(bufferObject).Wait();
                 }
-                AvoidGCPressure();
             }
             catch (Exception e)
             {
@@ -116,15 +115,6 @@ namespace ALE.ETLBox.DataFlow
                 else
                     ErrorHandler.Send(e, "N/A");
             }
-        }
-
-        private void AvoidGCPressure()
-        {
-            if (ReleaseGCPressureRowCount > 0 && ProgressCount % ReleaseGCPressureRowCount == 0)
-            {
-                GC.Collect();
-                Task.Delay(1).Wait();
-            };
         }
 
         protected override void CloseReader()
