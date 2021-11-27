@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using System.Globalization;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox
 {
@@ -9,5 +10,6 @@ namespace ALE.ETLBox
         string TaskHash { get; set; }
         IConnectionManager ConnectionManager { get; set; }
         bool DisableLogging { get; set; }
+        CultureInfo CurrentCulture { get; }
     }
 }

@@ -51,6 +51,8 @@ namespace ALE.ETLBox.DataFlow
             WriteHeaderIfRequired();
         }
 
+        public override CultureInfo CurrentCulture => CultureInfo.InvariantCulture;
+
         protected override void WriteIntoStream(TInput data)
         {
             if (TypeInfo.IsArray)

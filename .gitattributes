@@ -6,3 +6,4 @@
 *.png   binary
 *.ico   binary
 *.csv   eol=crlf
+*.json  eol=crlf

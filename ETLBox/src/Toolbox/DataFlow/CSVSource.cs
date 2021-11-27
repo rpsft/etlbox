@@ -11,7 +11,7 @@ using System.Threading.Tasks.Dataflow;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
+    /// Reads data from a csv source. While reading the data from the file, data is also asynchronously posted into the targets.
     /// Data is read a as string from the source and dynamically converted into the corresponding data format.
     /// </summary>
     /// <example>
@@ -22,6 +22,8 @@ namespace ALE.ETLBox.DataFlow
     /// </example>
     public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
+        private static readonly CultureInfo CsvDefaultCulture = CultureInfo.InvariantCulture;
+
         /* ITask Interface */
         public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";
 
@@ -38,7 +40,7 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
         public CsvSource()
         {
-            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
+            Configuration = new CsvConfiguration(CsvDefaultCulture);
             TypeInfo = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
             ResourceType = ResourceType.File;
         }
@@ -59,9 +61,11 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
+        public override CultureInfo CurrentCulture => CsvDefaultCulture;
+
         private void SkipFirstRows()
         {
-            for (int i = 0; i < SkipRows; i++)
+            for (var i = 0; i < SkipRows; i++)
                 StreamReader.ReadLine();
         }
 
