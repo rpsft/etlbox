@@ -59,11 +59,10 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void WriteIntoStream(TInput data)
         {
-            if (data != null)
-            {
-                JsonSerializer.Serialize(JsonTextWriter, data);
-                LogProgress();
-            }
+            if (data == null) return;
+
+            JsonSerializer.Serialize(JsonTextWriter, data);
+            LogProgress();
         }
 
         protected override void CloseStream()

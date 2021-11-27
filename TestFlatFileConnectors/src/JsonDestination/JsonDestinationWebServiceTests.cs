@@ -1,23 +1,13 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using Moq;
-using Moq.Protected;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Helper;
+using ALE.ETLBoxTests.Fixtures;
+using Moq;
+using Moq.Contrib.HttpClient;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -25,9 +15,55 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class JsonDestinationWebServiceTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public JsonDestinationWebServiceTests(DataFlowDatabaseFixture dbFixture)
         {
+        }
+
+        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+
+        [Fact]
+        public void WriteIntoHttpClient()
+        {
+            //Arrange
+            //Arrange
+            var handler = new Mock<HttpMessageHandler>();
+            string result = null;
+
+            handler
+                .SetupAnyRequest()
+                .Returns(async (HttpRequestMessage request, CancellationToken _) =>
+                {
+                    result = await request.Content!.ReadAsStringAsync(_);
+                    return new HttpResponseMessage
+                    {
+                        Content = new StringContent($"Hello, {result}")
+                    };
+                })
+                .Verifiable();
+            // .ReturnsResponse(HttpStatusCode.OK);
+
+            var httpClient = handler.CreateClient();
+
+            var source = new MemorySource<MySimpleRow>();
+            var mySimpleRow = new MySimpleRow { Col1 = 1, Col2 = "Test1" };
+            source.DataAsList.Add(mySimpleRow);
+
+            //Act
+            var dest = new JsonDestination<MySimpleRow>("http://test.test", ResourceType.Http)
+            {
+                HttpClient = httpClient
+            };
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            handler.VerifyRequest(
+                message => message.Method == HttpMethod.Post &&
+                           message.RequestUri == new Uri("http://test.test")
+                , Times.Exactly(1)
+            );
+            Assert.Equal(JsonConvert.SerializeObject(new[] { mySimpleRow }, Formatting.Indented), result);
         }
 
 
@@ -36,60 +72,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string Col2 { get; set; }
             public int Col1 { get; set; }
         }
-
-        [Fact]
-        public void WriteIntoHttpClient()
-        {
-            //Arrange
-            Mock<HttpMessageHandler> handlerMock = CreateHandlerMoq();
-            HttpClient httpClient = CreateHttpClient(handlerMock);
-
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.DataAsList.Add(new MySimpleRow() { Col1 = 1, Col2 = "Test1" });
-
-            //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("http://test.test", ResourceType.Http);
-            dest.HttpClient = httpClient;
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            handlerMock.Protected().Verify(
-               "SendAsync",
-               Times.Exactly(1),
-               ItExpr.Is<HttpRequestMessage>(req =>
-                  req.Method == HttpMethod.Get
-                  && req.RequestUri.Equals(new Uri("http://test.test"))
-               ),
-               ItExpr.IsAny<CancellationToken>()
-            );
-        }
-
-        private Mock<HttpMessageHandler> CreateHandlerMoq()
-        {
-            //Arrange
-            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            handlerMock.Protected()
-               .Setup<Task<HttpResponseMessage>>(
-                  "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>()
-               )
-               .ReturnsAsync(new HttpResponseMessage()
-               {
-                   StatusCode = HttpStatusCode.OK
-               })
-               .Verifiable();
-            return handlerMock;
-        }
-
-        private HttpClient CreateHttpClient(Mock<HttpMessageHandler> handlerMock)
-        {
-            return new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://test.test/"),
-            };
-        }
-
-
     }
 }
