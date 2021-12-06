@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
         public JsonSerializer JsonSerializer { get; set; }
         JsonTextWriter JsonTextWriter { get; set; }
 
-        public JsonDestination() : base()
+        public JsonDestination()
         {
             JsonSerializer = new JsonSerializer()
             {

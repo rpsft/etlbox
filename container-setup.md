@@ -63,14 +63,3 @@ For excel: download latest driver
 brew install unixodbc
 brew install mdbtools
 ```
-
-## Line break settings
-
-- current tests and files for comparison are created under windows and have \r\n as LineBreak (instead of \n only)
-- if cloned under mac os or linux with git clone, the line breaks will be converted automatically into \n
-- now tests will fail, because the as-is files created in windows will have different line breaks that than the to-be files in the cloned project
-- to avoid the converting the line breaks, you need to set the core.autocrlf=true in global git config:
-```
-git config --global --add core.autocrlf true
-```
-After doing this, you need to clone the project (if you already cloned it, remove it and clone it again)

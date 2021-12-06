@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests
             SQLiteConnectionString connString = new SQLiteConnectionString();
 
             //Act
-            connString.Value = "Data Source=.\\db\\SQLiteControlFlow.db;Version=3;";
+            connString.Value = $"Data Source=.{Path.PathSeparator}db{Path.PathSeparator}SQLiteControlFlow.db;Version=3;";
             string withoutDbName = connString.CloneWithoutDbName().Value;
             string newDbName = connString.CloneWithNewDbName("test").Value;
 

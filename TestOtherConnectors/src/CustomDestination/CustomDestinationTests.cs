@@ -1,14 +1,13 @@
-using ALE.ETLBox;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using TestOtherConnectors.Helpers;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -16,29 +15,25 @@ namespace ALE.ETLBoxTests.DataFlowTests
     [Collection("DataFlow")]
     public class CustomDestinationTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
         public CustomDestinationTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
-        public class MySimpleRow
-        {
-            public int Col1 { get; set; }
-            public string Col2 { get; set; }
-        }
+        private SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void InsertIntoTable()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("Source");
+            var source2Columns = new TwoColumnsTableFixture("Source");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestination");
+            var dest2Columns = new TwoColumnsTableFixture("CustomDestination");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
-            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
-                row => {
+            var source = new DbSource<MySimpleRow>(SqlConnection, "Source");
+            var dest = new CustomDestination<MySimpleRow>(
+                row =>
+                {
                     SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
                         $"INSERT INTO dbo.CustomDestination VALUES({row.Col1},'{row.Col2}')");
                 }
@@ -55,23 +50,31 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void CreateJsonFile()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("JSonSource");
+            var source2Columns = new TwoColumnsTableFixture("JSonSource");
             source2Columns.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "JSonSource");
-            List<MySimpleRow> rows = new List<MySimpleRow>();
+            var source = new DbSource<MySimpleRow>(SqlConnection, "JSonSource");
+            var rows = new List<MySimpleRow>();
 
             //Act
-            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
+            var dest = new CustomDestination<MySimpleRow>(
                 row => rows.Add(row)
             );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
             //Act
-            string json = JsonConvert.SerializeObject(rows, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(rows, Formatting.Indented);
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/CustomDestination/simpleJson_tobe.json"), json);
+            Assert.Equal(File.ReadAllText("res/CustomDestination/simpleJson_tobe.json").NormalizeLineEndings(), json);
+        }
+
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+        public class MySimpleRow
+        {
+            public int Col1 { get; set; }
+            public string Col2 { get; set; }
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ALE.ETLBoxTests.Logging
     [Collection("Logging")]
     public class DatabaseTasksLoggingTests : IDisposable
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
+        private SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
 
         public DatabaseTasksLoggingTests(LoggingDatabaseFixture dbFixture)
         {
@@ -28,11 +28,11 @@ namespace ALE.ETLBoxTests.Logging
             ControlFlow.ClearSettings();
         }
 
-        private int? CountLogEntries(string taskname)
+        private int? CountLogEntries(string taskName)
         {
             return new SqlTask("Find log entry", $@"
 SELECT COUNT(*) FROM etlbox_log
-WHERE task_type='{taskname}'
+WHERE task_type='{taskName}'
 GROUP BY task_hash")
             {
                 DisableLogging = true,

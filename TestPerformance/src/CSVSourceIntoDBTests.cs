@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.Performance
          MemberData(nameof(PostgresConnection), 100000, 1000, 0.5),
          MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5)
         ]
-        public void CompareGenericAndDynamic(IConnectionManager connection, int numberOfRows, int batchSize,
+        public void GenericAndDynamicAreNotTooDifferent(IConnectionManager connection, int numberOfRows, int batchSize,
             double deviation)
         {
             //Arrange
@@ -91,10 +91,14 @@ namespace ALE.ETLBoxTests.Performance
             //Assert
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationNonGenericETLBox"));
             Assert.Equal(numberOfRows, RowCountTask.Count(connection, "CsvDestinationGenericETLBox"));
-            Assert.True(Math.Abs(timeElapsedETLBoxGeneric.TotalMilliseconds -
-                                 timeElapsedETLBoxNonGeneric.TotalMilliseconds) <
-                        Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds,
-                            timeElapsedETLBoxNonGeneric.TotalMilliseconds) * deviation);
+
+            var timeDifference = Math.Abs(timeElapsedETLBoxGeneric.TotalMilliseconds -
+                                          timeElapsedETLBoxNonGeneric.TotalMilliseconds);
+
+            var diffPercentage = timeDifference / Math.Min(timeElapsedETLBoxGeneric.TotalMilliseconds,
+                timeElapsedETLBoxNonGeneric.TotalMilliseconds);
+            
+            Assert.InRange(diffPercentage, 0.0, deviation);
         }
 
         private TimeSpan GetETLBoxTime<T>(int numberOfRows, CsvSource<T> source, DbDestination<T> dest)
@@ -116,7 +120,7 @@ namespace ALE.ETLBoxTests.Performance
         }
 
 
-        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.2)]
+        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.3)]
         public void CheckMemoryUsage(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
         {
             //Arrange
@@ -201,7 +205,9 @@ namespace ALE.ETLBoxTests.Performance
         }
 
         [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
-        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize)
+#pragma warning disable xUnit1026
+        public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize, double _)
+#pragma warning restore xUnit1026
         {
             //Arrange
             ReCreateDestinationTable(connection, "MemoryDestination");

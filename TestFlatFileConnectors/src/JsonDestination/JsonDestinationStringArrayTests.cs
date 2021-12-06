@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TestFlatFileConnectors.Helpers;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -39,7 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3StringArray.json")
+            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3StringArray.json").NormalizeLineEndings()
                 , File.ReadAllText("./SimpleNonGeneric.json"));
         }
 
