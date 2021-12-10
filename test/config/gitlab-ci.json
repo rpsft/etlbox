@@ -1,0 +1,6 @@
+{
+  "CFG_MSSQL_IP" : "localmssql",
+  "CFG_MYSQL_IP" : "localmysql",
+  "CFG_POSTGRES_IP" : "localpostgres",
+  "CFG_PD" : "/"
+}

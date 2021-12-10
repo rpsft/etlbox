@@ -42,4 +42,7 @@ test_job:
     # FLUSH PRIVILEGES;
 
   script:
+    - pushd test
+    - pwsh ./Set-Configuration.ps1 gitlab-ci
+    - popd
     - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
