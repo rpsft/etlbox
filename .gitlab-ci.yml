@@ -1,6 +1,6 @@
 # place project specific paths in variables to make the rest of the script more generic
 variables:
-  NUPKG_FOLDER: 'RapidSoft.Micro.Throttle/bin/Release'
+  NUPKG_FOLDER: 'ETLBox/bin/Release/'
 
 stages:
   - build
@@ -19,5 +19,27 @@ build_job:
 
 test_job:
   stage: test
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  services:
+    - name: mysql/mysql-server
+      alias: localmysql
+    - name: postgres
+      alias: localpostgres
+    - name: mcr.microsoft.com/mssql/server
+      alias: localmssql
+  variables:
+    MYSQL_ROOT_HOST: '%'
+    MYSQL_ROOT_PASSWORD: 'etlboxpassword'
+    POSTGRES_PASSWORD: 'etlboxpassword'
+    ACCEPT_EULA: 'Y'
+    SA_PASSWORD: 'YourStrong@Passw0rd'
+    MSSQL_PID: 'Developer'
+  before_script:
+    # mysql -uroot -petlboxpassword
+
+    # ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY 'etlboxpassword';
+    # ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'etlboxpassword';
+    # FLUSH PRIVILEGES;
+
   script:
-    - dotnet test RapidSoft.Micro.Throttle.Tests/RapidSoft.Micro.Throttle.Tests.csproj
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
