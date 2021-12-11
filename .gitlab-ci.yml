@@ -28,9 +28,13 @@ test_job:
     - name: mcr.microsoft.com/mssql/server
       alias: localmssql
   variables:
+    # MySQL image customization
     MYSQL_ROOT_HOST: '%'
     MYSQL_ROOT_PASSWORD: 'etlboxpassword'
+    # MYSQL_USER: , MYSQL_PASSWORD
+
     POSTGRES_PASSWORD: 'etlboxpassword'
+
     ACCEPT_EULA: 'Y'
     SA_PASSWORD: 'YourStrong@Passw0rd'
     MSSQL_PID: 'Developer'
@@ -45,4 +49,13 @@ test_job:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestConnectionManager
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestControlFlowTasks
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestDatabaseConnectors
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestFlatFileConnectors
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestHelper
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestNonParallel
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestOtherConnectors
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestPerformance
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestShared
+    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestTransformations

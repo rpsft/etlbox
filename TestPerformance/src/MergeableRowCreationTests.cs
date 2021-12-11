@@ -53,6 +53,7 @@ namespace ALE.ETLBoxTests.Performance
         }
 
         [Theory]
+        [Trait("Category", "Performance")]
         [InlineData(2000000, 0.20)]
         public void CompareWithHiddenReflection(int objectsToCreate, double deviation)
         {

@@ -65,7 +65,9 @@ namespace ALE.ETLBoxTests.Performance
         /*
          * X Rows with 1027 bytes per Row (1020 bytes data + 7 bytes for sql server)
          */
-        [Theory, MemberData(nameof(SqlConnection), 100000, 1000, 0.5),
+        [Theory]
+        [Trait("Category", "Performance")]
+        [MemberData(nameof(SqlConnection), 100000, 1000, 0.5),
          MemberData(nameof(MySqlConnection), 100000, 1000, 0.5),
          MemberData(nameof(PostgresConnection), 100000, 1000, 0.5),
          MemberData(nameof(SQLiteConnection), 100000, 1000, 0.5)
@@ -120,7 +122,9 @@ namespace ALE.ETLBoxTests.Performance
         }
 
 
-        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.3)]
+        [Theory]
+        [Trait("Category", "Performance")]
+        [MemberData(nameof(SqlConnection), 1000000, 1000, 1.3)]
         public void CheckMemoryUsage(IConnectionManager connection, int numberOfRows, int batchSize, double deviation)
         {
             //Arrange
@@ -204,7 +208,9 @@ namespace ALE.ETLBoxTests.Performance
             }
         }
 
-        [Theory, MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
+        [Theory]
+        [Trait("Category", "Performance")]
+        [MemberData(nameof(SqlConnection), 1000000, 1000, 1.0)]
 #pragma warning disable xUnit1026
         public void CheckMemoryUsageDbDestination(IConnectionManager connection, int numberOfRows, int batchSize, double _)
 #pragma warning restore xUnit1026
