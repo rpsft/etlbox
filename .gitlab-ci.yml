@@ -1,21 +1,20 @@
-# place project specific paths in variables to make the rest of the script more generic
-variables:
-  NUPKG_FOLDER: 'ETLBox/bin/Release/'
-
 stages:
   - build
   - test
-  - deploy
 
 build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
+  variables:
+    NUPKG_FOLDER: 'ETLBox/bin/Release/'
   script:
     - dotnet build ETLBox.sln -c Release
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - "$NUPKG_FOLDER/"
+  rules:
+    - if: $CI_COMMIT_TAG
 
 test_job:
   stage: test
@@ -25,7 +24,7 @@ test_job:
       alias: localmysql
     - name: postgres
       alias: localpostgres
-    - name: mcr.microsoft.com/mssql/server
+    - name: git.rapidsoft.ru:4567/open-source/mssql-docker:latest
       alias: localmssql
   variables:
     # MySQL image customization
@@ -64,3 +63,5 @@ test_job:
     - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestPerformance
     - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestShared
     - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestTransformations
+  rules:
+    - if: $CI_COMMIT_TAG
