@@ -33,11 +33,16 @@ test_job:
     MYSQL_ROOT_PASSWORD: 'etlboxpassword'
     # MYSQL_USER: , MYSQL_PASSWORD
 
+    # Postgres image customization
     POSTGRES_PASSWORD: 'etlboxpassword'
 
+    # MS SQL image customization
     ACCEPT_EULA: 'Y'
     SA_PASSWORD: 'YourStrong@Passw0rd'
     MSSQL_PID: 'Developer'
+
+    # dotnet settings
+    DOT_NET_TEST_OPTIONS: '-c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance"'
   before_script:
     # mysql -uroot -petlboxpassword
 
@@ -49,13 +54,13 @@ test_job:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestConnectionManager
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestControlFlowTasks
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestDatabaseConnectors
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestFlatFileConnectors
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestHelper
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestNonParallel
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestOtherConnectors
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestPerformance
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestShared
-    - dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance" ./TestTransformations
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestConnectionManager
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestControlFlowTasks
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestDatabaseConnectors
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestFlatFileConnectors
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestHelper
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestNonParallel
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestOtherConnectors
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestPerformance
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestShared
+    - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestTransformations

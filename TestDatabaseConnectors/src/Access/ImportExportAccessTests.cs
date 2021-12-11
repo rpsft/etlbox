@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TestDatabaseConnectors.Helpers;
+using TestShared.Attributes;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests

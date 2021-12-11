@@ -7,6 +7,7 @@ using ALE.ETLBoxTests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TestShared.Attributes;
 using Xunit;
 
 namespace ALE.ETLBoxTests.ControlFlowTests
@@ -21,7 +22,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 new List<TableColumn>() { new TableColumn("id", "int") });
         }
 
-        [Fact]
+        [MultiprocessorOnlyFact]
         public void FastExecutingSqlsInParallel()
         {
             //Arrange
@@ -35,7 +36,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal(10, RowCountTask.Count(Connection, "FastParallel"));
         }
 
-        [Fact]
+        [MultiprocessorOnlyFact]
         public void LongExecutingSqlTaskInParallel()
         {
             //Arrange

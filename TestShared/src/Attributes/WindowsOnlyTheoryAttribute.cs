@@ -1,8 +1,7 @@
-using System;
 using System.Runtime.InteropServices;
 using Xunit;
 
-namespace TestDatabaseConnectors.Helpers
+namespace TestShared.Attributes
 {
     public sealed class WindowsOnlyTheoryAttribute : TheoryAttribute
     {
