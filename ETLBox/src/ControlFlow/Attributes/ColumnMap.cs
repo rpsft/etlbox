@@ -43,11 +43,18 @@ namespace ETLBox.DataFlow
         /// Index of the element in the array, only necessary if you use arrays 
         /// as data type
         /// </summary>
+        // int? is only ok because this property can't be used as an attribute decorator - arrays info can only
+        // be set manually. Otherwise a nullable would be an issue: https://etlbox.atlassian.net/browse/EB-128
         public int? ArrayIndex { get; set; }
 
         /// <summary>
         /// Name of the property that should be mapped to a database column
         /// </summary>
         public string PropertyName { get; set; }
+
+        /// <summary>
+        /// If set to true, this property will be ignored and not mapped to any column. 
+        /// </summary>
+        public bool IgnoreColumn { get; set; }
     }
 }

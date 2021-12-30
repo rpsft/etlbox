@@ -60,11 +60,13 @@ namespace ETLBox.Helper
                     return "System.Decimal";
                 case "real":
                 case "float4":
+                case "binary_float":
                     return "System.Single";
                 case "float": //Float is 64bit inSql Server 
                 case "float8":
                 case "double":
                 case "double precision":
+                case "binary_double":
                     return "System.Double";
                 case "date":
                 case "datetime":
@@ -90,6 +92,7 @@ namespace ETLBox.Helper
                 case "raw":
                 case "graphic":
                 case "vargraphic":
+                case "bfile":
                     return "System.Byte[]";
                 default:
                     return "System.String";

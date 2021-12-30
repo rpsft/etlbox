@@ -131,6 +131,12 @@ namespace ETLBox.ControlFlow
         }
 
         static string SqlServerBasicSql(bool IsOdbc = false) {
+            /* EB-186: joining with type table: hierarchyid, geometry and geography have all same system_type_id
+             * but different user_type_id - and is_assembly_type is set to true for these 3
+             * alternative condition in join with system.types:
+             * WHEN LOWER(tpes.name) in ('hierarchyid', 'geometry', 'geography')
+             * See also: https://docs.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-types-transact-sql?view=sql-server-ver15
+             */
             return $@"
 SELECT cols.name
      , CASE
@@ -177,7 +183,12 @@ FROM sys.columns cols
                     ON tbl.schema_id = sc.schema_id
          INNER JOIN sys.types tpes
                     ON tpes.system_type_id = cols.system_type_id
+                        AND tpes.user_type_id = (CASE 
+                            WHEN tpes.is_assembly_type = 1 
+                                THEN cols.user_type_id
+                                ELSE tpes.user_type_id END)
                         AND tpes.is_user_defined = 0
+                        AND tpes.name <> 'sysname'
          LEFT JOIN sys.identity_columns ident
                    ON ident.object_id = cols.object_id
          LEFT JOIN sys.indexes pkidx
@@ -195,7 +206,6 @@ FROM sys.columns cols
                        AND compCol.column_id = cols.column_id
 WHERE (CONCAT(sc.name, '.', tbl.name) = { (!IsOdbc ? "@TN1" : "?") } OR tbl.name = { (!IsOdbc ? "@TN2" : "?") })
   AND tbl.type IN ('U', 'V')
-  AND tpes.name <> 'sysname'
 ORDER BY cols.column_id
 ";
         }
@@ -213,10 +223,7 @@ ORDER BY cols.column_id
             , seed_value => curCol.IdentitySeed = (int?)(Convert.ToInt32(seed_value))
             , increment_value => curCol.IdentityIncrement = (int?)(Convert.ToInt32(increment_value))
             , primary_key => curCol.IsPrimaryKey = (bool)primary_key
-            , default_value =>
-                    curCol.DefaultValue = TryRemoveTrailingSingleQuotes(
-                            default_value?.ToString().Substring(2, (default_value.ToString().Length) - 4)
-                            )
+            , default_value => curCol.DefaultValue = Trail(default_value, "(",")")
             , collation_name => curCol.Collation = collation_name?.ToString()
             , computed_column_definition => curCol.ComputedColumn = computed_column_definition?.ToString().Substring(1, (computed_column_definition.ToString().Length) - 2)
             , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
@@ -232,6 +239,7 @@ ORDER BY cols.column_id
             readMetaSql.ExecuteReader();
             return result;
         }
+               
 
         static string SqlServerUniqueConstraintSql(bool IsOdbc = false) {
             return $@"
@@ -680,7 +688,7 @@ ORDER BY fk.FK_NAME, fk.PKTABLE_NAME, fk.KEY_SEQ, c.ORDINAL_POSITION;
             , name => curCol.Name = name.ToString()
             , type => curCol.DataType = type.ToString()
             , notnull => curCol.AllowNulls = (long)notnull == 0 ? true : false
-            , dftl_value => curCol.DefaultValue = TryRemoveTrailingSingleQuotes(dftl_value?.ToString())
+            , dftl_value => curCol.DefaultValue = dftl_value?.ToString()
             , pk => curCol.IsPrimaryKey = (long)pk >= 1 ? true : false
              ) {
                 DisableLogging = true,
@@ -757,7 +765,7 @@ ORDER BY cols.ordinal_position
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , serial => curCol.IsIdentity = (int)serial == 1 ? true : false
             , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
-            , column_default => curCol.DefaultValue = TryRemoveTrailingSingleQuotes(column_default?.ToString().ReplaceIgnoreCase("::character varying", ""))
+            , column_default => curCol.DefaultValue = column_default?.ToString().ReplaceIgnoreCase("::character varying", "")
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
@@ -852,7 +860,7 @@ FROM (
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
             , auto_increment => curCol.IsIdentity = (int)auto_increment == 1 ? true : false
              , primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false
-            , column_default => curCol.DefaultValue = TryRemoveTrailingSingleQuotes(column_default?.ToString())
+            , column_default => curCol.DefaultValue = column_default?.ToString()
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , comment => curCol.Comment = comment?.ToString()
@@ -880,11 +888,13 @@ SELECT cols.COLUMN_NAME
                IN ('VARCHAR', 'CHAR', 'NCHAR', 'NVARCHAR', 'NVARCHAR2', 'NCHAR2', 'VARCHAR2', 'CHAR2')
                THEN cols.DATA_TYPE || '(' || cols.CHAR_LENGTH || ')'
 
-           WHEN cols.DATA_TYPE
-               IN ('NUMBER')
-               THEN cols.DATA_TYPE || '(' || cols.DATA_LENGTH || ',' ||
-                    CASE WHEN cols.DATA_SCALE IS NULL THEN 127 ELSE cols.DATA_SCALE END
-               || ')'
+            WHEN cols.DATA_TYPE
+               IN ('NUMBER') AND (cols.DATA_PRECISION IS NOT NULL OR cols.DATA_SCALE IS NOT NULL)
+               THEN cols.DATA_TYPE || '(' ||
+                    CASE WHEN cols.DATA_PRECISION IS NULL THEN cols.DATA_LENGTH ELSE cols.DATA_PRECISION END
+                    || ',' ||
+                    CASE WHEN cols.DATA_SCALE IS NULL THEN 0 ELSE cols.DATA_SCALE END
+                    || ')'
 
            ELSE cols.DATA_TYPE
     END                                                                             AS data_type
@@ -1052,7 +1062,7 @@ ORDER BY cols.COLUMN_ID
             , nullable => curCol.AllowNulls = nullable.ToString() == "Y" ? true : false
             , identity_column => curCol.IsIdentity = identity_column?.ToString() == "YES" ? true : false
              , primary_key => curCol.IsPrimaryKey = primary_key?.ToString() == "ENABLED" ? true : false
-            , data_default => curCol.DefaultValue = TryRemoveTrailingSingleQuotes(data_default?.ToString())
+            , data_default => curCol.DefaultValue = data_default?.ToString()
             , collation => curCol.Collation = collation?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
             , pk_name => result.PrimaryKeyConstraintName = String.IsNullOrWhiteSpace(pk_name?.ToString()) ? result.PrimaryKeyConstraintName : pk_name.ToString()
@@ -1177,7 +1187,7 @@ ORDER BY c.ORDINAL_POSITION;
               , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
               , is_identity => curCol.IsIdentity = (int)is_identity == 1 ? true : false
               , is_primary => curCol.IsPrimaryKey = (int)is_primary == 1 ? true : false
-              , default_value => curCol.DefaultValue = TryRemoveTrailingSingleQuotes(default_value?.ToString())
+              , default_value => curCol.DefaultValue = default_value?.ToString()
               //, collation => curCol.Collation = collation?.ToString()
               //, computed_formula => curCol.ComputedColumn = computed_formula?.ToString()
               , remarks => curCol.Comment = remarks?.ToString()
@@ -1270,11 +1280,11 @@ ORDER BY c.ORDINAL_POSITION;
             return connDbObject?.ReadTableDefinition(TN);
         }
 
-        protected static string TryRemoveTrailingSingleQuotes(string value) {
-            if (!string.IsNullOrEmpty(value) && value.StartsWith("'") && value.EndsWith("'"))
-                return value.TrimStart('\'').TrimEnd('\'');
-            else
-                return value;
+        static string Trail(object value, string firstChar, string lastChar) {
+            string defv = value as string;
+            if (defv == null) return null;
+            return defv.StartsWith(firstChar) && defv.EndsWith(lastChar) ? (defv.Substring(1, defv.Length - 2)) : defv;
         }
+
     }
 }

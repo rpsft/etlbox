@@ -13,9 +13,7 @@ namespace ETLBox.ControlFlow
     {
         private string _taskType;
 
-        /// <summary>
-        /// A type description of the task or component. This is usually the class name.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual string TaskType {
             get {
                 if (String.IsNullOrEmpty(_taskType)) {
@@ -34,15 +32,10 @@ namespace ETLBox.ControlFlow
             set => _taskType = value;
         }
 
-        /// <summary>
-        /// A name to identify the task or component. Every component or task comes
-        /// with a default name that can be overwritten.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual string TaskName { get; set; } = "N/A";
 
-        /// <summary>
-        /// If set to true, the component or task won't produce any log output.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual bool DisableLogging {
             get {
                 if (Logging.Logging.DisableAllLogging == false)
@@ -56,9 +49,7 @@ namespace ETLBox.ControlFlow
         }
         private bool _disableLogging;
 
-        /// <summary>
-        /// Creates a unique hash value to identify the task.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual string TaskHash {
             get {
                 if (_taskHash == null)

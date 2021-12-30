@@ -252,8 +252,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
 
         private string CreateDefaultSql(TableColumn col) {
             string defaultSql = string.Empty;
-            if (!col.IsPrimaryKey)
-                defaultSql = col.DefaultValue != null ? $" DEFAULT {SetQuotesIfString(col.DefaultValue)}" : string.Empty;
+            if (!col.IsPrimaryKey)                
+                defaultSql = col.DefaultValue != null ? $" DEFAULT {col.DefaultValue}" : string.Empty;
             return defaultSql;
         }
 
@@ -282,16 +282,16 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
                 return string.Empty;
         }
 
-        string SetQuotesIfString(string value) {
-            if (!Regex.IsMatch(value, @"^\d+(\.\d+|)$")) {
-                if (value.StartsWith("'") && value.EndsWith("'"))
-                    return value;
-                else
-                    return $"'{value}'";
-            } else
-                return value;
+        //string SetQuotesIfString(string value) {
+        //    if (!Regex.IsMatch(value, @"^\d+(\.\d+|)$")) {
+        //        if (value.StartsWith("'") && value.EndsWith("'"))
+        //            return value;
+        //        else
+        //            return $"'{value}'";
+        //    } else
+        //        return value;
 
-        }
+        //}
 
         #endregion
 
@@ -520,15 +520,27 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
         }
 
         private bool AreDefaultValuesDifferent(TableColumn newcol, TableColumn existingcol) {
+            if (string.IsNullOrWhiteSpace(newcol.DefaultValue) && string.IsNullOrWhiteSpace(existingcol.DefaultValue)) return false;
             if ((!string.IsNullOrWhiteSpace(existingcol.DefaultValue) && string.IsNullOrWhiteSpace(newcol.DefaultValue))
                   || (string.IsNullOrWhiteSpace(existingcol.DefaultValue) && !string.IsNullOrWhiteSpace(newcol.DefaultValue))
-                  || existingcol.DefaultValue != newcol.DefaultValue)
+                  || CompareWithoutDbSpecialChars(existingcol.DefaultValue,newcol.DefaultValue))
                 return true;
             else
                 return false;
         }
 
+        private bool CompareWithoutDbSpecialChars(string value1, string value2) {            
+            value1 = value1.Replace(" ", "").Replace("'","").ToLower();
+            value2 = value2.Replace(" ", "").Replace("'","").ToLower();
+            if (this.ConnectionType == ConnectionManagerType.SqlServer) {
+                value1 = value1.Replace("(", "").Replace(")", "");
+                value2 = value2.Replace("(", "").Replace(")", "");                
+            }
+            return !string.Equals(value1, value2);
+        }
+
         bool AreComputedValuesDifferent(TableColumn newcol, TableColumn existingcol) {
+            if (string.IsNullOrWhiteSpace(newcol.ComputedColumn) && string.IsNullOrWhiteSpace(existingcol.ComputedColumn)) return false;
             if ((!string.IsNullOrWhiteSpace(existingcol.ComputedColumn) && string.IsNullOrWhiteSpace(newcol.ComputedColumn))
                   || (string.IsNullOrWhiteSpace(existingcol.ComputedColumn) && !string.IsNullOrWhiteSpace(newcol.ComputedColumn))
                   || existingcol.ComputedColumn != newcol.ComputedColumn)

@@ -33,7 +33,7 @@ namespace ETLBox.Helper
                     else if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
                         token.Text == ")")
                         functionStartCount--;
-                    if (token.Type == TSQL.Tokens.TSQLTokenType.Identifier)
+                    if (token.Type == TSQL.Tokens.TSQLTokenType.Identifier || token.Type == TSQL.Tokens.TSQLTokenType.StringLiteral)
                         prevToken = token.Text;
                     if (token.Type == TSQL.Tokens.TSQLTokenType.Character &&
                         functionStartCount <= 0 &&

@@ -77,7 +77,7 @@ namespace ETLBox.Logging
                     new TableColumn("end_date","DATETIME", allowNulls: true),
                     new TableColumn("source","VARCHAR(20)", allowNulls: true),
                     new TableColumn("source_id","BIGINT", allowNulls: true),
-                    new TableColumn("process_name","VARCHAR(100)", allowNulls: false) { DefaultValue = "N/A" },
+                    new TableColumn("process_name","VARCHAR(100)", allowNulls: false) { DefaultValue = "'N/A'" },
                     new TableColumn("start_message","VARCHAR(2000)", allowNulls: true)  ,
                     new TableColumn("is_running","SMALLINT", allowNulls: false) { DefaultValue = "1" },
                     new TableColumn("end_message","VARCHAR(2000)", allowNulls: true)  ,
