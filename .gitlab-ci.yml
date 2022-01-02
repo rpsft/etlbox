@@ -77,10 +77,11 @@ test_job:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
+    - dotnet build ETLBox.sln -c Release
     # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestConnectionManager
     # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestControlFlowTasks
     # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestDatabaseConnectors
-    - pushd ./TestFlatFileConnectors; dotnet test ${DOT_NET_TEST_OPTIONS} .; popd
+    - pushd ./TestFlatFileConnectors; dotnet test --no-build ${DOT_NET_TEST_OPTIONS} .; popd
     # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestHelper
     # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestNonParallel
     # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestOtherConnectors

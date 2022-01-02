@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-$docker='nerdctl'
+$docker='docker'
 & $docker login
 
 #$env:DOCKER_BUILDKIT=1

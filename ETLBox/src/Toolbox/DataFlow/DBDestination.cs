@@ -104,8 +104,7 @@ namespace ALE.ETLBox.DataFlow
                     DisableLogging = true,
                     ConnectionManager = BulkInsertConnectionManager
                 };
-                sql
-                .BulkInsert(TableData, DestinationTableDefinition.Name);
+                sql.BulkInsert(TableData, DestinationTableDefinition.Name);
             }
             catch (Exception e)
             {

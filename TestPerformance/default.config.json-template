@@ -5,6 +5,6 @@
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.${CFG_PD}db${CFG_PD}AccessPerformance.mdb",
         "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_Performance;Uid=root;Pwd=etlboxpassword;",
         "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_Performance;User Id=postgres;Password=etlboxpassword;",
-        "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLitePerformance.db;Version=3;"
+        "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLitePerformance.db;"
     }
 }

@@ -15,10 +15,10 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class DbDestinationTransactionTests
+    public class DbDestinationTransactionTests : IClassFixture<DataFlowDatabaseFixture>
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public DbDestinationTransactionTests(DataFlowDatabaseFixture dbFixture)
+        public DbDestinationTransactionTests(DataFlowDatabaseFixture _)
         {
         }
 
