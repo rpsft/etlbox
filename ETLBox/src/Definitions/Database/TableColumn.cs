@@ -18,8 +18,9 @@ namespace ALE.ETLBox
         public string DefaultValue { get; set; }
         public string Collation { get; set; }
         public string ComputedColumn { get; set; }
-        public bool HasComputedColumn => !String.IsNullOrWhiteSpace(ComputedColumn);
+        public bool HasComputedColumn => !string.IsNullOrWhiteSpace(ComputedColumn);
         public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
+        public DateTimeKind? NETDateTimeKind => DataTypeConverter.GetNETDateTimeKind(DataType);
 
         public string Comment { get; set; } //MySql only
         public int? IdentitySeed { get; set; } //Sql Server only

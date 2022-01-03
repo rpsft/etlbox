@@ -165,5 +165,24 @@ namespace ALE.ETLBox.ConnectionManager
                 return dbSpecificTypeName;
             }
         }
+
+        public static DateTimeKind? GetNETDateTimeKind(string dbSpecificTypeName)
+        {
+            switch (dbSpecificTypeName)
+            {
+                case "date":
+                case "datetime":
+                case "smalldatetime":
+                case "datetime2":
+                case "time":
+                case "timestamp":
+                    return DateTimeKind.Unspecified;
+                case "timetz":
+                case "timestamptz":
+                    return DateTimeKind.Utc;
+                default:
+                    return null;
+            }
+        }
     }
 }

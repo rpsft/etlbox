@@ -1,6 +1,6 @@
 {
     "DataFlow": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlow",
+        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlow",
         "SqlOdbcConnectionString": "Driver={SQL Server};Server=${CFG_MSSQL_IP};Database=ETLBox_DataFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
         "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLiteDataFlow.db;",
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.${CFG_PD}db${CFG_PD}AccessDataFlow.accdb",

@@ -1,6 +1,6 @@
 {
     "ControlFlow": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ControlFlow",
+        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ControlFlow",
         "SSASConnectionString": "Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox_ControlFlow",
         "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLiteControlFlow.db;",
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.${CFG_PD}db${CFG_PD}AccessControlFlow.accdb",

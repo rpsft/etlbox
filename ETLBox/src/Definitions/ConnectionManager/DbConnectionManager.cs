@@ -108,7 +108,10 @@ namespace ALE.ETLBox.ConnectionManager
                 {
                     var newPar = cmd.CreateParameter();
                     newPar.ParameterName = par.Name;
-                    newPar.DbType = par.DBType;
+                    newPar.DbType = ConnectionManagerType == ConnectionManagerType.Postgres && par.DBType == DbType.DateTime 
+                        ? DbType.DateTime2  // TODO: Move this hack to more appropriate place
+                                            // (fix for https://www.npgsql.org/doc/release-notes/6.0.html#major-changes-to-timestamp-mapping in NpgSql 6.0+)
+                        : par.DBType;
                     newPar.Value = par.Value;
                     cmd.Parameters.Add(newPar);
                 }

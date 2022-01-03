@@ -1,6 +1,6 @@
 {
     "Performance": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_Performance",
+        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_Performance",
         "SqlOdbcConnectionString": "Driver={SQL Server};Server=${CFG_MSSQL_IP};Database=ETLBox_Performance;Trusted_Connection=Yes",
         "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.${CFG_PD}db${CFG_PD}AccessPerformance.mdb",
         "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_Performance;Uid=root;Pwd=etlboxpassword;",
