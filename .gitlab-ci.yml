@@ -69,7 +69,7 @@ test_job:
     MSSQL_PID: 'Developer'
 
     # dotnet settings
-    DOT_NET_TEST_OPTIONS: '-c Release --filter "Category!=Performance" --no-build --logger:"console;verbosity=detailed" --logger:"junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"'
+    DOT_NET_TEST_OPTIONS: '-c Release --filter "Category!=Performance" --no-build --logger:"console;verbosity=detailed" --logger:"junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"'
   before_script:
     # mysql -uroot -petlboxpassword
 
@@ -99,3 +99,5 @@ test_job:
     reports:
       junit:
         - ./**/*test-result.xml
+      cobertura:
+        - ./**/*.coverage.xml

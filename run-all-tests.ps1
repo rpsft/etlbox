@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-$options = @("-c", "Release", "/p:CollectCoverage=true", "/p:CoverletOutputFormat=opencover", "--filter", "Category!=Performance", "--no-build", "--logger", "console;verbosity=detailed")
+$options = @("-c", "Release", "/p:CollectCoverage=true", "/p:CoverletOutputFormat=opencover", "--filter", "Category!=Performance", "--no-build", "--logger", "console;verbosity=detailed", '--collect:"XPlat Code Coverage"')
 
 dotnet test ./TestConnectionManager $options
 dotnet test ./TestControlFlowTasks $options
