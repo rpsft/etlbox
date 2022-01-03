@@ -1,3 +1,7 @@
+variables:
+  # Enable service network
+  FF_NETWORK_PER_BUILD: "true"
+
 stages:
   - build
   - test
@@ -48,7 +52,7 @@ test_job:
       alias: localmysql
     - name: postgres
       alias: localpostgres
-    - name: hub.rapidsoft.ru/open-source/mssql-docker:latest
+    - name: mcr.microsoft.com/azure-sql-edge
       alias: localmssql
   variables:
     # MySQL image customization
@@ -65,7 +69,7 @@ test_job:
     MSSQL_PID: 'Developer'
 
     # dotnet settings
-    DOT_NET_TEST_OPTIONS: '-c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "Category!=Performance"'
+    DOT_NET_TEST_OPTIONS: '-c Release --filter "Category!=Performance" --no-build --logger:"console;verbosity=detailed" --logger:"junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"'
   before_script:
     # mysql -uroot -petlboxpassword
 
@@ -78,15 +82,20 @@ test_job:
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
     - dotnet build ETLBox.sln -c Release
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestConnectionManager
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestControlFlowTasks
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestDatabaseConnectors
-    - pushd ./TestFlatFileConnectors; dotnet test --no-build ${DOT_NET_TEST_OPTIONS} .; popd
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestHelper
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestNonParallel
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestOtherConnectors
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestPerformance
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestShared
-    # - dotnet test ${DOT_NET_TEST_OPTIONS} ./TestTransformations
+    - dotnet test ./TestConnectionManager ${DOT_NET_TEST_OPTIONS}
+    - dotnet test ./TestControlFlowTasks ${DOT_NET_TEST_OPTIONS}
+    - dotnet test ./TestDatabaseConnectors ${DOT_NET_TEST_OPTIONS}
+    - dotnet test ./TestHelper ${DOT_NET_TEST_OPTIONS}
+    - dotnet test ./TestNonParallel ${DOT_NET_TEST_OPTIONS}
+    - dotnet test ./TestOtherConnectors ${DOT_NET_TEST_OPTIONS}
+    - dotnet test ./TestTransformations ${DOT_NET_TEST_OPTIONS}
+    # - dotnet test ./TestPerformance ${DOT_NET_TEST_OPTIONS}
   rules:
     - if: $CI_COMMIT_TAG
+  artifacts:
+    when: always
+    paths:
+      - ./**/*test-result.xml
+    reports:
+      junit:
+        - ./**/*test-result.xml
