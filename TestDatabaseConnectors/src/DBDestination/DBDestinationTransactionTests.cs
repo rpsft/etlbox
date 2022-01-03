@@ -1,168 +1,165 @@
-using ALE.ETLBox;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.DataFlowTests;
+
+[Collection("DataFlow")]
+public class DbDestinationTransactionTests
 {
-    [Collection("DataFlow")]
-    public class DbDestinationTransactionTests : IClassFixture<DataFlowDatabaseFixture>
+    public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+
+    [Theory]
+    [MemberData(nameof(Connections))]
+    public void ErrorInBatch(IConnectionManager connection)
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public DbDestinationTransactionTests(DataFlowDatabaseFixture _)
+        //Arrange
+        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var source = new MemorySource<MySimpleRow>
         {
-        }
-
-        public class MySimpleRow
-        {
-            public string Col1 { get; set; }
-            public string Col2 { get; set; }
-        }
-
-        [Theory, MemberData(nameof(Connections))]
-        public void ErrorInBatch(IConnectionManager connection)
-        {
-            //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.DataAsList = new List<MySimpleRow>()
+            DataAsList = new List<MySimpleRow>
             {
-                new MySimpleRow() { Col1 = "1", Col2 = "Test1"},
-                new MySimpleRow() { Col1 = "2", Col2 = "Test2"},
-                new MySimpleRow() { Col1 = null, Col2 = "Test3"},
-            };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", batchSize: 2);
+                new() { Col1 = "1", Col2 = "Test1" },
+                new() { Col1 = "2", Col2 = "Test2" },
+                new() { Col1 = null, Col2 = "Test3" }
+            }
+        };
+        var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
-            //Act & Assert
-            source.LinkTo(dest);
+        //Act & Assert
+        source.LinkTo(dest);
 
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                source.Execute();
-                dest.Wait();
-            });
-
-            //Assert
-            Assert.Equal(2, RowCountTask.Count(connection, "TransactionDest"));
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
-        }
-
-        [Theory, MemberData(nameof(Connections))]
-        public void CloseConnectionDuringTransaction(IConnectionManager connection)
+        Assert.ThrowsAny<Exception>(() =>
         {
-            //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "TransactionSource");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", batchSize: 2);
-
-            //Act & Assert
-            connection.BeginTransaction();
-            source.LinkTo(dest);
             source.Execute();
             dest.Wait();
-            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
-            connection.Close();
-            Assert.Equal(0, RowCountTask.Count(connection, "TransactionDest"));
+        });
 
-            //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
-        }
+        //Assert
+        Assert.Equal(2, RowCountTask.Count(connection, "TransactionDest"));
+        Assert.True(dest.BulkInsertConnectionManager.State == null);
+        Assert.True(connection.State == null);
+    }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void CommitTransaction(IConnectionManager connection)
-        {
-            //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "TransactionSource");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", batchSize: 2);
+    [Theory]
+    [MemberData(nameof(Connections))]
+    public void CloseConnectionDuringTransaction(IConnectionManager connection)
+    {
+        //Arrange
+        var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
+        s2c.InsertTestData();
+        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
+        var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
-            //Act & Assert
-            connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-            source.LinkTo(dest);
+        //Act & Assert
+        connection.BeginTransaction();
+        source.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+        Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+        connection.Close();
+        Assert.Equal(0, RowCountTask.Count(connection, "TransactionDest"));
 
-            source.Execute();
-            dest.Wait();
+        //Assert Connections are closed
+        Assert.True(dest.BulkInsertConnectionManager.State == null);
+        Assert.True(connection.State == null);
+    }
 
-            //Assert
-            if (connection.GetType() == typeof(SqlConnectionManager))
-                Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest", RowCountOptions.NoLock));
-            connection.CommitTransaction();
-            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
-            Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest"));
+    [Theory]
+    [MemberData(nameof(Connections))]
+    public void CommitTransaction(IConnectionManager connection)
+    {
+        //Arrange
+        var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
+        s2c.InsertTestData();
+        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
+        var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
-            //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
-        }
+        //Act & Assert
+        connection.BeginTransaction(IsolationLevel.ReadCommitted);
+        source.LinkTo(dest);
 
-        [Theory, MemberData(nameof(Connections))]
-        public void RollbackTransaction(IConnectionManager connection)
-        {
-            //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "TransactionSource");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", batchSize: 2);
+        source.Execute();
+        dest.Wait();
 
-            //Act & Assert
-            connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-            source.LinkTo(dest);
+        //Assert
+        if (connection.GetType() == typeof(SqlConnectionManager))
+            Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest", RowCountOptions.NoLock));
+        connection.CommitTransaction();
+        Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+        Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest"));
 
-            source.Execute();
-            dest.Wait();
-            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
-            connection.RollbackTransaction();
-            Assert.Equal(0, RowCountTask.Count(connection, "TransactionDest"));
+        //Assert Connections are closed
+        Assert.True(dest.BulkInsertConnectionManager.State == null);
+        Assert.True(connection.State == null);
+    }
 
-            //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
-        }
+    [Theory]
+    [MemberData(nameof(Connections))]
+    public void RollbackTransaction(IConnectionManager connection)
+    {
+        //Arrange
+        var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
+        s2c.InsertTestData();
+        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
+        var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
-        [Theory, MemberData(nameof(Connections))]
-        public void LeaveOpen(IConnectionManager connection)
-        {
-            //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "TransactionSource");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", batchSize: 2);
+        //Act & Assert
+        connection.BeginTransaction(IsolationLevel.ReadCommitted);
+        source.LinkTo(dest);
 
-            //Act
-            connection.LeaveOpen = true;
-            connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-            connection.CommitTransaction();
+        source.Execute();
+        dest.Wait();
+        Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+        connection.RollbackTransaction();
+        Assert.Equal(0, RowCountTask.Count(connection, "TransactionDest"));
 
-            //Assert
-            Assert.Equal(connection, dest.BulkInsertConnectionManager);
+        //Assert Connections are closed
+        Assert.True(dest.BulkInsertConnectionManager.State == null);
+        Assert.True(connection.State == null);
+    }
 
-            //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == System.Data.ConnectionState.Open);
-            Assert.True(connection.State == System.Data.ConnectionState.Open);
+    [Theory]
+    [MemberData(nameof(Connections))]
+    public void LeaveOpen(IConnectionManager connection)
+    {
+        //Arrange
+        var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
+        s2c.InsertTestData();
+        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
+        var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
-            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+        //Act
+        connection.LeaveOpen = true;
+        connection.BeginTransaction(IsolationLevel.ReadCommitted);
+        source.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+        connection.CommitTransaction();
 
+        //Assert
+        Assert.Equal(connection, dest.BulkInsertConnectionManager);
 
-        }
+        //Assert Connections are closed
+        Assert.True(dest.BulkInsertConnectionManager.State == ConnectionState.Open);
+        Assert.True(connection.State == ConnectionState.Open);
+
+        Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+    }
+
+    public class MySimpleRow
+    {
+        public string Col1 { get; set; }
+        public string Col2 { get; set; }
     }
 }

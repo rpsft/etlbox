@@ -20,8 +20,8 @@ namespace ALE.ETLBox.Logging
                 DisableLogging = true,
                 Actions = new List<Action<object>>() {
                 col => LoadProcess.Id = Convert.ToInt64(col),
-                col => LoadProcess.StartDate = (DateTime)col,
-                col => LoadProcess.EndDate = (DateTime?)col,
+                col => LoadProcess.StartDate = col is string str ? DateTime.Parse(str, null, System.Globalization.DateTimeStyles.RoundtripKind) : (DateTime)col,
+                col => LoadProcess.EndDate = col is string str ? DateTime.Parse(str, null, System.Globalization.DateTimeStyles.RoundtripKind) : (DateTime?)col,
                 col => LoadProcess.Source = (string)col,
                 col => LoadProcess.ProcessName = (string)col,
                 col => LoadProcess.StartMessage = (string)col,

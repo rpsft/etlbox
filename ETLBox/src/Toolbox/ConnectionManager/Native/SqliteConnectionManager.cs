@@ -2,6 +2,7 @@
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using ALE.ETLBox.ConnectionManager.Helpers;
 using Microsoft.Data.Sqlite;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -66,11 +67,7 @@ VALUES ({string.Join(",", paramNames)})";
                 while (data.Read())
                 {
                     command.Parameters.AddRange(
-                        destColumnNames.Select((n, i) => new SqliteParameter
-                        {
-                            ParameterName = paramNames[i],
-                            Value = data.GetValue(data.GetOrdinal(n))
-                        }));
+                        destColumnNames.Select((n, i) => ConstructSqliteParameter(paramNames[i], data.GetValue(data.GetOrdinal(n)))));
                     command.ExecuteNonQuery();
                     command.Parameters.Clear();
                 }
@@ -79,7 +76,19 @@ VALUES ({string.Join(",", paramNames)})";
             }
         }
 
-        public override void PrepareBulkInsert(string tablename)
+        private static SqliteParameter ConstructSqliteParameter(string parameterName, object value)
+        {
+            return new SqliteParameter
+            {
+                ParameterName = parameterName,
+                Value = value ?? DBNull.Value,
+                IsNullable = value is null,
+                DbType = SqliteConvert.TypeToDbType(value),
+                SqliteType = SqliteConvert.TypeToAffinity(value)
+            };
+        }
+
+        public override void PrepareBulkInsert(string tableName)
         {
             if (ModifyDBSettings)
             {

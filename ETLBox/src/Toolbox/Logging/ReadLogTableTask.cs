@@ -24,7 +24,7 @@ namespace ALE.ETLBox.Logging
                 AfterRowReadAction = () => LogEntries.Add(current),
                 Actions = new List<Action<object>>() {
                     col => current.Id = Convert.ToInt64(col),
-                    col => current.LogDate = (DateTime)col,
+                    col => current.LogDate = col is string str ? DateTime.Parse(str) : (DateTime)col,
                     col => current.Level = (string)col,
                     col => current.Message = (string)col,
                     col => current.TaskType = (string)col,

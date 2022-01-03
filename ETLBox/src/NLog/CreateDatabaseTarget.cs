@@ -71,7 +71,7 @@ SELECT {LogDate}
             else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql)
                 dbTarget.DBProvider = "MySql.Data.MySqlClient.MySqlConnection, MySql.Data";
             else if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.SQLite)
-                dbTarget.DBProvider = "System.Data.SQLite.SQLiteConnection, System.Data.SQLite";
+                dbTarget.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
             else
                 dbTarget.DBProvider = "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient";
             dbTarget.ConnectionString = ConnectionManager.ConnectionString.Value;

@@ -20,13 +20,13 @@ namespace ALE.ETLBoxTests
         public void NormalSqlServerString()
         {
             //Arrange
-            SqlConnectionString connString = new SqlConnectionString();
+            var connString = new SqlConnectionString();
 
             //Act
             connString.Value = "Server=.;User Id=test;Password=test;Database=TestDB;";
-            string withoutDbName = connString.CloneWithoutDbName().Value;
-            string withMaster = connString.CloneWithMasterDbName().Value;
-            string newDbName = connString.CloneWithNewDbName("test").Value;
+            var withoutDbName = connString.CloneWithoutDbName().Value;
+            var withMaster = connString.CloneWithMasterDbName().Value;
+            var newDbName = connString.CloneWithNewDbName("test").Value;
 
             //Assert
             Assert.Equal("Data Source=.;User ID=test;Password=test", withoutDbName);
@@ -39,34 +39,34 @@ namespace ALE.ETLBoxTests
         public void NormalSQLiteString()
         {
             //Arrange
-            SQLiteConnectionString connString = new SQLiteConnectionString();
+            var connString = new SQLiteConnectionString
+            {
+                Value = $"Data Source=.{Path.PathSeparator}db{Path.PathSeparator}SQLiteControlFlow.db;"
+            };
 
             //Act
-            connString.Value = $"Data Source=.{Path.PathSeparator}db{Path.PathSeparator}SQLiteControlFlow.db;Version=3;";
-            string withoutDbName = connString.CloneWithoutDbName().Value;
-            string newDbName = connString.CloneWithNewDbName("test").Value;
+            var withoutDbName = connString.CloneWithoutDbName().Value;
+            var newDbName = connString.CloneWithNewDbName("test").Value;
 
             //Assert
-            Assert.Equal("version=3", withoutDbName);
-            Assert.Equal("data source=test;version=3", newDbName);
+            Assert.Equal("", withoutDbName);
+            Assert.Equal("Data Source=test", newDbName);
             Assert.Throws<ETLBoxNotSupportedException>(() =>
                 connString.CloneWithMasterDbName().Value
             );
-
-
         }
 
         [Fact]
         public void NormalPostgresString()
         {
             //Arrange
-            PostgresConnectionString connString = new PostgresConnectionString();
+            var connString = new PostgresConnectionString();
 
             //Act
             connString.Value = "Server=10.211.55.2;Database=TestDb;User Id=postgres;Password=etlboxpassword;";
-            string withoutDbName = connString.CloneWithoutDbName().Value;
-            string withMaster = connString.CloneWithMasterDbName().Value;
-            string newDbName = connString.CloneWithNewDbName("test").Value;
+            var withoutDbName = connString.CloneWithoutDbName().Value;
+            var withMaster = connString.CloneWithMasterDbName().Value;
+            var newDbName = connString.CloneWithNewDbName("test").Value;
 
 
             //Assert
@@ -80,13 +80,13 @@ namespace ALE.ETLBoxTests
         public void NormalMySqlString()
         {
             //Arrange
-            MySqlConnectionString connString = new MySqlConnectionString();
+            var connString = new MySqlConnectionString();
 
             //Act
             connString.Value = "Server=10.211.55.2;Database=TestDb;Uid=root;Pwd=etlboxpassword;";
-            string withoutDbName = connString.CloneWithoutDbName().Value;
-            string withMaster = connString.CloneWithMasterDbName().Value;
-            string newDbName = connString.CloneWithNewDbName("test").Value;
+            var withoutDbName = connString.CloneWithoutDbName().Value;
+            var withMaster = connString.CloneWithMasterDbName().Value;
+            var newDbName = connString.CloneWithNewDbName("test").Value;
 
 
             //Assert

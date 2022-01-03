@@ -75,7 +75,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
 
-        [MultiprocessorOnlyFact]
+        [MultiprocessorOnlyFact(Skip = "TODO: Hangs on Apple silicon and Docker")]
         public void TestOpeningConnectionsParallelOnSqlTask()
         {
             AssertOpenConnectionCount(0, ConnectionStringParameter);
