@@ -102,7 +102,7 @@ test_job:
       junit:
         - ./**/*test-result.xml
       cobertura:
-        - ./**/*.coverage.xml
+        - ./**/coverage.cobertura.xml
 
 deploy:
   stage: deploy
