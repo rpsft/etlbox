@@ -33,7 +33,7 @@ namespace ALE.ETLBoxTests.Logging
         }
 
         private static string RemoveHashes(string jsonresult) => Regex.Replace(jsonresult, @"""taskhash"": ""[A-Za-z0-9]*""", @"""taskHash"": """"");
-        private static string RemoveDates(string jsonresult) => Regex.Replace(jsonresult, @"[0-9]+-[0-9]+-[0-9]([Tt]|\w)+[0-9]+:[0-9]+:[0-9]+[.][0-9]+", "");
+        private static string RemoveDates(string jsonresult) => Regex.Replace(jsonresult, @"[0-9]+-[0-9]+-[0-9]([Tt]|\w)+[0-9]+:[0-9]+:[0-9]+(?:\.[0-9]+)?", "");
 
         private void RunDemoProcess()
         {
