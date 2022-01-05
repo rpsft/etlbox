@@ -116,6 +116,6 @@ deploy:
   script:
     - dotnet pack -c Release
     - dotnet nuget add source "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json" --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
-    - dotnet nuget push "bin/Release/*.nupkg" --source gitlab
+    - dotnet nuget push "ETLBox/bin/Release/*.nupkg" --source gitlab
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
