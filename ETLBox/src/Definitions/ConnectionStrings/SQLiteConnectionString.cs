@@ -1,16 +1,16 @@
-﻿using System.Data.SQLite;
+﻿
+using Microsoft.Data.Sqlite;
 
 namespace ALE.ETLBox
 {
     /// <summary>
-    /// A helper class for encapsulating a conection string in an object.
+    /// A helper class for encapsulating a connection string in an object.
     /// Internally the SQLiteConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
     public class SQLiteConnectionString :
-        DbConnectionString<SQLiteConnectionString, SQLiteConnectionStringBuilder>
+        DbConnectionString<SQLiteConnectionString, SqliteConnectionStringBuilder>
     {
-        public SQLiteConnectionString() :
-            base()
+        public SQLiteConnectionString()
         { }
         public SQLiteConnectionString(string value) :
             base(value)

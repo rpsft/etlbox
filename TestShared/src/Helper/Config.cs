@@ -1,116 +1,166 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using ALE.ETLBox.ConnectionManager;
+using Microsoft.Extensions.Configuration;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.Helper;
+
+public static class Config
 {
+    private static IConfigurationRoot _defaultConfigFile;
 
-    public static class Config
+    public static ConnectionDetails<SqlConnectionString, SqlConnectionManager> SqlConnection { get; } =
+        new("SqlConnectionString");
+
+    public static ConnectionDetails<SqlConnectionString, AdomdConnectionManager> SSASConnection { get; } =
+        new("SSASConnectionString");
+
+    public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>
+        SQLiteConnection { get; set; } =
+        new("SQLiteConnectionString");
+
+    public static ConnectionDetails<MySqlConnectionString, MySqlConnectionManager> MySqlConnection { get; } =
+        new("MySqlConnectionString");
+
+    public static ConnectionDetails<PostgresConnectionString, PostgresConnectionManager> PostgresConnection
     {
-        public class ConnectionDetails<TConnectionString, TConnectionManager>
+        get;
+    } = new("PostgresConnectionString");
+
+    public static ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager> AccessOdbcConnection
+    {
+        get;
+    } = new("AccessOdbcConnectionString");
+
+    public static ConnectionDetails<OdbcConnectionString, SqlOdbcConnectionManager>
+        SqlOdbcConnection { get; } = new("SqlOdbcConnectionString");
+
+    public static ConnectionDetails<SqlConnectionString, SqlConnectionManager> AzureSqlConnection { get; } =
+        new("AzureSqlConnectionString");
+
+    private static IConfigurationRoot DefaultConfigFile
+    {
+        get
+        {
+            if (_defaultConfigFile == null)
+            {
+                var environmentVariable = Environment.GetEnvironmentVariable("ETLBoxConfig");
+                var path = string.IsNullOrWhiteSpace(environmentVariable) ? "default.config.json" : environmentVariable;
+                Load(path);
+            }
+
+            return _defaultConfigFile;
+        }
+        set => _defaultConfigFile = value;
+    }
+
+
+    public static IEnumerable<object[]> AllSqlConnections(string section)
+    {
+        return new[]
+        {
+            new object[] { SqlConnection.ConnectionManager(section) },
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SQLiteConnection.ConnectionManager(section) }
+        };
+    }
+
+    public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section)
+    {
+        return new[]
+        {
+            new object[] { SqlConnection.ConnectionManager(section) },
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) }
+        };
+    }
+
+    public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value)
+    {
+        return new[]
+        {
+            new object[] { SqlConnection.ConnectionManager(section), value },
+            new object[] { PostgresConnection.ConnectionManager(section), value },
+            new object[] { MySqlConnection.ConnectionManager(section), value },
+            new object[] { SQLiteConnection.ConnectionManager(section), value }
+        };
+    }
+
+    public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value)
+    {
+        return new[]
+        {
+            new object[] { SqlConnection.ConnectionManager(section), value },
+            new object[] { PostgresConnection.ConnectionManager(section), value },
+            new object[] { MySqlConnection.ConnectionManager(section), value },
+            new object[] { SQLiteConnection.ConnectionManager(section), value }
+        };
+    }
+
+    public static IEnumerable<object[]> AllOdbcConnections(string section)
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? new[]
+            {
+                new object[] { SqlOdbcConnection.ConnectionManager(section) },
+                new object[] { AccessOdbcConnection.ConnectionManager(section) }
+            }
+            : Array.Empty<object[]>();
+    }
+
+    public static IEnumerable<object[]> AccessConnection(string section)
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? new[]
+            {
+                new object[] { AccessOdbcConnection.ConnectionManager(section) }
+            }
+            : Array.Empty<object[]>();
+    }
+
+    public static void Load(string configFile)
+    {
+        DefaultConfigFile = new ConfigurationBuilder()
+            .AddJsonFile(configFile)
+            .Build();
+    }
+
+    public static IEnumerable<CultureInfo> AllLocalCultures()
+    {
+        return new[]
+        {
+            CultureInfo.GetCultureInfo("ru-RU"),
+            CultureInfo.GetCultureInfo("en-US")
+        };
+    }
+
+    public class ConnectionDetails<TConnectionString, TConnectionManager>
         where TConnectionString : IDbConnectionString, new()
         where TConnectionManager : IConnectionManager, new()
+    {
+        public ConnectionDetails(string connectionStringName)
         {
-            public string ConnectionStringName { get; set; }
-            public ConnectionDetails(string connectionStringName)
-            {
-                this.ConnectionStringName = connectionStringName;
-            }
-            public string RawConnectionString(string section)
-               => Config.DefaultConfigFile.GetSection(section)[ConnectionStringName];
-            public TConnectionString ConnectionString(string section)
-                => new TConnectionString() { Value = RawConnectionString(section) };
-            public TConnectionManager ConnectionManager(string section)
-                => new TConnectionManager() { ConnectionString = ConnectionString(section) };
-
+            ConnectionStringName = connectionStringName;
         }
 
-        public static ConnectionDetails<SqlConnectionString, SqlConnectionManager> SqlConnection
-        { get; set; } = new ConnectionDetails<SqlConnectionString, SqlConnectionManager>("SqlConnectionString");
+        public string ConnectionStringName { get; set; }
 
-        public static ConnectionDetails<SqlConnectionString, AdomdConnectionManager> SSASConnection
-        { get; set; } = new ConnectionDetails<SqlConnectionString, AdomdConnectionManager>("SSASConnectionString");
-
-        public static ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager> SQLiteConnection
-        { get; set; } = new ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>("SQLiteConnectionString");
-
-        public static ConnectionDetails<MySqlConnectionString, MySqlConnectionManager> MySqlConnection
-        { get; set; } = new ConnectionDetails<MySqlConnectionString, MySqlConnectionManager>("MySqlConnectionString");
-
-        public static ConnectionDetails<PostgresConnectionString, PostgresConnectionManager> PostgresConnection
-        { get; set; } = new ConnectionDetails<PostgresConnectionString, PostgresConnectionManager>("PostgresConnectionString");
-
-        public static ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager> AccessOdbcConnection
-        { get; set; } = new ConnectionDetails<OdbcConnectionString, AccessOdbcConnectionManager>("AccessOdbcConnectionString");
-
-        public static ConnectionDetails<OdbcConnectionString, SqlOdbcConnectionManager> SqlOdbcConnection
-        { get; set; } = new ConnectionDetails<OdbcConnectionString, SqlOdbcConnectionManager>("SqlOdbcConnectionString");
-        public static ConnectionDetails<SqlConnectionString, SqlConnectionManager> AzureSqlConnection
-        { get; set; } = new ConnectionDetails<SqlConnectionString, SqlConnectionManager>("AzureSqlConnectionString");
-
-
-        public static IEnumerable<object[]> AllSqlConnections(string section) => new[] {
-                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) },
-        };
-
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section) => new[] {
-                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) },
-        };
-
-        public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value) => new[] {
-                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
-                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value},
-        };
-
-        public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value) => new[] {
-                    new object[] { (IConnectionManager)SqlConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)PostgresConnection.ConnectionManager(section), value },
-                    new object[] { (IConnectionManager)MySqlConnection.ConnectionManager(section) , value},
-                    new object[] { (IConnectionManager)SQLiteConnection.ConnectionManager(section) , value}
-        };
-
-        public static IEnumerable<object[]> AllOdbcConnections(string section) => new[] {
-                    new object[] { (IConnectionManager)SqlOdbcConnection.ConnectionManager(section) },
-                    new object[] { (IConnectionManager)AccessOdbcConnection.ConnectionManager(section) }
-        };
-
-        public static IEnumerable<object[]> AccessConnection(string section) => new[] {
-                    new object[] { (IConnectionManager)AccessOdbcConnection.ConnectionManager(section) }
-        };
-
-        static IConfigurationRoot _defaultConfigFile;
-        public static IConfigurationRoot DefaultConfigFile
+        public string RawConnectionString(string section)
         {
-            get
-            {
-                if (_defaultConfigFile == null)
-                {
-                    var envvar = Environment.GetEnvironmentVariable("ETLBoxConfig");
-                    var path = string.IsNullOrWhiteSpace(envvar) ? $"default.config.json" : envvar;
-                    Load(path);
-                }
-                return _defaultConfigFile;
-            }
-            set
-            {
-                _defaultConfigFile = value;
-            }
+            return DefaultConfigFile.GetSection(section)[ConnectionStringName];
         }
 
-        public static void Load(string configFile)
+        public TConnectionString ConnectionString(string section)
         {
-            DefaultConfigFile = new ConfigurationBuilder()
-                    .AddJsonFile(configFile)
-                    .Build();
+            return new TConnectionString() { Value = RawConnectionString(section) };
         }
 
+        public TConnectionManager ConnectionManager(string section)
+        {
+            return new TConnectionManager() { ConnectionString = ConnectionString(section) };
+        }
     }
 }

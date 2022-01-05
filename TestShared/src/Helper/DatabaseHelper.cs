@@ -3,7 +3,7 @@ using ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox.Helper
 {
-    public class DatabaseHelper
+    public static class DatabaseHelper
     {
         private static void DropAndCreate(IConnectionManager connManagerMaster, string dbName)
         {

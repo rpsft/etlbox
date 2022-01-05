@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -38,5 +39,6 @@ namespace ALE.ETLBox.ConnectionManager
         bool SupportProcedures { get; }
         bool SupportSchemas { get; }
         bool SupportComputedColumns { get; }
+        CultureInfo ConnectionCulture { get; }
     }
 }

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TestShared.Attributes;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -53,14 +54,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         //Download and configure Odbc driver for access first! This test points to access file on local path
         //Odbc driver needs to be 64bit if using 64bit .NET core and 32bit if using 32bit version of .NET Core!
-        //(Visual Studio 2019 16.4 changed default behvaiour for xunit Tests - they now run with .NET Core 32bit versions
+        //(Visual Studio 2019 16.4 changed default behaviour for xunit Tests - they now run with .NET Core 32bit versions
         //Driver Access >2016 https://www.microsoft.com/en-us/download/details.aspx?id=54920
         //Driver Access >2010 https://www.microsoft.com/en-us/download/details.aspx?id=13255
         //If LeaveOpen is not set to true, very strange errors may occur:
         //https://stackoverflow.com/questions/37432816/microsoft-ace-oledb-12-0-bug-in-multithread-scenario
-        //It is recommened to leave this connection manager always open (this is why leave open is set to true by default)
+        //It is recommended to leave this connection manager always open (this is why leave open is set to true by default)
 
-        [Fact]
+        [WindowsOnlyFact]
         public void CSVIntoAccess()
         {
             //Arrange
@@ -90,7 +91,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string Field2Trimmed => Field2.Trim();
         }
 
-        [Fact]
+        [WindowsOnlyFact]
         public void AccessIntoDBWithTableDefinition()
         {
             //Arrange
@@ -122,7 +123,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 "INSERT INTO TestTable (Field1, Field2) VALUES (3,'Test3');");
         }
 
-        [Fact]
+        [WindowsOnlyFact]
         public void AccessIntoDB()
         {
             //Arrange

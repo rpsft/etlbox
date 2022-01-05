@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CsvHelper;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -47,8 +48,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvDestination2ColumnsClassMap");
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv");
-            source.Configuration.RegisterClassMap<ModelClassMap>();
+            var source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv")
+            {
+                ClassMapType = typeof(ModelClassMap)
+            };
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -83,10 +86,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(Connection, "CsvDestination4ColumnsClassMap");
 
             //Act
-            CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CsvSource/FourColumnsInvalidHeader.csv");
-            source.Configuration.RegisterClassMap<ExtendedClassMap>();
-            source.Configuration.HasHeaderRecord = false;
-            source.Configuration.ShouldSkipRecord = ShouldSkipRecordDelegate;
+            CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CsvSource/FourColumnsInvalidHeader.csv")
+            {
+                ClassMapType = typeof(ExtendedClassMap),
+                Configuration =
+                {
+                    HasHeaderRecord = false,
+                    ShouldSkipRecord = ShouldSkipRecordDelegate
+                }
+            };
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -95,12 +103,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             d4c.AssertTestData();
         }
 
-        private bool ShouldSkipRecordDelegate(string[] row)
+        private bool ShouldSkipRecordDelegate(ShouldSkipRecordArgs args)
         {
-            if (row[0].Contains(".csv"))
-                return true;
-            else
-                return false;
+            return args.Record[0].Contains(".csv");
         }
     }
 }

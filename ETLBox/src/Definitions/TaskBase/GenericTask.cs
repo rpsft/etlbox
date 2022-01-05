@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Helper;
 using System;
+using System.Globalization;
 using CF = ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox
@@ -18,16 +19,10 @@ namespace ALE.ETLBox
 
         public virtual IConnectionManager ConnectionManager { get; set; }
 
-        internal virtual IConnectionManager DbConnectionManager
-        {
-            get
-            {
-                if (ConnectionManager == null)
-                    return (IConnectionManager)ControlFlow.ControlFlow.DefaultDbConnection;
-                else
-                    return (IConnectionManager)ConnectionManager;
-            }
-        }
+        internal virtual IConnectionManager DbConnectionManager =>
+            ConnectionManager == null
+                ? (IConnectionManager)ControlFlow.ControlFlow.DefaultDbConnection
+                : (IConnectionManager)ConnectionManager;
 
         public ConnectionManagerType ConnectionType => this.DbConnectionManager.ConnectionManagerType;
         public string QB => DbConnectionManager.QB;
@@ -36,35 +31,21 @@ namespace ALE.ETLBox
         public bool _disableLogging;
         public virtual bool DisableLogging
         {
-            get
-            {
-                if (ControlFlow.ControlFlow.DisableAllLogging == false)
-                    return _disableLogging;
-                else
-                    return ControlFlow.ControlFlow.DisableAllLogging;
-            }
-            set
-            {
-                _disableLogging = value;
-            }
+            get => ControlFlow.ControlFlow.DisableAllLogging == false 
+                ? _disableLogging 
+                : ControlFlow.ControlFlow.DisableAllLogging;
+            set => _disableLogging = value;
         }
+
+        public virtual CultureInfo CurrentCulture => ConnectionManager?.ConnectionCulture;
 
         private string _taskHash;
 
 
         public virtual string TaskHash
         {
-            get
-            {
-                if (_taskHash == null)
-                    return HashHelper.Encrypt_Char40(this);
-                else
-                    return _taskHash;
-            }
-            set
-            {
-                _taskHash = value;
-            }
+            get => _taskHash ?? HashHelper.Encrypt_Char40(this);
+            set => _taskHash = value;
         }
         internal virtual bool HasName => !String.IsNullOrWhiteSpace(TaskName);
 

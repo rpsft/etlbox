@@ -32,7 +32,7 @@ namespace ALE.ETLBox.DataFlow
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplicateRow);
+            TransformBlock = new TransformManyBlock<TInput, TOutput>((Func<TInput, IEnumerable<TOutput>>)MultiplicateRow);
         }
 
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc) : this()

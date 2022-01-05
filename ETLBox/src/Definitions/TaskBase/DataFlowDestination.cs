@@ -49,10 +49,6 @@ namespace ALE.ETLBox.DataFlow
             {
                 throw ae.InnerException;
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
             finally
             {
                 CleanUp();

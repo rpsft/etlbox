@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using TestFlatFileConnectors.Helpers;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -46,7 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsSet3.xml")
+            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsSet3.xml").NormalizeLineEndings()
                 , File.ReadAllText("./SimpleWithObject.xml"));
         }
 
@@ -74,7 +75,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsAttributesSet3.xml")
+            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsAttributesSet3.xml").NormalizeLineEndings()
                 , File.ReadAllText("./SimpleOnlyAttributes.xml"));
         }
     }

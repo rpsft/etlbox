@@ -24,7 +24,7 @@ namespace ALE.ETLBox.DataFlow
         public JsonSerializer JsonSerializer { get; set; }
         JsonTextWriter JsonTextWriter { get; set; }
 
-        public JsonDestination() : base()
+        public JsonDestination()
         {
             JsonSerializer = new JsonSerializer()
             {
@@ -59,11 +59,10 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void WriteIntoStream(TInput data)
         {
-            if (data != null)
-            {
-                JsonSerializer.Serialize(JsonTextWriter, data);
-                LogProgress();
-            }
+            if (data == null) return;
+
+            JsonSerializer.Serialize(JsonTextWriter, data);
+            LogProgress();
         }
 
         protected override void CloseStream()

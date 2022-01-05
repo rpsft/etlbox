@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -27,6 +28,7 @@ namespace ALE.ETLBox.ConnectionManager
         
         public abstract string QB { get; }
         public abstract string QE { get; }
+        public abstract CultureInfo ConnectionCulture { get; }
         public virtual bool SupportDatabases { get; } = true;
         public virtual bool SupportProcedures { get; } = true;
         public virtual bool SupportSchemas { get; } = true;
@@ -106,7 +108,10 @@ namespace ALE.ETLBox.ConnectionManager
                 {
                     var newPar = cmd.CreateParameter();
                     newPar.ParameterName = par.Name;
-                    newPar.DbType = par.DBType;
+                    newPar.DbType = ConnectionManagerType == ConnectionManagerType.Postgres && par.DBType == DbType.DateTime 
+                        ? DbType.DateTime2  // TODO: Move this hack to more appropriate place
+                                            // (fix for https://www.npgsql.org/doc/release-notes/6.0.html#major-changes-to-timestamp-mapping in NpgSql 6.0+)
+                        : par.DBType;
                     newPar.Value = par.Value;
                     cmd.Parameters.Add(newPar);
                 }

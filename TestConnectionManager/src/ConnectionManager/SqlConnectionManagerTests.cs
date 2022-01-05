@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Threading.Tasks;
+using TestShared.Attributes;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -30,16 +31,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         void AssertOpenConnectionCount(int allowedOpenConnections, string connectionString)
         {
-            SqlConnectionString conString = new SqlConnectionString(connectionString);
-            SqlConnectionManager master = new SqlConnectionManager(conString.CloneWithMasterDbName());
-            string dbName = conString.Builder.InitialCatalog;
-            int? openConnections =
+            var conString = new SqlConnectionString(connectionString);
+            var master = new SqlConnectionManager(conString.CloneWithMasterDbName());
+            var dbName = conString.Builder.InitialCatalog;
+            var openConnections =
                 new SqlTask("Count open connections",
                 $@"SELECT COUNT(dbid) as NumberOfConnections FROM sys.sysprocesses
                     WHERE dbid > 0 and DB_NAME(dbid) = '{dbName}'")
                 { ConnectionManager = master, DisableLogging = true }
-                .ExecuteScalar<int>()
-                .Value;
+                .ExecuteScalar<int>();
             Assert.Equal(allowedOpenConnections, openConnections);
         }
 
@@ -47,7 +47,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void TestOpeningCloseConnection()
         {
             //Arrange
-            SqlConnectionManager con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
+            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
 
             //Act
             AssertOpenConnectionCount(0, ConnectionStringParameter);
@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Fact]
         public void TestOpeningConnectionTwice()
         {
-            SqlConnectionManager con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
+            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
             AssertOpenConnectionCount(0, ConnectionStringParameter);
             con.Open();
             con.Open();
@@ -75,11 +75,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
 
-        [Fact]
+        [MultiprocessorOnlyFact(Skip = "TODO: Hangs on Apple silicon and Docker")]
         public void TestOpeningConnectionsParallelOnSqlTask()
         {
             AssertOpenConnectionCount(0, ConnectionStringParameter);
-            List<int> array = new List<int>() { 1, 2, 3, 4 };
+            var array = new List<int>() { 1, 2, 3, 4 };
             Parallel.ForEach(array, new ParallelOptions { MaxDegreeOfParallelism = 2 },
                     curNr => new SqlTask($"Test statement {curNr}", $@"
                     DECLARE @counter INT = 0;
@@ -108,10 +108,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void TestCloningConnection()
         {
             //Arrange
-            SqlConnectionManager con = new SqlConnectionManager(ConnectionStringParameter);
+            var con = new SqlConnectionManager(ConnectionStringParameter);
 
             //Act
-            IConnectionManager clone = con.Clone();
+            var clone = con.Clone();
 
             //Assert
             Assert.NotEqual(clone, con);

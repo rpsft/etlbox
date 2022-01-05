@@ -38,7 +38,7 @@ Database: postgres
 ```
 docker login
 
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourStrong@Passw0rd" -p 1433:1433 --name localmssql -d mcr.microsoft.com/mssql/server
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourStrong@Passw0rd" -e "MSSQL_PID='Developer'"" -p 1433:1433 --name localmssql -d mcr.microsoft.com/mssql/server
 ```
 
 Login to
@@ -58,13 +58,8 @@ For excel: download latest driver
  - enter a data source name,e.g. Accesss - no further configuration needed
 - Everything else is derived from Connection String
 
-## Line break settings
-
-- current tests and files for comparison are created under windows and have \r\n as LineBreak (instead of \n only)
-- if cloned under mac os or linux with git clone, the line breaks will be converted automatically into \n
-- now tests will fail, because the as-is files created in windows will have different line breaks that than the to-be files in the cloned project
-- to avoid the converting the line breaks, you need to set the core.autocrlf=true in global git config:
+### ODBC on Mac
 ```
-git config --global --add core.autocrlf true
+brew install unixodbc
+brew install mdbtools
 ```
-After doing this, you need to clone the project (if you already cloned it, remove it and clone it again)

@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -18,6 +19,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Postgres;
         public override string QB { get; } = @"""";
         public override string QE { get; } = @"""";
+        public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
         
         public PostgresConnectionManager() : base() { }
 

@@ -8,6 +8,7 @@ using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -15,63 +16,94 @@ using Xunit;
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CsvSourceIdentityColumTests
+    public class CsvSourceIdentityColumnTests
     {
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CsvSourceIdentityColumTests(DataFlowDatabaseFixture dbFixture)
+
+        public CsvSourceIdentityColumnTests(DataFlowDatabaseFixture dbFixture)
         {
         }
 
         [Fact]
         public void IdentityAtPosition1()
         {
-            //Arrange
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 0);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+            var saveCulture = CultureInfo.CurrentCulture;
+            try
+            {
+                //Arrange
+                var dest4Columns =
+                    new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 0);
+                var dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+                var source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
 
-            //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+                if (source.CurrentCulture != null) CultureInfo.CurrentCulture = source.CurrentCulture;
 
-            //Assert
-            dest4Columns.AssertTestData();
+                //Act
+                source.LinkTo(dest);
+                source.Execute();
+                dest.Wait();
+
+                //Assert
+                dest4Columns.AssertTestData();
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = saveCulture;
+            }
         }
 
         [Fact]
         public void IdentityInTheMiddle()
         {
-            //Arrange
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 2);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+            var saveCulture = CultureInfo.CurrentCulture;
+            try
+            {
+                //Arrange
+                var dest4Columns =
+                    new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 2);
+                var dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+                var source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
+                if (source.CurrentCulture != null) CultureInfo.CurrentCulture = source.CurrentCulture;
 
-            //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+                //Act
+                source.LinkTo(dest);
+                source.Execute();
+                dest.Wait();
 
-            //Assert
-            dest4Columns.AssertTestData();
+                //Assert
+                dest4Columns.AssertTestData();
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = saveCulture;
+            }
         }
 
 
         [Fact]
         public void IdentityAtTheEnd()
         {
-            //Arrange
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 3);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+            var saveCulture = CultureInfo.CurrentCulture;
+            try
+            {
+                //Arrange
+                var dest4Columns =
+                    new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 3);
+                var dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
 
-            //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
-            source.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+                //Act
+                var source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
+                source.LinkTo(dest);
+                source.Execute();
+                dest.Wait();
 
-            //Assert
-            dest4Columns.AssertTestData();
+                //Assert
+                dest4Columns.AssertTestData();
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = saveCulture;
+            }
         }
     }
 }

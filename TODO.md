@@ -7,13 +7,13 @@
 - Now the Connection Manager have a PrepareBulkInsert/CleanUpBulkInsert method. There are missing tests that check that make use of the Modify-Db settings and verify improved performance. DbDestination modifies these server side settings only once and at then end end of all batches.
 - VoidDestination: [Use a NullBlock as Target](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.dataflow.dataflowblock.nulltarget?view=netcore-3.1)
 - Check if SMOConnectionManager can be reinstalled again
-- ODBC connection managers for MySql etc. 
-- add tests that support MariaDb (there is one test failing with CreatTableTask & ComputedColumn) 
+- ODBC connection managers for MySql etc.
+- add tests that support MariaDb (there is one test failing with CreatTableTask & ComputedColumn)
 
 ## Update Docu
 
 - Improving Lookup with new set of attributes to define matching and retrieving properties. Also a new Aggretion component that simplifies creating aggregates (e.g. to calculate SUM, MIN, MAX or Count or any other custom defined calculation).
-- All text files source (Csv, Json, Xml) now accept either a file path OR an URL which is loaded with a HttpClient. 
+- All text files source (Csv, Json, Xml) now accept either a file path OR an URL which is loaded with a HttpClient.
 - Excel source now skip blank lines
 
 ## Enhancements
@@ -25,5 +25,4 @@
 
 ## Todo
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from "GetTableDefinitionFrom"
-- GCPressure was detected on CSVSource - verify if CSVSource really is the root cause. (See performance tests, improve tests that uses memory as source) 
 - in order to have these tests fully working, add something like MaxBufferSize as  DataFlow parameter for all DataFlowTasks and use this when creating DF components  - also have a static DefaultMaxBufferSize as Fallback value

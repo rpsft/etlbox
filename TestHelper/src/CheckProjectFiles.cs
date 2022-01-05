@@ -1,45 +1,45 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using Xunit;
 
 namespace ALE.ETLBoxTests
 {
     public class CheckProjectFiles
     {
-
-        string noSymbolsPackageXml = $@"
+        private readonly string noSymbolsPackageXml = @"
 <PropertyGroup Condition=""'$(Configuration)|$(Platform)'=='Release|AnyCPU'"">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
+<DebugType>none</DebugType>
+<DebugSymbols>false</DebugSymbols>
 </PropertyGroup>";
 
         [Fact]
         public void CheckIfReleasesHaveNoSymbols()
         {
-            int found = 0;
+            var found = 0;
             var dirs = Directory.GetDirectories("../../../../");
             foreach (var dir in dirs)
             {
-                string cleanedDirName = dir.Replace("../", "").ToLower();
+                var cleanedDirName = dir.Replace("../", "").ToLower();
                 if (cleanedDirName.StartsWith("etlbox") && cleanedDirName != "etlboxdocu")
                 {
-                    var projfile = Directory.GetFiles(dir,"*.csproj").First();
-                    var cont = File.ReadAllText(projfile);
-                    Assert.Contains(noSymbolsPackageXml.Replace(" ", ""), cont.Replace(" ", ""));
+                    var projectFile = Directory.GetFiles(dir, "*.csproj").First();
+                    var cont = File.ReadAllText(projectFile);
+                    
+                    Assert.Contains( NormalizeText(noSymbolsPackageXml), NormalizeText(cont));
                     found++;
                 }
             }
 
             Assert.True(found > 0);
         }
+
+        private string NormalizeText(string text) =>
+            new StringBuilder(text)
+                .Replace(" ", "")
+                .Replace("\r", "")
+                .Replace("\n", "")
+                .ToString();
     }
 }

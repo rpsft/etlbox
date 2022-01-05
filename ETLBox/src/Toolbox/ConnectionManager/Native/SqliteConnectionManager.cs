@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
-using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
+using ALE.ETLBox.ConnectionManager.Helpers;
+using Microsoft.Data.Sqlite;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -15,11 +17,12 @@ namespace ALE.ETLBox.ConnectionManager
     ///     "Data Source=.\db\SQLite.db;Version=3;"));
     /// </code>
     /// </example>
-    public class SQLiteConnectionManager : DbConnectionManager<SQLiteConnection>
+    public class SQLiteConnectionManager : DbConnectionManager<SqliteConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SQLite;
         public override string QB { get; } = @"""";
         public override string QE { get; } = @"""";
+        public override CultureInfo ConnectionCulture => CultureInfo.InvariantCulture;
         public override bool SupportDatabases { get; } = false;
         public override bool SupportProcedures { get; } = false;
         public override bool SupportSchemas { get; } = false;
@@ -27,9 +30,17 @@ namespace ALE.ETLBox.ConnectionManager
 
         public bool ModifyDBSettings { get; set; } = false;
 
-        public SQLiteConnectionManager() : base() { }
-        public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString) { }
-        public SQLiteConnectionManager(string connectionString) : base(new SQLiteConnectionString(connectionString)) { }
+        public SQLiteConnectionManager() : base()
+        {
+        }
+
+        public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString)
+        {
+        }
+
+        public SQLiteConnectionManager(string connectionString) : base(new SQLiteConnectionString(connectionString))
+        {
+        }
 
         string Synchronous { get; set; }
         string JournalMode { get; set; }
@@ -37,11 +48,11 @@ namespace ALE.ETLBox.ConnectionManager
         public override void BulkInsert(ITableData data, string tableName)
         {
             var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
-            var sourceColumnValues = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => "?").ToList();
+            var paramNames = data.ColumnMapping.Cast<IColumnMapping>().Select((_, i) => $"$p{i}").ToArray();
             var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
 
-            SQLiteTransaction existingTransaction = Transaction as SQLiteTransaction;
-            SQLiteTransaction bulkTransaction = null;
+            var existingTransaction = Transaction as SqliteTransaction;
+            SqliteTransaction bulkTransaction = null;
             if (existingTransaction == null)
                 bulkTransaction = this.DbConnection.BeginTransaction();
             using (bulkTransaction)
@@ -49,28 +60,35 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 command.Transaction = existingTransaction ?? bulkTransaction;
                 command.CommandText =
-                $@"INSERT INTO {tableName} 
-({String.Join(",", sourceColumnNames)})
-VALUES ({String.Join(",", sourceColumnValues)})
-                ";
+                    $@"INSERT INTO {tableName} 
+({string.Join(",", sourceColumnNames)})
+VALUES ({string.Join(",", paramNames)})";
                 command.Prepare();
                 while (data.Read())
                 {
-                    foreach (var mapping in destColumnNames)
-                    {
-                        SQLiteParameter par = new SQLiteParameter();
-                        par.Value = data.GetValue(data.GetOrdinal(mapping));
-                        command.Parameters.Add(par);
-                    }
+                    command.Parameters.AddRange(
+                        destColumnNames.Select((n, i) => ConstructSqliteParameter(paramNames[i], data.GetValue(data.GetOrdinal(n)))));
                     command.ExecuteNonQuery();
                     command.Parameters.Clear();
                 }
+
                 bulkTransaction?.Commit();
             }
-
         }
 
-        public override void PrepareBulkInsert(string tablename)
+        private static SqliteParameter ConstructSqliteParameter(string parameterName, object value)
+        {
+            return new SqliteParameter
+            {
+                ParameterName = parameterName,
+                Value = value ?? DBNull.Value,
+                IsNullable = value is null,
+                DbType = SqliteConvert.TypeToDbType(value),
+                SqliteType = SqliteConvert.TypeToAffinity(value)
+            };
+        }
+
+        public override void PrepareBulkInsert(string tableName)
         {
             if (ModifyDBSettings)
             {
@@ -87,6 +105,7 @@ VALUES ({String.Join(",", sourceColumnValues)})
                 }
             }
         }
+
         public override void CleanUpBulkInsert(string tablename)
         {
             if (ModifyDBSettings)
@@ -96,17 +115,23 @@ VALUES ({String.Join(",", sourceColumnValues)})
                     this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
                     this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
                 }
-                catch { }
+                catch
+                {
+                }
             }
         }
 
-        public override void BeforeBulkInsert(string tableName) { }
+        public override void BeforeBulkInsert(string tableName)
+        {
+        }
 
-        public override void AfterBulkInsert(string tableName) { }
+        public override void AfterBulkInsert(string tableName)
+        {
+        }
 
         public override IConnectionManager Clone()
         {
-            SQLiteConnectionManager clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
+            var clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = this.MaxLoginAttempts,
                 ModifyDBSettings = this.ModifyDBSettings

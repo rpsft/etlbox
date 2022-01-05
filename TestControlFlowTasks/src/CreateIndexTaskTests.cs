@@ -13,7 +13,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class CreateIndexTaskTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
+        private SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
 
         public CreateIndexTaskTests(ControlFlowDatabaseFixture dbFixture)

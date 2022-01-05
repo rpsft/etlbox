@@ -1,9 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ALE.ETLBox.Helper;
 using Xunit;
 
 namespace ALE.ETLBoxTests.Fixtures

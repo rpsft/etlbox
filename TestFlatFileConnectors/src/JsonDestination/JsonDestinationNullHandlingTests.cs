@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TestFlatFileConnectors.Helpers;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
@@ -53,7 +54,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./IgnoreNullValues.json"),
-                File.ReadAllText("res/JsonDestination/TwoColumns.json"));
+                File.ReadAllText("res/JsonDestination/TwoColumns.json").NormalizeLineEndings());
         }
 
         [Fact]
@@ -79,7 +80,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(File.ReadAllText("./IgnoreNullValuesStringArray.json"),
-                File.ReadAllText("res/JsonDestination/TwoColumnsStringArray.json"));
+                File.ReadAllText("res/JsonDestination/TwoColumnsStringArray.json").NormalizeLineEndings());
         }
 
 

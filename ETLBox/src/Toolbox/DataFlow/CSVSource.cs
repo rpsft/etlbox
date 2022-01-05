@@ -11,7 +11,7 @@ using System.Threading.Tasks.Dataflow;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// Reads data from a csv source. While reading the data from the file, data is also asnychronously posted into the targets.
+    /// Reads data from a csv source. While reading the data from the file, data is also asynchronously posted into the targets.
     /// Data is read a as string from the source and dynamically converted into the corresponding data format.
     /// </summary>
     /// <example>
@@ -22,6 +22,8 @@ namespace ALE.ETLBox.DataFlow
     /// </example>
     public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
     {
+        private static readonly CultureInfo CsvDefaultCulture = CultureInfo.InvariantCulture;
+
         /* ITask Interface */
         public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";
 
@@ -31,14 +33,14 @@ namespace ALE.ETLBox.DataFlow
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
         public int ReleaseGCPressureRowCount {get;set; } = 500;
+        public Type ClassMapType { get; set; }
 
         /* Private stuff */
-        CsvReader CsvReader { get; set; }
-        TypeInfo TypeInfo { get; set; }
-
+        private CsvReader CsvReader { get; set; }
+        private TypeInfo TypeInfo { get; set; }
         public CsvSource()
         {
-            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
+            Configuration = new CsvConfiguration(CsvDefaultCulture);
             TypeInfo = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
             ResourceType = ResourceType.File;
         }
@@ -53,11 +55,17 @@ namespace ALE.ETLBox.DataFlow
             StreamReader = new StreamReader(Uri, Configuration.Encoding ?? Encoding.UTF8, true);
             SkipFirstRows();
             CsvReader = new CsvReader(StreamReader, Configuration);
+            if (ClassMapType != null)
+            {
+                CsvReader.Context.RegisterClassMap(ClassMapType);
+            }
         }
+
+        public override CultureInfo CurrentCulture => CsvDefaultCulture;
 
         private void SkipFirstRows()
         {
-            for (int i = 0; i < SkipRows; i++)
+            for (var i = 0; i < SkipRows; i++)
                 StreamReader.ReadLine();
         }
 
@@ -67,7 +75,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 CsvReader.Read();
                 CsvReader.ReadHeader();
-                FieldHeaders = CsvReader.Context.HeaderRecord;
+                FieldHeaders = CsvReader.HeaderRecord;
             }
             while (CsvReader.Read())
             {
@@ -84,7 +92,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (TypeInfo.IsArray)
                 {
-                    string[] line = CsvReader.Context.Record;
+                    string[] line = CsvReader.Parser.Record;
                     Buffer.SendAsync((TOutput)(object)line).Wait();
                 }
                 else if (TypeInfo.IsDynamic)
@@ -97,26 +105,16 @@ namespace ALE.ETLBox.DataFlow
                     TOutput bufferObject = CsvReader.GetRecord<TOutput>();
                     Buffer.SendAsync(bufferObject).Wait();
                 }
-                AvoidGCPressure();
             }
             catch (Exception e)
             {
                 if (!ErrorHandler.HasErrorBuffer) throw e;
                 if (e is CsvHelperException csvex)
                     ErrorHandler.Send(e,
-                        $"Row: {csvex.ReadingContext?.Row} -- StartPos: {csvex.ReadingContext?.RawRecordStartPosition} -- RawRecord: {csvex.ReadingContext?.RawRecord ?? string.Empty}");
+                        $"Row: {csvex.Context?.Parser.Row} -- RawRecord: {csvex.Context?.Parser.RawRecord ?? string.Empty}");
                 else
                     ErrorHandler.Send(e, "N/A");
             }
-        }
-
-        private void AvoidGCPressure()
-        {
-            if (ReleaseGCPressureRowCount > 0 && ProgressCount % ReleaseGCPressureRowCount == 0)
-            {
-                GC.Collect();
-                Task.Delay(1).Wait();
-            };
         }
 
         protected override void CloseReader()

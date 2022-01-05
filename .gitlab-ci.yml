@@ -1,0 +1,121 @@
+variables:
+  # Enable service network
+  FF_NETWORK_PER_BUILD: "true"
+
+.default_rules:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
+    - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/))
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+
+stages:
+  - build
+  - test
+  - deploy
+
+build_job:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  variables:
+    NUPKG_FOLDER: 'ETLBox/bin/Release/'
+  script:
+    - dotnet build ETLBox.sln -c Release
+  artifacts:
+    expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
+    paths:
+      - "$NUPKG_FOLDER/"
+  rules:
+    - !reference [.default_rules, rules]
+
+sonarqube-check:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+      - "apt-get update"
+      - "apt-get install --yes openjdk-11-jre"
+      - "dotnet tool install --global dotnet-sonarscanner"
+      - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
+      - "dotnet sonarscanner begin /k:\"open-source_etlbox_AX2rV2MSOqMd9uKUCs_O\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
+      - "dotnet build"
+      - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
+  allow_failure: true
+  rules:
+    - !reference [.default_rules, rules]
+
+test_job:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  services:
+    - name: mysql/mysql-server
+      alias: localmysql
+    - name: postgres
+      alias: localpostgres
+    - name: mcr.microsoft.com/azure-sql-edge
+      alias: localmssql
+  variables:
+    # MySQL image customization
+    MYSQL_ROOT_HOST: '%'
+    MYSQL_ROOT_PASSWORD: 'etlboxpassword'
+    # MYSQL_USER: , MYSQL_PASSWORD
+
+    # Postgres image customization
+    POSTGRES_PASSWORD: 'etlboxpassword'
+
+    # MS SQL image customization
+    ACCEPT_EULA: 'Y'
+    SA_PASSWORD: 'YourStrong@Passw0rd'
+    MSSQL_PID: 'Developer'
+
+    # dotnet settings
+    DOT_NET_TEST_OPTIONS: --configuration=Release --filter="Category!=Performance" --no-build --logger="console;verbosity=detailed" --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
+  before_script:
+    # mysql -uroot -petlboxpassword
+
+    # ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY 'etlboxpassword';
+    # ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'etlboxpassword';
+    # FLUSH PRIVILEGES;
+
+  script:
+    - pushd test
+    - pwsh ./Set-Configuration.ps1 gitlab-ci
+    - popd
+    - dotnet build ETLBox.sln -c Release
+    - dotnet test ./TestConnectionManager ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - dotnet test ./TestControlFlowTasks ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - dotnet test ./TestDatabaseConnectors ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - dotnet test ./TestHelper ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - dotnet test ./TestNonParallel ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - dotnet test ./TestOtherConnectors ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - dotnet test ./TestTransformations ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    # - dotnet test ./TestPerformance ${DOT_NET_TEST_OPTIONS} --collect="XPlat Code Coverage" || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
+  rules:
+    - !reference [.default_rules, rules]
+  artifacts:
+    when: always
+    paths:
+      - ./**/*test-result.xml
+    reports:
+      junit:
+        - ./**/*test-result.xml
+      cobertura:
+        - ./**/coverage.cobertura.xml
+
+deploy:
+  stage: deploy
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  script:
+    - dotnet pack -c Release
+    - dotnet nuget add source "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json" --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
+    - dotnet nuget push "bin/Release/*.nupkg" --source gitlab
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/

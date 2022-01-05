@@ -62,11 +62,11 @@ CREATE TABLE datetimetypes (
             //Assert
             Assert.Collection(result.Columns,
                 tc => Assert.True(tc.DataType == "date" && tc.NETDataType == typeof(DateTime)),
-                tc => Assert.True(tc.DataType == "time" && tc.NETDataType == typeof(DateTime)),
-                tc => Assert.True(tc.DataType == "timetz" && tc.NETDataType == typeof(DateTime)),
-                tc => Assert.True(tc.DataType == "interval" && tc.NETDataType == typeof(String)),
-                tc => Assert.True(tc.DataType == "timestamp" && tc.NETDataType == typeof(DateTime)),
-                tc => Assert.True(tc.DataType == "timestamptz" && tc.NETDataType == typeof(DateTime))
+                tc => Assert.True(tc.DataType == "time" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Unspecified),
+                tc => Assert.True(tc.DataType == "timetz" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Utc),
+                tc => Assert.True(tc.DataType == "interval" && tc.NETDataType == typeof(String) && tc.NETDateTimeKind == null),
+                tc => Assert.True(tc.DataType == "timestamp" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Unspecified),
+                tc => Assert.True(tc.DataType == "timestamptz" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Utc)
             );
         }
 

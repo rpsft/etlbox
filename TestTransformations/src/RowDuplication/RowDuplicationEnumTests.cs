@@ -1,59 +1,50 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using Npgsql.TypeHandlers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace ALE.ETLBoxTests.DataFlowTests;
+
+[Collection("DataFlow")]
+public class RowDuplicationEnumTests
 {
-    [Collection("DataFlow")]
-    public class RowDuplicationEnumTests
+    public enum EnumType
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowDuplicationEnumTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        Value1 = 1,
+        Value2 = 2
+    }
 
-        public class MyEnumRow
-        {
-            public EnumType EnumCol { get; set; }
-        }
+    public RowDuplicationEnumTests(DataFlowDatabaseFixture dbFixture)
+    {
+    }
 
-        public enum EnumType
-        {
-            Value1 = 1,
-            Value2 = 2
-        }
+    public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
-        [Fact]
-        public void NoParameter()
-        {
-            //Arrange
-            MemorySource<MyEnumRow> source = new MemorySource<MyEnumRow>();
-            source.DataAsList.Add(new MyEnumRow() { EnumCol = EnumType.Value2 });
-            RowDuplication<MyEnumRow> duplication = new RowDuplication<MyEnumRow>();
-            MemoryDestination<MyEnumRow> dest = new MemoryDestination<MyEnumRow>();
+    [Fact]
+    public void NoParameter()
+    {
+        //Arrange
+        var source = new MemorySource<MyEnumRow>();
+        source.DataAsList.Add(new MyEnumRow { EnumCol = EnumType.Value2 });
+        var duplication = new RowDuplication<MyEnumRow>();
+        var dest = new MemoryDestination<MyEnumRow>();
 
-            //Act
-            source.LinkTo(duplication);
-            duplication.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
+        //Act
+        source.LinkTo(duplication);
+        duplication.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
 
-            //Assert
-            Assert.Collection<MyEnumRow>(dest.Data,
-                d => Assert.True(d.EnumCol == EnumType.Value2),
-                d => Assert.True(d.EnumCol == EnumType.Value2)
-            );
-        }
+        //Assert
+        Assert.Collection(dest.Data,
+            d => Assert.True(d.EnumCol == EnumType.Value2),
+            d => Assert.True(d.EnumCol == EnumType.Value2)
+        );
+    }
+
+    public class MyEnumRow
+    {
+        public EnumType EnumCol { get; set; }
     }
 }

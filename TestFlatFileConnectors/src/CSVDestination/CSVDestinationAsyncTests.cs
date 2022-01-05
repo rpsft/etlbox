@@ -1,41 +1,31 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using System.IO;
+using System.Threading.Tasks;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ALE.ETLBoxTests.DataFlowTests
 {
     [Collection("DataFlow")]
-    public class CsvDestinationAsyncTests
+    public sealed class CsvDestinationAsyncTests
     {
-        [Theory, InlineData("AsyncTestFile.csv",5000)]
+        [Theory]
+        [InlineData("AsyncTestFile.csv", 5000)]
         public void WriteAsyncAndCheckLock(string filename, int noRecords)
         {
             //Arrange
             if (File.Exists(filename)) File.Delete(filename);
-            MemorySource<string[]> source = new MemorySource<string[]>();
-            for (int i=0;i<noRecords;i++)
-                source.DataAsList.Add(new string[] { HashHelper.RandomString(100)});
-            CsvDestination<string[]> dest = new CsvDestination<string[]>(filename);
-            bool onCompletionRun = false;
+            var source = new MemorySource<string[]>();
+            for (var i = 0; i < noRecords; i++)
+                source.DataAsList.Add(new[] { HashHelper.RandomString(100) });
+            var dest = new CsvDestination<string[]>(filename);
+            var onCompletionRun = false;
 
             //Act
             source.LinkTo(dest);
-            Task sT = source.ExecuteAsync();
-            Task dt = dest.Completion;
-            while (!File.Exists(filename)) { Task.Delay(10).Wait(); }
+            var sT = source.ExecuteAsync();
+            var dt = dest.Completion;
+            while (!File.Exists(filename)) Task.Delay(10).Wait();
 
             //Assert
             dest.OnCompletion = () =>
@@ -49,15 +39,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.True(onCompletionRun, "OnCompletion action and assertion did run");
         }
 
-        protected virtual bool IsFileLocked(string filename)
+        private bool IsFileLocked(string filename)
         {
             try
             {
-                FileInfo file = new FileInfo(filename);
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
+                var file = new FileInfo(filename);
+                using var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+                stream.Close();
             }
             catch (IOException)
             {
@@ -71,6 +59,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //file is not locked
             return false;
         }
-
     }
 }
