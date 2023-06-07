@@ -107,8 +107,9 @@ test_job:
     reports:
       junit:
         - ./**/*test-result.xml
-      cobertura:
-        - ./**/coverage.cobertura.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./**/coverage.cobertura.xml
 
 deploy:
   stage: deploy
