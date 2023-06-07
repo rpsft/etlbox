@@ -116,7 +116,6 @@ deploy:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - dotnet pack -c Release
-    - dotnet nuget add source $nuget_source --name proget --api-key $nuget_api_key
-    - dotnet nuget push "ETLBox/bin/Release/*.nupkg" --source proget
+    - dotnet nuget push "ETLBox/bin/Release/*.nupkg" --source $nuget_source --api-key $nuget_api_key
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
