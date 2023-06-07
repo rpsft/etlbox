@@ -100,7 +100,7 @@ test_job:
     - if [ $FAILED ]; then exit 1; fi
   rules:
     - !reference [.default_rules, rules]
-  when: never
+  when: manual
   artifacts:
     when: always
     paths:
