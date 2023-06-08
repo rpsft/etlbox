@@ -11,10 +11,6 @@ variables:
   # (при запуска пайплайна по тегу, версия берётся из тега)
   PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}-${CI_PIPELINE_IID}"
 
-  # English locale for dotnet build scripts
-  LANG: en-us
-  LCID: 1033
-
 .default_rules:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
