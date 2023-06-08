@@ -109,7 +109,7 @@ namespace TestFlatFileConnectors.CSVSource
 
         private bool ShouldSkipRecordDelegate(ShouldSkipRecordArgs args)
         {
-            return args.Record[0].Contains(".csv");
+            return args.Row.TryGetField<string>(0, out var field) && field!.Contains(".csv");
         }
     }
 }

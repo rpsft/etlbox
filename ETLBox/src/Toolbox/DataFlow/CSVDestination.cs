@@ -27,7 +27,7 @@ namespace ALE.ETLBox.DataFlow
 
         public CsvDestination()
         {
-            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { LeaveOpen = true };
+            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
 
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ResourceType = ResourceType.File;
@@ -42,18 +42,18 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void InitStream()
         {
-            CsvWriter = new CsvWriter(StreamWriter, Configuration);
+            CsvWriter = new CsvWriter(StreamWriter, Configuration, true);
             CsvWriter.Context.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[]
             {
                 "yyyy-MM-dd HH:mm:ss.fff"
             };
-            WriteHeaderIfRequired();
         }
 
         public override CultureInfo CurrentCulture => CultureInfo.InvariantCulture;
 
         protected override void WriteIntoStream(TInput data)
         {
+            WriteHeaderIfRequired(data);
             if (TypeInfo.IsArray)
                 WriteArray(data);
             else
@@ -62,13 +62,25 @@ namespace ALE.ETLBox.DataFlow
             LogProgress();
         }
 
-        private void WriteHeaderIfRequired()
+        private void WriteHeaderIfRequired(TInput tInput)
         {
-            if (!TypeInfo.IsArray && !TypeInfo.IsDynamic && Configuration.HasHeaderRecord)
+            if (
+                TypeInfo.IsArray || !Configuration.HasHeaderRecord || CsvWriter.HeaderRecord != null
+            )
+            {
+                return;
+            }
+
+            if (TypeInfo.IsDynamic)
+            {
+                CsvWriter.WriteDynamicHeader(tInput as ExpandoObject);
+            }
+            else
             {
                 CsvWriter.WriteHeader<TInput>();
-                CsvWriter.NextRecord();
             }
+
+            CsvWriter.NextRecord();
         }
 
         private void WriteArray(TInput data)
@@ -107,6 +119,7 @@ namespace ALE.ETLBox.DataFlow
                     throw;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
             }
+
             CsvWriter.NextRecord();
         }
 
