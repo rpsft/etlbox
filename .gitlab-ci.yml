@@ -3,6 +3,7 @@ include:
   - .version.yml
 
 variables:
+  CI_DEBUG_SERVICES: "true"
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
 
@@ -114,7 +115,6 @@ test_job:
     - if [ $FAILED ]; then exit 1; fi
   rules:
     - !reference [.default_rules, rules]
-  when: manual
   artifacts:
     when: always
     paths:
