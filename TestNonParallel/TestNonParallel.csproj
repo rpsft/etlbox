@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <AssemblyName>ALE.ETLBoxTestsNonParallel</AssemblyName>
-
     <RootNamespace>ALE.ETLBoxTests.NonParallel</RootNamespace>
-
     <LangVersion>default</LangVersion>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,4 +1,18 @@
-# <span><img src="ETLBox/img/logo_bw.png" alt="ETLBox logo" height="32" /> ETLBox</span>
+# <span><img src="ETLBox/img/logo_bw.png" alt="ETLBox logo" height="32" /> ETLBox.Classic</span>
+
+## ETLBox.Classic
+
+This is a fully open-source (MIT) fork from original ETLBox library.
+Starting version 2.0 the author of the original library decided to close the source and commercialize the newer branch.
+ETLBox.Classic is aiming at keeping original 1.x branch up to date with .Net and DB libraries.
+
+### Documentation note
+
+Please note, that most of the documentation below is not updated and may contain broken links. Documentation PRs
+are most welcome. If you use this library, please consider updating some of its documentation.
+
+
+## What is ETLBox
 
 A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination
 components let you read and write data from the most common databases and file types. Transformations allow you to you
@@ -7,14 +21,6 @@ harmonize, filter, aggregate, validate and clean your data.
 Create your own tailor-made data flow with your .NET language of choice. ETLBox is written in C# and offers full support
 for .NET Core.
 
-<div class="hideOnWebsite">
-
-## ETLBox.net
-
-[For full documentation visit the project homepage: etlbox.net](https://etlbox.net). You will find a whole set of
-introductional articles, lots of examples and a complete API documentation.
-
-</div>
 
 ## Why ETLBox
 
@@ -213,7 +219,7 @@ of .NET)
 
 **Variant 1:** Nuget
 
-[ETLBox is available on nuget](https://www.nuget.org/packages/ETLBox). Just add the package to your project via your
+[ETLBox is available on nuget](https://www.nuget.org/packages/ETLBox.Classic). Just add the package to your project via your
 nuget package manager.
 
 **Variant 2:** Download the sources
@@ -221,7 +227,7 @@ nuget package manager.
 Clone the repository:
 
 ```bash
-git clone https://github.com/roadrunnerlenny/etlbox.git
+git clone https://github.com/rpsft/etlbox.git
 ```
 
 Then, open the downloaded solution file ETLBox.sln with Visual Studio 2019 or higher.

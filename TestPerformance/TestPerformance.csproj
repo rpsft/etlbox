@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <AssemblyName>ALE.ETLBoxTestsPerformance</AssemblyName>
-
     <RootNamespace>ALE.ETLBoxTests.Performance</RootNamespace>
-
     <LangVersion>default</LangVersion>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
