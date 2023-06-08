@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Configurations>Debug;Release</Configurations>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>EtlBox.Classic</PackageId>
     <Description>
       Fully open-source 1.x version fork from original etlbox (etlbox.net)
