@@ -1,21 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
+namespace TestControlFlowTasks.SqlServer
 {
     [Collection("SSAS ControlFlow")]
     public class XMLATaskTests
     {
-        public AdomdConnectionManager DefaultCatalog => new AdomdConnectionManager(Config.SSASConnection.ConnectionString("ControlFlow").CloneWithoutDbName());
-        public XMLATaskTests()
-        { }
+        public AdomdConnectionManager DefaultCatalog =>
+            new AdomdConnectionManager(
+                Config.SSASConnection.ConnectionString("ControlFlow").CloneWithoutDbName()
+            );
 
         internal static string CreateCubeXMLA(string dbName)
         {
@@ -45,7 +39,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
 </Delete>";
         }
 
-        [Fact(Skip="Adjust to work with tabular model")]
+        [Fact(Skip = "Adjust to work with tabular model")]
         public void TestCreateAndDelete()
         {
             string dbName = "ETLBox_TestXMLA";
@@ -53,7 +47,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
             {
                 XmlaTask.ExecuteNonQuery(DefaultCatalog, "Drop cube", DeleteCubeXMLA(dbName));
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
+
             XmlaTask.ExecuteNonQuery(DefaultCatalog, "Create cube", CreateCubeXMLA(dbName));
             XmlaTask.ExecuteNonQuery(DefaultCatalog, "Delete cube", DeleteCubeXMLA(dbName));
         }

@@ -1,33 +1,29 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.CSVSource
 {
     [Collection("DataFlow")]
     public class CsvSourceStringArrayTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CsvSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void SimpleCSVIntoDatabase()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "CsvDestination2Columns"
+            );
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                Connection,
+                "CsvDestination2Columns"
+            );
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
@@ -43,8 +39,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MoreColumnsInCSV()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination2Columns");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "CsvDestination2Columns"
+            );
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                Connection,
+                "CsvDestination2Columns"
+            );
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumns.csv");
@@ -60,8 +61,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MoreColumnsInDatabase()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination2Columns");
+            var unused = new TwoColumnsTableFixture("CsvDestination2Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                Connection,
+                "CsvDestination2Columns"
+            );
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/OneColumn.csv");
@@ -70,7 +74,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "CsvDestination2Columns", "Col1 IN (1,2,3)"));
+            Assert.Equal(
+                3,
+                RowCountTask.Count(Connection, "CsvDestination2Columns", "Col1 IN (1,2,3)")
+            );
         }
     }
 }

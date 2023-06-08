@@ -1,24 +1,15 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.AggregationTests
 {
     [Collection("DataFlow")]
-    public class AggregationStringArrayTests
+    public class AggregationStringArrayTests : IDisposable
     {
+        private readonly CultureInfo _culture;
+
         public AggregationStringArrayTests()
         {
+            _culture = CultureInfo.CurrentCulture;
         }
 
         public class MyAggRow
@@ -31,16 +22,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void GroupingUsingStringArray()
         {
             //Arrange
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             MemorySource<string[]> source = new MemorySource<string[]>();
-            source.DataAsList.Add(new string[] { "Class1", "3.5" });
-            source.DataAsList.Add(new string[] { "Class1", "6.5" });
-            source.DataAsList.Add(new string[] { "Class2", "10" });
+            source.DataAsList.Add(new[] { "Class1", "3.5" });
+            source.DataAsList.Add(new[] { "Class1", "6.5" });
+            source.DataAsList.Add(new[] { "Class2", "10" });
 
             Aggregation<string[], MyAggRow> agg = new Aggregation<string[], MyAggRow>(
                 (row, aggValue) => aggValue.AggValue += Convert.ToDouble(row[1]),
                 row => row[0],
                 (key, agg) => agg.GroupName = (string)key
-                );
+            );
 
             MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
 
@@ -51,11 +43,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection<MyAggRow>(dest.Data,
-              ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
-              ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class2")
-          );
+            Assert.Collection(
+                dest.Data,
+                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
+                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class2")
+            );
         }
 
+        public void Dispose()
+        {
+            CultureInfo.CurrentCulture = _culture;
+        }
     }
 }

@@ -1,14 +1,10 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Xunit;
+﻿using System.Diagnostics.CodeAnalysis;
 
-namespace ALE.ETLBoxTests.Fixtures
+namespace TestControlFlowTasks.Fixtures
 {
     [CollectionDefinition("ControlFlow")]
     public class ControlFlowCollectionClass : ICollectionFixture<ControlFlowDatabaseFixture> { }
+
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public class ControlFlowDatabaseFixture
     {
@@ -19,5 +15,4 @@ namespace ALE.ETLBoxTests.Fixtures
             DatabaseHelper.RecreatePostgresDatabase("ControlFlow");
         }
     }
-
 }

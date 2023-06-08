@@ -1,30 +1,22 @@
-﻿using ALE.ETLBox;
+﻿using System.Collections.Generic;
+using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
 {
     [Collection("Logging")]
     public class ErrorTableTaskTests : IDisposable
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
-
-        public ErrorTableTaskTests(LoggingDatabaseFixture dbFixture)
-        {
-
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("Logging");
 
         public void Dispose()
         {
-            ControlFlow.ClearSettings();
+            ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -47,11 +39,11 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             //Act
-            CreateTableTask.Create(connection, "etlbox_error",
-                new List<TableColumn>()
-                {
-                    new TableColumn("Col1", "INT")
-                });
+            CreateTableTask.Create(
+                connection,
+                "etlbox_error",
+                new List<TableColumn> { new TableColumn("Col1", "INT") }
+            );
             CreateErrorTableTask.DropAndCreate(connection, "etlbox_error");
             //Assert
             var td = TableDefinition.GetDefinitionFromTableName(connection, "etlbox_error");

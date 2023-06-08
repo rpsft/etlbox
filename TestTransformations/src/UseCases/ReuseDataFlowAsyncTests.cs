@@ -1,29 +1,11 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
+using ALE.ETLBox.DataFlow;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.UseCases
 {
     [Collection("DataFlow")]
     public class ReuseDataFlowAsyncTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public ReuseDataFlowAsyncTests(DataFlowDatabaseFixture dbFixture)
-        {
-
-        }
-
         [Fact]
         public void RunReusableFlow()
         {
@@ -52,10 +34,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             public ReferenceDataFlow(int key, string value)
             {
-                var x = new MyData() { Key = key, Value = value };
+                var x = new MyData { Key = key, Value = value };
                 _source = new MemorySource<MyData>();
                 _source.DataAsList.Add(x);
-                _destination = new CustomDestination<MyData>(x => Data.Add(x.Key, x));
+                _destination = new CustomDestination<MyData>(data => Data.Add(data.Key, data));
                 _source.LinkTo(_destination);
                 _source.ExecuteAsync();
             }
@@ -64,10 +46,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             public Task Initialized => _destination.Completion;
         }
-
-
-
-
-
     }
 }

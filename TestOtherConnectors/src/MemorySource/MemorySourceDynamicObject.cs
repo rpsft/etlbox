@@ -1,27 +1,18 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.MemorySource
 {
     [Collection("DataFlow")]
     public class MemorySourceDynamicObjectTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MemorySourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void DataIsFromList()
@@ -29,7 +20,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
             MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>();
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "MemoryDestination");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+                SqlConnection,
+                "MemoryDestination"
+            );
             AddObjectsToSource(source);
 
             //Act

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -21,12 +17,13 @@ namespace ALE.ETLBox.DataFlow
     /// join.LinkTo(dest);
     /// </code>
     /// </example>
-    public class MergeJoin<TInput1, TInput2, TOutput> : DataFlowTask, ITask, IDataFlowLinkSource<TOutput>
+    [PublicAPI]
+    public class MergeJoin<TInput1, TInput2, TOutput> : DataFlowTask, IDataFlowLinkSource<TOutput>
     {
         private Func<TInput1, TInput2, TOutput> _mergeJoinFunc;
 
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Merge and join data";
+        public sealed override string TaskName { get; set; } = "Merge and join data";
 
         /* Public Properties */
         public MergeJoinTarget<TInput1> Target1 { get; set; }
@@ -39,8 +36,12 @@ namespace ALE.ETLBox.DataFlow
             set
             {
                 _mergeJoinFunc = value;
-                Transformation.TransformationFunc = new Func<Tuple<TInput1, TInput2>, TOutput>(tuple => _mergeJoinFunc.Invoke(tuple.Item1, tuple.Item2));
-                JoinBlock.LinkTo(Transformation.TargetBlock, new DataflowLinkOptions { PropagateCompletion = true });
+                Transformation.TransformationFunc = tuple =>
+                    _mergeJoinFunc.Invoke(tuple.Item1, tuple.Item2);
+                JoinBlock.LinkTo(
+                    Transformation.TargetBlock,
+                    new DataflowLinkOptions { PropagateCompletion = true }
+                );
             }
         }
 
@@ -56,38 +57,62 @@ namespace ALE.ETLBox.DataFlow
             Target2 = new MergeJoinTarget<TInput2>(this, JoinBlock.Target2);
         }
 
-        public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc) : this()
+        public MergeJoin(Func<TInput1, TInput2, TOutput> mergeJoinFunc)
+            : this()
         {
             MergeJoinFunc = mergeJoinFunc;
         }
 
-        public MergeJoin(string name, Func<TInput1, TInput2, TOutput> mergeJoinFunc) : this(mergeJoinFunc)
+        public MergeJoin(string name, Func<TInput1, TInput2, TOutput> mergeJoinFunc)
+            : this(mergeJoinFunc)
         {
-            this.TaskName = name;
+            TaskName = name;
         }
 
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target);
+        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target) =>
+            new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(target);
 
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target, predicate);
+        public IDataFlowLinkSource<TOutput> LinkTo(
+            IDataFlowLinkTarget<TOutput> target,
+            Predicate<TOutput> predicate
+        ) => new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(target, predicate);
 
-        public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo(target, rowsToKeep, rowsIntoVoid);
+        public IDataFlowLinkSource<TOutput> LinkTo(
+            IDataFlowLinkTarget<TOutput> target,
+            Predicate<TOutput> rowsToKeep,
+            Predicate<TOutput> rowsIntoVoid
+        ) =>
+            new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(
+                target,
+                rowsToKeep,
+                rowsIntoVoid
+            );
 
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target);
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+            IDataFlowLinkTarget<TOutput> target
+        ) => new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo<TConvert>(target);
 
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> predicate)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, predicate);
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+            IDataFlowLinkTarget<TOutput> target,
+            Predicate<TOutput> predicate
+        ) => new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo<TConvert>(target, predicate);
 
-        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(IDataFlowLinkTarget<TOutput> target, Predicate<TOutput> rowsToKeep, Predicate<TOutput> rowsIntoVoid)
-            => (new DataFlowLinker<TOutput>(this, SourceBlock)).LinkTo<TConvert>(target, rowsToKeep, rowsIntoVoid);
+        public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
+            IDataFlowLinkTarget<TOutput> target,
+            Predicate<TOutput> rowsToKeep,
+            Predicate<TOutput> rowsIntoVoid
+        ) =>
+            new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo<TConvert>(
+                target,
+                rowsToKeep,
+                rowsIntoVoid
+            );
 
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
             Transformation.LinkErrorTo(target);
     }
 
+    [PublicAPI]
     public class MergeJoinTarget<TInput> : GenericTask, IDataFlowDestination<TInput>
     {
         public ITargetBlock<TInput> TargetBlock { get; set; }
@@ -99,28 +124,30 @@ namespace ALE.ETLBox.DataFlow
 
         public Task Completion => TargetBlock.Completion;
 
-        protected List<Task> PredecessorCompletions { get; set; } = new List<Task>();
+        private List<Task> PredecessorCompletions { get; set; } = new();
 
         public void AddPredecessorCompletion(Task completion)
         {
             PredecessorCompletions.Add(completion);
-            completion.ContinueWith(t => CheckCompleteAction());
+            completion.ContinueWith(_ => CheckCompleteAction());
         }
 
-        protected void CheckCompleteAction()
+        private void CheckCompleteAction()
         {
-            Task.WhenAll(PredecessorCompletions).ContinueWith(t =>
-            {
-                if (t.IsFaulted) TargetBlock.Fault(t.Exception.InnerException);
-                else TargetBlock.Complete();
-            });
+            Task.WhenAll(PredecessorCompletions)
+                .ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                        TargetBlock.Fault(t.Exception!.InnerException!);
+                    else
+                        TargetBlock.Complete();
+                });
         }
 
         public MergeJoinTarget(ITask parent, ITargetBlock<TInput> joinTarget)
         {
             TargetBlock = joinTarget;
             CopyTaskProperties(parent);
-
         }
     }
 
@@ -136,16 +163,16 @@ namespace ALE.ETLBox.DataFlow
     /// join.LinkTo(dest);
     /// </code>
     /// </example>
+    [PublicAPI]
     public class MergeJoin<TInput> : MergeJoin<TInput, TInput, TInput>
     {
-        public MergeJoin() : base()
-        { }
+        public MergeJoin() { }
 
-        public MergeJoin(Func<TInput, TInput, TInput> mergeJoinFunc) : base(mergeJoinFunc)
-        { }
+        public MergeJoin(Func<TInput, TInput, TInput> mergeJoinFunc)
+            : base(mergeJoinFunc) { }
 
-        public MergeJoin(string name, Func<TInput, TInput, TInput> mergeJoinFunc) : base(name, mergeJoinFunc)
-        { }
+        public MergeJoin(string name, Func<TInput, TInput, TInput> mergeJoinFunc)
+            : base(name, mergeJoinFunc) { }
     }
 
     /// <summary>
@@ -153,16 +180,18 @@ namespace ALE.ETLBox.DataFlow
     /// Make sure both inputs are sorted or in the right order. The non generic implementation deals with
     /// a dynamic object as input and merged output.
     /// </summary>
+    [PublicAPI]
     public class MergeJoin : MergeJoin<ExpandoObject, ExpandoObject, ExpandoObject>
     {
-        public MergeJoin() : base()
-        { }
+        public MergeJoin() { }
 
-        public MergeJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc) : base(mergeJoinFunc)
-        { }
+        public MergeJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc)
+            : base(mergeJoinFunc) { }
 
-        public MergeJoin(string name, Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc) : base(name, mergeJoinFunc)
-        { }
+        public MergeJoin(
+            string name,
+            Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc
+        )
+            : base(name, mergeJoinFunc) { }
     }
 }
-

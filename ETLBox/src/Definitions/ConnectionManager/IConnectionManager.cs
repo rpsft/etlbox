@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
 
 namespace ALE.ETLBox.ConnectionManager
 {
+    [PublicAPI]
     public interface IConnectionManager : IDisposable
     {
         ConnectionManagerType ConnectionManagerType { get; }

@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.Data.Sqlite;
 
 namespace ALE.ETLBox.ConnectionManager.Helpers;
@@ -11,6 +6,7 @@ namespace ALE.ETLBox.ConnectionManager.Helpers;
 /// <summary>
 /// This base class provides datatype conversion services for the Sqlite provider.
 /// </summary>
+[PublicAPI]
 public abstract class SqliteConvert
 {
     /// <summary>
@@ -23,15 +19,17 @@ public abstract class SqliteConvert
         var tc = Type.GetTypeCode(typ);
         if (tc == TypeCode.Object)
         {
-            if (typ == typeof(byte[])) return DbType.Binary;
-            if (typ == typeof(Guid)) return DbType.Guid;
+            if (typ == typeof(byte[]))
+                return DbType.Binary;
+            if (typ == typeof(Guid))
+                return DbType.Guid;
             return DbType.String;
         }
 
-        return DbTypeMappings[(int)tc];
+        return s_dbTypeMappings[(int)tc];
     }
 
-    private static readonly DbType[] DbTypeMappings =
+    private static readonly DbType[] s_dbTypeMappings =
     {
         DbType.Object, // Empty (0)
         DbType.Binary, // Object (1)
@@ -54,21 +52,21 @@ public abstract class SqliteConvert
         DbType.String // String (18)
     };
 
-    public static DbType TypeToDbType(object _objValue)
+    public static DbType TypeToDbType(object objValue)
     {
-        if (_objValue != null && _objValue != DBNull.Value)
+        if (objValue != null && objValue != DBNull.Value)
         {
-            return TypeToDbType(_objValue.GetType());
+            return TypeToDbType(objValue.GetType());
         }
 
         return DbType.String; // Unassigned default value is String
     }
 
-    public static SqliteType TypeToAffinity(object _objValue)
+    public static SqliteType TypeToAffinity(object objValue)
     {
-        if (_objValue != null && _objValue != DBNull.Value)
+        if (objValue != null && objValue != DBNull.Value)
         {
-            return TypeToAffinity(_objValue.GetType());
+            return TypeToAffinity(objValue.GetType());
         }
 
         return SqliteType.Text; // Unassigned default value is String
@@ -78,7 +76,6 @@ public abstract class SqliteConvert
     /// For a given type, return the closest-match SQLite TypeAffinity, which only understands a very limited subset of types.
     /// </summary>
     /// <param name="typ">The type to evaluate</param>
-    /// <param name="flags">The flags associated with the connection.</param>
     /// <returns>The SQLite type affinity for that type.</returns>
     public static SqliteType TypeToAffinity(Type typ)
     {
@@ -87,14 +84,13 @@ public abstract class SqliteConvert
         {
             if (typ == typeof(byte[]) || typ == typeof(Guid))
                 return SqliteType.Blob;
-            else
-                return SqliteType.Text;
+            return SqliteType.Text;
         }
 
-        return TypeCodeAffinities[(int)tc];
+        return s_typeCodeAffinities[(int)tc];
     }
 
-    private static readonly SqliteType[] TypeCodeAffinities =
+    private static readonly SqliteType[] s_typeCodeAffinities =
     {
         SqliteType.Text, // Empty (0)
         SqliteType.Blob, // Object (1)

@@ -1,30 +1,25 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class RowCountTaskTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
-        public RowCountTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
 
-        [Theory, MemberData(nameof(Connections))
-            , MemberData(nameof(Access))]
+        [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
         public void NormalCount(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(connection, "RowCountTest");
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(
+                connection,
+                "RowCountTest"
+            );
             tableDef.InsertTestData();
             //Act
             int? actual = RowCountTask.Count(connection, "RowCountTest");
@@ -32,9 +27,8 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal(3, actual);
         }
 
-        [Theory, MemberData(nameof(Connections))
-            , MemberData(nameof(Access))] //If access fails with "Internal OLE Automation error", download and install: https://www.microsoft.com/en-us/download/confirmation.aspx?id=50040
-                                          //see also: https://stackoverflow.com/questions/54632928/internal-ole-automation-error-in-ms-access-using-oledb
+        [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))] //If access fails with "Internal OLE Automation error", download and install: https://www.microsoft.com/en-us/download/confirmation.aspx?id=50040
+        //see also: https://stackoverflow.com/questions/54632928/internal-ole-automation-error-in-ms-access-using-oledb
         public void CountWithCondition(IConnectionManager connection)
         {
             //Arrange
@@ -43,21 +37,26 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Act
             int? actual = RowCountTask.Count(connection, "RowCountTest", $"{tc.QB}Col1{tc.QE} = 2");
             //Assert
-            Assert.Equal(1, actual );
+            Assert.Equal(1, actual);
         }
 
         [Fact]
         public void SqlServerQuickQueryMode()
         {
             //Arrange
-            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(SqlConnection, "RowCountTest");
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(
+                SqlConnection,
+                "RowCountTest"
+            );
             tableDef.InsertTestData();
             //Act
-            int? actual = RowCountTask.Count(SqlConnection, "RowCountTest", RowCountOptions.QuickQueryMode);
+            int? actual = RowCountTask.Count(
+                SqlConnection,
+                "RowCountTest",
+                RowCountOptions.QuickQueryMode
+            );
             //Assert
             Assert.Equal(3, actual);
         }
-
-
     }
 }

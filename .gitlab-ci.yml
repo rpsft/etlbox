@@ -1,11 +1,22 @@
+include:
+  # Release version in current branch
+  - .version.yml
+
 variables:
+  CI_DEBUG_SERVICES: "true"
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
+
+  # Package version "by default", from .version.yml and added current pipeline no
+  # (при запуска пайплайна по тегу, версия берётся из тега)
+  PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}-${CI_PIPELINE_IID}"
 
 .default_rules:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
+      variables:
+        PACKAGE_VERSION: $CI_COMMIT_TAG
     - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/))
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
@@ -21,7 +32,7 @@ build_job:
   variables:
     NUPKG_FOLDER: 'ETLBox/bin/Release/'
   script:
-    - dotnet build ETLBox.sln -c Release
+    - dotnet build ETLBox.sln -c Release -p:Version=$PACKAGE_VERSION
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
@@ -29,27 +40,27 @@ build_job:
   rules:
     - !reference [.default_rules, rules]
 
-sonarqube-check:
-  stage: build
-  image: mcr.microsoft.com/dotnet/sdk:6.0
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
-  script: 
-      - "apt-get update"
-      - "apt-get install --yes openjdk-11-jre"
-      - "dotnet tool install --global dotnet-sonarscanner"
-      - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
-      - "dotnet sonarscanner begin /k:\"open-source_etlbox_AX2rV2MSOqMd9uKUCs_O\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
-      - "dotnet build"
-      - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
-  allow_failure: true
-  rules:
-    - !reference [.default_rules, rules]
+# sonarqube-check:
+#   stage: build
+#   image: mcr.microsoft.com/dotnet/sdk:6.0
+#   variables:
+#     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+#     GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+#   cache:
+#     key: "${CI_JOB_NAME}"
+#     paths:
+#       - .sonar/cache
+#   script: 
+#       - "apt-get update"
+#       - "apt-get install --yes openjdk-11-jre"
+#       - "dotnet tool install --global dotnet-sonarscanner"
+#       - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
+#       - "dotnet sonarscanner begin /k:\"open-source_etlbox_AX2rV2MSOqMd9uKUCs_O\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
+#       - "dotnet build"
+#       - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
+#   allow_failure: true
+#   rules:
+#     - !reference [.default_rules, rules]
 
 test_job:
   stage: test
@@ -100,7 +111,6 @@ test_job:
     - if [ $FAILED ]; then exit 1; fi
   rules:
     - !reference [.default_rules, rules]
-  when: manual
   artifacts:
     when: always
     paths:
@@ -116,7 +126,8 @@ deploy:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - dotnet pack -c Release
-    - dotnet nuget push "ETLBox/bin/Release/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
+    - dotnet pack -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
+    - dotnet nuget push "$NUPKG_FOLDER/*.snupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/

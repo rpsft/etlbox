@@ -1,26 +1,16 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using Xunit;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowTransformation
 {
     [Collection("DataFlow")]
     public class RowTransformationFluentNotationTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowTransformationFluentNotationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -32,12 +22,22 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void Linking3Transformations()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "SourceMultipleLinks"
+            );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "DestinationMultipleLinks"
+            );
 
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "SourceMultipleLinks");
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DestinationMultipleLinks");
+            DbSource<string[]> source = new DbSource<string[]>(
+                SqlConnection,
+                "SourceMultipleLinks"
+            );
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                SqlConnection,
+                "DestinationMultipleLinks"
+            );
             RowTransformation<string[]> trans1 = new RowTransformation<string[]>(row => row);
             RowTransformation<string[]> trans2 = new RowTransformation<string[]>(row => row);
             RowTransformation<string[]> trans3 = new RowTransformation<string[]>(row => row);
@@ -57,13 +57,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void UsingFluentVoidPredicate()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "SourceMultipleLinks"
+            );
             source2Columns.InsertTestData();
             source2Columns.InsertTestDataSet2();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "DestinationMultipleLinks"
+            );
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "DestinationMultipleLinks");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "SourceMultipleLinks"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                SqlConnection,
+                "DestinationMultipleLinks"
+            );
             RowTransformation<MySimpleRow> trans1 = new RowTransformation<MySimpleRow>(row => row);
 
             //Act
@@ -81,6 +91,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             [ColumnMap("Col1")]
             public int ColA { get; set; }
+
             [ColumnMap("Col2")]
             public string ColB { get; set; }
         }
@@ -89,22 +100,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void UsingDifferentObjectTypes()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "SourceMultipleLinks"
+            );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "DestinationMultipleLinks"
+            );
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
-            DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(SqlConnection, "DestinationMultipleLinks");
-            RowTransformation<MySimpleRow, MyOtherRow> trans1 = new RowTransformation<MySimpleRow, MyOtherRow>
-                (row =>
-                {
-                    return new MyOtherRow()
-                    {
-                        ColA = row.Col1,
-                        ColB = row.Col2
-                    };
-                }
-                );
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "SourceMultipleLinks"
+            );
+            DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(
+                SqlConnection,
+                "DestinationMultipleLinks"
+            );
+            RowTransformation<MySimpleRow, MyOtherRow> trans1 = new RowTransformation<
+                MySimpleRow,
+                MyOtherRow
+            >(row =>
+            {
+                return new MyOtherRow { ColA = row.Col1, ColB = row.Col2 };
+            });
 
             //Act
             source.LinkTo<MyOtherRow>(trans1).LinkTo(dest);
@@ -114,7 +132,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
             dest2Columns.AssertTestData();
         }
-
-
     }
 }

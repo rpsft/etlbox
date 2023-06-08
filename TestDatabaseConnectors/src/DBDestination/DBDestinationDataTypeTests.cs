@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBDestination
 {
     [Collection("DataFlow")]
     public class DbDestinationDataTypeTests
@@ -21,18 +18,13 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Value2 = 2
         }
 
-        public DbDestinationDataTypeTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
         public static IEnumerable<CultureInfo> Cultures => Config.AllLocalCultures();
 
         // Each culture for each database
         public static IEnumerable<object[]> Combinations =>
-            Connections.SelectMany(_ => Cultures,
-                (conn, culture) => new[] { conn[0], culture });
+            Connections.SelectMany(_ => Cultures, (conn, culture) => new[] { conn[0], culture });
 
         [Theory]
         [MemberData(nameof(Combinations))]
@@ -43,7 +35,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             {
                 CultureInfo.CurrentCulture = culture;
 
-                CreateTableTask.Create(connection, "datatypedestination",
+                CreateTableTask.Create(
+                    connection,
+                    "datatypedestination",
                     new List<TableColumn>
                     {
                         new("IntCol", "INT", allowNulls: true),
@@ -57,7 +51,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                         new("DecimalStringCol", "DECIMAL(12,10)", allowNulls: true),
                         new("NullCol", "CHAR(1)", allowNulls: true),
                         new("EnumCol", "INT", allowNulls: true)
-                    });
+                    }
+                );
                 //Arrange
                 var connectionCulture = connection.ConnectionCulture;
 
@@ -74,11 +69,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
                             DateCol = new DateTime(2020, 1, 1),
                             StringCol = "Test",
                             CharCol = 'T',
-                            DecimalStringCol = (13.4566m).ToString(connectionCulture),
+                            DecimalStringCol = 13.4566m.ToString(connectionCulture),
                             NullCol = null,
                             EnumCol = EnumType.Value2
                         }
-                    });
+                    }
+                );
 
                 //Act
                 var dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
@@ -89,17 +85,27 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 //Assert
                 //            IntCol LongCol DecimalCol DoubleCol   DateTimeCol DateCol StringCol CharCol DecimalStringCol NullCol
                 //1 - 1  2.3 5.4 2010 - 01 - 01 10:10:10.100 2020 - 01 - 01  Test T   13.4566000000   NULL
-                SqlTask.ExecuteReaderSingleLine(connection, "Check data", "SELECT * FROM datatypedestination",
+                SqlTask.ExecuteReaderSingleLine(
+                    connection,
+                    "Check data",
+                    "SELECT * FROM datatypedestination",
                     col => Assert.True(Convert.ToInt32(col) == 1),
                     col => Assert.True(Convert.ToInt64(col) == -1),
                     col => Assert.True(Convert.ToDecimal(col) == 2.3M),
                     col => Assert.True(Convert.ToDecimal(col) == 5.4M),
-                    col => Assert.True(Convert.ToDateTime(col) == new DateTime(2010, 1, 1, 10, 10, 10)),
+                    col =>
+                        Assert.True(
+                            Convert.ToDateTime(col) == new DateTime(2010, 1, 1, 10, 10, 10)
+                        ),
                     col => Assert.True(Convert.ToDateTime(col) == new DateTime(2020, 1, 1)),
                     col => Assert.True(Convert.ToString(col) == "Test"),
-                    col => Assert.True(Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),
-                    col => Assert.True(Convert.ToString(col, connectionCulture)?.Replace("0", "") ==
-                                       (13.4566m).ToString(connectionCulture)),
+                    col =>
+                        Assert.True(Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),
+                    col =>
+                        Assert.True(
+                            Convert.ToString(col, connectionCulture)?.Replace("0", "")
+                                == 13.4566m.ToString(connectionCulture)
+                        ),
                     col => Assert.True(col == null),
                     col => Assert.True(Convert.ToInt32(col) == 2)
                 );

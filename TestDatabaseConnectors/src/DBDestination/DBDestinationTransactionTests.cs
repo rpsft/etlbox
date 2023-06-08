@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests;
+namespace TestDatabaseConnectors.DBDestination;
 
 [Collection("DataFlow")]
 public class DbDestinationTransactionTests
@@ -20,7 +18,7 @@ public class DbDestinationTransactionTests
     public void ErrorInBatch(IConnectionManager connection)
     {
         //Arrange
-        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
         var source = new MemorySource<MySimpleRow>
         {
             DataAsList = new List<MySimpleRow>
@@ -54,7 +52,7 @@ public class DbDestinationTransactionTests
         //Arrange
         var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
         s2c.InsertTestData();
-        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
         var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
         var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
@@ -79,7 +77,7 @@ public class DbDestinationTransactionTests
         //Arrange
         var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
         s2c.InsertTestData();
-        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
         var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
         var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
@@ -92,7 +90,10 @@ public class DbDestinationTransactionTests
 
         //Assert
         if (connection.GetType() == typeof(SqlConnectionManager))
-            Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest", RowCountOptions.NoLock));
+            Assert.Equal(
+                3,
+                RowCountTask.Count(connection.Clone(), "TransactionDest", RowCountOptions.NoLock)
+            );
         connection.CommitTransaction();
         Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
         Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest"));
@@ -109,7 +110,7 @@ public class DbDestinationTransactionTests
         //Arrange
         var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
         s2c.InsertTestData();
-        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
         var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
         var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
@@ -135,7 +136,7 @@ public class DbDestinationTransactionTests
         //Arrange
         var s2c = new TwoColumnsTableFixture(connection, "TransactionSource");
         s2c.InsertTestData();
-        var d2c = new TwoColumnsTableFixture(connection, "TransactionDest");
+        var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
         var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
         var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 

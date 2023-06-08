@@ -1,9 +1,8 @@
 ﻿using System.IO;
 using System.Net.Http;
 
-namespace ETLBox.Helper
+namespace ALE.ETLBox.Helper
 {
-
     internal static class HttpRequestMessageExtensions
     {
         internal static HttpRequestMessage Clone(this HttpRequestMessage request)
@@ -13,8 +12,7 @@ namespace ETLBox.Helper
                 Content = request.Content.Clone(),
                 Version = request.Version
             };
-            foreach (var property in request
-                .Properties)
+            foreach (var property in request.Properties)
                 httpRequestMessage.Properties.Add(property);
             foreach (var header in request.Headers)
                 httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);

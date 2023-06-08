@@ -1,12 +1,9 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using System;
-using System.Dynamic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -20,24 +17,26 @@ namespace ALE.ETLBox.DataFlow
     /// source.Configuration.Delimiter = ";";
     /// </code>
     /// </example>
-    public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
-        private static readonly CultureInfo CsvDefaultCulture = CultureInfo.InvariantCulture;
+        private static CultureInfo CsvDefaultCulture => CultureInfo.InvariantCulture;
 
         /* ITask Interface */
         public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";
 
         /* Public properties */
         public CsvConfiguration Configuration { get; set; }
-        public int SkipRows { get; set; } = 0;
+        public int SkipRows { get; set; }
         public string[] FieldHeaders { get; private set; }
         public bool IsHeaderRead => FieldHeaders != null;
-        public int ReleaseGCPressureRowCount {get;set; } = 500;
+        public int ReleaseGCPressureRowCount { get; set; } = 500;
         public Type ClassMapType { get; set; }
 
         /* Private stuff */
         private CsvReader CsvReader { get; set; }
         private TypeInfo TypeInfo { get; set; }
+
         public CsvSource()
         {
             Configuration = new CsvConfiguration(CsvDefaultCulture);
@@ -45,7 +44,8 @@ namespace ALE.ETLBox.DataFlow
             ResourceType = ResourceType.File;
         }
 
-        public CsvSource(string uri) : this()
+        public CsvSource(string uri)
+            : this()
         {
             Uri = uri;
         }
@@ -71,7 +71,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void ReadAll()
         {
-            if (Configuration.HasHeaderRecord == true)
+            if (Configuration.HasHeaderRecord)
             {
                 CsvReader.Read();
                 CsvReader.ReadHeader();
@@ -83,8 +83,6 @@ namespace ALE.ETLBox.DataFlow
                 LogProgress();
             }
         }
-
-
 
         private void ReadLineAndSendIntoBuffer()
         {
@@ -108,10 +106,13 @@ namespace ALE.ETLBox.DataFlow
             }
             catch (Exception e)
             {
-                if (!ErrorHandler.HasErrorBuffer) throw e;
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
                 if (e is CsvHelperException csvex)
-                    ErrorHandler.Send(e,
-                        $"Row: {csvex.Context?.Parser.Row} -- RawRecord: {csvex.Context?.Parser.RawRecord ?? string.Empty}");
+                    ErrorHandler.Send(
+                        e,
+                        $"Row: {csvex.Context?.Parser.Row} -- RawRecord: {csvex.Context?.Parser.RawRecord ?? string.Empty}"
+                    );
                 else
                     ErrorHandler.Send(e, "N/A");
             }
@@ -136,9 +137,12 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
+    [PublicAPI]
     public class CsvSource : CsvSource<ExpandoObject>
     {
-        public CsvSource() : base() { }
-        public CsvSource(string fileName) : base(fileName) { }
+        public CsvSource() { }
+
+        public CsvSource(string fileName)
+            : base(fileName) { }
     }
 }

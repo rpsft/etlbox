@@ -1,11 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Dynamic;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks.Dataflow;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -18,7 +13,8 @@ namespace ALE.ETLBox.DataFlow
     /// JsonSource&lt;POCO&gt; source = new JsonSource&lt;POCO&gt;("https://jsonplaceholder.typicode.com/todos");
     /// </code>
     /// </example>
-    public class JsonSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class JsonSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Read Json from Uri: {CurrentRequestUri ?? ""}";
@@ -30,19 +26,21 @@ namespace ALE.ETLBox.DataFlow
         public JsonSerializer JsonSerializer { get; set; }
 
         /* Private stuff */
-        JsonTextReader JsonTextReader { get; set; }
+        private JsonTextReader JsonTextReader { get; set; }
 
         public JsonSource()
         {
             JsonSerializer = new JsonSerializer();
         }
 
-        public JsonSource(string uri) : this()
+        public JsonSource(string uri)
+            : this()
         {
             Uri = uri;
         }
 
-        public JsonSource(string uri, ResourceType resourceType) : this(uri)
+        public JsonSource(string uri, ResourceType resourceType)
+            : this(uri)
         {
             ResourceType = resourceType;
         }
@@ -54,34 +52,48 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void ReadAll()
         {
-            do
-            {
-            } while (JsonTextReader.Read() && JsonTextReader.TokenType != JsonToken.StartArray);
+            SkipToStartOfArray();
 
             bool skipRecord = false;
+
             if (ErrorHandler.HasErrorBuffer)
-                JsonSerializer.Error += (sender, args) =>
-                {
-                    ErrorHandler.Send(args.ErrorContext.Error, args.ErrorContext.Error.Message);
-                    args.ErrorContext.Handled = true;
-                    skipRecord = true;
-                };
+            {
+                JsonSerializer.Error += JsonSerializerOnError;
+            }
+
             while (JsonTextReader.Read())
             {
-                if (JsonTextReader.TokenType == JsonToken.EndArray || JsonTextReader.TokenType == JsonToken.EndObject) continue;
-                else
+                if (IsEndingToken(JsonTextReader.TokenType))
+                    continue;
+                TOutput record = JsonSerializer.Deserialize<TOutput>(JsonTextReader);
+                if (skipRecord)
                 {
-                    TOutput record = JsonSerializer.Deserialize<TOutput>(JsonTextReader);
-                    if (skipRecord)
-                    {
-                        if (JsonTextReader.TokenType == JsonToken.EndObject)
-                            skipRecord = false;
-                        continue;
-                    }
-                    Buffer.SendAsync(record).Wait();
-                    LogProgress();
+                    if (JsonTextReader.TokenType == JsonToken.EndObject)
+                        skipRecord = false;
+                    continue;
                 }
+                Buffer.SendAsync(record).Wait();
+                LogProgress();
             }
+
+            void JsonSerializerOnError(object _, ErrorEventArgs args)
+            {
+                ErrorHandler.Send(args.ErrorContext.Error, args.ErrorContext.Error.Message);
+                args.ErrorContext.Handled = true;
+                skipRecord = true;
+            }
+        }
+
+        private void SkipToStartOfArray()
+        {
+            do { } while (
+                JsonTextReader.Read() && JsonTextReader.TokenType != JsonToken.StartArray
+            );
+        }
+
+        private bool IsEndingToken(JsonToken tokenType)
+        {
+            return tokenType == JsonToken.EndArray || tokenType == JsonToken.EndObject;
         }
 
         protected override void CloseReader()
@@ -103,10 +115,15 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
-    public class JsonSource : JsonSource<ExpandoObject>
+    [PublicAPI]
+    public sealed class JsonSource : JsonSource<ExpandoObject>
     {
-        public JsonSource() : base() { }
-        public JsonSource(string uri) : base(uri) { }
-        public JsonSource(string uri, ResourceType resourceType) : base(uri, resourceType) { }
+        public JsonSource() { }
+
+        public JsonSource(string uri)
+            : base(uri) { }
+
+        public JsonSource(string uri, ResourceType resourceType)
+            : base(uri, resourceType) { }
     }
 }

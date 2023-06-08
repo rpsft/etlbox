@@ -1,25 +1,14 @@
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class NoConnectionManagerTests
     {
-        public NoConnectionManagerTests()
-        { }
-
         [Fact]
         public void CheckSqlTask()
         {
-
             //Arrange
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -31,7 +20,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Fact]
         public void CheckRowCountTask()
         {
-
             //Arrange
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -43,7 +31,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Fact]
         public void CheckCreateTableTask()
         {
-
             //Arrange
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -55,7 +42,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Fact]
         public void CheckIfExistsDatabaseTask()
         {
-
             //Arrange
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -67,7 +53,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Fact]
         public void CheckCreateSchemaTask()
         {
-
             //Arrange
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -79,7 +64,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         [Fact]
         public void CheckDropSchemaTask()
         {
-
             //Arrange
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>

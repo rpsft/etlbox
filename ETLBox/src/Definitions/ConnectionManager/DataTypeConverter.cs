@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Text.RegularExpressions;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -21,22 +20,29 @@ namespace ALE.ETLBox.ConnectionManager
         {
             switch (dataTypeString)
             {
-                case "tinyint": return DefaultTinyIntegerLength;
-                case "smallint": return DefaultSmallIntegerLength;
-                case "int": return DefaultIntegerLength;
-                case "bigint": return DefaultBigIntegerLength;
-                case "decimal": return DefaultDecimalLength;
-                case "datetime": return DefaultDateTimeLength;
-                case "datetime2": return DefaultDateTime2Length;
+                case "tinyint":
+                    return DefaultTinyIntegerLength;
+                case "smallint":
+                    return DefaultSmallIntegerLength;
+                case "int":
+                    return DefaultIntegerLength;
+                case "bigint":
+                    return DefaultBigIntegerLength;
+                case "decimal":
+                    return DefaultDecimalLength;
+                case "datetime":
+                    return DefaultDateTimeLength;
+                case "datetime2":
+                    return DefaultDateTime2Length;
                 default:
                     if (IsCharTypeDefinition(dataTypeString))
                         return GetStringLengthFromCharString(dataTypeString);
-                    else
-                        throw new Exception("Unknown data type");
+                    throw new Exception("Unknown data type");
             }
         }
 
-        public static bool IsCharTypeDefinition(string value) => new Regex(_REGEX, RegexOptions.IgnoreCase).IsMatch(value);
+        public static bool IsCharTypeDefinition(string value) =>
+            new Regex(_REGEX, RegexOptions.IgnoreCase).IsMatch(value);
 
         public static int GetStringLengthFromCharString(string value)
         {
@@ -46,16 +52,17 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 return result;
             }
-            else
-            {
-                return DefaultStringLength;
-            }
+
+            return DefaultStringLength;
         }
 
         public static string GetNETObjectTypeString(string dbSpecificTypeName)
         {
             if (dbSpecificTypeName.IndexOf("(") > 0)
-                dbSpecificTypeName = dbSpecificTypeName.Substring(0, dbSpecificTypeName.IndexOf("("));
+                dbSpecificTypeName = dbSpecificTypeName.Substring(
+                    0,
+                    dbSpecificTypeName.IndexOf("(")
+                );
             dbSpecificTypeName = dbSpecificTypeName.Trim().ToLower();
             switch (dbSpecificTypeName)
             {
@@ -113,7 +120,12 @@ namespace ALE.ETLBox.ConnectionManager
         {
             try
             {
-                return (DbType)Enum.Parse(typeof(DbType), GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""), true);
+                return (DbType)
+                    Enum.Parse(
+                        typeof(DbType),
+                        GetNETObjectTypeString(dbSpecificTypeName).Replace("System.", ""),
+                        true
+                    );
             }
             catch
             {
@@ -121,7 +133,10 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public static string TryGetDBSpecificType(string dbSpecificTypeName, ConnectionManagerType connectionType)
+        public static string TryGetDBSpecificType(
+            string dbSpecificTypeName,
+            ConnectionManagerType connectionType
+        )
         {
             var typeName = dbSpecificTypeName.Trim().ToUpper();
             if (connectionType == ConnectionManagerType.SqlServer)
@@ -133,7 +148,7 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 if (typeName == "INT")
                     return "INTEGER";
-                else if (IsCharTypeDefinition(typeName))
+                if (IsCharTypeDefinition(typeName))
                 {
                     if (typeName.StartsWith("N"))
                         typeName = typeName.Substring(1);
@@ -143,13 +158,15 @@ namespace ALE.ETLBox.ConnectionManager
                 }
                 return dbSpecificTypeName;
             }
-            else if (connectionType == ConnectionManagerType.SQLite)
+
+            if (connectionType == ConnectionManagerType.SQLite)
             {
-                if (typeName == "INT" ||typeName == "BIGINT")
+                if (typeName == "INT" || typeName == "BIGINT")
                     return "INTEGER";
                 return dbSpecificTypeName;
             }
-            else if (connectionType == ConnectionManagerType.Postgres)
+
+            if (connectionType == ConnectionManagerType.Postgres)
             {
                 if (IsCharTypeDefinition(typeName))
                 {
@@ -160,10 +177,8 @@ namespace ALE.ETLBox.ConnectionManager
                     return "TIMESTAMP";
                 return dbSpecificTypeName;
             }
-            else
-            {
-                return dbSpecificTypeName;
-            }
+
+            return dbSpecificTypeName;
         }
 
         public static DateTimeKind? GetNETDateTimeKind(string dbSpecificTypeName)

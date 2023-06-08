@@ -1,41 +1,37 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.MemorySource
 {
     [Collection("DataFlow")]
     public class MemorySourceStringArrayTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MemorySourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void DataIsFromList()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestinationNonGeneric");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "MemoryDestinationNonGeneric"
+            );
             MemorySource<string[]> source = new MemorySource<string[]>();
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "MemoryDestinationNonGeneric");
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                SqlConnection,
+                "MemoryDestinationNonGeneric"
+            );
 
             //Act
-            source.DataAsList = new List<string[]>()
+            source.DataAsList = new List<string[]>
             {
-                new string[] { "1", "Test1" },
-                new string[] { "2", "Test2" },
-                new string[] { "3", "Test3" },
+                new[] { "1", "Test1" },
+                new[] { "2", "Test2" },
+                new[] { "3", "Test3" },
             };
             source.LinkTo(dest);
             source.Execute();
@@ -44,7 +40,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
-
     }
 }

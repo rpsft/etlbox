@@ -1,10 +1,4 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Reflection;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -19,10 +13,11 @@ namespace ALE.ETLBox.DataFlow
     /// multicast.LinkTo(dest2);
     /// </code>
     /// </example>
-    public class Multicast<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>
+    [PublicAPI]
+    public class Multicast<TInput> : DataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Multicast - duplicate data";
+        public sealed override string TaskName { get; set; } = "Multicast - duplicate data";
 
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => BroadcastBlock;
@@ -30,8 +25,9 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
         internal BroadcastBlock<TInput> BroadcastBlock { get; set; }
-        TypeInfo TypeInfo { get; set; }
-        ObjectCopy<TInput> ObjectCopy { get; set; }
+        private TypeInfo TypeInfo { get; set; }
+        private ObjectCopy<TInput> ObjectCopy { get; set; }
+
         public Multicast()
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
@@ -39,9 +35,10 @@ namespace ALE.ETLBox.DataFlow
             BroadcastBlock = new BroadcastBlock<TInput>(Clone);
         }
 
-        public Multicast(string name) : this()
+        public Multicast(string name)
+            : this()
         {
-            this.TaskName = name;
+            TaskName = name;
         }
 
         private TInput Clone(TInput row)
@@ -50,8 +47,6 @@ namespace ALE.ETLBox.DataFlow
             LogProgress();
             return clone;
         }
-
-
     }
 
     /// <summary>
@@ -67,10 +62,12 @@ namespace ALE.ETLBox.DataFlow
     /// multicast.LinkTo(dest2);
     /// </code>
     /// </example>
+    [PublicAPI]
     public class Multicast : Multicast<ExpandoObject>
     {
-        public Multicast() : base() { }
+        public Multicast() { }
 
-        public Multicast(string name) : base(name) { }
+        public Multicast(string name)
+            : base(name) { }
     }
 }

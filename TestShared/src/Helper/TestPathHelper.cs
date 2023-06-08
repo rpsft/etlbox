@@ -1,7 +1,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace ALE.ETLBox.Helper;
+namespace TestShared.Helper;
 
 public static class TestPathHelper
 {

@@ -14,6 +14,5 @@
         int? IdentitySeed { get; } //Sql Server only
         int? IdentityIncrement { get; } //Sql Server only
         string Comment { get; } //MySql only
-
     }
 }

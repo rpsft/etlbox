@@ -1,25 +1,17 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowTransformation
 {
     [Collection("DataFlow")]
     public class RowTransformationErrorLinkingTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowTransformationErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -31,26 +23,33 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ThrowExceptionInFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("RowTransExceptionTest");
+            var unused = new TwoColumnsTableFixture("RowTransExceptionTest");
 
-            CsvSource<string[]> source = new CsvSource<string[]>("res/RowTransformation/TwoColumns.csv");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "RowTransExceptionTest");
+            CsvSource<string[]> source = new CsvSource<string[]>(
+                "res/RowTransformation/TwoColumns.csv"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                SqlConnection,
+                "RowTransExceptionTest"
+            );
 
             CreateErrorTableTask.DropAndCreate(SqlConnection, "errors");
-            DbDestination<ETLBoxError> errorDest = new DbDestination<ETLBoxError>(SqlConnection, "errors");
+            DbDestination<ETLBoxError> errorDest = new DbDestination<ETLBoxError>(
+                SqlConnection,
+                "errors"
+            );
 
             //Act
-            RowTransformation<string[], MySimpleRow> trans = new RowTransformation<string[], MySimpleRow>(
-                csvdata =>
-                {
-                    int no = int.Parse(csvdata[0]);
-                    if (no == 2) throw new Exception("Test");
-                    return new MySimpleRow()
-                    {
-                        Col1 = no,
-                        Col2 = csvdata[1]
-                    };
-                });
+            RowTransformation<string[], MySimpleRow> trans = new RowTransformation<
+                string[],
+                MySimpleRow
+            >(csvdata =>
+            {
+                int no = int.Parse(csvdata[0]);
+                if (no == 2)
+                    throw new Exception("Test");
+                return new MySimpleRow { Col1 = no, Col2 = csvdata[1] };
+            });
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
@@ -68,12 +67,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ThrowExceptionWithoutHandling()
         {
             //Arrange
-            CsvSource<string[]> source = new CsvSource<string[]>("res/RowTransformation/TwoColumns.csv");
+            CsvSource<string[]> source = new CsvSource<string[]>(
+                "res/RowTransformation/TwoColumns.csv"
+            );
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            RowTransformation<string[], MySimpleRow> trans = new RowTransformation<string[], MySimpleRow>(
-                csvdata => throw new InvalidOperationException("Test"));
+            RowTransformation<string[], MySimpleRow> trans = new RowTransformation<
+                string[],
+                MySimpleRow
+            >(_ => throw new InvalidOperationException("Test"));
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
@@ -84,8 +87,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 source.Execute();
                 dest.Wait();
             });
-
-
         }
     }
 }

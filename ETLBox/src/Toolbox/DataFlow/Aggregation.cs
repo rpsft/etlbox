@@ -1,11 +1,5 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
+using ALE.ETLBox.Helper;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -14,7 +8,8 @@ namespace ALE.ETLBox.DataFlow
     /// </summary>
     /// <typeparam name="TInput">Type of data input</typeparam>
     /// <typeparam name="TOutput">Type of data output</typeparam>
-    public class Aggregation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
+    [PublicAPI]
+    public class Aggregation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Execute aggregation block.";
@@ -22,24 +17,24 @@ namespace ALE.ETLBox.DataFlow
         /* Public Properties */
         public Action<TInput, TOutput> AggregationAction
         {
-            get
-            {
-                return _aggregationAction;
-            }
+            get { return _aggregationAction; }
             set
             {
                 _aggregationAction = value;
                 InputBuffer = new ActionBlock<TInput>(WrapAggregationAction);
-                InputBuffer.Completion.ContinueWith(t => {
-                    if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
+                InputBuffer.Completion.ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                        ((IDataflowBlock)OutputBuffer).Fault(t.Exception!.InnerException!);
                     try
                     {
                         WriteIntoOutput();
                         OutputBuffer.Complete();
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         ((IDataflowBlock)OutputBuffer).Fault(e);
-                        throw e;
+                        throw;
                     }
                 });
             }
@@ -49,14 +44,13 @@ namespace ALE.ETLBox.DataFlow
         public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
-
         /* Private stuff */
-        BufferBlock<TOutput> OutputBuffer { get; set; }
-        ActionBlock<TInput> InputBuffer { get; set; }
+        private BufferBlock<TOutput> OutputBuffer { get; set; }
+        private ActionBlock<TInput> InputBuffer { get; set; }
 
-        Action<TInput, TOutput> _aggregationAction;
-        Dictionary<object, TOutput> AggregationData { get; set; } = new Dictionary<object, TOutput>();
-        AggregationTypeInfo AggTypeInfo { get; set; }
+        private Action<TInput, TOutput> _aggregationAction;
+        private Dictionary<object, TOutput> AggregationData { get; set; } = new();
+        private AggregationTypeInfo AggTypeInfo { get; set; }
 
         public Aggregation()
         {
@@ -78,21 +72,31 @@ namespace ALE.ETLBox.DataFlow
         private void CheckTypeInfo()
         {
             if (AggTypeInfo.IsArrayOutput)
-                throw new Exception("Aggregation target must be of an object or dynamic type! Array types are not allowed.");
+                throw new Exception(
+                    "Aggregation target must be of an object or dynamic type! Array types are not allowed."
+                );
         }
 
-        public Aggregation(Action<TInput, TOutput> aggregationAction) : this()
+        public Aggregation(Action<TInput, TOutput> aggregationAction)
+            : this()
         {
             AggregationAction = aggregationAction;
         }
 
-        public Aggregation(Action<TInput, TOutput> aggregationAction, Func<TInput, object> groupingFunc)
+        public Aggregation(
+            Action<TInput, TOutput> aggregationAction,
+            Func<TInput, object> groupingFunc
+        )
             : this(aggregationAction)
         {
             GroupingFunc = groupingFunc;
         }
 
-        public Aggregation(Action<TInput, TOutput> aggregationAction, Func<TInput, object> groupingFunc, Action<object, TOutput> storeKeyAction)
+        public Aggregation(
+            Action<TInput, TOutput> aggregationAction,
+            Func<TInput, object> groupingFunc,
+            Action<object, TOutput> storeKeyAction
+        )
             : this(aggregationAction, groupingFunc)
         {
             StoreKeyAction = storeKeyAction;
@@ -112,14 +116,16 @@ namespace ALE.ETLBox.DataFlow
                 else if (attrmap.AggregationMethod == AggregationMethod.Sum)
                     res = (inputVal ?? 0) + aggVal;
                 else if (attrmap.AggregationMethod == AggregationMethod.Max)
-                    res = ((inputVal ?? 0) > aggVal) ? inputVal : aggVal;
+                    res = (inputVal ?? 0) > aggVal ? inputVal : aggVal;
                 else if (attrmap.AggregationMethod == AggregationMethod.Min)
                     res = (inputVal ?? 0) < aggVal ? inputVal : aggVal;
                 else if (attrmap.AggregationMethod == AggregationMethod.Count)
                     res = aggVal + 1;
 
                 object output = Convert.ChangeType(
-                    res, TypeInfo.TryGetUnderlyingType(attrmap.PropInOutput));
+                    res,
+                    TypeInfo.TryGetUnderlyingType(attrmap.PropInOutput)
+                );
                 attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
             }
         }
@@ -128,14 +134,15 @@ namespace ALE.ETLBox.DataFlow
         {
             if (input == null)
                 return null;
-            else
-                return Convert.ToDecimal(input);
+            return Convert.ToDecimal(input);
         }
 
         private void DefineStoreKeyActionFromAttributes(object key, TOutput outputRow)
         {
             var gk = key as GroupingKey;
-            foreach (var propMap in gk?.GroupingObjectsByProperty)
+            if (gk == null)
+                return;
+            foreach (var propMap in gk.GroupingObjectsByProperty)
                 propMap.Key.TrySetValue(outputRow, propMap.Value);
         }
 
@@ -143,9 +150,13 @@ namespace ALE.ETLBox.DataFlow
         {
             var gk = new GroupingKey();
             foreach (var propMap in AggTypeInfo.GroupColumns)
-                gk?.GroupingObjectsByProperty.Add(propMap.PropInOutput, propMap.PropInInput.GetValue(inputrow));
+                gk.GroupingObjectsByProperty.Add(
+                    propMap.PropInOutput,
+                    propMap.PropInInput.GetValue(inputrow)
+                );
             return gk;
         }
+
         private void WriteIntoOutput()
         {
             NLogStart();
@@ -167,17 +178,15 @@ namespace ALE.ETLBox.DataFlow
 
             TOutput currentAgg = AggregationData[key];
             AggregationAction.Invoke(row, currentAgg);
-
         }
 
         private void AddRecordToDict(object key)
         {
-            TOutput firstEntry = default(TOutput);
-            firstEntry = (TOutput)Activator.CreateInstance(typeof(TOutput));
+            var firstEntry = (TOutput)Activator.CreateInstance(typeof(TOutput));
             AggregationData.Add(key, firstEntry);
         }
 
-        class GroupingKey
+        private class GroupingKey
         {
             public override int GetHashCode()
             {
@@ -189,16 +198,19 @@ namespace ALE.ETLBox.DataFlow
                     return hash;
                 }
             }
+
             public override bool Equals(object obj)
             {
                 GroupingKey comp = obj as GroupingKey;
-                if (comp == null) return false;
+                if (comp == null)
+                    return false;
                 bool equals = true;
                 foreach (var map in GroupingObjectsByProperty)
-                    equals &= (map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true);
+                    equals &= map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true;
                 return equals;
             }
-            public Dictionary<PropertyInfo, object> GroupingObjectsByProperty { get; set; } = new Dictionary<PropertyInfo, object>();
+
+            public Dictionary<PropertyInfo, object> GroupingObjectsByProperty { get; } = new();
         }
     }
 
@@ -215,17 +227,23 @@ namespace ALE.ETLBox.DataFlow
     /// The non generic implementation uses dynamic objects.
     /// </summary>
     /// <see cref="Aggregation{TInput, TOutput}"/>
+    [PublicAPI]
     public class Aggregation : Aggregation<ExpandoObject, ExpandoObject>
     {
-        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction) : base(aggregationAction)
-        { }
+        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction)
+            : base(aggregationAction) { }
 
-        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction, Func<ExpandoObject, object> groupingFunc)
-            : base(aggregationAction, groupingFunc)
-        { }
+        public Aggregation(
+            Action<ExpandoObject, ExpandoObject> aggregationAction,
+            Func<ExpandoObject, object> groupingFunc
+        )
+            : base(aggregationAction, groupingFunc) { }
 
-        public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction, Func<ExpandoObject, object> groupingFunc, Action<object, ExpandoObject> storeKeyAction)
-            : base(aggregationAction, groupingFunc, storeKeyAction)
-        { }
+        public Aggregation(
+            Action<ExpandoObject, ExpandoObject> aggregationAction,
+            Func<ExpandoObject, object> groupingFunc,
+            Action<object, ExpandoObject> storeKeyAction
+        )
+            : base(aggregationAction, groupingFunc, storeKeyAction) { }
     }
 }

@@ -1,38 +1,35 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 {
     [Collection("Logging")]
     public class GetLoadProcessAsJSONTaskTests : IDisposable
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
-        public GetLoadProcessAsJSONTaskTests(LoggingDatabaseFixture dbFixture)
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("Logging");
+
+        public GetLoadProcessAsJSONTaskTests()
         {
             CreateLogTableTask.Create(SqlConnection);
             CreateLoadProcessTableTask.Create(SqlConnection);
-            ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ControlFlow.LogTable);
-            DropTableTask.Drop(SqlConnection, ControlFlow.LoadProcessTable);
-            ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
+            ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private void RunProcess1()
         {
             StartLoadProcessTask.Start(SqlConnection, "Process 1", "Start");
-            SqlTask.ExecuteNonQuery(SqlConnection, $"Just some sql", "Select 1 as test");
+            SqlTask.ExecuteNonQuery(SqlConnection, "Just some sql", "Select 1 as test");
             EndLoadProcessTask.End(SqlConnection, "End");
         }
 

@@ -1,30 +1,25 @@
+using System;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using TestShared.Attributes;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.Access
 {
     [Collection("DataFlow")]
     public class ImportExportAccessTests : IDisposable
     {
-        public AccessOdbcConnectionManager AccessOdbcConnection { get; set; }
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+        private AccessOdbcConnectionManager AccessOdbcConnection { get; }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public ImportExportAccessTests(DataFlowDatabaseFixture dbFixture)
+        public ImportExportAccessTests()
         {
             AccessOdbcConnection = Config.AccessOdbcConnection.ConnectionManager("DataFlow");
-            Assert.True(AccessOdbcConnection.LeaveOpen);  //If LeaveOpen is not set to true, very strange errors may occur
+            Assert.True(AccessOdbcConnection.LeaveOpen); //If LeaveOpen is not set to true, very strange errors may occur
         }
 
         public void Dispose()
@@ -36,14 +31,25 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             try
             {
-                SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Try to drop table",
-                    @"DROP TABLE TestTable;");
+                SqlTask.ExecuteNonQuery(
+                    AccessOdbcConnection,
+                    "Try to drop table",
+                    @"DROP TABLE TestTable;"
+                );
             }
-            catch { }
-            TableDefinition testTable = new TableDefinition("TestTable", new List<TableColumn>() {
-                new TableColumn("Field1", "NUMBER", allowNulls: true),
-                new TableColumn("Field2", "CHAR", allowNulls: true)
-            });
+            catch
+            {
+                // ignored
+            }
+
+            TableDefinition testTable = new TableDefinition(
+                "TestTable",
+                new List<TableColumn>
+                {
+                    new TableColumn("Field1", "NUMBER", allowNulls: true),
+                    new TableColumn("Field2", "CHAR", allowNulls: true)
+                }
+            );
             new CreateTableTask(testTable)
             {
                 ThrowErrorIfTableExists = true,
@@ -85,8 +91,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public class Data
         {
             [ColumnMap("Col1")]
-            public Double Field1 { get; set; }
+            public double Field1 { get; set; }
             public string Field2 { get; set; }
+
             [ColumnMap("Col2")]
             public string Field2Trimmed => Field2.Trim();
         }
@@ -97,14 +104,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TableDefinition testTable = RecreateAccessTestTable();
             InsertTestData();
-            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTableWTD");
+            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
+                SqlConnection,
+                "dbo.AccessTargetTableWTD"
+            );
 
             //Act
             DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection)
             {
                 SourceTableDefinition = testTable
             };
-            DbDestination<Data> dest = new DbDestination<Data>(SqlConnection, "dbo.AccessTargetTableWTD");
+            DbDestination<Data> dest = new DbDestination<Data>(
+                SqlConnection,
+                "dbo.AccessTargetTableWTD"
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -115,25 +128,40 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void InsertTestData()
         {
-            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (1,'Test1');");
-            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (2,'Test2');");
-            SqlTask.ExecuteNonQuery(AccessOdbcConnection, "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (3,'Test3');");
+            SqlTask.ExecuteNonQuery(
+                AccessOdbcConnection,
+                "Insert test data",
+                "INSERT INTO TestTable (Field1, Field2) VALUES (1,'Test1');"
+            );
+            SqlTask.ExecuteNonQuery(
+                AccessOdbcConnection,
+                "Insert test data",
+                "INSERT INTO TestTable (Field1, Field2) VALUES (2,'Test2');"
+            );
+            SqlTask.ExecuteNonQuery(
+                AccessOdbcConnection,
+                "Insert test data",
+                "INSERT INTO TestTable (Field1, Field2) VALUES (3,'Test3');"
+            );
         }
 
         [WindowsOnlyFact]
         public void AccessIntoDB()
         {
             //Arrange
-            TableDefinition testTable = RecreateAccessTestTable();
+            TableDefinition _ = RecreateAccessTestTable();
             InsertTestData();
-            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTable");
+            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
+                SqlConnection,
+                "dbo.AccessTargetTable"
+            );
 
             //Act
             DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection, "TestTable");
-            DbDestination<Data> dest = new DbDestination<Data>(SqlConnection, "dbo.AccessTargetTable");
+            DbDestination<Data> dest = new DbDestination<Data>(
+                SqlConnection,
+                "dbo.AccessTargetTable"
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -141,7 +169,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             destTable.AssertTestData();
         }
-
-
     }
 }

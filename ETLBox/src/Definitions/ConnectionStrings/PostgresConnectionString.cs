@@ -6,15 +6,13 @@ namespace ALE.ETLBox
     /// A helper class for encapsulating a conection string to a MySql server in an object.
     /// Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class PostgresConnectionString :
-        DbConnectionString<PostgresConnectionString, NpgsqlConnectionStringBuilder>
+    public class PostgresConnectionString
+        : DbConnectionString<PostgresConnectionString, NpgsqlConnectionStringBuilder>
     {
-        public PostgresConnectionString() :
-            base()
-        { }
-        public PostgresConnectionString(string value) :
-            base(value)
-        { }
+        public PostgresConnectionString() { }
+
+        public PostgresConnectionString(string value)
+            : base(value) { }
 
         public override string DbName
         {
@@ -24,6 +22,6 @@ namespace ALE.ETLBox
         public override string MasterDbName => "postgres";
         protected override string DbNameKeyword => "Database";
 
-        public static implicit operator PostgresConnectionString(string value) => new PostgresConnectionString(value);
+        public static implicit operator PostgresConnectionString(string value) => new(value);
     }
 }

@@ -1,53 +1,57 @@
+using System;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
+namespace TestControlFlowTasks.SqlServer
 {
     [Collection("ControlFlow")]
     public class TableDefinitionTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
-
-        public TableDefinitionTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("ControlFlow");
 
         [Fact]
         public void BigIntIdentity()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                SqlConnection,
+                "Create table",
+                @"
 CREATE TABLE BigIntIdentity (
     Id BIGINT NOT NULL PRIMARY KEY IDENTITY(100,10)
 )"
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "BigIntIdentity");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                SqlConnection,
+                "BigIntIdentity"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                           tc => Assert.True(tc.DataType == "BIGINT"
-                           && tc.NETDataType == typeof(Int64)
-                           && tc.IsIdentity == true
-                           && tc.IdentityIncrement == 10
-                           && tc.IdentitySeed == 100
-                           )
-                       );
+            Assert.Collection(
+                result.Columns,
+                tc =>
+                    Assert.True(
+                        tc.DataType == "BIGINT"
+                            && tc.NETDataType == typeof(long)
+                            && tc.IsIdentity
+                            && tc.IdentityIncrement == 10
+                            && tc.IdentitySeed == 100
+                    )
+            );
         }
 
         [Fact]
         public void NumbericDataTypes()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                SqlConnection,
+                "Create table",
+                @"
 CREATE TABLE NumericDataTypes (
     Id BIGINT NOT NULL,
     Col1 NUMERIC,
@@ -64,21 +68,25 @@ CREATE TABLE NumericDataTypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "NumericDataTypes");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                SqlConnection,
+                "NumericDataTypes"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "BIGINT" && tc.NETDataType == typeof(Int64)),
-                tc => Assert.True(tc.DataType == "NUMERIC(18,0)" && tc.NETDataType == typeof(Decimal)),
-                tc => Assert.True(tc.DataType == "BIT" && tc.NETDataType == typeof(Boolean)),
-                tc => Assert.True(tc.DataType == "SMALLINT" && tc.NETDataType == typeof(Int16)),
-                tc => Assert.True(tc.DataType == "DECIMAL(18,0)" && tc.NETDataType == typeof(Decimal)),
-                tc => Assert.True(tc.DataType == "SMALLMONEY" && tc.NETDataType == typeof(Decimal)),
-                tc => Assert.True(tc.DataType == "INT" && tc.NETDataType == typeof(Int32)),
-                tc => Assert.True(tc.DataType == "TINYINT" && tc.NETDataType == typeof(UInt16)),
-                tc => Assert.True(tc.DataType == "MONEY" && tc.NETDataType == typeof(Decimal)),
-                tc => Assert.True(tc.DataType == "FLOAT" && tc.NETDataType == typeof(Double)),
-                tc => Assert.True(tc.DataType == "REAL" && tc.NETDataType == typeof(Double))
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "BIGINT", typeof(long)),
+                tc => AssertTypes(tc, "NUMERIC(18,0)", typeof(decimal)),
+                tc => AssertTypes(tc, "BIT", typeof(bool)),
+                tc => AssertTypes(tc, "SMALLINT", typeof(short)),
+                tc => AssertTypes(tc, "DECIMAL(18,0)", typeof(decimal)),
+                tc => AssertTypes(tc, "SMALLMONEY", typeof(decimal)),
+                tc => AssertTypes(tc, "INT", typeof(int)),
+                tc => AssertTypes(tc, "TINYINT", typeof(ushort)),
+                tc => AssertTypes(tc, "MONEY", typeof(decimal)),
+                tc => AssertTypes(tc, "FLOAT", typeof(double)),
+                tc => AssertTypes(tc, "REAL", typeof(double))
             );
         }
 
@@ -86,7 +94,10 @@ CREATE TABLE NumericDataTypes (
         public void DateTimeTypes()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                SqlConnection,
+                "Create table",
+                @"
 CREATE TABLE ReadTableDefinition (
     Col11 DATE,
     --Col12 DATETIMEOFFSET,
@@ -99,19 +110,24 @@ CREATE TABLE ReadTableDefinition (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "ReadTableDefinition");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                SqlConnection,
+                "ReadTableDefinition"
+            );
 
             //Assert
             Assert.True(result.Columns.All(tc => tc.NETDataType == typeof(DateTime)));
             Assert.True(result.Columns.Count == 5);
         }
 
-
         [Fact]
         public void TypesWithLengthOrPrecision()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                SqlConnection,
+                "Create table",
+                @"
 CREATE TABLE LengthOrPrecisionTypes (    
     Col1 DECIMAL (12,3),
     Col2 NVARCHAR(100),
@@ -125,18 +141,22 @@ CREATE TABLE LengthOrPrecisionTypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "LengthOrPrecisionTypes");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                SqlConnection,
+                "LengthOrPrecisionTypes"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "DECIMAL(12,3)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "NVARCHAR(100)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "VARCHAR(10)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "CHAR(4)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "NCHAR(4)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "NUMERIC(3,2)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "BINARY(10)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "VARBINARY(20)" && tc.NETDataType == typeof(string))
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "DECIMAL(12,3)", typeof(decimal)),
+                tc => AssertTypes(tc, "NVARCHAR(100)", typeof(string)),
+                tc => AssertTypes(tc, "VARCHAR(10)", typeof(string)),
+                tc => AssertTypes(tc, "CHAR(4)", typeof(string)),
+                tc => AssertTypes(tc, "NCHAR(4)", typeof(string)),
+                tc => AssertTypes(tc, "NUMERIC(3,2)", typeof(decimal)),
+                tc => AssertTypes(tc, "BINARY(10)", typeof(string)),
+                tc => AssertTypes(tc, "VARBINARY(20)", typeof(string))
             );
         }
 
@@ -144,7 +164,10 @@ CREATE TABLE LengthOrPrecisionTypes (
         public void TextTypes()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(SqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                SqlConnection,
+                "Create table",
+                @"
 CREATE TABLE TextTypes (    
     Col1 TEXT,
     Col2 NTEXT,
@@ -156,10 +179,19 @@ CREATE TABLE TextTypes (
             var result = TableDefinition.GetDefinitionFromTableName(SqlConnection, "TextTypes");
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "TEXT" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "NTEXT" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "IMAGE" && tc.NETDataType == typeof(string))
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "TEXT", typeof(string)),
+                tc => AssertTypes(tc, "NTEXT", typeof(string)),
+                tc => AssertTypes(tc, "IMAGE", typeof(string))
+            );
+        }
+
+        private static void AssertTypes(TableColumn tc, string dataType, Type dotnetType)
+        {
+            Assert.Multiple(
+                () => Assert.Equal(tc.DataType, dataType),
+                () => Assert.Equal(tc.NETDataType, dotnetType)
             );
         }
     }

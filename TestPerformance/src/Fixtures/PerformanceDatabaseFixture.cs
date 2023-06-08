@@ -1,13 +1,7 @@
-﻿using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Xunit;
+﻿using System.Diagnostics.CodeAnalysis;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Performance
+namespace ALE.ETLBoxTests.Performance.Fixtures
 {
     [CollectionDefinition("Performance")]
     public class PerformanceCollectionClass : ICollectionFixture<PerformanceDatabaseFixture> { }

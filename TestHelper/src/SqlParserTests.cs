@@ -1,17 +1,8 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using ALE.ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace TestHelper
 {
     public class SqlParserTests
     {
@@ -19,8 +10,8 @@ namespace ALE.ETLBoxTests
         public void SqlSimple()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1", "Col2" };
-            string sql = $@"SELECT Col1, Col2 FROM Table";
+            List<string> expected = new List<string> { "Col1", "Col2" };
+            string sql = @"SELECT Col1, Col2 FROM Table";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -33,8 +24,8 @@ namespace ALE.ETLBoxTests
         public void SqlOneColumn()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1"};
-            string sql = $@"SELECT Col1";
+            List<string> expected = new List<string> { "Col1" };
+            string sql = @"SELECT Col1";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -47,8 +38,9 @@ namespace ALE.ETLBoxTests
         public void SqlWithFunction()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1", "Col2" };
-            string sql = $@"SELECT CASE WHEN ISNULL(Col1,'') IS NOT NULL THEN Col1 ELSE Col1 END AS Col1, 
+            List<string> expected = new List<string> { "Col1", "Col2" };
+            string sql =
+                @"SELECT CASE WHEN ISNULL(Col1,'') IS NOT NULL THEN Col1 ELSE Col1 END AS Col1, 
 Col2 
 FROM Table";
 
@@ -63,8 +55,9 @@ FROM Table";
         public void SqlWithSeveralFunctions()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1", "Col2" };
-            string sql = $@"SELECT CONCAT('','Test',ISNULL(Col1,''), GETDATE()) AS Col1, 
+            List<string> expected = new List<string> { "Col1", "Col2" };
+            string sql =
+                @"SELECT CONCAT('','Test',ISNULL(Col1,''), GETDATE()) AS Col1, 
 ( CONVERT(INT, Col2) * 5) Col2 
 FROM Table";
 
@@ -79,8 +72,8 @@ FROM Table";
         public void SqlSelectStart()
         {
             //Arrange
-            List<string> expected = new List<string>() {  };
-            string sql = $@"SELECT * FROM Table";
+            List<string> expected = new List<string>();
+            string sql = @"SELECT * FROM Table";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -93,8 +86,8 @@ FROM Table";
         public void SqlWithSchema()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1", "Col2" };
-            string sql = $@"SELECT sou.Col1, sou.Col2 FROM table AS sou";
+            List<string> expected = new List<string> { "Col1", "Col2" };
+            string sql = @"SELECT sou.Col1, sou.Col2 FROM table AS sou";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -107,8 +100,8 @@ FROM Table";
         public void SqlWithSchemaOneColumn()
         {
             //Arrange
-            List<string> expected = new List<string>() { "Col1" };
-            string sql = $@"SELECT sou.Col1 FROM table AS sou";
+            List<string> expected = new List<string> { "Col1" };
+            string sql = @"SELECT sou.Col1 FROM table AS sou";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -116,7 +109,5 @@ FROM Table";
             //Assert
             Assert.Equal(expected, actual);
         }
-
-
     }
 }

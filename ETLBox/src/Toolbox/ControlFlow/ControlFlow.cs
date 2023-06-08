@@ -1,8 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Logging;
 using NLog;
-using NLog.Targets;
-using System.Linq;
+using NLog.Config;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -10,9 +9,11 @@ namespace ALE.ETLBox.ControlFlow
     /// Contains static information which affects all ETLBox tasks.
     /// Here you can set default connections string, disbale the logging for all processes or set the current stage used in your logging configuration.
     /// </summary>
+    [PublicAPI]
     public static class ControlFlow
     {
-        private static IConnectionManager _defaultDbConnection;
+        private static IConnectionManager s_defaultDbConnection;
+
         /// <summary>
         /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
         /// </summary>
@@ -20,17 +21,16 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (_defaultDbConnection == null)
-                    throw new ETLBoxException("No connection manager found! The component or task you are " +
-                        "using expected a  connection manager to connect to the database." +
-                        "Either pass a connection manager or set a default connection manager within the " +
-                        "ControlFlow.DefaultDbConnection property!");
-                return _defaultDbConnection;
+                if (s_defaultDbConnection == null)
+                    throw new ETLBoxException(
+                        "No connection manager found! The component or task you are "
+                            + "using expected a  connection manager to connect to the database."
+                            + "Either pass a connection manager or set a default connection manager within the "
+                            + "ControlFlow.DefaultDbConnection property!"
+                    );
+                return s_defaultDbConnection;
             }
-            set
-            {
-                _defaultDbConnection = value;
-            }
+            set { s_defaultDbConnection = value; }
         }
 
         /// <summary>
@@ -51,6 +51,7 @@ namespace ALE.ETLBox.ControlFlow
         public static LoadProcess CurrentLoadProcess { get; internal set; }
 
         public const string DEFAULTLOADPROCESSTABLENAME = "etlbox_loadprocess";
+
         /// <summary>
         /// TableName of the current load process logging table
         /// </summary>
@@ -63,38 +64,59 @@ namespace ALE.ETLBox.ControlFlow
         /// </summary>
         public static string LogTable { get; set; } = DEFAULTLOGTABLENAME;
 
-        public static void AddLoggingDatabaseToConfig(IConnectionManager connection) => AddLoggingDatabaseToConfig(connection, LogLevel.Info);
+        public static void AddLoggingDatabaseToConfig(IConnectionManager connection) =>
+            AddLoggingDatabaseToConfig(connection, LogLevel.Info);
 
         /// <summary>
         /// You can also set the logging database in the nlog.config file.
         /// If you want to programmatically change the logging database,  use this method.
         /// </summary>
         /// <param name="connection">The new logging database connection manager</param>
-        public static void AddLoggingDatabaseToConfig(IConnectionManager connection, LogLevel minLogLevel, string logTableName = DEFAULTLOGTABLENAME)
+        /// <param name="minLogLevel">Logging level</param>
+        /// <param name="logTableName">Table to hold logs</param>
+        public static void AddLoggingDatabaseToConfig(
+            IConnectionManager connection,
+            LogLevel minLogLevel,
+            string logTableName = DEFAULTLOGTABLENAME
+        )
         {
-
             try
             {
-                if (LogTable != null && LogTable != DEFAULTLOADPROCESSTABLENAME && logTableName == DEFAULTLOADPROCESSTABLENAME)
+                if (
+                    LogTable != null
+                    && LogTable != DEFAULTLOADPROCESSTABLENAME
+                    && logTableName == DEFAULTLOADPROCESSTABLENAME
+                )
                     logTableName = LogTable;
-                var newTarget = new CreateDatabaseTarget(connection, logTableName).GetNLogDatabaseTarget();
-                NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(newTarget, minLogLevel);
+                var newTarget = new CreateDatabaseTarget(
+                    connection,
+                    logTableName
+                ).GetNLogDatabaseTarget();
+                LoggingConfiguration config = new LoggingConfiguration();
+                config.AddRule(minLogLevel, LogLevel.Fatal, newTarget);
+                LogManager.Setup().LoadConfiguration(config);
             }
             catch
             {
-                ;
+                // ignored
             }
         }
 
-        static bool IsLayoutRendererRegisterd = false;
-        public static NLog.Logger GetLogger()
+        private static bool s_isLayoutRendererRegisterd;
+
+        public static Logger GetLogger()
         {
-            if (!IsLayoutRendererRegisterd)
+            if (!s_isLayoutRendererRegisterd)
             {
-                NLog.Config.ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition("etllog", typeof(ETLLogLayoutRenderer));
-                IsLayoutRendererRegisterd = true;
+                LogManager
+                    .Setup()
+                    .SetupExtensions(builder =>
+                    {
+                        builder.RegisterLayoutRenderer<ETLLogLayoutRenderer>("etllog");
+                    });
+                s_isLayoutRendererRegisterd = true;
             }
-            return NLog.LogManager.GetLogger("ETL");
+            return LogManager.GetLogger("ETL");
         }
 
         /// <summary>
@@ -110,7 +132,4 @@ namespace ALE.ETLBox.ControlFlow
             STAGE = null;
         }
     }
-
-
-
 }

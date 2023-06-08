@@ -1,14 +1,8 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using TSQL;
-using TSQL.Statements;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -24,7 +18,8 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the data flow
     /// </code>
     /// </example>
-    public class DbSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class DbSource<TOutput> : DataFlowSource<TOutput>, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Read data from {SourceDescription}";
@@ -45,10 +40,9 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!HasSourceTableDefinition)
                         LoadTableDefinition();
-                    var TN = new ObjectNameDescriptor(SourceTableDefinition.Name, QB, QE);
-                    return $@"SELECT {SourceTableDefinition.Columns.AsString("", QB, QE)} FROM {TN.QuotatedFullName}";
+                    var tn = new ObjectNameDescriptor(SourceTableDefinition.Name, QB, QE);
+                    return $@"SELECT {SourceTableDefinition.Columns.AsString("", QB, QE)} FROM {tn.QuotatedFullName}";
                 }
-
             }
         }
 
@@ -65,11 +59,12 @@ namespace ALE.ETLBox.DataFlow
             }
         }
 
-        bool HasSourceTableDefinition => SourceTableDefinition != null;
-        bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
-        bool HasSql => !String.IsNullOrWhiteSpace(Sql);
-        DBTypeInfo TypeInfo { get; set; }
-        string SourceDescription
+        private bool HasSourceTableDefinition => SourceTableDefinition != null;
+        private bool HasTableName => !string.IsNullOrWhiteSpace(TableName);
+        private bool HasSql => !string.IsNullOrWhiteSpace(Sql);
+        private DBTypeInfo TypeInfo { get; set; }
+
+        private string SourceDescription
         {
             get
             {
@@ -87,26 +82,33 @@ namespace ALE.ETLBox.DataFlow
             TypeInfo = new DBTypeInfo(typeof(TOutput));
         }
 
-        public DbSource(string tableName) : this()
+        public DbSource(string tableName)
+            : this()
         {
             TableName = tableName;
         }
 
-        public DbSource(IConnectionManager connectionManager) : this()
+        public DbSource(IConnectionManager connectionManager)
+            : this()
         {
             ConnectionManager = connectionManager;
         }
 
-        public DbSource(IConnectionManager connectionManager, string tableName) : this(tableName)
+        public DbSource(IConnectionManager connectionManager, string tableName)
+            : this(tableName)
         {
             ConnectionManager = connectionManager;
         }
 
         private List<string> ParseColumnNamesFromQuery()
         {
-            var result = SqlParser.ParseColumnNames(QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead);
-            if (TypeInfo.IsArray && result?.Count == 0) throw new ETLBoxException("Could not parse column names from Sql Query! Please pass a valid TableDefinition to the " +
-                " property SourceTableDefinition with at least a name for each column that you want to use in the source."
+            var result = SqlParser.ParseColumnNames(
+                QB != string.Empty ? SqlForRead.Replace(QB, "").Replace(QE, "") : SqlForRead
+            );
+            if (TypeInfo.IsArray && result?.Count == 0)
+                throw new ETLBoxException(
+                    "Could not parse column names from Sql Query! Please pass a valid TableDefinition to the "
+                        + " property SourceTableDefinition with at least a name for each column that you want to use in the source."
                 );
             return result;
         }
@@ -139,46 +141,39 @@ namespace ALE.ETLBox.DataFlow
         private void LoadTableDefinition()
         {
             if (HasTableName)
-                SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(this.DbConnectionManager, TableName);
+                SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(
+                    this.DbConnectionManager,
+                    TableName
+                );
             else if (!HasSourceTableDefinition && !HasTableName)
-                throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
+                throw new ETLBoxException(
+                    "No Table definition or table name found! You must provide a table name or a table definition."
+                );
         }
 
-        SqlTask CreateSqlTask(string sql)
-        {
-            var sqlT = new SqlTask(this, sql)
-            {
-                DisableLogging = true,
-            };
-            sqlT.Actions = new List<Action<object>>();
-            return sqlT;
-        }
+        private SqlTask CreateSqlTask(string sql) =>
+            new(this, sql) { DisableLogging = true, Actions = new List<Action<object>>() };
 
-        TOutput _row;
+        private TOutput _row;
+
         internal void DefineActions(SqlTask sqlT, List<string> columnNames)
         {
-            _row = default(TOutput);
+            _row = default;
             if (TypeInfo.IsArray)
             {
                 sqlT.BeforeRowReadAction = () =>
-                    _row = (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { columnNames.Count });
+                    _row = (TOutput)Activator.CreateInstance(typeof(TOutput), columnNames.Count);
                 int index = 0;
-                foreach (var colName in columnNames)
+                foreach (var _ in columnNames)
                     index = SetupArrayFillAction(sqlT, index);
             }
             else
             {
-                if (columnNames?.Count == 0) columnNames = TypeInfo.PropertyNames;
-                foreach (var colName in columnNames)
-                {
-                    if (TypeInfo.HasPropertyOrColumnMapping(colName))
-                        SetupObjectFillAction(sqlT, colName);
-                    else if (TypeInfo.IsDynamic)
-                        SetupDynamicObjectFillAction(sqlT, colName);
-                    else
-                        sqlT.Actions.Add(col => { });
-                }
-                sqlT.BeforeRowReadAction = () => _row = (TOutput)Activator.CreateInstance(typeof(TOutput));
+                if (columnNames?.Count == 0)
+                    columnNames = TypeInfo.PropertyNames;
+                SetupNonArrayFillAction(sqlT, columnNames);
+                sqlT.BeforeRowReadAction = () =>
+                    _row = (TOutput)Activator.CreateInstance(typeof(TOutput));
             }
             sqlT.AfterRowReadAction = () =>
             {
@@ -190,6 +185,19 @@ namespace ALE.ETLBox.DataFlow
             };
         }
 
+        private void SetupNonArrayFillAction(SqlTask sqlT, List<string> columnNames)
+        {
+            foreach (var colName in columnNames)
+            {
+                if (TypeInfo.HasPropertyOrColumnMapping(colName))
+                    SetupObjectFillAction(sqlT, colName);
+                else if (TypeInfo.IsDynamic)
+                    SetupDynamicObjectFillAction(sqlT, colName);
+                else
+                    sqlT.Actions.Add(_ => { });
+            }
+        }
+
         private int SetupArrayFillAction(SqlTask sqlT, int index)
         {
             int currentIndexAvoidingClosure = index;
@@ -199,16 +207,17 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (_row != null)
                     {
-                        var ar = _row as System.Array;
-                        var con = Convert.ChangeType(col, typeof(TOutput).GetElementType());
-                        ar.SetValue(con, currentIndexAvoidingClosure);
+                        var ar = _row as Array;
+                        var con = Convert.ChangeType(col, typeof(TOutput).GetElementType()!);
+                        ar!.SetValue(con, currentIndexAvoidingClosure);
                     }
                 }
                 catch (Exception e)
                 {
-                    if (!ErrorHandler.HasErrorBuffer) throw e;
-                    _row = default(TOutput);
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                    if (!ErrorHandler.HasErrorBuffer)
+                        throw;
+                    _row = default;
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
                 }
             });
             index++;
@@ -224,25 +233,25 @@ namespace ALE.ETLBox.DataFlow
                     if (_row != null)
                     {
                         var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
-                        //var con = colValue != null ? Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]) : colValue;
-                        //propInfo.TrySetValue(_row, con);
-                        Object con = null;
-                        if (colValue != null)
-                        {
-                            if (TypeInfo.UnderlyingPropType[propInfo].IsEnum)
-                                con = colValue;
-                            else
-                                con = Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]);
-                        }
+                        var con =
+                            colValue != null
+                                ? TypeInfo.UnderlyingPropType[propInfo].IsEnum
+                                    ? colValue
+                                    : Convert.ChangeType(
+                                        colValue,
+                                        TypeInfo.UnderlyingPropType[propInfo]
+                                    )
+                                : null;
 
                         propInfo.TrySetValue(_row, con, TypeInfo.UnderlyingPropType[propInfo]);
                     }
                 }
                 catch (Exception e)
                 {
-                    if (!ErrorHandler.HasErrorBuffer) throw e;
-                    _row = default(TOutput);
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                    if (!ErrorHandler.HasErrorBuffer)
+                        throw;
+                    _row = default;
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
                 }
             });
         }
@@ -255,25 +264,24 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (_row != null)
                     {
-                        dynamic r = _row as ExpandoObject;
-                        ((IDictionary<String, Object>)r).Add(colName, colValue);
+                        IDictionary<string, object> r = _row as ExpandoObject;
+                        r!.Add(colName, colValue);
                     }
                 }
                 catch (Exception e)
                 {
-                    if (!ErrorHandler.HasErrorBuffer) throw e;
-                    _row = default(TOutput);
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TOutput>(_row));
+                    if (!ErrorHandler.HasErrorBuffer)
+                        throw;
+                    _row = default;
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
                 }
             });
         }
 
-        void CleanupSqlTask(SqlTask sqlT)
+        private void CleanupSqlTask(SqlTask sqlT)
         {
             sqlT.Actions = null;
         }
-
-
     }
 
     /// <summary>
@@ -288,11 +296,18 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the data flow
     /// </code>
     /// </example>
+    [PublicAPI]
     public class DbSource : DbSource<ExpandoObject>
     {
-        public DbSource() : base() { }
-        public DbSource(string tableName) : base(tableName) { }
-        public DbSource(IConnectionManager connectionManager) : base(connectionManager) { }
-        public DbSource(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
+        public DbSource() { }
+
+        public DbSource(string tableName)
+            : base(tableName) { }
+
+        public DbSource(IConnectionManager connectionManager)
+            : base(connectionManager) { }
+
+        public DbSource(IConnectionManager connectionManager, string tableName)
+            : base(connectionManager, tableName) { }
     }
 }

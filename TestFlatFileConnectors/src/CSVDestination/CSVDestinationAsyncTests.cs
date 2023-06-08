@@ -4,17 +4,18 @@ using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.CSVDestination
 {
     [Collection("DataFlow")]
     public sealed class CsvDestinationAsyncTests
     {
         [Theory]
-        [InlineData("AsyncTestFile.csv", 5000)]
+        [InlineData("AsyncTestFile.csv", 20000)]
         public void WriteAsyncAndCheckLock(string filename, int noRecords)
         {
             //Arrange
-            if (File.Exists(filename)) File.Delete(filename);
+            if (File.Exists(filename))
+                File.Delete(filename);
             var source = new MemorySource<string[]>();
             for (var i = 0; i < noRecords; i++)
                 source.DataAsList.Add(new[] { HashHelper.RandomString(100) });
@@ -23,18 +24,25 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             source.LinkTo(dest);
-            var sT = source.ExecuteAsync();
+            source.ExecuteAsync();
             var dt = dest.Completion;
-            while (!File.Exists(filename)) Task.Delay(10).Wait();
+            while (!File.Exists(filename))
+                Task.Delay(10).Wait();
 
             //Assert
             dest.OnCompletion = () =>
             {
-                Assert.False(IsFileLocked(filename), "StreamWriter should be disposed and file unlocked");
+                Assert.False(
+                    IsFileLocked(filename),
+                    "StreamWriter should be disposed and file unlocked"
+                );
                 onCompletionRun = true;
             };
 
-            Assert.True(IsFileLocked(filename), "Right after  start the file should still be locked.");
+            Assert.True(
+                IsFileLocked(filename),
+                "Right after  start the file should still be locked."
+            );
             dt.Wait();
             Assert.True(onCompletionRun, "OnCompletion action and assertion did run");
         }

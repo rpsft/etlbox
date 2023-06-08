@@ -1,6 +1,5 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using System;
-using System.Data;
+﻿using System.Data;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox
 {

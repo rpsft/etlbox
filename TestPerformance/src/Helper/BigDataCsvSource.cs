@@ -1,15 +1,15 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using ALE.ETLBox;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Performance
+namespace ALE.ETLBoxTests.Performance.Helper
 {
     public static class BigDataCsvSource
     {
-        internal static List<TableColumn> DestTableCols { get; } = new List<TableColumn>() {
+        internal static List<TableColumn> DestTableCols { get; } =
+            new()
+            {
                 new TableColumn("Col1", "CHAR(255)", allowNulls: false),
                 new TableColumn("Col2", "CHAR(255)", allowNulls: false),
                 new TableColumn("Col3", "CHAR(255)", allowNulls: false),
@@ -17,6 +17,7 @@ namespace ALE.ETLBoxTests.Performance
             };
 
         internal static string CSVFolderName = "res/Csv";
+
         internal static string GetCompleteFilePath(int numberOfRows) =>
             Path.GetFullPath(Path.Combine(CSVFolderName, "TestData" + numberOfRows + ".csv"));
 
@@ -24,7 +25,7 @@ namespace ALE.ETLBoxTests.Performance
         {
             if (!File.Exists(GetCompleteFilePath(numberOfRows)))
             {
-                BigDataHelper bigData = new BigDataHelper()
+                BigDataHelper bigData = new BigDataHelper
                 {
                     FileName = GetCompleteFilePath(numberOfRows),
                     NumberOfRows = numberOfRows,
@@ -33,7 +34,5 @@ namespace ALE.ETLBoxTests.Performance
                 bigData.CreateBigDataCSV();
             }
         }
-
-
     }
 }

@@ -1,0 +1,43 @@
+<Project>
+  <PropertyGroup>
+    <VersionSuffix>alpha</VersionSuffix>
+    <VersionPrefix>1.8.11</VersionPrefix>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+    <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <PackageVersion>$(Version)</PackageVersion>
+    <Copyright>© 2018 Andreas Lennartz, © 2021-2023 RapidSoft</Copyright>
+    <PackageAuthors>RapidSoft</PackageAuthors>
+    <PackageOwners>RapidSoft</PackageOwners>
+    <PackageProjectUrl>https://rapidsoft.ru/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rpsft/etlbox.git</RepositoryUrl>
+    <PackageCopyright>$(Copyright)</PackageCopyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsCI Condition="'$(CI_JOB_ID)'!=''">true</IsCI>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="/" Visible="false" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      InstallHusky;
+      $(BuildDependsOn)
+    </BuildDependsOn>
+  </PropertyGroup>
+  
+  <Target Name="InstallHusky" Condition="!Exists('$(MSBuildThisFileDirectory).husky/_/husky.sh') And '$(IsCI)'!='true'">
+    <Message Importance="high" Text="Installing Husky into $(MSBuildThisFileDirectory).husky/_/husky.sh" />
+    <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High" />
+    <Exec Command="dotnet husky install" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High" />
+  </Target>
+
+</Project>

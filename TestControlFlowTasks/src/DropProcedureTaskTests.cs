@@ -1,22 +1,14 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class DropProcedureTaskTests
     {
-        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
-
-        public DropProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        public static IEnumerable<object[]> Connections =>
+            Config.AllConnectionsWithoutSQLite("ControlFlow");
 
         [Theory, MemberData(nameof(Connections))]
         public void Drop(IConnectionManager connection)
@@ -47,13 +39,16 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.False(IfProcedureExistsTask.IsExisting(connection, "DropProc2"));
         }
 
-
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => DropProcedureTask.Drop(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
-                );
+                () =>
+                    DropProcedureTask.Drop(
+                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
+                        "Test"
+                    )
+            );
         }
     }
 }

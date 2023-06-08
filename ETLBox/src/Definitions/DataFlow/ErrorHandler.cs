@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -13,24 +10,27 @@ namespace ALE.ETLBox.DataFlow
         internal BufferBlock<ETLBoxError> ErrorBuffer { get; set; }
         internal bool HasErrorBuffer => ErrorBuffer != null;
 
-
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target, Task completion)
         {
             ErrorBuffer = new BufferBlock<ETLBoxError>();
             ErrorSourceBlock.LinkTo(target.TargetBlock, new DataflowLinkOptions());
             target.AddPredecessorCompletion(ErrorSourceBlock.Completion);
-            completion.ContinueWith(t => ErrorBuffer.Complete());
+            completion.ContinueWith(_ => ErrorBuffer.Complete());
         }
 
         public void Send(Exception e, string jsonRow)
         {
-            ErrorBuffer.SendAsync(new ETLBoxError()
-            {
-                Exception = e,
-                ErrorText = e.Message,
-                ReportTime = DateTime.Now,
-                RecordAsJson = jsonRow
-            }).Wait();
+            ErrorBuffer
+                .SendAsync(
+                    new ETLBoxError
+                    {
+                        Exception = e,
+                        ErrorText = e.Message,
+                        ReportTime = DateTime.Now,
+                        RecordAsJson = jsonRow
+                    }
+                )
+                .Wait();
         }
 
         public static string ConvertErrorData<T>(T row)

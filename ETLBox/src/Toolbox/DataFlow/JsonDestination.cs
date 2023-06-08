@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Dynamic;
-using System.IO;
 
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A Json destination defines a json file where data from the flow is inserted. 
+    /// A Json destination defines a json file where data from the flow is inserted.
     /// </summary>
     /// <see cref="JsonDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
@@ -16,17 +13,18 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class JsonDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    [PublicAPI]
+    public class JsonDestination<TInput> : DataFlowStreamDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write Json into file {Uri ?? ""}";
-       
+
         public JsonSerializer JsonSerializer { get; set; }
-        JsonTextWriter JsonTextWriter { get; set; }
+        private JsonTextWriter JsonTextWriter { get; set; }
 
         public JsonDestination()
         {
-            JsonSerializer = new JsonSerializer()
+            JsonSerializer = new JsonSerializer
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented
@@ -34,12 +32,14 @@ namespace ALE.ETLBox.DataFlow
             InitTargetAction();
         }
 
-        public JsonDestination(string uri) : this()
+        public JsonDestination(string uri)
+            : this()
         {
             Uri = uri;
         }
 
-        public JsonDestination(string uri, ResourceType resourceType) : this(uri)
+        public JsonDestination(string uri, ResourceType resourceType)
+            : this(uri)
         {
             ResourceType = resourceType;
         }
@@ -49,9 +49,12 @@ namespace ALE.ETLBox.DataFlow
             JsonTextWriter = new JsonTextWriter(StreamWriter);
             JsonTextWriter.Formatting = JsonSerializer.Formatting;
             if (ErrorHandler.HasErrorBuffer)
-                JsonSerializer.Error += (sender, args) =>
+                JsonSerializer.Error += (_, args) =>
                 {
-                    ErrorHandler.Send(args.ErrorContext.Error, ErrorHandler.ConvertErrorData(args.CurrentObject));
+                    ErrorHandler.Send(
+                        args.ErrorContext.Error,
+                        ErrorHandler.ConvertErrorData(args.CurrentObject)
+                    );
                     args.ErrorContext.Handled = true;
                 };
             JsonTextWriter.WriteStartArray();
@@ -59,7 +62,8 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void WriteIntoStream(TInput data)
         {
-            if (data == null) return;
+            if (data == null)
+                return;
 
             JsonSerializer.Serialize(JsonTextWriter, data);
             LogProgress();
@@ -74,7 +78,7 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A Json destination defines a json file where data from the flow is inserted. 
+    /// A Json destination defines a json file where data from the flow is inserted.
     /// The JsonDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="JsonDestination{TInput}"/>
@@ -86,12 +90,12 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
+    [PublicAPI]
     public class JsonDestination : JsonDestination<ExpandoObject>
     {
-        public JsonDestination() : base() { }
+        public JsonDestination() { }
 
-        public JsonDestination(string fileName) : base(fileName) { }
-
+        public JsonDestination(string fileName)
+            : base(fileName) { }
     }
-
 }

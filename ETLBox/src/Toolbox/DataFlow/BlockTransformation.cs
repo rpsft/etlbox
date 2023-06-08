@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -23,25 +17,24 @@ namespace ALE.ETLBox.DataFlow
     /// block.LinkTo(dest);
     /// </code>
     /// </example>
-    public class BlockTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
+    [PublicAPI]
+    public class BlockTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Excecute block transformation";
+        public sealed override string TaskName { get; set; } = "Excecute block transformation";
 
         /* Public Properties */
         public Func<List<TInput>, List<TOutput>> BlockTransformationFunc
         {
-            get
-            {
-                return _blockTransformationFunc;
-            }
+            get { return _blockTransformationFunc; }
             set
             {
                 _blockTransformationFunc = value;
                 InputBuffer = new ActionBlock<TInput>(row => InputData.Add(row));
                 InputBuffer.Completion.ContinueWith(t =>
                 {
-                    if (t.IsFaulted) ((IDataflowBlock)OutputBuffer).Fault(t.Exception.InnerException);
+                    if (t.IsFaulted)
+                        ((IDataflowBlock)OutputBuffer).Fault(t.Exception!.InnerException!);
                     try
                     {
                         WriteIntoOutput();
@@ -50,38 +43,47 @@ namespace ALE.ETLBox.DataFlow
                     catch (Exception e)
                     {
                         ((IDataflowBlock)OutputBuffer).Fault(e);
-                        throw e;
+                        throw;
                     }
                 });
-
             }
         }
         public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
         /* Private stuff */
-        BufferBlock<TOutput> OutputBuffer { get; set; }
-        ActionBlock<TInput> InputBuffer { get; set; }
-        Func<List<TInput>, List<TOutput>> _blockTransformationFunc;
-        List<TInput> InputData { get; set; }
-        List<TOutput> OutputData { get; set; }
+        private BufferBlock<TOutput> OutputBuffer { get; set; }
+        private ActionBlock<TInput> InputBuffer { get; set; }
+        private Func<List<TInput>, List<TOutput>> _blockTransformationFunc;
+        private List<TInput> InputData { get; set; }
+        private List<TOutput> OutputData { get; set; }
+
         public BlockTransformation()
         {
             InputData = new List<TInput>();
             OutputBuffer = new BufferBlock<TOutput>();
         }
 
-        public BlockTransformation(Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this()
+        public BlockTransformation(Func<List<TInput>, List<TOutput>> blockTransformationFunc)
+            : this()
         {
             BlockTransformationFunc = blockTransformationFunc;
         }
 
-        public BlockTransformation(string name, Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this(blockTransformationFunc)
+        public BlockTransformation(
+            string name,
+            Func<List<TInput>, List<TOutput>> blockTransformationFunc
+        )
+            : this(blockTransformationFunc)
         {
-            this.TaskName = name;
+            TaskName = name;
         }
 
-        internal BlockTransformation(ITask task, Func<List<TInput>, List<TOutput>> blockTransformationFunc) : this(blockTransformationFunc)
+        internal BlockTransformation(
+            ITask task,
+            Func<List<TInput>, List<TOutput>> blockTransformationFunc
+        )
+            : this(blockTransformationFunc)
         {
             CopyTaskProperties(task);
         }
@@ -113,14 +115,17 @@ namespace ALE.ETLBox.DataFlow
     /// block.LinkTo(dest);
     /// </code>
     /// </example>
+    [PublicAPI]
     public class BlockTransformation<TInput> : BlockTransformation<TInput, TInput>
     {
-        public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(blockTransformationFunc)
-        { }
+        public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc)
+            : base(blockTransformationFunc) { }
 
-        public BlockTransformation(string name, Func<List<TInput>, List<TInput>> blockTransformationFunc) : base(name, blockTransformationFunc)
-        { }
-
+        public BlockTransformation(
+            string name,
+            Func<List<TInput>, List<TInput>> blockTransformationFunc
+        )
+            : base(name, blockTransformationFunc) { }
     }
 
     /// <summary>
@@ -128,14 +133,18 @@ namespace ALE.ETLBox.DataFlow
     /// is execution and the result posted into the targets.
     /// The non generic implementation uses dynamic objects as input and output
     /// </summary>
+    [PublicAPI]
     public class BlockTransformation : BlockTransformation<ExpandoObject>
     {
-        public BlockTransformation(Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc) : base(blockTransformationFunc)
-        { }
+        public BlockTransformation(
+            Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc
+        )
+            : base(blockTransformationFunc) { }
 
-        public BlockTransformation(string name, Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc) : base(name, blockTransformationFunc)
-        { }
-
+        public BlockTransformation(
+            string name,
+            Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc
+        )
+            : base(name, blockTransformationFunc) { }
     }
-
 }

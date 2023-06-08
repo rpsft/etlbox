@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Represents table row in destination database for <see cref="DbMerge{T}"/>
@@ -15,6 +13,7 @@ namespace ALE.ETLBox.DataFlow
         /// </remarks>
         /// <value>null means not determined yet</value>
         DateTime ChangeDate { get; set; }
+
         /// <summary>
         /// The result of a merge operation
         /// </summary>

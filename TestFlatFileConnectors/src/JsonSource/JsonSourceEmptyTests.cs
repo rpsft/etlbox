@@ -1,19 +1,7 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration.Attributes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.JsonSource
 {
     [Collection("DataFlow")]
     public class JsonSourceEmptyTests
@@ -21,7 +9,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Fact]
         public void ReadEmptyArray()
         {
-            JsonSource source = new JsonSource("res/JsonSource/EmptyArray.json", ResourceType.File);
+            ALE.ETLBox.DataFlow.JsonSource source = new ALE.ETLBox.DataFlow.JsonSource(
+                "res/JsonSource/EmptyArray.json",
+                ResourceType.File
+            );
             MemoryDestination dest = new MemoryDestination();
 
             source.LinkTo(dest);
@@ -34,7 +25,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [Fact]
         public void JsonFromWebService()
         {
-            JsonSource source = new JsonSource("res/JsonSource/EmptyObject.json", ResourceType.File);
+            ALE.ETLBox.DataFlow.JsonSource source = new ALE.ETLBox.DataFlow.JsonSource(
+                "res/JsonSource/EmptyObject.json",
+                ResourceType.File
+            );
             MemoryDestination dest = new MemoryDestination();
 
             source.LinkTo(dest);
@@ -43,6 +37,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             Assert.True(dest.Data.Count == 0);
         }
-
     }
 }

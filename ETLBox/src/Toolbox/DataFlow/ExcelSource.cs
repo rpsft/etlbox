@@ -1,12 +1,5 @@
 ﻿using ALE.ETLBox.Helper;
 using ExcelDataReader;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Dynamic;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
@@ -24,7 +17,8 @@ namespace ALE.ETLBox.DataFlow
     ///  };
     /// </code>
     /// </example>
-    public class ExcelSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class ExcelSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Read excel data from Uri: {CurrentRequestUri ?? ""}";
@@ -37,20 +31,22 @@ namespace ALE.ETLBox.DataFlow
         public bool HasNoHeader { get; set; }
 
         /* Private stuff */
-        List<string> HeaderColumns = new List<string>();
-        bool HasHeaderData => !HasNoHeader && HeaderColumns?.Count > 0;
-        bool HasRange => Range != null;
-        bool HasSheetName => !String.IsNullOrWhiteSpace(SheetName);
-        bool IsHeaderRead { get; set; }
-        IExcelDataReader ExcelDataReader { get; set; }
-        ExcelTypeInfo TypeInfo { get; set; }
+        private readonly List<string> _headerColumns = new();
+        private bool HasHeaderData => !HasNoHeader && _headerColumns?.Count > 0;
+        private bool HasRange => Range != null;
+        private bool HasSheetName => !string.IsNullOrWhiteSpace(SheetName);
+        private bool IsHeaderRead { get; set; }
+        private IExcelDataReader ExcelDataReader { get; set; }
+        private ExcelTypeInfo TypeInfo { get; set; }
+
         public ExcelSource()
         {
             TypeInfo = new ExcelTypeInfo(typeof(TOutput));
             ResourceType = ResourceType.File;
         }
 
-        public ExcelSource(string uri) : this()
+        public ExcelSource(string uri)
+            : this()
         {
             Uri = uri;
         }
@@ -63,110 +59,184 @@ namespace ALE.ETLBox.DataFlow
 
                 while (ExcelDataReader.Read())
                 {
-                    if (ExcelDataReader.VisibleState != "visible") continue;
-                    if (HasSheetName && ExcelDataReader.Name != SheetName) continue;
-                    rowNr++;
-                    if (HasRange && rowNr > Range.EndRowIfSet) break;
-                    if (HasRange && rowNr < Range.StartRow) continue;
-                    try
+                    if (!ReadLine(ref rowNr))
                     {
-                        if (!HasNoHeader && !IsHeaderRead)
-                            ParseHeader();
-                        else
-                        {
-                            TOutput row = ParseDataRow();
-                            if (row == null && IgnoreBlankRows) continue;
-                            else if (row == null && !IgnoreBlankRows) break;
-                            else if (row != null)
-                            {
-                                Buffer.SendAsync(row).Wait();
-                                LogProgress();
-                            }
-                        }
+                        break;
                     }
-                    catch (Exception e)
-                    {
-                        if (!ErrorHandler.HasErrorBuffer) throw e;
-                        ErrorHandler.Send(e, $"File: {Uri} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
-                    }
-
                 }
             } while (ExcelDataReader.NextResult());
         }
 
+        /// <summary>
+        /// Read one single line
+        /// </summary>
+        /// <param name="rowNr">Counter of data rows read</param>
+        /// <returns>true if needs to skip to the end of sheet</returns>
+        private bool ReadLine(ref int rowNr)
+        {
+            if (CheckSkipLine(ref rowNr, out var skipToEnd))
+                return skipToEnd;
+            return ParseHeaderOrDataRow(rowNr);
+        }
+
+        private bool ParseHeaderOrDataRow(int rowNr)
+        {
+            try
+            {
+                if (!HasNoHeader && !IsHeaderRead)
+                    ParseHeader();
+                else
+                {
+                    TOutput row = ParseDataRow();
+                    if (row != null)
+                    {
+                        Buffer.SendAsync(row).Wait();
+                        LogProgress();
+                    }
+                    else if (!IgnoreBlankRows)
+                        return false;
+                }
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                ErrorHandler.Send(e, $"File: {Uri} -- Sheet: {SheetName ?? ""} -- Row: {rowNr}");
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check if line needs to be read
+        /// </summary>
+        /// <param name="rowNr">Data row counter</param>
+        /// <param name="skipToEnd">Calling party shall skip to the end of sheet</param>
+        /// <returns>true if line shall be skipped, false if line is to be read</returns>
+        private bool CheckSkipLine(ref int rowNr, out bool skipToEnd)
+        {
+            if (ExcelDataReader.VisibleState != "visible")
+            {
+                skipToEnd = true;
+                return true;
+            }
+
+            if (HasSheetName && ExcelDataReader.Name != SheetName)
+            {
+                skipToEnd = true;
+                return true;
+            }
+
+            rowNr++;
+            if (HasRange && rowNr > Range.EndRowIfSet)
+            {
+                skipToEnd = false;
+                return true;
+            }
+
+            if (HasRange && rowNr < Range.StartRow)
+            {
+                skipToEnd = true;
+                return true;
+            }
+
+            skipToEnd = false;
+            return false;
+        }
+
         private void ParseHeader()
         {
-            for (int col = 0, colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
+            for (int col = 0; col < ExcelDataReader.FieldCount; col++)
             {
-                if (HasRange && col > Range.EndColumnIfSet) break;
-                if (HasRange && (col + 1) < Range.StartColumn) continue;
-                colNrInRange++;
+                if (HasRange && col > Range.EndColumnIfSet)
+                    break;
+                if (HasRange && col + 1 < Range.StartColumn)
+                    continue;
                 string value = Convert.ToString(ExcelDataReader.GetValue(col));
-                HeaderColumns.Add(value);
+                _headerColumns.Add(value);
             }
             IsHeaderRead = true;
         }
 
         private TOutput ParseDataRow()
         {
-            TOutput row;
-            row = GetNewOutputInstance();
+            TOutput row = GetNewOutputInstance();
             bool emptyRow = true;
             for (int col = 0, colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
             {
-                if (HasRange && col > Range.EndColumnIfSet) break;
-                if (HasRange && (col + 1) < Range.StartColumn) continue;
+                if (HasRange && col > Range.EndColumnIfSet)
+                    break;
+                if (HasRange && col + 1 < Range.StartColumn)
+                    continue;
                 colNrInRange++;
                 emptyRow &= ExcelDataReader.IsDBNull(col);
                 object value = ExcelDataReader.GetValue(col);
-                if (TypeInfo.IsArray)
-                    SetValueInArray(row, colNrInRange, value);
-                else if (TypeInfo.IsDynamic)
-                    SetValueInDynamic(row, colNrInRange, value);
-                else
-                    SetValueInObject(row, colNrInRange, value);
+                SetOutputValue(row, colNrInRange, value);
             }
-            if (emptyRow) return default(TOutput);
-            else return row;
+
+            return emptyRow ? default : row;
+        }
+
+        private void SetOutputValue(TOutput row, int colNrInRange, object value)
+        {
+            if (TypeInfo.IsArray)
+                SetValueInArray(row as Array, colNrInRange, value);
+            else if (TypeInfo.IsDynamic)
+                SetValueInDynamic(row as dynamic, colNrInRange, value);
+            else
+                SetValueInObject(row, colNrInRange, value);
         }
 
         private TOutput GetNewOutputInstance()
         {
             if (TypeInfo.IsArray)
-                return (TOutput)Activator.CreateInstance(typeof(TOutput), new object[] { ExcelDataReader.FieldCount });
+                return (TOutput)
+                    Activator.CreateInstance(typeof(TOutput), ExcelDataReader.FieldCount);
             else
                 return (TOutput)Activator.CreateInstance(typeof(TOutput));
         }
 
-        private void SetValueInArray(TOutput row, int colNrInRange, object value)
+        private void SetValueInArray(Array row, int colNrInRange, object value)
         {
-            var ar = row as System.Array;
-            var con = Convert.ChangeType(value, typeof(TOutput).GetElementType());
-            ar.SetValue(con, colNrInRange);
+            var con = Convert.ChangeType(value, typeof(TOutput).GetElementType()!);
+            row.SetValue(con, colNrInRange);
         }
 
-        private void SetValueInDynamic(TOutput row, int colNrInRange, object value)
+        private void SetValueInDynamic(
+            IDictionary<string, object> row,
+            int colNrInRange,
+            object value
+        )
         {
-            var r = row as IDictionary<string, Object>;
             if (HasHeaderData)
-                r.Add(HeaderColumns[colNrInRange], value);
+                row.Add(_headerColumns[colNrInRange], value);
             else
-                r.Add("Column" + (colNrInRange + 1), value);
+                row.Add("Column" + (colNrInRange + 1), value);
         }
 
         private void SetValueInObject(TOutput row, int colNrInRange, object value)
         {
             PropertyInfo propInfo = null;
-            if (HasHeaderData && TypeInfo.ExcelColumnName2PropertyIndex.ContainsKey(HeaderColumns[colNrInRange]))
-                propInfo = TypeInfo.Properties[TypeInfo.ExcelColumnName2PropertyIndex[HeaderColumns[colNrInRange]]];
-            else if (TypeInfo.ExcelIndex2PropertyIndex.ContainsKey(colNrInRange))
-                propInfo = TypeInfo.Properties[TypeInfo.ExcelIndex2PropertyIndex[colNrInRange]];
+            if (
+                HasHeaderData
+                && TypeInfo.ExcelColumnName2PropertyIndex.ContainsKey(_headerColumns[colNrInRange])
+            )
+                propInfo = TypeInfo.Properties[
+                    TypeInfo.ExcelColumnName2PropertyIndex[_headerColumns[colNrInRange]]
+                ];
+            else if (
+                TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out var propertyIndex)
+            )
+                propInfo = TypeInfo.Properties[propertyIndex];
             propInfo?.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
         }
 
         protected override void InitReader()
         {
-            ExcelDataReader = ExcelReaderFactory.CreateReader(StreamReader.BaseStream, new ExcelReaderConfiguration() { Password = ExcelFilePassword });
+            ExcelDataReader = ExcelReaderFactory.CreateReader(
+                StreamReader.BaseStream,
+                new ExcelReaderConfiguration() { Password = ExcelFilePassword }
+            );
         }
 
         protected override void CloseReader()
@@ -190,12 +260,12 @@ namespace ALE.ETLBox.DataFlow
     ///  };
     /// </code>
     /// </example>
+    [PublicAPI]
     public class ExcelSource : ExcelSource<ExpandoObject>
     {
-        public ExcelSource() : base()
-        { }
+        public ExcelSource() { }
 
-        public ExcelSource(string uri) : base(uri)
-        { }
+        public ExcelSource(string uri)
+            : base(uri) { }
     }
 }

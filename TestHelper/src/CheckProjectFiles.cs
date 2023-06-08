@@ -1,14 +1,14 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace TestHelper
 {
     public class CheckProjectFiles
     {
-        private readonly string noSymbolsPackageXml = @"
+        private readonly string noSymbolsPackageXml =
+            @"
 <PropertyGroup Condition=""'$(Configuration)|$(Platform)'=='Release|AnyCPU'"">
 <DebugType>none</DebugType>
 <DebugSymbols>false</DebugSymbols>
@@ -26,8 +26,8 @@ namespace ALE.ETLBoxTests
                 {
                     var projectFile = Directory.GetFiles(dir, "*.csproj").First();
                     var cont = File.ReadAllText(projectFile);
-                    
-                    Assert.Contains( NormalizeText(noSymbolsPackageXml), NormalizeText(cont));
+
+                    Assert.Contains(NormalizeText(noSymbolsPackageXml), NormalizeText(cont));
                     found++;
                 }
             }
@@ -36,10 +36,6 @@ namespace ALE.ETLBoxTests
         }
 
         private string NormalizeText(string text) =>
-            new StringBuilder(text)
-                .Replace(" ", "")
-                .Replace("\r", "")
-                .Replace("\n", "")
-                .ToString();
+            new StringBuilder(text).Replace(" ", "").Replace("\r", "").Replace("\n", "").ToString();
     }
 }

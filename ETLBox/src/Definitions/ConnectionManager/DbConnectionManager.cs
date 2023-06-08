@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -10,7 +8,7 @@ namespace ALE.ETLBox.ConnectionManager
         where Connection : class, IDbConnection, new()
     {
         public abstract ConnectionManagerType ConnectionManagerType { get; }
-        
+
         public int MaxLoginAttempts { get; set; } = 3;
         public bool LeaveOpen
         {
@@ -25,7 +23,7 @@ namespace ALE.ETLBox.ConnectionManager
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
         private bool _leaveOpen;
-        
+
         public abstract string QB { get; }
         public abstract string QE { get; }
         public abstract CultureInfo ConnectionCulture { get; }
@@ -34,34 +32,24 @@ namespace ALE.ETLBox.ConnectionManager
         public virtual bool SupportSchemas { get; } = true;
         public virtual bool SupportComputedColumns { get; } = true;
 
-        public DbConnectionManager()
-        {
-        }
+        public DbConnectionManager() { }
 
-        public DbConnectionManager(IDbConnectionString connectionString) : this()
+        public DbConnectionManager(IDbConnectionString connectionString)
+            : this()
         {
-            this.ConnectionString = connectionString;
+            ConnectionString = connectionString;
         }
 
         public void Open()
         {
             if (LeaveOpen)
             {
-                if (DbConnection == null)
-                {
-                    DbConnection = new Connection
-                    {
-                        ConnectionString = ConnectionString.Value
-                    };
-                }
+                DbConnection ??= new Connection { ConnectionString = ConnectionString.Value };
             }
             else
             {
                 DbConnection?.Close();
-                DbConnection = new Connection
-                {
-                    ConnectionString = ConnectionString.Value
-                };
+                DbConnection = new Connection { ConnectionString = ConnectionString.Value };
             }
             if (DbConnection.State != ConnectionState.Open)
             {
@@ -97,7 +85,10 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        public IDbCommand CreateCommand(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        public IDbCommand CreateCommand(
+            string commandText,
+            IEnumerable<QueryParameter> parameterList = null
+        )
         {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
@@ -108,36 +99,49 @@ namespace ALE.ETLBox.ConnectionManager
                 {
                     var newPar = cmd.CreateParameter();
                     newPar.ParameterName = par.Name;
-                    newPar.DbType = ConnectionManagerType == ConnectionManagerType.Postgres && par.DBType == DbType.DateTime 
-                        ? DbType.DateTime2  // TODO: Move this hack to more appropriate place
-                                            // (fix for https://www.npgsql.org/doc/release-notes/6.0.html#major-changes-to-timestamp-mapping in NpgSql 6.0+)
-                        : par.DBType;
+                    newPar.DbType =
+                        ConnectionManagerType == ConnectionManagerType.Postgres
+                        && par.DBType == DbType.DateTime
+                            ? DbType.DateTime2 // TODO: Move this hack to more appropriate place
+                            // (fix for https://www.npgsql.org/doc/release-notes/6.0.html#major-changes-to-timestamp-mapping in NpgSql 6.0+)
+                            : par.DBType;
                     newPar.Value = par.Value;
                     cmd.Parameters.Add(newPar);
                 }
             }
-            if (Transaction?.Connection != null && Transaction.Connection.State == ConnectionState.Open)
+            if (
+                Transaction?.Connection != null
+                && Transaction.Connection.State == ConnectionState.Open
+            )
                 cmd.Transaction = Transaction;
             return cmd;
         }
 
-        public int ExecuteNonQuery(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        public int ExecuteNonQuery(
+            string commandText,
+            IEnumerable<QueryParameter> parameterList = null
+        )
         {
             IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteNonQuery();
         }
 
-        public object ExecuteScalar(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        public object ExecuteScalar(
+            string commandText,
+            IEnumerable<QueryParameter> parameterList = null
+        )
         {
             IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteScalar();
         }
 
-        public IDataReader ExecuteReader(string commandText, IEnumerable<QueryParameter> parameterList = null)
+        public IDataReader ExecuteReader(
+            string commandText,
+            IEnumerable<QueryParameter> parameterList = null
+        )
         {
             IDbCommand cmd = CreateCommand(commandText, parameterList);
             return cmd.ExecuteReader();
-
         }
 
         public void BeginTransaction(IsolationLevel isolationLevel)
@@ -148,8 +152,9 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IConnectionManager CloneIfAllowed()
         {
-            if (LeaveOpen) return this;
-            else return Clone();
+            if (LeaveOpen)
+                return this;
+            return Clone();
         }
 
         public void BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
@@ -181,8 +186,7 @@ namespace ALE.ETLBox.ConnectionManager
         public abstract void AfterBulkInsert(string tableName);
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
+        private bool disposedValue; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
@@ -217,6 +221,5 @@ namespace ALE.ETLBox.ConnectionManager
 
         public abstract IConnectionManager Clone();
         #endregion
-
     }
 }

@@ -5,20 +5,18 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
 using Newtonsoft.Json;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.JsonSource
 {
     [Collection("DataFlow")]
     public class JsonSourceConverterTests
     {
-        public JsonSourceConverterTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void JsonPathInJsonPropertyAttribute()
@@ -28,7 +26,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             var dest = new DbDestination<MySimpleRow>(SqlConnection, "JsonSourceNested");
 
             //Act
-            var source = new JsonSource<MySimpleRow>("res/JsonSource/NestedData.json", ResourceType.File);
+            var source = new JsonSource<MySimpleRow>(
+                "res/JsonSource/NestedData.json",
+                ResourceType.File
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -42,17 +43,19 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             var dest2Columns = new TwoColumnsTableFixture("JsonSourceNestedDynamic");
-            var trans = new RowTransformation<ExpandoObject>(
-                row =>
-                {
-                    dynamic r = row;
-                    r.Col1 = r.Column1;
-                    return r;
-                });
+            var trans = new RowTransformation<ExpandoObject>(row =>
+            {
+                dynamic r = row;
+                r.Col1 = r.Column1;
+                return r;
+            });
             var dest = new DbDestination<ExpandoObject>(SqlConnection, "JsonSourceNestedDynamic");
 
             //Act
-            var source = new JsonSource<ExpandoObject>("res/JsonSource/NestedData.json", ResourceType.File);
+            var source = new JsonSource<ExpandoObject>(
+                "res/JsonSource/NestedData.json",
+                ResourceType.File
+            );
             var pathLookups = new List<JsonProperty2JsonPath>
             {
                 new()
@@ -72,7 +75,6 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Columns.AssertTestData();
         }
 
-
         [Fact]
         public void JsonPathListIntoDynamic()
         {
@@ -81,19 +83,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
             {
                 //Arrange
                 CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-                
+
                 var dest4Columns = new FourColumnsTableFixture("JsonSourceNestedDynamic4Cols");
-                var dest = new DbDestination<ExpandoObject>(SqlConnection, "JsonSourceNestedDynamic4Cols");
+                var dest = new DbDestination<ExpandoObject>(
+                    SqlConnection,
+                    "JsonSourceNestedDynamic4Cols"
+                );
 
                 //Act
-                var source = new JsonSource<ExpandoObject>("res/JsonSource/NestedData4Cols.json", ResourceType.File);
+                var source = new JsonSource<ExpandoObject>(
+                    "res/JsonSource/NestedData4Cols.json",
+                    ResourceType.File
+                );
                 var pathLookups = new List<JsonProperty2JsonPath>
                 {
-                    new()
-                    {
-                        JsonPropertyName = "Col2",
-                        JsonPath = "Value"
-                    },
+                    new() { JsonPropertyName = "Col2", JsonPath = "Value" },
                     new()
                     {
                         JsonPropertyName = "Object",
@@ -115,9 +119,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
                 //Assert
                 dest4Columns.AssertTestData();
-                Assert.Equal(1,
-                    RowCountTask.Count(SqlConnection, "JsonSourceNestedDynamic4Cols",
-                        "Col2 = 'Test2' AND Col3 = 4711 AND Col4='1.23'"));
+                Assert.Equal(
+                    1,
+                    RowCountTask.Count(
+                        SqlConnection,
+                        "JsonSourceNestedDynamic4Cols",
+                        "Col2 = 'Test2' AND Col3 = 4711 AND Col4='1.23'"
+                    )
+                );
             }
             finally
             {
@@ -128,9 +137,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         [JsonConverter(typeof(JsonPathConverter))]
         public class MySimpleRow
         {
-            [JsonProperty("Column1")] public int Col1 { get; set; }
+            [JsonProperty("Column1")]
+            public int Col1 { get; set; }
 
-            [JsonProperty("Column2.Value")] public string Col2 { get; set; }
+            [JsonProperty("Column2.Value")]
+            public string Col2 { get; set; }
         }
     }
 }

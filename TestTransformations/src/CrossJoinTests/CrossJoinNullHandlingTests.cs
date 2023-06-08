@@ -1,17 +1,6 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.CrossJoinTests
 {
     [Collection("DataFlow")]
     public class CrossJoinNullHandlingTests
@@ -26,19 +15,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IgnoreNullValues()
         {
             //Arrange
-            MemorySource<string> source1 = new MemorySource<string>();
-            source1.DataAsList = new List<string>() { "A", null, "B", "C"};
-            MemorySource<int?> source2 = new MemorySource<int?>();
-            source2.DataAsList = new List<int?>() { 1, null, 2 , null, 3};
+            MemorySource<string> source1 = new MemorySource<string>
+            {
+                DataAsList = new List<string> { "A", null, "B", "C" }
+            };
+            MemorySource<int?> source2 = new MemorySource<int?>
+            {
+                DataAsList = new List<int?> { 1, null, 2, null, 3 }
+            };
             CrossJoin<string, int?, string> crossJoin = new CrossJoin<string, int?, string>(
                 (data1, data2) =>
                 {
-                    if (data1 == "C") return null;
-                    else return data1 + data2?.ToString();
+                    if (data1 == "C")
+                        return null;
+                    return data1 + data2;
                 }
             );
             MemoryDestination<string> dest = new MemoryDestination<string>();
-
 
             //Act
             source1.LinkTo(crossJoin.InMemoryTarget);
@@ -50,14 +43,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(6, dest.Data.Count);
-            Assert.Collection<string>(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 s => Assert.Equal("A1", s),
                 s => Assert.Equal("B1", s),
                 s => Assert.Equal("A2", s),
                 s => Assert.Equal("B2", s),
                 s => Assert.Equal("A3", s),
                 s => Assert.Equal("B3", s)
-                );
+            );
         }
     }
 }

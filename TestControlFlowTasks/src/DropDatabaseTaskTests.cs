@@ -2,30 +2,44 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class DropDatabaseTaskTests
     {
-        public SqlConnectionManager MasterConnection => new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName());
-        public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
-                    new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
-                    new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
-                    new object[] { (IConnectionManager)new MySqlConnectionManager(Config.MySqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
-        };
-        public DropDatabaseTaskTests()
-        { }
+        public static IEnumerable<object[]> SqlConnectionsWithMaster() =>
+            new[]
+            {
+                new object[]
+                {
+                    new SqlConnectionManager(
+                        Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()
+                    )
+                },
+                new object[]
+                {
+                    new PostgresConnectionManager(
+                        Config.PostgresConnection
+                            .ConnectionString("ControlFlow")
+                            .CloneWithMasterDbName()
+                    )
+                },
+                new object[]
+                {
+                    new MySqlConnectionManager(
+                        Config.MySqlConnection
+                            .ConnectionString("ControlFlow")
+                            .CloneWithMasterDbName()
+                    )
+                },
+            };
 
         [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            string dbName = "ETLBox_"+HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + HashHelper.RandomString(10);
             CreateDatabaseTask.Create(connection, dbName);
             bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
@@ -60,9 +74,12 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => DropDatabaseTask.Drop(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
-                );
+                () =>
+                    DropDatabaseTask.Drop(
+                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
+                        "Test"
+                    )
+            );
         }
-
     }
 }

@@ -1,30 +1,19 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.XmlDestination
 {
     [Collection("DataFlow")]
     public class XmlDestinationTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public XmlDestinationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -38,17 +27,25 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "XmlDestSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "XmlDestSimple"
+            );
 
             //Act
-            XmlDestination<MySimpleRow> dest = new XmlDestination<MySimpleRow>("./SimpleWithObject.xml", ResourceType.File);
+            XmlDestination<MySimpleRow> dest = new XmlDestination<MySimpleRow>(
+                "./SimpleWithObject.xml",
+                ResourceType.File
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsSet3.xml").NormalizeLineEndings()
-                , File.ReadAllText("./SimpleWithObject.xml"));
+            Assert.Equal(
+                File.ReadAllText("res/XmlDestination/TwoColumnsSet3.xml").NormalizeLineEndings(),
+                File.ReadAllText("./SimpleWithObject.xml")
+            );
         }
 
         [XmlRoot("MySimpleRow")]
@@ -56,6 +53,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             [XmlAttribute]
             public int Col1 { get; set; }
+
             [XmlAttribute]
             public string Col2 { get; set; }
         }
@@ -66,17 +64,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestOnlyAttributes");
             s2C.InsertTestDataSet3();
-            DbSource<MyAttributeRow> source = new DbSource<MyAttributeRow>(SqlConnection, "XmlDestOnlyAttributes");
+            DbSource<MyAttributeRow> source = new DbSource<MyAttributeRow>(
+                SqlConnection,
+                "XmlDestOnlyAttributes"
+            );
 
             //Act
-            XmlDestination<MyAttributeRow> dest = new XmlDestination<MyAttributeRow>("./SimpleOnlyAttributes.xml", ResourceType.File);
+            XmlDestination<MyAttributeRow> dest = new XmlDestination<MyAttributeRow>(
+                "./SimpleOnlyAttributes.xml",
+                ResourceType.File
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("res/XmlDestination/TwoColumnsAttributesSet3.xml").NormalizeLineEndings()
-                , File.ReadAllText("./SimpleOnlyAttributes.xml"));
+            Assert.Equal(
+                File.ReadAllText("res/XmlDestination/TwoColumnsAttributesSet3.xml")
+                    .NormalizeLineEndings(),
+                File.ReadAllText("./SimpleOnlyAttributes.xml")
+            );
         }
     }
 }

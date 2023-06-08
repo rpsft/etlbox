@@ -1,36 +1,31 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.MemoryDestination
 {
     [Collection("DataFlow")]
     public class MemoryDestinationDynamicObjectTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MemoryDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void DataIsInList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("MemoryDestinationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "MemoryDestinationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "MemoryDestinationSource");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+                SqlConnection,
+                "MemoryDestinationSource"
+            );
             MemoryDestination<ExpandoObject> dest = new MemoryDestination<ExpandoObject>();
 
             //Act
@@ -42,12 +37,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             int index = 1;
             foreach (dynamic d in dest.Data)
             {
-
-                Assert.True(d.Col1 == index && d.Col2 == "Test"+index);
+                Assert.True(d.Col1 == index && d.Col2 == "Test" + index);
                 index++;
             }
         }
-
-
     }
 }

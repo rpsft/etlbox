@@ -1,40 +1,35 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBDestination
 {
     [Collection("DataFlow")]
     public class DbDestinationBatchChangesTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DbDestinationBatchChangesTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
         [Theory, MemberData(nameof(Connections))]
         public void WithBatchChanges(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DbDestinationBatchChanges", batchSize: 2)
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+                connection,
+                "DbDestinationBatchChanges"
+            );
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                connection,
+                "DbDestinationBatchChanges",
+                batchSize: 2
+            )
             {
                 BeforeBatchWrite = rowArray =>
-                                   {
-                                       rowArray[0][1] = "NewValue";
-                                       return rowArray;
-                                   }
+                {
+                    rowArray[0][1] = "NewValue";
+                    return rowArray;
+                }
             };
 
             //Act
@@ -45,18 +40,35 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(3, RowCountTask.Count(connection, "DbDestinationBatchChanges"));
-            Assert.Equal(2, RowCountTask.Count(connection, "DbDestinationBatchChanges", $"{d2c.QB}Col2{d2c.QE}='NewValue'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "DbDestinationBatchChanges", $"{d2c.QB}Col1{d2c.QE} = 2 AND {d2c.QB}Col2{d2c.QE}='Test2'"));
+            Assert.Equal(
+                2,
+                RowCountTask.Count(
+                    connection,
+                    "DbDestinationBatchChanges",
+                    $"{d2c.QB}Col2{d2c.QE}='NewValue'"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DbDestinationBatchChanges",
+                    $"{d2c.QB}Col1{d2c.QE} = 2 AND {d2c.QB}Col2{d2c.QE}='Test2'"
+                )
+            );
         }
-
 
         [Theory, MemberData(nameof(Connections))]
         public void AfterBatchWrite(IConnectionManager connection)
         {
             //Arrange
             bool wasExecuted = false;
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DbDestinationBatchChanges", batchSize: 1)
+            var _ = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                connection,
+                "DbDestinationBatchChanges",
+                batchSize: 1
+            )
             {
                 AfterBatchWrite = rowArray =>
                 {

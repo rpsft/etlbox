@@ -1,26 +1,16 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.MemoryDestination
 {
     [Collection("DataFlow")]
     public class MemoryDestinationTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MemoryDestinationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -32,10 +22,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DataIsInList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("MemoryDestinationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "MemoryDestinationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "MemoryDestinationSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "MemoryDestinationSource"
+            );
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
             //Act
@@ -44,7 +39,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 2 && d.Col2 == "Test2"),
                 d => Assert.True(d.Col1 == 3 && d.Col2 == "Test3")

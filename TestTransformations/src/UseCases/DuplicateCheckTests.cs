@@ -2,41 +2,39 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using CsvHelper.Configuration;
+using CsvHelper.Configuration.Attributes;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.UseCases
 {
     [Collection("DataFlow")]
-    public class DuplicateCheckTests 
+    public class DuplicateCheckTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public DuplicateCheckTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class Poco
         {
             public int ID { get; set; }
             public string Name { get; set; }
-            [CsvHelper.Configuration.Attributes.Name("Text")]
+
+            [Name("Text")]
             public string Value { get; set; }
             public bool IsDuplicate { get; set; }
         }
 
         private CsvSource<Poco> CreateDuplicateCsvSource(string fileName)
         {
-            CsvSource<Poco> source = new CsvSource<Poco>(fileName);
-            source.Configuration.Delimiter = ";";
-            source.Configuration.TrimOptions = CsvHelper.Configuration.TrimOptions.Trim;
-            source.Configuration.MissingFieldFound = null;
+            CsvSource<Poco> source = new CsvSource<Poco>(fileName)
+            {
+                Configuration =
+                {
+                    Delimiter = ";",
+                    TrimOptions = TrimOptions.Trim,
+                    MissingFieldFound = null
+                }
+            };
             return source;
         }
 
@@ -44,12 +42,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             DropTableTask.DropIfExists(Connection, tableName);
             var dest = new DbDestination<Poco>(Connection, tableName);
-            TableDefinition stagingTable = new TableDefinition(tableName, new List<TableColumn>() {
-                new TableColumn("PKey", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
-                new TableColumn("ID", "INT", allowNulls: false),
-                new TableColumn("Value", "NVARCHAR(100)", allowNulls: false),
-                new TableColumn("Name", "NVARCHAR(100)", allowNulls: false)
-            });
+            TableDefinition stagingTable = new TableDefinition(
+                tableName,
+                new List<TableColumn>
+                {
+                    new("PKey", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
+                    new("ID", "INT", allowNulls: false),
+                    new("Value", "NVARCHAR(100)", allowNulls: false),
+                    new("Name", "NVARCHAR(100)", allowNulls: false)
+                }
+            );
             stagingTable.CreateTable(Connection);
             return dest;
         }
@@ -57,9 +59,30 @@ namespace ALE.ETLBoxTests.DataFlowTests
         private void AssertDataWithoutDuplicates()
         {
             Assert.Equal(3, RowCountTask.Count(Connection, "dbo.DuplicateCheck"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 1 AND Name='ROOT' AND Value = 'Lorem ipsum'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 2 AND Name='TEST 2' AND Value = 'Lalandia'"));
-            Assert.Equal(1, RowCountTask.Count(Connection, "dbo.DuplicateCheck", "ID = 3 AND Name='TEST 3' AND Value = 'XX'"));
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    Connection,
+                    "dbo.DuplicateCheck",
+                    "ID = 1 AND Name='ROOT' AND Value = 'Lorem ipsum'"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    Connection,
+                    "dbo.DuplicateCheck",
+                    "ID = 2 AND Name='TEST 2' AND Value = 'Lalandia'"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    Connection,
+                    "dbo.DuplicateCheck",
+                    "ID = 3 AND Name='TEST 3' AND Value = 'XX'"
+                )
+            );
         }
 
         [Fact]
@@ -86,7 +109,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.LinkTo(rowTrans);
             rowTrans.LinkTo(multicast);
             multicast.LinkTo(dest, input => input.IsDuplicate == false);
-            multicast.LinkTo(trash, input => input.IsDuplicate == true);
+            multicast.LinkTo(trash, input => input.IsDuplicate);
 
             source.Execute();
             dest.Wait();
@@ -96,15 +119,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             AssertDataWithoutDuplicates();
         }
 
-
-
-
         [Fact]
         public void DuplicateCheckWithBlockTrans()
         {
             //Arrange
             CsvSource<Poco> source = CreateDuplicateCsvSource("res/UseCases/DuplicateCheck.csv");
-            List<int> IDs = new List<int>(); //at the end of the flow, this list will contain all IDs of your source
 
             //Act
             BlockTransformation<Poco> blockTrans = new BlockTransformation<Poco>(inputList =>

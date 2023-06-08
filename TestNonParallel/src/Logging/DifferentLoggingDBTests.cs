@@ -1,18 +1,12 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging
 {
+    [UsedImplicitly]
     public class OtherDBFixture
     {
         public OtherDBFixture()
@@ -24,18 +18,21 @@ namespace ALE.ETLBoxTests.Logging
     [Collection("Logging")]
     public class DifferentLoggingDBTests : IDisposable, IClassFixture<OtherDBFixture>
     {
-        public SqlConnectionManager LoggingConnection => Config.SqlConnection.ConnectionManager("Logging");
-        public SqlConnectionManager NoLogConnection => Config.SqlConnection.ConnectionManager("NoLog");
-        public DifferentLoggingDBTests(LoggingDatabaseFixture dbFixture, OtherDBFixture odbFixture)
+        private SqlConnectionManager LoggingConnection =>
+            Config.SqlConnection.ConnectionManager("Logging");
+        private SqlConnectionManager NoLogConnection =>
+            Config.SqlConnection.ConnectionManager("NoLog");
+
+        public DifferentLoggingDBTests()
         {
             CreateLogTableTask.Create(LoggingConnection);
-            ControlFlow.AddLoggingDatabaseToConfig(LoggingConnection);
+            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(LoggingConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(LoggingConnection, ControlFlow.LogTable);
-            ControlFlow.ClearSettings();
+            DropTableTask.Drop(LoggingConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
+            ETLBox.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 
@@ -45,19 +42,31 @@ namespace ALE.ETLBoxTests.Logging
             //Arrange
 
             //Act
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Create source table", @"CREATE TABLE CFLogSource
-                            (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
+            SqlTask.ExecuteNonQuery(
+                NoLogConnection,
+                "Create source table",
+                @"CREATE TABLE CFLogSource
+                            (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
+            );
 
-            ControlFlow.DefaultDbConnection = NoLogConnection;
+            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
 
-            SqlTask.ExecuteNonQuery("Insert demo data", "INSERT INTO CFLogSource VALUES(1,'Test1')");
+            SqlTask.ExecuteNonQuery(
+                "Insert demo data",
+                "INSERT INTO CFLogSource VALUES(1,'Test1')"
+            );
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'SqlTask' ")
-            {
-                DisableLogging = true,
-                ConnectionManager = LoggingConnection
-            }.Count().Rows);
+            Assert.Equal(
+                4,
+                new RowCountTask("etlbox_log", "task_type = 'SqlTask' ")
+                {
+                    DisableLogging = true,
+                    ConnectionManager = LoggingConnection
+                }
+                    .Count()
+                    .Rows
+            );
         }
 
         [Fact]
@@ -65,14 +74,34 @@ namespace ALE.ETLBoxTests.Logging
         {
             //Arrange
             DataFlow.LoggingThresholdRows = 3;
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Create source table", @"CREATE TABLE DFLogSource
-                            (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Insert demo data", "INSERT INTO DFLogSource VALUES(1,'Test1')");
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Insert demo data", "INSERT INTO DFLogSource VALUES(2,'Test2')");
-            SqlTask.ExecuteNonQuery(NoLogConnection, "Insert demo data", "INSERT INTO DFLogSource VALUES(3,'Test3')");
+            SqlTask.ExecuteNonQuery(
+                NoLogConnection,
+                "Create source table",
+                @"CREATE TABLE DFLogSource
+                            (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
+            );
+            SqlTask.ExecuteNonQuery(
+                NoLogConnection,
+                "Insert demo data",
+                "INSERT INTO DFLogSource VALUES(1,'Test1')"
+            );
+            SqlTask.ExecuteNonQuery(
+                NoLogConnection,
+                "Insert demo data",
+                "INSERT INTO DFLogSource VALUES(2,'Test2')"
+            );
+            SqlTask.ExecuteNonQuery(
+                NoLogConnection,
+                "Insert demo data",
+                "INSERT INTO DFLogSource VALUES(3,'Test3')"
+            );
 
-            SqlTask.ExecuteNonQuery(LoggingConnection, "Create source table", @"CREATE TABLE DFLogDestination
-                            (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
+            SqlTask.ExecuteNonQuery(
+                LoggingConnection,
+                "Create source table",
+                @"CREATE TABLE DFLogDestination
+                            (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
+            );
 
             DbSource source = new DbSource(NoLogConnection, "DFLogSource");
             DbDestination dest = new DbDestination(LoggingConnection, "DFLogDestination");
@@ -83,18 +112,26 @@ namespace ALE.ETLBoxTests.Logging
             dest.Wait();
 
             //Assert
-            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DbSource'")
-            {
-                DisableLogging = true,
-                ConnectionManager = LoggingConnection
-            }.Count().Rows);
-            Assert.Equal(4, new RowCountTask("etlbox_log", "task_type = 'DbDestination'")
-            {
-                DisableLogging = true,
-                ConnectionManager = LoggingConnection
-            }.Count().Rows);
+            Assert.Equal(
+                4,
+                new RowCountTask("etlbox_log", "task_type = 'DbSource'")
+                {
+                    DisableLogging = true,
+                    ConnectionManager = LoggingConnection
+                }
+                    .Count()
+                    .Rows
+            );
+            Assert.Equal(
+                4,
+                new RowCountTask("etlbox_log", "task_type = 'DbDestination'")
+                {
+                    DisableLogging = true,
+                    ConnectionManager = LoggingConnection
+                }
+                    .Count()
+                    .Rows
+            );
         }
-
-
     }
 }

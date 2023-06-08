@@ -1,24 +1,14 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBSource
 {
     [Collection("DataFlow")]
     public class DbSourceTableDefinitionTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-
-        public DbSourceTableDefinitionTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
 
         public class MySimpleRow
         {
@@ -30,17 +20,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithTableDefinition(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                connection,
+                "Source"
+            );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "Destination");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                connection,
+                "Destination"
+            );
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>()
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
                 ConnectionManager = connection
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>()
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
                 ConnectionManager = connection

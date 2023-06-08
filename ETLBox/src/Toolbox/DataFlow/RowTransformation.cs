@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Dynamic;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -21,83 +17,85 @@ namespace ALE.ETLBox.DataFlow
     /// trans.LinkTo(dest);
     /// </code>
     /// </example>
-    public class RowTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
+    [PublicAPI]
+    public class RowTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Execute row transformation";
+        public sealed override string TaskName { get; set; } = "Execute row transformation";
 
         /* Public Properties */
         public Func<TInput, TOutput> TransformationFunc
         {
-            get
-            {
-                return _transformationFunc;
-            }
-
+            get { return _transformationFunc; }
             set
             {
                 _transformationFunc = value;
-                TransformBlock = new TransformBlock<TInput, TOutput>(
-                    row =>
+                TransformBlock = new TransformBlock<TInput, TOutput>(row =>
+                {
+                    try
                     {
-                        try
-                        {
-                            return WrapTransformation(row);
-                        }
-                        catch (Exception e)
-                        {
-                            if (!ErrorHandler.HasErrorBuffer) throw e;
-                            ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(row));
-                            return default(TOutput);
-                        }
+                        return WrapTransformation(row);
                     }
-                );
+                    catch (Exception e)
+                    {
+                        if (!ErrorHandler.HasErrorBuffer)
+                            throw;
+                        ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(row));
+                        return default;
+                    }
+                });
             }
         }
         public Action InitAction { get; set; }
-        public bool WasInitialized { get; private set; } = false;
+        public bool WasInitialized { get; private set; }
 
         public override ITargetBlock<TInput> TargetBlock => TransformBlock;
         public override ISourceBlock<TOutput> SourceBlock => TransformBlock;
 
         /* Private stuff */
-        Func<TInput, TOutput> _transformationFunc;
+        private Func<TInput, TOutput> _transformationFunc;
         internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
-        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
+        internal ErrorHandler ErrorHandler { get; set; } = new();
 
-        public RowTransformation()
-        {
-        }
+        public RowTransformation() { }
 
-        public RowTransformation(Func<TInput, TOutput> rowTransformationFunc) : this()
+        public RowTransformation(Func<TInput, TOutput> rowTransformationFunc)
+            : this()
         {
             TransformationFunc = rowTransformationFunc;
         }
 
-        public RowTransformation(string name, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
+        public RowTransformation(string name, Func<TInput, TOutput> rowTransformationFunc)
+            : this(rowTransformationFunc)
         {
-            this.TaskName = name;
+            TaskName = name;
         }
 
-        public RowTransformation(string name, Func<TInput, TOutput> rowTransformationFunc, Action initAction) : this(rowTransformationFunc)
+        public RowTransformation(
+            string name,
+            Func<TInput, TOutput> rowTransformationFunc,
+            Action initAction
+        )
+            : this(rowTransformationFunc)
         {
-            this.TaskName = name;
-            this.InitAction = initAction;
+            TaskName = name;
+            InitAction = initAction;
         }
 
-        internal RowTransformation(ITask task) : this()
+        internal RowTransformation(ITask task)
+            : this()
         {
             CopyTaskProperties(task);
         }
 
-        internal RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc) : this(rowTransformationFunc)
+        internal RowTransformation(ITask task, Func<TInput, TOutput> rowTransformationFunc)
+            : this(rowTransformationFunc)
         {
             CopyTaskProperties(task);
         }
 
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-            => ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
-
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
         private TOutput WrapTransformation(TInput row)
         {
@@ -106,7 +104,15 @@ namespace ALE.ETLBox.DataFlow
                 InitAction?.Invoke();
                 WasInitialized = true;
                 if (!DisableLogging)
-                    NLogger.Debug(TaskName + " was initialized!", TaskType, "LOG", TaskHash, ControlFlow.ControlFlow.STAGE, ControlFlow.ControlFlow.CurrentLoadProcess?.Id);
+                    NLogger.Debug(
+                        // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                        TaskName + " was initialized!",
+                        TaskType,
+                        "LOG",
+                        TaskHash,
+                        ControlFlow.ControlFlow.STAGE,
+                        ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    );
             }
             LogProgress();
             return TransformationFunc.Invoke(row);
@@ -128,13 +134,24 @@ namespace ALE.ETLBox.DataFlow
     /// trans.LinkTo(dest);
     /// </code>
     /// </example>
+    [PublicAPI]
     public class RowTransformation<TInput> : RowTransformation<TInput, TInput>
     {
-        public RowTransformation() : base() { }
-        public RowTransformation(Func<TInput, TInput> rowTransformationFunc) : base(rowTransformationFunc) { }
-        public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc) : base(name, rowTransformationFunc) { }
-        public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
-   }
+        public RowTransformation() { }
+
+        public RowTransformation(Func<TInput, TInput> rowTransformationFunc)
+            : base(rowTransformationFunc) { }
+
+        public RowTransformation(string name, Func<TInput, TInput> rowTransformationFunc)
+            : base(name, rowTransformationFunc) { }
+
+        public RowTransformation(
+            string name,
+            Func<TInput, TInput> rowTransformationFunc,
+            Action initAction
+        )
+            : base(name, rowTransformationFunc, initAction) { }
+    }
 
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
@@ -153,11 +170,25 @@ namespace ALE.ETLBox.DataFlow
     /// trans.LinkTo(dest);
     /// </code>
     /// </example>
+    [PublicAPI]
     public class RowTransformation : RowTransformation<ExpandoObject>
     {
-        public RowTransformation() : base() { }
-        public RowTransformation(Func<ExpandoObject, ExpandoObject> rowTransformationFunc) : base(rowTransformationFunc) { }
-        public RowTransformation(string name, Func<ExpandoObject, ExpandoObject> rowTransformationFunc) : base(name, rowTransformationFunc) { }
-        public RowTransformation(string name, Func<ExpandoObject, ExpandoObject> rowTransformationFunc, Action initAction) : base(name, rowTransformationFunc, initAction) { }
+        public RowTransformation() { }
+
+        public RowTransformation(Func<ExpandoObject, ExpandoObject> rowTransformationFunc)
+            : base(rowTransformationFunc) { }
+
+        public RowTransformation(
+            string name,
+            Func<ExpandoObject, ExpandoObject> rowTransformationFunc
+        )
+            : base(name, rowTransformationFunc) { }
+
+        public RowTransformation(
+            string name,
+            Func<ExpandoObject, ExpandoObject> rowTransformationFunc,
+            Action initAction
+        )
+            : base(name, rowTransformationFunc, initAction) { }
     }
 }

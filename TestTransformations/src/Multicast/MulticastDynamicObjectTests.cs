@@ -1,26 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.Multicast
 {
     [Collection("DataFlow")]
     public class MulticastDynamicObjectTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MulticastDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void SplitInto2Tables()
@@ -32,8 +21,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
 
             DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(Connection, "Source");
-            DbDestination<ExpandoObject> dest1 = new DbDestination<ExpandoObject>(Connection, "Destination1");
-            DbDestination< ExpandoObject> dest2 = new DbDestination<ExpandoObject>(Connection, "Destination2");
+            DbDestination<ExpandoObject> dest1 = new DbDestination<ExpandoObject>(
+                Connection,
+                "Destination1"
+            );
+            DbDestination<ExpandoObject> dest2 = new DbDestination<ExpandoObject>(
+                Connection,
+                "Destination2"
+            );
 
             //Act
             Multicast<ExpandoObject> multicast = new Multicast<ExpandoObject>();
@@ -49,6 +44,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest1Table.AssertTestData();
             dest2Table.AssertTestData();
         }
-
     }
 }

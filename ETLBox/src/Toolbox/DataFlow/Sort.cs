@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
+using NLog;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -18,10 +15,11 @@ namespace ALE.ETLBox.DataFlow
     /// Sort&lt;MyDataRow&gt; block = new Sort&lt;MyDataRow&gt;(comp);
     /// </code>
     /// </example>
-    public class Sort<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>
+    [PublicAPI]
+    public class Sort<TInput> : DataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = "Sort";
+        public sealed override string TaskName { get; set; } = "Sort";
 
         /* Public Properties */
 
@@ -39,24 +37,27 @@ namespace ALE.ETLBox.DataFlow
         public override ITargetBlock<TInput> TargetBlock => BlockTransformation.TargetBlock;
 
         /* Private stuff */
-        Comparison<TInput> _sortFunction;
-        BlockTransformation<TInput, TInput> BlockTransformation { get; set; }
+        private Comparison<TInput> _sortFunction;
+        private BlockTransformation<TInput, TInput> BlockTransformation { get; set; }
+
         public Sort()
         {
-            NLogger = NLog.LogManager.GetLogger("ETL");
+            NLogger = LogManager.GetLogger("ETL");
         }
 
-        public Sort(Comparison<TInput> sortFunction) : this()
+        public Sort(Comparison<TInput> sortFunction)
+            : this()
         {
             SortFunction = sortFunction;
         }
 
-        public Sort(string name, Comparison<TInput> sortFunction) : this(sortFunction)
+        public Sort(string name, Comparison<TInput> sortFunction)
+            : this(sortFunction)
         {
-            this.TaskName = name;
+            TaskName = name;
         }
 
-        List<TInput> SortByFunc(List<TInput> data)
+        private List<TInput> SortByFunc(List<TInput> data)
         {
             data.Sort(SortFunction);
             return data;
@@ -66,17 +67,15 @@ namespace ALE.ETLBox.DataFlow
     /// <summary>
     /// Sort the input with the given sort function. The non generic implementation works with a dyanmic object.
     /// </summary>
+    [PublicAPI]
     public class Sort : Sort<ExpandoObject>
     {
-        public Sort() : base()
-        { }
+        public Sort() { }
 
-        public Sort(Comparison<ExpandoObject> sortFunction) : base(sortFunction)
-        { }
+        public Sort(Comparison<ExpandoObject> sortFunction)
+            : base(sortFunction) { }
 
-        public Sort(string name, Comparison<ExpandoObject> sortFunction) : base(name, sortFunction)
-        { }
+        public Sort(string name, Comparison<ExpandoObject> sortFunction)
+            : base(name, sortFunction) { }
     }
-
-
 }

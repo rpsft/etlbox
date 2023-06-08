@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ETLBox.Helper
+namespace ALE.ETLBox.Helper
 {
-
     internal abstract class DelegatingStream : Stream
     {
         protected DelegatingStream(Stream innerStream)
@@ -64,7 +62,8 @@ namespace ETLBox.Helper
             byte[] buffer,
             int offset,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken
+        )
         {
             return InnerStream.ReadAsync(buffer, offset, count, cancellationToken);
         }
@@ -98,7 +97,8 @@ namespace ETLBox.Helper
             byte[] buffer,
             int offset,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken
+        )
         {
             return InnerStream.WriteAsync(buffer, offset, count, cancellationToken);
         }

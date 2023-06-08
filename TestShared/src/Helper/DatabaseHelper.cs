@@ -1,7 +1,7 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.Helper
+namespace TestShared.Helper
 {
     public static class DatabaseHelper
     {
@@ -23,8 +23,8 @@ namespace ALE.ETLBox.Helper
         public static void RecreateSqlDatabase(string section)
         {
             var connManagerMaster = new SqlConnectionManager(
-                            Config.SqlConnection.ConnectionString(section).CloneWithMasterDbName()
-                            );
+                Config.SqlConnection.ConnectionString(section).CloneWithMasterDbName()
+            );
             var dbName = Config.SqlConnection.ConnectionString(section).DbName;
 
             DropAndCreate(connManagerMaster, dbName);
@@ -33,8 +33,8 @@ namespace ALE.ETLBox.Helper
         public static void RecreateMySqlDatabase(string section)
         {
             var connManagerMaster = new MySqlConnectionManager(
-                            Config.MySqlConnection.ConnectionString(section).CloneWithMasterDbName()
-                            );
+                Config.MySqlConnection.ConnectionString(section).CloneWithMasterDbName()
+            );
             var dbName = Config.MySqlConnection.ConnectionString(section).DbName;
             DropAndCreate(connManagerMaster, dbName);
         }
@@ -42,8 +42,8 @@ namespace ALE.ETLBox.Helper
         public static void RecreatePostgresDatabase(string section)
         {
             var connManagerMaster = new PostgresConnectionManager(
-                            Config.PostgresConnection.ConnectionString(section).CloneWithMasterDbName()
-                            );
+                Config.PostgresConnection.ConnectionString(section).CloneWithMasterDbName()
+            );
             var dbName = Config.PostgresConnection.ConnectionString(section).DbName;
 
             DropAndCreate(connManagerMaster, dbName);

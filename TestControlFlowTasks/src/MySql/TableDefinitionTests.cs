@@ -1,29 +1,24 @@
+using System;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests.MySql
+namespace TestControlFlowTasks.MySql
 {
     [Collection("ControlFlow")]
     public class TableDefinitionTests
     {
-        public MySqlConnectionManager MySqlConnection => Config.MySqlConnection.ConnectionManager("ControlFlow");
-
-        public TableDefinitionTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        private MySqlConnectionManager MySqlConnection =>
+            Config.MySqlConnection.ConnectionManager("ControlFlow");
 
         [Fact]
         public void AutoIncrement()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(MySqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                MySqlConnection,
+                "Create table",
+                @"
 CREATE TABLE identity (
       `Id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY
 )"
@@ -33,9 +28,15 @@ CREATE TABLE identity (
             var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "identity");
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "int" && tc.NETDataType == typeof(Int32)
-                                    && tc.IsIdentity && tc.IsPrimaryKey)
+            Assert.Collection(
+                result.Columns,
+                tc =>
+                    Assert.True(
+                        tc.DataType == "int"
+                            && tc.NETDataType == typeof(int)
+                            && tc.IsIdentity
+                            && tc.IsPrimaryKey
+                    )
             );
         }
 
@@ -43,7 +44,10 @@ CREATE TABLE identity (
         public void TypesWithLengthAndPrecision()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(MySqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                MySqlConnection,
+                "Create table",
+                @"
 CREATE TABLE length_and_precision (
       `Value1` VARCHAR (255) NULL,
       `Value2` NVARCHAR (200) NULL,
@@ -55,16 +59,20 @@ CREATE TABLE length_and_precision (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "length_and_precision");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                MySqlConnection,
+                "length_and_precision"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "varchar(255)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "varchar(200)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "char(10)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "char(20)" && tc.NETDataType == typeof(string)),
-                tc => Assert.True(tc.DataType == "decimal(12,3)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "decimal(3,2)" && tc.NETDataType == typeof(decimal))
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "varchar(255)", typeof(string)),
+                tc => AssertTypes(tc, "varchar(200)", typeof(string)),
+                tc => AssertTypes(tc, "char(10)", typeof(string)),
+                tc => AssertTypes(tc, "char(20)", typeof(string)),
+                tc => AssertTypes(tc, "decimal(12,3)", typeof(decimal)),
+                tc => AssertTypes(tc, "decimal(3,2)", typeof(decimal))
             );
         }
 
@@ -72,7 +80,10 @@ CREATE TABLE length_and_precision (
         public void TestComment()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(MySqlConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                MySqlConnection,
+                "Create table",
+                @"
 CREATE TABLE testcomment (
       `comment` INT NULL COMMENT 'test'
 )"
@@ -82,8 +93,17 @@ CREATE TABLE testcomment (
             var result = TableDefinition.GetDefinitionFromTableName(MySqlConnection, "testcomment");
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "int" && tc.Comment =="test")
+            Assert.Collection(
+                result.Columns,
+                tc => Assert.True(tc.DataType == "int" && tc.Comment == "test")
+            );
+        }
+
+        private static void AssertTypes(TableColumn tc, string dataType, Type dotnetType)
+        {
+            Assert.Multiple(
+                () => Assert.Equal(tc.DataType, dataType),
+                () => Assert.Equal(tc.NETDataType, dotnetType)
             );
         }
     }

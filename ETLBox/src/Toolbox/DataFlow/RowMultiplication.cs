@@ -1,12 +1,4 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -15,10 +7,11 @@ namespace ALE.ETLBox.DataFlow
     /// </summary>
     /// <typeparam name="TInput">Type of data input</typeparam>
     /// <typeparam name="TOutput">Type of data output</typeparam>
-    public class RowMultiplication<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>, ITask, IDataFlowTransformation<TInput, TOutput>
+    [PublicAPI]
+    public class RowMultiplication<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = $"Duplicate rows.";
+        public override string TaskName { get; set; } = "Duplicate rows.";
 
         /* Public Properties */
         public override ISourceBlock<TOutput> SourceBlock => TransformBlock;
@@ -26,62 +19,64 @@ namespace ALE.ETLBox.DataFlow
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
         /* Private stuff */
-        TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
+        private TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
 
-        internal ErrorHandler ErrorHandler { get; set; } = new ErrorHandler();
+        internal ErrorHandler ErrorHandler { get; set; } = new();
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>((Func<TInput, IEnumerable<TOutput>>)MultiplicateRow);
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(
+                (Func<TInput, IEnumerable<TOutput>>)MultiplicateRow
+            );
         }
 
-        public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc) : this()
+        public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc)
+            : this()
         {
             MultiplicationFunc = multiplicationFunc;
         }
 
         private IEnumerable<TOutput> MultiplicateRow(TInput row)
         {
-            if (row == null) return null;
+            if (row == null)
+                return null;
             try
             {
                 return MultiplicationFunc.Invoke(row);
             }
             catch (Exception e)
             {
-                if (!ErrorHandler.HasErrorBuffer) throw e;
-                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(row));
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(row));
                 return null;
             }
         }
 
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target)
-            => ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
-
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
     }
 
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.
     /// </summary>
     /// <see cref="RowMultiplication{TInput, TOutput}"/>
-    public class RowMultiplication : RowMultiplication<ExpandoObject,ExpandoObject>
+    [PublicAPI]
+    public class RowMultiplication : RowMultiplication<ExpandoObject, ExpandoObject>
     {
-        public RowMultiplication() : base()
-        { }
+        public RowMultiplication() { }
 
         public RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>> multiplicationFunc)
-            : base (multiplicationFunc)
-        { }
+            : base(multiplicationFunc) { }
     }
 
     /// <inheritdoc/>
+    [PublicAPI]
     public class RowMultiplication<TInput> : RowMultiplication<TInput, TInput>
     {
-        public RowMultiplication() : base()
-        { }
+        public RowMultiplication() { }
 
         public RowMultiplication(Func<TInput, IEnumerable<TInput>> multiplicationFunc)
-            : base(multiplicationFunc)
-        { }
+            : base(multiplicationFunc) { }
     }
 }

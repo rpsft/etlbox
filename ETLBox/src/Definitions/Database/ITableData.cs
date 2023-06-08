@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 
 namespace ALE.ETLBox
 {
-
     public interface ITableData : IDisposable, IDataReader
     {
         IColumnMappingCollection ColumnMapping { get; }

@@ -6,7 +6,7 @@ using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.JsonDestination
 {
     [Collection("DataFlow")]
     public class JsonDestinationErrorLinkingTests
@@ -37,14 +37,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
             errorDest.Wait();
 
             //Assert
-            Assert.Equal(File.ReadAllText("./ErrorFile.json"),
-                File.ReadAllText("res/JsonDestination/TwoColumnsErrorLinking.json").NormalizeLineEndings());
-            Assert.Collection(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
+            Assert.Equal(
+                File.ReadAllText("./ErrorFile.json"),
+                File.ReadAllText("res/JsonDestination/TwoColumnsErrorLinking.json")
+                    .NormalizeLineEndings()
+            );
+            Assert.Collection(
+                errorDest.Data,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
             );
         }
-
 
         [Fact]
         public void NoErrorHandling()

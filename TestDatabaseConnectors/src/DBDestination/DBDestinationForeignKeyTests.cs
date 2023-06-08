@@ -2,25 +2,15 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBDestination
 {
     [Collection("DataFlow")]
     public class DbDestinationForeignKeyTests
     {
-        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("DataFlow");
-        public DbDestinationForeignKeyTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public static IEnumerable<object[]> Connections =>
+            Config.AllConnectionsWithoutSQLite("DataFlow");
 
         public class MyRow
         {
@@ -29,54 +19,96 @@ namespace ALE.ETLBoxTests.DataFlowTests
             public string Value { get; set; }
         }
 
-        void ReCreateOtherTable(IConnectionManager connection, string tablename)
+        private void ReCreateOtherTable(IConnectionManager connection, string tablename)
         {
             DropTableTask.DropIfExists(connection, tablename);
 
-            CreateTableTask.Create(connection, tablename,
-                new List<TableColumn>()
+            CreateTableTask.Create(
+                connection,
+                tablename,
+                new List<TableColumn>
                 {
-                    new TableColumn("Id", "INT", allowNulls:false, isPrimaryKey:true),
-                    new TableColumn("Other", "VARCHAR(100)", allowNulls:true, isPrimaryKey:false),
-                });
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tablename, connection.QB, connection.QE);
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(10,'TestX')");
+                    new("Id", "INT", allowNulls: false, isPrimaryKey: true),
+                    new("Other", "VARCHAR(100)", allowNulls: true, isPrimaryKey: false),
+                }
+            );
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+                tablename,
+                connection.QB,
+                connection.QE
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES(10,'TestX')"
+            );
         }
-        void ReCreateTable(IConnectionManager connection, string tableName)
+
+        private void ReCreateTable(IConnectionManager connection, string tableName)
         {
             DropTableTask.DropIfExists(connection, tableName);
 
-            CreateTableTask.Create(connection, tableName,
-                new List<TableColumn>()
+            CreateTableTask.Create(
+                connection,
+                tableName,
+                new List<TableColumn>
                 {
-                    new TableColumn("Key1", "INT", allowNulls:false, isPrimaryKey:true),
-                    new TableColumn("Key2", "INT", allowNulls:false, isPrimaryKey:true),
-                    new TableColumn("Value1", "VARCHAR(100)", allowNulls:true, isPrimaryKey:false),
-                });
+                    new("Key1", "INT", allowNulls: false, isPrimaryKey: true),
+                    new("Key2", "INT", allowNulls: false, isPrimaryKey: true),
+                    new("Value1", "VARCHAR(100)", allowNulls: true, isPrimaryKey: false),
+                }
+            );
         }
 
-        void AddFKConstraint(IConnectionManager connection, string sourceTableName, string referenceTableName)
+        private void AddFKConstraint(
+            IConnectionManager connection,
+            string sourceTableName,
+            string referenceTableName
+        )
         {
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(sourceTableName, connection.QB, connection.QE);
-            ObjectNameDescriptor TNR = new ObjectNameDescriptor(referenceTableName, connection.QB, connection.QE);
-            SqlTask.ExecuteNonQuery(connection, "Add FK constraint",
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+                sourceTableName,
+                connection.QB,
+                connection.QE
+            );
+            ObjectNameDescriptor TNR = new ObjectNameDescriptor(
+                referenceTableName,
+                connection.QB,
+                connection.QE
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Add FK constraint",
                 $@"ALTER TABLE {TN.QuotatedFullName}
 ADD CONSTRAINT constraint_fk
 FOREIGN KEY ({TN.QB}Key2{TN.QE})
 REFERENCES {TNR.QuotatedFullName}({TNR.QB}Id{TNR.QE})
-ON DELETE CASCADE;");
+ON DELETE CASCADE;"
+            );
         }
 
-        void InsertTestData(IConnectionManager connection, string tableName)
+        private void InsertTestData(IConnectionManager connection, string tableName)
         {
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection.QB, connection.QE);
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                    , $@"INSERT INTO {TN.QuotatedFullName} VALUES(1, 10 ,'Test1')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                    , $@"INSERT INTO {TN.QuotatedFullName} VALUES(2, 10 ,'Test2')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES(3, 10 ,'Test3')");
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+                tableName,
+                connection.QB,
+                connection.QE
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1, 10 ,'Test1')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES(2, 10 ,'Test2')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES(3, 10 ,'Test3')"
+            );
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -99,7 +131,6 @@ ON DELETE CASCADE;");
 
             //Assert
             Assert.Equal(3, RowCountTask.Count(connection, "FKDestTable").Value);
-
         }
     }
 }

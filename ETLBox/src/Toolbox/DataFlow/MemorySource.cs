@@ -1,13 +1,4 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -15,32 +6,28 @@ namespace ALE.ETLBox.DataFlow
     /// Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.
     /// Data is read a as string from the source and dynamically converted into the corresponding data format.
     /// </summary>
-    public class MemorySource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class MemorySource<TOutput> : DataFlowSource<TOutput>, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read data from memory";
+        public override string TaskName => "Read data from memory";
 
         /* Public properties */
         public IEnumerable<TOutput> Data { get; set; }
         public IList<TOutput> DataAsList
         {
-            get
-            {
-                return Data as IList<TOutput>;
-            }
-            set
-            {
-                Data = value;
-            }
+            get { return Data as IList<TOutput>; }
+            set { Data = value; }
         }
+
         /* Private stuff */
 
-        public MemorySource() 
+        public MemorySource()
         {
             Data = new List<TOutput>();
         }
 
-        public MemorySource(IEnumerable<TOutput> data) 
+        public MemorySource(IEnumerable<TOutput> data)
         {
             Data = data;
         }
@@ -61,7 +48,6 @@ namespace ALE.ETLBox.DataFlow
                 Buffer.SendAsync(record).Wait();
             }
         }
-
     }
 
     /// <summary>
@@ -70,9 +56,12 @@ namespace ALE.ETLBox.DataFlow
     /// the MemorySource&lt;TOutput&gt; object instead.
     /// </summary>
     /// <see cref="MemorySource{TOutput}"/>
-    public class MemorySource : MemorySource<ExpandoObject>
+    [PublicAPI]
+    public sealed class MemorySource : MemorySource<ExpandoObject>
     {
-        public MemorySource() : base() { }
-        public MemorySource(IList<ExpandoObject> data) : base(data) { }
+        public MemorySource() { }
+
+        public MemorySource(IList<ExpandoObject> data)
+            : base(data) { }
     }
 }

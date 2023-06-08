@@ -1,15 +1,10 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Fixtures
+namespace TestDatabaseConnectors.Fixtures
 {
     [CollectionDefinition("DataFlow")]
     public class DatalFlowCollectionClass : ICollectionFixture<DataFlowDatabaseFixture> { }
+
     public class DataFlowDatabaseFixture
     {
         public DataFlowDatabaseFixture()
@@ -18,8 +13,5 @@ namespace ALE.ETLBoxTests.Fixtures
             DatabaseHelper.RecreateMySqlDatabase("DataFlow");
             DatabaseHelper.RecreatePostgresDatabase("DataFlow");
         }
-
-
     }
-
 }

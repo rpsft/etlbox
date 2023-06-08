@@ -1,23 +1,16 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.ExcelSource
 {
     [Collection("DataFlow")]
     public class ExcelSourceHeaderTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public ExcelSourceHeaderTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -30,9 +23,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleData()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelDestinationWithHeader");
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnWithHeader.xlsx");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestinationWithHeader");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "ExcelDestinationWithHeader"
+            );
+            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+                "res/Excel/TwoColumnWithHeader.xlsx"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                Connection,
+                "ExcelDestinationWithHeader"
+            );
 
             //Act
             source.LinkTo(dest);
@@ -47,9 +47,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void MoreHeaderColumns()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelDestinationManyColsWithHeader");
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/ManyColumnsWithHeader.xlsx");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestinationManyColsWithHeader");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "ExcelDestinationManyColsWithHeader"
+            );
+            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+                "res/Excel/ManyColumnsWithHeader.xlsx"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                Connection,
+                "ExcelDestinationManyColsWithHeader"
+            );
 
             //Act
             source.LinkTo(dest);
@@ -59,6 +66,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
     }
 }

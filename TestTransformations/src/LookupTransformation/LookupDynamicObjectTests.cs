@@ -1,62 +1,84 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.LookupTransformation
 {
     [Collection("DataFlow")]
-    public class LookupDynamicObjectTests
+    public class LookupDynamicObjectTests : IDisposable
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        private readonly CultureInfo _culture;
 
-        public LookupDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
+        public LookupDynamicObjectTests()
         {
+            _culture = CultureInfo.CurrentCulture;
         }
+
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
         [Theory, MemberData(nameof(Connections))]
         public void SimpleLookupWithDynamicObject(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection,"SourceLookupDynamicObject");
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                connection,
+                "SourceLookupDynamicObject"
+            );
             source2Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"DestinationLookupDynamicObject", -1);
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+                connection,
+                "DestinationLookupDynamicObject",
+                -1
+            );
 
-
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceLookupDynamicObject");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationLookupDynamicObject");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+                connection,
+                "SourceLookupDynamicObject"
+            );
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+                connection,
+                "DestinationLookupDynamicObject"
+            );
 
             //Act
             List<ExpandoObject> lookupList = new List<ExpandoObject>();
 
-            CsvSource<ExpandoObject> lookupSource = new CsvSource<ExpandoObject>("res/Lookup/LookupSource.csv");
+            CsvSource<ExpandoObject> lookupSource = new CsvSource<ExpandoObject>(
+                "res/Lookup/LookupSource.csv"
+            );
 
-            var lookup = new ETLBox.DataFlow.LookupTransformation<ExpandoObject, ExpandoObject>(
+            var lookup = new LookupTransformation<ExpandoObject, ExpandoObject>(
                 lookupSource,
                 row =>
                 {
-                    dynamic r = row as ExpandoObject;
+                    dynamic r = row;
                     r.Col3 = lookupList
-                            .Where(lkupRow => { dynamic lk = lkupRow as dynamic;  return int.Parse(lk.Key) == r.Col1; })
-                            .Select(lkupRow => { dynamic lk = lkupRow as dynamic;
-                                return lk.Column3 == string.Empty ? null : Int64.Parse(lk.Column3); })
-                            .FirstOrDefault();
+                        .Where(lkupRow =>
+                        {
+                            dynamic lk = lkupRow;
+                            return int.Parse(lk.Key) == r.Col1;
+                        })
+                        .Select(lkupRow =>
+                        {
+                            dynamic lk = lkupRow;
+                            return lk.Column3 == string.Empty ? null : long.Parse(lk.Column3);
+                        })
+                        .FirstOrDefault();
                     r.Col4 = lookupList
-                            .Where(lkupRow => { dynamic lk = lkupRow as dynamic; return int.Parse(lk.Key) == r.Col1; })
-                            .Select(lkupRow => { dynamic lk = lkupRow as dynamic; return double.Parse(lk.Column4); })
-                            .FirstOrDefault();
-                     return row;
+                        .Where(lkupRow =>
+                        {
+                            dynamic lk = lkupRow;
+                            return int.Parse(lk.Key) == r.Col1;
+                        })
+                        .Select(lkupRow =>
+                        {
+                            dynamic lk = lkupRow;
+                            return double.Parse(lk.Column4);
+                        })
+                        .FirstOrDefault();
+                    return row;
                 },
                 lookupList
             );
@@ -68,6 +90,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             dest4Columns.AssertTestData();
+        }
+
+        public void Dispose()
+        {
+            CultureInfo.CurrentCulture = _culture;
         }
     }
 }

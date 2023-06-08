@@ -1,12 +1,6 @@
-﻿using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging.Fixtures
 {
     [CollectionDefinition("Logging")]
     public class LoggingCollectionClass : ICollectionFixture<LoggingDatabaseFixture> { }

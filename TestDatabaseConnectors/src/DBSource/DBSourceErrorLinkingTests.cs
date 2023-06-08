@@ -1,30 +1,24 @@
+using System;
+using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBSource
 {
     [Collection("DataFlow")]
     public class DbSourceErrorLinkingTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DbSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
         public class MySimpleRow
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }
+
             [ColumnMap("Col3")]
             public int AddCol { get; set; }
         }
@@ -37,11 +31,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Arrange
             CreateSourceTable(connection, "DbSourceErrorLinking");
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationErrorLinking");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                connection,
+                "DbDestinationErrorLinking"
+            );
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceErrorLinking");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationErrorLinking");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                connection,
+                "DbSourceErrorLinking"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                connection,
+                "DbDestinationErrorLinking"
+            );
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
@@ -51,10 +54,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             dest2Columns.AssertTestData();
-            Assert.Collection<ETLBoxError>(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                 d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
+            Assert.Collection(
+                errorDest.Data,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
             );
         }
 
@@ -64,49 +77,76 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             CreateSourceTable(connection, "DbSourceNoErrorLinking");
 
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationNoErrorLinking");
+            var _ = new TwoColumnsTableFixture(connection, "DbDestinationNoErrorLinking");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceNoErrorLinking");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationNoErrorLinking");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                connection,
+                "DbSourceNoErrorLinking"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                connection,
+                "DbDestinationNoErrorLinking"
+            );
             source.LinkTo(dest);
 
             //Assert
-            Assert.Throws<System.FormatException>(() =>
-               {
-                   source.Execute();
-                   dest.Wait();
-               });
+            Assert.Throws<FormatException>(() =>
+            {
+                source.Execute();
+                dest.Wait();
+            });
         }
 
         private static void CreateSourceTable(IConnectionManager connection, string tableName)
         {
             DropTableTask.DropIfExists(connection, tableName);
 
-            var TableDefinition = new TableDefinition(tableName
-                , new List<TableColumn>() {
-                new TableColumn("Col1", "VARCHAR(100)", allowNulls: true),
-                new TableColumn("Col2", "VARCHAR(100)", allowNulls: true),
-                new TableColumn("Col3", "VARCHAR(100)", allowNulls: true)
-            });
+            var TableDefinition = new TableDefinition(
+                tableName,
+                new List<TableColumn>
+                {
+                    new("Col1", "VARCHAR(100)", allowNulls: true),
+                    new("Col2", "VARCHAR(100)", allowNulls: true),
+                    new("Col3", "VARCHAR(100)", allowNulls: true)
+                }
+            );
             TableDefinition.CreateTable(connection);
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection.QB, connection.QE);
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-              , $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1','1')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('1.35','TestX','X')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('2','Test2', NULL)");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('X',NULL, NULL)");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('3','Test3', '3')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('4','Test4', 'X')");
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+                tableName,
+                connection.QB,
+                connection.QE
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1','1')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('1.35','TestX','X')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('2','Test2', NULL)"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('X',NULL, NULL)"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('3','Test3', '3')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('4','Test4', 'X')"
+            );
         }
-
-
-
-
     }
 }

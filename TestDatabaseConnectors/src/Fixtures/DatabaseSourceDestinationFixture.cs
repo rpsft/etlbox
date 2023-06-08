@@ -1,13 +1,11 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Fixtures
+namespace TestDatabaseConnectors.Fixtures
 {
     [CollectionDefinition("DataFlow Source and Destination")]
-    public class DatalFlowSourceDestinationCollectionClass : ICollectionFixture<DatabaseSourceDestinationFixture> { }
+    public class DatalFlowSourceDestinationCollectionClass
+        : ICollectionFixture<DatabaseSourceDestinationFixture> { }
+
     public class DatabaseSourceDestinationFixture
     {
         public DatabaseSourceDestinationFixture()
@@ -20,5 +18,4 @@ namespace ALE.ETLBoxTests.Fixtures
             DatabaseHelper.RecreatePostgresDatabase("DataFlowDestination");
         }
     }
-
 }

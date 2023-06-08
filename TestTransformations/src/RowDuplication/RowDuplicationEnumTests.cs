@@ -1,25 +1,16 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
-using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests;
+namespace TestTransformations.RowDuplication;
 
 [Collection("DataFlow")]
 public class RowDuplicationEnumTests
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public enum EnumType
     {
         Value1 = 1,
         Value2 = 2
     }
-
-    public RowDuplicationEnumTests(DataFlowDatabaseFixture dbFixture)
-    {
-    }
-
-    public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
 
     [Fact]
     public void NoParameter()
@@ -37,7 +28,8 @@ public class RowDuplicationEnumTests
         dest.Wait();
 
         //Assert
-        Assert.Collection(dest.Data,
+        Assert.Collection(
+            dest.Data,
             d => Assert.True(d.EnumCol == EnumType.Value2),
             d => Assert.True(d.EnumCol == EnumType.Value2)
         );
