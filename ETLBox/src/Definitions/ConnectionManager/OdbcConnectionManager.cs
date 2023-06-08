@@ -4,9 +4,10 @@ namespace ALE.ETLBox.ConnectionManager
 {
     public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection>
     {
-        public OdbcConnectionManager() : base() { }
+        public OdbcConnectionManager() { }
 
-        public OdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
+        public OdbcConnectionManager(OdbcConnectionString connectionString)
+            : base(connectionString) { }
 
         internal void OdbcBulkInsert(ITableData data, string tableName, BulkInsertSql bulkInsert)
         {

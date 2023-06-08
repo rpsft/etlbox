@@ -1,15 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace ALE.ETLBox.Helper
 {
+    [PublicAPI]
     public class JsonProperty2JsonPath
     {
         public string JsonPropertyName { get; set; }
@@ -20,13 +15,19 @@ namespace ALE.ETLBox.Helper
             set => _newPropertyName = value;
         }
         private string _newPropertyName;
+
         public bool Validate()
         {
-            if (string.IsNullOrWhiteSpace(JsonPropertyName) || string.IsNullOrWhiteSpace(JsonPath) || string.IsNullOrWhiteSpace(NewPropertyName))
+            if (
+                string.IsNullOrWhiteSpace(JsonPropertyName)
+                || string.IsNullOrWhiteSpace(JsonPath)
+                || string.IsNullOrWhiteSpace(NewPropertyName)
+            )
                 return false;
             return true;
         }
     }
+
     /// <summary>
     /// Allows to pass JsonPath string that are applied for particular property names - this will work one on the first level
     /// of the
@@ -37,6 +38,7 @@ namespace ALE.ETLBox.Helper
     public class ExpandoJsonPathConverter : JsonConverter
     {
         public IEnumerable<JsonProperty2JsonPath> PathLookups { get; set; }
+
         public ExpandoJsonPathConverter(IEnumerable<JsonProperty2JsonPath> pathLookups)
         {
             PathLookups = pathLookups;
@@ -49,7 +51,12 @@ namespace ALE.ETLBox.Helper
         }
 
         /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object existingValue,
+            JsonSerializer serializer
+        )
         {
             return ReadValue(reader);
         }
@@ -80,23 +87,7 @@ namespace ALE.ETLBox.Helper
                 {
                     case JsonToken.PropertyName:
                         string propertyName = reader.Value?.ToString();
-
-                        if (!reader.Read())
-                            throw new JsonSerializationException("Unexpected end when reading ExpandoObject.");
-
-                        if (IsPrimitiveToken(reader.TokenType))
-                        {
-                            expandoObject[propertyName] = reader.Value;
-                        }
-                        else
-                        {
-                            var jo = JContainer.Load(reader);
-                            foreach (var pl in PathLookups.Where(l => l.JsonPropertyName == propertyName))
-                            {
-                                if (pl?.Validate() ?? false)
-                                    expandoObject[pl.NewPropertyName] = GetValueFromJsonPath(jo, pl.JsonPath);
-                            }
-                        }
+                        ReadProperty(reader, expandoObject, propertyName);
                         break;
                     case JsonToken.Comment:
                         break;
@@ -106,6 +97,30 @@ namespace ALE.ETLBox.Helper
             }
 
             throw new JsonSerializationException("Unexpected end when reading ExpandoObject.");
+        }
+
+        private void ReadProperty(
+            JsonReader reader,
+            IDictionary<string, object> expandoObject,
+            string propertyName
+        )
+        {
+            if (!reader.Read())
+                throw new JsonSerializationException("Unexpected end when reading ExpandoObject.");
+
+            if (IsPrimitiveToken(reader.TokenType))
+            {
+                expandoObject[propertyName] = reader.Value;
+            }
+            else
+            {
+                var jo = JToken.Load(reader);
+                foreach (var pl in PathLookups.Where(l => l.JsonPropertyName == propertyName))
+                {
+                    if (pl?.Validate() ?? false)
+                        expandoObject[pl.NewPropertyName] = GetValueFromJsonPath(jo, pl.JsonPath);
+                }
+            }
         }
 
         private object GetValueFromJsonPath(JToken jo, string path)
@@ -132,16 +147,13 @@ namespace ALE.ETLBox.Helper
 
         private object ParseToken(JToken t)
         {
-            if (t is JValue)
-                return ((JValue)t).Value;
-            else
-                return t.ToString();
+            return t is JValue value ? value.Value : t.ToString();
         }
 
         /// <inheritdoc />
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(ExpandoObject));
+            return objectType == typeof(ExpandoObject);
         }
 
         /// <inheritdoc />
@@ -150,21 +162,18 @@ namespace ALE.ETLBox.Helper
         /// https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/JsonTokenUtils.cs
         private bool IsPrimitiveToken(JsonToken token)
         {
-            switch (token)
+            return token switch
             {
-                case JsonToken.Integer:
-                case JsonToken.Float:
-                case JsonToken.String:
-                case JsonToken.Boolean:
-                case JsonToken.Undefined:
-                case JsonToken.Null:
-                case JsonToken.Date:
-                case JsonToken.Bytes:
-                    return true;
-                default:
-                    return false;
-            }
+                JsonToken.Integer => true,
+                JsonToken.Float => true,
+                JsonToken.String => true,
+                JsonToken.Boolean => true,
+                JsonToken.Undefined => true,
+                JsonToken.Null => true,
+                JsonToken.Date => true,
+                JsonToken.Bytes => true,
+                _ => false
+            };
         }
     }
-
 }

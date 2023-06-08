@@ -1,5 +1,4 @@
-﻿using System.Data.Odbc;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -23,19 +22,23 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class SqlOdbcConnectionManager : OdbcConnectionManager
     {
-        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
+        public override ConnectionManagerType ConnectionManagerType { get; } =
+            ConnectionManagerType.SqlServer;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
         public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
-        
-        public SqlOdbcConnectionManager() : base() { }
 
-        public SqlOdbcConnectionManager(OdbcConnectionString connectionString) : base(connectionString) { }
-        public SqlOdbcConnectionManager(string connectionString) : base(new OdbcConnectionString(connectionString)) { }
+        public SqlOdbcConnectionManager() { }
+
+        public SqlOdbcConnectionManager(OdbcConnectionString connectionString)
+            : base(connectionString) { }
+
+        public SqlOdbcConnectionManager(string connectionString)
+            : base(new OdbcConnectionString(connectionString)) { }
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            BulkInsertSql bulkInsert = new BulkInsertSql()
+            BulkInsertSql bulkInsert = new BulkInsertSql
             {
                 UseParameterQuery = true,
                 QB = QB,
@@ -47,16 +50,21 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            SqlOdbcConnectionManager clone = new SqlOdbcConnectionManager((OdbcConnectionString)ConnectionString)
+            SqlOdbcConnectionManager clone = new SqlOdbcConnectionManager(
+                (OdbcConnectionString)ConnectionString
+            )
             {
-                MaxLoginAttempts = this.MaxLoginAttempts
+                MaxLoginAttempts = MaxLoginAttempts
             };
             return clone;
         }
 
         public override void BeforeBulkInsert(string tableName) { }
+
         public override void AfterBulkInsert(string tableName) { }
+
         public override void PrepareBulkInsert(string tablename) { }
+
         public override void CleanUpBulkInsert(string tablename) { }
     }
 }

@@ -1,24 +1,16 @@
+using System;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBDestination
 {
     [Collection("DataFlow")]
     public class DbDestinationExceptionTests
     {
-        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-
-        public DbDestinationExceptionTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public static SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void UnknownTable()
@@ -27,7 +19,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             string[] data = { "1", "2" };
             MemorySource<string[]> source = new MemorySource<string[]>();
             source.DataAsList.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "UnknownTable");
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                SqlConnection,
+                "UnknownTable"
+            );
             source.LinkTo(dest);
 
             //Act & Assert
@@ -49,17 +44,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void UnknownTableViaTableDefinition()
         {
             //Arrange
-            TableDefinition def = new TableDefinition("UnknownTable",
-                new List<TableColumn>()
-                {
-                    new TableColumn("id", "INT")
-                });
+            TableDefinition def = new TableDefinition(
+                "UnknownTable",
+                new List<TableColumn> { new("id", "INT") }
+            );
 
             //Arrange
             string[] data = { "1", "2" };
             MemorySource<string[]> source = new MemorySource<string[]>();
             source.DataAsList.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>()
+            DbDestination<string[]> dest = new DbDestination<string[]>
             {
                 ConnectionManager = SqlConnection,
                 DestinationTableDefinition = def
@@ -67,7 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.LinkTo(dest);
 
             //Act & Assert
-            Assert.Throws<System.InvalidOperationException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
             {
                 try
                 {

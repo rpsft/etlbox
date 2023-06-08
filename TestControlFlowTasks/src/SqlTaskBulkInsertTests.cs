@@ -1,31 +1,22 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
-using Xunit;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.ControlFlowTests;
+namespace TestControlFlowTasks;
 
 [Collection("ControlFlow")]
 public class SqlTaskBulkInsertTests
 {
-    public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture dbFixture)
-    {
-    }
-
-    public static IEnumerable<object[]> Connections => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-        ? Config.AllSqlConnections("ControlFlow").Concat(Config.AccessConnection("ControlFlow"))
-        : Config.AllSqlConnections("ControlFlow");
+    public static IEnumerable<object[]> Connections =>
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Config.AllSqlConnections("ControlFlow").Concat(Config.AccessConnection("ControlFlow"))
+            : Config.AllSqlConnections("ControlFlow");
 
     public static IEnumerable<object[]> ConnectionsWithValue(int value)
     {
         return Config.AllSqlConnectionsWithValue("ControlFlow", value);
     }
-
 
     [Theory]
     [MemberData(nameof(Connections))]
@@ -37,11 +28,11 @@ public class SqlTaskBulkInsertTests
         var destTable = new TwoColumnsTableFixture(connection, "BulkInsert2Columns");
 
         var data = new TableData<string[]>(destTable.TableDefinition);
-        string[] values = { "1", "Test1" };
+        object[] values = { "1", "Test1" };
         data.Rows.Add(values);
-        string[] values2 = { "2", "Test2" };
+        object[] values2 = { "2", "Test2" };
         data.Rows.Add(values2);
-        string[] values3 = { "3", "Test3" };
+        object[] values3 = { "3", "Test3" };
         data.Rows.Add(values3);
 
         //Act
@@ -66,8 +57,11 @@ public class SqlTaskBulkInsertTests
         if (connection.GetType() != typeof(SQLiteConnectionManager))
         {
             //Arrange
-            var destTable =
-                new FourColumnsTableFixture(connection, "BulkInsert4Columns", identityIndex);
+            var destTable = new FourColumnsTableFixture(
+                connection,
+                "BulkInsert4Columns",
+                identityIndex
+            );
 
             var data = new TableData(destTable.TableDefinition, 2);
             object[] values = { "Test1", null, 1.2 };

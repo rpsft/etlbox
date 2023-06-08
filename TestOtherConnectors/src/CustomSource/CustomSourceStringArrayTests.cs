@@ -1,32 +1,27 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.CustomSource
 {
     [Collection("DataFlow")]
     public class CustomSourceStringArrayTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CustomSourceStringArrayTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void SimpleFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination4CustomSourceNonGeneric");
-            List<string> Data = new List<string>() { "Test1", "Test2", "Test3" };
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "Destination4CustomSourceNonGeneric"
+            );
+            List<string> Data = new List<string> { "Test1", "Test2", "Test3" };
             int _readIndex = 0;
             Func<string[]> ReadData = () =>
             {
@@ -41,7 +36,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CustomSource<string[]> source = new CustomSource<string[]>(ReadData, EndOfData);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "Destination4CustomSourceNonGeneric");
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                Connection,
+                "Destination4CustomSourceNonGeneric"
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -1,28 +1,17 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.CSVDestination
 {
     [Collection("DataFlow")]
     public class CsvDestinationStringArrayTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CsvDestinationStringArrayTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void SimpleNonGeneric()
@@ -30,7 +19,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimpleNonGeneric");
             s2C.InsertTestDataSet3();
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "CSVDestSimpleNonGeneric");
+            DbSource<string[]> source = new DbSource<string[]>(
+                SqlConnection,
+                "CSVDestSimpleNonGeneric"
+            );
 
             //Act
             CsvDestination<string[]> dest = new CsvDestination<string[]>("./SimpleNonGeneric.csv");
@@ -40,10 +32,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             //Assert
-            Assert.Equal(File.ReadAllText("./SimpleNonGeneric.csv"),
-                File.ReadAllText("res/CsvDestination/TwoColumnsSet3NoHeader.csv"));
+            Assert.Equal(
+                File.ReadAllText("./SimpleNonGeneric.csv"),
+                File.ReadAllText("res/CsvDestination/TwoColumnsSet3NoHeader.csv")
+            );
         }
-
-
     }
 }

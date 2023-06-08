@@ -1,29 +1,24 @@
+using System;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests.Postgres
+namespace TestControlFlowTasks.Postgres
 {
     [Collection("ControlFlow")]
     public class TableDefinitionTests
     {
-        public PostgresConnectionManager PostgresConnection => Config.PostgresConnection.ConnectionManager("ControlFlow");
-
-        public TableDefinitionTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        private PostgresConnectionManager PostgresConnection =>
+            Config.PostgresConnection.ConnectionManager("ControlFlow");
 
         [Fact]
         public void Identity()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(PostgresConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                PostgresConnection,
+                "Create table",
+                @"
 CREATE TABLE identity (
     document_id serial PRIMARY KEY,
      header_text VARCHAR (255) NOT NULL
@@ -34,10 +29,16 @@ CREATE TABLE identity (
             var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "identity");
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "integer" && tc.NETDataType == typeof(Int32)
-                                    && tc.IsIdentity && tc.IsPrimaryKey),
-                tc => Assert.True(tc.DataType == "varchar(255)" && tc.NETDataType == typeof(String))
+            Assert.Collection(
+                result.Columns,
+                tc =>
+                    Assert.True(
+                        tc.DataType == "integer"
+                            && tc.NETDataType == typeof(int)
+                            && tc.IsIdentity
+                            && tc.IsPrimaryKey
+                    ),
+                tc => AssertTypes(tc, "varchar(255)", typeof(string))
             );
         }
 
@@ -45,7 +46,10 @@ CREATE TABLE identity (
         public void DateTypes()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(PostgresConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                PostgresConnection,
+                "Create table",
+                @"
 CREATE TABLE datetimetypes (
     datetype DATE,
     timetype TIME,
@@ -57,25 +61,56 @@ CREATE TABLE datetimetypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "datetimetypes");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                PostgresConnection,
+                "datetimetypes"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "date" && tc.NETDataType == typeof(DateTime)),
-                tc => Assert.True(tc.DataType == "time" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Unspecified),
-                tc => Assert.True(tc.DataType == "timetz" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Utc),
-                tc => Assert.True(tc.DataType == "interval" && tc.NETDataType == typeof(String) && tc.NETDateTimeKind == null),
-                tc => Assert.True(tc.DataType == "timestamp" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Unspecified),
-                tc => Assert.True(tc.DataType == "timestamptz" && tc.NETDataType == typeof(DateTime) && tc.NETDateTimeKind == DateTimeKind.Utc)
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "date", typeof(DateTime)),
+                tc =>
+                    Assert.True(
+                        tc.DataType == "time"
+                            && tc.NETDataType == typeof(DateTime)
+                            && tc.NETDateTimeKind == DateTimeKind.Unspecified
+                    ),
+                tc =>
+                    Assert.True(
+                        tc.DataType == "timetz"
+                            && tc.NETDataType == typeof(DateTime)
+                            && tc.NETDateTimeKind == DateTimeKind.Utc
+                    ),
+                tc =>
+                    Assert.True(
+                        tc.DataType == "interval"
+                            && tc.NETDataType == typeof(string)
+                            && tc.NETDateTimeKind == null
+                    ),
+                tc =>
+                    Assert.True(
+                        tc.DataType == "timestamp"
+                            && tc.NETDataType == typeof(DateTime)
+                            && tc.NETDateTimeKind == DateTimeKind.Unspecified
+                    ),
+                tc =>
+                    Assert.True(
+                        tc.DataType == "timestamptz"
+                            && tc.NETDataType == typeof(DateTime)
+                            && tc.NETDateTimeKind == DateTimeKind.Utc
+                    )
             );
         }
-
 
         [Fact]
         public void Character_Varying()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(PostgresConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                PostgresConnection,
+                "Create table",
+                @"
 CREATE TABLE varchartable (
     varchar_50 VARCHAR (50) NULL,
     varchar_novalue VARCHAR NULL,
@@ -87,16 +122,20 @@ CREATE TABLE varchartable (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "varchartable");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                PostgresConnection,
+                "varchartable"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "varchar(50)" && tc.NETDataType == typeof(String)),
-                tc => Assert.True(tc.DataType == "varchar" && tc.NETDataType == typeof(String)),
-                tc => Assert.True(tc.DataType == "varchar(50)" && tc.NETDataType == typeof(String)),
-                tc => Assert.True(tc.DataType == "char(10)" && tc.NETDataType == typeof(String)),
-                 tc => Assert.True(tc.DataType == "char(1)" && tc.NETDataType == typeof(String)),
-                tc => Assert.True(tc.DataType == "text" && tc.NETDataType == typeof(String))
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "varchar(50)", typeof(string)),
+                tc => AssertTypes(tc, "varchar", typeof(string)),
+                tc => AssertTypes(tc, "varchar(50)", typeof(string)),
+                tc => AssertTypes(tc, "char(10)", typeof(string)),
+                tc => AssertTypes(tc, "char(1)", typeof(string)),
+                tc => AssertTypes(tc, "text", typeof(string))
             );
         }
 
@@ -104,7 +143,10 @@ CREATE TABLE varchartable (
         public void Numeric()
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(PostgresConnection, "Create table", @"
+            SqlTask.ExecuteNonQuery(
+                PostgresConnection,
+                "Create table",
+                @"
 CREATE TABLE numerictable (
     si SMALLINT NULL,
     i INT NULL,
@@ -121,21 +163,33 @@ CREATE TABLE numerictable (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "numerictable");
+            var result = TableDefinition.GetDefinitionFromTableName(
+                PostgresConnection,
+                "numerictable"
+            );
 
             //Assert
-            Assert.Collection(result.Columns,
-                tc => Assert.True(tc.DataType == "smallint" && tc.NETDataType == typeof(Int16)),
-                tc => Assert.True(tc.DataType == "integer" && tc.NETDataType == typeof(Int32)),
-                tc => Assert.True(tc.DataType == "bigint" && tc.NETDataType == typeof(Int64)),
-                tc => Assert.True(tc.DataType == "numeric(10,5)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "numeric(10,0)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "numeric" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "numeric(1,1)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "numeric(2,0)" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "numeric" && tc.NETDataType == typeof(decimal)),
-                tc => Assert.True(tc.DataType == "real" && tc.NETDataType == typeof(double)),
-                tc => Assert.True(tc.DataType == "double precision" && tc.NETDataType == typeof(double))
+            Assert.Collection(
+                result.Columns,
+                tc => AssertTypes(tc, "smallint", typeof(short)),
+                tc => AssertTypes(tc, "integer", typeof(int)),
+                tc => AssertTypes(tc, "bigint", typeof(long)),
+                tc => AssertTypes(tc, "numeric(10,5)", typeof(decimal)),
+                tc => AssertTypes(tc, "numeric(10,0)", typeof(decimal)),
+                tc => AssertTypes(tc, "numeric", typeof(decimal)),
+                tc => AssertTypes(tc, "numeric(1,1)", typeof(decimal)),
+                tc => AssertTypes(tc, "numeric(2,0)", typeof(decimal)),
+                tc => AssertTypes(tc, "numeric", typeof(decimal)),
+                tc => AssertTypes(tc, "real", typeof(double)),
+                tc => AssertTypes(tc, "double precision", typeof(double))
+            );
+        }
+
+        private static void AssertTypes(TableColumn tc, string dataType, Type dotnetType)
+        {
+            Assert.Multiple(
+                () => Assert.Equal(tc.DataType, dataType),
+                () => Assert.Equal(tc.NETDataType, dotnetType)
             );
         }
     }

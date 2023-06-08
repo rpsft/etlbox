@@ -1,0 +1,268 @@
+# ATTENTION!!!
+# This file home is https://git.rapidsoft.ru/dev/practices/-/blob/master/.editorconfig
+# Do not edit local copies, but rather keep everything in sync with a central repository
+
+# More about syntax at editorconfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Default settings:
+# A newline ending every file
+# Use 4 spaces as indentation
+[*]
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_auto_properties = true:silent
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:silent
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+end_of_line = crlf
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+
+[project.json]
+indent_size = 2
+
+# C# files
+[*.cs]
+# New line preferences
+end_of_line = crlf
+charset = utf-8
+# Define the file header
+file_header_template = Copyright (c) RapidSoft. All rights reserved.\n\n
+
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_within_query_expression_clauses = true
+
+
+# Indentation preferences
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = flush_left
+
+# avoid this. unless absolutely necessary
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# only use var when it's obvious what the variable type is
+csharp_style_var_for_built_in_types = true:none
+csharp_style_var_when_type_is_apparent = true:none
+csharp_style_var_elsewhere = false:suggestion
+
+# use language keywords instead of BCL types
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# name all constant fields using PascalCase
+dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols = constant_fields
+dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case_style
+
+dotnet_naming_symbols.constant_fields.applicable_kinds = field
+dotnet_naming_symbols.constant_fields.required_modifiers = const
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# static fields should have s_ prefix
+dotnet_naming_rule.static_fields_should_have_prefix.severity = suggestion
+dotnet_naming_rule.static_fields_should_have_prefix.symbols = static_fields
+dotnet_naming_rule.static_fields_should_have_prefix.style = static_prefix_style
+
+dotnet_naming_symbols.static_fields.applicable_kinds = field
+dotnet_naming_symbols.static_fields.required_modifiers = static
+
+dotnet_naming_style.static_prefix_style.required_prefix = s_
+dotnet_naming_style.static_prefix_style.capitalization = camel_case
+
+# internal and private fields should be _camelCase
+dotnet_naming_rule.camel_case_for_private_internal_fields.severity = suggestion
+dotnet_naming_rule.camel_case_for_private_internal_fields.symbols = private_internal_fields
+dotnet_naming_rule.camel_case_for_private_internal_fields.style = camel_case_underscore_style
+
+dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
+dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = private, internal
+
+dotnet_naming_style.camel_case_underscore_style.required_prefix = _
+dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
+
+# Code style defaults
+dotnet_sort_system_directives_first = true
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = false
+
+# Expression-level preferences
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+
+# Expression-bodied members
+csharp_style_expression_bodied_methods = false:none
+csharp_style_expression_bodied_constructors = false:none
+csharp_style_expression_bodied_operators = false:none
+csharp_style_expression_bodied_properties = true:none
+csharp_style_expression_bodied_indexers = true:none
+csharp_style_expression_bodied_accessors = true:none
+
+# Pattern matching
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_inlined_variable_declaration = true:suggestion
+
+# Null checking preferences
+csharp_style_throw_expression = true:suggestion
+csharp_style_conditional_delegate_call = true:suggestion
+
+# Space preferences
+csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_after_comma = true
+csharp_space_after_dot = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_around_declaration_statements = false
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_before_comma = false
+csharp_space_before_dot = false
+csharp_space_before_open_square_brackets = false
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_parentheses = false
+csharp_space_between_square_brackets = false
+csharp_using_directive_placement = outside_namespace:silent
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_prefer_braces = true:silent
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_expression_bodied_lambdas = true:silent
+csharp_style_expression_bodied_local_functions = false:silent
+csharp_style_deconstructed_variable_declaration = true:suggestion
+
+# ReSharper properties
+resharper_csharp_max_line_length = 120
+resharper_csharp_wrap_before_declaration_rpar = true
+resharper_csharp_wrap_before_invocation_rpar = true
+resharper_csharp_wrap_ternary_expr_style = chop_always
+resharper_keep_existing_invocation_parens_arrangement = true
+resharper_wrap_object_and_collection_initializer_style = chop_always
+
+# WeCantSpell properties
+dotnet_diagnostic.SP3110.severity = warning
+dotnet_diagnostic.SP3111.severity = suggestion
+dotnet_diagnostic.SP3112.severity = suggestion
+dotnet_diagnostic.SP3113.severity = suggestion
+
+# Sonar properties
+# Cognitive complexity https://rules.sonarsource.com/csharp/RSPEC-3776
+dotnet_diagnostic.S3776.severity = suggestion
+# Expressions should not be too complex https://rules.sonarsource.com/csharp/RSPEC-1067
+dotnet_diagnostic.S1067.severity = suggestion
+# Regular expressions should not be vulnerable to Denial of Service attacks https://rules.sonarsource.com/csharp/RSPEC-2631
+dotnet_diagnostic.S2631.severity = warning
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-3884
+dotnet_diagnostic.S3884.severity = error
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-2755
+dotnet_diagnostic.S3884.severity = warning
+# A secure password should be used when connecting to a database
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-2115
+dotnet_diagnostic.S2115.severity = warning
+# JWT should be signed and verified with strong cipher algorithms
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-5659
+dotnet_diagnostic.S5659.severity = warning
+# Cipher algorithms should be robust
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-5547
+dotnet_diagnostic.S5547.severity = warning
+# Encryption algorithms should be used with secure mode and padding scheme
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-5542
+dotnet_diagnostic.S5542.severity = warning
+# Insecure temporary file creation methods should not be used
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-5445
+dotnet_diagnostic.S5445.severity = warning
+# Server certificates should be verified during SSL/TLS connections
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4830
+dotnet_diagnostic.S4830.severity = warning
+# LDAP connections should be authenticated
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4433
+dotnet_diagnostic.S4433.severity = warning
+# Cryptographic keys should be robust
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4426
+dotnet_diagnostic.S4426.severity = warning
+# Weak SSL/TLS protocols should not be used
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4423
+dotnet_diagnostic.S4423.severity = warning
+# Cipher Block Chaining IVs should be unpredictable
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-3329
+dotnet_diagnostic.S3329.severity = warning
+# Hashes should include an unpredictable salt
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-2053
+dotnet_diagnostic.S2053.severity = warning
+# Types allowed to be deserialized should be restricted
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-5773
+dotnet_diagnostic.S2053.severity = suggestion
+# Serialization constructors should be secured
+# https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4212
+dotnet_diagnostic.S4212.severity = suggestion
+
+# C++ Files
+[*.{cpp,h,in}]
+curly_bracket_next_line = true
+indent_brace_style = Allman
+
+# Xml project files
+[*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
+indent_size = 2
+
+# Xml build files
+[*.{builds,tasks,props,targets}]
+indent_size = 2
+
+# Xml files
+[*.{xml,stylecop,resx,ruleset}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,config,nuspec}]
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+end_of_line = lf
+[*.{cmd, bat}]
+end_of_line = crlf
+
+# PowerShell
+[*.{ps1, psd1}]
+charset = utf-8-bom
+end_of_line = lf
+indent_style = space
+indent_size = 2

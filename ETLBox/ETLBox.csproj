@@ -6,20 +6,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A lightweight ETL (extract, transform, load) library and data integration toolbox for .NET. Source and destination components let you read and write data from the most common databases and file types. Transformations allow you to you harmonize, filter, aggregate, validate and clean your data.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Andreas Lennartz</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://www.etlbox.net</PackageProjectUrl>
     <RepositoryUrl>https://git.rapidsoft.ru/open-source/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
     <PackageReleaseNotes>Fixing issues with ExpandoJsonConverter and TableDefinition within CreateTableTask.</PackageReleaseNotes>
-    <Version>1.8.10</Version>
-    <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
-    <Authors>Andreas Lennartz</Authors>
-    <Company>ALE</Company>
-    <AssemblyVersion>1.8.10.0</AssemblyVersion>
-    <FileVersion>1.8.10.0</FileVersion>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
@@ -32,9 +23,10 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.1" />
-    <PackageReference Include="MySql.Data" Version="8.0.27" />
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />

@@ -1,49 +1,51 @@
-﻿using ALE.ETLBox;
+﻿using System.Collections.Generic;
+using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging
 {
     [Collection("Logging")]
     public class DatabaseTasksLoggingTests : IDisposable
     {
-        private SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Logging");
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("Logging");
 
-        public DatabaseTasksLoggingTests(LoggingDatabaseFixture dbFixture)
+        public DatabaseTasksLoggingTests()
         {
             CreateSchemaTask.Create(SqlConnection, "etl");
             CreateLogTableTask.Create(SqlConnection);
-            ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ControlFlow.LogTable);
-            ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
+            ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private int? CountLogEntries(string taskName)
         {
-            return new SqlTask("Find log entry", $@"
+            return new SqlTask(
+                "Find log entry",
+                $@"
 SELECT COUNT(*) FROM etlbox_log
 WHERE task_type='{taskName}'
-GROUP BY task_hash")
+GROUP BY task_hash"
+            )
             {
                 DisableLogging = true,
                 ConnectionManager = SqlConnection
-            }
-            .ExecuteScalar<int>();
+            }.ExecuteScalar<int>();
         }
 
         private void CreateSimpleTable(string tableName)
         {
-            new SqlTask("Create test data table", $@"
+            new SqlTask(
+                "Create test data table",
+                $@"
 CREATE TABLE {tableName}
 (
     Col1 INT NULL,
@@ -51,7 +53,8 @@ CREATE TABLE {tableName}
 )
 INSERT INTO {tableName}
 SELECT * FROM
-(VALUES (1,'Test1'), (2,'Test2'), (3,'Test3')) AS MyTable(v,w)")
+(VALUES (1,'Test1'), (2,'Test2'), (3,'Test3')) AS MyTable(v,w)"
+            )
             {
                 ConnectionManager = SqlConnection,
                 DisableLogging = true
@@ -77,13 +80,21 @@ SELECT * FROM
             //Act
             RowCountTask.Count(SqlConnection, "etl.RowCountWithCondition", "Col1 = 2");
             //Assert
-            Assert.Equal(2, new SqlTask("Find log entry",
-               @"
+            Assert.Equal(
+                2,
+                new SqlTask(
+                    "Find log entry",
+                    @"
 SELECT COUNT(*) FROM etlbox_log
 WHERE task_type='RowCountTask' 
 AND message LIKE '%with condition%' 
-GROUP BY task_hash")
-            { DisableLogging = true, ConnectionManager = SqlConnection }.ExecuteScalar<int>());
+GROUP BY task_hash"
+                )
+                {
+                    DisableLogging = true,
+                    ConnectionManager = SqlConnection
+                }.ExecuteScalar<int>()
+            );
         }
 
         [Fact]
@@ -91,7 +102,7 @@ GROUP BY task_hash")
         {
             //Arrange
             //Act
-            SqlTask.ExecuteNonQuery(SqlConnection, "Test select", $"select 1 as test");
+            SqlTask.ExecuteNonQuery(SqlConnection, "Test select", "select 1 as test");
             //Assert
             Assert.Equal(2, CountLogEntries("SqlTask"));
         }
@@ -154,8 +165,11 @@ GROUP BY task_hash")
         {
             //Arrange
             //Act
-            CreateTableTask.Create(SqlConnection, "dbo.CreateTable",
-                new List<TableColumn>() { new TableColumn("value", "INT") });
+            CreateTableTask.Create(
+                SqlConnection,
+                "dbo.CreateTable",
+                new List<TableColumn> { new TableColumn("value", "INT") }
+            );
             //Assert
             Assert.Equal(2, CountLogEntries("CreateTableTask"));
         }
@@ -176,8 +190,12 @@ GROUP BY task_hash")
             //Arrange
             CreateSimpleTable("dbo.CreateIndex");
             //Act
-            CreateIndexTask.CreateOrRecreate(SqlConnection, "ix_logIndexTest", "dbo.CreateIndex",
-                new List<string>() { "Col1", "Col2" });
+            CreateIndexTask.CreateOrRecreate(
+                SqlConnection,
+                "ix_logIndexTest",
+                "dbo.CreateIndex",
+                new List<string> { "Col1", "Col2" }
+            );
             //Assert
             Assert.Equal(2, CountLogEntries("CreateIndexTask"));
         }
@@ -193,7 +211,6 @@ GROUP BY task_hash")
             Assert.Equal(2, CountLogEntries("IfTableOrViewExistsTask"));
         }
 
-
         [Fact]
         public void CheckHashValuesEquality()
         {
@@ -202,12 +219,17 @@ GROUP BY task_hash")
             //Act
             SqlTask.ExecuteNonQuery(SqlConnection, "Test Task - same name", "Select 2 as test");
             //Assert
-            Assert.Equal(4, new SqlTask("Check if hash are equal",
-                $@"SELECT COUNT(*) from etlbox_log GROUP BY task_hash")
-            {
-                DisableLogging = true,
-                ConnectionManager = SqlConnection
-            }.ExecuteScalar<int>());
+            Assert.Equal(
+                4,
+                new SqlTask(
+                    "Check if hash are equal",
+                    @"SELECT COUNT(*) from etlbox_log GROUP BY task_hash"
+                )
+                {
+                    DisableLogging = true,
+                    ConnectionManager = SqlConnection
+                }.ExecuteScalar<int>()
+            );
         }
 
         [Fact]

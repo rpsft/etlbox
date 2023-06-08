@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-
-namespace ALE.ETLBox.Helper
+﻿namespace ALE.ETLBox.Helper
 {
     public static class PropertyInfoExtension
     {
@@ -10,16 +7,23 @@ namespace ALE.ETLBox.Helper
             if (pi.CanWrite)
                 pi.SetValue(obj, value);
             else
-                throw new ETLBoxException($"Can't write into property {pi?.Name} - property has no setter definition.");
+                throw new ETLBoxException(
+                    $"Can't write into property {pi.Name} - property has no setter definition."
+                );
         }
 
-        public static void TrySetValue(this PropertyInfo pi, object obj, object value, Type enumType = null)
+        public static void TrySetValue(
+            this PropertyInfo pi,
+            object obj,
+            object value,
+            Type enumType = null
+        )
         {
             if (pi.CanWrite)
             {
                 if (enumType != null && value != null && enumType.IsEnum)
                 {
-                    pi.SetValue(obj, Enum.Parse(enumType, value?.ToString()));
+                    pi.SetValue(obj, Enum.Parse(enumType, value.ToString()));
                 }
                 else
                 {

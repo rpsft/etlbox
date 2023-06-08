@@ -12,26 +12,37 @@ namespace ALE.ETLBox.ConnectionManager
     /// ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;"));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class SqlConnectionManager : DbConnectionManager<SqlConnection>
     {
-        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
+        public override ConnectionManagerType ConnectionManagerType { get; } =
+            ConnectionManagerType.SqlServer;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
         public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
-        
-        public bool ModifyDBSettings { get; set; } = false;
 
-        public SqlConnectionManager() : base() { }
+        public bool ModifyDBSettings { get; set; }
 
-        public SqlConnectionManager(SqlConnectionString connectionString) : base(connectionString) { }
+        public SqlConnectionManager() { }
 
-        public SqlConnectionManager(string connectionString) : base(new SqlConnectionString(connectionString)) { }
+        public SqlConnectionManager(SqlConnectionString connectionString)
+            : base(connectionString) { }
 
-        string PageVerify { get; set; }
-        string RecoveryModel { get; set; }
+        public SqlConnectionManager(string connectionString)
+            : base(new SqlConnectionString(connectionString)) { }
+
+        private string PageVerify { get; set; }
+        private string RecoveryModel { get; set; }
+
         public override void BulkInsert(ITableData data, string tableName)
         {
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(DbConnection, SqlBulkCopyOptions.TableLock, Transaction as SqlTransaction))
+            using (
+                SqlBulkCopy bulkCopy = new SqlBulkCopy(
+                    DbConnection,
+                    SqlBulkCopyOptions.TableLock,
+                    Transaction as SqlTransaction
+                )
+            )
             {
                 bulkCopy.BulkCopyTimeout = 0;
                 bulkCopy.DestinationTableName = tableName;
@@ -47,13 +58,19 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 try
                 {
-                    string dbName = this.DbConnection.Database;
-                    PageVerify = this.ExecuteScalar($"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
-                    RecoveryModel = this.ExecuteScalar($"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'").ToString();
-                    this.ExecuteNonQuery($@"USE master");
-                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
-                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
-                    this.ExecuteNonQuery($@"USE [{dbName}]");
+                    string dbName = DbConnection.Database;
+                    PageVerify = ExecuteScalar(
+                            $"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'"
+                        )
+                        .ToString();
+                    RecoveryModel = ExecuteScalar(
+                            $"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'"
+                        )
+                        .ToString();
+                    ExecuteNonQuery(@"USE master");
+                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
+                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
+                    ExecuteNonQuery($@"USE [{dbName}]");
                 }
                 catch
                 {
@@ -72,22 +89,27 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 try
                 {
-                    string dbName = this.DbConnection.Database;
-                    this.ExecuteNonQuery($@"USE master");
-                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
-                    this.ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
-                    this.ExecuteNonQuery($@"USE [{dbName}]");
+                    string dbName = DbConnection.Database;
+                    ExecuteNonQuery(@"USE master");
+                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
+                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
+                    ExecuteNonQuery($@"USE [{dbName}]");
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
         public override IConnectionManager Clone()
         {
-            SqlConnectionManager clone = new SqlConnectionManager((SqlConnectionString)ConnectionString)
+            SqlConnectionManager clone = new SqlConnectionManager(
+                (SqlConnectionString)ConnectionString
+            )
             {
-                MaxLoginAttempts = this.MaxLoginAttempts,
-                ModifyDBSettings = this.ModifyDBSettings
+                MaxLoginAttempts = MaxLoginAttempts,
+                ModifyDBSettings = ModifyDBSettings
             };
             return clone;
         }

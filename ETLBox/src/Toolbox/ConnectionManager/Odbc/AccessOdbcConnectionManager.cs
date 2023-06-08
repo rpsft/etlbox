@@ -1,8 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Data.Odbc;
+﻿using System.Data;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -31,26 +28,33 @@ namespace ALE.ETLBox.ConnectionManager
     ///      "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\DB\Test.mdb"));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class AccessOdbcConnectionManager : OdbcConnectionManager
     {
-        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Access;
+        public override ConnectionManagerType ConnectionManagerType { get; } =
+            ConnectionManagerType.Access;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
         public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
-        public override bool SupportDatabases { get; } = false;
-        public override bool SupportProcedures { get; } = false;
-        public override bool SupportSchemas { get; } = false;
-        public override bool SupportComputedColumns { get; } = false;
+        public override bool SupportDatabases { get; }
+        public override bool SupportProcedures { get; }
+        public override bool SupportSchemas { get; }
+        public override bool SupportComputedColumns { get; }
 
-        public AccessOdbcConnectionManager() : base() {
+        public AccessOdbcConnectionManager()
+        {
             LeaveOpen = true;
         }
+
         public AccessOdbcConnectionManager(OdbcConnectionString connectionString)
-            : base(connectionString) {
+            : base(connectionString)
+        {
             LeaveOpen = true;
         }
-        public AccessOdbcConnectionManager(string connectionString) :
-            base(new OdbcConnectionString(connectionString)) {
+
+        public AccessOdbcConnectionManager(string connectionString)
+            : base(new OdbcConnectionString(connectionString))
+        {
             LeaveOpen = true;
         }
 
@@ -63,7 +67,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            BulkInsertSql bulkInsert = new BulkInsertSql()
+            BulkInsertSql bulkInsert = new BulkInsertSql
             {
                 ConnectionType = ConnectionManagerType.Access,
                 QB = QB,
@@ -81,11 +85,9 @@ namespace ALE.ETLBox.ConnectionManager
                 DataTable schemaTables = GetSchemaDataTable(unquotatedFullName, "Tables");
                 if (schemaTables.Rows.Count > 0)
                     return true;
-                else {
-                    DataTable schemaViews = GetSchemaDataTable(unquotatedFullName, "Views");
-                    if (schemaViews.Rows.Count > 0)
-                        return true;
-                }
+                DataTable schemaViews = GetSchemaDataTable(unquotatedFullName, "Views");
+                if (schemaViews.Rows.Count > 0)
+                    return true;
                 return false;
             }
             catch (Exception)
@@ -96,27 +98,26 @@ namespace ALE.ETLBox.ConnectionManager
 
         private DataTable GetSchemaDataTable(string unquotatedFullName, string schemaInfo)
         {
-            this.Open();
+            Open();
             string[] restrictions = new string[3];
             restrictions[2] = unquotatedFullName;
             DataTable schemaTable = DbConnection.GetSchema(schemaInfo, restrictions);
             return schemaTable;
-
         }
 
-        internal TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
+        internal TableDefinition ReadTableDefinition(ObjectNameDescriptor tn)
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
-            DataTable schemaTable = GetSchemaDataTable(TN.UnquotatedFullName, "Columns");
+            TableDefinition result = new TableDefinition(tn.ObjectName);
+            DataTable schemaTable = GetSchemaDataTable(tn.UnquotatedFullName, "Columns");
 
             foreach (var row in schemaTable.Rows)
             {
                 DataRow dr = row as DataRow;
-                TableColumn col = new TableColumn()
+                TableColumn col = new TableColumn
                 {
-                    Name = dr[schemaTable.Columns["COLUMN_NAME"]].ToString(),
+                    Name = dr![schemaTable.Columns["COLUMN_NAME"]].ToString(),
                     DataType = dr[schemaTable.Columns["TYPE_NAME"]].ToString(),
-                    AllowNulls = dr[schemaTable.Columns["IS_NULLABLE"]].ToString() == "YES" ? true : false
+                    AllowNulls = dr[schemaTable.Columns["IS_NULLABLE"]].ToString() == "YES"
                 };
                 result.Columns.Add(col);
             }
@@ -130,7 +131,8 @@ namespace ALE.ETLBox.ConnectionManager
             CreateDummyTable();
         }
 
-        public override void CleanUpBulkInsert(string tablename) {
+        public override void CleanUpBulkInsert(string tablename)
+        {
             TryDropDummyTable();
         }
 
@@ -139,9 +141,8 @@ namespace ALE.ETLBox.ConnectionManager
             if (!PreparationDone)
                 PrepareBulkInsert(tableName);
         }
-        public override void AfterBulkInsert(string tableName)
-        {
-        }
+
+        public override void AfterBulkInsert(string tableName) { }
 
         private void TryDropDummyTable()
         {
@@ -149,29 +150,35 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 ExecuteCommand($@"DROP TABLE {DummyTableName};");
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void CreateDummyTable()
         {
             ExecuteCommand($@"CREATE TABLE {DummyTableName} (Field1 NUMBER);");
-            ExecuteCommand($@"INSERT INTO { DummyTableName} VALUES(1);");
+            ExecuteCommand($@"INSERT INTO {DummyTableName} VALUES(1);");
             PreparationDone = true;
         }
 
         private void ExecuteCommand(string sql)
         {
-            if (DbConnection == null) this.Open();
-            var cmd = DbConnection.CreateCommand();
+            if (DbConnection == null)
+                Open();
+            var cmd = DbConnection!.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }
 
         public override IConnectionManager Clone()
         {
-            AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager((OdbcConnectionString)ConnectionString)
+            AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager(
+                (OdbcConnectionString)ConnectionString
+            )
             {
-                MaxLoginAttempts = this.MaxLoginAttempts
+                MaxLoginAttempts = MaxLoginAttempts
             };
             return clone;
         }

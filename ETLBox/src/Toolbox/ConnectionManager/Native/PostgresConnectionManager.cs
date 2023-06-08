@@ -1,8 +1,7 @@
-﻿using Npgsql;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
 using System.Linq;
+using Npgsql;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -16,30 +15,39 @@ namespace ALE.ETLBox.ConnectionManager
     /// </example>
     public class PostgresConnectionManager : DbConnectionManager<NpgsqlConnection>
     {
-        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Postgres;
+        public override ConnectionManagerType ConnectionManagerType { get; } =
+            ConnectionManagerType.Postgres;
         public override string QB { get; } = @"""";
         public override string QE { get; } = @"""";
         public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
-        
-        public PostgresConnectionManager() : base() { }
 
-        public PostgresConnectionManager(PostgresConnectionString connectionString) : base(connectionString) { }
+        public PostgresConnectionManager() { }
 
-        public PostgresConnectionManager(string connectionString) : base(new PostgresConnectionString(connectionString)) { }
+        public PostgresConnectionManager(PostgresConnectionString connectionString)
+            : base(connectionString) { }
 
-        TableDefinition DestTableDef { get; set; }
-        Dictionary<string, TableColumn> DestinationColumns { get; set; }
+        public PostgresConnectionManager(string connectionString)
+            : base(new PostgresConnectionString(connectionString)) { }
+
+        private TableDefinition DestTableDef { get; set; }
+        private Dictionary<string, TableColumn> DestinationColumns { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName)
         {
             var TN = new ObjectNameDescriptor(tableName, QB, QE);
-            var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
-            var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
+            var destColumnNames = data.ColumnMapping
+                .Cast<IColumnMapping>()
+                .Select(cm => cm.DataSetColumn)
+                .ToList();
             var quotedDestColumns = destColumnNames.Select(col => TN.QB + col + TN.QE);
 
-            using (var writer = DbConnection.BeginBinaryImport($@"
+            using (
+                var writer = DbConnection.BeginBinaryImport(
+                    $@"
 COPY {TN.QuotatedFullName} ({string.Join(", ", quotedDestColumns)})
-FROM STDIN (FORMAT BINARY)"))
+FROM STDIN (FORMAT BINARY)"
+                )
+            )
             {
                 while (data.Read())
                 {
@@ -51,7 +59,10 @@ FROM STDIN (FORMAT BINARY)"))
                         object val = data.GetValue(ordinal);
                         if (val != null)
                         {
-                            object convertedVal = System.Convert.ChangeType(data.GetValue(ordinal), colDef.NETDataType);
+                            object convertedVal = Convert.ChangeType(
+                                data.GetValue(ordinal),
+                                colDef.NETDataType
+                            );
                             writer.Write(convertedVal, colDef.InternalDataType.ToLower());
                         }
                         else
@@ -81,7 +92,8 @@ FROM STDIN (FORMAT BINARY)"))
 
         public override void CleanUpBulkInsert(string tablename) { }
 
-        public override void BeforeBulkInsert(string tableName) {
+        public override void BeforeBulkInsert(string tableName)
+        {
             if (DestinationColumns == null)
                 ReadTableDefinition(tableName);
         }
@@ -90,9 +102,11 @@ FROM STDIN (FORMAT BINARY)"))
 
         public override IConnectionManager Clone()
         {
-            PostgresConnectionManager clone = new PostgresConnectionManager((PostgresConnectionString)ConnectionString)
+            PostgresConnectionManager clone = new PostgresConnectionManager(
+                (PostgresConnectionString)ConnectionString
+            )
             {
-                MaxLoginAttempts = this.MaxLoginAttempts
+                MaxLoginAttempts = MaxLoginAttempts
             };
             return clone;
         }

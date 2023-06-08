@@ -1,24 +1,19 @@
-using System.Collections.Generic;
 using System.Dynamic;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBDestination
 {
     [Collection("DataFlow")]
     public class DbDestinationDynamicObjectTests
     {
-        public DbDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public static IEnumerable<object[]> ConnectionsNoSQLite => Config.AllConnectionsWithoutSQLite("DataFlow");
+        public static IEnumerable<object[]> ConnectionsNoSQLite =>
+            Config.AllConnectionsWithoutSQLite("DataFlow");
 
         [Theory]
         [MemberData(nameof(Connections))]
@@ -48,19 +43,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             var source2Columns = new TwoColumnsTableFixture(connection, "SourceDynamicDiffCols");
             source2Columns.InsertTestData();
-            CreateTableTask.Create(connection, "DestinationDynamicDiffCols",
+            CreateTableTask.Create(
+                connection,
+                "DestinationDynamicDiffCols",
                 new List<TableColumn>
                 {
                     new("Col5", "VARCHAR(100)", true),
                     new("Col2", "VARCHAR(100)", true),
                     new("Col1", "INT", true),
                     new("ColX", "INT", true)
-                });
+                }
+            );
 
             //Act
             var source = new DbSource<ExpandoObject>(connection, "SourceDynamicDiffCols");
-            var dest =
-                new DbDestination<ExpandoObject>(connection, "DestinationDynamicDiffCols");
+            var dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamicDiffCols");
 
             source.LinkTo(dest);
             source.Execute();
@@ -70,15 +67,30 @@ namespace ALE.ETLBoxTests.DataFlowTests
             var QB = connection.QB;
             var QE = connection.QE;
             Assert.Equal(3, RowCountTask.Count(connection, "DestinationDynamicDiffCols"));
-            Assert.Equal(1,
-                RowCountTask.Count(connection, "DestinationDynamicDiffCols",
-                    $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"));
-            Assert.Equal(1,
-                RowCountTask.Count(connection, "DestinationDynamicDiffCols",
-                    $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"));
-            Assert.Equal(1,
-                RowCountTask.Count(connection, "DestinationDynamicDiffCols",
-                    $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"));
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DestinationDynamicDiffCols",
+                    $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DestinationDynamicDiffCols",
+                    $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DestinationDynamicDiffCols",
+                    $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"
+                )
+            );
         }
 
         [Theory]
@@ -88,14 +100,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             var source2Columns = new TwoColumnsTableFixture(connection, "SourceDynamicIDCol");
             source2Columns.InsertTestData();
-            CreateTableTask.Create(connection, "DestinationDynamicIdCol",
+            CreateTableTask.Create(
+                connection,
+                "DestinationDynamicIdCol",
                 new List<TableColumn>
                 {
                     new("Id", "BIGINT", false, true, true),
                     new("Col2", "VARCHAR(100)", true),
                     new("Col1", "INT", true),
                     new("ColX", "INT", true)
-                });
+                }
+            );
 
             //Act
             var source = new DbSource<ExpandoObject>(connection, "SourceDynamicIDCol");
@@ -109,15 +124,30 @@ namespace ALE.ETLBoxTests.DataFlowTests
             var QB = connection.QB;
             var QE = connection.QE;
             Assert.Equal(3, RowCountTask.Count(connection, "DestinationDynamicIdCol"));
-            Assert.Equal(1,
-                RowCountTask.Count(connection, "DestinationDynamicIdCol",
-                    $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"));
-            Assert.Equal(1,
-                RowCountTask.Count(connection, "DestinationDynamicIdCol",
-                    $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"));
-            Assert.Equal(1,
-                RowCountTask.Count(connection, "DestinationDynamicIdCol",
-                    $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"));
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DestinationDynamicIdCol",
+                    $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DestinationDynamicIdCol",
+                    $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    "DestinationDynamicIdCol",
+                    $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"
+                )
+            );
         }
     }
 }

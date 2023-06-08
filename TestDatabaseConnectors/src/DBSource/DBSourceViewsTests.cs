@@ -1,24 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBSource
 {
     [Collection("DataFlow")]
     public class DbSourceViewsTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-
-        public DbSourceViewsTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
 
         public class MySimpleRow
         {
@@ -30,14 +21,27 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleFlow(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "dbsource_simple");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                connection,
+                "dbsource_simple"
+            );
             source2Columns.InsertTestData();
-            CreateViewTask.CreateOrAlter(connection, "DbSourceView", "SELECT * FROM dbsource_simple");
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationSimple");
+            CreateViewTask.CreateOrAlter(
+                connection,
+                "DbSourceView",
+                "SELECT * FROM dbsource_simple"
+            );
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                connection,
+                "DbDestinationSimple"
+            );
 
             //Act
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceView");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationSimple");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                connection,
+                "DbDestinationSimple"
+            );
 
             source.LinkTo(dest);
             source.Execute();
@@ -58,14 +62,31 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DifferentColumnsInView(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture s4c = new FourColumnsTableFixture(connection, "dbsource_extended");
+            FourColumnsTableFixture s4c = new FourColumnsTableFixture(
+                connection,
+                "dbsource_extended"
+            );
             s4c.InsertTestData();
-            CreateViewTask.CreateOrAlter(connection, "DbSourceViewExtended", $"SELECT {s4c.QB}Col2{s4c.QE}, {s4c.QB}Col4{s4c.QE} FROM dbsource_extended");
-            FourColumnsTableFixture d4c = new FourColumnsTableFixture(connection, "DbDestinationExtended", 1);
+            CreateViewTask.CreateOrAlter(
+                connection,
+                "DbSourceViewExtended",
+                $"SELECT {s4c.QB}Col2{s4c.QE}, {s4c.QB}Col4{s4c.QE} FROM dbsource_extended"
+            );
+            FourColumnsTableFixture d4c = new FourColumnsTableFixture(
+                connection,
+                "DbDestinationExtended",
+                1
+            );
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "DbSourceViewExtended");
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "DbDestinationExtended");
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(
+                connection,
+                "DbSourceViewExtended"
+            );
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(
+                connection,
+                "DbDestinationExtended"
+            );
 
             source.LinkTo(dest);
             source.Execute();

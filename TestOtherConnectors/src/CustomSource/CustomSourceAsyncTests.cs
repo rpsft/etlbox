@@ -1,26 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.CustomSource
 {
     [Collection("DataFlow")]
     public class CustomSourceAsyncTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CustomSourceAsyncTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -32,17 +27,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleAsyncFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination4CustomSource");
-            List<string> Data = new List<string>() { "Test1", "Test2", "Test3" };
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "Destination4CustomSource"
+            );
+            List<string> Data = new List<string> { "Test1", "Test2", "Test3" };
             int _readIndex = 0;
             Func<MySimpleRow> ReadData = () =>
             {
-                if (_readIndex == 0) Task.Delay(300).Wait();
-                var result = new MySimpleRow()
-                {
-                    Col1 = _readIndex + 1,
-                    Col2 = Data[_readIndex]
-                };
+                if (_readIndex == 0)
+                    Task.Delay(300).Wait();
+                var result = new MySimpleRow { Col1 = _readIndex + 1, Col2 = Data[_readIndex] };
                 _readIndex++;
                 return result;
             };
@@ -51,7 +45,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                SqlConnection,
+                "Destination4CustomSource"
+            );
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion;
@@ -67,11 +64,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ExceptionalAsyncFlow()
         {
             //Arrange
-            CustomSource source = new CustomSource(
-                () => throw new ETLBoxException("Test Exception"), () => false
+            ALE.ETLBox.DataFlow.CustomSource source = new ALE.ETLBox.DataFlow.CustomSource(
+                () => throw new ETLBoxException("Test Exception"),
+                () => false
             );
-            CustomDestination dest = new CustomDestination
-                (row => {; });
+            ALE.ETLBox.DataFlow.CustomDestination dest =
+                new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
 
             //Act
             source.LinkTo(dest);
@@ -85,12 +83,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 {
                     sourceT.Wait();
                     destT.Wait();
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
-
         }
     }
 }

@@ -1,31 +1,27 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.ExcelSource
 {
     [Collection("DataFlow")]
     public class ExcelSourceBlankRowsTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public ExcelSourceBlankRowsTests()
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MyDataRow
         {
             [ExcelColumn(0)]
             public int No { get; set; }
+
             [ExcelColumn(1)]
             public string ID { get; set; }
+
             [ExcelColumn(2)]
             public string Desc { get; set; }
         }
@@ -71,6 +67,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             [ExcelColumn(0)]
             public int Col1 { get; set; }
+
             [ExcelColumn(1)]
             public string Col2 { get; set; }
         }
@@ -79,15 +76,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IgnoreBlankRows()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ExcelDestinationBlankRows");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "ExcelDestinationBlankRows"
+            );
 
             //Act
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>("res/Excel/TwoColumnBlankRow.xlsx")
+            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+                "res/Excel/TwoColumnBlankRow.xlsx"
+            )
             {
                 IgnoreBlankRows = true,
                 HasNoHeader = true
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestinationBlankRows", 2);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                Connection,
+                "ExcelDestinationBlankRows",
+                2
+            );
 
             source.LinkTo(dest);
             source.Execute();
@@ -96,6 +101,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
     }
 }

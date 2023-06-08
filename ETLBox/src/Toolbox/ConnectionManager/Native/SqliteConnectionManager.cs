@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
 using System.Linq;
 using ALE.ETLBox.ConnectionManager.Helpers;
@@ -17,46 +16,53 @@ namespace ALE.ETLBox.ConnectionManager
     ///     "Data Source=.\db\SQLite.db;Version=3;"));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class SQLiteConnectionManager : DbConnectionManager<SqliteConnection>
     {
-        public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SQLite;
+        public override ConnectionManagerType ConnectionManagerType { get; } =
+            ConnectionManagerType.SQLite;
         public override string QB { get; } = @"""";
         public override string QE { get; } = @"""";
         public override CultureInfo ConnectionCulture => CultureInfo.InvariantCulture;
-        public override bool SupportDatabases { get; } = false;
-        public override bool SupportProcedures { get; } = false;
-        public override bool SupportSchemas { get; } = false;
-        public override bool SupportComputedColumns { get; } = false;
+        public override bool SupportDatabases { get; }
+        public override bool SupportProcedures { get; }
+        public override bool SupportSchemas { get; }
+        public override bool SupportComputedColumns { get; }
 
-        public bool ModifyDBSettings { get; set; } = false;
+        public bool ModifyDBSettings { get; set; }
 
-        public SQLiteConnectionManager() : base()
-        {
-        }
+        public SQLiteConnectionManager() { }
 
-        public SQLiteConnectionManager(SQLiteConnectionString connectionString) : base(connectionString)
-        {
-        }
+        public SQLiteConnectionManager(SQLiteConnectionString connectionString)
+            : base(connectionString) { }
 
-        public SQLiteConnectionManager(string connectionString) : base(new SQLiteConnectionString(connectionString))
-        {
-        }
+        public SQLiteConnectionManager(string connectionString)
+            : base(new SQLiteConnectionString(connectionString)) { }
 
-        string Synchronous { get; set; }
-        string JournalMode { get; set; }
+        private string Synchronous { get; set; }
+        private string JournalMode { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            var sourceColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.SourceColumn).ToList();
-            var paramNames = data.ColumnMapping.Cast<IColumnMapping>().Select((_, i) => $"$p{i}").ToArray();
-            var destColumnNames = data.ColumnMapping.Cast<IColumnMapping>().Select(cm => cm.DataSetColumn).ToList();
+            var sourceColumnNames = data.ColumnMapping
+                .Cast<IColumnMapping>()
+                .Select(cm => cm.SourceColumn)
+                .ToList();
+            var paramNames = data.ColumnMapping
+                .Cast<IColumnMapping>()
+                .Select((_, i) => $"$p{i}")
+                .ToArray();
+            var destColumnNames = data.ColumnMapping
+                .Cast<IColumnMapping>()
+                .Select(cm => cm.DataSetColumn)
+                .ToList();
 
             var existingTransaction = Transaction as SqliteTransaction;
             SqliteTransaction bulkTransaction = null;
             if (existingTransaction == null)
-                bulkTransaction = this.DbConnection.BeginTransaction();
+                bulkTransaction = DbConnection.BeginTransaction();
             using (bulkTransaction)
-            using (var command = this.DbConnection.CreateCommand())
+            using (var command = DbConnection.CreateCommand())
             {
                 command.Transaction = existingTransaction ?? bulkTransaction;
                 command.CommandText =
@@ -67,7 +73,14 @@ VALUES ({string.Join(",", paramNames)})";
                 while (data.Read())
                 {
                     command.Parameters.AddRange(
-                        destColumnNames.Select((n, i) => ConstructSqliteParameter(paramNames[i], data.GetValue(data.GetOrdinal(n)))));
+                        destColumnNames.Select(
+                            (n, i) =>
+                                ConstructSqliteParameter(
+                                    paramNames[i],
+                                    data.GetValue(data.GetOrdinal(n))
+                                )
+                        )
+                    );
                     command.ExecuteNonQuery();
                     command.Parameters.Clear();
                 }
@@ -94,10 +107,10 @@ VALUES ({string.Join(",", paramNames)})";
             {
                 try
                 {
-                    Synchronous = this.ExecuteScalar("PRAGMA synchronous").ToString();
-                    JournalMode = this.ExecuteScalar("PRAGMA journal_mode").ToString();
-                    this.ExecuteNonQuery("PRAGMA synchronous = OFF");
-                    this.ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+                    Synchronous = ExecuteScalar("PRAGMA synchronous").ToString();
+                    JournalMode = ExecuteScalar("PRAGMA journal_mode").ToString();
+                    ExecuteNonQuery("PRAGMA synchronous = OFF");
+                    ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
                 }
                 catch
                 {
@@ -112,29 +125,26 @@ VALUES ({string.Join(",", paramNames)})";
             {
                 try
                 {
-                    this.ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
-                    this.ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+                    ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
+                    ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }
 
-        public override void BeforeBulkInsert(string tableName)
-        {
-        }
+        public override void BeforeBulkInsert(string tableName) { }
 
-        public override void AfterBulkInsert(string tableName)
-        {
-        }
+        public override void AfterBulkInsert(string tableName) { }
 
         public override IConnectionManager Clone()
         {
             var clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {
-                MaxLoginAttempts = this.MaxLoginAttempts,
-                ModifyDBSettings = this.ModifyDBSettings
+                MaxLoginAttempts = MaxLoginAttempts,
+                ModifyDBSettings = ModifyDBSettings
             };
             return clone;
         }

@@ -2,7 +2,8 @@
 {
     public static class StringExtension
     {
-        public static string NullOrSqlString(this string s) => s == null ? "NULL" : $"'{s.Replace("'", "''")}'";
+        public static string NullOrSqlString(this string s) =>
+            s == null ? "NULL" : $"'{s.Replace("'", "''")}'";
 
         /// <summary>
         ///		This replicates the functionality of case-insensitive functionality built into Replace in .Net Core.
@@ -13,9 +14,7 @@
         /// <returns></returns>
         public static string ReplaceIgnoreCase(this string toSearch, string find, string replace)
         {
-            int index = toSearch.IndexOf(
-                find,
-                System.StringComparison.InvariantCultureIgnoreCase);
+            int index = toSearch.IndexOf(find, StringComparison.InvariantCultureIgnoreCase);
 
             if (index < 0)
             {

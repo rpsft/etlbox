@@ -1,26 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.Multicast
 {
     [Collection("DataFlow")]
     public class MulticastSplitDataTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MulticastSplitDataTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         internal class CSVPoco
         {
@@ -48,21 +37,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
-            FourColumnsTableFixture dest2Table = new FourColumnsTableFixture("SplitDataDestination2");
+            FourColumnsTableFixture dest2Table = new FourColumnsTableFixture(
+                "SplitDataDestination2"
+            );
 
-            var source = new CsvSource<CSVPoco>("res/Multicast/CsvSourceToSplit.csv");
-            source.Configuration.Delimiter = ";";
+            var source = new CsvSource<CSVPoco>("res/Multicast/CsvSourceToSplit.csv")
+            {
+                Configuration = { Delimiter = ";" }
+            };
 
             var multicast = new Multicast<CSVPoco>();
 
-            var row1 = new RowTransformation<CSVPoco, Entity1>(input => {
-                return new Entity1
-                {
-                    Col1 = input.CSVCol1,
-                    Col2 = input.CSVCol2
-                };
+            var row1 = new RowTransformation<CSVPoco, Entity1>(input =>
+            {
+                return new Entity1 { Col1 = input.CSVCol1, Col2 = input.CSVCol2 };
             });
-            var row2 = new RowTransformation<CSVPoco, Entity2>(input => {
+            var row2 = new RowTransformation<CSVPoco, Entity2>(input =>
+            {
                 return new Entity2
                 {
                     Col2 = input.CSVCol2,

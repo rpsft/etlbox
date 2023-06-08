@@ -1,6 +1,5 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using System;
-using System.Data;
+﻿using System.Data;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox
 {
@@ -19,7 +18,7 @@ namespace ALE.ETLBox
         public string Collation { get; set; }
         public string ComputedColumn { get; set; }
         public bool HasComputedColumn => !string.IsNullOrWhiteSpace(ComputedColumn);
-        public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
+        public Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
         public DateTimeKind? NETDateTimeKind => DataTypeConverter.GetNETDateTimeKind(DataType);
 
         public string Comment { get; set; } //MySql only
@@ -28,39 +27,44 @@ namespace ALE.ETLBox
 
         public string DataSetColumn
         {
-            get { return String.IsNullOrWhiteSpace(_dataSetColumn) ? Name : _dataSetColumn; }
-            set
-            {
-                _dataSetColumn = value;
-            }
+            get { return string.IsNullOrWhiteSpace(_dataSetColumn) ? Name : _dataSetColumn; }
+            set { _dataSetColumn = value; }
         }
         public string SourceColumn
         {
-            get { return String.IsNullOrWhiteSpace(_sourceColumn) ? Name : _sourceColumn; }
-            set
-            {
-                _sourceColumn = value;
-            }
+            get { return string.IsNullOrWhiteSpace(_sourceColumn) ? Name : _sourceColumn; }
+            set { _sourceColumn = value; }
         }
 
         public TableColumn() { }
-        public TableColumn(string name, string dataType) : this()
+
+        public TableColumn(string name, string dataType)
+            : this()
         {
             Name = name;
             DataType = dataType;
         }
 
-        public TableColumn(string name, string dataType, bool allowNulls) : this(name, dataType)
+        public TableColumn(string name, string dataType, bool allowNulls)
+            : this(name, dataType)
         {
             AllowNulls = allowNulls;
         }
 
-        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey) : this(name, dataType, allowNulls)
+        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey)
+            : this(name, dataType, allowNulls)
         {
             IsPrimaryKey = isPrimaryKey;
         }
 
-        public TableColumn(string name, string dataType, bool allowNulls, bool isPrimaryKey, bool isIdentity) : this(name, dataType, allowNulls, isPrimaryKey)
+        public TableColumn(
+            string name,
+            string dataType,
+            bool allowNulls,
+            bool isPrimaryKey,
+            bool isIdentity
+        )
+            : this(name, dataType, allowNulls, isPrimaryKey)
         {
             IsIdentity = isIdentity;
         }

@@ -1,35 +1,44 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using System.Globalization;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using System;
-using System.Collections.Generic;
 
 namespace ALE.ETLBox.Logging
 {
     /// <summary>
     /// Read load processes by Id, all processes or last finished/successful/aborted.
     /// </summary>
-    public class ReadLoadProcessTableTask : GenericTask, ITask
+    [PublicAPI]
+    public class ReadLoadProcessTableTask : GenericTask
     {
         /* ITask Interface */
-        public override string TaskName => $"Read load processes by Id, all processes or last finished/successful/aborted.";
+        public override string TaskName =>
+            "Read load processes by Id, all processes or last finished/successful/aborted.";
+
         public void Execute()
         {
             LoadProcess = new LoadProcess();
             var sql = new SqlTask(this, Sql)
             {
                 DisableLogging = true,
-                Actions = new List<Action<object>>() {
-                col => LoadProcess.Id = Convert.ToInt64(col),
-                col => LoadProcess.StartDate = col is string str ? DateTime.Parse(str, null, System.Globalization.DateTimeStyles.RoundtripKind) : (DateTime)col,
-                col => LoadProcess.EndDate = col is string str ? DateTime.Parse(str, null, System.Globalization.DateTimeStyles.RoundtripKind) : (DateTime?)col,
-                col => LoadProcess.Source = (string)col,
-                col => LoadProcess.ProcessName = (string)col,
-                col => LoadProcess.StartMessage = (string)col,
-                col => LoadProcess.IsRunning = Convert.ToInt16(col) > 0 ? true : false,
-                col => LoadProcess.EndMessage = (string)col,
-                col => LoadProcess.WasSuccessful = Convert.ToInt16(col) > 0 ? true : false,
-                col => LoadProcess.AbortMessage = (string)col,
-                col => LoadProcess.WasAborted= Convert.ToInt16(col) > 0 ? true : false,
+                Actions = new List<Action<object>>
+                {
+                    col => LoadProcess.Id = Convert.ToInt64(col),
+                    col =>
+                        LoadProcess.StartDate = col is string str
+                            ? DateTime.Parse(str, null, DateTimeStyles.RoundtripKind)
+                            : (DateTime)col,
+                    col =>
+                        LoadProcess.EndDate = col is string str
+                            ? DateTime.Parse(str, null, DateTimeStyles.RoundtripKind)
+                            : (DateTime?)col,
+                    col => LoadProcess.Source = (string)col,
+                    col => LoadProcess.ProcessName = (string)col,
+                    col => LoadProcess.StartMessage = (string)col,
+                    col => LoadProcess.IsRunning = Convert.ToInt16(col) > 0,
+                    col => LoadProcess.EndMessage = (string)col,
+                    col => LoadProcess.WasSuccessful = Convert.ToInt16(col) > 0,
+                    col => LoadProcess.AbortMessage = (string)col,
+                    col => LoadProcess.WasAborted = Convert.ToInt16(col) > 0,
                 }
             };
             if (ReadOption == ReadOptions.ReadAllProcesses)
@@ -41,17 +50,11 @@ namespace ALE.ETLBox.Logging
         }
 
         /* Public properties */
-        public long? _loadProcessId;
+        private long? _loadProcessId;
         public long? LoadProcessId
         {
-            get
-            {
-                return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id;
-            }
-            set
-            {
-                _loadProcessId = value;
-            }
+            get { return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
+            set { _loadProcessId = value; }
         }
         public LoadProcess LoadProcess { get; private set; }
         public List<LoadProcess> AllLoadProcesses { get; set; }
@@ -64,19 +67,23 @@ namespace ALE.ETLBox.Logging
         {
             get
             {
-                string sql = $@"
+                string sql =
+                    $@"
 SELECT {Top1Sql} {QB}id{QE}, {QB}start_date{QE}, {QB}end_date{QE}, {QB}source{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}is_running{QE}, {QB}end_message{QE}, {QB}was_successful{QE}, {QB}abort_message{QE}, {QB}was_aborted{QE}
-FROM {TN.QuotatedFullName}";
+FROM {Tn.QuotatedFullName}";
                 if (ReadOption == ReadOptions.ReadSingleProcess)
                     sql += $@"WHERE id = {LoadProcessId}";
                 else if (ReadOption == ReadOptions.ReadLastFinishedProcess)
-                    sql += $@"WHERE was_successful = 1 || was_aborted = 1
+                    sql +=
+                        @"WHERE was_successful = 1 || was_aborted = 1
 ORDER BY end_date desc, id DESC";
                 else if (ReadOption == ReadOptions.ReadLastSuccessful)
-                    sql += $@"WHERE was_successful = 1
+                    sql +=
+                        @"WHERE was_successful = 1
 ORDER BY end_date desc, id DESC";
                 else if (ReadOption == ReadOptions.ReadLastAborted)
-                    sql += $@"WHERE was_aborted = 1
+                    sql +=
+                        @"WHERE was_aborted = 1
 ORDER BY end_date desc, id DESC";
                 sql += Environment.NewLine + Limit1Sql;
                 return sql;
@@ -89,13 +96,9 @@ ORDER BY end_date desc, id DESC";
             {
                 if (ReadOption == ReadOptions.ReadAllProcesses)
                     return string.Empty;
-                else
-                {
-                    if (ConnectionType == ConnectionManagerType.SqlServer)
-                        return "TOP 1";
-                    else
-                        return string.Empty;
-                }
+                if (ConnectionType == ConnectionManagerType.SqlServer)
+                    return "TOP 1";
+                return string.Empty;
             }
         }
 
@@ -105,30 +108,26 @@ ORDER BY end_date desc, id DESC";
             {
                 if (ReadOption == ReadOptions.ReadAllProcesses)
                     return string.Empty;
-                else
-                {
-                    if (ConnectionType == ConnectionManagerType.Postgres)
-                        return "LIMIT 1";
-                    else
-                        return string.Empty;
-                }
+                if (ConnectionType == ConnectionManagerType.Postgres)
+                    return "LIMIT 1";
+                return string.Empty;
             }
         }
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(ControlFlow.ControlFlow.LoadProcessTable,  QB, QE);
-        
-        public ReadLoadProcessTableTask()
-        {
+        private ObjectNameDescriptor Tn => new(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
-        }
-        public ReadLoadProcessTableTask(long? loadProcessId) : this()
+        public ReadLoadProcessTableTask() { }
+
+        public ReadLoadProcessTableTask(long? loadProcessId)
+            : this()
         {
-            this.LoadProcessId = loadProcessId;
+            LoadProcessId = loadProcessId;
         }
 
-        public ReadLoadProcessTableTask(ITask callingTask, long? loadProcessId) : this(loadProcessId)
+        public ReadLoadProcessTableTask(ITask callingTask, long? loadProcessId)
+            : this(loadProcessId)
         {
-            this.CopyTaskProperties(callingTask);
+            CopyTaskProperties(callingTask);
         }
 
         public static LoadProcess Read(long? loadProcessId)
@@ -137,16 +136,17 @@ ORDER BY end_date desc, id DESC";
             sql.Execute();
             return sql.LoadProcess;
         }
+
         public static List<LoadProcess> ReadAll()
         {
-            var sql = new ReadLoadProcessTableTask() { ReadOption = ReadOptions.ReadAllProcesses };
+            var sql = new ReadLoadProcessTableTask { ReadOption = ReadOptions.ReadAllProcesses };
             sql.Execute();
             return sql.AllLoadProcesses;
         }
 
         public static LoadProcess ReadWithOption(ReadOptions option)
         {
-            var sql = new ReadLoadProcessTableTask() { ReadOption = option };
+            var sql = new ReadLoadProcessTableTask { ReadOption = option };
             sql.Execute();
             return sql.LoadProcess;
         }

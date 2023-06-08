@@ -1,26 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowDuplication
 {
     [Collection("DataFlow")]
     public class RowDuplicationTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowDuplicationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -32,10 +21,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void NoParameter()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowDuplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowDuplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowDuplicationSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowDuplicationSource"
+            );
             RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>();
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
@@ -46,7 +40,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 2 && d.Col2 == "Test2"),
@@ -60,10 +55,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DuplicateTwice()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowDuplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowDuplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowDuplicationSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowDuplicationSource"
+            );
             RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(2);
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 
@@ -74,7 +74,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
@@ -91,10 +92,15 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithPredicate()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowDuplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowDuplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowDuplicationSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowDuplicationSource"
+            );
             RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(
                 row => row.Col1 == 1 || row.Col2 == "Test3"
             );
@@ -107,7 +113,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 2 && d.Col2 == "Test2"),

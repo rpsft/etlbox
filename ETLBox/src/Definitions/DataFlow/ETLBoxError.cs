@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// The generic ETLBox Exception. See inner exception for more details.

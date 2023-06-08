@@ -1,25 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.Multicast
 {
     [Collection("DataFlow")]
     public class MulticastTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MulticastTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -39,9 +29,18 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest3Table = new TwoColumnsTableFixture("Destination3");
 
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "Source");
-            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(Connection, "Destination1");
-            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(Connection, "Destination2");
-            DbDestination<MySimpleRow> dest3 = new DbDestination<MySimpleRow>(Connection, "Destination3");
+            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(
+                Connection,
+                "Destination1"
+            );
+            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(
+                Connection,
+                "Destination2"
+            );
+            DbDestination<MySimpleRow> dest3 = new DbDestination<MySimpleRow>(
+                Connection,
+                "Destination3"
+            );
 
             //Act
             Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
@@ -59,6 +58,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest2Table.AssertTestData();
             dest3Table.AssertTestData();
         }
-
     }
 }

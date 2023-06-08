@@ -1,23 +1,13 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
 using System;
-using System.Collections.Generic;
+using ALE.ETLBox;
+using ALE.ETLBox.DataFlow;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestConnectionManager.ConnectionManager
 {
     [Collection("DataFlow")]
     public class NoConnectionManagerTests
     {
-        public NoConnectionManagerTests()
-        {
-        }
-
         [Fact]
         public void DbSource()
         {
@@ -54,11 +44,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 }
                 catch (AggregateException e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
         }
-
-
     }
 }

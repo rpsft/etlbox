@@ -1,26 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.BlockTransformationTests
 {
     [Collection("DataFlow")]
     public class BlockTransformationExceptionTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public BlockTransformationExceptionTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -34,17 +23,22 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSource");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
+            var _ = new TwoColumnsTableFixture("BlockTransDest");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "BlockTransSource");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "BlockTransDest");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                Connection,
+                "BlockTransSource"
+            );
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                Connection,
+                "BlockTransDest"
+            );
 
             //Act
-            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
-                inputData =>
-                {
-                    throw new Exception("Test");
-                });
+            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(_ =>
+            {
+                throw new Exception("Test");
+            });
             source.LinkTo(block);
             block.LinkTo(dest);
 

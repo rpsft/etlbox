@@ -1,21 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using Microsoft.AnalysisServices.AdomdClient;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
+using ALE.ETLBox.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests
+namespace TestHelper
 {
-
     public class PropertyInfoExtensionsTests
     {
         public class TestClass
@@ -26,7 +15,7 @@ namespace ALE.ETLBoxTests
         [Fact]
         public void TestTrySetValue()
         {
-            TestClass t = new TestClass() { TestProp1 = 1 };
+            TestClass t = new TestClass { TestProp1 = 1 };
             Assert.Equal(1, t.TestProp1);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestProp1");
             propInfo1.TrySetValue(t, 5);
@@ -47,7 +36,7 @@ namespace ALE.ETLBoxTests
         [Fact]
         public void TestTrySetEnumValue()
         {
-            TestEnumClass t = new TestEnumClass() { TestEnumProp = EnumType.Value2 };
+            TestEnumClass t = new TestEnumClass { TestEnumProp = EnumType.Value2 };
             Assert.Equal(EnumType.Value2, t.TestEnumProp);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestEnumProp");
             propInfo1.TrySetValue(t, 1);
@@ -62,13 +51,11 @@ namespace ALE.ETLBoxTests
         [Fact]
         public void TestTrySetNullableEnumValue()
         {
-            TestNullableEnumClass t = new TestNullableEnumClass() { TestEnumProp = EnumType.Value2 };
+            TestNullableEnumClass t = new TestNullableEnumClass { TestEnumProp = EnumType.Value2 };
             Assert.Equal(EnumType.Value2, t.TestEnumProp);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestEnumProp");
             propInfo1.TrySetValue(t, 1, Nullable.GetUnderlyingType(propInfo1.PropertyType));
             Assert.Equal(EnumType.Value1, t.TestEnumProp);
         }
-
-
     }
 }

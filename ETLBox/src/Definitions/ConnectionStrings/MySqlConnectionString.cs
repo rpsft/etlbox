@@ -6,15 +6,13 @@ namespace ALE.ETLBox
     /// A helper class for encapsulating a conection string to a MySql server in an object.
     /// Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class MySqlConnectionString :
-        DbConnectionString<MySqlConnectionString, MySqlConnectionStringBuilder>
+    public class MySqlConnectionString
+        : DbConnectionString<MySqlConnectionString, MySqlConnectionStringBuilder>
     {
-        public MySqlConnectionString() :
-            base()
-        { }
-        public MySqlConnectionString(string value) :
-            base(value)
-        { }
+        public MySqlConnectionString() { }
+
+        public MySqlConnectionString(string value)
+            : base(value) { }
 
         public override string DbName
         {
@@ -24,6 +22,6 @@ namespace ALE.ETLBox
         public override string MasterDbName => "mysql";
         protected override string DbNameKeyword => "Database";
 
-        public static implicit operator MySqlConnectionString(string value) => new MySqlConnectionString(value);
+        public static implicit operator MySqlConnectionString(string value) => new(value);
     }
 }

@@ -9,6 +9,7 @@
         string ToString();
         IDbConnectionString Clone();
         string DbName { get; set; }
+
         //bool HasMasterDbName { get; }
         string MasterDbName { get; }
         IDbConnectionString CloneWithNewDbName(string value = null);

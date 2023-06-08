@@ -1,28 +1,17 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Xunit;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBMerge
 {
     [Collection("DataFlow")]
     public class DbMergeDeltaTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-
-        public DbMergeDeltaTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public static SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MyMergeRow : MergeableRow
         {
@@ -43,15 +32,21 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
-            source.DataAsList.Add(new MyMergeRow() { Key = 2, Value = "Test2" });
-            source.DataAsList.Add(new MyMergeRow() { Key = 3, Value = "Test3" });
-            source.DataAsList.Add(new MyMergeRow() { Key = 4, DeleteThisRow = true });
-            source.DataAsList.Add(new MyMergeRow() { Key = 10, DeleteThisRow = true });
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDeltaDestination");
+            source.DataAsList.Add(new MyMergeRow { Key = 2, Value = "Test2" });
+            source.DataAsList.Add(new MyMergeRow { Key = 3, Value = "Test3" });
+            source.DataAsList.Add(new MyMergeRow { Key = 4, DeleteThisRow = true });
+            source.DataAsList.Add(new MyMergeRow { Key = 10, DeleteThisRow = true });
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+                connection,
+                "DBMergeDeltaDestination"
+            );
             d2c.InsertTestDataSet3();
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDeltaDestination")
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(
+                connection,
+                "DBMergeDeltaDestination"
+            )
             {
                 DeltaMode = DeltaMode.Delta
             };
@@ -63,11 +58,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.True(dest.UseTruncateMethod == false);
             d2c.AssertTestData();
             Assert.True(dest.DeltaTable.Count == 4);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Update && row.Key == 2).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Insert && row.Key == 3).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 4).Count() == 1);
-            Assert.True(dest.DeltaTable.Where(row => row.ChangeAction == ChangeAction.Delete && row.Key == 10).Count() == 1);
+            Assert.True(
+                dest.DeltaTable.Count(
+                    row => row.ChangeAction == ChangeAction.Update && row.Key == 2
+                ) == 1
+            );
+            Assert.True(
+                dest.DeltaTable.Count(
+                    row => row.ChangeAction == ChangeAction.Insert && row.Key == 3
+                ) == 1
+            );
+            Assert.True(
+                dest.DeltaTable.Count(
+                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 4
+                ) == 1
+            );
+            Assert.True(
+                dest.DeltaTable.Count(
+                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 10
+                ) == 1
+            );
         }
-
     }
 }

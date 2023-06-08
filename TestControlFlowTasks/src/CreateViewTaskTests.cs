@@ -1,26 +1,16 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class CreateViewTaskTests
     {
-       public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
 
-        public CreateViewTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
-
-        [Theory, MemberData(nameof(Connections))
-              , MemberData(nameof(Access))]
+        [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
         public void CreateView(IConnectionManager connection)
         {
             //Arrange

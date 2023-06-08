@@ -1,17 +1,6 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.CrossJoinTests
 {
     [Collection("DataFlow")]
     public class CrossJoinErrorLinkingTests
@@ -26,15 +15,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void TestErrorLink()
         {
             //Arrange
-            MemorySource<string> source1 = new MemorySource<string>();
-            source1.DataAsList = new List<string>() { "A", "B" };
-            MemorySource<int> source2 = new MemorySource<int>();
-            source2.DataAsList = new List<int>() { 1, 2, 3 };
+            MemorySource<string> source1 = new MemorySource<string>
+            {
+                DataAsList = new List<string> { "A", "B" }
+            };
+            MemorySource<int> source2 = new MemorySource<int>
+            {
+                DataAsList = new List<int> { 1, 2, 3 }
+            };
             CrossJoin<string, int, string> crossJoin = new CrossJoin<string, int, string>(
                 (data1, data2) =>
                 {
-                    if (data1 == "A") throw new Exception("Invalid record");
-                    return data1 + data2.ToString();
+                    if (data1 == "A")
+                        throw new Exception("Invalid record");
+                    return data1 + data2;
                 }
             );
             MemoryDestination<string> dest = new MemoryDestination<string>();
@@ -51,10 +45,20 @@ namespace ALE.ETLBoxTests.DataFlowTests
             errorDest.Wait();
 
             //Assert
-            Assert.Collection<ETLBoxError>(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
+            Assert.Collection(
+                errorDest.Data,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
             );
         }
     }

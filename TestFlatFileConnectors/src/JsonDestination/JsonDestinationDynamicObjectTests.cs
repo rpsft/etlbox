@@ -1,30 +1,19 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.JsonDestination
 {
     [Collection("DataFlow")]
     public class JsonDestinationDynamicObjectTests
     {
-        private SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public JsonDestinationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void SimpleFlowWithObject()
@@ -35,7 +24,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             var source = new DbSource<ExpandoObject>(SqlConnection, "JsonDestDynamic");
 
             //Act
-            var dest = new JsonDestination<ExpandoObject>("./SimpleWithDynamicObject.json", ResourceType.File);
+            var dest = new JsonDestination<ExpandoObject>(
+                "./SimpleWithDynamicObject.json",
+                ResourceType.File
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -43,8 +35,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             //Null values can't be ignored:
             //https://github.com/JamesNK/Newtonsoft.Json/issues/1466
-            Assert.Equal(File.ReadAllText("res/JsonDestination/TwoColumnsSet3DynamicObject.json").NormalizeLineEndings(),
-                File.ReadAllText("./SimpleWithDynamicObject.json"));
+            Assert.Equal(
+                File.ReadAllText("res/JsonDestination/TwoColumnsSet3DynamicObject.json")
+                    .NormalizeLineEndings(),
+                File.ReadAllText("./SimpleWithDynamicObject.json")
+            );
         }
     }
 }

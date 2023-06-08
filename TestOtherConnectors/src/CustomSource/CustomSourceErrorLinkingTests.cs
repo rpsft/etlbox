@@ -1,25 +1,18 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.CustomSource
 {
     [Collection("DataFlow")]
     public class CustomSourceErrorLinkingTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CustomSourceErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -31,25 +24,27 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void SimpleFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("ErrorLinkingCustomSource");
-            List<string> Data = new List<string>() { "Test1", "Test2", "Test3", "Test4" };
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "ErrorLinkingCustomSource"
+            );
+            List<string> Data = new List<string> { "Test1", "Test2", "Test3", "Test4" };
             int _readIndex = 0;
             Func<MySimpleRow> ReadData = () =>
             {
-                var result = new MySimpleRow()
-                {
-                    Col1 = _readIndex + 1,
-                    Col2 = Data[_readIndex]
-                };
+                var result = new MySimpleRow { Col1 = _readIndex + 1, Col2 = Data[_readIndex] };
                 _readIndex++;
-                if (_readIndex == 4) throw new Exception("Error record!");
+                if (_readIndex == 4)
+                    throw new Exception("Error record!");
                 return result;
             };
 
             Func<bool> EndOfData = () => _readIndex >= Data.Count;
 
             CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "ErrorLinkingCustomSource");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                SqlConnection,
+                "ErrorLinkingCustomSource"
+            );
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
@@ -61,8 +56,12 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             dest2Columns.AssertTestData();
-            Assert.Collection<ETLBoxError>(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
+            Assert.Collection(
+                errorDest.Data,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
             );
         }
     }

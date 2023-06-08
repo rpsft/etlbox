@@ -1,42 +1,40 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.BlockTransformationTests
 {
     [Collection("DataFlow")]
     public class BlockTransformationDynamicObjectTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public BlockTransformationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSourceDynamic");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "BlockTransSourceDynamic"
+            );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDestDynamic");
+            var _ = new TwoColumnsTableFixture("BlockTransDestDynamic");
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "BlockTransSourceDynamic");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "BlockTransDestDynamic");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+                SqlConnection,
+                "BlockTransSourceDynamic"
+            );
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+                SqlConnection,
+                "BlockTransDestDynamic"
+            );
 
             //Act
-            BlockTransformation<ExpandoObject> block = new BlockTransformation<ExpandoObject>(
-                inputData => {
+            BlockTransformation<ExpandoObject> block =
+                new BlockTransformation<ExpandoObject>(inputData =>
+                {
                     inputData.RemoveRange(1, 2);
                     dynamic nr = new ExpandoObject();
                     nr.Col1 = 4;
@@ -51,8 +49,22 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             Assert.Equal(2, RowCountTask.Count(SqlConnection, "BlockTransDestDynamic"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "BlockTransDestDynamic", "Col1 = 1 AND Col2='Test1'"));
-            Assert.Equal(1, RowCountTask.Count(SqlConnection, "BlockTransDestDynamic", "Col1 = 4 AND Col2='Test4'"));
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    SqlConnection,
+                    "BlockTransDestDynamic",
+                    "Col1 = 1 AND Col2='Test1'"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    SqlConnection,
+                    "BlockTransDestDynamic",
+                    "Col1 = 4 AND Col2='Test4'"
+                )
+            );
         }
     }
 }

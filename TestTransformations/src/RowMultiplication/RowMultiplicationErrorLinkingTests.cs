@@ -1,25 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowMultiplication
 {
     [Collection("DataFlow")]
     public class RowMultiplicationErrorLinkingTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowMultiplicationErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -31,22 +21,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ThrowExceptionInFlow()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowMultiplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowMultiplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowMultiplicationSource");
-            RowMultiplication<MySimpleRow> multiplication = new RowMultiplication<MySimpleRow>(
-                row =>
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowMultiplicationSource"
+            );
+            RowMultiplication<MySimpleRow> multiplication =
+                new RowMultiplication<MySimpleRow>(row =>
                 {
                     List<MySimpleRow> result = new List<MySimpleRow>();
                     result.Add(row);
-                    if (row.Col1 == 2) throw new Exception("Error in Flow!");
+                    if (row.Col1 == 2)
+                        throw new Exception("Error in Flow!");
                     return result;
-
                 });
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
-
 
             //Act
             source.LinkTo(multiplication);
@@ -57,29 +51,36 @@ namespace ALE.ETLBoxTests.DataFlowTests
             errorDest.Wait();
 
             //Assert
-            Assert.Collection<ETLBoxError>(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
+            Assert.Collection(
+                errorDest.Data,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
             );
         }
-
-       
 
         [Fact]
         public void ThrowExceptionWithoutHandling()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowMultiplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowMultiplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowMultiplicationSource");
-            RowMultiplication<MySimpleRow> multiplication = new RowMultiplication<MySimpleRow>(
-                row =>
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowMultiplicationSource"
+            );
+            RowMultiplication<MySimpleRow> multiplication =
+                new RowMultiplication<MySimpleRow>(row =>
                 {
                     List<MySimpleRow> result = new List<MySimpleRow>();
                     result.Add(row);
-                    if (row.Col1 == 2) throw new Exception("Error in Flow!");
+                    if (row.Col1 == 2)
+                        throw new Exception("Error in Flow!");
                     return result;
-
                 });
             MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
 

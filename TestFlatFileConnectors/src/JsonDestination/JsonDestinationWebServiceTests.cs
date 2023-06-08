@@ -3,23 +3,20 @@ using System.Net.Http;
 using System.Threading;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBoxTests.Fixtures;
+using JetBrains.Annotations;
 using Moq;
 using Moq.Contrib.HttpClient;
 using Newtonsoft.Json;
+using TestShared.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestFlatFileConnectors.JsonDestination
 {
     [Collection("DataFlow")]
     public class JsonDestinationWebServiceTests
     {
-        public JsonDestinationWebServiceTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void WriteIntoHttpClient()
@@ -31,14 +28,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             handler
                 .SetupAnyRequest()
-                .Returns(async (HttpRequestMessage request, CancellationToken _) =>
-                {
-                    result = await request.Content!.ReadAsStringAsync(_);
-                    return new HttpResponseMessage
+                .Returns(
+                    async (HttpRequestMessage request, CancellationToken _) =>
                     {
-                        Content = new StringContent($"Hello, {result}")
-                    };
-                })
+                        result = await request.Content!.ReadAsStringAsync(_);
+                        return new HttpResponseMessage
+                        {
+                            Content = new StringContent($"Hello, {result}")
+                        };
+                    }
+                )
                 .Verifiable();
             // .ReturnsResponse(HttpStatusCode.OK);
 
@@ -59,14 +58,18 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             handler.VerifyRequest(
-                message => message.Method == HttpMethod.Post &&
-                           message.RequestUri == new Uri("http://test.test")
-                , Times.Exactly(1)
+                message =>
+                    message.Method == HttpMethod.Post
+                    && message.RequestUri == new Uri("http://test.test"),
+                Times.Exactly(1)
             );
-            Assert.Equal(JsonConvert.SerializeObject(new[] { mySimpleRow }, Formatting.Indented), result);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new[] { mySimpleRow }, Formatting.Indented),
+                result
+            );
         }
 
-
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySimpleRow
         {
             public string Col2 { get; set; }

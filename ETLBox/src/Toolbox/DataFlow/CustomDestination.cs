@@ -1,7 +1,4 @@
-﻿using System;
-using System.Dynamic;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -9,18 +6,16 @@ namespace ALE.ETLBox.DataFlow
     /// Define your own destination block.
     /// </summary>
     /// <typeparam name="TInput">Type of datasource input.</typeparam>
-    public class CustomDestination<TInput> : DataFlowDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    [PublicAPI]
+    public class CustomDestination<TInput> : DataFlowDestination<TInput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = $"Write data into custom target";
+        public sealed override string TaskName { get; set; } = "Write data into custom target";
 
         /* Public properties */
         public Action<TInput> WriteAction
         {
-            get
-            {
-                return _writeAction;
-            }
+            get { return _writeAction; }
             set
             {
                 _writeAction = value;
@@ -31,23 +26,24 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         private Action<TInput> _writeAction;
 
-        public CustomDestination()
-        {
-        }
+        public CustomDestination() { }
 
-        public CustomDestination(Action<TInput> writeAction) : this()
+        public CustomDestination(Action<TInput> writeAction)
+            : this()
         {
             WriteAction = writeAction;
         }
 
-        internal CustomDestination(ITask callingTask, Action<TInput> writeAction) : this(writeAction)
+        internal CustomDestination(ITask callingTask, Action<TInput> writeAction)
+            : this(writeAction)
         {
             CopyTaskProperties(callingTask);
         }
 
-        public CustomDestination(string taskName, Action<TInput> writeAction) : this(writeAction)
+        public CustomDestination(string taskName, Action<TInput> writeAction)
+            : this(writeAction)
         {
-            this.TaskName = taskName;
+            TaskName = taskName;
         }
 
         private void InitObjects()
@@ -58,34 +54,35 @@ namespace ALE.ETLBox.DataFlow
 
         private Action<TInput> AddLoggingAndErrorHandling(Action<TInput> writeAction)
         {
-            return new Action<TInput>(
-                input =>
+            return input =>
+            {
+                if (ProgressCount == 0)
+                    NLogStart();
+                try
                 {
-                    if (ProgressCount == 0) NLogStart();
-                    try
-                    {
-                        if (input != null)
-                            writeAction.Invoke(input);
-                    }
-                    catch (Exception e)
-                    {
-                        if (!ErrorHandler.HasErrorBuffer) throw e;
-                        ErrorHandler.Send(e, ErrorHandler.ConvertErrorData<TInput>(input));
-                    }
-                    LogProgress();
-                });
+                    if (input != null)
+                        writeAction.Invoke(input);
+                }
+                catch (Exception e)
+                {
+                    if (!ErrorHandler.HasErrorBuffer)
+                        throw;
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(input));
+                }
+                LogProgress();
+            };
         }
     }
 
     /// <summary>
     /// Define your own destination block. The non generic implementation uses a dynamic object as input.
     /// </summary>
+    [PublicAPI]
     public class CustomDestination : CustomDestination<ExpandoObject>
     {
-        public CustomDestination() : base()
-        { }
+        public CustomDestination() { }
 
-        public CustomDestination(Action<ExpandoObject> writeAction) : base(writeAction)
-        { }
+        public CustomDestination(Action<ExpandoObject> writeAction)
+            : base(writeAction) { }
     }
 }

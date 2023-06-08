@@ -1,22 +1,14 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class CreateProcedureTaskTests
     {
-        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
-
-        public CreateProcedureTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        public static IEnumerable<object[]> Connections =>
+            Config.AllConnectionsWithoutSQLite("ControlFlow");
 
         [Theory, MemberData(nameof(Connections))]
         public void CreateProcedure(IConnectionManager connection)
@@ -46,9 +38,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void CreateProcedureWithParameter(IConnectionManager connection)
         {
             //Arrange
-            List<ProcedureParameter> pars = new List<ProcedureParameter>() {
-                new ProcedureParameter("Par1", "VARCHAR(10)"),
-                new ProcedureParameter("Par2", "INT", "7"),
+            List<ProcedureParameter> pars = new List<ProcedureParameter>
+            {
+                new("Par1", "VARCHAR(10)"),
+                new("Par2", "INT", "7"),
             };
             //Act
             CreateProcedureTask.CreateOrAlter(connection, "Proc3", "SELECT 1;", pars);
@@ -60,9 +53,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void CreatProcedureWithProcedureObject(IConnectionManager connection)
         {
             //Arrange
-            List<ProcedureParameter> pars = new List<ProcedureParameter>() {
-                new ProcedureParameter("Par1", "varchar(10)"),
-                new ProcedureParameter("Par2", "int", "7"),
+            List<ProcedureParameter> pars = new List<ProcedureParameter>
+            {
+                new("Par1", "varchar(10)"),
+                new("Par2", "int", "7"),
             };
             ProcedureDefinition procDef = new ProcedureDefinition("Proc4", "SELECT 1;", pars);
             //Act
@@ -75,8 +69,12 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => CreateDatabaseTask.Create(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
-                );
+                () =>
+                    CreateDatabaseTask.Create(
+                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
+                        "Test"
+                    )
+            );
         }
     }
 }

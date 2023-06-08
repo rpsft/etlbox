@@ -1,12 +1,4 @@
-﻿using ALE.ETLBox.Helper;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -14,10 +6,11 @@ namespace ALE.ETLBox.DataFlow
     /// Creates one or more duplicates of your incoming rows.
     /// </summary>
     /// <typeparam name="TInput">Type of data input</typeparam>
-    public class RowDuplication<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput>
+    [PublicAPI]
+    public class RowDuplication<TInput> : DataFlowTransformation<TInput, TInput>
     {
         /* ITask Interface */
-        public override string TaskName { get; set; } = $"Duplicate rows.";
+        public override string TaskName { get; set; } = "Duplicate rows.";
 
         /* Public Properties */
         public int NumberOfDuplicates { get; set; } = 1;
@@ -26,35 +19,41 @@ namespace ALE.ETLBox.DataFlow
         public override ITargetBlock<TInput> TargetBlock => TransformBlock;
 
         /* Private stuff */
-        TransformManyBlock<TInput, TInput> TransformBlock { get; set; }
-        ObjectCopy<TInput> ObjectCopy { get; set; }
-        TypeInfo TypeInfo { get; set; }
+        private TransformManyBlock<TInput, TInput> TransformBlock { get; set; }
+        private ObjectCopy<TInput> ObjectCopy { get; set; }
+        private TypeInfo TypeInfo { get; set; }
 
         public RowDuplication()
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
-            TransformBlock = new TransformManyBlock<TInput, TInput>((Func<TInput, IEnumerable<TInput>>)DuplicateRow);
+            TransformBlock = new TransformManyBlock<TInput, TInput>(
+                (Func<TInput, IEnumerable<TInput>>)DuplicateRow
+            );
         }
 
-        public RowDuplication(int numberOfDuplicates) : this()
+        public RowDuplication(int numberOfDuplicates)
+            : this()
         {
-            this.NumberOfDuplicates = numberOfDuplicates;
+            NumberOfDuplicates = numberOfDuplicates;
         }
 
-        public RowDuplication(Predicate<TInput> canDuplicate, int numberOfDuplicates) : this(numberOfDuplicates)
+        public RowDuplication(Predicate<TInput> canDuplicate, int numberOfDuplicates)
+            : this(numberOfDuplicates)
         {
-            this.CanDuplicate = canDuplicate;
+            CanDuplicate = canDuplicate;
         }
 
-        public RowDuplication(Predicate<TInput> canDuplicate) : this()
+        public RowDuplication(Predicate<TInput> canDuplicate)
+            : this()
         {
-            this.CanDuplicate = canDuplicate;
+            CanDuplicate = canDuplicate;
         }
 
         private IEnumerable<TInput> DuplicateRow(TInput row)
         {
-            if (row == null) return null;
+            if (row == null)
+                return null;
             List<TInput> result = new List<TInput>(NumberOfDuplicates);
             result.Add(row);
             LogProgress();
@@ -76,18 +75,18 @@ namespace ALE.ETLBox.DataFlow
     /// The non generic implementation works with dynamic object.
     /// </summary>
     /// <see cref="RowDuplication{TInput}"/>
+    [PublicAPI]
     public class RowDuplication : RowDuplication<ExpandoObject>
     {
-        public RowDuplication() : base()
-        { }
+        public RowDuplication() { }
 
-        public RowDuplication(int numberOfDuplicates) : base(numberOfDuplicates)
-        { }
+        public RowDuplication(int numberOfDuplicates)
+            : base(numberOfDuplicates) { }
 
-        public RowDuplication(Predicate<ExpandoObject> canDuplicate, int numberOfDuplicates) : base(canDuplicate, numberOfDuplicates)
-        { }
+        public RowDuplication(Predicate<ExpandoObject> canDuplicate, int numberOfDuplicates)
+            : base(canDuplicate, numberOfDuplicates) { }
 
-        public RowDuplication(Predicate<ExpandoObject> canDuplicate) : base(canDuplicate)
-        { }
+        public RowDuplication(Predicate<ExpandoObject> canDuplicate)
+            : base(canDuplicate) { }
     }
 }

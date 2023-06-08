@@ -1,16 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks.Dataflow;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -23,7 +15,8 @@ namespace ALE.ETLBox.DataFlow
     /// XmlSource&lt;POCO&gt; source = new XmlSource&lt;POCO&gt;("https://jsonplaceholder.typicode.com/todos");
     /// </code>
     /// </example>
-    public class XmlSource<TOutput> : DataFlowStreamSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class XmlSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
         public override string TaskName => $"Read Xml from Uri: {CurrentRequestUri ?? ""}";
@@ -39,9 +32,9 @@ namespace ALE.ETLBox.DataFlow
         /// </summary>
 
         /* Private stuff */
-        XmlReader XmlReader { get; set; }
+        private XmlReader XmlReader { get; set; }
 
-        XmlTypeInfo TypeInfo { get; set; }
+        private XmlTypeInfo TypeInfo { get; set; }
 
         public XmlSource()
         {
@@ -50,12 +43,14 @@ namespace ALE.ETLBox.DataFlow
                 XmlSerializer = new XmlSerializer(typeof(TOutput));
         }
 
-        public XmlSource(string uri) : this()
+        public XmlSource(string uri)
+            : this()
         {
             Uri = uri;
         }
 
-        public XmlSource(string uri, ResourceType resourceType) : this(uri)
+        public XmlSource(string uri, ResourceType resourceType)
+            : this(uri)
         {
             ResourceType = resourceType;
         }
@@ -67,41 +62,44 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void ReadAll()
         {
-
             XmlReader.MoveToContent();
             while (XmlReader.Read())
             {
-                if (XmlReader.NodeType == XmlNodeType.Element)
+                if (
+                    XmlReader.NodeType == XmlNodeType.Element
+                    && XmlReader.Name == (ElementName ?? TypeInfo.ElementName)
+                    && XNode.ReadFrom(XmlReader) is XElement el
+                )
                 {
-                    if (XmlReader.Name == (ElementName ?? TypeInfo.ElementName))
-                    {
-                        XElement el = XNode.ReadFrom(XmlReader) as XElement;
-                        if (el != null)
-                        {
-                            try
-                            {
-                                TOutput output = default(TOutput);
-                                if (TypeInfo.IsDynamic)
-                                {
-                                    string jsonText = JsonConvert.SerializeXNode(el);
-                                    dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText) as dynamic;
-                                    output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
-                                }
-                                else
-                                {
-                                    output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
-                                }
-                                Buffer.SendAsync(output).Wait();
-                            }
-                            catch (Exception e)
-                            {
-                                if (!ErrorHandler.HasErrorBuffer) throw e;
-                                ErrorHandler.Send(e, el.ToString());
-                            }
-                            LogProgress();
-                        }
-                    }
+                    ReadElement(el);
+                    LogProgress();
                 }
+            }
+        }
+
+        private void ReadElement(XElement el)
+        {
+            try
+            {
+                TOutput output;
+                if (TypeInfo.IsDynamic)
+                {
+                    string jsonText = JsonConvert.SerializeXNode(el);
+                    dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText);
+                    output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
+                }
+                else
+                {
+                    output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
+                }
+
+                Buffer.SendAsync(output).Wait();
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                ErrorHandler.Send(e, el.ToString());
             }
         }
 
@@ -124,10 +122,15 @@ namespace ALE.ETLBox.DataFlow
     /// source.Execute(); //Start the dataflow
     /// </code>
     /// </example>
+    [PublicAPI]
     public class XmlSource : XmlSource<ExpandoObject>
     {
-        public XmlSource() : base() { }
-        public XmlSource(string uri) : base(uri) { }
-        public XmlSource(string uri, ResourceType resourceType) : base(uri, resourceType) { }
+        public XmlSource() { }
+
+        public XmlSource(string uri)
+            : base(uri) { }
+
+        public XmlSource(string uri, ResourceType resourceType)
+            : base(uri, resourceType) { }
     }
 }

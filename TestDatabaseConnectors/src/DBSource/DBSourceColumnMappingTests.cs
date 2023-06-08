@@ -1,62 +1,62 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBSource
 {
     [Collection("DataFlow")]
     public class DbSourceColumnMappingTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
 
-        public DbSourceColumnMappingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
-
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class ColumnMapRow
         {
             public long Col1 { get; set; }
+
             [ColumnMap("Col2")]
             public string B { get; set; }
-
         }
 
         [Theory, MemberData(nameof(Connections))]
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "Source");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                connection,
+                "Source"
+            );
             source2Columns.InsertTestData();
 
             //Act
             DbSource<ColumnMapRow> source = new DbSource<ColumnMapRow>(connection, "Source");
-            CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
-                input =>
-                {
-                    //Assert
-                    Assert.InRange(input.Col1, 1, 3);
-                    Assert.StartsWith("Test", input.B);
-                });
+            CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(AssertInput);
+
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
+
+            void AssertInput(ColumnMapRow input)
+            {
+                //Assert
+                Assert.InRange(input.Col1, 1, 3);
+                Assert.StartsWith("Test", input.B);
+            }
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MyExtendedRow
         {
             [ColumnMap("Col3")]
             public long? Value { get; set; }
+
             [ColumnMap("Col4")]
             public decimal Percentage { get; set; }
+
             [ColumnMap("Col1")]
-            public Int64 Id { get; set; }
+            public long Id { get; set; }
+
             [ColumnMap("Col2")]
             public string Text { get; set; }
         }
@@ -65,24 +65,29 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void ColumnMappingExtended(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(connection,
-                "SourceColumnMapping", identityColumnIndex: 0);
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+                connection,
+                "SourceColumnMapping",
+                identityColumnIndex: 0
+            );
             source4Columns.InsertTestData();
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "SourceColumnMapping");
-            CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(
-                input =>
-                {
-                    //Assert
-                    Assert.InRange(input.Id, 1, 3);
-                    Assert.StartsWith("Test", input.Text);
-                    if (input.Id == 1)
-                        Assert.Null(input.Value);
-                    else
-                        Assert.True(input.Value > 0);
-                    Assert.InRange(input.Percentage, 1, 2);
-                });
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(
+                connection,
+                "SourceColumnMapping"
+            );
+            CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(input =>
+            {
+                //Assert
+                Assert.InRange(input.Id, 1, 3);
+                Assert.StartsWith("Test", input.Text);
+                if (input.Id == 1)
+                    Assert.Null(input.Value);
+                else
+                    Assert.True(input.Value > 0);
+                Assert.InRange(input.Percentage, 1, 2);
+            });
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

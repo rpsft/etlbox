@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace ALE.ETLBox.Logging
 {
@@ -22,29 +20,34 @@ namespace ALE.ETLBox.Logging
         public long? LoadProcessId { get; set; }
     }
 
-    [DebuggerDisplay("#{ID} {TaskType} - {TaskAction} {LogDate}")]
+    [PublicAPI]
+    [DebuggerDisplay("#{Id} {TaskType} - {TaskAction} {LogDate}")]
     public class LogHierarchyEntry : LogEntry
     {
         public List<LogHierarchyEntry> Children { get; set; }
+
         [JsonIgnore]
         public LogHierarchyEntry Parent { get; set; }
+
         public LogHierarchyEntry()
         {
             Children = new List<LogHierarchyEntry>();
         }
-        public LogHierarchyEntry(LogEntry entry) : this()
+
+        public LogHierarchyEntry(LogEntry entry)
+            : this()
         {
-            this.Id = entry.Id;
-            this.LogDate = entry.LogDate;
-            this.EndDate = entry.EndDate;
-            this.Level = entry.Level;
-            this.Message = entry.Message;
-            this.TaskType = entry.TaskType;
-            this.TaskAction = entry.TaskAction;
-            this.TaskHash = entry.TaskHash;
-            this.Stage = entry.Stage;
-            this.Source = entry.Source;
-            this.LoadProcessId = entry.LoadProcessId;
+            Id = entry.Id;
+            LogDate = entry.LogDate;
+            EndDate = entry.EndDate;
+            Level = entry.Level;
+            Message = entry.Message;
+            TaskType = entry.TaskType;
+            TaskAction = entry.TaskAction;
+            TaskHash = entry.TaskHash;
+            Stage = entry.Stage;
+            Source = entry.Source;
+            LoadProcessId = entry.LoadProcessId;
         }
     }
 }

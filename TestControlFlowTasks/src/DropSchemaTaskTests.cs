@@ -1,22 +1,14 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class DropSchemaTaskTests
     {
-        public static IEnumerable<object[]> Connections => Config.AllConnectionsWithoutSQLite("ControlFlow");
-
-        public DropSchemaTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        public static IEnumerable<object[]> Connections =>
+            Config.AllConnectionsWithoutSQLite("ControlFlow");
 
         [Theory, MemberData(nameof(Connections))]
         public void Drop(IConnectionManager connection)
@@ -53,21 +45,28 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             }
         }
 
-
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => DropSchemaTask.Drop(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
-                );
+                () =>
+                    DropSchemaTask.Drop(
+                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
+                        "Test"
+                    )
+            );
         }
 
         [Fact]
         public void NotSupportedWithMySql()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => DropSchemaTask.Drop(Config.MySqlConnection.ConnectionManager("ControlFlow"), "Test")
-                );
+                () =>
+                    DropSchemaTask.Drop(
+                        Config.MySqlConnection.ConnectionManager("ControlFlow"),
+                        "Test"
+                    )
+            );
         }
     }
 }

@@ -1,11 +1,13 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Helper;
+using ALE.ETLBox.Logging;
 
-namespace ALE.ETLBox.Helper
+namespace TestShared.Helper
 {
     public class BigDataHelper
     {
@@ -18,15 +20,20 @@ namespace ALE.ETLBox.Helper
             using (FileStream stream = File.Open(FileName, FileMode.Create))
             using (StreamWriter writer = new StreamWriter(stream))
             {
-                string header = String.Join(",", TableDefinition.Columns.Select(col => col.Name));
+                string header = string.Join(",", TableDefinition.Columns.Select(col => col.Name));
                 writer.WriteLine(header);
                 for (int i = 0; i < NumberOfRows; i++)
                 {
-                    string line = String.Join(",", TableDefinition.Columns.Select(col =>
-                    {
-                        int length = DataTypeConverter.GetStringLengthFromCharString(col.DataType);
-                        return HashHelper.RandomString(length);
-                    }));
+                    string line = string.Join(
+                        ",",
+                        TableDefinition.Columns.Select(col =>
+                        {
+                            int length = DataTypeConverter.GetStringLengthFromCharString(
+                                col.DataType
+                            );
+                            return HashHelper.RandomString(length);
+                        })
+                    );
                     writer.WriteLine(line);
                 }
             }
@@ -39,7 +46,9 @@ namespace ALE.ETLBox.Helper
             watch.Start();
             action.Invoke();
             watch.Stop();
-            LogTask.Warn($"Stopping: {name} -- Time elapsed: {watch.Elapsed.TotalSeconds} seconds.");
+            LogTask.Warn(
+                $"Stopping: {name} -- Time elapsed: {watch.Elapsed.TotalSeconds} seconds."
+            );
             return watch.Elapsed;
         }
     }

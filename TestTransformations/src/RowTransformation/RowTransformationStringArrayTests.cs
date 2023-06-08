@@ -1,25 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowTransformation
 {
     [Collection("DataFlow")]
     public class RowTransformationStringArrayTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowTransformationStringArrayTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -31,17 +21,23 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void RearrangeSwappedData()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("DestinationRowTransformation");
-            CsvSource<string[]> source = new CsvSource<string[]>("res/RowTransformation/TwoColumnsSwapped.csv");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "DestinationRowTransformation"
+            );
+            CsvSource<string[]> source = new CsvSource<string[]>(
+                "res/RowTransformation/TwoColumnsSwapped.csv"
+            );
 
             //Act
-            RowTransformation<string[]> trans = new RowTransformation<string[]>(
-                csvdata =>
-                {
-                    return new string[] { csvdata[1], csvdata[0] };
-                });
+            RowTransformation<string[]> trans = new RowTransformation<string[]>(csvdata =>
+            {
+                return new[] { csvdata[1], csvdata[0] };
+            });
 
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "DestinationRowTransformation");
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                Connection,
+                "DestinationRowTransformation"
+            );
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();
@@ -50,7 +46,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Assert
             dest2Columns.AssertTestData();
         }
-
-
     }
 }

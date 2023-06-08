@@ -1,26 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.AggregationTests
 {
     [Collection("DataFlow")]
     public class AggregationDynamicObjectTests
     {
-        public AggregationDynamicObjectTests()
-        {
-        }
-
         [Fact]
         public void GroupingUsingDynamicObject()
         {
@@ -39,26 +23,30 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.DataAsList.Add(row2);
             source.DataAsList.Add(row3);
 
-            Aggregation<ExpandoObject, ExpandoObject> agg = new Aggregation<ExpandoObject, ExpandoObject>(
+            Aggregation<ExpandoObject, ExpandoObject> agg = new Aggregation<
+                ExpandoObject,
+                ExpandoObject
+            >(
                 (row, aggValue) =>
                 {
-                    dynamic r = row as ExpandoObject;
-                    dynamic a = aggValue as ExpandoObject;
-                    if (!((IDictionary<String, object>)a).ContainsKey("AggValue"))
+                    dynamic r = row;
+                    dynamic a = aggValue;
+                    if (!((IDictionary<string, object>)a).ContainsKey("AggValue"))
                         a.AggValue = r.DetailValue;
                     else
                         a.AggValue += r.DetailValue;
                 },
                 row =>
                 {
-                    dynamic r = row as ExpandoObject;
+                    dynamic r = row;
                     return r.ClassName;
                 },
                 (key, agg) =>
                 {
-                    dynamic a = agg as ExpandoObject;
+                    dynamic a = agg;
                     a.GroupName = (string)key;
-                } );
+                }
+            );
 
             MemoryDestination<ExpandoObject> dest = new MemoryDestination<ExpandoObject>();
 
@@ -68,19 +56,22 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source.Execute();
             dest.Wait();
 
-
             //Assert
-            Assert.Collection<ExpandoObject>(dest.Data,
-                ar => {
-                    dynamic a = ar as ExpandoObject;
-                    Assert.True(a.AggValue == 10 && a.GroupName == "Class1");
+            Assert.Collection(
+                dest.Data,
+                ar =>
+                {
+                    Assert.True(
+                        ((dynamic)ar).AggValue == 10 && ((dynamic)ar).GroupName == "Class1"
+                    );
                 },
-                ar => {
-                    dynamic a = ar as ExpandoObject;
-                    Assert.True(a.AggValue == 10 && a.GroupName == "Class2");
+                ar =>
+                {
+                    Assert.True(
+                        ((dynamic)ar).AggValue == 10 && ((dynamic)ar).GroupName == "Class2"
+                    );
                 }
             );
         }
-
     }
 }

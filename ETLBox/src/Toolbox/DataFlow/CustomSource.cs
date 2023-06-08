@@ -1,7 +1,4 @@
-﻿using System;
-using System.Dynamic;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -9,11 +6,11 @@ namespace ALE.ETLBox.DataFlow
     /// Define your own source block.
     /// </summary>
     /// <typeparam name="TOutput">Type of data output.</typeparam>
-    public class CustomSource<TOutput> : DataFlowSource<TOutput>, ITask, IDataFlowSource<TOutput>
+    [PublicAPI]
+    public class CustomSource<TOutput> : DataFlowSource<TOutput>, IDataFlowSource<TOutput>
     {
         /* ITask Interface */
-        public override string TaskName => $"Read data from custom source";
-
+        public sealed override string TaskName => "Read data from custom source";
 
         /* Public properties */
         public Func<TOutput> ReadFunc { get; set; }
@@ -21,19 +18,19 @@ namespace ALE.ETLBox.DataFlow
 
         /* Private stuff */
 
-        public CustomSource()
-        {
-        }
+        public CustomSource() { }
 
-        public CustomSource(Func<TOutput> readFunc, Func<bool> readCompletedFunc) : this()
+        public CustomSource(Func<TOutput> readFunc, Func<bool> readCompletedFunc)
+            : this()
         {
             ReadFunc = readFunc;
             ReadCompletedFunc = readCompletedFunc;
         }
 
-        public CustomSource(string name, Func<TOutput> readFunc, Func<bool> readCompletedFunc) : this(readFunc, readCompletedFunc)
+        public CustomSource(string name, Func<TOutput> readFunc, Func<bool> readCompletedFunc)
+            : this(readFunc, readCompletedFunc)
         {
-            this.TaskName = name;
+            TaskName = name;
         }
 
         public override void Execute()
@@ -47,7 +44,8 @@ namespace ALE.ETLBox.DataFlow
                 }
                 catch (Exception e)
                 {
-                    if (!ErrorHandler.HasErrorBuffer) throw e;
+                    if (!ErrorHandler.HasErrorBuffer)
+                        throw;
                     ErrorHandler.Send(e, e.Message);
                 }
                 LogProgress();
@@ -55,21 +53,20 @@ namespace ALE.ETLBox.DataFlow
             Buffer.Complete();
             NLogFinish();
         }
-
     }
 
     /// <summary>
     /// Define your own source block. The non generic implementation returns a dynamic object as output.
     /// </summary>
+    [PublicAPI]
     public class CustomSource : CustomSource<ExpandoObject>
     {
-        public CustomSource() : base()
-        { }
+        public CustomSource() { }
 
-        public CustomSource(Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc) : base(readFunc, readCompletedFunc)
-        { }
+        public CustomSource(Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc)
+            : base(readFunc, readCompletedFunc) { }
 
-        public CustomSource(string name, Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc) : base(name, readFunc, readCompletedFunc)
-        { }
+        public CustomSource(string name, Func<ExpandoObject> readFunc, Func<bool> readCompletedFunc)
+            : base(name, readFunc, readCompletedFunc) { }
     }
 }

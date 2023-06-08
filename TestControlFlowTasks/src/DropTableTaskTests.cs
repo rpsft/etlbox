@@ -1,29 +1,20 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class DropTableTaskTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
-        public DropTableTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
 
-        [Theory, MemberData(nameof(Connections))
-               , MemberData(nameof(Access))]
+        [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
+            List<TableColumn> columns = new List<TableColumn> { new("value", "int") };
             CreateTableTask.Create(connection, "DropTableTest", columns);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropTableTest"));
 
@@ -39,7 +30,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         {
             //Arrange
             DropTableTask.DropIfExists(connection, "DropIfExistsTableTest");
-            List<TableColumn> columns = new List<TableColumn>() { new TableColumn("value", "int") };
+            List<TableColumn> columns = new List<TableColumn> { new("value", "int") };
             CreateTableTask.Create(connection, "DropIfExistsTableTest", columns);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropIfExistsTableTest"));
 

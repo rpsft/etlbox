@@ -1,26 +1,18 @@
+using System;
+using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Xunit;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBSource
 {
     [Collection("DataFlow")]
     public class DbSourceExceptionTests
     {
-        public static SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-
-        public DbSourceExceptionTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public static SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void UnknownTable()
@@ -42,12 +34,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void UnknownTableViaTableDefinition()
         {
             //Arrange
-            TableDefinition def = new TableDefinition("UnknownTable",
-                new List<TableColumn>()
-                {
-                    new TableColumn("id", "INT")
-                });
-            DbSource<string[]> source = new DbSource<string[]>()
+            TableDefinition def = new TableDefinition(
+                "UnknownTable",
+                new List<TableColumn> { new("id", "INT") }
+            );
+            DbSource<string[]> source = new DbSource<string[]>
             {
                 ConnectionManager = SqlConnection,
                 SourceTableDefinition = def
@@ -55,7 +46,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
             //Act & Assert
-            Assert.Throws<Microsoft.Data.SqlClient.SqlException>(() =>
+            Assert.Throws<SqlException>(() =>
             {
                 source.LinkTo(dest);
                 source.Execute();
@@ -63,15 +54,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             });
         }
 
-
         [Fact]
         public void ErrorInSql()
         {
             //Arrange
-            DbSource source = new DbSource(SqlConnection)
-            {
-                Sql = "SELECT XYZ FROM ABC"
-            };
+            DbSource source = new DbSource(SqlConnection) { Sql = "SELECT XYZ FROM ABC" };
             MemoryDestination dest = new MemoryDestination();
             source.LinkTo(dest);
             //Act & Assert
@@ -85,7 +72,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 }
                 catch (AggregateException e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
         }

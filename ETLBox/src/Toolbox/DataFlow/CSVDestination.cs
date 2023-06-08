@@ -1,9 +1,6 @@
-﻿using CsvHelper;
+﻿using System.Globalization;
+using CsvHelper;
 using CsvHelper.Configuration;
-using System;
-using System.Dynamic;
-using System.Globalization;
-using System.IO;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -18,28 +15,27 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class CsvDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    [PublicAPI]
+    public class CsvDestination<TInput> : DataFlowStreamDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write Csv data into file {Uri ?? ""}";
         public CsvConfiguration Configuration { get; set; }
 
-        CsvWriter CsvWriter { get; set; }
-        TypeInfo TypeInfo { get; set; }
+        private CsvWriter CsvWriter { get; set; }
+        private TypeInfo TypeInfo { get; set; }
 
         public CsvDestination()
         {
-            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                LeaveOpen = true
-            };
-            
+            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { LeaveOpen = true };
+
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ResourceType = ResourceType.File;
             InitTargetAction();
         }
 
-        public CsvDestination(string uri) : this()
+        public CsvDestination(string uri)
+            : this()
         {
             Uri = uri;
         }
@@ -47,7 +43,10 @@ namespace ALE.ETLBox.DataFlow
         protected override void InitStream()
         {
             CsvWriter = new CsvWriter(StreamWriter, Configuration);
-            CsvWriter.Context.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[] { "yyyy-MM-dd HH:mm:ss.fff" };
+            CsvWriter.Context.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[]
+            {
+                "yyyy-MM-dd HH:mm:ss.fff"
+            };
             WriteHeaderIfRequired();
         }
 
@@ -74,18 +73,20 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteArray(TInput data)
         {
-            if (data == null) return;
+            if (data == null)
+                return;
             var recordAsArray = data as object[];
             try
             {
-                foreach (var field in recordAsArray)
+                foreach (var field in recordAsArray!)
                 {
                     CsvWriter.WriteField(field);
                 }
             }
             catch (Exception e)
             {
-                if (!ErrorHandler.HasErrorBuffer) throw e;
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
             }
 
@@ -94,14 +95,16 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteObject(TInput data)
         {
-            if (data == null) return;
+            if (data == null)
+                return;
             try
             {
                 CsvWriter.WriteRecord(data);
             }
             catch (Exception e)
             {
-                if (!ErrorHandler.HasErrorBuffer) throw e;
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
             }
             CsvWriter.NextRecord();
@@ -127,12 +130,12 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
+    [PublicAPI]
     public class CsvDestination : CsvDestination<ExpandoObject>
     {
-        public CsvDestination() : base() { }
+        public CsvDestination() { }
 
-        public CsvDestination(string fileName) : base(fileName) { }
-
+        public CsvDestination(string fileName)
+            : base(fileName) { }
     }
-
 }

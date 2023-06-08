@@ -1,28 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using CsvHelper;
-using Moq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowMultiplication
 {
     [Collection("DataFlow")]
     public class RowMultiplicationTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowMultiplicationTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -39,21 +26,24 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void RandomDoubling()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowMultiplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowMultiplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowMultiplicationSource");
-            RowMultiplication<MySimpleRow> multiplication = new RowMultiplication<MySimpleRow>(
-                row =>
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowMultiplicationSource"
+            );
+            RowMultiplication<MySimpleRow> multiplication =
+                new RowMultiplication<MySimpleRow>(row =>
                 {
                     List<MySimpleRow> result = new List<MySimpleRow>();
-                    for (int i= 0; i<row.Col1;i++)
+                    for (int i = 0; i < row.Col1; i++)
                     {
-                        result.Add(new MySimpleRow()
-                        {
-                            Col1 = row.Col1 + i,
-                            Col2 = "Test" + (row.Col1 + i)
-                        });
+                        result.Add(
+                            new MySimpleRow { Col1 = row.Col1 + i, Col2 = "Test" + (row.Col1 + i) }
+                        );
                     }
                     return result;
                 });
@@ -66,7 +56,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d.Col1 == 1 && d.Col2 == "Test1"),
                 d => Assert.True(d.Col1 == 2 && d.Col2 == "Test2"),
                 d => Assert.True(d.Col1 == 3 && d.Col2 == "Test3"),
@@ -80,23 +71,27 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void DifferentOutputType()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowMultiplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowMultiplicationSource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "RowMultiplicationSource");
-            RowMultiplication<MySimpleRow, MyOtherRow> multiplication = new RowMultiplication<MySimpleRow, MyOtherRow>(
-                row =>
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+                SqlConnection,
+                "RowMultiplicationSource"
+            );
+            RowMultiplication<MySimpleRow, MyOtherRow> multiplication = new RowMultiplication<
+                MySimpleRow,
+                MyOtherRow
+            >(row =>
+            {
+                List<MyOtherRow> result = new List<MyOtherRow>();
+                for (int i = 0; i <= row.Col1; i++)
                 {
-                    List<MyOtherRow> result = new List<MyOtherRow>();
-                    for (int i = 0; i <= row.Col1; i++)
-                    {
-                        result.Add(new MyOtherRow()
-                        {
-                            Col3 = i*row.Col1,
-                        });
-                    }
-                    return result;
-                });
+                    result.Add(new MyOtherRow { Col3 = i * row.Col1, });
+                }
+                return result;
+            });
             MemoryDestination<MyOtherRow> dest = new MemoryDestination<MyOtherRow>();
 
             //Act
@@ -106,7 +101,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d.Col3 == 0),
                 d => Assert.True(d.Col3 == 1),
                 d => Assert.True(d.Col3 == 0),

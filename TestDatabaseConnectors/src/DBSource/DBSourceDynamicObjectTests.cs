@@ -1,38 +1,41 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using Xunit;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBSource
 {
     [Collection("DataFlow")]
     public class DbSourceDynamicObjectTests
     {
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public static IEnumerable<object[]> ConnectionsNoSQLite => Config.AllConnectionsWithoutSQLite("DataFlow");
-
-        public DbSourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public static IEnumerable<object[]> ConnectionsNoSQLite =>
+            Config.AllConnectionsWithoutSQLite("DataFlow");
 
         [Theory, MemberData(nameof(Connections))]
         public void SourceAndDestinationSameColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(connection, "SourceDynamic");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                connection,
+                "SourceDynamic"
+            );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationDynamic");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                connection,
+                "DestinationDynamic"
+            );
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamic");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamic");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+                connection,
+                "SourceDynamic"
+            );
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+                connection,
+                "DestinationDynamic"
+            );
 
             source.LinkTo(dest);
             source.Execute();

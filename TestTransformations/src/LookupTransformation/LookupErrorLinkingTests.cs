@@ -2,30 +2,22 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.LookupTransformation
 {
     [Collection("DataFlow")]
     public class LookupErrorLinkingTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public LookupErrorLinkingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MyLookupRow
         {
             [ColumnMap("Col1")]
             public int Key { get; set; }
+
             [ColumnMap("Col2")]
             public string LookupValue { get; set; }
         }
@@ -40,31 +32,46 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void NoErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "LookupErrorLinkingDest");
+            var _ = new TwoColumnsTableFixture(SqlConnection, "LookupErrorLinkingDest");
             CreateSourceTable(SqlConnection, "LookupErrorLinkingSource");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(SqlConnection, "LookupErrorLinkingSource");
+            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(
+                SqlConnection,
+                "LookupErrorLinkingSource"
+            );
 
-            MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>();
-            source.DataAsList = new List<MyInputDataRow>() {
-                new MyInputDataRow() { Col1 = 1 },
-                 new MyInputDataRow() { Col1 = 2 },
-                  new MyInputDataRow() { Col1 = 3 }
+            MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>
+            {
+                DataAsList = new List<MyInputDataRow>
+                {
+                    new() { Col1 = 1 },
+                    new() { Col1 = 2 },
+                    new() { Col1 = 3 }
+                }
             };
 
             //Act & Assert
             Assert.ThrowsAny<Exception>(() =>
             {
                 List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
-                LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<MyInputDataRow, MyLookupRow>(
+                LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<
+                    MyInputDataRow,
+                    MyLookupRow
+                >(
                     lookupSource,
                     row =>
                     {
-                        row.Col2 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue).FirstOrDefault();
+                        row.Col2 = LookupTableData
+                            .Where(ld => ld.Key == row.Col1)
+                            .Select(ld => ld.LookupValue)
+                            .FirstOrDefault();
                         return row;
-                    }
-                    , LookupTableData
+                    },
+                    LookupTableData
                 );
-                DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(SqlConnection, "LookupErrorLinkingDest");
+                DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(
+                    SqlConnection,
+                    "LookupErrorLinkingDest"
+                );
                 source.LinkTo(lookup);
                 lookup.LinkTo(dest);
                 source.Execute();
@@ -76,32 +83,51 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void WithObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "LookupErrorLinkingDest");
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                SqlConnection,
+                "LookupErrorLinkingDest"
+            );
             CreateSourceTable(SqlConnection, "LookupErrorLinkingSource");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(SqlConnection, "LookupErrorLinkingSource");
+            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(
+                SqlConnection,
+                "LookupErrorLinkingSource"
+            );
 
-            MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>();
-            source.DataAsList = new List<MyInputDataRow>() {
-                new MyInputDataRow() { Col1 = 1 },
-                 new MyInputDataRow() { Col1 = 2 },
-                  new MyInputDataRow() { Col1 = 3 },
-                  new MyInputDataRow() { Col1 = 4 }
+            MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>
+            {
+                DataAsList = new List<MyInputDataRow>
+                {
+                    new() { Col1 = 1 },
+                    new() { Col1 = 2 },
+                    new() { Col1 = 3 },
+                    new() { Col1 = 4 }
+                }
             };
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
             List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
-            LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<MyInputDataRow, MyLookupRow>(
-                 lookupSource,
+            LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<
+                MyInputDataRow,
+                MyLookupRow
+            >(
+                lookupSource,
                 row =>
                 {
-                    row.Col2 = LookupTableData.Where(ld => ld.Key == row.Col1).Select(ld => ld.LookupValue).FirstOrDefault();
-                    if (row.Col1 == 4) throw new Exception("Error record");
+                    row.Col2 = LookupTableData
+                        .Where(ld => ld.Key == row.Col1)
+                        .Select(ld => ld.LookupValue)
+                        .FirstOrDefault();
+                    if (row.Col1 == 4)
+                        throw new Exception("Error record");
                     return row;
-                }
-                , LookupTableData
+                },
+                LookupTableData
             );
-            DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(SqlConnection, "LookupErrorLinkingDest");
+            DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(
+                SqlConnection,
+                "LookupErrorLinkingDest"
+            );
             source.LinkTo(lookup);
             lookup.LinkTo(dest);
             lookup.LinkLookupSourceErrorTo(errorDest);
@@ -112,9 +138,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Assert
             dest2Columns.AssertTestData();
-            Assert.Collection<ETLBoxError>(errorDest.Data,
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)),
-                d => Assert.True(!string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText))
+            Assert.Collection(
+                errorDest.Data,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
             );
         }
 
@@ -122,23 +155,40 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             DropTableTask.DropIfExists(connection, tableName);
 
-            var TableDefinition = new TableDefinition(tableName
-                , new List<TableColumn>() {
-                new TableColumn("Col1", "VARCHAR(100)", allowNulls: true),
-                new TableColumn("Col2", "VARCHAR(100)", allowNulls: true)
-            });
+            var TableDefinition = new TableDefinition(
+                tableName,
+                new List<TableColumn>
+                {
+                    new("Col1", "VARCHAR(100)", allowNulls: true),
+                    new("Col2", "VARCHAR(100)", allowNulls: true)
+                }
+            );
             TableDefinition.CreateTable(connection);
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connection.QB, connection.QE);
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-              , $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('2','Test2')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('X','Test3')");
-            SqlTask.ExecuteNonQuery(connection, "Insert demo data"
-                , $@"INSERT INTO {TN.QuotatedFullName} VALUES('3','Test3')");
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+                tableName,
+                connection.QB,
+                connection.QE
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('2','Test2')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('X','Test3')"
+            );
+            SqlTask.ExecuteNonQuery(
+                connection,
+                "Insert demo data",
+                $@"INSERT INTO {TN.QuotatedFullName} VALUES('3','Test3')"
+            );
         }
-
-
     }
 }

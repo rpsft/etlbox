@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace ALE.ETLBox.Helper
 {
@@ -24,34 +20,42 @@ namespace ALE.ETLBox.Helper
     ///     public string Col2 { get; set; }
     /// }
     /// </code>
-    /// </example>    
+    /// </example>
     /// <remarks>
     /// https://stackoverflow.com/questions/33088462/can-i-specify-a-path-in-an-attribute-to-map-a-property-in-my-class-to-a-child-pr
     /// </remarks>"
     public class JsonPathConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object existingValue,
+            JsonSerializer serializer
+        )
         {
             JObject jo = JObject.Load(reader);
             object targetObj = Activator.CreateInstance(objectType);
 
-            foreach (PropertyInfo prop in objectType.GetProperties().Where(p => p.CanRead && p.CanWrite))
+            foreach (
+                PropertyInfo prop in objectType.GetProperties().Where(p => p.CanRead && p.CanWrite)
+            )
             {
                 JsonPropertyAttribute att = prop.GetCustomAttributes(true)
-                                                .OfType<JsonPropertyAttribute>()
-                                                .FirstOrDefault();
+                    .OfType<JsonPropertyAttribute>()
+                    .FirstOrDefault();
 
-                string jsonPath = att != null ? att.PropertyName : prop.Name;
+                string jsonPath = att != null ? att.PropertyName! : prop.Name;
 
-                if (serializer.ContractResolver is DefaultContractResolver)
+                if (serializer.ContractResolver is DefaultContractResolver resolver)
                 {
-                    var resolver = (DefaultContractResolver)serializer.ContractResolver;
                     jsonPath = resolver.GetResolvedPropertyName(jsonPath);
                 }
 
                 if (!Regex.IsMatch(jsonPath, @"^[a-zA-Z0-9_.-]+$"))
-                    throw new InvalidOperationException($"JProperties of JsonPathConverter can have only letters, numbers, underscores, hiffens and dots but name was ${jsonPath}."); // Array operations not permitted
+                    throw new InvalidOperationException(
+                        $"JProperties of JsonPathConverter can have only letters, numbers, underscores, hiffens and dots but name was ${jsonPath}."
+                    ); // Array operations not permitted
 
                 JToken token = jo.SelectToken(jsonPath);
                 if (token != null && token.Type != JTokenType.Null)
@@ -74,7 +78,10 @@ namespace ALE.ETLBox.Helper
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var properties = value.GetType().GetRuntimeProperties().Where(p => p.CanRead && p.CanWrite);
+            var properties = value
+                .GetType()
+                .GetRuntimeProperties()
+                .Where(p => p.CanRead && p.CanWrite);
             JObject main = new JObject();
             foreach (PropertyInfo prop in properties)
             {
@@ -82,11 +89,10 @@ namespace ALE.ETLBox.Helper
                     .OfType<JsonPropertyAttribute>()
                     .FirstOrDefault();
 
-                string jsonPath = att != null ? att.PropertyName : prop.Name;
+                string jsonPath = att != null ? att.PropertyName! : prop.Name;
 
-                if (serializer.ContractResolver is DefaultContractResolver)
+                if (serializer.ContractResolver is DefaultContractResolver resolver)
                 {
-                    var resolver = (DefaultContractResolver)serializer.ContractResolver;
                     jsonPath = resolver.GetResolvedPropertyName(jsonPath);
                 }
 
@@ -101,11 +107,7 @@ namespace ALE.ETLBox.Helper
                     }
                     else
                     {
-                        if (lastLevel[nesting[i]] == null)
-                        {
-                            lastLevel[nesting[i]] = new JObject();
-                        }
-
+                        lastLevel[nesting[i]] ??= new JObject();
                         lastLevel = (JObject)lastLevel[nesting[i]];
                     }
                 }

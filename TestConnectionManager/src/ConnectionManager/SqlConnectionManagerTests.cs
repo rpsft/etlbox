@@ -1,45 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
-using System.IO;
-using System.Threading.Tasks;
 using TestShared.Attributes;
+using TestShared.Helper;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestConnectionManager.ConnectionManager
 {
     [Collection("Connection Manager")]
     public class SqlConnectionManagerTests : IDisposable
     {
-        public string ConnectionStringParameter => Config.SqlConnection.RawConnectionString("ConnectionManager");
-        public SqlConnectionManagerTests(ConnectionManagerFixture dbFixture)
-        {
-        }
+        private string ConnectionStringParameter =>
+            Config.SqlConnection.RawConnectionString("ConnectionManager");
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
-
-        void AssertOpenConnectionCount(int allowedOpenConnections, string connectionString)
+        private void AssertOpenConnectionCount(int allowedOpenConnections, string connectionString)
         {
             var conString = new SqlConnectionString(connectionString);
             var master = new SqlConnectionManager(conString.CloneWithMasterDbName());
             var dbName = conString.Builder.InitialCatalog;
-            var openConnections =
-                new SqlTask("Count open connections",
+            var openConnections = new SqlTask(
+                "Count open connections",
                 $@"SELECT COUNT(dbid) as NumberOfConnections FROM sys.sysprocesses
-                    WHERE dbid > 0 and DB_NAME(dbid) = '{dbName}'")
-                { ConnectionManager = master, DisableLogging = true }
-                .ExecuteScalar<int>();
+                    WHERE dbid > 0 and DB_NAME(dbid) = '{dbName}'"
+            )
+            {
+                ConnectionManager = master,
+                DisableLogging = true
+            }.ExecuteScalar<int>();
             Assert.Equal(allowedOpenConnections, openConnections);
         }
 
@@ -79,9 +72,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void TestOpeningConnectionsParallelOnSqlTask()
         {
             AssertOpenConnectionCount(0, ConnectionStringParameter);
-            var array = new List<int>() { 1, 2, 3, 4 };
-            Parallel.ForEach(array, new ParallelOptions { MaxDegreeOfParallelism = 2 },
-                    curNr => new SqlTask($"Test statement {curNr}", $@"
+            var array = new List<int> { 1, 2, 3, 4 };
+            Parallel.ForEach(
+                array,
+                new ParallelOptions { MaxDegreeOfParallelism = 2 },
+                curNr =>
+                    new SqlTask(
+                        $"Test statement {curNr}",
+                        $@"
                     DECLARE @counter INT = 0;
                     CREATE TABLE dbo.test{curNr} (
                         Col1 nvarchar(50)
@@ -92,17 +90,19 @@ namespace ALE.ETLBoxTests.DataFlowTests
                          INSERT INTO dbo.test{curNr}
                             values('Lorem ipsum Lorem ipsum Lorem ipsum Lorem')
                     END
-            ")
+            "
+                    )
                     {
-                        ConnectionManager = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter)),
+                        ConnectionManager = new SqlConnectionManager(
+                            new SqlConnectionString(ConnectionStringParameter)
+                        ),
                         DisableLogging = true
                     }.ExecuteNonQuery()
-                 );
+            );
             AssertOpenConnectionCount(2, ConnectionStringParameter);
             SqlConnection.ClearAllPools();
             AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
-
 
         [Fact]
         public void TestCloningConnection()

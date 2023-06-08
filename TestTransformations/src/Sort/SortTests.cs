@@ -1,28 +1,18 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.Sort
 {
     [Collection("DataFlow")]
     public class SortTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public SortTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public class MySimpleRow
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+        private class MySimpleRow
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }
@@ -41,18 +31,16 @@ namespace ALE.ETLBoxTests.DataFlowTests
             CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
                 row => actual.Add(row)
             );
-            Comparison<MySimpleRow> comp = new Comparison<MySimpleRow>(
-                   (x, y) => y.Col1 - x.Col1
-                );
-            Sort<MySimpleRow> block = new Sort<MySimpleRow>(comp);
+            int Comp(MySimpleRow x, MySimpleRow y) => y.Col1 - x.Col1;
+            Sort<MySimpleRow> block = new Sort<MySimpleRow>(Comp);
             source.LinkTo(block);
             block.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            List<int> expected = new List<int>() { 3, 2, 1 };
-            Assert.Equal(expected, actual.Select(row => row.Col1).ToList()) ;
+            List<int> expected = new List<int> { 3, 2, 1 };
+            Assert.Equal(expected, actual.Select(row => row.Col1).ToList());
         }
     }
 }

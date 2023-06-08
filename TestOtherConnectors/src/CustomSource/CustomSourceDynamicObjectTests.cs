@@ -1,33 +1,28 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.CustomSource
 {
     [Collection("DataFlow")]
     public class CustomSourceDynamicObjectTests
     {
-        public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public CustomSourceDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager Connection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void SimpleFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("Destination4CustomSourceDynamic");
-            List<string> Data = new List<string>() { "Test1", "Test2", "Test3" };
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+                "Destination4CustomSourceDynamic"
+            );
+            List<string> Data = new List<string> { "Test1", "Test2", "Test3" };
             int _readIndex = 0;
             Func<ExpandoObject> ReadData = () =>
             {
@@ -41,8 +36,14 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Func<bool> EndOfData = () => _readIndex >= Data.Count;
 
             //Act
-            CustomSource<ExpandoObject> source = new CustomSource<ExpandoObject>(ReadData, EndOfData);
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "Destination4CustomSourceDynamic");
+            CustomSource<ExpandoObject> source = new CustomSource<ExpandoObject>(
+                ReadData,
+                EndOfData
+            );
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+                Connection,
+                "Destination4CustomSourceDynamic"
+            );
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

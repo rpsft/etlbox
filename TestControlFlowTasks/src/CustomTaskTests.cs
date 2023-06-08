@@ -1,22 +1,13 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("Generic ControlFlow")]
     public class CustomTaskTests
     {
-        public CustomTaskTests()
-        { }
+        private bool Action1Executed { get; set; }
 
-        bool Action1Executed { get; set; }
-        void Action1()
+        private void Action1()
         {
             Action1Executed = true;
         }
@@ -32,8 +23,9 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.True(Action1Executed);
         }
 
-        int Action2Value { get; set; }
-        void Action2(int param1)
+        private int Action2Value { get; set; }
+
+        private void Action2(int param1)
         {
             Action2Value = param1;
         }
@@ -49,9 +41,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Equal(5, Action2Value);
         }
 
-        string Action3Value1 { get; set; }
-        bool Action3Value2 { get; set; }
-        void Action3(string param1, bool param2)
+        private string Action3Value1 { get; set; }
+        private bool Action3Value2 { get; set; }
+
+        private void Action3(string param1, bool param2)
         {
             Action3Value1 = param1;
             Action3Value2 = param2;

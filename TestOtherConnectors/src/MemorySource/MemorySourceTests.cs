@@ -1,27 +1,20 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using JetBrains.Annotations;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 using Xunit;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestOtherConnectors.MemorySource
 {
     [Collection("DataFlow")]
     public class MemorySourceTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public MemorySourceTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        private SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySimpleRow
         {
             public int Col1 { get; set; }
@@ -34,14 +27,17 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "MemoryDestination");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                SqlConnection,
+                "MemoryDestination"
+            );
 
             //Act
-            source.DataAsList = new List<MySimpleRow>()
+            source.DataAsList = new List<MySimpleRow>
             {
-                new MySimpleRow() { Col1 = 1, Col2 = "Test1" },
-                new MySimpleRow() { Col1 = 2, Col2 = "Test2" },
-                new MySimpleRow() { Col1 = 3, Col2 = "Test3" }
+                new() { Col1 = 1, Col2 = "Test1" },
+                new() { Col1 = 2, Col2 = "Test2" },
+                new() { Col1 = 3, Col2 = "Test3" }
             };
             source.LinkTo(dest);
             source.Execute();

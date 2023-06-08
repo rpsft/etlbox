@@ -1,17 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
-using System.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A Xml destination defines a xml file where data from the flow is inserted. 
+    /// A Xml destination defines a xml file where data from the flow is inserted.
     /// </summary>
     /// <see cref="XmlDestination"/>
     /// <typeparam name="TInput">Type of data input.</typeparam>
@@ -21,25 +16,23 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class XmlDestination<TInput> : DataFlowStreamDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    [PublicAPI]
+    public class XmlDestination<TInput> : DataFlowStreamDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write Xml into file {Uri ?? ""}";
 
         public string RootElementName { get; set; } = "Root";
-        public string DynamicElementName { get; set; } 
+        public string DynamicElementName { get; set; }
         public XmlWriter XmlWriter { get; set; }
-        public XmlWriterSettings Settings { get; set; } = new XmlWriterSettings()
-        {
-            Indent = true,
-            NamespaceHandling = NamespaceHandling.OmitDuplicates
-        };
+        public XmlWriterSettings Settings { get; set; } =
+            new() { Indent = true, NamespaceHandling = NamespaceHandling.OmitDuplicates };
 
-        XmlSerializer XmlSerializer { get; set; }
-        XmlTypeInfo TypeInfo { get; set; }
-        XmlSerializerNamespaces NS { get; set; }
+        private XmlSerializer XmlSerializer { get; set; }
+        private XmlTypeInfo TypeInfo { get; set; }
+        private XmlSerializerNamespaces Ns { get; set; }
 
-        public XmlDestination() : base()
+        public XmlDestination()
         {
             TypeInfo = new XmlTypeInfo(typeof(TInput));
             if (!TypeInfo.IsDynamic)
@@ -47,20 +40,22 @@ namespace ALE.ETLBox.DataFlow
             InitTargetAction();
         }
 
-        public XmlDestination(string fileName) : this()
+        public XmlDestination(string fileName)
+            : this()
         {
             Uri = fileName;
         }
 
-        public XmlDestination(string uri, ResourceType resourceType) : this(uri)
+        public XmlDestination(string uri, ResourceType resourceType)
+            : this(uri)
         {
             ResourceType = resourceType;
         }
 
         protected override void InitStream()
         {
-            NS = new XmlSerializerNamespaces();
-            NS.Add("", "");
+            Ns = new XmlSerializerNamespaces();
+            Ns.Add("", "");
             XmlWriter = XmlWriter.Create(StreamWriter, Settings);
             XmlWriter.WriteStartDocument();
             XmlWriter.WriteStartElement(RootElementName);
@@ -68,23 +63,28 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void WriteIntoStream(TInput data)
         {
-            if (data == null) return;
+            if (data == null)
+                return;
             try
             {
                 if (TypeInfo.IsDynamic)
                 {
                     string json = JsonConvert.SerializeObject(data);
-                    XDocument doc = JsonConvert.DeserializeXNode(json, DynamicElementName ?? "Dynamic") as XDocument;
-                    doc.Root.WriteTo(XmlWriter);
+                    XDocument doc = JsonConvert.DeserializeXNode(
+                        json,
+                        DynamicElementName ?? "Dynamic"
+                    );
+                    doc?.Root?.WriteTo(XmlWriter);
                 }
                 else
                 {
-                    XmlSerializer.Serialize(XmlWriter, data, NS);
+                    XmlSerializer.Serialize(XmlWriter, data, Ns);
                 }
             }
             catch (Exception e)
             {
-                if (!ErrorHandler.HasErrorBuffer) throw e;
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(data));
             }
             LogProgress();
@@ -99,16 +99,16 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// A Xml destination defines a Xml file where data from the flow is inserted. 
+    /// A Xml destination defines a Xml file where data from the flow is inserted.
     /// The XmlDestination uses a dynamic object as input type. If you need other data types, use the generic CsvDestination instead.
     /// </summary>
     /// <see cref="XmlDestination{TInput}"/>
-    public class XmlDestination : XmlDestination<ExpandoObject>
+    [PublicAPI]
+    public sealed class XmlDestination : XmlDestination<ExpandoObject>
     {
-        public XmlDestination() : base() { }
+        public XmlDestination() { }
 
-        public XmlDestination(string fileName) : base(fileName) { }
-
+        public XmlDestination(string fileName)
+            : base(fileName) { }
     }
-
 }

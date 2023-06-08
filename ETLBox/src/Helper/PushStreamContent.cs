@@ -1,63 +1,58 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace ETLBox.Helper
+namespace ALE.ETLBox.Helper
 {
-
     internal class PushStreamContent : HttpContent
     {
         private readonly Func<Stream, HttpContent, TransportContext, Task> _onStreamAvailable;
 
-        public PushStreamContent(
-            Action<Stream, HttpContent, TransportContext> onStreamAvailable)
-            : this(AsTask(onStreamAvailable), (MediaTypeHeaderValue)null)
-        {
-        }
+        public PushStreamContent(Action<Stream, HttpContent, TransportContext> onStreamAvailable)
+            : this(AsTask(onStreamAvailable), (MediaTypeHeaderValue)null) { }
 
         public PushStreamContent(
-            Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable)
-            : this(onStreamAvailable, (MediaTypeHeaderValue)null)
-        {
-        }
+            Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable
+        )
+            : this(onStreamAvailable, (MediaTypeHeaderValue)null) { }
 
         public PushStreamContent(
             Action<Stream, HttpContent, TransportContext> onStreamAvailable,
-            string mediaType)
-            : this(AsTask(onStreamAvailable), new MediaTypeHeaderValue(mediaType))
-        {
-        }
+            string mediaType
+        )
+            : this(AsTask(onStreamAvailable), new MediaTypeHeaderValue(mediaType)) { }
 
         public PushStreamContent(
             Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable,
-            string mediaType)
-            : this(onStreamAvailable, new MediaTypeHeaderValue(mediaType))
-        {
-        }
+            string mediaType
+        )
+            : this(onStreamAvailable, new MediaTypeHeaderValue(mediaType)) { }
 
         public PushStreamContent(
             Action<Stream, HttpContent, TransportContext> onStreamAvailable,
-            MediaTypeHeaderValue mediaType)
-            : this(AsTask(onStreamAvailable), mediaType)
-        {
-        }
+            MediaTypeHeaderValue mediaType
+        )
+            : this(AsTask(onStreamAvailable), mediaType) { }
 
         public PushStreamContent(
             Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable,
-            MediaTypeHeaderValue mediaType)
+            MediaTypeHeaderValue mediaType
+        )
         {
-            _onStreamAvailable = onStreamAvailable ?? throw new ArgumentException(nameof(onStreamAvailable));
+            _onStreamAvailable =
+                onStreamAvailable ?? throw new ArgumentException(nameof(onStreamAvailable));
             Headers.ContentType = mediaType ?? ApplicationOctetStreamMediaType;
         }
 
-        private MediaTypeHeaderValue ApplicationOctetStreamMediaType => new("application/octet-stream");
+        private MediaTypeHeaderValue ApplicationOctetStreamMediaType =>
+            new("application/octet-stream");
 
         private static Func<Stream, HttpContent, TransportContext, Task> AsTask(
-            Action<Stream, HttpContent, TransportContext> onStreamAvailable)
+            Action<Stream, HttpContent, TransportContext> onStreamAvailable
+        )
         {
             if (onStreamAvailable == null)
                 throw new ArgumentException(nameof(onStreamAvailable));
@@ -77,7 +72,8 @@ namespace ETLBox.Helper
 
         protected override async Task SerializeToStreamAsync(
             Stream stream,
-            TransportContext context)
+            TransportContext context
+        )
         {
             var pushStreamContent = this;
             var serializeToStreamTask = new TaskCompletionSource<bool>();
@@ -93,9 +89,7 @@ namespace ETLBox.Helper
         }
 
         [StructLayout(LayoutKind.Sequential, Size = 1)]
-        private struct AsyncVoid
-        {
-        }
+        private struct AsyncVoid { }
 
         internal class CompleteTaskOnCloseStream : DelegatingStream
         {
@@ -103,11 +97,13 @@ namespace ETLBox.Helper
 
             public CompleteTaskOnCloseStream(
                 Stream innerStream,
-                TaskCompletionSource<bool> serializeToStreamTask)
+                TaskCompletionSource<bool> serializeToStreamTask
+            )
                 : base(innerStream)
             {
-                _serializeToStreamTask = serializeToStreamTask ??
-                                         throw new ArgumentNullException(nameof(serializeToStreamTask));
+                _serializeToStreamTask =
+                    serializeToStreamTask
+                    ?? throw new ArgumentNullException(nameof(serializeToStreamTask));
             }
 
             protected override void Dispose(bool disposing)

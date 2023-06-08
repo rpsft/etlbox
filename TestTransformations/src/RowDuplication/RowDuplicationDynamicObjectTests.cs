@@ -1,36 +1,28 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowDuplication
 {
     [Collection("DataFlow")]
     public class RowDuplicationDynamicObjectTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowDuplicationDynamicObjectTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void NoParameter()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowDuplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowDuplicationSource"
+            );
             source2Columns.InsertTestData();
 
             DbSource source = new DbSource(SqlConnection, "RowDuplicationSource");
-            RowDuplication duplication = new RowDuplication();
+            ALE.ETLBox.DataFlow.RowDuplication duplication =
+                new ALE.ETLBox.DataFlow.RowDuplication();
             MemoryDestination dest = new MemoryDestination();
 
             //Act
@@ -40,29 +32,49 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 1 && d.Col2 == "Test1"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 1 && d.Col2 == "Test1"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 2 && d.Col2 == "Test2"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 2 && d.Col2 == "Test2"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 3 && d.Col2 == "Test3"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 3 && d.Col2 == "Test3"); }
+            Assert.Collection(
+                dest.Data,
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 1 && (row as dynamic).Col2 == "Test1");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 1 && (row as dynamic).Col2 == "Test1");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 2 && (row as dynamic).Col2 == "Test2");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 2 && (row as dynamic).Col2 == "Test2");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 3 && (row as dynamic).Col2 == "Test3");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 3 && (row as dynamic).Col2 == "Test3");
+                }
             );
         }
 
-       
         [Fact]
         public void WithPredicate()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowDuplicationSource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowDuplicationSource"
+            );
             source2Columns.InsertTestData();
 
             DbSource source = new DbSource(SqlConnection, "RowDuplicationSource");
-            RowDuplication duplication = new RowDuplication(
-                row =>
+            ALE.ETLBox.DataFlow.RowDuplication duplication =
+                new ALE.ETLBox.DataFlow.RowDuplication(row =>
                 {
-                    dynamic r = row as dynamic;
+                    dynamic r = row;
                     return r.Col1 == 1 || r.Col2 == "Test3";
                 });
             MemoryDestination dest = new MemoryDestination();
@@ -74,12 +86,28 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 1 && d.Col2 == "Test1"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 1 && d.Col2 == "Test1"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 2 && d.Col2 == "Test2"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 3 && d.Col2 == "Test3"); },
-                row => { dynamic d = row as dynamic; Assert.True(d.Col1 == 3 && d.Col2 == "Test3"); }
+            Assert.Collection(
+                dest.Data,
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 1 && (row as dynamic).Col2 == "Test1");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 1 && (row as dynamic).Col2 == "Test1");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 2 && (row as dynamic).Col2 == "Test2");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 3 && (row as dynamic).Col2 == "Test3");
+                },
+                row =>
+                {
+                    Assert.True((row as dynamic).Col1 == 3 && (row as dynamic).Col2 == "Test3");
+                }
             );
         }
     }

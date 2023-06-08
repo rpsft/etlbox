@@ -1,35 +1,29 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestTransformations.RowDuplication
 {
     [Collection("DataFlow")]
     public class RowDuplicationStringArrayTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public RowDuplicationStringArrayTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         [Fact]
         public void DataIsInList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("RowDuplicationStringArraySource");
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+                "RowDuplicationStringArraySource"
+            );
             source2Columns.InsertTestData();
 
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "RowDuplicationStringArraySource");
+            DbSource<string[]> source = new DbSource<string[]>(
+                SqlConnection,
+                "RowDuplicationStringArraySource"
+            );
             RowDuplication<string[]> duplication = new RowDuplication<string[]>();
             MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
@@ -40,7 +34,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data,
+            Assert.Collection(
+                dest.Data,
                 d => Assert.True(d[0] == "1" && d[1] == "Test1"),
                 d => Assert.True(d[0] == "1" && d[1] == "Test1"),
                 d => Assert.True(d[0] == "2" && d[1] == "Test2"),
@@ -49,7 +44,5 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 d => Assert.True(d[0] == "3" && d[1] == "Test3")
             );
         }
-
-
     }
 }

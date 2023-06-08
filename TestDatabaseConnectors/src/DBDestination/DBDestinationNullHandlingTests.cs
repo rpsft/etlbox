@@ -1,26 +1,15 @@
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.Fixtures;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
+using TestShared.Helper;
+using TestShared.SharedFixtures;
 
-namespace ALE.ETLBoxTests.DataFlowTests
+namespace TestDatabaseConnectors.DBDestination
 {
     [Collection("DataFlow")]
     public class DbDestinationNullHandlingTests
     {
-        public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("DataFlow");
-        public DbDestinationNullHandlingTests(DataFlowDatabaseFixture dbFixture)
-        {
-        }
+        public SqlConnectionManager SqlConnection =>
+            Config.SqlConnection.ConnectionManager("DataFlow");
 
         public class MySimpleRow
         {
@@ -32,19 +21,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IgnoreWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DestIgnoreNullValues");
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>();
-            source.DataAsList = new List<MySimpleRow>()
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+                SqlConnection,
+                "DestIgnoreNullValues"
+            );
+            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
-                null,
-                new MySimpleRow() { Col1 = 1, Col2 = "Test1"},
-                null,
-                new MySimpleRow() { Col1 = 2, Col2 = "Test2"},
-                new MySimpleRow() { Col1 = 3, Col2 = "Test3"},
-                null
+                DataAsList = new List<MySimpleRow>
+                {
+                    null,
+                    new MySimpleRow { Col1 = 1, Col2 = "Test1" },
+                    null,
+                    new MySimpleRow { Col1 = 2, Col2 = "Test2" },
+                    new MySimpleRow { Col1 = 3, Col2 = "Test3" },
+                    null
+                }
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "DestIgnoreNullValues");
-
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+                SqlConnection,
+                "DestIgnoreNullValues"
+            );
 
             //Act
             source.LinkTo(dest);
@@ -59,19 +55,26 @@ namespace ALE.ETLBoxTests.DataFlowTests
         public void IgnoreWithStringArray()
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DestIgnoreNullValuesStringArray");
-            MemorySource<string[]> source = new MemorySource<string[]>();
-            source.DataAsList = new List<string[]>()
+            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+                SqlConnection,
+                "DestIgnoreNullValuesStringArray"
+            );
+            MemorySource<string[]> source = new MemorySource<string[]>
             {
-                null ,
-                new string[] { "1", "Test1"},
-                null,
-                new string[] { "2", "Test2"},
-                new string[] { "3", "Test3"},
-                null
+                DataAsList = new List<string[]>
+                {
+                    null,
+                    new[] { "1", "Test1" },
+                    null,
+                    new[] { "2", "Test2" },
+                    new[] { "3", "Test3" },
+                    null
+                }
             };
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DestIgnoreNullValuesStringArray");
-
+            DbDestination<string[]> dest = new DbDestination<string[]>(
+                SqlConnection,
+                "DestIgnoreNullValuesStringArray"
+            );
 
             //Act
             source.LinkTo(dest);

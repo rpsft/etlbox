@@ -2,39 +2,53 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace ALE.ETLBoxTests.ControlFlowTests
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class CreateDatabaseTaskTests
     {
-        public SqlConnectionManager SqlMasterConnection => new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName());
-        public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
-                    new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
-                    new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
-                    new object[] { (IConnectionManager)new MySqlConnectionManager(Config.MySqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
-        };
-        public CreateDatabaseTaskTests()
-        { }
+        public static IEnumerable<object[]> SqlConnectionsWithMaster() =>
+            new[]
+            {
+                new object[]
+                {
+                    new SqlConnectionManager(
+                        Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()
+                    )
+                },
+                new object[]
+                {
+                    new PostgresConnectionManager(
+                        Config.PostgresConnection
+                            .ConnectionString("ControlFlow")
+                            .CloneWithMasterDbName()
+                    )
+                },
+                new object[]
+                {
+                    new MySqlConnectionManager(
+                        Config.MySqlConnection
+                            .ConnectionString("ControlFlow")
+                            .CloneWithMasterDbName()
+                    )
+                },
+            };
 
         [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
         public void CreateSimple(IConnectionManager connection)
         {
             //Arrange
-            var dbName = "ETLBox_"+HashHelper.RandomString(10);
+            var dbName = "ETLBox_" + HashHelper.RandomString(10);
             var dbListBefore = GetDatabaseListTask.List(connection);
-            Assert.DoesNotContain<string>(dbName, dbListBefore);
+            Assert.DoesNotContain(dbName, dbListBefore);
 
             //Act
             CreateDatabaseTask.Create(connection, dbName);
 
             //Assert
             var dbListAfter = GetDatabaseListTask.List(connection);
-            Assert.Contains<string>(dbName, dbListAfter);
+            Assert.Contains(dbName, dbListAfter);
 
             //Cleanup
             DropDatabaseTask.Drop(connection, dbName);
@@ -51,11 +65,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             if (connection.GetType() == typeof(MySqlConnectionManager))
                 collation = "latin1_swedish_ci";
             //Act
-            CreateDatabaseTask.Create(connection, dbName,collation );
+            CreateDatabaseTask.Create(connection, dbName, collation);
 
             //Assert
             var dbList = GetDatabaseListTask.List(connection);
-            Assert.Contains<string>(dbName, dbList);
+            Assert.Contains(dbName, dbList);
 
             //Cleanup
             DropDatabaseTask.Drop(connection, dbName);
@@ -65,8 +79,12 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => CreateDatabaseTask.Create(Config.SQLiteConnection.ConnectionManager("ControlFlow"), "Test")
-                );
+                () =>
+                    CreateDatabaseTask.Create(
+                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
+                        "Test"
+                    )
+            );
         }
     }
 }
