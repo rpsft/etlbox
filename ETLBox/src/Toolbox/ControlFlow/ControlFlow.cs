@@ -9,6 +9,7 @@ namespace ALE.ETLBox.ControlFlow
     /// Contains static information which affects all ETLBox tasks.
     /// Here you can set default connections string, disbale the logging for all processes or set the current stage used in your logging configuration.
     /// </summary>
+    [PublicAPI]
     public static class ControlFlow
     {
         private static IConnectionManager s_defaultDbConnection;
@@ -91,7 +92,9 @@ namespace ALE.ETLBox.ControlFlow
                     connection,
                     logTableName
                 ).GetNLogDatabaseTarget();
-                SimpleConfigurator.ConfigureForTargetLogging(newTarget, minLogLevel);
+                LoggingConfiguration config = new LoggingConfiguration();
+                config.AddRule(minLogLevel, LogLevel.Fatal, newTarget);
+                LogManager.Setup().LoadConfiguration(config);
             }
             catch
             {
@@ -99,17 +102,19 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
-        private static bool IsLayoutRendererRegisterd;
+        private static bool s_isLayoutRendererRegisterd;
 
         public static Logger GetLogger()
         {
-            if (!IsLayoutRendererRegisterd)
+            if (!s_isLayoutRendererRegisterd)
             {
-                ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition(
-                    "etllog",
-                    typeof(ETLLogLayoutRenderer)
-                );
-                IsLayoutRendererRegisterd = true;
+                LogManager
+                    .Setup()
+                    .SetupExtensions(builder =>
+                    {
+                        builder.RegisterLayoutRenderer<ETLLogLayoutRenderer>("etllog");
+                    });
+                s_isLayoutRendererRegisterd = true;
             }
             return LogManager.GetLogger("ETL");
         }
