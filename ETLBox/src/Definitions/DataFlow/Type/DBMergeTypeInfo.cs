@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     internal class DBMergeTypeInfo : TypeInfo
     {
@@ -6,12 +6,12 @@
         internal List<PropertyInfo> IdAttributeProps { get; } = new();
         internal List<PropertyInfo> CompareAttributeProps { get; } = new();
         internal List<Tuple<PropertyInfo, object>> DeleteAttributeProps { get; } = new();
-        internal PropertyInfo ChangeDateProperty { get; set; }
-        internal PropertyInfo ChangeActionProperty { get; set; }
-        internal MergeProperties MergeProps { get; set; }
+        internal PropertyInfo ChangeDateProperty { get; private set; }
+        internal PropertyInfo ChangeActionProperty { get; private set; }
+        private MergeProperties MergeProps { get; }
 
-        internal DBMergeTypeInfo(Type typ, MergeProperties mergeProps)
-            : base(typ)
+        internal DBMergeTypeInfo(Type type, MergeProperties mergeProps)
+            : base(type)
         {
             MergeProps = mergeProps;
             GatherTypeInfo();
@@ -27,22 +27,25 @@
             AddChangeDateProp(propInfo);
         }
 
-        private void AddMergeIdColumnNameAttribute(PropertyInfo propInfo)
+        private void AddMergeIdColumnNameAttribute(MemberInfo propInfo)
         {
             if (MergeProps.IdPropertyNames.Contains(propInfo.Name))
-                IdColumnNames.Add(propInfo.Name);
-            else
             {
-                var attr = propInfo.GetCustomAttribute(typeof(IdColumn)) as IdColumn;
-                if (attr != null)
-                {
-                    var cmattr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
-                    if (cmattr != null)
-                        IdColumnNames.Add(cmattr.ColumnName);
-                    else
-                        IdColumnNames.Add(propInfo.Name);
-                }
+                IdColumnNames.Add(propInfo.Name);
+                return;
             }
+
+            if (propInfo.GetCustomAttribute(typeof(IdColumnAttribute)) is not IdColumnAttribute)
+            {
+                return;
+            }
+
+            if (
+                propInfo.GetCustomAttribute(typeof(ColumnMapAttribute)) is ColumnMapAttribute cmattr
+            )
+                IdColumnNames.Add(cmattr.ColumnName);
+            else
+                IdColumnNames.Add(propInfo.Name);
         }
 
         private void AddIdAddAttributeProps(PropertyInfo propInfo)
@@ -51,8 +54,7 @@
                 IdAttributeProps.Add(propInfo);
             else
             {
-                var idAttr = propInfo.GetCustomAttribute(typeof(IdColumn)) as IdColumn;
-                if (idAttr != null)
+                if (propInfo.GetCustomAttribute(typeof(IdColumnAttribute)) is IdColumnAttribute)
                     IdAttributeProps.Add(propInfo);
             }
         }
@@ -63,35 +65,49 @@
                 CompareAttributeProps.Add(propInfo);
             else
             {
-                var compAttr = propInfo.GetCustomAttribute(typeof(CompareColumn)) as CompareColumn;
-                if (compAttr != null)
+                if (
+                    propInfo.GetCustomAttribute(typeof(CompareColumnAttribute))
+                    is CompareColumnAttribute
+                )
                     CompareAttributeProps.Add(propInfo);
             }
         }
 
         private void AddDeleteAttributeProps(PropertyInfo propInfo)
         {
-            if (MergeProps.DeletionProperties.ContainsKey(propInfo.Name))
-                DeleteAttributeProps.Add(
-                    Tuple.Create(propInfo, MergeProps.DeletionProperties[propInfo.Name])
-                );
+            if (MergeProps.DeletionProperties.TryGetValue(propInfo.Name, out var property))
+                DeleteAttributeProps.Add(Tuple.Create(propInfo, property));
             else
             {
-                var deleteAttr = propInfo.GetCustomAttribute(typeof(DeleteColumn)) as DeleteColumn;
-                if (deleteAttr != null)
+                if (
+                    propInfo.GetCustomAttribute(typeof(DeleteColumnAttribute))
+                    is DeleteColumnAttribute deleteAttr
+                )
                     DeleteAttributeProps.Add(Tuple.Create(propInfo, deleteAttr.DeleteOnMatchValue));
             }
         }
 
         private void AddChangeActionProp(PropertyInfo propInfo)
         {
-            if (propInfo.Name.ToLower() == MergeProps.ChangeActionPropertyName.ToLower())
+            if (
+                string.Equals(
+                    propInfo.Name,
+                    MergeProps.ChangeActionPropertyName,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
                 ChangeActionProperty = propInfo;
         }
 
         private void AddChangeDateProp(PropertyInfo propInfo)
         {
-            if (propInfo.Name.ToLower() == MergeProps.ChangeDatePropertyName.ToLower())
+            if (
+                string.Equals(
+                    propInfo.Name,
+                    MergeProps.ChangeDatePropertyName,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
                 ChangeDateProperty = propInfo;
         }
     }

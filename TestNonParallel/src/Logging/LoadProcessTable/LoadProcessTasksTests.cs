@@ -1,27 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ALE.ETLBox;
+﻿using System.Threading.Tasks;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 using NLog;
-using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 {
-    [Collection("Logging")]
-    public class LoadProcessTasksTests : IDisposable
+    public sealed class LoadProcessTasksTests : NonParallelTestBase, IDisposable
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
+        public LoadProcessTasksTests(LoggingDatabaseFixture fixture)
+            : base(fixture) { }
 
         public void Dispose()
         {
             ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void CreateLoadProcessTable(IConnectionManager connection)
         {
             //Arrange
@@ -40,7 +36,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             DropTableTask.Drop(connection, "etlbox_testloadprocess");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void StartLoadProcess(IConnectionManager connection)
         {
             //Arrange
@@ -80,7 +76,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             DropTableTask.Drop(connection, "test_load_process");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void StartLoadProcessWithMessage(IConnectionManager connection)
         {
             //Arrange
@@ -103,7 +99,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             DropTableTask.Drop(connection, "test_lp_withmessage");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void EndLoadProcess(IConnectionManager connection)
         {
             //Arrange
@@ -116,7 +112,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             EndLoadProcessTask.End(connection, "End process 2");
 
             //Assert
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning == false);
+            Assert.False(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
             Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.WasSuccessful);
             Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsFinished);
             Assert.True(
@@ -161,7 +157,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             );
 
             //Assert
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning == false);
+            Assert.False(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
             Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.WasAborted);
             Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.AbortMessage == null);
             Assert.Equal(
@@ -177,7 +173,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             DropTableTask.Drop(SqlConnection, "test_lp_abort");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void IsLoadProcessKeyInLog(IConnectionManager connection)
         {
             //Arrange

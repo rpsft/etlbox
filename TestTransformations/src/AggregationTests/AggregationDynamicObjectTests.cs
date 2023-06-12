@@ -2,7 +2,6 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.AggregationTests
 {
-    [Collection("DataFlow")]
     public class AggregationDynamicObjectTests
     {
         [Fact]

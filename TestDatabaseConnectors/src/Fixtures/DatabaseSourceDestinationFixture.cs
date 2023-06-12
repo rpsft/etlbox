@@ -2,20 +2,29 @@
 
 namespace TestDatabaseConnectors.Fixtures
 {
-    [CollectionDefinition("DataFlow Source and Destination")]
-    public class DatalFlowSourceDestinationCollectionClass
-        : ICollectionFixture<DatabaseSourceDestinationFixture> { }
-
-    public class DatabaseSourceDestinationFixture
+    public sealed class DatabaseSourceDestinationFixture : IDisposable
     {
+        public const string SourceConfigSection = "DataFlowSource";
+        public const string DestinationConfigSection = "DataFlowDestination";
+
         public DatabaseSourceDestinationFixture()
         {
-            DatabaseHelper.RecreateSqlDatabase("DataFlowSource");
-            DatabaseHelper.RecreateSqlDatabase("DataFlowDestination");
-            DatabaseHelper.RecreateMySqlDatabase("DataFlowSource");
-            DatabaseHelper.RecreateMySqlDatabase("DataFlowDestination");
-            DatabaseHelper.RecreatePostgresDatabase("DataFlowSource");
-            DatabaseHelper.RecreatePostgresDatabase("DataFlowDestination");
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, SourceConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, DestinationConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.MySqlConnection, SourceConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.MySqlConnection, DestinationConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, SourceConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, DestinationConfigSection);
+        }
+
+        public void Dispose()
+        {
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, SourceConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, DestinationConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.MySqlConnection, SourceConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.MySqlConnection, DestinationConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, SourceConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, DestinationConfigSection);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using ALE.ETLBox.Helper;
 using ExcelDataReader;
-using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -187,16 +186,12 @@ namespace ALE.ETLBox.DataFlow
                 SetValueInObject(row, colNrInRange, value);
         }
 
-        private TOutput GetNewOutputInstance()
-        {
-            if (TypeInfo.IsArray)
-                return (TOutput)
-                    Activator.CreateInstance(typeof(TOutput), ExcelDataReader.FieldCount);
-            else
-                return (TOutput)Activator.CreateInstance(typeof(TOutput));
-        }
+        private TOutput GetNewOutputInstance() =>
+            TypeInfo.IsArray
+                ? (TOutput)Activator.CreateInstance(typeof(TOutput), ExcelDataReader.FieldCount)
+                : (TOutput)Activator.CreateInstance(typeof(TOutput));
 
-        private void SetValueInArray(Array row, int colNrInRange, object value)
+        private static void SetValueInArray(Array row, int colNrInRange, object value)
         {
             var con = Convert.ChangeType(value, typeof(TOutput).GetElementType()!);
             row.SetValue(con, colNrInRange);
@@ -228,14 +223,17 @@ namespace ALE.ETLBox.DataFlow
                 TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out var propertyIndex)
             )
                 propInfo = TypeInfo.Properties[propertyIndex];
-            propInfo?.TrySetValue(row, TypeInfo.CastPropertyValue(propInfo, value?.ToString()));
+            propInfo?.TrySetValue(
+                row,
+                ExcelTypeInfo.CastPropertyValue(propInfo, value?.ToString())
+            );
         }
 
         protected override void InitReader()
         {
             ExcelDataReader = ExcelReaderFactory.CreateReader(
                 StreamReader.BaseStream,
-                new ExcelReaderConfiguration() { Password = ExcelFilePassword }
+                new ExcelReaderConfiguration { Password = ExcelFilePassword }
             );
         }
 

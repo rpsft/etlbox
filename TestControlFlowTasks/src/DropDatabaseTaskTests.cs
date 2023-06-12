@@ -2,40 +2,16 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class DropDatabaseTaskTests
+    public class DropDatabaseTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> SqlConnectionsWithMaster() =>
-            new[]
-            {
-                new object[]
-                {
-                    new SqlConnectionManager(
-                        Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new PostgresConnectionManager(
-                        Config.PostgresConnection
-                            .ConnectionString("ControlFlow")
-                            .CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new MySqlConnectionManager(
-                        Config.MySqlConnection
-                            .ConnectionString("ControlFlow")
-                            .CloneWithMasterDbName()
-                    )
-                },
-            };
+        public DropDatabaseTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
-        [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
+        [Theory, MemberData(nameof(DbConnectionsWithMaster))]
         public void Drop(IConnectionManager connection)
         {
             //Arrange
@@ -52,7 +28,7 @@ namespace TestControlFlowTasks
             Assert.False(existsAfter);
         }
 
-        [Theory, MemberData(nameof(SqlConnectionsWithMaster))]
+        [Theory, MemberData(nameof(DbConnectionsWithMaster))]
         public void DropIfExists(IConnectionManager connection)
         {
             //Arrange
@@ -74,11 +50,7 @@ namespace TestControlFlowTasks
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () =>
-                    DropDatabaseTask.Drop(
-                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
-                        "Test"
-                    )
+                () => DropDatabaseTask.Drop(SqliteConnection, "Test")
             );
         }
     }

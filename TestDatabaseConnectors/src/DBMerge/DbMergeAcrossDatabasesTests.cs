@@ -1,40 +1,17 @@
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DataFlow Source and Destination")]
-    public class DbMergeAcrossDatabasesTests
+    public class DbMergeAcrossDatabasesTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> MixedSourceDestinations() =>
-            new[]
-            {
-                //Same DB
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.SqlConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.SQLiteConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.MySqlConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.PostgresConnection.ConnectionManager("DataFlowDestination")
-                }
-            };
+        public DbMergeAcrossDatabasesTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class Name
         {
             public string ID { get; set; }
@@ -60,23 +37,21 @@ namespace TestDatabaseConnectors.DBMerge
         public void Test(IConnectionManager sourceConnection, IConnectionManager destConnection)
         {
             //Arrange
-            string QB = destConnection.QB;
-            string QE = destConnection.QE;
-            CreateSourceAndDestinationTables(sourceConnection, destConnection, QB, QE);
+            CreateSourceAndDestinationTables(sourceConnection, destConnection);
 
             //Act
             var nameSource = new DbSource<Name>(sourceConnection, "Name");
             var personMerge = new DbMerge<People>(destConnection, "People");
 
-            var transform = new RowTransformation<Name, People>(d =>
-            {
-                return new People
-                {
-                    FirstName = d.FIRST_NAME,
-                    LastName = d.LAST_NAME,
-                    Id = d.ID
-                };
-            });
+            var transform = new RowTransformation<Name, People>(
+                d =>
+                    new People
+                    {
+                        FirstName = d.FIRST_NAME,
+                        LastName = d.LAST_NAME,
+                        Id = d.ID
+                    }
+            );
 
             nameSource.LinkTo(transform);
             transform.LinkTo(personMerge);
@@ -85,12 +60,14 @@ namespace TestDatabaseConnectors.DBMerge
             personMerge.Wait();
 
             //Assert
+            string qb = destConnection.QB;
+            string qe = destConnection.QE;
             Assert.Equal(
                 1,
                 RowCountTask.Count(
                     destConnection,
                     "People",
-                    $"{QB}Id{QE} = 1 AND {QB}FirstName{QE} = 'Bugs' AND {QB}LastName{QE} IS NULL"
+                    $"{qb}Id{qe} = 1 AND {qb}FirstName{qe} = 'Bugs' AND {qb}LastName{qe} IS NULL"
                 )
             );
             Assert.Equal(
@@ -98,7 +75,7 @@ namespace TestDatabaseConnectors.DBMerge
                 RowCountTask.Count(
                     destConnection,
                     "People",
-                    $"{QB}Id{QE} = 2 AND {QB}FirstName{QE} IS NULL AND {QB}LastName{QE} = 'Pig'"
+                    $"{qb}Id{qe} = 2 AND {qb}FirstName{qe} IS NULL AND {qb}LastName{qe} = 'Pig'"
                 )
             );
             Assert.Equal(
@@ -106,16 +83,14 @@ namespace TestDatabaseConnectors.DBMerge
                 RowCountTask.Count(
                     destConnection,
                     "People",
-                    $"{QB}Id{QE} = 3 AND {QB}FirstName{QE} = 'Franky' AND {QB}LastName{QE} IS NULL"
+                    $"{qb}Id{qe} = 3 AND {qb}FirstName{qe} = 'Franky' AND {qb}LastName{qe} IS NULL"
                 )
             );
         }
 
         private static void CreateSourceAndDestinationTables(
             IConnectionManager sourceConnection,
-            IConnectionManager destConnection,
-            string QB,
-            string QE
+            IConnectionManager destConnection
         )
         {
             DropTableTask.DropIfExists(sourceConnection, "Name");
@@ -124,9 +99,9 @@ namespace TestDatabaseConnectors.DBMerge
                 "Name",
                 new List<TableColumn>
                 {
-                    new("ID", "INT", false, true, true),
-                    new("FIRST_NAME", "NVARCHAR(100)", true),
-                    new("LAST_NAME", "NVARCHAR(100)", true)
+                    new(nameof(Name.ID), "INT", false, true, true),
+                    new(nameof(Name.FIRST_NAME), "NVARCHAR(100)", true),
+                    new(nameof(Name.LAST_NAME), "NVARCHAR(100)", true)
                 }
             );
             DropTableTask.DropIfExists(destConnection, "People");
@@ -135,37 +110,42 @@ namespace TestDatabaseConnectors.DBMerge
                 "People",
                 new List<TableColumn>
                 {
-                    new("Id", "INT", false, true),
-                    new("FirstName", "NVARCHAR(100)", true),
-                    new("LastName", "NVARCHAR(100)", true)
+                    new(nameof(People.Id), "INT", false, true),
+                    new(nameof(People.FirstName), "NVARCHAR(100)", true),
+                    new(nameof(People.LastName), "NVARCHAR(100)", true)
                 }
             );
 
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 sourceConnection,
                 "Test data",
-                "INSERT INTO Name (FIRST_NAME, LAST_NAME) VALUES ('Bugs', NULL)"
+                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
+                VALUES ('Bugs', NULL)"
             );
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 sourceConnection,
                 "Test data",
-                "INSERT INTO Name (FIRST_NAME, LAST_NAME) VALUES (NULL, 'Pig')"
+                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
+                VALUES (NULL, 'Pig')"
             );
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 sourceConnection,
                 "Test data",
-                "INSERT INTO Name (FIRST_NAME, LAST_NAME) VALUES ('Franky', NULL)"
+                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
+                VALUES ('Franky', NULL)"
             );
 
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 destConnection,
                 "Test data",
-                $"INSERT INTO {QB}People{QE} ({QB}Id{QE}, {QB}FirstName{QE}, {QB}LastName{QE}) VALUES (1, 'Bugs', NULL)"
+                $@"INSERT INTO {nameof(People):q} ({nameof(People.Id):q}, {nameof(People.FirstName):q}, {nameof(People.LastName):q})
+                VALUES (1, 'Bugs', NULL)"
             );
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 destConnection,
                 "Test data",
-                $"INSERT INTO {QB}People{QE} ({QB}Id{QE}, {QB}FirstName{QE}, {QB}LastName{QE}) VALUES (2, 'Peggy', NULL)"
+                $@"INSERT INTO {nameof(People):q} ({nameof(People.Id):q}, {nameof(People.FirstName):q}, {nameof(People.LastName):q})
+                VALUES (2, 'Peggy', NULL)"
             );
         }
     }

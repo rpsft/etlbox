@@ -1,18 +1,12 @@
-using System.IO;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
-    [Collection("DataFlow")]
-    public class JsonDestinationStringArrayTests
+    public class JsonDestinationStringArrayTests : FlatFileConnectorsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonDestinationStringArrayTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleNonGeneric()

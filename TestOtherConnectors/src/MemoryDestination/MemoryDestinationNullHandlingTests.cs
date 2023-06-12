@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using ALE.ETLBox.DataFlow;
-using Xunit;
-
 namespace TestOtherConnectors.MemoryDestination
 {
-    [Collection("DataFlow")]
     public class MemoryDestinationNullHandlingTests
     {
         public class MySimpleRow
@@ -22,10 +17,10 @@ namespace TestOtherConnectors.MemoryDestination
                 DataAsList = new List<MySimpleRow>
                 {
                     null,
-                    new MySimpleRow { Col1 = 1, Col2 = "Test1" },
+                    new() { Col1 = 1, Col2 = "Test1" },
                     null,
-                    new MySimpleRow { Col1 = 2, Col2 = "Test2" },
-                    new MySimpleRow { Col1 = 3, Col2 = "Test3" },
+                    new() { Col1 = 2, Col2 = "Test2" },
+                    new() { Col1 = 3, Col2 = "Test3" },
                     null
                 }
             };

@@ -1,22 +1,13 @@
-using System.Collections.Generic;
-using System.IO;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using JetBrains.Annotations;
-using Newtonsoft.Json;
 using TestOtherConnectors.Helpers;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.CustomDestination
 {
-    [Collection("DataFlow")]
-    public class CustomDestinationTests
+    public class CustomDestinationTests : OtherConnectorsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CustomDestinationTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void InsertIntoTable()

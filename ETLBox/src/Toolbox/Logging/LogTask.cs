@@ -29,16 +29,25 @@ namespace ALE.ETLBox.Logging
             Message = message;
         }
 
-        //NLogger.Info(TaskName, TaskType, "START", TaskHash, ControlFlow.STAGE, ControlFlow.CurrentLoadProcess?.LoadProcessKey);
+        public static void Trace(string message) => new LogTask(message).Trace();
+
+        public static void Trace(IConnectionManager connectionManager, string message) =>
+            new LogTask(message) { ConnectionManager = connectionManager }.Trace();
+
         public void Trace() =>
             NLogger?.Trace(
                 Message,
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.STAGE,
+                ControlFlow.ControlFlow.Stage,
                 ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
+
+        public static void Debug(string message) => new LogTask(message).Debug();
+
+        public static void Debug(IConnectionManager connectionManager, string message) =>
+            new LogTask(message) { ConnectionManager = connectionManager }.Debug();
 
         public void Debug() =>
             NLogger?.Debug(
@@ -46,9 +55,14 @@ namespace ALE.ETLBox.Logging
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.STAGE,
+                ControlFlow.ControlFlow.Stage,
                 ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
+
+        public static void Info(string message) => new LogTask(message).Info();
+
+        public static void Info(IConnectionManager connectionManager, string message) =>
+            new LogTask(message) { ConnectionManager = connectionManager }.Info();
 
         public void Info() =>
             NLogger?.Info(
@@ -56,9 +70,14 @@ namespace ALE.ETLBox.Logging
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.STAGE,
+                ControlFlow.ControlFlow.Stage,
                 ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
+
+        public static void Warn(string message) => new LogTask(message).Warn();
+
+        public static void Warn(IConnectionManager connectionManager, string message) =>
+            new LogTask(message) { ConnectionManager = connectionManager }.Warn();
 
         public void Warn() =>
             NLogger?.Warn(
@@ -66,9 +85,14 @@ namespace ALE.ETLBox.Logging
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.STAGE,
+                ControlFlow.ControlFlow.Stage,
                 ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
+
+        public static void Error(string message) => new LogTask(message).Error();
+
+        public static void Error(IConnectionManager connectionManager, string message) =>
+            new LogTask(message) { ConnectionManager = connectionManager }.Error();
 
         public void Error() =>
             NLogger?.Error(
@@ -76,9 +100,14 @@ namespace ALE.ETLBox.Logging
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.STAGE,
+                ControlFlow.ControlFlow.Stage,
                 ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
+
+        public static void Fatal(string message) => new LogTask(message).Fatal();
+
+        public static void Fatal(IConnectionManager connectionManager, string message) =>
+            new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
 
         public void Fatal() =>
             NLogger?.Fatal(
@@ -86,38 +115,8 @@ namespace ALE.ETLBox.Logging
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.STAGE,
+                ControlFlow.ControlFlow.Stage,
                 ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
-
-        public static void Trace(string message) => new LogTask(message).Trace();
-
-        public static void Debug(string message) => new LogTask(message).Debug();
-
-        public static void Info(string message) => new LogTask(message).Info();
-
-        public static void Warn(string message) => new LogTask(message).Warn();
-
-        public static void Error(string message) => new LogTask(message).Error();
-
-        public static void Fatal(string message) => new LogTask(message).Fatal();
-
-        public static void Trace(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Trace();
-
-        public static void Debug(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Debug();
-
-        public static void Info(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Info();
-
-        public static void Warn(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Warn();
-
-        public static void Error(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Error();
-
-        public static void Fatal(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
     }
 }

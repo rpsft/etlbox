@@ -14,18 +14,23 @@ namespace ALE.ETLBox.Logging
 
         private void Execute()
         {
-            QueryParameter cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
-            QueryParameter pn = new QueryParameter("ProcessName", "VARCHAR(100)", ProcessName);
-            QueryParameter sm = new QueryParameter("StartMessage", "VARCHAR(4000)", StartMessage);
-            QueryParameter so = new QueryParameter("Source", "VARCHAR(20)", Source);
             LoadProcessId = new SqlTask(this, Sql)
             {
-                Parameter = new List<QueryParameter> { cd, pn, sm, so },
-                DisableLogging = true,
+                Parameter = new List<QueryParameter>
+                {
+                    new("CurrentDate", "DATETIME", DateTime.Now),
+                    new("ProcessName", "VARCHAR(100)", ProcessName),
+                    new("StartMessage", "VARCHAR(4000)", StartMessage),
+                    new("Source", "VARCHAR(20)", Source)
+                },
+                DisableLogging = true
             }.ExecuteScalar<long>();
-            var rlp = new ReadLoadProcessTableTask(this, LoadProcessId) { DisableLogging = true };
-            rlp.Execute();
-            ControlFlow.ControlFlow.CurrentLoadProcess = rlp.LoadProcess;
+            var tableTask = new ReadLoadProcessTableTask(this, LoadProcessId)
+            {
+                DisableLogging = true
+            };
+            tableTask.Execute();
+            ControlFlow.ControlFlow.CurrentLoadProcess = tableTask.LoadProcess;
         }
 
         /* Public properties */
@@ -42,7 +47,7 @@ namespace ALE.ETLBox.Logging
 
         public string Sql =>
             $@"
- INSERT INTO {TN.QuotatedFullName} 
+ INSERT INTO {TN.QuotedFullName} 
 ( {QB}start_date{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}source{QE}, {QB}is_running{QE})
  VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 ) 
 {LastIdSql}";
@@ -51,16 +56,13 @@ namespace ALE.ETLBox.Logging
 
         private string LastIdSql
         {
-            get
-            {
-                if (ConnectionType == ConnectionManagerType.Postgres)
-                    return "RETURNING id";
-                if (ConnectionType == ConnectionManagerType.SqlServer)
-                    return "SELECT CAST ( SCOPE_IDENTITY() AS BIGINT)";
-                //else if (ConnectionType == ConnectionManagerType.MySql)
-                //    return "; SELECT LAST_INSERT_ID();";
-                return $"; SELECT MAX({QB}id{QE}) FROM {TN.QuotatedFullName}";
-            }
+            get =>
+                ConnectionType switch
+                {
+                    ConnectionManagerType.Postgres => "RETURNING id",
+                    ConnectionManagerType.SqlServer => "SELECT CAST ( SCOPE_IDENTITY() AS BIGINT)",
+                    _ => $"; SELECT MAX({QB}id{QE}) FROM {TN.QuotedFullName}"
+                };
         }
 
         public StartLoadProcessTask() { }

@@ -1,6 +1,6 @@
 ﻿namespace ALE.ETLBoxTests.Performance.Helper
 {
-    public class CSVData
+    public class CsvData
     {
         public string Col1 { get; set; }
         public string Col2 { get; set; }

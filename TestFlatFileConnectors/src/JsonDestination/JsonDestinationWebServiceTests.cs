@@ -1,22 +1,13 @@
-using System;
 using System.Net.Http;
-using System.Threading;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using JetBrains.Annotations;
 using Moq;
 using Moq.Contrib.HttpClient;
-using Newtonsoft.Json;
-using TestShared.Helper;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
-    [Collection("DataFlow")]
-    public class JsonDestinationWebServiceTests
+    public class JsonDestinationWebServiceTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonDestinationWebServiceTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void WriteIntoHttpClient()
@@ -39,7 +30,6 @@ namespace TestFlatFileConnectors.JsonDestination
                     }
                 )
                 .Verifiable();
-            // .ReturnsResponse(HttpStatusCode.OK);
 
             var httpClient = handler.CreateClient();
 

@@ -8,7 +8,6 @@ namespace ALE.ETLBox.Logging
     {
         public long Id { get; set; }
         public DateTime LogDate { get; set; }
-        public DateTime StartDate => LogDate;
         public DateTime? EndDate { get; set; }
         public string Level { get; set; }
         public string Message { get; set; }

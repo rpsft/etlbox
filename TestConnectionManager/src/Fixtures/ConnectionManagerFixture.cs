@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using TestShared.Helper;
-using Xunit;
 
 namespace TestConnectionManager.Fixtures
 {
@@ -9,11 +8,18 @@ namespace TestConnectionManager.Fixtures
         : ICollectionFixture<ConnectionManagerFixture> { }
 
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    public class ConnectionManagerFixture
+    public sealed class ConnectionManagerFixture : IDisposable
     {
+        public const string Section = "ConnectionManager";
+
         public ConnectionManagerFixture()
         {
-            DatabaseHelper.RecreateSqlDatabase("ConnectionManager");
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, Section);
+        }
+
+        public void Dispose()
+        {
+            DatabaseHelper.DropDatabase(Config.SqlConnection, Section);
         }
     }
 }

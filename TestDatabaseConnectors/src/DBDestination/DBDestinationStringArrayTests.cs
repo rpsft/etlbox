@@ -1,40 +1,39 @@
-using System;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationStringArrayTests
+    public class DbDestinationStringArrayTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbDestinationStringArrayTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [Theory, MemberData(nameof(Connections))]
         public void WithSqlNotMatchingColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 connection,
                 "SourceNotMatchingCols"
             );
-            s2c.InsertTestData();
+            s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Create destination table",
                 $@"CREATE TABLE destination_notmatchingcols
                 ( col3 VARCHAR(100) NULL
                 , col4 VARCHAR(100) NULL
-                , {s2c.QB}Col1{s2c.QE} VARCHAR(100) NULL)"
+                , {s2C.QB}Col1{s2C.QE} VARCHAR(100) NULL)"
             );
 
             //Act
             DbSource<string[]> source = new DbSource<string[]>
             {
                 Sql =
-                    $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceNotMatchingCols{s2c.QE}",
+                    $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceNotMatchingCols{s2C.QE}",
                 ConnectionManager = connection
             };
             DbDestination<string[]> dest = new DbDestination<string[]>(
@@ -77,8 +76,8 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithLessColumnsInDestination(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
-            s2c.InsertTestData();
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
+            s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Create destination table",
@@ -107,11 +106,11 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithAdditionalNullableCol(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 connection,
                 "source_additionalnullcol"
             );
-            s2c.InsertTestData();
+            s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Create destination table",
@@ -133,18 +132,18 @@ namespace TestDatabaseConnectors.DBDestination
             dest.Wait();
 
             //Assert
-            s2c.AssertTestData();
+            s2C.AssertTestData();
         }
 
         [Theory, MemberData(nameof(Connections))]
         public void WithAdditionalNotNullCol(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 connection,
                 "source_additionalnotnullcol"
             );
-            s2c.InsertTestData();
+            s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Create destination table",

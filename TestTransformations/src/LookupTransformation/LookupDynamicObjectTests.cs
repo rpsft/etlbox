@@ -1,23 +1,21 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
-    [Collection("DataFlow")]
-    public class LookupDynamicObjectTests : IDisposable
+    public sealed class LookupDynamicObjectTests : TransformationsTestBase, IDisposable
     {
         private readonly CultureInfo _culture;
 
-        public LookupDynamicObjectTests()
+        public LookupDynamicObjectTests(TransformationsDatabaseFixture fixture)
+            : base(fixture)
         {
             _culture = CultureInfo.CurrentCulture;
         }
 
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void SimpleLookupWithDynamicObject(IConnectionManager connection)
         {
             //Arrange

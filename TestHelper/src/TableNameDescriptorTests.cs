@@ -1,5 +1,4 @@
 using ALE.ETLBox;
-using Xunit;
 
 namespace TestHelper
 {
@@ -10,12 +9,12 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor("dbo.Test", "[", "]");
 
-            Assert.Equal("[dbo]", desc.QuotatedSchemaName);
-            Assert.Equal("[Test]", desc.QuotatedObjectName);
-            Assert.Equal("[dbo].[Test]", desc.QuotatedFullName);
-            Assert.Equal("dbo", desc.UnquotatedSchemaName);
-            Assert.Equal("Test", desc.UnquotatedObjectName);
-            Assert.Equal("dbo.Test", desc.UnquotatedFullName);
+            Assert.Equal("[dbo]", desc.QuotedSchemaName);
+            Assert.Equal("[Test]", desc.QuotedObjectName);
+            Assert.Equal("[dbo].[Test]", desc.QuotedFullName);
+            Assert.Equal("dbo", desc.UnquotedSchemaName);
+            Assert.Equal("Test", desc.UnquotedObjectName);
+            Assert.Equal("dbo.Test", desc.UnquotedFullName);
         }
 
         [Fact]
@@ -23,12 +22,12 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor("[Foo.Bar].[Test]", "[", "]");
 
-            Assert.Equal("[Foo.Bar]", desc.QuotatedSchemaName);
-            Assert.Equal("[Test]", desc.QuotatedObjectName);
-            Assert.Equal("[Foo.Bar].[Test]", desc.QuotatedFullName);
-            Assert.Equal("Foo.Bar", desc.UnquotatedSchemaName);
-            Assert.Equal("Test", desc.UnquotatedObjectName);
-            Assert.Equal("Foo.Bar.Test", desc.UnquotatedFullName);
+            Assert.Equal("[Foo.Bar]", desc.QuotedSchemaName);
+            Assert.Equal("[Test]", desc.QuotedObjectName);
+            Assert.Equal("[Foo.Bar].[Test]", desc.QuotedFullName);
+            Assert.Equal("Foo.Bar", desc.UnquotedSchemaName);
+            Assert.Equal("Test", desc.UnquotedObjectName);
+            Assert.Equal("Foo.Bar.Test", desc.UnquotedFullName);
         }
 
         [Fact]
@@ -36,11 +35,11 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor("Test", "[", "]");
 
-            Assert.Equal("", desc.QuotatedSchemaName);
-            Assert.Equal("[Test]", desc.QuotatedObjectName);
-            Assert.Equal("[Test]", desc.QuotatedFullName);
-            Assert.Equal("Test", desc.UnquotatedObjectName);
-            Assert.Equal("Test", desc.UnquotatedFullName);
+            Assert.Equal("", desc.QuotedSchemaName);
+            Assert.Equal("[Test]", desc.QuotedObjectName);
+            Assert.Equal("[Test]", desc.QuotedFullName);
+            Assert.Equal("Test", desc.UnquotedObjectName);
+            Assert.Equal("Test", desc.UnquotedFullName);
         }
 
         [Fact]
@@ -48,11 +47,11 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor("[Test]", "[", "]");
 
-            Assert.Equal("", desc.QuotatedSchemaName);
-            Assert.Equal("[Test]", desc.QuotatedObjectName);
-            Assert.Equal("[Test]", desc.QuotatedFullName);
-            Assert.Equal("Test", desc.UnquotatedObjectName);
-            Assert.Equal("Test", desc.UnquotatedFullName);
+            Assert.Equal("", desc.QuotedSchemaName);
+            Assert.Equal("[Test]", desc.QuotedObjectName);
+            Assert.Equal("[Test]", desc.QuotedFullName);
+            Assert.Equal("Test", desc.UnquotedObjectName);
+            Assert.Equal("Test", desc.UnquotedFullName);
         }
 
         [Fact]
@@ -60,11 +59,11 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor("public.Test", @"""", @"""");
 
-            Assert.Equal(@"""public""", desc.QuotatedSchemaName);
-            Assert.Equal(@"""Test""", desc.QuotatedObjectName);
-            Assert.Equal(@"""public"".""Test""", desc.QuotatedFullName);
-            Assert.Equal(@"Test", desc.UnquotatedObjectName);
-            Assert.Equal(@"public.Test", desc.UnquotatedFullName);
+            Assert.Equal(@"""public""", desc.QuotedSchemaName);
+            Assert.Equal(@"""Test""", desc.QuotedObjectName);
+            Assert.Equal(@"""public"".""Test""", desc.QuotedFullName);
+            Assert.Equal(@"Test", desc.UnquotedObjectName);
+            Assert.Equal(@"public.Test", desc.UnquotedFullName);
         }
 
         [Fact]
@@ -72,35 +71,35 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor(@"""public"".""Test""", @"""", @"""");
 
-            Assert.Equal(@"""public""", desc.QuotatedSchemaName);
-            Assert.Equal(@"""Test""", desc.QuotatedObjectName);
-            Assert.Equal(@"""public"".""Test""", desc.QuotatedFullName);
-            Assert.Equal(@"Test", desc.UnquotatedObjectName);
-            Assert.Equal(@"public.Test", desc.UnquotatedFullName);
+            Assert.Equal(@"""public""", desc.QuotedSchemaName);
+            Assert.Equal(@"""Test""", desc.QuotedObjectName);
+            Assert.Equal(@"""public"".""Test""", desc.QuotedFullName);
+            Assert.Equal(@"Test", desc.UnquotedObjectName);
+            Assert.Equal(@"public.Test", desc.UnquotedFullName);
         }
 
         [Fact]
-        public void MySqlQuotatedTableName()
+        public void MySqlQuotedTableName()
         {
             var desc = new ObjectNameDescriptor("`Test`", "`", "`");
 
-            Assert.Equal(@"", desc.QuotatedSchemaName);
-            Assert.Equal(@"`Test`", desc.QuotatedObjectName);
-            Assert.Equal(@"`Test`", desc.QuotatedFullName);
-            Assert.Equal(@"Test", desc.UnquotatedObjectName);
-            Assert.Equal(@"Test", desc.UnquotatedFullName);
+            Assert.Equal(@"", desc.QuotedSchemaName);
+            Assert.Equal(@"`Test`", desc.QuotedObjectName);
+            Assert.Equal(@"`Test`", desc.QuotedFullName);
+            Assert.Equal(@"Test", desc.UnquotedObjectName);
+            Assert.Equal(@"Test", desc.UnquotedFullName);
         }
 
         [Fact]
-        public void MySqlQuotatedTableNameAndDots()
+        public void MySqlQuotedTableNameAndDots()
         {
             var desc = new ObjectNameDescriptor("`Test.Test`", "`", "`");
 
-            Assert.Equal(@"", desc.QuotatedSchemaName);
-            Assert.Equal(@"`Test.Test`", desc.QuotatedObjectName);
-            Assert.Equal(@"`Test.Test`", desc.QuotatedFullName);
-            Assert.Equal(@"Test.Test", desc.UnquotatedObjectName);
-            Assert.Equal(@"Test.Test", desc.UnquotatedFullName);
+            Assert.Equal(@"", desc.QuotedSchemaName);
+            Assert.Equal(@"`Test.Test`", desc.QuotedObjectName);
+            Assert.Equal(@"`Test.Test`", desc.QuotedFullName);
+            Assert.Equal(@"Test.Test", desc.UnquotedObjectName);
+            Assert.Equal(@"Test.Test", desc.UnquotedFullName);
         }
 
         [Fact]
@@ -108,11 +107,11 @@ namespace TestHelper
         {
             var desc = new ObjectNameDescriptor(@"""public.dot"".""Test.Test""", @"""", @"""");
 
-            Assert.Equal(@"""public.dot""", desc.QuotatedSchemaName);
-            Assert.Equal(@"""Test.Test""", desc.QuotatedObjectName);
-            Assert.Equal(@"""public.dot"".""Test.Test""", desc.QuotatedFullName);
-            Assert.Equal(@"Test.Test", desc.UnquotatedObjectName);
-            Assert.Equal(@"public.dot.Test.Test", desc.UnquotatedFullName);
+            Assert.Equal(@"""public.dot""", desc.QuotedSchemaName);
+            Assert.Equal(@"""Test.Test""", desc.QuotedObjectName);
+            Assert.Equal(@"""public.dot"".""Test.Test""", desc.QuotedFullName);
+            Assert.Equal(@"Test.Test", desc.UnquotedObjectName);
+            Assert.Equal(@"public.dot.Test.Test", desc.UnquotedFullName);
         }
     }
 }

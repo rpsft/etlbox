@@ -1,22 +1,16 @@
-﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging
 {
-    [Collection("Logging")]
-    public class DataFlowLoggingTests : IDisposable
+    public sealed class DataFlowLoggingTests : NonParallelTestBase, IDisposable
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
-
-        public DataFlowLoggingTests()
+        public DataFlowLoggingTests(LoggingDatabaseFixture fixture)
+            : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
             ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);

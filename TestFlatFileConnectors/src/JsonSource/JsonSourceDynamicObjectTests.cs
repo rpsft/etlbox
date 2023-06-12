@@ -1,17 +1,11 @@
-using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonSource
 {
-    [Collection("DataFlow")]
-    public class JsonSourceDynamicObjectTests
+    public class JsonSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SourceWithDifferentNames()
@@ -28,7 +22,7 @@ namespace TestFlatFileConnectors.JsonSource
                 return r;
             });
             DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "JsonSource2ColsDynamic"
             );
 

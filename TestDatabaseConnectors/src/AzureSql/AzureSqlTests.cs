@@ -1,17 +1,12 @@
-using System;
-using System.Linq;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.AzureSql
 {
-    public sealed class IgnoreOnNonAzureEnvironmentFact : FactAttribute
+    public sealed class IgnoreOnNonAzureEnvironmentFactAttribute : FactAttribute
     {
-        public IgnoreOnNonAzureEnvironmentFact()
+        public IgnoreOnNonAzureEnvironmentFactAttribute()
         {
             if (!IsInAzure())
                 Skip = "Ignore on non azure environments";
@@ -21,21 +16,21 @@ namespace TestDatabaseConnectors.AzureSql
             Environment.GetEnvironmentVariable("ETLBoxAzure") != null;
     }
 
-    [Collection("DataFlow")]
-    public class AzureSqlTests
+    public sealed class AzureSqlTests : DatabaseConnectorsTestBase, IDisposable
     {
-        private static SqlConnectionManager AzureSqlConnection =>
-            Config.AzureSqlConnection.ConnectionManager("DataFlow");
-
-        private static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
-
-        public AzureSqlTests()
+        public AzureSqlTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture)
         {
             CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[source]");
             CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[dest]");
             CreateSchemaTask.Create(AzureSqlConnection, "[source]");
             CreateSchemaTask.Create(AzureSqlConnection, "[dest]");
+        }
+
+        public void Dispose()
+        {
+            CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[source]");
+            CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[dest]");
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
@@ -89,14 +84,14 @@ namespace TestDatabaseConnectors.AzureSql
             if (envvar != "true")
                 return;
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeSource");
-            s2c.InsertTestData();
-            s2c.InsertTestDataSet2();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(SqlConnection, "DBMergeSource");
+            s2C.InsertTestData();
+            s2C.InsertTestDataSet2();
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 AzureSqlConnection,
                 "[dest].[AzureMergeDestination]"
             );
-            d2c.InsertTestDataSet3();
+            d2C.InsertTestDataSet3();
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "DBMergeSource"
@@ -117,7 +112,7 @@ namespace TestDatabaseConnectors.AzureSql
                 RowCountTask.Count(
                     AzureSqlConnection,
                     "[dest].[AzureMergeDestination]",
-                    $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"
+                    $"{d2C.QB}Col1{d2C.QE} BETWEEN 1 AND 7 AND {d2C.QB}Col2{d2C.QE} LIKE 'Test%'"
                 )
             );
             Assert.True(dest.DeltaTable.Count == 7);

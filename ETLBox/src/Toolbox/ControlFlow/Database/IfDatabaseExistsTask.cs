@@ -14,22 +14,16 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            if (ConnectionType == ConnectionManagerType.SqlServer)
+            return ConnectionType switch
             {
-                return $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ON.UnquotatedObjectName}'";
-            }
-
-            if (ConnectionType == ConnectionManagerType.MySql)
-            {
-                return $@"SELECT COUNT(*)  FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{ON.UnquotatedObjectName}'";
-            }
-
-            if (ConnectionType == ConnectionManagerType.Postgres)
-            {
-                return $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ON.UnquotatedObjectName}'";
-            }
-
-            return string.Empty;
+                ConnectionManagerType.SqlServer
+                    => $@"SELECT COUNT(*) FROM sys.databases WHERE [NAME] = '{ON.UnquotedObjectName}'",
+                ConnectionManagerType.MySql
+                    => $@"SELECT COUNT(*)  FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{ON.UnquotedObjectName}'",
+                ConnectionManagerType.Postgres
+                    => $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ON.UnquotedObjectName}'",
+                _ => string.Empty
+            };
         }
 
         /* Some constructors */

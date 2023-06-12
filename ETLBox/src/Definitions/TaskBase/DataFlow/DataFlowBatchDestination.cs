@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowBatchDestination<TInput>
@@ -40,7 +37,7 @@ namespace ALE.ETLBox.DataFlow
         }
         private int _batchSize;
 
-        public const int DEFAULT_BATCH_SIZE = 1000;
+        public const int DefaultBatchSize = 1000;
 
         protected bool WasInitialized { get; set; }
 
@@ -62,13 +59,15 @@ namespace ALE.ETLBox.DataFlow
             Task.WhenAll(PredecessorCompletions)
                 .ContinueWith(t =>
                 {
-                    if (!TargetBlock.Completion.IsCompleted)
+                    if (TargetBlock.Completion.IsCompleted)
                     {
-                        if (t.IsFaulted)
-                            TargetBlock.Fault(t.Exception!.InnerException!);
-                        else
-                            TargetBlock.Complete();
+                        return;
                     }
+
+                    if (t.IsFaulted)
+                        TargetBlock.Fault(t.Exception!.InnerException!);
+                    else
+                        TargetBlock.Complete();
                 });
         }
 

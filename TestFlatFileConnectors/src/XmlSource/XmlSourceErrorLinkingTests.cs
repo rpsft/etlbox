@@ -1,17 +1,11 @@
-using System;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.XmlSource
 {
-    [Collection("DataFlow")]
-    public class XmlSourceErrorLinkingTests
+    public class XmlSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public XmlSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Microsoft.AnalysisServices.AdomdClient;
+﻿using Microsoft.AnalysisServices.AdomdClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -11,6 +10,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// ControlFlow.DefaultDbConnection = new AdmoConnectionManager(new ConnectionString("..connection string.."));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class AdomdConnectionManager : DbConnectionManager<AdomdConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =
@@ -32,9 +32,9 @@ namespace ALE.ETLBox.ConnectionManager
             throw new NotImplementedException();
         }
 
-        public override void PrepareBulkInsert(string tablename) { }
+        public override void PrepareBulkInsert(string tableName) { }
 
-        public override void CleanUpBulkInsert(string tablename) { }
+        public override void CleanUpBulkInsert(string tableName) { }
 
         public override void BeforeBulkInsert(string tableName) { }
 

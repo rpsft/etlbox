@@ -1,18 +1,14 @@
-using System;
 using System.Threading.Tasks;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
 using Microsoft.Data.SqlClient;
-using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceExceptionTests
+    public class DbSourceExceptionTests : DatabaseConnectorsTestBase
     {
-        public static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbSourceExceptionTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void UnknownTable()

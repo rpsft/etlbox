@@ -1,59 +1,12 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow Source and Destination")]
-    public class DbDestinationDifferentDBTests
+    public class DbDestinationDifferentDBTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> MixedSourceDestinations() =>
-            new[]
-            {
-                //Same DB
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.SqlConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager("DataFlowSource"),
-                    Config.SQLiteConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.MySqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.MySqlConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.PostgresConnection.ConnectionManager("DataFlowSource"),
-                    Config.PostgresConnection.ConnectionManager("DataFlowDestination")
-                },
-                //Mixed
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.SQLiteConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager("DataFlowSource"),
-                    Config.SqlConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.MySqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.PostgresConnection.ConnectionManager("DataFlowDestination")
-                },
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("DataFlowSource"),
-                    Config.PostgresConnection.ConnectionManager("DataFlowDestination")
-                }
-            };
+        public DbDestinationDifferentDBTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
         [Theory, MemberData(nameof(MixedSourceDestinations))]
         public void TestTransferBetweenDBs(

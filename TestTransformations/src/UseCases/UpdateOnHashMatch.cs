@@ -1,17 +1,15 @@
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using TestShared.Helper;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.UseCases
 {
-    [Collection("DataFlow")]
-    public class UpdateOnHashMatchTests
+    public class UpdateOnHashMatchTests : TransformationsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public UpdateOnHashMatchTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         private void CreateSourceTable(string tableName)
         {
@@ -22,7 +20,7 @@ namespace TestTransformations.UseCases
                 {
                     new("id", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                     new("name", "NVARCHAR(100)", allowNulls: false),
-                    new("age", "INT", allowNulls: false),
+                    new("age", "INT", allowNulls: false)
                 }
             );
             sourceTable.CreateTable(SqlConnection);
@@ -53,7 +51,7 @@ namespace TestTransformations.UseCases
                     new("id", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                     new("name", "NVARCHAR(100)", allowNulls: false),
                     new("age", "INT", allowNulls: false),
-                    new("hashcode", "CHAR(40)", allowNulls: false),
+                    new("hashcode", "CHAR(40)", allowNulls: false)
                 }
             );
             sourceTable.CreateTable(SqlConnection);
@@ -85,7 +83,7 @@ namespace TestTransformations.UseCases
             RowTransformation<string[]> trans = new RowTransformation<string[]>(row =>
             {
                 Array.Resize(ref row, row.Length + 1);
-                row[row.Length - 1] = HashHelper.Encrypt_Char40(string.Join("", row));
+                row[^1] = HashHelper.Encrypt_Char40(string.Join("", row));
                 return row;
             });
 
@@ -97,12 +95,13 @@ namespace TestTransformations.UseCases
                 new DbSource<string[]>(SqlConnection, "dbo.HashMatchDestination"),
                 row =>
                 {
-                    var matchingIdEntry = allEntriesInDestination
-                        .Where(destRow => destRow[0] == row[0])
-                        .FirstOrDefault();
+                    var firstRowClosureCopy = row[0];
+                    var matchingIdEntry = allEntriesInDestination.Find(
+                        destRow => destRow[0] == firstRowClosureCopy
+                    );
                     if (matchingIdEntry == null)
                         row = null;
-                    else if (matchingIdEntry[matchingIdEntry.Length - 1] != row[row.Length - 1])
+                    else if (matchingIdEntry[^1] != row[^1])
                     {
                         SqlTask.ExecuteNonQuery(
                             SqlConnection,

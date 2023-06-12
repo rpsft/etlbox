@@ -1,10 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.AggregationTests
 {
-    [Collection("DataFlow")]
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public class AggregationGroupingAttributeTests
     {
+        [Serializable]
         public class MyRow
         {
             public int Id { get; set; }
@@ -14,6 +16,7 @@ namespace TestTransformations.AggregationTests
             public double DetailValue { get; set; }
         }
 
+        [Serializable]
         public class MyAggRow
         {
             [GroupColumn(nameof(MyRow.ClassName))]
@@ -78,7 +81,7 @@ namespace TestTransformations.AggregationTests
                         Id = 6,
                         ClassName = null,
                         DetailValue = 15.5
-                    },
+                    }
                 }
             };
 
@@ -102,14 +105,16 @@ namespace TestTransformations.AggregationTests
             );
         }
 
-        public class MyRowNullable
+        [Serializable]
+        private class MyRowNullable
         {
             public int Id { get; set; }
             public int? ClassId { get; set; }
             public double? DetailValue { get; set; }
         }
 
-        public class MyAggRowNullable
+        [Serializable]
+        private class MyAggRowNullable
         {
             [GroupColumn("ClassId")]
             public int? GroupId { get; set; }
@@ -173,7 +178,7 @@ namespace TestTransformations.AggregationTests
                         Id = 6,
                         ClassId = null,
                         DetailValue = 15.5
-                    },
+                    }
                 }
             };
 
@@ -198,6 +203,7 @@ namespace TestTransformations.AggregationTests
             );
         }
 
+        [Serializable]
         public class MyRowMultiple
         {
             public int Id { get; set; }
@@ -207,6 +213,7 @@ namespace TestTransformations.AggregationTests
             public double DetailValue2 { get; set; }
         }
 
+        [Serializable]
         public class MyAggRowMultiple
         {
             [GroupColumn("Class1Name")]
@@ -264,7 +271,7 @@ namespace TestTransformations.AggregationTests
                         Class1Name = "Class",
                         Class2Name = "3",
                         DetailValue1 = 10
-                    },
+                    }
                 }
             };
 

@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
-    public interface IDataFlowLinkSource<TOutput>
+    public interface IDataFlowLinkSource<out TOutput>
     {
         ISourceBlock<TOutput> SourceBlock { get; }
         IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target);

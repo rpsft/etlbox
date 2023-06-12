@@ -3,20 +3,16 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationDynamicObjectTests
+    public class DbDestinationDynamicObjectTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public static IEnumerable<object[]> ConnectionsNoSQLite =>
-            Config.AllConnectionsWithoutSQLite("DataFlow");
+        public DbDestinationDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
         [Theory]
-        [MemberData(nameof(Connections))]
+        [MemberData(nameof(AllSqlConnections))]
         public void SourceMoreColumnsThanDestination(IConnectionManager connection)
         {
             //Arrange
@@ -37,7 +33,7 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(Connections))]
+        [MemberData(nameof(AllSqlConnections))]
         public void DestinationMoreColumnsThanSource(IConnectionManager connection)
         {
             //Arrange
@@ -64,15 +60,15 @@ namespace TestDatabaseConnectors.DBDestination
             dest.Wait();
 
             //Assert
-            var QB = connection.QB;
-            var QE = connection.QE;
+            var qb = connection.QB;
+            var qe = connection.QE;
             Assert.Equal(3, RowCountTask.Count(connection, "DestinationDynamicDiffCols"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
                     connection,
                     "DestinationDynamicDiffCols",
-                    $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"
+                    $"{qb}Col1{qe} = 1 AND {qb}Col2{qe}='Test1' AND {qb}Col5{qe} IS NULL AND {qb}ColX{qe} IS NULL"
                 )
             );
             Assert.Equal(
@@ -80,7 +76,7 @@ namespace TestDatabaseConnectors.DBDestination
                 RowCountTask.Count(
                     connection,
                     "DestinationDynamicDiffCols",
-                    $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"
+                    $"{qb}Col1{qe} = 2 AND {qb}Col2{qe}='Test2' AND {qb}Col5{qe} IS NULL AND {qb}ColX{qe} IS NULL"
                 )
             );
             Assert.Equal(
@@ -88,13 +84,13 @@ namespace TestDatabaseConnectors.DBDestination
                 RowCountTask.Count(
                     connection,
                     "DestinationDynamicDiffCols",
-                    $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3' AND {QB}Col5{QE} IS NULL AND {QB}ColX{QE} IS NULL"
+                    $"{qb}Col1{qe} = 3 AND {qb}Col2{qe}='Test3' AND {qb}Col5{qe} IS NULL AND {qb}ColX{qe} IS NULL"
                 )
             );
         }
 
         [Theory]
-        [MemberData(nameof(ConnectionsNoSQLite))]
+        [MemberData(nameof(AllConnectionsWithoutSQLite))]
         public void DestinationWithIdentityColumn(IConnectionManager connection)
         {
             //Arrange
@@ -121,15 +117,15 @@ namespace TestDatabaseConnectors.DBDestination
             dest.Wait();
 
             //Assert
-            var QB = connection.QB;
-            var QE = connection.QE;
+            var qb = connection.QB;
+            var qe = connection.QE;
             Assert.Equal(3, RowCountTask.Count(connection, "DestinationDynamicIdCol"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
                     connection,
                     "DestinationDynamicIdCol",
-                    $"{QB}Col1{QE} = 1 AND {QB}Col2{QE}='Test1' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"
+                    $"{qb}Col1{qe} = 1 AND {qb}Col2{qe}='Test1' AND {qb}Id{qe} > 0 AND {qb}ColX{qe} IS NULL"
                 )
             );
             Assert.Equal(
@@ -137,7 +133,7 @@ namespace TestDatabaseConnectors.DBDestination
                 RowCountTask.Count(
                     connection,
                     "DestinationDynamicIdCol",
-                    $"{QB}Col1{QE} = 2 AND {QB}Col2{QE}='Test2' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"
+                    $"{qb}Col1{qe} = 2 AND {qb}Col2{qe}='Test2' AND {qb}Id{qe} > 0 AND {qb}ColX{qe} IS NULL"
                 )
             );
             Assert.Equal(
@@ -145,7 +141,7 @@ namespace TestDatabaseConnectors.DBDestination
                 RowCountTask.Count(
                     connection,
                     "DestinationDynamicIdCol",
-                    $"{QB}Col1{QE} = 3 AND {QB}Col2{QE}='Test3' AND {QB}Id{QE} > 0 AND {QB}ColX{QE} IS NULL"
+                    $"{qb}Col1{qe} = 3 AND {qb}Col2{qe}='Test3' AND {qb}Id{qe} > 0 AND {qb}ColX{qe} IS NULL"
                 )
             );
         }

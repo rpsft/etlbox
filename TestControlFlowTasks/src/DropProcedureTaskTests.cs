@@ -1,14 +1,16 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class DropProcedureTaskTests
+    public class DropProcedureTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections =>
-            Config.AllConnectionsWithoutSQLite("ControlFlow");
+        public DropProcedureTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllConnectionsWithoutSQLite;
 
         [Theory, MemberData(nameof(Connections))]
         public void Drop(IConnectionManager connection)
@@ -43,11 +45,7 @@ namespace TestControlFlowTasks
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () =>
-                    DropProcedureTask.Drop(
-                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
-                        "Test"
-                    )
+                () => DropProcedureTask.Drop(SqliteConnection, "Test")
             );
         }
     }

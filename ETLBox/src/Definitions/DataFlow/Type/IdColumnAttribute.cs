@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines if the column is used as an Id for the DBMerge. It it supposed
@@ -15,5 +15,5 @@
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class IdColumn : Attribute { }
+    public class IdColumnAttribute : Attribute { }
 }

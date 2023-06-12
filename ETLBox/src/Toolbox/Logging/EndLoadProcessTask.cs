@@ -14,21 +14,26 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            QueryParameter cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
-            QueryParameter em = new QueryParameter("EndMessage", "VARCHAR(100)", EndMessage);
-            QueryParameter lpk = new QueryParameter("LoadProcessId", "BIGINT", LoadProcessId);
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,
-                Parameter = new List<QueryParameter> { cd, em, lpk },
+                Parameter = new List<QueryParameter>
+                {
+                    new("CurrentDate", "DATETIME", DateTime.Now),
+                    new("EndMessage", "VARCHAR(100)", EndMessage),
+                    new("LoadProcessId", "BIGINT", LoadProcessId)
+                }
             }.ExecuteNonQuery();
-            var rlp = new ReadLoadProcessTableTask(this, LoadProcessId) { DisableLogging = true, };
-            rlp.Execute();
-            ControlFlow.ControlFlow.CurrentLoadProcess = rlp.LoadProcess;
+            var readLoadProcessTableTask = new ReadLoadProcessTableTask(this, LoadProcessId)
+            {
+                DisableLogging = true
+            };
+            readLoadProcessTableTask.Execute();
+            ControlFlow.ControlFlow.CurrentLoadProcess = readLoadProcessTableTask.LoadProcess;
         }
 
         /* Public properties */
-        public long? _loadProcessId;
+        private long? _loadProcessId;
         public long? LoadProcessId
         {
             get { return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
@@ -38,7 +43,7 @@ namespace ALE.ETLBox.Logging
 
         public string Sql =>
             $@"
- UPDATE {TN.QuotatedFullName} 
+ UPDATE {TN.QuotedFullName} 
   SET end_date = @CurrentDate
   , is_running = 0
   , was_successful = 1

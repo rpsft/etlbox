@@ -1,18 +1,17 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
-    [Collection("DataFlow")]
-    public class RowTransformationErrorLinkingTests
+    public class RowTransformationErrorLinkingTests : TransformationsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowTransformationErrorLinkingTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
+        [Serializable]
         public class MySimpleRow
         {
             public int Col1 { get; set; }

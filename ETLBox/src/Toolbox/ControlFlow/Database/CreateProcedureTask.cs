@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow
@@ -42,7 +42,7 @@ namespace ALE.ETLBox.ControlFlow
         public string ProcedureDefinition { get; set; }
         public IList<ProcedureParameter> ProcedureParameters { get; set; }
         public string Sql =>
-            $@"{CreateOrAlterSql} PROCEDURE {PN.QuotatedFullName}{ParameterDefinition}{Language}
+            $@"{CreateOrAlterSql} PROCEDURE {PN.QuotedFullName}{ParameterDefinition}{Language}
 {As}
 {Begin}
 
@@ -127,11 +127,12 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.Postgres)
-                    return "CREATE OR REPLACE";
-                if (ConnectionType == ConnectionManagerType.MySql)
-                    return "CREATE";
-                return IsExisting ? "ALTER" : "CREATE";
+                return ConnectionType switch
+                {
+                    ConnectionManagerType.Postgres => "CREATE OR REPLACE",
+                    ConnectionManagerType.MySql => "CREATE",
+                    _ => IsExisting ? "ALTER" : "CREATE"
+                };
             }
         }
 
@@ -140,19 +141,13 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 string result = "";
-                if (
-                    ConnectionType == ConnectionManagerType.Postgres
-                    || ConnectionType == ConnectionManagerType.MySql
-                )
+                if (ConnectionType is ConnectionManagerType.Postgres or ConnectionManagerType.MySql)
                     result += "(";
                 result +=
                     ProcedureParameters?.Count > 0
                         ? string.Join(",", ProcedureParameters.Select(ParameterSql))
                         : string.Empty;
-                if (
-                    ConnectionType == ConnectionManagerType.Postgres
-                    || ConnectionType == ConnectionManagerType.MySql
-                )
+                if (ConnectionType is ConnectionManagerType.Postgres or ConnectionManagerType.MySql)
                     result += ")";
                 return result;
             }

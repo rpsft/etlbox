@@ -2,7 +2,6 @@
 
 namespace TestTransformations.CrossJoinTests
 {
-    [Collection("DataFlow")]
     public class CrossJoinTests
     {
         [Fact]

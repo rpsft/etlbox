@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Globalization;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -36,46 +34,44 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            using (
-                SqlBulkCopy bulkCopy = new SqlBulkCopy(
-                    DbConnection,
-                    SqlBulkCopyOptions.TableLock,
-                    Transaction as SqlTransaction
-                )
-            )
-            {
-                bulkCopy.BulkCopyTimeout = 0;
-                bulkCopy.DestinationTableName = tableName;
-                foreach (IColumnMapping colMap in data.ColumnMapping)
-                    bulkCopy.ColumnMappings.Add(colMap.SourceColumn, colMap.DataSetColumn);
-                bulkCopy.WriteToServer(data);
-            }
+            using SqlBulkCopy bulkCopy = new SqlBulkCopy(
+                DbConnection,
+                SqlBulkCopyOptions.TableLock,
+                Transaction as SqlTransaction
+            );
+            bulkCopy.BulkCopyTimeout = 0;
+            bulkCopy.DestinationTableName = tableName;
+            foreach (IColumnMapping colMap in data.GetColumnMapping())
+                bulkCopy.ColumnMappings.Add(colMap.SourceColumn, colMap.DataSetColumn);
+            bulkCopy.WriteToServer(data);
         }
 
-        public override void PrepareBulkInsert(string tablename)
+        public override void PrepareBulkInsert(string tableName)
         {
-            if (ModifyDBSettings)
+            if (!ModifyDBSettings)
             {
-                try
-                {
-                    string dbName = DbConnection.Database;
-                    PageVerify = ExecuteScalar(
-                            $"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'"
-                        )
-                        .ToString();
-                    RecoveryModel = ExecuteScalar(
-                            $"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'"
-                        )
-                        .ToString();
-                    ExecuteNonQuery(@"USE master");
-                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
-                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
-                    ExecuteNonQuery($@"USE [{dbName}]");
-                }
-                catch
-                {
-                    ModifyDBSettings = false;
-                }
+                return;
+            }
+
+            try
+            {
+                string dbName = DbConnection.Database;
+                PageVerify = ExecuteScalar(
+                        $"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'"
+                    )
+                    .ToString();
+                RecoveryModel = ExecuteScalar(
+                        $"SELECT recovery_model_desc FROM sys.databases WHERE NAME = '{dbName}'"
+                    )
+                    .ToString();
+                ExecuteNonQuery(@"USE master");
+                ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY NONE;");
+                ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY BULK_LOGGED");
+                ExecuteNonQuery($@"USE [{dbName}]");
+            }
+            catch
+            {
+                ModifyDBSettings = false;
             }
         }
 
@@ -83,22 +79,24 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void AfterBulkInsert(string tableName) { }
 
-        public override void CleanUpBulkInsert(string tablename)
+        public override void CleanUpBulkInsert(string tableName)
         {
-            if (ModifyDBSettings)
+            if (!ModifyDBSettings)
             {
-                try
-                {
-                    string dbName = DbConnection.Database;
-                    ExecuteNonQuery(@"USE master");
-                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
-                    ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
-                    ExecuteNonQuery($@"USE [{dbName}]");
-                }
-                catch
-                {
-                    // ignored
-                }
+                return;
+            }
+
+            try
+            {
+                string dbName = DbConnection.Database;
+                ExecuteNonQuery(@"USE master");
+                ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
+                ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
+                ExecuteNonQuery($@"USE [{dbName}]");
+            }
+            catch
+            {
+                // ignored
             }
         }
 

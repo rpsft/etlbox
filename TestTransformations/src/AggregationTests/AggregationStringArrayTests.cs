@@ -1,9 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.AggregationTests
 {
-    [Collection("DataFlow")]
-    public class AggregationStringArrayTests : IDisposable
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+    public sealed class AggregationStringArrayTests : IDisposable
     {
         private readonly CultureInfo _culture;
 

@@ -1,15 +1,16 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class DropIndexTaskTests
+    public class DropIndexTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public DropIndexTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void Drop(IConnectionManager connection)
         {
             //Arrange
@@ -33,7 +34,7 @@ namespace TestControlFlowTasks
             Assert.False(IfIndexExistsTask.IsExisting(connection, "IndexToDrop", "DropIndexTable"));
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void DropIfExists(IConnectionManager connection)
         {
             //Arrange

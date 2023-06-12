@@ -1,35 +1,34 @@
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.Helper;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
-    [Collection("ControlFlow")]
-    public class CleanUpSchemaTaskTests
+    public class CleanUpSchemaTaskTests : ControlFlowTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("ControlFlow");
+        public CleanUpSchemaTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void CleanUpSchema()
         {
             //Arrange
             string schemaName = "s" + HashHelper.RandomString(9);
-            SqlTask.ExecuteNonQuery(Connection, "Create schema", $"CREATE SCHEMA {schemaName}");
+            SqlTask.ExecuteNonQuery(SqlConnection, "Create schema", $"CREATE SCHEMA {schemaName}");
             SqlTask.ExecuteNonQuery(
-                Connection,
+                SqlConnection,
                 "Create table",
                 $"CREATE TABLE {schemaName}.Table1 ( Nothing INT NULL )"
             );
             SqlTask.ExecuteNonQuery(
-                Connection,
+                SqlConnection,
                 "Create view",
                 $"CREATE VIEW {schemaName}.View1 AS SELECT * FROM {schemaName}.Table1"
             );
             SqlTask.ExecuteNonQuery(
-                Connection,
+                SqlConnection,
                 "Create procedure",
                 $"CREATE PROCEDURE {schemaName}.Proc1 AS SELECT * FROM {schemaName}.Table1"
             );
@@ -40,12 +39,12 @@ namespace TestControlFlowTasks.SqlServer
 WHERE sch.name = '{schemaName}'"
             )
             {
-                ConnectionManager = Connection
+                ConnectionManager = SqlConnection
             };
             Assert.Equal(3, objCountSql.ExecuteScalar<int>());
 
             //Act
-            CleanUpSchemaTask.CleanUp(Connection, schemaName);
+            CleanUpSchemaTask.CleanUp(SqlConnection, schemaName);
 
             //Assert
             Assert.Equal(0, objCountSql.ExecuteScalar<int>());
@@ -55,11 +54,7 @@ WHERE sch.name = '{schemaName}'"
         public void NotSupportedWithOtherDBs()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () =>
-                    CleanUpSchemaTask.CleanUp(
-                        Config.SQLiteConnection.ConnectionManager("ControlFlow"),
-                        "Test"
-                    )
+                () => CleanUpSchemaTask.CleanUp(SqliteConnection, "Test")
             );
         }
     }

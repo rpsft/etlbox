@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Creates one or more duplicates of your incoming rows.
@@ -53,18 +51,19 @@ namespace ALE.ETLBox.DataFlow
         private IEnumerable<TInput> DuplicateRow(TInput row)
         {
             if (row == null)
-                return null;
-            List<TInput> result = new List<TInput>(NumberOfDuplicates);
-            result.Add(row);
+                return Array.Empty<TInput>();
+            List<TInput> result = new List<TInput>(NumberOfDuplicates) { row };
             LogProgress();
             for (int i = 0; i < NumberOfDuplicates; i++)
             {
-                if (CanDuplicate?.Invoke(row) ?? true)
+                if (!(CanDuplicate?.Invoke(row) ?? true))
                 {
-                    TInput copy = ObjectCopy.Clone(row);
-                    result.Add(copy);
-                    LogProgress();
+                    continue;
                 }
+
+                TInput copy = ObjectCopy.Clone(row);
+                result.Add(copy);
+                LogProgress();
             }
             return result;
         }

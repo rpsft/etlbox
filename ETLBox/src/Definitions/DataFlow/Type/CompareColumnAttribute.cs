@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines if the column is included in the comparison to identify
@@ -16,5 +16,5 @@
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class CompareColumn : Attribute { }
+    public class CompareColumnAttribute : Attribute { }
 }

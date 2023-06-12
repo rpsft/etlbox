@@ -1,28 +1,27 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class CreateIndexTaskTests
+    public class CreateIndexTaskTests : ControlFlowTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("ControlFlow");
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public CreateIndexTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void CreateIndex(IConnectionManager connection)
         {
             //Arrange
-            string indexName = "ix_IndexTest1";
+            const string indexName = "ix_IndexTest1";
             CreateTableTask.Create(
                 connection,
                 "IndexCreationTable1",
                 new List<TableColumn>
                 {
                     new("Key1", "INT", allowNulls: false),
-                    new("Key2", "INT", allowNulls: true),
+                    new("Key2", "INT", allowNulls: true)
                 }
             );
 
@@ -40,18 +39,18 @@ namespace TestControlFlowTasks
             );
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void ReCreateIndex(IConnectionManager connection)
         {
             //Arrange
-            string indexName = "ix_IndexTest2";
+            const string indexName = "ix_IndexTest2";
             CreateTableTask.Create(
                 connection,
                 "IndexCreationTable2",
                 new List<TableColumn>
                 {
                     new("Key1", "INT", allowNulls: false),
-                    new("Key2", "INT", allowNulls: true),
+                    new("Key2", "INT", allowNulls: true)
                 }
             );
             CreateIndexTask.CreateOrRecreate(
@@ -79,7 +78,7 @@ namespace TestControlFlowTasks
         public void CreateIndexWithInclude()
         {
             //Arrange
-            string indexName = "ix_IndexTest3";
+            const string indexName = "ix_IndexTest3";
             CreateTableTask.Create(
                 SqlConnection,
                 "dbo.IndexCreation3",
@@ -88,7 +87,7 @@ namespace TestControlFlowTasks
                     new("Key1", "INT", allowNulls: false),
                     new("Key2", "CHAR(2)", allowNulls: true),
                     new("Value1", "NVARCHAR(10)", allowNulls: true),
-                    new("Value2", "DECIMAL(10,2)", allowNulls: false),
+                    new("Value2", "DECIMAL(10,2)", allowNulls: false)
                 }
             );
             //Act

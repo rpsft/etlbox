@@ -2,7 +2,6 @@ using ALE.ETLBox.ControlFlow;
 
 namespace TestControlFlowTasks
 {
-    [Collection("Generic ControlFlow")]
     public class CustomTaskTests
     {
         private bool Action1Executed { get; set; }

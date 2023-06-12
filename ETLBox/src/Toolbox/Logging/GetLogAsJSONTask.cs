@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -30,11 +30,11 @@ namespace ALE.ETLBox.Logging
             );
         }
 
-        private void CalculateEndDate(List<LogEntry> logEntries)
+        private static void CalculateEndDate(List<LogEntry> logEntries)
         {
             foreach (var startEntry in logEntries.Where(entry => entry.TaskAction == "START"))
             {
-                var endEntry = logEntries.FirstOrDefault(
+                var endEntry = logEntries.Find(
                     entry =>
                         entry.TaskAction == "END"
                         && entry.TaskHash == startEntry.TaskHash
@@ -67,7 +67,7 @@ namespace ALE.ETLBox.Logging
                     currentParent = currentParent.Parent;
                     currentList = currentParent.Children;
                 }
-                else if (entry.TaskAction == "START" || entry.TaskAction == "LOG")
+                else if (entry.TaskAction is "START" or "LOG")
                 {
                     var hierarchyEntry = new LogHierarchyEntry(entry) { Parent = currentParent };
                     currentList.Add(hierarchyEntry);
@@ -77,7 +77,7 @@ namespace ALE.ETLBox.Logging
         }
 
         /* Public properties */
-        public List<string> ContainerTypes => new() { "sequence", "subpackage", "package" };
+        public static List<string> ContainerTypes => new() { "sequence", "subpackage", "package" };
 
         private long? _loadProcessKey;
         public long? LoadProcessKey

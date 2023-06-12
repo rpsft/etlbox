@@ -1,5 +1,4 @@
 using ALE.ETLBox.Helper;
-using Xunit;
 
 namespace TestHelper
 {

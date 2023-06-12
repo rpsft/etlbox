@@ -1,12 +1,12 @@
-﻿using System.Data.Odbc;
+using System.Data.Odbc;
 
 namespace ALE.ETLBox.ConnectionManager
 {
     public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection>
     {
-        public OdbcConnectionManager() { }
+        protected OdbcConnectionManager() { }
 
-        public OdbcConnectionManager(OdbcConnectionString connectionString)
+        protected OdbcConnectionManager(OdbcConnectionString connectionString)
             : base(connectionString) { }
 
         internal void OdbcBulkInsert(ITableData data, string tableName, BulkInsertSql bulkInsert)

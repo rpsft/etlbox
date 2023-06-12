@@ -2,8 +2,6 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.Helper;
 
 namespace ALE.ETLBox.DataFlow
@@ -102,7 +100,6 @@ namespace ALE.ETLBox.DataFlow
                     BufferCancellationSource.Token
                 );
             }
-            // StreamWriter = new StreamWriter(HttpClient.GetStreamAsync(new Uri(Uri)).Result);
         }
 
         protected override void CleanUp()

@@ -1,5 +1,3 @@
-using System;
-
 namespace TestFlatFileConnectors.Helpers
 {
     public static class StringExtensions

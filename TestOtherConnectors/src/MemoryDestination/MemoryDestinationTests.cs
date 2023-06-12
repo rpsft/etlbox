@@ -1,17 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.MemoryDestination
 {
-    [Collection("DataFlow")]
-    public class MemoryDestinationTests
+    public class MemoryDestinationTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MemoryDestinationTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
+        [Serializable]
         public class MySimpleRow
         {
             public int Col1 { get; set; }

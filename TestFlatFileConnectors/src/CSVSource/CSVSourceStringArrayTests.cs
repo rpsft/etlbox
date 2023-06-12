@@ -1,17 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVSource
 {
-    [Collection("DataFlow")]
-    public class CsvSourceStringArrayTests
+    public class CsvSourceStringArrayTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvSourceStringArrayTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleCSVIntoDatabase()
@@ -21,7 +15,7 @@ namespace TestFlatFileConnectors.CSVSource
                 "CsvDestination2Columns"
             );
             DbDestination<string[]> dest = new DbDestination<string[]>(
-                Connection,
+                SqlConnection,
                 "CsvDestination2Columns"
             );
 
@@ -43,7 +37,7 @@ namespace TestFlatFileConnectors.CSVSource
                 "CsvDestination2Columns"
             );
             DbDestination<string[]> dest = new DbDestination<string[]>(
-                Connection,
+                SqlConnection,
                 "CsvDestination2Columns"
             );
 
@@ -63,7 +57,7 @@ namespace TestFlatFileConnectors.CSVSource
             //Arrange
             var unused = new TwoColumnsTableFixture("CsvDestination2Columns");
             DbDestination<string[]> dest = new DbDestination<string[]>(
-                Connection,
+                SqlConnection,
                 "CsvDestination2Columns"
             );
 
@@ -76,7 +70,7 @@ namespace TestFlatFileConnectors.CSVSource
             //Assert
             Assert.Equal(
                 3,
-                RowCountTask.Count(Connection, "CsvDestination2Columns", "Col1 IN (1,2,3)")
+                RowCountTask.Count(SqlConnection, "CsvDestination2Columns", "Col1 IN (1,2,3)")
             );
         }
     }

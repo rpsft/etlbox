@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.CustomSource
 {
-    [Collection("DataFlow")]
-    public class CustomSourceDynamicObjectTests
+    public class CustomSourceDynamicObjectTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CustomSourceDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleFlow()
@@ -22,18 +15,19 @@ namespace TestOtherConnectors.CustomSource
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSourceDynamic"
             );
-            List<string> Data = new List<string> { "Test1", "Test2", "Test3" };
-            int _readIndex = 0;
-            Func<ExpandoObject> ReadData = () =>
+            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
+            int readIndex = 0;
+
+            ExpandoObject ReadData()
             {
                 dynamic result = new ExpandoObject();
-                result.Col1 = (_readIndex + 1).ToString();
-                result.Col2 = Data[_readIndex];
-                _readIndex++;
+                result.Col1 = (readIndex + 1).ToString();
+                result.Col2 = data[readIndex];
+                readIndex++;
                 return result;
-            };
+            }
 
-            Func<bool> EndOfData = () => _readIndex >= Data.Count;
+            bool EndOfData() => readIndex >= data.Count;
 
             //Act
             CustomSource<ExpandoObject> source = new CustomSource<ExpandoObject>(
@@ -41,7 +35,7 @@ namespace TestOtherConnectors.CustomSource
                 EndOfData
             );
             DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "Destination4CustomSourceDynamic"
             );
             source.LinkTo(dest);

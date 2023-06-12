@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines if the column is used to identify if the record is supposed to be deleted.
@@ -18,11 +18,11 @@
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class DeleteColumn : Attribute
+    public class DeleteColumnAttribute : Attribute
     {
         public object DeleteOnMatchValue { get; set; }
 
-        public DeleteColumn(object deleteOnMatchValue)
+        public DeleteColumnAttribute(object deleteOnMatchValue)
         {
             DeleteOnMatchValue = deleteOnMatchValue;
         }

@@ -1,20 +1,11 @@
-using System.Collections.Generic;
-using System.Dynamic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVSource
 {
-    [Collection("DataFlow")]
-    public class CsvSourceDynamicObjectTests
+    public sealed class CsvSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleFlowWithDynamicObject()
@@ -74,7 +65,7 @@ namespace TestFlatFileConnectors.CSVSource
                     new("Col2", "VARCHAR(100)", allowNulls: true),
                     new("Id", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                     new("Col1", "INT", allowNulls: true),
-                    new("ColX", "INT", allowNulls: true),
+                    new("ColX", "INT", allowNulls: true)
                 }
             );
             DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(

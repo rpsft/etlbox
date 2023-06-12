@@ -1,19 +1,18 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class CreateTableTaskTests
+    public class CreateTableTaskTests : ControlFlowTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("ControlFlow");
-        private MySqlConnectionManager MySqlConnection =>
-            Config.MySqlConnection.ConnectionManager("ControlFlow");
+        public CreateTableTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
-        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
+
+        public static IEnumerable<object[]> Access => AccessConnection;
 
         [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
         public void CreateTable(IConnectionManager connection)
@@ -162,11 +161,13 @@ namespace TestControlFlowTasks
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable6"));
-            if (connection.GetType() != typeof(SQLiteConnectionManager))
+            if (connection.GetType() == typeof(SQLiteConnectionManager))
             {
-                var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable6");
-                Assert.Contains(td.Columns, col => col.IsIdentity);
+                return;
             }
+
+            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable6");
+            Assert.Contains(td.Columns, col => col.IsIdentity);
         }
 
         [Fact]
@@ -211,10 +212,7 @@ namespace TestControlFlowTasks
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable8"));
             var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable8");
             Assert.Contains(td.Columns, col => col.DefaultValue == "0");
-            Assert.Contains(
-                td.Columns,
-                col => col.DefaultValue == "Test" || col.DefaultValue == "'Test'"
-            );
+            Assert.Contains(td.Columns, col => col.DefaultValue is "Test" or "'Test'");
             Assert.Contains(td.Columns, col => col.DefaultValue == "3.12");
         }
 
@@ -222,35 +220,34 @@ namespace TestControlFlowTasks
         public void CreateTableWithComputedColumn(IConnectionManager connection)
         {
             if (
-                connection.GetType() != typeof(SQLiteConnectionManager)
-                && connection.GetType() != typeof(PostgresConnectionManager)
+                connection.GetType() == typeof(SQLiteConnectionManager)
+                || connection.GetType() == typeof(PostgresConnectionManager)
             )
             {
-                //Arrange
-                List<TableColumn> columns = new List<TableColumn>
-                {
-                    new("value1", "INT", allowNulls: false),
-                    new("value2", "INT", allowNulls: false),
-                    new("compValue", "BIGINT", allowNulls: true)
-                    {
-                        ComputedColumn = "(value1 * value2)"
-                    }
-                };
-
-                //Act
-                CreateTableTask.Create(connection, "CreateTable9", columns);
-
-                //Assert
-                Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable9"));
-                var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable9");
-                if (connection.GetType() == typeof(SqlConnectionManager))
-                    Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
-                else if (connection.GetType() == typeof(MySqlConnectionManager))
-                    Assert.Contains(
-                        td.Columns,
-                        col => col.ComputedColumn == "(`value1` * `value2`)"
-                    );
+                return;
             }
+
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>
+            {
+                new("value1", "INT", allowNulls: false),
+                new("value2", "INT", allowNulls: false),
+                new("compValue", "BIGINT", allowNulls: true)
+                {
+                    ComputedColumn = "(value1 * value2)"
+                }
+            };
+
+            //Act
+            CreateTableTask.Create(connection, "CreateTable9", columns);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable9"));
+            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable9");
+            if (connection.GetType() == typeof(SqlConnectionManager))
+                Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
+            else if (connection.GetType() == typeof(MySqlConnectionManager))
+                Assert.Contains(td.Columns, col => col.ComputedColumn == "(`value1` * `value2`)");
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -349,9 +346,9 @@ namespace TestControlFlowTasks
                 {
                     Name = "ThisIsAReallyLongAndPrettyColumnNameWhichICantChange",
                     DataType = "int",
-                    IsPrimaryKey = true,
+                    IsPrimaryKey = true
                 },
-                new() { Name = "JustRandomColumn", DataType = "int" },
+                new() { Name = "JustRandomColumn", DataType = "int" }
             };
 
             var tableDefinition = new TableDefinition(

@@ -56,10 +56,6 @@ SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS
 END
 ";
                 }
-                //else if (ConnectionType == ConnectionManagerType.MySql)
-                //{
-                //    return $@"CREATE DATABASE IF NOT EXISTS {DatabaseName} {CollationString}";
-                //}
 
                 return $@"CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString}";
             }
@@ -106,16 +102,14 @@ END
         /* Implementation & stuff */
         private string RecoveryModelAsString
         {
-            get
-            {
-                if (RecoveryModel == RecoveryModel.Simple)
-                    return "SIMPLE";
-                if (RecoveryModel == RecoveryModel.BulkLogged)
-                    return "BULK";
-                if (RecoveryModel == RecoveryModel.Full)
-                    return "FULL";
-                return string.Empty;
-            }
+            get =>
+                RecoveryModel switch
+                {
+                    RecoveryModel.Simple => "SIMPLE",
+                    RecoveryModel.BulkLogged => "BULK",
+                    RecoveryModel.Full => "FULL",
+                    _ => string.Empty
+                };
         }
 
         private bool HasCollation => !string.IsNullOrWhiteSpace(Collation);

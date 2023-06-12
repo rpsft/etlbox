@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
-    [Collection("DataFlow")]
-    public class BlockTransformationExceptionTests
+    public class BlockTransformationExceptionTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public BlockTransformationExceptionTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -26,19 +24,18 @@ namespace TestTransformations.BlockTransformationTests
             var _ = new TwoColumnsTableFixture("BlockTransDest");
 
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "BlockTransSource"
             );
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "BlockTransDest"
             );
 
             //Act
-            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(_ =>
-            {
-                throw new Exception("Test");
-            });
+            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
+                _ => throw new Exception("Test")
+            );
             source.LinkTo(block);
             block.LinkTo(dest);
 

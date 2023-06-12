@@ -1,9 +1,5 @@
-using ALE.ETLBox.DataFlow;
-using Xunit;
-
 namespace TestFlatFileConnectors.JsonSource
 {
-    [Collection("DataFlow")]
     public class JsonSourceEmptyTests
     {
         [Fact]

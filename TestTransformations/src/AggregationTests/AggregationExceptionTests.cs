@@ -2,7 +2,6 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.AggregationTests
 {
-    [Collection("DataFlow")]
     public class AggregationExceptionTests
     {
         public class MyRow
@@ -26,7 +25,7 @@ namespace TestTransformations.AggregationTests
             {
                 DataAsList = new List<MyRow>
                 {
-                    new() { Id = 1, DetailValue = 3.5 },
+                    new() { Id = 1, DetailValue = 3.5 }
                 }
             };
 

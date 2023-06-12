@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 
@@ -15,14 +14,12 @@ namespace ALE.ETLBox
         {
             get
             {
-                TableColumn idCol = Columns.FirstOrDefault(col => col.IsIdentity);
+                TableColumn idCol = Columns.Find(col => col.IsIdentity);
                 if (idCol != null)
                     return Columns.IndexOf(idCol);
                 return null;
             }
         }
-
-        public string AllColumnsWithoutIdentity => Columns.Where(col => !col.IsIdentity).AsString();
 
         public TableDefinition()
         {
@@ -41,8 +38,6 @@ namespace ALE.ETLBox
             Columns = columns;
         }
 
-        public void CreateTable() => CreateTableTask.Create(this);
-
         public void CreateTable(IConnectionManager connectionManager) =>
             CreateTableTask.Create(connectionManager, this);
 
@@ -53,37 +48,36 @@ namespace ALE.ETLBox
         {
             IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = connection.ConnectionManagerType;
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+            ObjectNameDescriptor tn = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE
             );
 
-            if (connectionType == ConnectionManagerType.SqlServer)
-                return ReadTableDefinitionFromSqlServer(connection, TN);
-            if (connectionType == ConnectionManagerType.SQLite)
-                return ReadTableDefinitionFromSQLite(connection, TN);
-            if (connectionType == ConnectionManagerType.MySql)
-                return ReadTableDefinitionFromMySqlServer(connection, TN);
-            if (connectionType == ConnectionManagerType.Postgres)
-                return ReadTableDefinitionFromPostgres(connection, TN);
-            if (connectionType == ConnectionManagerType.Access)
-                return ReadTableDefinitionFromAccess(connection, TN);
-            throw new ETLBoxException(
-                "Unknown connection type - please pass a valid TableDefinition!"
-            );
+            return connectionType switch
+            {
+                ConnectionManagerType.SqlServer => ReadTableDefinitionFromSqlServer(connection, tn),
+                ConnectionManagerType.SQLite => ReadTableDefinitionFromSQLite(connection, tn),
+                ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(connection, tn),
+                ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(connection, tn),
+                ConnectionManagerType.Access => ReadTableDefinitionFromAccess(connection, tn),
+                _
+                    => throw new ETLBoxException(
+                        "Unknown connection type - please pass a valid TableDefinition!"
+                    )
+            };
         }
 
         private static TableDefinition ReadTableDefinitionFromSqlServer(
             IConnectionManager connection,
-            ObjectNameDescriptor TN
+            ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
+            TableDefinition result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
-                $"Read column meta data for table {TN.ObjectName}",
+                $"Read column meta data for table {tn.ObjectName}",
                 $@"
 SELECT  cols.name
      , CASE WHEN tpes.name IN ('varchar','char','binary','varbinary') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length, ')')
@@ -124,7 +118,7 @@ LEFT JOIN sys.default_constraints defconstr
     AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
     ON compCol.object_id = cols.object_id
-WHERE ( CONCAt (sc.name,'.',tbl.name) ='{TN.UnquotatedFullName}' OR  tbl.name = '{TN.UnquotatedFullName}' )
+WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tn.UnquotedFullName}' OR  tbl.name = '{tn.UnquotedFullName}' )
     AND tbl.type IN ('U','V')
     AND tpes.name <> 'sysname'
 ORDER BY cols.column_id
@@ -138,21 +132,21 @@ ORDER BY cols.column_id
                     result.Columns.Add(curCol);
                 },
                 name => curCol.Name = name.ToString(),
-                type_name => curCol.DataType = type_name.ToString(),
-                is_nullable => curCol.AllowNulls = (bool)is_nullable,
-                is_identity => curCol.IsIdentity = (bool)is_identity,
-                seed_value => curCol.IdentitySeed = Convert.ToInt32(seed_value),
-                increment_value => curCol.IdentityIncrement = Convert.ToInt32(increment_value),
-                primary_key => curCol.IsPrimaryKey = (bool)primary_key,
-                default_value =>
-                    curCol.DefaultValue = default_value
+                typeName => curCol.DataType = typeName.ToString(),
+                isNullable => curCol.AllowNulls = (bool)isNullable,
+                isIdentity => curCol.IsIdentity = (bool)isIdentity,
+                seedValue => curCol.IdentitySeed = Convert.ToInt32(seedValue),
+                incrementValue => curCol.IdentityIncrement = Convert.ToInt32(incrementValue),
+                primaryKey => curCol.IsPrimaryKey = (bool)primaryKey,
+                defaultValue =>
+                    curCol.DefaultValue = defaultValue
                         ?.ToString()
-                        .Substring(2, default_value.ToString().Length - 4),
-                collation_name => curCol.Collation = collation_name?.ToString(),
-                computed_column_definition =>
-                    curCol.ComputedColumn = computed_column_definition
+                        .Substring(2, defaultValue.ToString().Length - 4),
+                collationName => curCol.Collation = collationName?.ToString(),
+                computedColumnDefinition =>
+                    curCol.ComputedColumn = computedColumnDefinition
                         ?.ToString()
-                        .Substring(1, computed_column_definition.ToString().Length - 2)
+                        .Substring(1, computedColumnDefinition.ToString().Length - 2)
             )
             {
                 DisableLogging = true,
@@ -164,14 +158,14 @@ ORDER BY cols.column_id
 
         private static TableDefinition ReadTableDefinitionFromSQLite(
             IConnectionManager connection,
-            ObjectNameDescriptor TN
+            ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
+            TableDefinition result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
             var readMetaSql = new SqlTask(
-                $"Read column meta data for table {TN.ObjectName}",
-                $@"PRAGMA table_info(""{TN.UnquotatedFullName}"")",
+                $"Read column meta data for table {tn.ObjectName}",
+                $@"PRAGMA table_info(""{tn.UnquotedFullName}"")",
                 () =>
                 {
                     curCol = new TableColumn();
@@ -180,15 +174,12 @@ ORDER BY cols.column_id
                 {
                     result.Columns.Add(curCol);
                 },
-                _ =>
-                {
-                    ;
-                },
+                _ => { },
                 name => curCol.Name = name.ToString(),
                 type => curCol.DataType = type.ToString(),
-                notnull => curCol.AllowNulls = (long)notnull == 1 ? true : false,
-                dftl_value => curCol.DefaultValue = dftl_value?.ToString(),
-                pk => curCol.IsPrimaryKey = (long)pk >= 1 ? true : false
+                notNull => curCol.AllowNulls = (long)notNull == 1,
+                defaultValue => curCol.DefaultValue = defaultValue?.ToString(),
+                pk => curCol.IsPrimaryKey = (long)pk >= 1
             )
             {
                 DisableLogging = true,
@@ -200,14 +191,14 @@ ORDER BY cols.column_id
 
         private static TableDefinition ReadTableDefinitionFromMySqlServer(
             IConnectionManager connection,
-            ObjectNameDescriptor TN
+            ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
+            TableDefinition result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
-                $"Read column meta data for table {TN.ObjectName}",
+                $"Read column meta data for table {tn.ObjectName}",
                 $@" 
 SELECT cols.column_name
   , CASE WHEN cols.data_type IN ('varchar','char') THEN CONCAT (cols.data_type,'(',cols.character_maximum_length, ')')
@@ -232,7 +223,7 @@ LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
     AND cols.table_catalog = k.table_catalog
     AND cols.column_name = k.column_name
     AND k.constraint_name = 'PRIMARY'
-WHERE ( cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{TN.UnquotatedFullName}')
+WHERE ( cols.table_name = '{tn.UnquotedFullName}'  OR  CONCAT(cols.table_catalog,'.',cols.table_name) = '{tn.UnquotedFullName}')
     AND cols.table_schema = DATABASE()
 ORDER BY cols.ordinal_position
 ",
@@ -244,14 +235,14 @@ ORDER BY cols.ordinal_position
                 {
                     result.Columns.Add(curCol);
                 },
-                column_name => curCol.Name = column_name.ToString(),
-                data_type => curCol.DataType = data_type.ToString(),
-                is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false,
-                auto_increment => curCol.IsIdentity = (int)auto_increment == 1 ? true : false,
-                primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false,
-                column_default => curCol.DefaultValue = column_default?.ToString(),
-                collation_name => curCol.Collation = collation_name?.ToString(),
-                generation_expression => curCol.ComputedColumn = generation_expression?.ToString(),
+                columnName => curCol.Name = columnName.ToString(),
+                dataType => curCol.DataType = dataType.ToString(),
+                isNullable => curCol.AllowNulls = (int)isNullable == 1,
+                autoIncrement => curCol.IsIdentity = (int)autoIncrement == 1,
+                primaryKey => curCol.IsPrimaryKey = (int)primaryKey == 1,
+                columnDefault => curCol.DefaultValue = columnDefault?.ToString(),
+                collationName => curCol.Collation = collationName?.ToString(),
+                generationExpression => curCol.ComputedColumn = generationExpression?.ToString(),
                 comment => curCol.Comment = comment?.ToString()
             )
             {
@@ -264,14 +255,14 @@ ORDER BY cols.ordinal_position
 
         private static TableDefinition ReadTableDefinitionFromPostgres(
             IConnectionManager connection,
-            ObjectNameDescriptor TN
+            ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
+            TableDefinition result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
-                $"Read column meta data for table {TN.ObjectName}",
+                $"Read column meta data for table {tn.ObjectName}",
                 $@" 
 SELECT cols.column_name
 ,CASE 
@@ -318,7 +309,7 @@ LEFT JOIN information_schema.constraint_column_usage tccu
     AND tccu.constraint_schema = tc.constraint_schema
     AND tccu.constraint_catalog = tc.constraint_catalog
     AND cols.column_name = tccu.column_name
-WHERE(cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{TN.UnquotatedFullName}')
+WHERE(cols.table_name = '{tn.UnquotedFullName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tn.UnquotedFullName}')
     AND cols.table_catalog = CURRENT_DATABASE()
 ORDER BY cols.ordinal_position
 ",
@@ -330,18 +321,18 @@ ORDER BY cols.ordinal_position
                 {
                     result.Columns.Add(curCol);
                 },
-                column_name => curCol.Name = column_name.ToString(),
-                internal_type_name => curCol.InternalDataType = internal_type_name.ToString(),
-                data_type => curCol.DataType = data_type.ToString(),
-                is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false,
-                serial => curCol.IsIdentity = (int)serial == 1 ? true : false,
-                primary_key => curCol.IsPrimaryKey = (int)primary_key == 1 ? true : false,
-                column_default =>
-                    curCol.DefaultValue = column_default
+                columnName => curCol.Name = columnName.ToString(),
+                internalTypeName => curCol.InternalDataType = internalTypeName.ToString(),
+                dataType => curCol.DataType = dataType.ToString(),
+                isNullable => curCol.AllowNulls = (int)isNullable == 1,
+                serial => curCol.IsIdentity = (int)serial == 1,
+                primaryKey => curCol.IsPrimaryKey = (int)primaryKey == 1,
+                columnDefault =>
+                    curCol.DefaultValue = columnDefault
                         ?.ToString()
                         .ReplaceIgnoreCase("::character varying", ""),
-                collation_name => curCol.Collation = collation_name?.ToString(),
-                generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
+                collationName => curCol.Collation = collationName?.ToString(),
+                generationExpression => curCol.ComputedColumn = generationExpression?.ToString()
             )
             {
                 DisableLogging = true,
@@ -353,11 +344,11 @@ ORDER BY cols.ordinal_position
 
         private static TableDefinition ReadTableDefinitionFromAccess(
             IConnectionManager connection,
-            ObjectNameDescriptor TN
+            ObjectNameDescriptor tn
         )
         {
             var accessConnection = connection as AccessOdbcConnectionManager;
-            return accessConnection?.ReadTableDefinition(TN);
+            return accessConnection?.ReadTableDefinition(tn);
         }
     }
 }

@@ -1,17 +1,10 @@
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using ALE.ETLBox.DataFlow;
 using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonSource
 {
-    [Collection("DataFlow")]
     public class JsonSourceWebServiceTests
     {
         public class Todo
@@ -44,7 +37,7 @@ namespace TestFlatFileConnectors.JsonSource
             Assert.Equal(5, dest.Data.Count);
         }
 
-        private HttpClient MoqJsonResponse(string json)
+        private static HttpClient MoqJsonResponse(string json)
         {
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
             handlerMock
@@ -58,7 +51,7 @@ namespace TestFlatFileConnectors.JsonSource
                     new HttpResponseMessage
                     {
                         StatusCode = HttpStatusCode.OK,
-                        Content = new StringContent(json),
+                        Content = new StringContent(json)
                     }
                 )
                 .Verifiable();
@@ -80,7 +73,6 @@ namespace TestFlatFileConnectors.JsonSource
                 ResourceType = ResourceType.File
             };
 
-            //source.HttpClient = httpClient;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

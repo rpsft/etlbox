@@ -1,18 +1,15 @@
-using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DataFlow")]
-    public class DbMergeTests
+    public class DbMergeTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        private static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbMergeTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MyMergeRow : MergeableRow
@@ -88,7 +85,6 @@ namespace TestDatabaseConnectors.DBMerge
             {
                 DeltaMode = DeltaMode.NoDeletions
             };
-            //dest.DisableDeletion = true;
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -34,13 +34,12 @@ namespace ALE.ETLBox.DataFlow
         private bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         private bool HasTableName => !string.IsNullOrWhiteSpace(TableName);
         private TableData<TInput> TableData { get; set; }
-        private int WereDynamicColumnsAdded { get; set; }
 
         public IConnectionManager BulkInsertConnectionManager { get; set; }
 
         public DbDestination()
         {
-            BatchSize = DEFAULT_BATCH_SIZE;
+            BatchSize = DefaultBatchSize;
         }
 
         public DbDestination(int batchSize)
@@ -57,7 +56,7 @@ namespace ALE.ETLBox.DataFlow
         public DbDestination(IConnectionManager connectionManager, string tableName)
             : this(tableName)
         {
-            base.ConnectionManager = connectionManager;
+            ConnectionManager = connectionManager;
         }
 
         public DbDestination(string tableName, int batchSize)
@@ -69,12 +68,12 @@ namespace ALE.ETLBox.DataFlow
         public DbDestination(IConnectionManager connectionManager, string tableName, int batchSize)
             : this(tableName, batchSize)
         {
-            base.ConnectionManager = connectionManager;
+            ConnectionManager = connectionManager;
         }
 
-        protected override void InitObjects(int batchSize)
+        protected override void InitObjects(int initBatchSize)
         {
-            base.InitObjects(batchSize);
+            base.InitObjects(initBatchSize);
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
         }
 
@@ -126,12 +125,14 @@ namespace ALE.ETLBox.DataFlow
         protected override void FinishWrite()
         {
             TableData?.Close();
-            if (BulkInsertConnectionManager != null)
+            if (BulkInsertConnectionManager == null)
             {
-                BulkInsertConnectionManager.IsInBulkInsert = false;
-                BulkInsertConnectionManager.CleanUpBulkInsert(DestinationTableDefinition?.Name);
-                BulkInsertConnectionManager.CloseIfAllowed();
+                return;
             }
+
+            BulkInsertConnectionManager.IsInBulkInsert = false;
+            BulkInsertConnectionManager.CleanUpBulkInsert(DestinationTableDefinition?.Name);
+            BulkInsertConnectionManager.CloseIfAllowed();
         }
 
         private void TryAddDynamicColumnsToTableDef(TInput[] data)
@@ -146,11 +147,11 @@ namespace ALE.ETLBox.DataFlow
                     .Where(x => x != null)
             )
             {
-                foreach (var column in dynamicObject)
+                foreach (var key in dynamicObject.Select(c => c.Key))
                 {
                     int newPropIndex = TableData.DynamicColumnNames.Count;
-                    if (!TableData.DynamicColumnNames.ContainsKey(column.Key))
-                        TableData.DynamicColumnNames.Add(column.Key, newPropIndex);
+                    if (!TableData.DynamicColumnNames.ContainsKey(key))
+                        TableData.DynamicColumnNames.Add(key, newPropIndex);
                 }
             }
         }
@@ -163,11 +164,13 @@ namespace ALE.ETLBox.DataFlow
                     continue;
 
                 TableData.Rows.Add(
-                    TypeInfo.IsArray
-                        ? currentRow as object[]
-                        : TypeInfo.IsDynamic
-                            ? ConvertDynamicRow(currentRow as IDictionary<string, object>)
-                            : ConvertObjectRow(currentRow)
+                    TypeInfo.GetTypeInfoGroup() switch
+                    {
+                        TypeInfo.TypeInfoGroup.Array => currentRow as object[],
+                        TypeInfo.TypeInfoGroup.Dynamic
+                            => ConvertDynamicRow(currentRow as IDictionary<string, object>),
+                        _ => ConvertObjectRow(currentRow)
+                    }
                 );
             }
         }

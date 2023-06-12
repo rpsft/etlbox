@@ -11,9 +11,9 @@ namespace ALE.ETLBox
         {
             get
             {
-                if (DataFlow.DataFlow.HasLoggingThresholdRows)
-                    return DataFlow.DataFlow.LoggingThresholdRows;
-                return _loggingThresholdRows;
+                return DataFlow.DataFlow.HasLoggingThresholdRows
+                    ? DataFlow.DataFlow.LoggingThresholdRows
+                    : _loggingThresholdRows;
             }
             set { _loggingThresholdRows = value; }
         }
@@ -31,7 +31,7 @@ namespace ALE.ETLBox
                     TaskType,
                     "START",
                     TaskHash,
-                    ControlFlow.ControlFlow.STAGE,
+                    ControlFlow.ControlFlow.Stage,
                     ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
@@ -44,7 +44,7 @@ namespace ALE.ETLBox
                     TaskType,
                     "LOG",
                     TaskHash,
-                    ControlFlow.ControlFlow.STAGE,
+                    ControlFlow.ControlFlow.Stage,
                     ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             if (!DisableLogging)
@@ -53,7 +53,7 @@ namespace ALE.ETLBox
                     TaskType,
                     "END",
                     TaskHash,
-                    ControlFlow.ControlFlow.STAGE,
+                    ControlFlow.ControlFlow.Stage,
                     ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
@@ -62,39 +62,45 @@ namespace ALE.ETLBox
         {
             ProgressCount += rowsProcessed;
             if (
-                !DisableLogging
-                && HasLoggingThresholdRows
-                && ProgressCount >= LoggingThresholdRows * ThresholdCount
+                DisableLogging
+                || !HasLoggingThresholdRows
+                || ProgressCount < LoggingThresholdRows * ThresholdCount
             )
             {
-                NLogger.Info(
-                    TaskName + $" processed {ProgressCount} records.",
-                    TaskType,
-                    "LOG",
-                    TaskHash,
-                    ControlFlow.ControlFlow.STAGE,
-                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
-                );
-                ThresholdCount++;
+                return;
             }
+
+            NLogger.Info(
+                TaskName + $" processed {ProgressCount} records.",
+                TaskType,
+                "LOG",
+                TaskHash,
+                ControlFlow.ControlFlow.Stage,
+                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+            );
+            ThresholdCount++;
         }
 
         protected void LogProgress()
         {
             ProgressCount += 1;
             if (
-                !DisableLogging
-                && HasLoggingThresholdRows
-                && ProgressCount % LoggingThresholdRows == 0
+                DisableLogging
+                || !HasLoggingThresholdRows
+                || ProgressCount % LoggingThresholdRows != 0
             )
-                NLogger.Info(
-                    TaskName + $" processed {ProgressCount} records.",
-                    TaskType,
-                    "LOG",
-                    TaskHash,
-                    ControlFlow.ControlFlow.STAGE,
-                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
-                );
+            {
+                return;
+            }
+
+            NLogger.Info(
+                TaskName + $" processed {ProgressCount} records.",
+                TaskType,
+                "LOG",
+                TaskHash,
+                ControlFlow.ControlFlow.Stage,
+                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+            );
         }
     }
 }

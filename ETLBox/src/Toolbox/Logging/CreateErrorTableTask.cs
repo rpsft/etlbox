@@ -29,7 +29,7 @@ namespace ALE.ETLBox.Logging
                 {
                     new("ErrorText", "TEXT", allowNulls: false),
                     new("RecordAsJson", "TEXT", allowNulls: true),
-                    new("ReportTime", "DATETIME", allowNulls: false),
+                    new("ReportTime", "DATETIME", allowNulls: false)
                 }
             );
         }

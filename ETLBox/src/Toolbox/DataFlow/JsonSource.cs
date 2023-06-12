@@ -1,4 +1,3 @@
-﻿using System.Threading.Tasks.Dataflow;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -86,14 +85,15 @@ namespace ALE.ETLBox.DataFlow
 
         private void SkipToStartOfArray()
         {
-            do { } while (
-                JsonTextReader.Read() && JsonTextReader.TokenType != JsonToken.StartArray
-            );
+            do
+            {
+                // Nothing
+            } while (JsonTextReader.Read() && JsonTextReader.TokenType != JsonToken.StartArray);
         }
 
-        private bool IsEndingToken(JsonToken tokenType)
+        private static bool IsEndingToken(JsonToken tokenType)
         {
-            return tokenType == JsonToken.EndArray || tokenType == JsonToken.EndObject;
+            return tokenType is JsonToken.EndArray or JsonToken.EndObject;
         }
 
         protected override void CloseReader()

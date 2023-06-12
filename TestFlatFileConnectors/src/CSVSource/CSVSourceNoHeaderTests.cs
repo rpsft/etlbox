@@ -1,17 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using CsvHelper.Configuration.Attributes;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVSource
 {
-    [Collection("DataFlow")]
-    public class CsvSourceNoHeaderTests
+    public class CsvSourceNoHeaderTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvSourceNoHeaderTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -28,7 +22,7 @@ namespace TestFlatFileConnectors.CSVSource
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceNoHeader");
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "CsvSourceNoHeader"
             );
 

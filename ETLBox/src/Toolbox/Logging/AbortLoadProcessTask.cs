@@ -20,11 +20,14 @@ namespace ALE.ETLBox.Logging
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,
-                Parameter = new List<QueryParameter> { cd, em, lpk },
+                Parameter = new List<QueryParameter> { cd, em, lpk }
             }.ExecuteNonQuery();
-            var rlp = new ReadLoadProcessTableTask(this, LoadProcessId) { DisableLogging = true, };
-            rlp.Execute();
-            ControlFlow.ControlFlow.CurrentLoadProcess = rlp.LoadProcess;
+            var tableTask = new ReadLoadProcessTableTask(this, LoadProcessId)
+            {
+                DisableLogging = true
+            };
+            tableTask.Execute();
+            ControlFlow.ControlFlow.CurrentLoadProcess = tableTask.LoadProcess;
         }
 
         /* Public properties */
@@ -38,7 +41,7 @@ namespace ALE.ETLBox.Logging
 
         public string Sql =>
             $@"
- UPDATE {TN.QuotatedFullName} 
+ UPDATE {TN.QuotedFullName} 
   SET end_date = @CurrentDate
   , is_running = 0
   , was_successful = 0

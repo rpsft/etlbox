@@ -1,17 +1,11 @@
-using System.Globalization;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVSource
 {
-    [Collection("DataFlow")]
-    public class CsvSourceIdentityColumnTests
+    public class CsvSourceIdentityColumnTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvSourceIdentityColumnTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void IdentityAtPosition1()
@@ -24,7 +18,7 @@ namespace TestFlatFileConnectors.CSVSource
                     "CsvDestination4Columns",
                     identityColumnIndex: 0
                 );
-                var dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+                var dest = new DbDestination<string[]>(SqlConnection, "CsvDestination4Columns");
                 var source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
 
                 if (source.CurrentCulture != null)
@@ -55,7 +49,7 @@ namespace TestFlatFileConnectors.CSVSource
                     "CsvDestination4Columns",
                     identityColumnIndex: 2
                 );
-                var dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+                var dest = new DbDestination<string[]>(SqlConnection, "CsvDestination4Columns");
                 var source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
                 if (source.CurrentCulture != null)
                     CultureInfo.CurrentCulture = source.CurrentCulture;
@@ -86,7 +80,7 @@ namespace TestFlatFileConnectors.CSVSource
                     "CsvDestination4Columns",
                     identityColumnIndex: 3
                 );
-                var dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+                var dest = new DbDestination<string[]>(SqlConnection, "CsvDestination4Columns");
 
                 //Act
                 var source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");

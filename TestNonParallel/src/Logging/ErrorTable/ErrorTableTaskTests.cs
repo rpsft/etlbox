@@ -1,25 +1,21 @@
-﻿using System.Collections.Generic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
 {
-    [Collection("Logging")]
-    public class ErrorTableTaskTests : IDisposable
+    public sealed class ErrorTableTaskTests : NonParallelTestBase, IDisposable
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
+        public ErrorTableTaskTests(LoggingDatabaseFixture fixture)
+            : base(fixture) { }
 
         public void Dispose()
         {
             ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void CreateErrorTable(IConnectionManager connection)
         {
             //Arrange
@@ -34,7 +30,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
             DropTableTask.Drop(connection, "etlbox_error");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void ReCreateErrorTable(IConnectionManager connection)
         {
             //Arrange
@@ -42,7 +38,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
             CreateTableTask.Create(
                 connection,
                 "etlbox_error",
-                new List<TableColumn> { new TableColumn("Col1", "INT") }
+                new List<TableColumn> { new("Col1", "INT") }
             );
             CreateErrorTableTask.DropAndCreate(connection, "etlbox_error");
             //Assert

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+using System.Text;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
@@ -78,7 +77,7 @@ namespace ALE.ETLBox.DataFlow
         public DbMerge(
             IConnectionManager connectionManager,
             string tableName,
-            int batchSize = DbDestination.DEFAULT_BATCH_SIZE
+            int batchSize = DbDestination.DefaultBatchSize
         )
         {
             TableName = tableName;
@@ -99,9 +98,6 @@ namespace ALE.ETLBox.DataFlow
 
         public ChangeAction? GetChangeAction(TInput row)
         {
-            //if (row is IMergeableRow)
-            //    return ((IMergeableRow)row).ChangeAction;
-            //else
             if (TypeInfo.IsDynamic)
             {
                 var r = row as IDictionary<string, object>;
@@ -123,8 +119,6 @@ namespace ALE.ETLBox.DataFlow
 
         public void SetChangeAction(TInput row, ChangeAction? changeAction)
         {
-            //if (row is IMergeableRow)
-            //    ((IMergeableRow)row).ChangeAction = changeAction;
             if (TypeInfo.IsDynamic)
             {
                 dynamic r = row as ExpandoObject;
@@ -143,7 +137,7 @@ namespace ALE.ETLBox.DataFlow
 
         public string GetUniqueId(TInput row)
         {
-            string result = "";
+            StringBuilder resultBuilder = new();
             if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
             {
                 var r = row as IDictionary<string, object>;
@@ -151,22 +145,22 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if (!r!.ContainsKey(idColumn))
                         r.Add(idColumn, null);
-                    result += r[idColumn].ToString();
+                    resultBuilder.Append(r[idColumn]);
                 }
-                return result;
+                return resultBuilder.ToString();
             }
 
-            if (TypeInfo.IdAttributeProps.Count > 0)
+            if (TypeInfo.IdAttributeProps.Count <= 0)
             {
-                foreach (var propInfo in TypeInfo.IdAttributeProps)
-                    result += propInfo?.GetValue(row).ToString();
-                return result;
+                throw new ETLBoxNotSupportedException(
+                    "Objects used for merge must at least define a id column"
+                        + "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list."
+                );
             }
 
-            throw new ETLBoxNotSupportedException(
-                "Objects used for merge must at least define a id column"
-                    + "to identify matching rows - please use the IdColumn attribute or add a property name in the MergeProperties.IdProperyNames list."
-            );
+            foreach (var propInfo in TypeInfo.IdAttributeProps)
+                resultBuilder.Append(propInfo?.GetValue(row));
+            return resultBuilder.ToString();
         }
 
         public bool GetIsDeletion(TInput row)
@@ -176,24 +170,23 @@ namespace ALE.ETLBox.DataFlow
                 return FindDeletionDynamicProperty(row as IDictionary<string, object>);
             }
 
-            if (TypeInfo.DeleteAttributeProps.Count > 0)
+            if (TypeInfo.DeleteAttributeProps.Count <= 0)
             {
-                bool result = true;
-                foreach (var tup in TypeInfo.DeleteAttributeProps)
-                    result &= tup.Item1?.GetValue(row)?.Equals(tup.Item2) ?? false;
-                return result;
+                return false;
             }
 
-            return false;
+            return TypeInfo.DeleteAttributeProps.TrueForAll(
+                tuple => tuple.Item1?.GetValue(row)?.Equals(tuple.Item2) ?? false
+            );
         }
 
         private bool FindDeletionDynamicProperty(IDictionary<string, object> r)
         {
             bool result = true;
-            foreach (var delColumn in MergeProperties.DeletionProperties)
+            foreach (var deleteColumn in MergeProperties.DeletionProperties)
             {
-                if (r!.ContainsKey(delColumn.Key))
-                    result &= r[delColumn.Key]?.Equals(delColumn.Value) ?? true;
+                if (r!.ContainsKey(deleteColumn.Key))
+                    result &= r[deleteColumn.Key]?.Equals(deleteColumn.Value) ?? true;
                 else
                     result = false;
             }
@@ -231,28 +224,22 @@ namespace ALE.ETLBox.DataFlow
                 );
             }
 
-            if (TypeInfo.CompareAttributeProps.Count > 0)
-            {
-                bool result = true;
-                foreach (var propInfo in TypeInfo.CompareAttributeProps)
-                    result &= propInfo?.GetValue(self)?.Equals(propInfo.GetValue(other)) ?? false;
-                return result;
-            }
-
-            return false;
+            return TypeInfo.CompareAttributeProps.Count > 0
+                && TypeInfo.CompareAttributeProps.TrueForAll(
+                    propInfo => propInfo?.GetValue(self)?.Equals(propInfo.GetValue(other)) ?? false
+                );
         }
 
         private bool CompareDynamicObjects(
             IDictionary<string, object> self,
             IDictionary<string, object> other
-        )
-        {
-            bool result = true;
-            foreach (string compColumn in MergeProperties.ComparePropertyNames)
-                if (self!.ContainsKey(compColumn) && other!.ContainsKey(compColumn))
-                    result &= self[compColumn]?.Equals(other[compColumn]) ?? false;
-            return result;
-        }
+        ) =>
+            MergeProperties.ComparePropertyNames.TrueForAll(
+                compColumn =>
+                    self!.ContainsKey(compColumn)
+                    && other!.ContainsKey(compColumn)
+                    && self[compColumn]!.Equals(other[compColumn])
+            );
 
         private void InitInternalFlow()
         {
@@ -310,7 +297,7 @@ namespace ALE.ETLBox.DataFlow
         {
             int x = 0;
             OutputSource = new CustomSource<TInput>(
-                () => DeltaTable.ElementAt(x++),
+                () => DeltaTable[x++],
                 () => x >= DeltaTable.Count
             );
 
@@ -343,28 +330,32 @@ namespace ALE.ETLBox.DataFlow
         private void SetInsertUpdateAction(TInput row, TInput find)
         {
             SetChangeAction(row, ChangeAction.Insert);
-            if (find != null)
+            if (find == null)
             {
-                if (AreEqual(row, find))
-                {
-                    SetChangeAction(row, ChangeAction.Exists);
-                    SetChangeAction(find, ChangeAction.Exists);
-                }
-                else
-                {
-                    SetChangeAction(row, ChangeAction.Update);
-                    SetChangeAction(find, ChangeAction.Update);
-                }
+                return;
+            }
+
+            if (AreEqual(row, find))
+            {
+                SetChangeAction(row, ChangeAction.Exists);
+                SetChangeAction(find, ChangeAction.Exists);
+            }
+            else
+            {
+                SetChangeAction(row, ChangeAction.Update);
+                SetChangeAction(find, ChangeAction.Update);
             }
         }
 
         private void SetDeleteAction(TInput row, TInput find)
         {
-            if (find != null)
+            if (find == null)
             {
-                SetChangeAction(find, ChangeAction.Delete);
-                SetChangeAction(row, ChangeAction.Delete);
+                return;
             }
+
+            SetChangeAction(find, ChangeAction.Delete);
+            SetChangeAction(row, ChangeAction.Delete);
         }
 
         private void InitInputDataDictionary()
@@ -419,19 +410,19 @@ namespace ALE.ETLBox.DataFlow
             if (!delete.Any())
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
-            string idNames = $"{QB}{IdColumnNames.First()}{QE}";
+            string idNames = $"{QB}{IdColumnNames[0]}{QE}";
             if (IdColumnNames.Count > 1)
                 idNames = CreateConcatSqlForNames();
             new SqlTask(
                 this,
                 $@"
-            DELETE FROM {TN.QuotatedFullName} 
+            DELETE FROM {TN.QuotedFullName} 
             WHERE {idNames} IN (
             {string.Join(",", deleteString)}
             )"
             )
             {
-                DisableLogging = true,
+                DisableLogging = true
             }.ExecuteNonQuery();
         }
 
@@ -453,7 +444,7 @@ namespace ALE.ETLBox.DataFlow
     {
         Full = 0,
         NoDeletions = 1,
-        Delta = 2,
+        Delta = 2
     }
 
     public class MergeProperties

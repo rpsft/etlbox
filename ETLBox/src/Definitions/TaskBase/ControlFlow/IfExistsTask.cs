@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.ControlFlow
 {
     [PublicAPI]
     public abstract class IfExistsTask : GenericTask

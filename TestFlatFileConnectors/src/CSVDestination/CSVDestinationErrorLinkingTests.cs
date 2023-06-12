@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using ALE.ETLBox.DataFlow;
-using Xunit;
-
 namespace TestFlatFileConnectors.CSVDestination
 {
-    [Collection("DataFlow")]
     public class CsvDestinationErrorLinkingTests
     {
         public class MySimpleRow
@@ -16,7 +9,7 @@ namespace TestFlatFileConnectors.CSVDestination
             {
                 get
                 {
-                    if (Col1 == null || Col1 == "X")
+                    if (Col1 is null or "X")
                         throw new Exception("Error record!");
                     return "Test" + Col1;
                 }
@@ -35,7 +28,7 @@ namespace TestFlatFileConnectors.CSVDestination
                     new() { Col1 = "1" },
                     new() { Col1 = "2" },
                     new() { Col1 = null },
-                    new() { Col1 = "3" },
+                    new() { Col1 = "3" }
                 }
             };
             CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("ErrorFile.csv");

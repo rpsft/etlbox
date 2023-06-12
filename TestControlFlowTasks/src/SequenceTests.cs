@@ -2,7 +2,6 @@ using ALE.ETLBox.ControlFlow;
 
 namespace TestControlFlowTasks
 {
-    [Collection("Generic ControlFlow")]
     public class SequenceTests
     {
         private bool Action1Executed { get; set; }
@@ -36,7 +35,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             Action2Executed = false;
-            string test = "Test";
+            const string test = "Test";
             //Act
             Sequence<object>.Execute("Test sequence 2", Action2, test);
             //Assert

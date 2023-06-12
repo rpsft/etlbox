@@ -57,12 +57,12 @@ namespace ALE.ETLBox.Logging
         }
 
         public static void Create(
-            string logTableName = ControlFlow.ControlFlow.DEFAULTLOGTABLENAME
+            string logTableName = ControlFlow.ControlFlow.DefaultLogTableName
         ) => new CreateLogTableTask(logTableName).Execute();
 
         public static void Create(
             IConnectionManager connectionManager,
-            string logTableName = ControlFlow.ControlFlow.DEFAULTLOGTABLENAME
+            string logTableName = ControlFlow.ControlFlow.DefaultLogTableName
         ) => new CreateLogTableTask(connectionManager, logTableName).Execute();
     }
 }

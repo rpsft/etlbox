@@ -1,16 +1,15 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
-    [Collection("DataFlow")]
-    public class RowMultiplicationErrorLinkingTests
+    public class RowMultiplicationErrorLinkingTests : TransformationsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowMultiplicationErrorLinkingTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
+        [Serializable]
         public class MySimpleRow
         {
             public int Col1 { get; set; }
@@ -33,8 +32,7 @@ namespace TestTransformations.RowMultiplication
             RowMultiplication<MySimpleRow> multiplication =
                 new RowMultiplication<MySimpleRow>(row =>
                 {
-                    List<MySimpleRow> result = new List<MySimpleRow>();
-                    result.Add(row);
+                    List<MySimpleRow> result = new List<MySimpleRow> { row };
                     if (row.Col1 == 2)
                         throw new Exception("Error in Flow!");
                     return result;
@@ -76,8 +74,7 @@ namespace TestTransformations.RowMultiplication
             RowMultiplication<MySimpleRow> multiplication =
                 new RowMultiplication<MySimpleRow>(row =>
                 {
-                    List<MySimpleRow> result = new List<MySimpleRow>();
-                    result.Add(row);
+                    List<MySimpleRow> result = new List<MySimpleRow> { row };
                     if (row.Col1 == 2)
                         throw new Exception("Error in Flow!");
                     return result;

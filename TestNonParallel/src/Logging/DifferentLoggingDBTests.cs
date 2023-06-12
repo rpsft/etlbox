@@ -1,30 +1,28 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging
 {
-    [UsedImplicitly]
-    public class OtherDBFixture
+    public sealed class DifferentLoggingDBTests
+        : NonParallelTestBase,
+            IDisposable,
+            IClassFixture<NoLoggingDatabaseFixture>
     {
-        public OtherDBFixture()
-        {
-            DatabaseHelper.RecreateSqlDatabase("NoLog");
-        }
-    }
+        public NoLoggingDatabaseFixture NoLoggingDatabaseFixture { get; }
+        private static SqlConnectionManager LoggingConnection => SqlConnection;
+        private static SqlConnectionManager NoLogConnection =>
+            NoLoggingDatabaseFixture.SqlConnection;
 
-    [Collection("Logging")]
-    public class DifferentLoggingDBTests : IDisposable, IClassFixture<OtherDBFixture>
-    {
-        private SqlConnectionManager LoggingConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
-        private SqlConnectionManager NoLogConnection =>
-            Config.SqlConnection.ConnectionManager("NoLog");
-
-        public DifferentLoggingDBTests()
+        public DifferentLoggingDBTests(
+            LoggingDatabaseFixture fixture,
+            NoLoggingDatabaseFixture noLoggingDatabaseFixture
+        )
+            : base(fixture)
         {
+            NoLoggingDatabaseFixture = noLoggingDatabaseFixture;
             CreateLogTableTask.Create(LoggingConnection);
             ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(LoggingConnection);
         }

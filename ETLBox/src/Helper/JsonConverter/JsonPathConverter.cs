@@ -34,18 +34,18 @@ namespace ALE.ETLBox.Helper
             JsonSerializer serializer
         )
         {
-            JObject jo = JObject.Load(reader);
+            JObject jObject = JObject.Load(reader);
             object targetObj = Activator.CreateInstance(objectType);
 
             foreach (
                 PropertyInfo prop in objectType.GetProperties().Where(p => p.CanRead && p.CanWrite)
             )
             {
-                JsonPropertyAttribute att = prop.GetCustomAttributes(true)
+                JsonPropertyAttribute attribute = prop.GetCustomAttributes(true)
                     .OfType<JsonPropertyAttribute>()
                     .FirstOrDefault();
 
-                string jsonPath = att != null ? att.PropertyName! : prop.Name;
+                string jsonPath = attribute != null ? attribute.PropertyName! : prop.Name;
 
                 if (serializer.ContractResolver is DefaultContractResolver resolver)
                 {
@@ -57,7 +57,7 @@ namespace ALE.ETLBox.Helper
                         $"JProperties of JsonPathConverter can have only letters, numbers, underscores, hiffens and dots but name was ${jsonPath}."
                     ); // Array operations not permitted
 
-                JToken token = jo.SelectToken(jsonPath);
+                JToken token = jObject.SelectToken(jsonPath);
                 if (token != null && token.Type != JTokenType.Null)
                 {
                     object value = token.ToObject(prop.PropertyType, serializer);
@@ -85,11 +85,11 @@ namespace ALE.ETLBox.Helper
             JObject main = new JObject();
             foreach (PropertyInfo prop in properties)
             {
-                JsonPropertyAttribute att = prop.GetCustomAttributes(true)
+                JsonPropertyAttribute attribute = prop.GetCustomAttributes(true)
                     .OfType<JsonPropertyAttribute>()
                     .FirstOrDefault();
 
-                string jsonPath = att != null ? att.PropertyName! : prop.Name;
+                string jsonPath = attribute != null ? attribute.PropertyName! : prop.Name;
 
                 if (serializer.ContractResolver is DefaultContractResolver resolver)
                 {

@@ -1,16 +1,16 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
-    [Collection("DataFlow")]
-    public class LookupTests
+    public class LookupTests : TransformationsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public LookupTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MyLookupRow
@@ -65,8 +65,6 @@ namespace TestTransformations.LookupTransformation
             var lookup = new LookupTransformation<MyDataRow, MyLookupRow>();
             lookup.TransformationFunc = row =>
             {
-                row.Col1 = row.Col1;
-                row.Col2 = row.Col2;
                 row.Col3 = lookup.LookupData
                     .Where(ld => ld.Key == row.Col1)
                     .Select(ld => ld.LookupValue1)

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.
@@ -23,23 +21,23 @@ namespace ALE.ETLBox.DataFlow
 
         internal ErrorHandler ErrorHandler { get; set; } = new();
 
-        public RowMultiplication()
-        {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(
-                (Func<TInput, IEnumerable<TOutput>>)MultiplicateRow
-            );
-        }
-
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc)
             : this()
         {
             MultiplicationFunc = multiplicationFunc;
         }
 
-        private IEnumerable<TOutput> MultiplicateRow(TInput row)
+        public RowMultiplication()
+        {
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(
+                (Func<TInput, IEnumerable<TOutput>>)MultiplyRow
+            );
+        }
+
+        private IEnumerable<TOutput> MultiplyRow(TInput row)
         {
             if (row == null)
-                return null;
+                return Array.Empty<TOutput>();
             try
             {
                 return MultiplicationFunc.Invoke(row);
@@ -49,7 +47,7 @@ namespace ALE.ETLBox.DataFlow
                 if (!ErrorHandler.HasErrorBuffer)
                     throw;
                 ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(row));
-                return null;
+                return Array.Empty<TOutput>();
             }
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual
@@ -64,15 +62,19 @@ namespace ALE.ETLBox.DataFlow
         {
             try
             {
-                if (inMemoryRow != null && passingRow != null)
+                if (inMemoryRow == null || passingRow == null)
                 {
-                    TOutput result = CrossJoinFunc.Invoke(inMemoryRow, passingRow);
-                    if (result != null)
-                    {
-                        Buffer.SendAsync(result).Wait();
-                        LogProgress();
-                    }
+                    return;
                 }
+
+                TOutput result = CrossJoinFunc.Invoke(inMemoryRow, passingRow);
+                if (result == null)
+                {
+                    return;
+                }
+
+                Buffer.SendAsync(result).Wait();
+                LogProgress();
             }
             catch (Exception e)
             {

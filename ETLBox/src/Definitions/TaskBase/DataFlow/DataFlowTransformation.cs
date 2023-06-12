@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowTransformation<TInput, TOutput>
@@ -24,13 +21,15 @@ namespace ALE.ETLBox.DataFlow
             Task.WhenAll(PredecessorCompletions)
                 .ContinueWith(t =>
                 {
-                    if (!TargetBlock.Completion.IsCompleted)
+                    if (TargetBlock.Completion.IsCompleted)
                     {
-                        if (t.IsFaulted)
-                            TargetBlock.Fault(t.Exception!.InnerException!);
-                        else
-                            TargetBlock.Complete();
+                        return;
                     }
+
+                    if (t.IsFaulted)
+                        TargetBlock.Fault(t.Exception!.InnerException!);
+                    else
+                        TargetBlock.Complete();
                 });
         }
 

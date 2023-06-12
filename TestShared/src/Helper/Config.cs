@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using ALE.ETLBox;
@@ -10,7 +9,7 @@ namespace TestShared.Helper;
 
 public static class Config
 {
-    private static IConfigurationRoot _defaultConfigFile;
+    private static IConfigurationRoot s_defaultConfigFile;
 
     public static ConnectionDetails<
         SqlConnectionString,
@@ -56,18 +55,20 @@ public static class Config
     {
         get
         {
-            if (_defaultConfigFile == null)
+            if (s_defaultConfigFile != null)
             {
-                var environmentVariable = Environment.GetEnvironmentVariable("ETLBoxConfig");
-                var path = string.IsNullOrWhiteSpace(environmentVariable)
-                    ? "default.config.json"
-                    : environmentVariable;
-                Load(path);
+                return s_defaultConfigFile;
             }
 
-            return _defaultConfigFile;
+            var environmentVariable = Environment.GetEnvironmentVariable("ETLBoxConfig");
+            var path = string.IsNullOrWhiteSpace(environmentVariable)
+                ? "default.config.json"
+                : environmentVariable;
+            Load(path);
+
+            return s_defaultConfigFile;
         }
-        set => _defaultConfigFile = value;
+        set => s_defaultConfigFile = value;
     }
 
     public static IEnumerable<object[]> AllSqlConnections(string section)
@@ -88,28 +89,6 @@ public static class Config
             new object[] { SqlConnection.ConnectionManager(section) },
             new object[] { PostgresConnection.ConnectionManager(section) },
             new object[] { MySqlConnection.ConnectionManager(section) }
-        };
-    }
-
-    public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, string value)
-    {
-        return new[]
-        {
-            new object[] { SqlConnection.ConnectionManager(section), value },
-            new object[] { PostgresConnection.ConnectionManager(section), value },
-            new object[] { MySqlConnection.ConnectionManager(section), value },
-            new object[] { SQLiteConnection.ConnectionManager(section), value }
-        };
-    }
-
-    public static IEnumerable<object[]> AllSqlConnectionsWithValue(string section, int value)
-    {
-        return new[]
-        {
-            new object[] { SqlConnection.ConnectionManager(section), value },
-            new object[] { PostgresConnection.ConnectionManager(section), value },
-            new object[] { MySqlConnection.ConnectionManager(section), value },
-            new object[] { SQLiteConnection.ConnectionManager(section), value }
         };
     }
 

@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines that this property is used to match with the property of the object
@@ -22,11 +22,11 @@
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class MatchColumn : Attribute
+    public class MatchColumnAttribute : Attribute
     {
         public string LookupSourcePropertyName { get; set; }
 
-        public MatchColumn(string lookupSourcePropertyName)
+        public MatchColumnAttribute(string lookupSourcePropertyName)
         {
             LookupSourcePropertyName = lookupSourcePropertyName;
         }

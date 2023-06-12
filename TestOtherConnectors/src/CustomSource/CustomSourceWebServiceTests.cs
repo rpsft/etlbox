@@ -1,19 +1,12 @@
-using System;
 using System.Net.Http;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using Newtonsoft.Json;
-using TestShared.Helper;
-using Xunit;
 
 namespace TestOtherConnectors.CustomSource
 {
-    [Collection("DataFlow")]
-    public class CustomSourceWebServiceTests
+    public class CustomSourceWebServiceTests : OtherConnectorsTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CustomSourceWebServiceTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         /// <summary>
         /// See https://jsonplaceholder.typicode.com/ for details of the rest api
@@ -24,13 +17,13 @@ namespace TestOtherConnectors.CustomSource
         {
             //Arrange
             SqlTask.ExecuteNonQuery(
-                Connection,
+                SqlConnection,
                 "Create test table",
                 @"CREATE TABLE dbo.WebServiceDestination 
                 ( Id INT NOT NULL, UserId INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
             );
             DbDestination<Todo> dest = new DbDestination<Todo>(
-                Connection,
+                SqlConnection,
                 "dbo.WebServiceDestination"
             );
             WebserviceReader wsreader = new WebserviceReader();
@@ -45,9 +38,10 @@ namespace TestOtherConnectors.CustomSource
             dest.Wait();
 
             //Assert
-            Assert.Equal(5, RowCountTask.Count(Connection, "dbo.WebServiceDestination"));
+            Assert.Equal(5, RowCountTask.Count(SqlConnection, "dbo.WebServiceDestination"));
         }
 
+        [Serializable]
         public class Todo
         {
             public int Id { get; set; }
@@ -56,6 +50,7 @@ namespace TestOtherConnectors.CustomSource
             public bool Completed { get; set; }
         }
 
+        [Serializable]
         public class WebserviceReader
         {
             public string Json { get; set; }
@@ -64,13 +59,11 @@ namespace TestOtherConnectors.CustomSource
             public Todo ReadTodo()
             {
                 var todo = new Todo();
-                using (var httpClient = new HttpClient())
-                {
-                    var uri = new Uri("https://jsonplaceholder.typicode.com/todos/" + TodoCounter);
-                    TodoCounter++;
-                    var response = httpClient.GetStringAsync(uri).Result;
-                    JsonConvert.PopulateObject(response, todo);
-                }
+                using var httpClient = new HttpClient();
+                var uri = new Uri("https://jsonplaceholder.typicode.com/todos/" + TodoCounter);
+                TodoCounter++;
+                var response = httpClient.GetStringAsync(uri).Result;
+                JsonConvert.PopulateObject(response, todo);
                 return todo;
             }
 

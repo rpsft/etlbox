@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow
@@ -34,7 +34,7 @@ namespace ALE.ETLBox.ControlFlow
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
-        public void CreateOrRecrate() => Execute();
+        public void CreateOrRecreate() => Execute();
 
         /* Public properties */
         public string IndexName { get; set; }
@@ -49,7 +49,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotatedFullName} ON {TN.QuotatedFullName}
+                return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotedFullName} ON {TN.QuotedFullName}
 ( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
 {IncludeSql}
 ";

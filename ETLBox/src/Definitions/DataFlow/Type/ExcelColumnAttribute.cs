@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines either which column index is mapped to the property or the
@@ -19,17 +19,17 @@
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ExcelColumn : Attribute
+    public class ExcelColumnAttribute : Attribute
     {
         public int? Index { get; set; }
         public string ColumnName { get; set; }
 
-        public ExcelColumn(int columnIndex)
+        public ExcelColumnAttribute(int columnIndex)
         {
             Index = columnIndex;
         }
 
-        public ExcelColumn(string columnName)
+        public ExcelColumnAttribute(string columnName)
         {
             ColumnName = columnName;
         }

@@ -1,7 +1,5 @@
-﻿using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks.Dataflow;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -20,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
-        private static CultureInfo CsvDefaultCulture => CultureInfo.InvariantCulture;
+        private CultureInfo CsvDefaultCulture => CultureInfo.InvariantCulture;
 
         /* ITask Interface */
         public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";

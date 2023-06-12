@@ -1,19 +1,8 @@
-using System.Collections.Generic;
-using System.IO;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using CsvHelper.Configuration.Attributes;
-using TestShared.Helper;
-using Xunit;
-
 namespace TestFlatFileConnectors.CSVDestination
 {
-    [Collection("DataFlow")]
     public class CsvDestinationNullHandlingTests
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
-
+        [Serializable]
         public class MySimpleRow
         {
             [Index(0)]
@@ -32,10 +21,10 @@ namespace TestFlatFileConnectors.CSVDestination
                 DataAsList = new List<MySimpleRow>
                 {
                     null,
-                    new MySimpleRow { Col1 = 1, Col2 = "Test1" },
+                    new() { Col1 = 1, Col2 = "Test1" },
                     null,
-                    new MySimpleRow { Col1 = 2, Col2 = "Test2" },
-                    new MySimpleRow { Col1 = 3, Col2 = "Test3" },
+                    new() { Col1 = 2, Col2 = "Test2" },
+                    new() { Col1 = 3, Col2 = "Test3" },
                     null
                 }
             };

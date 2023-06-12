@@ -3,9 +3,9 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.LookupTransformation
 {
-    [Collection("DataFlow")]
     public class LookupExceptionTests
     {
+        [Serializable]
         public class MyDataRow
         {
             [MatchColumn("Key")]
@@ -44,7 +44,7 @@ namespace TestTransformations.LookupTransformation
                 }
                 catch (AggregateException e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
             //Assert

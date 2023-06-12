@@ -1,17 +1,11 @@
-using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.XmlSource
 {
-    [Collection("DataFlow")]
-    public class XmlSourceDynamicObjectTests
+    public class XmlSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public XmlSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SourceWithDifferentNames()
@@ -28,7 +22,7 @@ namespace TestFlatFileConnectors.XmlSource
                 return r;
             });
             DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "XmlSource2ColsDynamic"
             );
 

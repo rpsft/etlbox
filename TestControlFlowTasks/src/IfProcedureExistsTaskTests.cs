@@ -1,13 +1,15 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class IfProcedureExistsTaskTests
+    public class IfProcedureExistsTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections =>
-            Config.AllConnectionsWithoutSQLite("ControlFlow");
+        public IfProcedureExistsTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllConnectionsWithoutSQLite;
 
         [Theory, MemberData(nameof(Connections))]
         public void IfProcedureExists(IConnectionManager connection)

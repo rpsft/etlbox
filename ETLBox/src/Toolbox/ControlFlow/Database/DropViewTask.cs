@@ -5,11 +5,12 @@ namespace ALE.ETLBox.ControlFlow
     /// <summary>
     /// Drops a view. Use DropIfExists to drop a view only if it exists.
     /// </summary>
+    [PublicAPI]
     public class DropViewTask : DropTask<IfTableOrViewExistsTask>
     {
         internal override string GetSql()
         {
-            return $@"DROP VIEW {ON.QuotatedFullName}";
+            return $@"DROP VIEW {ON.QuotedFullName}";
         }
 
         public DropViewTask() { }

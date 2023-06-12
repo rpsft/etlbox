@@ -13,38 +13,32 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportProcedures)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            if (ConnectionType == ConnectionManagerType.SqlServer)
+            return ConnectionType switch
             {
-                return $@"
-IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ON.QuotatedFullName}'))
-    SELECT 1
-";
-            }
-
-            if (ConnectionType == ConnectionManagerType.MySql)
-            {
-                return $@"
- SELECT 1 
-FROM information_schema.routines 
-WHERE routine_schema = DATABASE()
-   AND ( routine_name = '{ON.UnquotatedFullName}' OR
-        CONCAT(routine_catalog, '.', routine_name) = '{ON.UnquotatedFullName}' )  
-";
-            }
-
-            if (ConnectionType == ConnectionManagerType.Postgres)
-            {
-                return $@"
-SELECT 1
-FROM pg_catalog.pg_proc
-JOIN pg_namespace 
-  ON pg_catalog.pg_proc.pronamespace = pg_namespace.oid
-WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ON.UnquotatedFullName}'
-            OR proname = '{ON.UnquotatedFullName}' )
-";
-            }
-
-            return string.Empty;
+                ConnectionManagerType.SqlServer
+                    => $@"
+                            IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND object_id = object_id('{ON.QuotedFullName}'))
+                                SELECT 1
+                            ",
+                ConnectionManagerType.MySql
+                    => $@"
+                             SELECT 1 
+                            FROM information_schema.routines 
+                            WHERE routine_schema = DATABASE()
+                               AND ( routine_name = '{ON.UnquotedFullName}' OR
+                                    CONCAT(routine_catalog, '.', routine_name) = '{ON.UnquotedFullName}' )  
+                            ",
+                ConnectionManagerType.Postgres
+                    => $@"
+                            SELECT 1
+                            FROM pg_catalog.pg_proc
+                            JOIN pg_namespace 
+                              ON pg_catalog.pg_proc.pronamespace = pg_namespace.oid
+                            WHERE ( CONCAT(pg_namespace.nspname,'.',proname) = '{ON.UnquotedFullName}'
+                                        OR proname = '{ON.UnquotedFullName}' )
+                            ",
+                _ => string.Empty
+            };
         }
 
         public IfProcedureExistsTask() { }

@@ -1,17 +1,12 @@
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.MemoryDestination
 {
-    [Collection("DataFlow")]
-    public class MemoryDestinationDynamicObjectTests
+    public class MemoryDestinationDynamicObjectTests : OtherConnectorsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MemoryDestinationDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void DataIsInList()

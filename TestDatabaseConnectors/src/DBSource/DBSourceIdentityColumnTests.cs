@@ -1,14 +1,14 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceIdentityColumnTests
+    public class DbSourceIdentityColumnTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbSourceIdentityColumnTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MyPartialRow
         {
@@ -16,7 +16,7 @@ namespace TestDatabaseConnectors.DBSource
             public decimal? Col4 { get; set; }
         }
 
-        private void DataFlowForIdentityColumn(IConnectionManager connection)
+        private static void DataFlowForIdentityColumn(IConnectionManager connection)
         {
             DbSource<MyPartialRow> source = new DbSource<MyPartialRow>(connection, "Source4Cols");
             DbDestination<MyPartialRow> dest = new DbDestination<MyPartialRow>(

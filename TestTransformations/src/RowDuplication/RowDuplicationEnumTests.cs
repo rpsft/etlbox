@@ -2,7 +2,6 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.RowDuplication;
 
-[Collection("DataFlow")]
 public class RowDuplicationEnumTests
 {
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]

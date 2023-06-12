@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.AggregationTests
 {
-    [Collection("DataFlow")]
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public class AggregationUsingGroupingTests
     {
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
@@ -75,7 +76,7 @@ namespace TestTransformations.AggregationTests
                         Id = 6,
                         ClassName = null,
                         DetailValue = 15.5
-                    },
+                    }
                 }
             };
 

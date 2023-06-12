@@ -1,17 +1,14 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow.SqlServer;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
-    [Collection("SSAS ControlFlow")]
-    public class XMLATaskTests
+    public class XmlaTaskTests : ControlFlowTestBase
     {
-        public AdomdConnectionManager DefaultCatalog =>
-            new AdomdConnectionManager(
-                Config.SSASConnection.ConnectionString("ControlFlow").CloneWithoutDbName()
-            );
+        public XmlaTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
-        internal static string CreateCubeXMLA(string dbName)
+        internal static string CreateCubeXmla(string dbName)
         {
             return $@"<Alter AllowCreate=""true"" ObjectExpansion=""ExpandFull"" xmlns=""http://schemas.microsoft.com/analysisservices/2003/engine"">
   <Object>
@@ -30,7 +27,7 @@ namespace TestControlFlowTasks.SqlServer
 </Alter>";
         }
 
-        internal static string DeleteCubeXMLA(string dbName)
+        internal static string DeleteCubeXmla(string dbName)
         {
             return $@"<Delete xmlns=""http://schemas.microsoft.com/analysisservices/2003/engine"">
   <Object>
@@ -42,18 +39,18 @@ namespace TestControlFlowTasks.SqlServer
         [Fact(Skip = "Adjust to work with tabular model")]
         public void TestCreateAndDelete()
         {
-            string dbName = "ETLBox_TestXMLA";
+            const string dbName = "ETLBox_TestXMLA";
             try
             {
-                XmlaTask.ExecuteNonQuery(DefaultCatalog, "Drop cube", DeleteCubeXMLA(dbName));
+                XmlaTask.ExecuteNonQuery(AdomdConnection, "Drop cube", DeleteCubeXmla(dbName));
             }
             catch
             {
                 // ignored
             }
 
-            XmlaTask.ExecuteNonQuery(DefaultCatalog, "Create cube", CreateCubeXMLA(dbName));
-            XmlaTask.ExecuteNonQuery(DefaultCatalog, "Delete cube", DeleteCubeXMLA(dbName));
+            XmlaTask.ExecuteNonQuery(AdomdConnection, "Create cube", CreateCubeXmla(dbName));
+            XmlaTask.ExecuteNonQuery(AdomdConnection, "Delete cube", DeleteCubeXmla(dbName));
         }
     }
 }

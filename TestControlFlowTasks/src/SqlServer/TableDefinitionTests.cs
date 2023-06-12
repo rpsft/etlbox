@@ -1,15 +1,13 @@
-using System;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
-    [Collection("ControlFlow")]
-    public class TableDefinitionTests
+    public class TableDefinitionTests : ControlFlowTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("ControlFlow");
+        public TableDefinitionTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void BigIntIdentity()
@@ -116,7 +114,7 @@ CREATE TABLE ReadTableDefinition (
             );
 
             //Assert
-            Assert.True(result.Columns.All(tc => tc.NETDataType == typeof(DateTime)));
+            Assert.True(result.Columns.TrueForAll(tc => tc.NETDataType == typeof(DateTime)));
             Assert.True(result.Columns.Count == 5);
         }
 

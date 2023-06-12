@@ -33,7 +33,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
                 {
                     logicalName => CurrentBackupFile.LogicalName = (string)logicalName,
                     type => CurrentBackupFile.Type = (string)type,
-                    fileid => CurrentBackupFile.FileId = (long)fileid,
+                    fileId => CurrentBackupFile.FileId = (long)fileId
                 }
             }.ExecuteReader();
             new SqlTask(this, Sql).ExecuteNonQuery();
@@ -79,7 +79,7 @@ RESTORE DATABASE [{DatabaseName}] FROM  DISK = N'{Path.GetFullPath(FileName)}' W
             new RestoreDatabaseTask(databaseName, fileName).Execute();
 
         /* Implementation & stuff */
-        private string DefaultDataPathSql =>
+        private static string DefaultDataPathSql =>
             "SELECT CAST(serverproperty('InstanceDefaultDataPath') AS NVARCHAR(1000)) AS DefaultDataPath";
 
         private string FileListSql =>
@@ -88,7 +88,7 @@ RESTORE FILELISTONLY FROM DISK=N'{Path.GetFullPath(FileName)}'";
 
         private List<BackupFile> FileList { get; set; }
 
-        private class BackupFile
+        private sealed class BackupFile
         {
             internal string LogicalName { get; set; }
             internal long FileId { get; set; }

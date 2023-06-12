@@ -1,19 +1,15 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
 {
-    [Collection("Logging")]
-    public class GetLogAsJsonTests : IDisposable
+    public sealed class GetLogAsJsonTests : NonParallelTestBase, IDisposable
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
-
-        public GetLogAsJsonTests()
+        public GetLogAsJsonTests(LoggingDatabaseFixture fixture)
+            : base(fixture)
         {
             CreateLoadProcessTableTask.Create(SqlConnection);
             CreateLogTableTask.Create(SqlConnection);
@@ -136,7 +132,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             return RemoveLineEndings(RemoveHashes(RemoveDates(jsonresult.ToLower().Trim())));
         }
 
-        private string RemoveLineEndings(string originalJson)
+        private static string RemoveLineEndings(string originalJson)
         {
             return Regex.Replace(originalJson, "[\n\r]", "");
         }

@@ -1,41 +1,33 @@
-using System;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Attributes;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.Access
 {
-    [Collection("DataFlow")]
-    public class ImportExportAccessTests : IDisposable
+    public sealed class ImportExportAccessTests : DatabaseConnectorsTestBase, IDisposable
     {
-        private AccessOdbcConnectionManager AccessOdbcConnection { get; }
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        private readonly TableDefinition _sourceTable;
+        private readonly TableDefinition _destinationTable;
 
-        public ImportExportAccessTests()
+        public ImportExportAccessTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture)
         {
-            AccessOdbcConnection = Config.AccessOdbcConnection.ConnectionManager("DataFlow");
-            Assert.True(AccessOdbcConnection.LeaveOpen); //If LeaveOpen is not set to true, very strange errors may occur
+            _sourceTable = RecreateAccessTestTable("SourceTable");
+            _destinationTable = RecreateAccessTestTable("DestinationTable");
         }
 
         public void Dispose()
         {
+            DropTableTask.DropIfExists(AccessOdbcConnection, _sourceTable.Name);
+            DropTableTask.DropIfExists(AccessOdbcConnection, _destinationTable.Name);
             AccessOdbcConnection.Close();
         }
 
-        private TableDefinition RecreateAccessTestTable()
+        private TableDefinition RecreateAccessTestTable(string tableName)
         {
             try
             {
-                SqlTask.ExecuteNonQuery(
-                    AccessOdbcConnection,
-                    "Try to drop table",
-                    @"DROP TABLE TestTable;"
-                );
+                DropTableTask.DropIfExists(AccessOdbcConnection, tableName);
             }
             catch
             {
@@ -43,11 +35,11 @@ namespace TestDatabaseConnectors.Access
             }
 
             TableDefinition testTable = new TableDefinition(
-                "TestTable",
+                tableName,
                 new List<TableColumn>
                 {
-                    new TableColumn("Field1", "NUMBER", allowNulls: true),
-                    new TableColumn("Field2", "CHAR", allowNulls: true)
+                    new("Field1", "NUMBER", allowNulls: true),
+                    new("Field2", "CHAR", allowNulls: true)
                 }
             );
             new CreateTableTask(testTable)
@@ -68,16 +60,21 @@ namespace TestDatabaseConnectors.Access
         //It is recommended to leave this connection manager always open (this is why leave open is set to true by default)
 
         [WindowsOnlyFact]
-        public void CSVIntoAccess()
+        public void ShallBeLeftOpen()
+        {
+            Assert.True(AccessOdbcConnection.LeaveOpen); //If LeaveOpen is not set to true, very strange errors may occur
+        }
+
+        [WindowsOnlyFact]
+        public void CsvIntoAccess()
         {
             //Arrange
-            TableDefinition testTable = RecreateAccessTestTable();
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/Access/AccessData.csv");
             DbDestination<string[]> dest = new DbDestination<string[]>(batchSize: 2)
             {
-                DestinationTableDefinition = testTable,
+                DestinationTableDefinition = _destinationTable,
                 ConnectionManager = AccessOdbcConnection
             };
             source.LinkTo(dest);
@@ -85,9 +82,10 @@ namespace TestDatabaseConnectors.Access
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(AccessOdbcConnection, testTable.Name));
+            Assert.Equal(3, RowCountTask.Count(AccessOdbcConnection, _destinationTable.Name));
         }
 
+        [Serializable]
         public class Data
         {
             [ColumnMap("Col1")]
@@ -102,8 +100,7 @@ namespace TestDatabaseConnectors.Access
         public void AccessIntoDBWithTableDefinition()
         {
             //Arrange
-            TableDefinition testTable = RecreateAccessTestTable();
-            InsertTestData();
+            InsertTestData(_sourceTable);
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTableWTD"
@@ -112,7 +109,7 @@ namespace TestDatabaseConnectors.Access
             //Act
             DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection)
             {
-                SourceTableDefinition = testTable
+                SourceTableDefinition = _sourceTable
             };
             DbDestination<Data> dest = new DbDestination<Data>(
                 SqlConnection,
@@ -126,22 +123,22 @@ namespace TestDatabaseConnectors.Access
             destTable.AssertTestData();
         }
 
-        private void InsertTestData()
+        private void InsertTestData(TableDefinition table)
         {
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 AccessOdbcConnection,
                 "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (1,'Test1');"
+                $"INSERT INTO {table.Name:q} (Field1, Field2) VALUES (1,'Test1');"
             );
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 AccessOdbcConnection,
                 "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (2,'Test2');"
+                $"INSERT INTO {table.Name:q} (Field1, Field2) VALUES (2,'Test2');"
             );
-            SqlTask.ExecuteNonQuery(
+            SqlTask.ExecuteNonQueryFormatted(
                 AccessOdbcConnection,
                 "Insert test data",
-                "INSERT INTO TestTable (Field1, Field2) VALUES (3,'Test3');"
+                $"INSERT INTO {table.Name:q} (Field1, Field2) VALUES (3,'Test3');"
             );
         }
 
@@ -149,18 +146,18 @@ namespace TestDatabaseConnectors.Access
         public void AccessIntoDB()
         {
             //Arrange
-            TableDefinition _ = RecreateAccessTestTable();
-            InsertTestData();
+            var sourceTable = RecreateAccessTestTable(nameof(AccessIntoDB));
+            InsertTestData(sourceTable);
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTable"
             );
 
             //Act
-            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection, "TestTable");
+            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection, sourceTable.Name);
             DbDestination<Data> dest = new DbDestination<Data>(
                 SqlConnection,
-                "dbo.AccessTargetTable"
+                destTable.TableDefinition.Name
             );
             source.LinkTo(dest);
             source.Execute();

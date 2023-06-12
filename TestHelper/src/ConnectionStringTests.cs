@@ -1,6 +1,4 @@
-using System.IO;
 using ALE.ETLBox;
-using Xunit;
 
 namespace TestHelper
 {
@@ -39,7 +37,7 @@ namespace TestHelper
             var connString = new SQLiteConnectionString
             {
                 Value =
-                    $"Data Source=.{Path.PathSeparator}db{Path.PathSeparator}SQLiteControlFlow.db;"
+                    $"Data Source=.{Path.DirectorySeparatorChar}db{Path.DirectorySeparatorChar}SQLiteControlFlow.db;"
             };
 
             //Act

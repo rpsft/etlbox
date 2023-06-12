@@ -1,41 +1,45 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     internal class TypeInfo
     {
-        internal PropertyInfo[] Properties { get; set; }
-        protected Dictionary<string, int> PropertyIndex { get; set; } = new();
-        internal int PropertyLength { get; set; }
-        internal bool IsArray { get; set; } = true;
-        internal bool IsDynamic { get; set; }
+        internal PropertyInfo[] Properties { get; private set; }
+        protected Dictionary<string, int> PropertyIndex { get; } = new();
+        internal int PropertyLength { get; private set; }
+        internal bool IsArray { get; private set; } = true;
+        internal bool IsDynamic { get; private set; }
         internal int ArrayLength { get; set; }
 
-        private Type Typ { get; set; }
+        private Type InternalType { get; set; }
 
-        internal TypeInfo(Type typ)
+        internal TypeInfo(Type type)
         {
-            Typ = typ;
+            InternalType = type;
         }
 
         internal TypeInfo GatherTypeInfo()
         {
-            IsArray = Typ.IsArray;
-            if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(Typ))
+            IsArray = InternalType.IsArray;
+            if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(InternalType))
                 IsDynamic = true;
-            if (!IsArray && !IsDynamic)
+            switch (IsArray, IsDynamic)
             {
-                Properties = Typ.GetProperties();
-                PropertyLength = Properties.Length;
-                int index = 0;
-                foreach (var propInfo in Properties)
+                case (false, false):
                 {
-                    PropertyIndex.Add(propInfo.Name, index);
-                    RetrieveAdditionalTypeInfo(propInfo, index);
-                    index++;
+                    Properties = InternalType.GetProperties();
+                    PropertyLength = Properties.Length;
+                    int index = 0;
+                    foreach (var propInfo in Properties)
+                    {
+                        PropertyIndex.Add(propInfo.Name, index);
+                        RetrieveAdditionalTypeInfo(propInfo, index);
+                        index++;
+                    }
+
+                    break;
                 }
-            }
-            else if (IsArray)
-            {
-                ArrayLength = Typ.GetArrayRank();
+                case (true, _):
+                    ArrayLength = InternalType.GetArrayRank();
+                    break;
             }
             return this;
         }
@@ -49,5 +53,20 @@
             PropertyInfo propInfo,
             int currentIndex
         ) { }
+
+        internal enum TypeInfoGroup
+        {
+            Array,
+            Dynamic,
+            Object
+        }
+
+        public TypeInfoGroup GetTypeInfoGroup() =>
+            IsDynamic switch
+            {
+                true => TypeInfoGroup.Dynamic,
+                false when IsArray => TypeInfoGroup.Array,
+                _ => TypeInfoGroup.Object
+            };
     }
 }

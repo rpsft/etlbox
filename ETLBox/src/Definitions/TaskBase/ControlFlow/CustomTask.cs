@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -12,14 +12,14 @@ namespace ALE.ETLBox.ControlFlow
         /* ITask interface */
         public sealed override string TaskName { get; set; }
 
-        public void Execute()
-        {
-            throw new Exception("A custom task can't be used without an Action!");
-        }
-
         public CustomTask(string name)
         {
             TaskName = name;
+        }
+
+        public static void Execute()
+        {
+            throw new InvalidOperationException("A custom task can't be used without an Action!");
         }
 
         public void Execute(Action task)
@@ -29,14 +29,14 @@ namespace ALE.ETLBox.ControlFlow
             NLogFinish();
         }
 
-        public void Execute<t1>(Action<t1> task, t1 param1)
+        public void Execute<T1>(Action<T1> task, T1 param1)
         {
             NLogStart();
             task.Invoke(param1);
             NLogFinish();
         }
 
-        public void Execute<t1, t2>(Action<t1, t2> task, t1 param1, t2 param2)
+        public void Execute<T1, T2>(Action<T1, T2> task, T1 param1, T2 param2)
         {
             NLogStart();
             task.Invoke(param1, param2);
@@ -45,14 +45,14 @@ namespace ALE.ETLBox.ControlFlow
 
         public static void Execute(string name, Action task) => new CustomTask(name).Execute(task);
 
-        public static void Execute<t1>(string name, Action<t1> task, t1 param1) =>
+        public static void Execute<T1>(string name, Action<T1> task, T1 param1) =>
             new CustomTask(name).Execute(task, param1);
 
-        public static void Execute<t1, t2>(
+        public static void Execute<T1, T2>(
             string name,
-            Action<t1, t2> task,
-            t1 param1,
-            t2 param2
+            Action<T1, T2> task,
+            T1 param1,
+            T2 param2
         ) => new CustomTask(name).Execute(task, param1, param2);
 
         private void NLogStart()
@@ -63,7 +63,7 @@ namespace ALE.ETLBox.ControlFlow
                     TaskType,
                     "START",
                     TaskHash,
-                    ControlFlow.STAGE,
+                    ControlFlow.Stage,
                     ControlFlow.CurrentLoadProcess?.Id
                 );
         }
@@ -76,7 +76,7 @@ namespace ALE.ETLBox.ControlFlow
                     TaskType,
                     "END",
                     TaskHash,
-                    ControlFlow.STAGE,
+                    ControlFlow.Stage,
                     ControlFlow.CurrentLoadProcess?.Id
                 );
         }

@@ -1,25 +1,22 @@
 using System.Threading.Tasks;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 using TestShared.Attributes;
 
 namespace TestControlFlowTasks;
 
-[Collection("ControlFlow")]
-public class SqlTaskInParallelTests
+public class SqlTaskInParallelTests : ControlFlowTestBase
 {
-    public SqlTaskInParallelTests()
+    public SqlTaskInParallelTests(ControlFlowDatabaseFixture fixture)
+        : base(fixture)
     {
         CreateTableTask.Create(
-            Connection,
+            SqlConnection,
             "FastParallel",
             new List<TableColumn> { new("id", "int") }
         );
     }
-
-    private SqlConnectionManager Connection =>
-        Config.SqlConnection.ConnectionManager("ControlFlow");
 
     [MultiprocessorOnlyFact]
     public void FastExecutingSqlsInParallel()
@@ -32,13 +29,13 @@ public class SqlTaskInParallelTests
             new ParallelOptions { MaxDegreeOfParallelism = 8 },
             curNr =>
                 SqlTask.ExecuteNonQuery(
-                    Connection,
+                    SqlConnection,
                     $"Test statement {curNr}",
                     $"INSERT INTO FastParallel VALUES({curNr})"
                 )
         );
         //Assert
-        Assert.Equal(10, RowCountTask.Count(Connection, "FastParallel"));
+        Assert.Equal(10, RowCountTask.Count(SqlConnection, "FastParallel"));
     }
 
     [MultiprocessorOnlyFact]
@@ -53,7 +50,7 @@ public class SqlTaskInParallelTests
             new ParallelOptions { MaxDegreeOfParallelism = 8 },
             curNr =>
                 SqlTask.ExecuteNonQuery(
-                    Connection,
+                    SqlConnection,
                     $"Test statement {curNr}",
                     $@"
                     DECLARE @counter INT = 0;
@@ -71,7 +68,7 @@ public class SqlTaskInParallelTests
         //Assert
         Parallel.ForEach(
             array,
-            curNr => Assert.Equal(5000, RowCountTask.Count(Connection, $"LongParallel{curNr}"))
+            curNr => Assert.Equal(5000, RowCountTask.Count(SqlConnection, $"LongParallel{curNr}"))
         );
     }
 }

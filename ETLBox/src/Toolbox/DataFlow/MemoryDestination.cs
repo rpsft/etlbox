@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -30,8 +29,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected void WriteRecord(TInput data)
         {
-            if (Data == null)
-                Data = new BlockingCollection<TInput>();
+            Data ??= new BlockingCollection<TInput>();
             if (data == null)
                 return;
             Data.Add(data);

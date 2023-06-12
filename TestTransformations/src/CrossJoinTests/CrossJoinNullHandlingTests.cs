@@ -2,7 +2,6 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.CrossJoinTests
 {
-    [Collection("DataFlow")]
     public class CrossJoinNullHandlingTests
     {
         public class MySimpleRow

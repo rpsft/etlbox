@@ -1,12 +1,15 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class IfIndexExistsTaskTests
+    public class IfIndexExistsTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public IfIndexExistsTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [Theory, MemberData(nameof(Connections))]
         public void IfIndexExists(IConnectionManager connection)

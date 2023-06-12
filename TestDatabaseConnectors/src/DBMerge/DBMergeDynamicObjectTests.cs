@@ -1,17 +1,13 @@
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DataFlow")]
-    public class DbMergeDynamicObjectTests
+    public class DbMergeDynamicObjectTests : DatabaseConnectorsTestBase
     {
-        public static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbMergeDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleMergeWithDynamic()
@@ -21,11 +17,11 @@ namespace TestDatabaseConnectors.DBMerge
             source.DataAsList.Add(CreateDynamicRow(1, "Test1"));
             source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeDynamicDestination"
             );
-            d2c.InsertTestDataSet3();
+            d2C.InsertTestDataSet3();
 
             //Act
             DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDestination");
@@ -41,10 +37,10 @@ namespace TestDatabaseConnectors.DBMerge
                 RowCountTask.Count(
                     SqlConnection,
                     "DBMergeDynamicDestination",
-                    $"{d2c.QB}Col1{d2c.QE} BETWEEN 1 AND 7 AND {d2c.QB}Col2{d2c.QE} LIKE 'Test%'"
+                    $"{d2C.QB}Col1{d2C.QE} BETWEEN 1 AND 7 AND {d2C.QB}Col2{d2C.QE} LIKE 'Test%'"
                 )
             );
-            d2c.AssertTestData();
+            d2C.AssertTestData();
             Assert.Collection(
                 dest.DeltaTable,
                 row =>
@@ -85,7 +81,7 @@ namespace TestDatabaseConnectors.DBMerge
             );
         }
 
-        private dynamic CreateDynamicRow(int key, string value = "", bool delete = false)
+        private static dynamic CreateDynamicRow(int key, string value = "", bool delete = false)
         {
             dynamic r = new ExpandoObject();
             r.Col1 = key;
@@ -105,11 +101,11 @@ namespace TestDatabaseConnectors.DBMerge
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
             source.DataAsList.Add(CreateDynamicRow(4, delete: true));
             source.DataAsList.Add(CreateDynamicRow(10, delete: true));
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeDynamicDeltaDestination"
             );
-            d2c.InsertTestDataSet3();
+            d2C.InsertTestDataSet3();
 
             //Act
             DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
@@ -124,7 +120,7 @@ namespace TestDatabaseConnectors.DBMerge
             dest.Wait();
 
             //Assert
-            d2c.AssertTestData();
+            d2C.AssertTestData();
             Assert.Collection(
                 dest.DeltaTable,
                 row =>

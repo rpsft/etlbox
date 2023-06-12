@@ -10,46 +10,37 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
+            switch (ConnectionType)
             {
-                return $@"SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotatedObjectName}';";
-            }
-
-            if (ConnectionType == ConnectionManagerType.SqlServer)
-            {
-                return $@"IF ( OBJECT_ID('{ON.QuotatedFullName}', 'U') IS NOT NULL OR OBJECT_ID('{ON.QuotatedFullName}', 'V') IS NOT NULL)
+                case ConnectionManagerType.SQLite:
+                    return $@"SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotedObjectName}';";
+                case ConnectionManagerType.SqlServer:
+                    return $@"IF ( OBJECT_ID('{ON.QuotedFullName}', 'U') IS NOT NULL OR OBJECT_ID('{ON.QuotedFullName}', 'V') IS NOT NULL)
     SELECT 1";
+                case ConnectionManagerType.MySql:
+                    return $@"SELECT EXISTS(
+                                    SELECT table_name
+                                    FROM information_schema.tables
+                                    WHERE table_schema = DATABASE()
+                                    AND ( table_name = '{ON.UnquotedFullName}' OR CONCAT(table_catalog, '.', table_name) = '{ON.UnquotedFullName}')
+                                ) AS 'DoesExist'";
+                case ConnectionManagerType.Postgres:
+                    return $@"SELECT EXISTS(
+                                    SELECT table_name
+                                    FROM information_schema.tables
+                                    WHERE table_catalog = CURRENT_DATABASE()
+                                    AND ( table_name = '{ON.UnquotedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotedFullName}')
+                                    )";
             }
 
-            if (ConnectionType == ConnectionManagerType.MySql)
+            if (ConnectionType != ConnectionManagerType.Access)
             {
-                return $@"SELECT EXISTS(
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema = DATABASE()
-    AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_catalog, '.', table_name) = '{ON.UnquotatedFullName}')
-) AS 'DoesExist'";
-            }
-
-            if (ConnectionType == ConnectionManagerType.Postgres)
-            {
-                return $@"SELECT EXISTS(
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_catalog = CURRENT_DATABASE()
-    AND ( table_name = '{ON.UnquotatedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotatedFullName}')
-)";
-            }
-
-            if (ConnectionType == ConnectionManagerType.Access)
-            {
-                var connMan = DbConnectionManager.CloneIfAllowed() as AccessOdbcConnectionManager;
-                DoesExist = connMan?.CheckIfTableOrViewExists(ON.UnquotatedFullName) ?? false;
-                connMan?.CloseIfAllowed();
                 return string.Empty;
-                //return $@"SELECT * FROM MSysObjects WHERE Type=1 AND Flags=0  AND Name = '{ON.UnquotatedFullName}'";
             }
 
+            var connMan = DbConnectionManager.CloneIfAllowed() as AccessOdbcConnectionManager;
+            DoesExist = connMan?.CheckIfTableOrViewExists(ON.UnquotedFullName) ?? false;
+            connMan?.CloseIfAllowed();
             return string.Empty;
         }
 

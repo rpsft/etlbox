@@ -1,18 +1,27 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 
 namespace TestShared.Helper
 {
     public static class DatabaseHelper
     {
-        private static void DropAndCreate(IConnectionManager connManagerMaster, string dbName)
+        private static void DropAndCreate<TConnectionManager>(
+            TConnectionManager connManagerMaster,
+            string dbName
+        )
+            where TConnectionManager : IConnectionManager
         {
-            new DropDatabaseTask(dbName)
-            {
-                DisableLogging = true,
-                ConnectionManager = connManagerMaster
-            }.DropIfExists();
+            DropDatabase(connManagerMaster, dbName);
+            CreateDatabase(connManagerMaster, dbName);
+        }
 
+        private static void CreateDatabase<TConnectionManager>(
+            TConnectionManager connManagerMaster,
+            string dbName
+        )
+            where TConnectionManager : IConnectionManager
+        {
             new CreateDatabaseTask(dbName)
             {
                 DisableLogging = true,
@@ -20,33 +29,64 @@ namespace TestShared.Helper
             }.Execute();
         }
 
-        public static void RecreateSqlDatabase(string section)
+        private static void DropDatabase<TConnectionManager>(
+            TConnectionManager connManagerMaster,
+            string dbName
+        )
+            where TConnectionManager : IConnectionManager
         {
-            var connManagerMaster = new SqlConnectionManager(
-                Config.SqlConnection.ConnectionString(section).CloneWithMasterDbName()
-            );
-            var dbName = Config.SqlConnection.ConnectionString(section).DbName;
-
-            DropAndCreate(connManagerMaster, dbName);
+            new DropDatabaseTask(dbName)
+            {
+                DisableLogging = true,
+                ConnectionManager = connManagerMaster
+            }.DropIfExists();
         }
 
-        public static void RecreateMySqlDatabase(string section)
+        private static void ActOnDatabase<TConnectionManager, TConnectionString>(
+            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            string section,
+            string dbNameSuffix,
+            Action<TConnectionManager, string> databaseAction
+        )
+            where TConnectionManager : IConnectionManager, new()
+            where TConnectionString : IDbConnectionString, new()
         {
-            var connManagerMaster = new MySqlConnectionManager(
-                Config.MySqlConnection.ConnectionString(section).CloneWithMasterDbName()
-            );
-            var dbName = Config.MySqlConnection.ConnectionString(section).DbName;
-            DropAndCreate(connManagerMaster, dbName);
+            var connManagerMaster = new TConnectionManager
+            {
+                ConnectionString = connectionDetails
+                    .ConnectionString(section)
+                    .CloneWithMasterDbName()
+            };
+            var dbName =
+                connectionDetails.ConnectionString(section).DbName + (dbNameSuffix ?? string.Empty);
+            databaseAction(connManagerMaster, dbName);
         }
 
-        public static void RecreatePostgresDatabase(string section)
-        {
-            var connManagerMaster = new PostgresConnectionManager(
-                Config.PostgresConnection.ConnectionString(section).CloneWithMasterDbName()
-            );
-            var dbName = Config.PostgresConnection.ConnectionString(section).DbName;
+        public static void DropDatabase<TConnectionManager, TConnectionString>(
+            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            string section,
+            string dbNameSuffix = null
+        )
+            where TConnectionManager : IConnectionManager, new()
+            where TConnectionString : IDbConnectionString, new() =>
+            ActOnDatabase(connectionDetails, section, dbNameSuffix, DropDatabase);
 
-            DropAndCreate(connManagerMaster, dbName);
-        }
+        public static void CreateDatabase<TConnectionManager, TConnectionString>(
+            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            string section,
+            string dbNameSuffix = null
+        )
+            where TConnectionManager : IConnectionManager, new()
+            where TConnectionString : IDbConnectionString, new() =>
+            ActOnDatabase(connectionDetails, section, dbNameSuffix, CreateDatabase);
+
+        public static void RecreateDatabase<TConnectionManager, TConnectionString>(
+            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            string section,
+            string dbNameSuffix = null
+        )
+            where TConnectionManager : IConnectionManager, new()
+            where TConnectionString : IDbConnectionString, new() =>
+            ActOnDatabase(connectionDetails, section, dbNameSuffix, DropAndCreate);
     }
 }

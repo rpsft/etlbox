@@ -34,7 +34,7 @@ namespace ALE.ETLBox.Logging
                     col => current.TaskHash = (string)col,
                     col => current.Stage = (string)col,
                     col => current.Source = (string)col,
-                    col => current.LoadProcessId = Convert.ToInt64(col),
+                    col => current.LoadProcessId = Convert.ToInt64(col)
                 }
             }.ExecuteReader();
         }
@@ -58,7 +58,7 @@ namespace ALE.ETLBox.Logging
         public string Sql =>
             $@"
 SELECT {QB}id{QE}, {QB}log_date{QE}, {QB}level{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}stage{QE}, {QB}source{QE}, {QB}load_process_id{QE}
-FROM {Tn.QuotatedFullName}"
+FROM {Tn.QuotedFullName}"
             + (LoadProcessId != null ? $@" WHERE {QB}LoadProcessKey{QE} = {LoadProcessId}" : "");
 
         private ObjectNameDescriptor Tn => new(ControlFlow.ControlFlow.LogTable, QB, QE);

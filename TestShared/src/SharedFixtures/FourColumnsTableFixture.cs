@@ -4,7 +4,6 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using TestShared.Helper;
-using Xunit;
 
 namespace TestShared.SharedFixtures
 {
@@ -79,17 +78,17 @@ namespace TestShared.SharedFixtures
                 SqlTask.ExecuteNonQuery(
                     Connection,
                     "Insert demo data",
-                    $"INSERT INTO {TN.QuotatedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')"
+                    $"INSERT INTO {TN.QuotedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test1', NULL, '1.2')"
                 );
                 SqlTask.ExecuteNonQuery(
                     Connection,
                     "Insert demo data",
-                    $"INSERT INTO {TN.QuotatedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test2', 4711, '1.23')"
+                    $"INSERT INTO {TN.QuotedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test2', 4711, '1.23')"
                 );
                 SqlTask.ExecuteNonQuery(
                     Connection,
                     "Insert demo data",
-                    $"INSERT INTO {TN.QuotatedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test3', 185, '1.234')"
+                    $"INSERT INTO {TN.QuotedFullName} (Col1, Col2, Col3, Col4) VALUES(NULL, 'Test3', 185, '1.234')"
                 );
             }
             else
@@ -97,17 +96,17 @@ namespace TestShared.SharedFixtures
                 SqlTask.ExecuteNonQuery(
                     Connection,
                     "Insert demo data",
-                    $@"INSERT INTO {TN.QuotatedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test1', NULL, '1.2')"
+                    $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test1', NULL, '1.2')"
                 );
                 SqlTask.ExecuteNonQuery(
                     Connection,
                     "Insert demo data",
-                    $@"INSERT INTO {TN.QuotatedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test2', 4711, '1.23')"
+                    $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test2', 4711, '1.23')"
                 );
                 SqlTask.ExecuteNonQuery(
                     Connection,
                     "Insert demo data",
-                    $@"INSERT INTO {TN.QuotatedFullName} ({QB}Col2{QE},{QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test3', 185, '1.234')"
+                    $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE},{QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test3', 185, '1.234')"
                 );
             }
         }

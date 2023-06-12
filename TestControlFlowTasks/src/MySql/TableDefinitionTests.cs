@@ -1,15 +1,13 @@
-using System;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.MySql
 {
-    [Collection("ControlFlow")]
-    public class TableDefinitionTests
+    public class TableDefinitionTests : ControlFlowTestBase
     {
-        private MySqlConnectionManager MySqlConnection =>
-            Config.MySqlConnection.ConnectionManager("ControlFlow");
+        public TableDefinitionTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void AutoIncrement()

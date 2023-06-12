@@ -2,17 +2,17 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
-    [Collection("DataFlow")]
-    public class LookupErrorLinkingTests
+    public class LookupErrorLinkingTests : TransformationsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public LookupErrorLinkingTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
+        [Serializable]
         public class MyLookupRow
         {
             [ColumnMap("Col1")]
@@ -22,6 +22,7 @@ namespace TestTransformations.LookupTransformation
             public string LookupValue { get; set; }
         }
 
+        [Serializable]
         public class MyInputDataRow
         {
             public int Col1 { get; set; }
@@ -52,7 +53,7 @@ namespace TestTransformations.LookupTransformation
             //Act & Assert
             Assert.ThrowsAny<Exception>(() =>
             {
-                List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
+                List<MyLookupRow> lookupTableData = new List<MyLookupRow>();
                 LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<
                     MyInputDataRow,
                     MyLookupRow
@@ -60,13 +61,13 @@ namespace TestTransformations.LookupTransformation
                     lookupSource,
                     row =>
                     {
-                        row.Col2 = LookupTableData
+                        row.Col2 = lookupTableData
                             .Where(ld => ld.Key == row.Col1)
                             .Select(ld => ld.LookupValue)
                             .FirstOrDefault();
                         return row;
                     },
-                    LookupTableData
+                    lookupTableData
                 );
                 DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(
                     SqlConnection,
@@ -106,7 +107,7 @@ namespace TestTransformations.LookupTransformation
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            List<MyLookupRow> LookupTableData = new List<MyLookupRow>();
+            List<MyLookupRow> lookupTableData = new List<MyLookupRow>();
             LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<
                 MyInputDataRow,
                 MyLookupRow
@@ -114,7 +115,7 @@ namespace TestTransformations.LookupTransformation
                 lookupSource,
                 row =>
                 {
-                    row.Col2 = LookupTableData
+                    row.Col2 = lookupTableData
                         .Where(ld => ld.Key == row.Col1)
                         .Select(ld => ld.LookupValue)
                         .FirstOrDefault();
@@ -122,7 +123,7 @@ namespace TestTransformations.LookupTransformation
                         throw new Exception("Error record");
                     return row;
                 },
-                LookupTableData
+                lookupTableData
             );
             DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(
                 SqlConnection,
@@ -155,7 +156,7 @@ namespace TestTransformations.LookupTransformation
         {
             DropTableTask.DropIfExists(connection, tableName);
 
-            var TableDefinition = new TableDefinition(
+            var tableDefinition = new TableDefinition(
                 tableName,
                 new List<TableColumn>
                 {
@@ -163,7 +164,7 @@ namespace TestTransformations.LookupTransformation
                     new("Col2", "VARCHAR(100)", allowNulls: true)
                 }
             );
-            TableDefinition.CreateTable(connection);
+            tableDefinition.CreateTable(connection);
             ObjectNameDescriptor TN = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
@@ -172,22 +173,22 @@ namespace TestTransformations.LookupTransformation
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1')"
+                $@"INSERT INTO {TN.QuotedFullName} VALUES('1','Test1')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('2','Test2')"
+                $@"INSERT INTO {TN.QuotedFullName} VALUES('2','Test2')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('X','Test3')"
+                $@"INSERT INTO {TN.QuotedFullName} VALUES('X','Test3')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('3','Test3')"
+                $@"INSERT INTO {TN.QuotedFullName} VALUES('3','Test3')"
             );
         }
     }

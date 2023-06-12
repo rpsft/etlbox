@@ -1,26 +1,24 @@
-﻿using System.Collections.Generic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 using NLog;
-using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
 {
-    [Collection("Logging")]
-    public class LogTaskTests : IDisposable
+    public sealed class LogTaskTests : NonParallelTestBase, IDisposable
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("Logging");
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
+        public LogTaskTests(LoggingDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public void Dispose()
         {
             ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void CreateLogTable(IConnectionManager connection)
         {
             //Arrange
@@ -35,7 +33,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             DropTableTask.Drop(connection, "etlbox_testlog");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void TestErrorLogging(IConnectionManager connection)
         {
             //Arrange
@@ -118,7 +116,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             );
 
             //Act
-            ETLBox.ControlFlow.ControlFlow.STAGE = "SETUP";
+            ETLBox.ControlFlow.ControlFlow.Stage = "SETUP";
             SqlTask.ExecuteNonQuery(SqlConnection, "Test Task", "Select 1 as test");
 
             //Assert
@@ -137,7 +135,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void TestReadLogTask(IConnectionManager connection)
         {
             //Arrange

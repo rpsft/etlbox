@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            string sql = $@"DROP SCHEMA {ON.QuotatedFullName}";
+            string sql = $@"DROP SCHEMA {ON.QuotedFullName}";
             return sql;
         }
 

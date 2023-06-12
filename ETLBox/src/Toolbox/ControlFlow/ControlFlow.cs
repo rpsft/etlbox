@@ -21,14 +21,13 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (s_defaultDbConnection == null)
-                    throw new ETLBoxException(
+                return s_defaultDbConnection
+                    ?? throw new ETLBoxException(
                         "No connection manager found! The component or task you are "
                             + "using expected a  connection manager to connect to the database."
                             + "Either pass a connection manager or set a default connection manager within the "
                             + "ControlFlow.DefaultDbConnection property!"
                     );
-                return s_defaultDbConnection;
             }
             set { s_defaultDbConnection = value; }
         }
@@ -42,7 +41,7 @@ namespace ALE.ETLBox.ControlFlow
         /// <summary>
         /// For logging purposes only. If the stage is set, you can access the stage value in the logging configuration.
         /// </summary>
-        public static string STAGE { get; set; }
+        public static string Stage { get; set; }
 
         /// <summary>
         /// If you used the logging task StartLoadProces (and created the corresponding load process table before)
@@ -50,19 +49,19 @@ namespace ALE.ETLBox.ControlFlow
         /// </summary>
         public static LoadProcess CurrentLoadProcess { get; internal set; }
 
-        public const string DEFAULTLOADPROCESSTABLENAME = "etlbox_loadprocess";
+        public const string DefaultLoadProcessTableName = "etlbox_loadprocess";
 
         /// <summary>
         /// TableName of the current load process logging table
         /// </summary>
-        public static string LoadProcessTable { get; set; } = DEFAULTLOADPROCESSTABLENAME;
+        public static string LoadProcessTable { get; set; } = DefaultLoadProcessTableName;
 
-        public const string DEFAULTLOGTABLENAME = "etlbox_log";
+        public const string DefaultLogTableName = "etlbox_log";
 
         /// <summary>
         /// TableName of the current log process logging table
         /// </summary>
-        public static string LogTable { get; set; } = DEFAULTLOGTABLENAME;
+        public static string LogTable { get; set; } = DefaultLogTableName;
 
         public static void AddLoggingDatabaseToConfig(IConnectionManager connection) =>
             AddLoggingDatabaseToConfig(connection, LogLevel.Info);
@@ -77,15 +76,15 @@ namespace ALE.ETLBox.ControlFlow
         public static void AddLoggingDatabaseToConfig(
             IConnectionManager connection,
             LogLevel minLogLevel,
-            string logTableName = DEFAULTLOGTABLENAME
+            string logTableName = DefaultLogTableName
         )
         {
             try
             {
                 if (
                     LogTable != null
-                    && LogTable != DEFAULTLOADPROCESSTABLENAME
-                    && logTableName == DEFAULTLOADPROCESSTABLENAME
+                    && LogTable != DefaultLoadProcessTableName
+                    && logTableName == DefaultLoadProcessTableName
                 )
                     logTableName = LogTable;
                 var newTarget = new CreateDatabaseTarget(
@@ -102,20 +101,22 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
-        private static bool s_isLayoutRendererRegisterd;
+        private static bool s_isLayoutRendererRegistered;
 
         public static Logger GetLogger()
         {
-            if (!s_isLayoutRendererRegisterd)
+            if (s_isLayoutRendererRegistered)
             {
-                LogManager
-                    .Setup()
-                    .SetupExtensions(builder =>
-                    {
-                        builder.RegisterLayoutRenderer<ETLLogLayoutRenderer>("etllog");
-                    });
-                s_isLayoutRendererRegisterd = true;
+                return LogManager.GetLogger("ETL");
             }
+
+            LogManager
+                .Setup()
+                .SetupExtensions(builder =>
+                {
+                    builder.RegisterLayoutRenderer<ETLLogLayoutRenderer>("etllog");
+                });
+            s_isLayoutRendererRegistered = true;
             return LogManager.GetLogger("ETL");
         }
 
@@ -127,9 +128,9 @@ namespace ALE.ETLBox.ControlFlow
             DefaultDbConnection = null;
             CurrentLoadProcess = null;
             DisableAllLogging = false;
-            LoadProcessTable = DEFAULTLOADPROCESSTABLENAME;
-            LogTable = DEFAULTLOGTABLENAME;
-            STAGE = null;
+            LoadProcessTable = DefaultLoadProcessTableName;
+            LogTable = DefaultLogTableName;
+            Stage = null;
         }
     }
 }

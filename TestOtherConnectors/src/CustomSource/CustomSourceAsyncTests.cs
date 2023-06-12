@@ -1,21 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.CustomSource
 {
-    [Collection("DataFlow")]
-    public class CustomSourceAsyncTests
+    public class CustomSourceAsyncTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CustomSourceAsyncTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -30,18 +22,19 @@ namespace TestOtherConnectors.CustomSource
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSource"
             );
-            List<string> Data = new List<string> { "Test1", "Test2", "Test3" };
-            int _readIndex = 0;
-            Func<MySimpleRow> ReadData = () =>
-            {
-                if (_readIndex == 0)
-                    Task.Delay(300).Wait();
-                var result = new MySimpleRow { Col1 = _readIndex + 1, Col2 = Data[_readIndex] };
-                _readIndex++;
-                return result;
-            };
+            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
+            int readIndex = 0;
 
-            Func<bool> EndOfData = () => _readIndex >= Data.Count;
+            MySimpleRow ReadData()
+            {
+                if (readIndex == 0)
+                    Task.Delay(300).Wait();
+                var result = new MySimpleRow { Col1 = readIndex + 1, Col2 = data[readIndex] };
+                readIndex++;
+                return result;
+            }
+
+            bool EndOfData() => readIndex >= data.Count;
 
             //Act
             CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);

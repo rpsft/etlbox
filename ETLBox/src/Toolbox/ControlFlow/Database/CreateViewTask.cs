@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -18,11 +18,11 @@ namespace ALE.ETLBox.ControlFlow
                 DisableLogging = true
             }.Exists();
             if (
-                (
-                    ConnectionType == ConnectionManagerType.SQLite
-                    || ConnectionType == ConnectionManagerType.Postgres
-                    || ConnectionType == ConnectionManagerType.Access
-                ) && IsExisting
+                ConnectionType
+                    is ConnectionManagerType.SQLite
+                        or ConnectionManagerType.Postgres
+                        or ConnectionManagerType.Access
+                && IsExisting
             )
                 new DropViewTask(ViewName)
                 {
@@ -37,8 +37,8 @@ namespace ALE.ETLBox.ControlFlow
 
         private string CreateViewName =>
             ConnectionType == ConnectionManagerType.Access
-                ? VN.UnquotatedFullName
-                : VN.QuotatedFullName;
+                ? VN.UnquotedFullName
+                : VN.QuotedFullName;
         public string Definition { get; set; }
         public string Sql
         {

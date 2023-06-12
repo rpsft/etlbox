@@ -94,7 +94,6 @@ $configFiles = @(
     "./TestDatabaseConnectors/default.config.json",
     "./TestConnectionManager/default.config.json",
     "./TestFlatFileConnectors/default.config.json",
-    "./TestNonParallel/res/Demo/demolog_tobe.json",
     "./TestNonParallel/default.config.json",
     "./TestNonParallel/docker.config.json",
     "./TestTransformations/default.config.json",

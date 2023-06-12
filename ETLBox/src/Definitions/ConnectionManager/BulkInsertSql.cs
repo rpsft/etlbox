@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.Odbc;
 using System.Linq;
 using System.Text;
@@ -13,10 +12,11 @@ namespace ALE.ETLBox.ConnectionManager
     /// </summary>
     /// <see cref="OdbcConnectionManager"/>
     /// <see cref="AccessOdbcConnectionManager"/>
+    [PublicAPI]
     internal class BulkInsertSql<T>
         where T : DbParameter, new()
     {
-        internal bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
+        private bool IsAccessDatabase => ConnectionType == ConnectionManagerType.Access;
         internal bool UseParameterQuery { get; set; } = true;
         internal bool UseNamedParameters { get; set; }
         internal List<T> Parameters { get; set; }
@@ -36,7 +36,7 @@ namespace ALE.ETLBox.ConnectionManager
             InitObjects();
             TableName = tableName;
             GetSourceAndDestColumnNames(data);
-            AppendBeginSql(tableName);
+            AppendBeginSql();
             ReadDataAndCreateQuery(data);
             AppendEndSql();
             return QueryText.ToString();
@@ -50,11 +50,11 @@ namespace ALE.ETLBox.ConnectionManager
 
         private void GetSourceAndDestColumnNames(ITableData data)
         {
-            SourceColumnNames = data.ColumnMapping
+            SourceColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
                 .Select(cm => cm.SourceColumn)
                 .ToList();
-            DestColumnNames = data.ColumnMapping
+            DestColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
                 .Select(cm => cm.DataSetColumn)
                 .ToList();
@@ -115,28 +115,25 @@ namespace ALE.ETLBox.ConnectionManager
         {
             var par = new T { Value = parValue };
             Parameters.Add(par);
-            if (UseNamedParameters)
+            if (!UseNamedParameters)
             {
-                string parName = $"@P{ParameterNameCount++}";
-                par.ParameterName = parName;
-                return parName;
+                return "?";
             }
 
-            return "?";
+            string parName = $"@P{ParameterNameCount++}";
+            par.ParameterName = parName;
+            return parName;
         }
 
-        private void AppendBeginSql(string tableName)
+        private void AppendBeginSql()
         {
             QueryText.AppendLine(
-                $@"INSERT INTO {TN.QuotatedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})"
+                $@"INSERT INTO {TN.QuotedFullName} ({string.Join(",", SourceColumnNames.Select(col => QB + col + QE))})"
             );
-            if (IsAccessDatabase)
-                QueryText.AppendLine("  SELECT * FROM (");
-            else
-                QueryText.AppendLine("VALUES");
+            QueryText.AppendLine(IsAccessDatabase ? "  SELECT * FROM (" : "VALUES");
         }
 
-        private void AppendValueListSql(List<string> values, bool lastItem)
+        private void AppendValueListSql(IEnumerable<string> values, bool lastItem)
         {
             if (IsAccessDatabase)
             {
@@ -158,38 +155,6 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (IsAccessDatabase)
                 QueryText.AppendLine(") a;");
-        }
-
-        internal string CreateBulkInsertStatementWithParameter(
-            ITableData data,
-            string tableName,
-            List<OdbcParameter> parameters
-        )
-        {
-            QueryText.Clear();
-            TableName = tableName;
-            GetSourceAndDestColumnNames(data);
-            AppendBeginSql(tableName);
-            while (data.Read())
-            {
-                QueryText.Append("(");
-                string[] placeholder = new string[DestColumnNames.Count];
-                QueryText.Append(string.Join(",", placeholder.Select(s => s + "?")));
-                QueryText.AppendLine(")");
-                foreach (string destColumnName in DestColumnNames)
-                {
-                    int colIndex = data.GetOrdinal(destColumnName);
-                    data.GetDataTypeName(colIndex);
-                    if (data.IsDBNull(colIndex))
-                        parameters.Add(new OdbcParameter(destColumnName, DBNull.Value));
-                    else
-                        parameters.Add(new OdbcParameter(destColumnName, data.GetValue(colIndex)));
-                }
-                if (data.NextResult())
-                    QueryText.Append(",");
-            }
-            AppendEndSql();
-            return QueryText.ToString();
         }
     }
 

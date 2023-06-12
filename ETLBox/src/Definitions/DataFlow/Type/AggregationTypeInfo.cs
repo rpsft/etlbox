@@ -1,14 +1,17 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace ALE.ETLBox.DataFlow
 {
-    internal class AggregationTypeInfo : MappingTypeInfo
+    internal sealed class AggregationTypeInfo : MappingTypeInfo
     {
-        internal List<AggregateAttributeMapping> AggregateColumns { get; set; } = new();
-        internal List<AttributeMappingInfo> GroupColumns { get; set; } = new();
+        internal List<AggregateAttributeMapping> AggregateColumns { get; } = new();
+        internal List<AttributeMappingInfo> GroupColumns { get; } = new();
 
         internal AggregationTypeInfo(Type inputType, Type aggType)
-            : base(inputType, aggType) { }
+            : base(inputType, aggType)
+        {
+            InitMappings(inputType, aggType);
+        }
 
         protected override void AddAttributeInfoMapping(PropertyInfo propInfo)
         {
@@ -18,8 +21,10 @@ namespace ALE.ETLBox.DataFlow
 
         private void AddGroupColumn(PropertyInfo propInfo)
         {
-            var attr = propInfo.GetCustomAttribute(typeof(GroupColumn)) as GroupColumn;
-            if (attr != null)
+            if (
+                propInfo.GetCustomAttribute(typeof(GroupColumnAttribute))
+                is GroupColumnAttribute attr
+            )
             {
                 GroupColumns.Add(
                     new AttributeMappingInfo
@@ -33,8 +38,10 @@ namespace ALE.ETLBox.DataFlow
 
         private void AddAggregateColumn(PropertyInfo propInfo)
         {
-            var attr = propInfo.GetCustomAttribute(typeof(AggregateColumn)) as AggregateColumn;
-            if (attr != null)
+            if (
+                propInfo.GetCustomAttribute(typeof(AggregateColumnAttribute))
+                is AggregateColumnAttribute attr
+            )
             {
                 AggregateColumns.Add(
                     new AggregateAttributeMapping

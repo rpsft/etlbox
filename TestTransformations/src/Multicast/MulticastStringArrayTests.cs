@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
-    [Collection("DataFlow")]
-    public class MulticastStringArrayTests
+    public class MulticastStringArrayTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MulticastStringArrayTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SplitInto2Tables()
@@ -20,9 +18,15 @@ namespace TestTransformations.Multicast
             TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("Destination1");
             TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
 
-            DbSource<string[]> source = new DbSource<string[]>(Connection, "Source");
-            DbDestination<string[]> dest1 = new DbDestination<string[]>(Connection, "Destination1");
-            DbDestination<string[]> dest2 = new DbDestination<string[]>(Connection, "Destination2");
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "Source");
+            DbDestination<string[]> dest1 = new DbDestination<string[]>(
+                SqlConnection,
+                "Destination1"
+            );
+            DbDestination<string[]> dest2 = new DbDestination<string[]>(
+                SqlConnection,
+                "Destination2"
+            );
 
             //Act
             Multicast<string[]> multicast = new Multicast<string[]>();

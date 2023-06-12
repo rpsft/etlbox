@@ -1,14 +1,18 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class IfTableOrViewExistsTaskTests
+    public class IfTableOrViewExistsTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
-        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
+        public IfTableOrViewExistsTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
+
+        public static IEnumerable<object[]> Access => AccessConnection;
 
         [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
         public void IfTableExists(IConnectionManager connection)

@@ -1,21 +1,19 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationBatchChangesTests
+    public class DbDestinationBatchChangesTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbDestinationBatchChangesTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void WithBatchChanges(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DbDestinationBatchChanges"
             );
@@ -45,7 +43,7 @@ namespace TestDatabaseConnectors.DBDestination
                 RowCountTask.Count(
                     connection,
                     "DbDestinationBatchChanges",
-                    $"{d2c.QB}Col2{d2c.QE}='NewValue'"
+                    $"{d2C.QB}Col2{d2C.QE}='NewValue'"
                 )
             );
             Assert.Equal(
@@ -53,12 +51,12 @@ namespace TestDatabaseConnectors.DBDestination
                 RowCountTask.Count(
                     connection,
                     "DbDestinationBatchChanges",
-                    $"{d2c.QB}Col1{d2c.QE} = 2 AND {d2c.QB}Col2{d2c.QE}='Test2'"
+                    $"{d2C.QB}Col1{d2C.QE} = 2 AND {d2C.QB}Col2{d2C.QE}='Test2'"
                 )
             );
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void AfterBatchWrite(IConnectionManager connection)
         {
             //Arrange
