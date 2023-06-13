@@ -147,9 +147,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IConnectionManager CloneIfAllowed()
         {
-            if (LeaveOpen)
-                return this;
-            return Clone();
+            return LeaveOpen ? this : Clone();
         }
 
         public void BeginTransaction(IsolationLevel isolationLevel)
