@@ -269,3 +269,8 @@ charset = utf-8-bom
 end_of_line = lf
 indent_style = space
 indent_size = 2
+
+# Yaml
+[*.{yml,yaml}]
+end_of_line = lf
+indent_size = 2
