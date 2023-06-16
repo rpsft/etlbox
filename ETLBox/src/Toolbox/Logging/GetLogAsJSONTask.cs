@@ -44,7 +44,7 @@ namespace ALE.ETLBox.Logging
             }
         }
 
-        private LogHierarchyEntry CreateHierarchyStructure(List<LogEntry> entries)
+        private static LogHierarchyEntry CreateHierarchyStructure(List<LogEntry> entries)
         {
             LogHierarchyEntry root = new LogHierarchyEntry(new LogEntry { TaskType = "ROOT" });
             var currentParent = root;

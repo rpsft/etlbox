@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace ALE.ETLBox
 {
-    public class ObjectNameDescriptor
+    public sealed class ObjectNameDescriptor
     {
         private string _schema;
         private string _table;

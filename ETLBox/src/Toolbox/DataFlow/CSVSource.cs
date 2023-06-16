@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -18,6 +19,7 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
+        [SuppressMessage("Performance", "CA1822")]
         private CultureInfo CsvDefaultCulture => CultureInfo.InvariantCulture;
 
         /* ITask Interface */

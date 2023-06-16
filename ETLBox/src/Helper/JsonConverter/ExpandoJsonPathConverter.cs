@@ -129,7 +129,7 @@ namespace ALE.ETLBox.Helper
             }
         }
 
-        private object GetValueFromJsonPath(JToken jsonObject, string path)
+        private static object GetValueFromJsonPath(JToken jsonObject, string path)
         {
             object val = null;
             List<JToken> tokens = jsonObject.SelectTokens(path).ToList();

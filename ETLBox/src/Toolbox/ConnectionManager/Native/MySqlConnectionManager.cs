@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override string QB { get; } = @"`";
         public override string QE { get; } = @"`";
         public override CultureInfo ConnectionCulture => CultureInfo.InvariantCulture;
-        public override bool SupportSchemas { get; } = false;
+        public override bool SupportSchemas { get; }
 
         public MySqlConnectionManager() { }
 

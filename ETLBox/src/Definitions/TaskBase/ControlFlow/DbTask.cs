@@ -154,8 +154,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (result == null)
                 return false;
-            int.TryParse(result.ToString(), out var number);
-            if (number > 0)
+            if (int.TryParse(result.ToString(), out var number) && number > 0)
                 return true;
             if (result.ToString().Trim().ToLower() == "true")
                 return true;

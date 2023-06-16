@@ -42,7 +42,6 @@ namespace ALE.ETLBox.Helper
         /// <exception cref="FormatException"></exception>
         public string Format(string format, object arg, IFormatProvider formatProvider)
         {
-            // TODO : Add handling for ObjectNameDescriptor
             if (format is "q" or "Q" && arg is string identifier)
             {
                 return $"{_qb}{identifier}{_qe}";
@@ -60,7 +59,7 @@ namespace ALE.ETLBox.Helper
             }
         }
 
-        private string HandleOtherFormats(string format, object arg) =>
+        private static string HandleOtherFormats(string format, object arg) =>
             arg switch
             {
                 IFormattable formattable
