@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using ALE.ETLBox.ConnectionManager.Helpers;
 using Microsoft.Data.Sqlite;
 
@@ -44,15 +42,15 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            var sourceColumnNames = data.ColumnMapping
+            var sourceColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
                 .Select(cm => cm.SourceColumn)
                 .ToList();
-            var paramNames = data.ColumnMapping
+            var paramNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
                 .Select((_, i) => $"$p{i}")
                 .ToArray();
-            var destColumnNames = data.ColumnMapping
+            var destColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
                 .Select(cm => cm.DataSetColumn)
                 .ToList();
@@ -103,35 +101,39 @@ VALUES ({string.Join(",", paramNames)})";
 
         public override void PrepareBulkInsert(string tableName)
         {
-            if (ModifyDBSettings)
+            if (!ModifyDBSettings)
             {
-                try
-                {
-                    Synchronous = ExecuteScalar("PRAGMA synchronous").ToString();
-                    JournalMode = ExecuteScalar("PRAGMA journal_mode").ToString();
-                    ExecuteNonQuery("PRAGMA synchronous = OFF");
-                    ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
-                }
-                catch
-                {
-                    ModifyDBSettings = false;
-                }
+                return;
+            }
+
+            try
+            {
+                Synchronous = ExecuteScalar("PRAGMA synchronous").ToString();
+                JournalMode = ExecuteScalar("PRAGMA journal_mode").ToString();
+                ExecuteNonQuery("PRAGMA synchronous = OFF");
+                ExecuteNonQuery("PRAGMA journal_mode = MEMORY");
+            }
+            catch
+            {
+                ModifyDBSettings = false;
             }
         }
 
-        public override void CleanUpBulkInsert(string tablename)
+        public override void CleanUpBulkInsert(string tableName)
         {
-            if (ModifyDBSettings)
+            if (!ModifyDBSettings)
             {
-                try
-                {
-                    ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
-                    ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
-                }
-                catch
-                {
-                    // ignored
-                }
+                return;
+            }
+
+            try
+            {
+                ExecuteNonQuery($"PRAGMA synchronous = {Synchronous}");
+                ExecuteNonQuery($"PRAGMA journal_mode = {JournalMode}");
+            }
+            catch
+            {
+                // ignored
             }
         }
 

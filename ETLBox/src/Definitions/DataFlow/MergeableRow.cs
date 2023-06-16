@@ -6,9 +6,9 @@
     /// You still needs that you have flagged the id properties with the IdColumn attribute
     /// and the properties use to identify equal object flagged with the CompareColumn attribute.
     /// </summary>
-    /// <see cref="CompareColumn"/>
-    /// <see cref="IdColumn"/>
-    public abstract class MergeableRow
+    /// <see cref="CompareColumnAttribute"/>
+    /// <see cref="IdColumnAttribute"/>
+    public abstract class MergeableRow : IMergeableRow
     {
         /// <summary>
         /// Date and time when the object was considered for merging.

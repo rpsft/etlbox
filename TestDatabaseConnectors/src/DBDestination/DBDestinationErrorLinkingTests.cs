@@ -1,14 +1,14 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationErrorLinkingTests
+    public class DbDestinationErrorLinkingTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbDestinationErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MySimpleRow
         {
@@ -20,7 +20,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void RedirectBatch(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestLinkError");
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestLinkError");
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
@@ -31,7 +31,7 @@ namespace TestDatabaseConnectors.DBDestination
                     new() { Col1 = "2", Col2 = "Test2" },
                     new() { Col1 = "3", Col2 = "Test3 - good, but in error batch" },
                     new() { Col1 = null, Col2 = "ErrorRecord" },
-                    new() { Col1 = "3", Col2 = "Test3" },
+                    new() { Col1 = "3", Col2 = "Test3" }
                 }
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
@@ -49,7 +49,7 @@ namespace TestDatabaseConnectors.DBDestination
             errorDest.Wait();
 
             //Assert
-            d2c.AssertTestData();
+            d2C.AssertTestData();
             Assert.Collection(
                 errorDest.Data,
                 d =>

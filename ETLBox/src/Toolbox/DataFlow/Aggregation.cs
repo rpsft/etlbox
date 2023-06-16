@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
+using System.Linq;
 using ALE.ETLBox.Helper;
 
 namespace ALE.ETLBox.DataFlow
@@ -52,6 +52,14 @@ namespace ALE.ETLBox.DataFlow
         private Dictionary<object, TOutput> AggregationData { get; set; } = new();
         private AggregationTypeInfo AggTypeInfo { get; set; }
 
+        private void CheckTypeInfo()
+        {
+            if (AggTypeInfo.IsArrayOutput)
+                throw new ETLBoxException(
+                    "Aggregation target must be of an object or dynamic type! Array types are not allowed."
+                );
+        }
+
         public Aggregation()
         {
             OutputBuffer = new BufferBlock<TOutput>();
@@ -67,14 +75,6 @@ namespace ALE.ETLBox.DataFlow
 
             if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
                 StoreKeyAction = DefineStoreKeyActionFromAttributes;
-        }
-
-        private void CheckTypeInfo()
-        {
-            if (AggTypeInfo.IsArrayOutput)
-                throw new Exception(
-                    "Aggregation target must be of an object or dynamic type! Array types are not allowed."
-                );
         }
 
         public Aggregation(Action<TInput, TOutput> aggregationAction)
@@ -102,35 +102,36 @@ namespace ALE.ETLBox.DataFlow
             StoreKeyAction = storeKeyAction;
         }
 
-        private void DefineAggregationAction(TInput inputrow, TOutput aggOutput)
+        private void DefineAggregationAction(TInput inputRow, TOutput aggOutput)
         {
-            foreach (var attrmap in AggTypeInfo.AggregateColumns)
+            foreach (var attributeMapping in AggTypeInfo.AggregateColumns)
             {
-                decimal? inputVal = ConvertToDecimal(attrmap.PropInInput.GetValue(inputrow));
-                decimal? aggVal = ConvertToDecimal(attrmap.PropInOutput.GetValue(aggOutput));
-                decimal? res = null;
-                if (aggVal == null && attrmap.AggregationMethod == AggregationMethod.Count)
-                    res = 1;
-                else if (aggVal == null)
-                    res = inputVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Sum)
-                    res = (inputVal ?? 0) + aggVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Max)
-                    res = (inputVal ?? 0) > aggVal ? inputVal : aggVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Min)
-                    res = (inputVal ?? 0) < aggVal ? inputVal : aggVal;
-                else if (attrmap.AggregationMethod == AggregationMethod.Count)
-                    res = aggVal + 1;
+                decimal? inputVal = ConvertToDecimal(
+                    attributeMapping.PropInInput.GetValue(inputRow)
+                );
+                decimal? aggVal = ConvertToDecimal(
+                    attributeMapping.PropInOutput.GetValue(aggOutput)
+                );
+                decimal? res = (aggVal, attributeMapping.AggregationMethod) switch
+                {
+                    (null, AggregationMethod.Count) => 1,
+                    (null, _) => inputVal,
+                    (_, AggregationMethod.Sum) => (inputVal ?? 0) + aggVal,
+                    (_, AggregationMethod.Max) => (inputVal ?? 0) > aggVal ? inputVal : aggVal,
+                    (_, AggregationMethod.Min) => (inputVal ?? 0) < aggVal ? inputVal : aggVal,
+                    (_, AggregationMethod.Count) => aggVal + 1,
+                    (_, _) => null
+                };
 
                 object output = Convert.ChangeType(
                     res,
-                    TypeInfo.TryGetUnderlyingType(attrmap.PropInOutput)
+                    TypeInfo.TryGetUnderlyingType(attributeMapping.PropInOutput)
                 );
-                attrmap.PropInOutput.SetValueOrThrow(aggOutput, output);
+                attributeMapping.PropInOutput.SetValueOrThrow(aggOutput, output);
             }
         }
 
-        private decimal? ConvertToDecimal(object input)
+        private static decimal? ConvertToDecimal(object input)
         {
             if (input == null)
                 return null;
@@ -139,22 +140,21 @@ namespace ALE.ETLBox.DataFlow
 
         private void DefineStoreKeyActionFromAttributes(object key, TOutput outputRow)
         {
-            var gk = key as GroupingKey;
-            if (gk == null)
+            if (key is not GroupingKey gk)
                 return;
             foreach (var propMap in gk.GroupingObjectsByProperty)
                 propMap.Key.TrySetValue(outputRow, propMap.Value);
         }
 
-        private object DefineGroupingPropertyFromAttributes(TInput inputrow)
+        private object DefineGroupingPropertyFromAttributes(TInput inputRow)
         {
-            var gk = new GroupingKey();
+            var groupingKey = new GroupingKey();
             foreach (var propMap in AggTypeInfo.GroupColumns)
-                gk.GroupingObjectsByProperty.Add(
+                groupingKey.GroupingObjectsByProperty.Add(
                     propMap.PropInOutput,
-                    propMap.PropInInput.GetValue(inputrow)
+                    propMap.PropInInput.GetValue(inputRow)
                 );
-            return gk;
+            return groupingKey;
         }
 
         private void WriteIntoOutput()
@@ -186,7 +186,7 @@ namespace ALE.ETLBox.DataFlow
             AggregationData.Add(key, firstEntry);
         }
 
-        private class GroupingKey
+        private sealed class GroupingKey
         {
             public override int GetHashCode()
             {
@@ -199,16 +199,11 @@ namespace ALE.ETLBox.DataFlow
                 }
             }
 
-            public override bool Equals(object obj)
-            {
-                GroupingKey comp = obj as GroupingKey;
-                if (comp == null)
-                    return false;
-                bool equals = true;
-                foreach (var map in GroupingObjectsByProperty)
-                    equals &= map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true;
-                return equals;
-            }
+            public override bool Equals(object obj) =>
+                obj is GroupingKey comp
+                && GroupingObjectsByProperty.All(
+                    map => map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true
+                );
 
             public Dictionary<PropertyInfo, object> GroupingObjectsByProperty { get; } = new();
         }

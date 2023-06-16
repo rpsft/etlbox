@@ -3,6 +3,7 @@ using System.Net.Http;
 
 namespace ALE.ETLBox.DataFlow
 {
+    [PublicAPI]
     public abstract class DataFlowStreamSource<TOutput> : DataFlowSource<TOutput>
     {
         /* Public properties */
@@ -32,10 +33,11 @@ namespace ALE.ETLBox.DataFlow
         public HttpClient HttpClient { get; set; } = new();
 
         /* Internal properties */
-        protected string _uri;
         protected string CurrentRequestUri { get; set; }
         protected StreamReader StreamReader { get; set; }
         private bool WasStreamOpened { get; set; }
+
+        private string _uri;
 
         public override void Execute()
         {
@@ -63,13 +65,11 @@ namespace ALE.ETLBox.DataFlow
             NLogFinish();
         }
 
-        private void OpenStream(string uri)
-        {
-            if (ResourceType == ResourceType.File)
-                StreamReader = new StreamReader(uri);
-            else
-                StreamReader = new StreamReader(HttpClient.GetStreamAsync(new Uri(uri)).Result);
-        }
+        private void OpenStream(string uri) =>
+            StreamReader =
+                ResourceType == ResourceType.File
+                    ? new StreamReader(uri)
+                    : new StreamReader(HttpClient.GetStreamAsync(new Uri(uri)).Result);
 
         private void CloseStream()
         {

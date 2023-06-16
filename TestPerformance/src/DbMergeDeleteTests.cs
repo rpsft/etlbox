@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+﻿using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using ALE.ETLBoxTests.Performance.Fixtures;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance
 {
-    [Collection("Performance")]
-    public class DbMergeDeleteTests
+    public class DbMergeDeleteTests : PerformanceTestBase
     {
-        private SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("Performance");
+        public DbMergeDeleteTests(PerformanceDatabaseFixture fixture)
+            : base(fixture) { }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MyMergeRow : MergeableRow
@@ -35,7 +31,7 @@ namespace ALE.ETLBoxTests.Performance
             TransferTestDataIntoDestination(knownGuids);
             MemorySource<MyMergeRow> source = AddNewTestData(rowsInDest, knownGuids);
             DbMerge<MyMergeRow> mergeDest = new DbMerge<MyMergeRow>(
-                SqlConnection,
+                SqlConnectionManager,
                 "MergeDestination"
             );
             source.LinkTo(mergeDest);
@@ -53,7 +49,7 @@ namespace ALE.ETLBoxTests.Performance
             //Assert
             Assert.Equal(
                 rowsInDest + rowsInSource,
-                RowCountTask.Count(SqlConnection, "MergeDestination") ?? 0
+                RowCountTask.Count(SqlConnectionManager, "MergeDestination") ?? 0
             );
             Assert.True(
                 executionTime <= TimeSpan.FromMilliseconds((rowsInDest + rowsInSource) * 2)
@@ -62,20 +58,15 @@ namespace ALE.ETLBoxTests.Performance
 
         private void CreateDestinationTable(string tableName)
         {
-            DropTableTask.DropIfExists(SqlConnection, tableName);
+            DropTableTask.DropIfExists(SqlConnectionManager, tableName);
             CreateTableTask.Create(
-                SqlConnection,
+                SqlConnectionManager,
                 tableName,
                 new List<TableColumn>
                 {
-                    new TableColumn(
-                        "Id",
-                        "UNIQUEIDENTIFIER",
-                        allowNulls: false,
-                        isPrimaryKey: true
-                    ),
-                    new TableColumn("LastUpdated", "DATETIMEOFFSET", allowNulls: false),
-                    new TableColumn("Value", "CHAR(1)", allowNulls: false),
+                    new("Id", "UNIQUEIDENTIFIER", allowNulls: false, isPrimaryKey: true),
+                    new("LastUpdated", "DATETIMEOFFSET", allowNulls: false),
+                    new("Value", "CHAR(1)", allowNulls: false)
                 }
             );
         }
@@ -102,7 +93,7 @@ namespace ALE.ETLBoxTests.Performance
                 DataAsList = knownGuids
             };
             DbDestination<MyMergeRow> dest = new DbDestination<MyMergeRow>(
-                SqlConnection,
+                SqlConnectionManager,
                 "MergeDestination"
             );
             source.LinkTo(dest);
@@ -110,7 +101,10 @@ namespace ALE.ETLBoxTests.Performance
             dest.Wait();
         }
 
-        private MemorySource<MyMergeRow> AddNewTestData(int rowsInDest, List<MyMergeRow> knownGuids)
+        private static MemorySource<MyMergeRow> AddNewTestData(
+            int rowsInDest,
+            List<MyMergeRow> knownGuids
+        )
         {
             MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>
             {

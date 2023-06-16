@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks.Dataflow;
+﻿using System.Diagnostics.CodeAnalysis;
 using NLog;
 using CF = ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox.DataFlow
 {
+    [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
+    [PublicAPI]
     public class DataFlowLinker<TOutput>
     {
         public ISourceBlock<TOutput> SourceBlock { get; set; }
@@ -30,7 +32,7 @@ namespace ALE.ETLBox.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    CF.ControlFlow.STAGE,
+                    CF.ControlFlow.Stage,
                     CF.ControlFlow.CurrentLoadProcess?.Id
                 );
             return target as IDataFlowLinkSource<TConvert>;
@@ -54,7 +56,7 @@ namespace ALE.ETLBox.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    CF.ControlFlow.STAGE,
+                    CF.ControlFlow.Stage,
                     CF.ControlFlow.CurrentLoadProcess?.Id
                 );
             return target as IDataFlowLinkSource<TConvert>;
@@ -80,7 +82,7 @@ namespace ALE.ETLBox.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    CF.ControlFlow.STAGE,
+                    CF.ControlFlow.Stage,
                     CF.ControlFlow.CurrentLoadProcess?.Id
                 );
 
@@ -94,7 +96,7 @@ namespace ALE.ETLBox.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    CF.ControlFlow.STAGE,
+                    CF.ControlFlow.Stage,
                     CF.ControlFlow.CurrentLoadProcess?.Id
                 );
 

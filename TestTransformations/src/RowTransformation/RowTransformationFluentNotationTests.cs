@@ -1,16 +1,14 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
-    [Collection("DataFlow")]
-    public class RowTransformationFluentNotationTests
+    public class RowTransformationFluentNotationTests : TransformationsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowTransformationFluentNotationTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -119,10 +117,7 @@ namespace TestTransformations.RowTransformation
             RowTransformation<MySimpleRow, MyOtherRow> trans1 = new RowTransformation<
                 MySimpleRow,
                 MyOtherRow
-            >(row =>
-            {
-                return new MyOtherRow { ColA = row.Col1, ColB = row.Col2 };
-            });
+            >(row => new MyOtherRow { ColA = row.Col1, ColB = row.Col2 });
 
             //Act
             source.LinkTo<MyOtherRow>(trans1).LinkTo(dest);

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using ALE.ETLBox.Helper;
-using Xunit;
 
 namespace TestHelper
 {
@@ -11,7 +10,7 @@ namespace TestHelper
         {
             //Arrange
             List<string> expected = new List<string> { "Col1", "Col2" };
-            string sql = @"SELECT Col1, Col2 FROM Table";
+            const string sql = @"SELECT Col1, Col2 FROM Table";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -25,7 +24,7 @@ namespace TestHelper
         {
             //Arrange
             List<string> expected = new List<string> { "Col1" };
-            string sql = @"SELECT Col1";
+            const string sql = @"SELECT Col1";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -39,7 +38,7 @@ namespace TestHelper
         {
             //Arrange
             List<string> expected = new List<string> { "Col1", "Col2" };
-            string sql =
+            const string sql =
                 @"SELECT CASE WHEN ISNULL(Col1,'') IS NOT NULL THEN Col1 ELSE Col1 END AS Col1, 
 Col2 
 FROM Table";
@@ -56,7 +55,7 @@ FROM Table";
         {
             //Arrange
             List<string> expected = new List<string> { "Col1", "Col2" };
-            string sql =
+            const string sql =
                 @"SELECT CONCAT('','Test',ISNULL(Col1,''), GETDATE()) AS Col1, 
 ( CONVERT(INT, Col2) * 5) Col2 
 FROM Table";
@@ -73,7 +72,7 @@ FROM Table";
         {
             //Arrange
             List<string> expected = new List<string>();
-            string sql = @"SELECT * FROM Table";
+            const string sql = @"SELECT * FROM Table";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -87,7 +86,7 @@ FROM Table";
         {
             //Arrange
             List<string> expected = new List<string> { "Col1", "Col2" };
-            string sql = @"SELECT sou.Col1, sou.Col2 FROM table AS sou";
+            const string sql = @"SELECT sou.Col1, sou.Col2 FROM table AS sou";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);
@@ -101,7 +100,7 @@ FROM Table";
         {
             //Arrange
             List<string> expected = new List<string> { "Col1" };
-            string sql = @"SELECT sou.Col1 FROM table AS sou";
+            const string sql = @"SELECT sou.Col1 FROM table AS sou";
 
             //Act
             var actual = SqlParser.ParseColumnNames(sql);

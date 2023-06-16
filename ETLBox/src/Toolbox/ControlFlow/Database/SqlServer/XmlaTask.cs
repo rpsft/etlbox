@@ -1,9 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow.SqlServer
 {
     /// <summary>
-    /// This task can exeucte any XMLA.
+    /// This task can execute any XMLA.
     /// </summary>
     /// <example>
     /// <code>
@@ -61,9 +61,14 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
             DoXMLCommentStyle = true;
         }
 
-        /* Static methods for convenience */
         public static int ExecuteNonQuery(string name, string xmla) =>
             new XmlaTask(name, xmla).ExecuteNonQuery();
+
+        public static int ExecuteNonQuery(
+            IConnectionManager connectionManager,
+            string name,
+            string xmla
+        ) => new XmlaTask(name, xmla) { ConnectionManager = connectionManager }.ExecuteNonQuery();
 
         public static object ExecuteScalar(string name, string xmla) =>
             new XmlaTask(name, xmla).ExecuteScalar();
@@ -71,8 +76,32 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
         public static T? ExecuteScalar<T>(string name, string xmla)
             where T : struct => new XmlaTask(name, xmla).ExecuteScalar<T>();
 
+        public static object ExecuteScalar(
+            IConnectionManager connectionManager,
+            string name,
+            string xmla
+        ) => new XmlaTask(name, xmla) { ConnectionManager = connectionManager }.ExecuteScalar();
+
+        public static T? ExecuteScalar<T>(
+            IConnectionManager connectionManager,
+            string name,
+            string xmla
+        )
+            where T : struct =>
+            new XmlaTask(name, xmla) { ConnectionManager = connectionManager }.ExecuteScalar<T>();
+
         public static bool ExecuteScalarAsBool(string name, string xmla) =>
             new XmlaTask(name, xmla).ExecuteScalarAsBool();
+
+        public static bool ExecuteScalarAsBool(
+            IConnectionManager connectionManager,
+            string name,
+            string xmla
+        ) =>
+            new XmlaTask(name, xmla)
+            {
+                ConnectionManager = connectionManager
+            }.ExecuteScalarAsBool();
 
         public static void ExecuteReaderSingleLine(
             string name,
@@ -100,36 +129,6 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
                 afterRowReadAction,
                 actions
             ).ExecuteReader();
-
-        public static int ExecuteNonQuery(
-            IConnectionManager connectionManager,
-            string name,
-            string xmla
-        ) => new XmlaTask(name, xmla) { ConnectionManager = connectionManager }.ExecuteNonQuery();
-
-        public static object ExecuteScalar(
-            IConnectionManager connectionManager,
-            string name,
-            string xmla
-        ) => new XmlaTask(name, xmla) { ConnectionManager = connectionManager }.ExecuteScalar();
-
-        public static T? ExecuteScalar<T>(
-            IConnectionManager connectionManager,
-            string name,
-            string xmla
-        )
-            where T : struct =>
-            new XmlaTask(name, xmla) { ConnectionManager = connectionManager }.ExecuteScalar<T>();
-
-        public static bool ExecuteScalarAsBool(
-            IConnectionManager connectionManager,
-            string name,
-            string xmla
-        ) =>
-            new XmlaTask(name, xmla)
-            {
-                ConnectionManager = connectionManager
-            }.ExecuteScalarAsBool();
 
         public static void ExecuteReader(
             IConnectionManager connectionManager,

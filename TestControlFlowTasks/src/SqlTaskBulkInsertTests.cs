@@ -1,21 +1,30 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks;
 
-[Collection("ControlFlow")]
-public class SqlTaskBulkInsertTests
+public class SqlTaskBulkInsertTests : ControlFlowTestBase
 {
+    public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture fixture)
+        : base(fixture) { }
+
     public static IEnumerable<object[]> Connections =>
         RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? Config.AllSqlConnections("ControlFlow").Concat(Config.AccessConnection("ControlFlow"))
-            : Config.AllSqlConnections("ControlFlow");
+            ? AllSqlConnections.Concat(AccessConnection)
+            : AllSqlConnections;
 
     public static IEnumerable<object[]> ConnectionsWithValue(int value)
     {
-        return Config.AllSqlConnectionsWithValue("ControlFlow", value);
+        return new[]
+        {
+            new object[] { SqlConnection, value },
+            new object[] { PostgresConnection, value },
+            new object[] { MySqlConnection, value },
+            new object[] { SqliteConnection, value }
+        };
     }
 
     [Theory]
@@ -54,28 +63,30 @@ public class SqlTaskBulkInsertTests
     public void WithIdentityShift(IConnectionManager connection, int identityIndex)
     {
         //SQLite does not support Batch Insert on Non Nullable Identity Columns
-        if (connection.GetType() != typeof(SQLiteConnectionManager))
+        if (connection.GetType() == typeof(SQLiteConnectionManager))
         {
-            //Arrange
-            var destTable = new FourColumnsTableFixture(
-                connection,
-                "BulkInsert4Columns",
-                identityIndex
-            );
-
-            var data = new TableData(destTable.TableDefinition, 2);
-            object[] values = { "Test1", null, 1.2 };
-            data.Rows.Add(values);
-            object[] values2 = { "Test2", 4711, 1.23 };
-            data.Rows.Add(values2);
-            object[] values3 = { "Test3", 185, 1.234 };
-            data.Rows.Add(values3);
-
-            //Act
-            SqlTask.BulkInsert(connection, "Bulk insert demo data", data, "BulkInsert4Columns");
-
-            //Assert
-            destTable.AssertTestData();
+            return;
         }
+
+        //Arrange
+        var destTable = new FourColumnsTableFixture(
+            connection,
+            "BulkInsert4Columns",
+            identityIndex
+        );
+
+        var data = new TableData(destTable.TableDefinition, 2);
+        object[] values = { "Test1", null, 1.2 };
+        data.Rows.Add(values);
+        object[] values2 = { "Test2", 4711, 1.23 };
+        data.Rows.Add(values2);
+        object[] values3 = { "Test3", 185, 1.234 };
+        data.Rows.Add(values3);
+
+        //Act
+        SqlTask.BulkInsert(connection, "Bulk insert demo data", data, "BulkInsert4Columns");
+
+        //Assert
+        destTable.AssertTestData();
     }
 }

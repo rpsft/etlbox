@@ -1,11 +1,11 @@
-﻿using System.Data;
-using System.Globalization;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ALE.ETLBox.ConnectionManager
 {
-    public abstract class DbConnectionManager<Connection> : IDisposable, IConnectionManager
-        where Connection : class, IDbConnection, new()
+    [PublicAPI]
+    [DebuggerDisplay("{ConnectionManagerType}:{ConnectionString}")]
+    public abstract class DbConnectionManager<TConnection> : IConnectionManager
+        where TConnection : class, IDbConnection, new()
     {
         public abstract ConnectionManagerType ConnectionManagerType { get; }
 
@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbConnectionString ConnectionString { get; set; }
 
-        internal Connection DbConnection { get; set; }
+        internal TConnection DbConnection { get; private set; }
         public ConnectionState? State => DbConnection?.State;
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
@@ -32,9 +32,9 @@ namespace ALE.ETLBox.ConnectionManager
         public virtual bool SupportSchemas { get; } = true;
         public virtual bool SupportComputedColumns { get; } = true;
 
-        public DbConnectionManager() { }
+        protected DbConnectionManager() { }
 
-        public DbConnectionManager(IDbConnectionString connectionString)
+        protected DbConnectionManager(IDbConnectionString connectionString)
             : this()
         {
             ConnectionString = connectionString;
@@ -44,12 +44,12 @@ namespace ALE.ETLBox.ConnectionManager
         {
             if (LeaveOpen)
             {
-                DbConnection ??= new Connection { ConnectionString = ConnectionString.Value };
+                DbConnection ??= new TConnection { ConnectionString = ConnectionString.Value };
             }
             else
             {
                 DbConnection?.Close();
-                DbConnection = new Connection { ConnectionString = ConnectionString.Value };
+                DbConnection = new TConnection { ConnectionString = ConnectionString.Value };
             }
             if (DbConnection.State != ConnectionState.Open)
             {
@@ -87,7 +87,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbCommand CreateCommand(
             string commandText,
-            IEnumerable<QueryParameter> parameterList = null
+            IEnumerable<QueryParameter> parameterList
         )
         {
             var cmd = DbConnection.CreateCommand();
@@ -98,63 +98,62 @@ namespace ALE.ETLBox.ConnectionManager
                 foreach (QueryParameter par in parameterList)
                 {
                     var newPar = cmd.CreateParameter();
-                    newPar.ParameterName = par.Name;
-                    newPar.DbType =
-                        ConnectionManagerType == ConnectionManagerType.Postgres
-                        && par.DBType == DbType.DateTime
-                            ? DbType.DateTime2 // TODO: Move this hack to more appropriate place
-                            // (fix for https://www.npgsql.org/doc/release-notes/6.0.html#major-changes-to-timestamp-mapping in NpgSql 6.0+)
-                            : par.DBType;
-                    newPar.Value = par.Value;
+                    MapQueryParameterToCommandParameter(par, newPar);
                     cmd.Parameters.Add(newPar);
                 }
             }
-            if (
-                Transaction?.Connection != null
-                && Transaction.Connection.State == ConnectionState.Open
-            )
+            if (Transaction?.Connection is { State: ConnectionState.Open })
                 cmd.Transaction = Transaction;
             return cmd;
         }
 
-        public int ExecuteNonQuery(
-            string commandText,
-            IEnumerable<QueryParameter> parameterList = null
+        /// <summary>
+        /// Map QueryParameter to Command parameter
+        /// </summary>
+        /// <returns></returns>
+        protected virtual void MapQueryParameterToCommandParameter(
+            QueryParameter source,
+            IDbDataParameter destination
         )
         {
-            IDbCommand cmd = CreateCommand(commandText, parameterList);
+            destination.ParameterName = source.Name;
+            destination.DbType = source.DBType;
+            destination.Value = source.Value;
+        }
+
+        public int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null)
+        {
+            IDbCommand cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteNonQuery();
         }
 
         public object ExecuteScalar(
-            string commandText,
+            string command,
             IEnumerable<QueryParameter> parameterList = null
         )
         {
-            IDbCommand cmd = CreateCommand(commandText, parameterList);
+            IDbCommand cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteScalar();
         }
 
         public IDataReader ExecuteReader(
-            string commandText,
+            string command,
             IEnumerable<QueryParameter> parameterList = null
         )
         {
-            IDbCommand cmd = CreateCommand(commandText, parameterList);
+            IDbCommand cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteReader();
+        }
+
+        public IConnectionManager CloneIfAllowed()
+        {
+            return LeaveOpen ? this : Clone();
         }
 
         public void BeginTransaction(IsolationLevel isolationLevel)
         {
             Open();
             Transaction = DbConnection?.BeginTransaction(isolationLevel);
-        }
-
-        public IConnectionManager CloneIfAllowed()
-        {
-            if (LeaveOpen)
-                return this;
-            return Clone();
         }
 
         public void BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
@@ -186,26 +185,29 @@ namespace ALE.ETLBox.ConnectionManager
         public abstract void AfterBulkInsert(string tableName);
 
         #region IDisposable Support
-        private bool disposedValue; // To detect redundant calls
+        private bool _disposedValue; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue)
             {
-                if (disposing)
-                {
-                    Transaction?.Dispose();
-                    Transaction = null;
-                    DbConnection?.Close();
-                    DbConnection = null;
-                }
-                disposedValue = true;
+                return;
             }
+
+            if (disposing)
+            {
+                Transaction?.Dispose();
+                Transaction = null;
+                DbConnection?.Close();
+                DbConnection = null;
+            }
+            _disposedValue = true;
         }
 
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void CloseIfAllowed()

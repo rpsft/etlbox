@@ -1,9 +1,9 @@
-﻿using System.Data.Odbc;
+using System.Data.Odbc;
 
 namespace ALE.ETLBox
 {
     /// <summary>
-    /// A helper class for encapsulating a conection string in an object.
+    /// A helper class for encapsulating a connection string in an object.
     /// Internally the OdbcConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
     public class OdbcConnectionString

@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
-    [Collection("DataFlow")]
-    public class RowTransformationStringArrayTests
+    public class RowTransformationStringArrayTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowTransformationStringArrayTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -35,7 +33,7 @@ namespace TestTransformations.RowTransformation
             });
 
             DbDestination<string[]> dest = new DbDestination<string[]>(
-                Connection,
+                SqlConnection,
                 "DestinationRowTransformation"
             );
             source.LinkTo(trans);

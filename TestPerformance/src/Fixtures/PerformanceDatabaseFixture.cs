@@ -3,17 +3,21 @@ using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance.Fixtures
 {
-    [CollectionDefinition("Performance")]
-    public class PerformanceCollectionClass : ICollectionFixture<PerformanceDatabaseFixture> { }
-
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    public class PerformanceDatabaseFixture
+    public sealed class PerformanceDatabaseFixture : IDisposable
     {
         public PerformanceDatabaseFixture()
         {
-            DatabaseHelper.RecreateSqlDatabase("Performance");
-            DatabaseHelper.RecreateMySqlDatabase("Performance");
-            DatabaseHelper.RecreatePostgresDatabase("Performance");
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, "Performance");
+            DatabaseHelper.RecreateDatabase(Config.MySqlConnection, "Performance");
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, "Performance");
+        }
+
+        public void Dispose()
+        {
+            DatabaseHelper.DropDatabase(Config.PostgresConnection, "Performance");
+            DatabaseHelper.DropDatabase(Config.MySqlConnection, "Performance");
+            DatabaseHelper.DropDatabase(Config.SqlConnection, "Performance");
         }
     }
 }

@@ -1,18 +1,11 @@
-using System.Collections.Generic;
-using System.IO;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
-using TestShared.Helper;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
-    [Collection("DataFlow")]
-    public class JsonDestinationNullHandlingTests
+    public class JsonDestinationNullHandlingTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonDestinationNullHandlingTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {

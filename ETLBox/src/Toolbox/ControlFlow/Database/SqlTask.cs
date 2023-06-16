@@ -1,4 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Helper;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -73,7 +74,6 @@ namespace ALE.ETLBox.ControlFlow
             Parameter = parameter;
         }
 
-        /* Static methods for convenience */
         public static int ExecuteNonQuery(string name, string sql) =>
             new SqlTask(name, sql).ExecuteNonQuery();
 
@@ -82,6 +82,40 @@ namespace ALE.ETLBox.ControlFlow
             string name,
             string sql
         ) => new SqlTask(name, sql) { ConnectionManager = connectionManager }.ExecuteNonQuery();
+
+        public static int ExecuteNonQuery(
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList
+        ) => new SqlTask(name, sql, parameterList).ExecuteNonQuery();
+
+        public static int ExecuteNonQuery(
+            IConnectionManager connectionManager,
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList
+        ) =>
+            new SqlTask(name, sql, parameterList)
+            {
+                ConnectionManager = connectionManager
+            }.ExecuteNonQuery();
+
+        /// <summary>
+        /// Take interpolated string as argument and apply formatting
+        /// </summary>
+        /// <param name="connectionManager"></param>
+        /// <param name="name"></param>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static int ExecuteNonQueryFormatted(
+            IConnectionManager connectionManager,
+            string name,
+            FormattableString sql
+        ) =>
+            new SqlTask(name, connectionManager.FormatQuery(sql))
+            {
+                ConnectionManager = connectionManager
+            }.ExecuteNonQuery();
 
         public static object ExecuteScalar(string name, string sql) =>
             new SqlTask(name, sql).ExecuteScalar();
@@ -103,6 +137,30 @@ namespace ALE.ETLBox.ControlFlow
             where T : struct =>
             new SqlTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalar<T>();
 
+        public static object ExecuteScalar(
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList
+        ) => new SqlTask(name, sql, parameterList).ExecuteScalar();
+
+        public static object ExecuteScalar(
+            IConnectionManager connectionManager,
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList
+        ) =>
+            new SqlTask(name, sql, parameterList)
+            {
+                ConnectionManager = connectionManager
+            }.ExecuteScalar();
+
+        public static T? ExecuteScalar<T>(
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList
+        )
+            where T : struct => new SqlTask(name, sql, parameterList).ExecuteScalar<T>();
+
         public static bool ExecuteScalarAsBool(string name, string sql) =>
             new SqlTask(name, sql).ExecuteScalarAsBool();
 
@@ -112,23 +170,11 @@ namespace ALE.ETLBox.ControlFlow
             string sql
         ) => new SqlTask(name, sql) { ConnectionManager = connectionManager }.ExecuteScalarAsBool();
 
-        public static void ExecuteReaderSingleLine(
+        public static bool ExecuteScalarAsBool(
             string name,
             string sql,
-            params Action<object>[] actions
-        ) => new SqlTask(name, sql, actions) { Limit = 1 }.ExecuteReader();
-
-        public static void ExecuteReaderSingleLine(
-            IConnectionManager connectionManager,
-            string name,
-            string sql,
-            params Action<object>[] actions
-        ) =>
-            new SqlTask(name, sql, actions)
-            {
-                ConnectionManager = connectionManager,
-                Limit = 1
-            }.ExecuteReader();
+            IEnumerable<QueryParameter> parameterList
+        ) => new SqlTask(name, sql, parameterList).ExecuteScalarAsBool();
 
         public static void ExecuteReader(
             string name,
@@ -175,73 +221,6 @@ namespace ALE.ETLBox.ControlFlow
                 ConnectionManager = connectionManager
             }.ExecuteReader();
 
-        public static int ExecuteNonQuery(
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList
-        ) => new SqlTask(name, sql, parameterList).ExecuteNonQuery();
-
-        public static int ExecuteNonQuery(
-            IConnectionManager connectionManager,
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList
-        ) =>
-            new SqlTask(name, sql, parameterList)
-            {
-                ConnectionManager = connectionManager
-            }.ExecuteNonQuery();
-
-        public static object ExecuteScalar(
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList
-        ) => new SqlTask(name, sql, parameterList).ExecuteScalar();
-
-        public static object ExecuteScalar(
-            IConnectionManager connectionManager,
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList
-        ) =>
-            new SqlTask(name, sql, parameterList)
-            {
-                ConnectionManager = connectionManager
-            }.ExecuteScalar();
-
-        public static T? ExecuteScalar<T>(
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList
-        )
-            where T : struct => new SqlTask(name, sql, parameterList).ExecuteScalar<T>();
-
-        public static bool ExecuteScalarAsBool(
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList
-        ) => new SqlTask(name, sql, parameterList).ExecuteScalarAsBool();
-
-        public static void ExecuteReaderSingleLine(
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList,
-            params Action<object>[] actions
-        ) => new SqlTask(name, sql, parameterList, actions) { Limit = 1 }.ExecuteReader();
-
-        public static void ExecuteReaderSingleLine(
-            IConnectionManager connectionManager,
-            string name,
-            string sql,
-            IEnumerable<QueryParameter> parameterList,
-            params Action<object>[] actions
-        ) =>
-            new SqlTask(name, sql, parameterList, actions)
-            {
-                ConnectionManager = connectionManager,
-                Limit = 1
-            }.ExecuteReader();
-
         public static void ExecuteReader(
             string name,
             string sql,
@@ -277,6 +256,44 @@ namespace ALE.ETLBox.ControlFlow
                 afterRowReadAction,
                 actions
             ).ExecuteReader();
+
+        public static void ExecuteReaderSingleLine(
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList,
+            params Action<object>[] actions
+        ) => new SqlTask(name, sql, parameterList, actions) { Limit = 1 }.ExecuteReader();
+
+        public static void ExecuteReaderSingleLine(
+            IConnectionManager connectionManager,
+            string name,
+            string sql,
+            IEnumerable<QueryParameter> parameterList,
+            params Action<object>[] actions
+        ) =>
+            new SqlTask(name, sql, parameterList, actions)
+            {
+                ConnectionManager = connectionManager,
+                Limit = 1
+            }.ExecuteReader();
+
+        public static void ExecuteReaderSingleLine(
+            string name,
+            string sql,
+            params Action<object>[] actions
+        ) => new SqlTask(name, sql, actions) { Limit = 1 }.ExecuteReader();
+
+        public static void ExecuteReaderSingleLine(
+            IConnectionManager connectionManager,
+            string name,
+            string sql,
+            params Action<object>[] actions
+        ) =>
+            new SqlTask(name, sql, actions)
+            {
+                ConnectionManager = connectionManager,
+                Limit = 1
+            }.ExecuteReader();
 
         public static void BulkInsert(string name, ITableData data, string tableName) =>
             new SqlTask(name).BulkInsert(data, tableName);

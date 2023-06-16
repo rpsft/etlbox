@@ -1,22 +1,12 @@
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
-using Newtonsoft.Json;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonSource
 {
-    [Collection("DataFlow")]
-    public class JsonSourceConverterTests
+    public class JsonSourceConverterTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonSourceConverterTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void JsonPathInJsonPropertyAttribute()
@@ -39,7 +29,7 @@ namespace TestFlatFileConnectors.JsonSource
         }
 
         [Fact]
-        public void JsonPathInEpandoObject()
+        public void JsonPathInExpandoObject()
         {
             //Arrange
             var dest2Columns = new TwoColumnsTableFixture("JsonSourceNestedDynamic");

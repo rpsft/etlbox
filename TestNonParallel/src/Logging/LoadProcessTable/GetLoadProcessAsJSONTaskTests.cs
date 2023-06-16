@@ -1,18 +1,14 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 using Newtonsoft.Json.Linq;
-using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 {
-    [Collection("Logging")]
-    public class GetLoadProcessAsJSONTaskTests : IDisposable
+    public sealed class GetLoadProcessAsJSONTaskTests : NonParallelTestBase, IDisposable
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
-
-        public GetLoadProcessAsJSONTaskTests()
+        public GetLoadProcessAsJSONTaskTests(LoggingDatabaseFixture fixture)
+            : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
             CreateLoadProcessTableTask.Create(SqlConnection);

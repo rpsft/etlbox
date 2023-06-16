@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
-    [Collection("DataFlow")]
-    public class RowMultiplicationStringArrayTests
+    public class RowMultiplicationStringArrayTests : TransformationsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowMultiplicationStringArrayTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void RandomDoubling()

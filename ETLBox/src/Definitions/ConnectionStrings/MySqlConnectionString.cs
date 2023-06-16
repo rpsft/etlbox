@@ -1,9 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 
 namespace ALE.ETLBox
 {
     /// <summary>
-    /// A helper class for encapsulating a conection string to a MySql server in an object.
+    /// A helper class for encapsulating a connection string to a MySql server in an object.
     /// Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
     public class MySqlConnectionString

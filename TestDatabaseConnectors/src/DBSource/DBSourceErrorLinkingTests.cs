@@ -1,18 +1,17 @@
-using System;
 using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceErrorLinkingTests
+    public class DbSourceErrorLinkingTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbSourceErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MySimpleRow
         {
@@ -102,7 +101,7 @@ namespace TestDatabaseConnectors.DBSource
         {
             DropTableTask.DropIfExists(connection, tableName);
 
-            var TableDefinition = new TableDefinition(
+            var tableDefinition = new TableDefinition(
                 tableName,
                 new List<TableColumn>
                 {
@@ -111,8 +110,8 @@ namespace TestDatabaseConnectors.DBSource
                     new("Col3", "VARCHAR(100)", allowNulls: true)
                 }
             );
-            TableDefinition.CreateTable(connection);
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+            tableDefinition.CreateTable(connection);
+            ObjectNameDescriptor tn = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE
@@ -120,32 +119,32 @@ namespace TestDatabaseConnectors.DBSource
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('1','Test1','1')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES('1','Test1','1')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('1.35','TestX','X')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES('1.35','TestX','X')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('2','Test2', NULL)"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES('2','Test2', NULL)"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('X',NULL, NULL)"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES('X',NULL, NULL)"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('3','Test3', '3')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES('3','Test3', '3')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES('4','Test4', 'X')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES('4','Test4', 'X')"
             );
         }
     }

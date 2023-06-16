@@ -3,7 +3,6 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.UseCases
 {
-    [Collection("DataFlow")]
     public class ReuseDataFlowAsyncTests
     {
         [Fact]
@@ -29,22 +28,22 @@ namespace TestTransformations.UseCases
 
         public class ReferenceDataFlow
         {
-            private MemorySource<MyData> _source { get; set; }
-            private CustomDestination<MyData> _destination { get; set; }
+            private MemorySource<MyData> Source { get; set; }
+            private CustomDestination<MyData> Destination { get; set; }
 
             public ReferenceDataFlow(int key, string value)
             {
                 var x = new MyData { Key = key, Value = value };
-                _source = new MemorySource<MyData>();
-                _source.DataAsList.Add(x);
-                _destination = new CustomDestination<MyData>(data => Data.Add(data.Key, data));
-                _source.LinkTo(_destination);
-                _source.ExecuteAsync();
+                Source = new MemorySource<MyData>();
+                Source.DataAsList.Add(x);
+                Destination = new CustomDestination<MyData>(data => Data.Add(data.Key, data));
+                Source.LinkTo(Destination);
+                Source.ExecuteAsync();
             }
 
             public IDictionary<long, MyData> Data { get; } = new Dictionary<long, MyData>();
 
-            public Task Initialized => _destination.Completion;
+            public Task Initialized => Destination.Completion;
         }
     }
 }

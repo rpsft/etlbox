@@ -1,10 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.AggregationTests
 {
-    [Collection("DataFlow")]
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public class AggregationTests
     {
+        [Serializable]
         public class MyRow
         {
             public int Id { get; set; }
@@ -26,7 +28,7 @@ namespace TestTransformations.AggregationTests
                 {
                     new() { Id = 1, DetailValue = 3.5 },
                     new() { Id = 2, DetailValue = 4.5 },
-                    new() { Id = 3, DetailValue = 2.0 },
+                    new() { Id = 3, DetailValue = 2.0 }
                 }
             };
 
@@ -46,13 +48,15 @@ namespace TestTransformations.AggregationTests
             Assert.Collection(dest.Data, ar => Assert.True(ar.AggValue == 10));
         }
 
-        public class MyRowNullable
+        [Serializable]
+        private class MyRowNullable
         {
             public int Id { get; set; }
             public double? DetailValue { get; set; }
         }
 
-        public class MyAggRowNullable
+        [Serializable]
+        private class MyAggRowNullable
         {
             public double? AggValue { get; set; } = 0;
         }
@@ -69,7 +73,7 @@ namespace TestTransformations.AggregationTests
                     new() { Id = 0, DetailValue = null },
                     new() { Id = 2, DetailValue = 4.5 },
                     new() { Id = 3, DetailValue = 2.0 },
-                    new() { Id = 4, DetailValue = null },
+                    new() { Id = 4, DetailValue = null }
                 }
             };
 

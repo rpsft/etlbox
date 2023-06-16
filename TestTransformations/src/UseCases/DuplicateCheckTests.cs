@@ -1,18 +1,16 @@
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
-using TestShared.Helper;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.UseCases
 {
-    [Collection("DataFlow")]
-    public class DuplicateCheckTests
+    public class DuplicateCheckTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DuplicateCheckTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class Poco
         {
@@ -24,7 +22,7 @@ namespace TestTransformations.UseCases
             public bool IsDuplicate { get; set; }
         }
 
-        private CsvSource<Poco> CreateDuplicateCsvSource(string fileName)
+        private static CsvSource<Poco> CreateDuplicateCsvSource(string fileName)
         {
             CsvSource<Poco> source = new CsvSource<Poco>(fileName)
             {
@@ -40,8 +38,8 @@ namespace TestTransformations.UseCases
 
         private DbDestination<Poco> CreateDestinationTable(string tableName)
         {
-            DropTableTask.DropIfExists(Connection, tableName);
-            var dest = new DbDestination<Poco>(Connection, tableName);
+            DropTableTask.DropIfExists(SqlConnection, tableName);
+            var dest = new DbDestination<Poco>(SqlConnection, tableName);
             TableDefinition stagingTable = new TableDefinition(
                 tableName,
                 new List<TableColumn>
@@ -52,17 +50,17 @@ namespace TestTransformations.UseCases
                     new("Name", "NVARCHAR(100)", allowNulls: false)
                 }
             );
-            stagingTable.CreateTable(Connection);
+            stagingTable.CreateTable(SqlConnection);
             return dest;
         }
 
         private void AssertDataWithoutDuplicates()
         {
-            Assert.Equal(3, RowCountTask.Count(Connection, "dbo.DuplicateCheck"));
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, "dbo.DuplicateCheck"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "dbo.DuplicateCheck",
                     "ID = 1 AND Name='ROOT' AND Value = 'Lorem ipsum'"
                 )
@@ -70,7 +68,7 @@ namespace TestTransformations.UseCases
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "dbo.DuplicateCheck",
                     "ID = 2 AND Name='TEST 2' AND Value = 'Lalandia'"
                 )
@@ -78,7 +76,7 @@ namespace TestTransformations.UseCases
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "dbo.DuplicateCheck",
                     "ID = 3 AND Name='TEST 3' AND Value = 'XX'"
                 )
@@ -108,7 +106,7 @@ namespace TestTransformations.UseCases
 
             source.LinkTo(rowTrans);
             rowTrans.LinkTo(multicast);
-            multicast.LinkTo(dest, input => input.IsDuplicate == false);
+            multicast.LinkTo(dest, input => !input.IsDuplicate);
             multicast.LinkTo(trash, input => input.IsDuplicate);
 
             source.Execute();

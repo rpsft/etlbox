@@ -1,9 +1,12 @@
-﻿namespace ALE.ETLBox
+﻿using System.Runtime.Serialization;
+
+namespace ALE.ETLBox
 {
     /// <summary>
     /// The generic ETLBox Exception. See inner exception for more details.
     /// </summary>
-    public class ETLBoxNotSupportedException : Exception
+    [Serializable]
+    public sealed class ETLBoxNotSupportedException : Exception
     {
         public ETLBoxNotSupportedException() { }
 
@@ -12,5 +15,8 @@
 
         public ETLBoxNotSupportedException(string message, Exception innerException)
             : base(message, innerException) { }
+
+        private ETLBoxNotSupportedException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

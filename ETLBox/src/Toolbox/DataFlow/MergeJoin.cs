@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.

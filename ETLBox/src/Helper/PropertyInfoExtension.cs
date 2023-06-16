@@ -19,16 +19,18 @@
             Type enumType = null
         )
         {
-            if (pi.CanWrite)
+            if (!pi.CanWrite)
             {
-                if (enumType != null && value != null && enumType.IsEnum)
-                {
-                    pi.SetValue(obj, Enum.Parse(enumType, value.ToString()));
-                }
-                else
-                {
-                    pi.SetValue(obj, value);
-                }
+                return;
+            }
+
+            if (enumType != null && value != null && enumType.IsEnum)
+            {
+                pi.SetValue(obj, Enum.Parse(enumType, value.ToString()));
+            }
+            else
+            {
+                pi.SetValue(obj, value);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 
 namespace ALE.ETLBox
 {
@@ -11,7 +11,7 @@ namespace ALE.ETLBox
         where T : DbConnectionString<T, TBuilder>, new()
         where TBuilder : DbConnectionStringBuilder, new()
     {
-        public DbConnectionString() { }
+        protected DbConnectionString() { }
 
         protected DbConnectionString(string value)
         {
@@ -20,13 +20,15 @@ namespace ALE.ETLBox
 
         public TBuilder Builder { get; private set; } = new();
 
-        public virtual string Value
+        public string Value
         {
-            get => Builder.ConnectionString;
+            get => GetConnectionString();
             set => Builder.ConnectionString = value;
         }
 
-        public virtual T Clone()
+        protected virtual string GetConnectionString() => Builder.ConnectionString;
+
+        protected virtual T Clone()
         {
             var clone = (T)MemberwiseClone();
             clone.Builder = new TBuilder();

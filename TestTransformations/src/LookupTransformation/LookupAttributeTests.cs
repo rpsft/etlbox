@@ -3,9 +3,9 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.LookupTransformation
 {
-    [Collection("DataFlow")]
     public class LookupAttributeTests
     {
+        [Serializable]
         public class LookupData
         {
             [MatchColumn("LookupId")]
@@ -15,6 +15,7 @@ namespace TestTransformations.LookupTransformation
             public string Value { get; set; }
         }
 
+        [Serializable]
         public class InputDataRow
         {
             public int LookupId { get; set; }
@@ -55,6 +56,7 @@ namespace TestTransformations.LookupTransformation
             );
         }
 
+        [Serializable]
         public class LookupDataMultiple
         {
             [MatchColumn("LookupId1")]
@@ -70,6 +72,7 @@ namespace TestTransformations.LookupTransformation
             public int Value2 { get; set; }
         }
 
+        [Serializable]
         public class InputDataMultiple
         {
             public int LookupId1 { get; set; }
@@ -192,7 +195,7 @@ namespace TestTransformations.LookupTransformation
                 }
                 catch (AggregateException e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
         }

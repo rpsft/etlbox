@@ -9,14 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
-    <PackageReference Include="JunitXml.TestLogger" Version="3.0.124" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -28,25 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="db\AccessDataFlow.accdb">
+    <None Update="db\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="db\SQLiteDataFlow.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="db\SQLiteDataFlowDestination.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="db\SQLiteDataFlowSource.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="default.config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="res\Access\AccessData.csv">
+    <None Update="res\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="res\BatchChanges\TwoColumns.csv">
+    <None Update="default.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="xunit.runner.json">

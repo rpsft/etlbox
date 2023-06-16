@@ -13,12 +13,12 @@ namespace ALE.ETLBox.ControlFlow
 
         internal override string GetSql()
         {
-            string sql = $@"DROP INDEX {ON.QuotatedFullName}";
+            string sql = $@"DROP INDEX {ON.QuotedFullName}";
             if (
                 ConnectionType != ConnectionManagerType.SQLite
                 && ConnectionType != ConnectionManagerType.Postgres
             )
-                sql += $@" ON {TN.QuotatedFullName}";
+                sql += $@" ON {TN.QuotedFullName}";
             return sql;
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using Npgsql;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -13,6 +11,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;"));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class PostgresConnectionManager : DbConnectionManager<NpgsqlConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =
@@ -34,50 +33,46 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            var TN = new ObjectNameDescriptor(tableName, QB, QE);
-            var destColumnNames = data.ColumnMapping
+            var tn = new ObjectNameDescriptor(tableName, QB, QE);
+            var destColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
                 .Select(cm => cm.DataSetColumn)
                 .ToList();
-            var quotedDestColumns = destColumnNames.Select(col => TN.QB + col + TN.QE);
+            var quotedDestColumns = destColumnNames.Select(col => tn.QB + col + tn.QE);
 
-            using (
-                var writer = DbConnection.BeginBinaryImport(
-                    $@"
-COPY {TN.QuotatedFullName} ({string.Join(", ", quotedDestColumns)})
+            using var writer = DbConnection.BeginBinaryImport(
+                $@"
+COPY {tn.QuotedFullName} ({string.Join(", ", quotedDestColumns)})
 FROM STDIN (FORMAT BINARY)"
-                )
-            )
+            );
+            while (data.Read())
             {
-                while (data.Read())
+                writer.StartRow();
+                foreach (var destCol in destColumnNames)
                 {
-                    writer.StartRow();
-                    foreach (var destCol in destColumnNames)
+                    TableColumn colDef = DestinationColumns[destCol];
+                    int ordinal = data.GetOrdinal(destCol);
+                    object val = data.GetValue(ordinal);
+                    if (val != null)
                     {
-                        TableColumn colDef = DestinationColumns[destCol];
-                        int ordinal = data.GetOrdinal(destCol);
-                        object val = data.GetValue(ordinal);
-                        if (val != null)
-                        {
-                            object convertedVal = Convert.ChangeType(
-                                data.GetValue(ordinal),
-                                colDef.NETDataType
-                            );
-                            writer.Write(convertedVal, colDef.InternalDataType.ToLower());
-                        }
-                        else
-                        {
-                            writer.WriteNull();
-                        }
+                        object convertedVal = Convert.ChangeType(
+                            data.GetValue(ordinal),
+                            colDef.NETDataType
+                        );
+                        writer.Write(convertedVal, colDef.InternalDataType.ToLower());
+                    }
+                    else
+                    {
+                        writer.WriteNull();
                     }
                 }
-                writer.Complete();
             }
+            writer.Complete();
         }
 
-        public override void PrepareBulkInsert(string tablename)
+        public override void PrepareBulkInsert(string tableName)
         {
-            ReadTableDefinition(tablename);
+            ReadTableDefinition(tableName);
         }
 
         private void ReadTableDefinition(string tablename)
@@ -90,7 +85,7 @@ FROM STDIN (FORMAT BINARY)"
             }
         }
 
-        public override void CleanUpBulkInsert(string tablename) { }
+        public override void CleanUpBulkInsert(string tableName) { }
 
         public override void BeforeBulkInsert(string tableName)
         {
@@ -109,6 +104,18 @@ FROM STDIN (FORMAT BINARY)"
                 MaxLoginAttempts = MaxLoginAttempts
             };
             return clone;
+        }
+
+        protected override void MapQueryParameterToCommandParameter(
+            QueryParameter source,
+            IDbDataParameter destination
+        )
+        {
+            destination.ParameterName = source.Name;
+            // (fix for https://www.npgsql.org/doc/release-notes/6.0.html#major-changes-to-timestamp-mapping in NpgSql 6.0+)
+            destination.DbType =
+                source.DBType == DbType.DateTime ? DbType.DateTime2 : source.DBType;
+            destination.Value = source.Value;
         }
     }
 }

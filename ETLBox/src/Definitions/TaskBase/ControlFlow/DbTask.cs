@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.Odbc;
+﻿using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ALE.ETLBox.ConnectionManager;
@@ -12,8 +11,23 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* Public Properties */
         public string Sql { get; set; }
+
+        /// <summary>
+        /// Optional action hooks to be performed on each column of returned dataset (precisely one action per column)
+        /// </summary>
+        [CanBeNull]
         public List<Action<object>> Actions { get; set; }
+
+        /// <summary>
+        /// Optional action hooks to be performed on each row before <see cref="Actions"/>
+        /// </summary>
+        [CanBeNull]
         public Action BeforeRowReadAction { get; set; }
+
+        /// <summary>
+        /// Optional action hooks to be performed on each row after <see cref="Actions"/>
+        /// </summary>
+        [CanBeNull]
         public Action AfterRowReadAction { get; set; }
         public long Limit { get; set; } = long.MaxValue;
         public int? RowsAffected { get; private set; }
@@ -31,7 +45,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 if (HasSql)
                     return HasName && !IsOdbcConnection ? NameAsComment + Sql : Sql;
-                throw new Exception("Empty command");
+                throw new InvalidOperationException("Empty command");
             }
         }
         public IEnumerable<QueryParameter> Parameter { get; set; }
@@ -103,7 +117,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public object ExecuteScalar()
         {
-            object result = null;
+            object result;
             var conn = DbConnectionManager.CloneIfAllowed();
             try
             {
@@ -140,8 +154,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             if (result == null)
                 return false;
-            int.TryParse(result.ToString(), out var number);
-            if (number > 0)
+            if (int.TryParse(result.ToString(), out var number) && number > 0)
                 return true;
             if (result.ToString().Trim().ToLower() == "true")
                 return true;
@@ -222,7 +235,7 @@ namespace ALE.ETLBox.ControlFlow
                 TaskType,
                 "START",
                 TaskHash,
-                ControlFlow.STAGE,
+                ControlFlow.Stage,
                 ControlFlow.CurrentLoadProcess?.Id
             );
             NLogger.Debug(
@@ -230,7 +243,7 @@ namespace ALE.ETLBox.ControlFlow
                 TaskType,
                 "RUN",
                 TaskHash,
-                ControlFlow.STAGE,
+                ControlFlow.Stage,
                 ControlFlow.CurrentLoadProcess?.Id
             );
         }
@@ -242,7 +255,7 @@ namespace ALE.ETLBox.ControlFlow
                 TaskType,
                 "END",
                 TaskHash,
-                ControlFlow.STAGE,
+                ControlFlow.Stage,
                 ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
@@ -251,7 +264,7 @@ namespace ALE.ETLBox.ControlFlow
                     TaskType,
                     "RUN",
                     TaskHash,
-                    ControlFlow.STAGE,
+                    ControlFlow.Stage,
                     ControlFlow.CurrentLoadProcess?.Id
                 );
         }

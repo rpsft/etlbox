@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
-    [Collection("DataFlow")]
-    public class MulticastTests
+    public class MulticastTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MulticastTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -28,17 +26,17 @@ namespace TestTransformations.Multicast
             TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
             TwoColumnsTableFixture dest3Table = new TwoColumnsTableFixture("Destination3");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "Source");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
             DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "Destination1"
             );
             DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "Destination2"
             );
             DbDestination<MySimpleRow> dest3 = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "Destination3"
             );
 

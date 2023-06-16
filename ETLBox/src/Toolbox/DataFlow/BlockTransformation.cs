@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation

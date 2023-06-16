@@ -1,19 +1,12 @@
-using System.IO;
-using System.Xml.Serialization;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.XmlDestination
 {
-    [Collection("DataFlow")]
-    public class XmlDestinationTests
+    public class XmlDestinationTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public XmlDestinationTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {

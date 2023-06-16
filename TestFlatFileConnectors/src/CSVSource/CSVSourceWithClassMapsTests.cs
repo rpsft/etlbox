@@ -1,19 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using CsvHelper;
-using CsvHelper.Configuration;
-using JetBrains.Annotations;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVSource
 {
-    [Collection("DataFlow")]
-    public class CsvSourceWithClassMapsTests
+    public class CsvSourceWithClassMapsTests : FlatFileConnectorsTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvSourceWithClassMapsTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySimpleRow
@@ -40,7 +32,7 @@ namespace TestFlatFileConnectors.CSVSource
                 "CsvDestination2ColumnsClassMap"
             );
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "CsvDestination2ColumnsClassMap"
             );
 
@@ -57,7 +49,7 @@ namespace TestFlatFileConnectors.CSVSource
             dest2Columns.AssertTestData();
         }
 
-        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+        [Serializable]
         private class MyExtendedRow
         {
             public string Col2 { get; set; }
@@ -83,7 +75,7 @@ namespace TestFlatFileConnectors.CSVSource
                 "CsvDestination4ColumnsClassMap"
             );
             DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(
-                Connection,
+                SqlConnection,
                 "CsvDestination4ColumnsClassMap"
             );
 

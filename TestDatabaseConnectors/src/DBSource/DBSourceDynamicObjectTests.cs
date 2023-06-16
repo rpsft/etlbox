@@ -1,17 +1,15 @@
 using System.Dynamic;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceDynamicObjectTests
+    public class DbSourceDynamicObjectTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public static IEnumerable<object[]> ConnectionsNoSQLite =>
-            Config.AllConnectionsWithoutSQLite("DataFlow");
+        public DbSourceDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [Theory, MemberData(nameof(Connections))]
         public void SourceAndDestinationSameColumns(IConnectionManager connection)

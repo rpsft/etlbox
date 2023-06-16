@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Sort
 {
-    [Collection("DataFlow")]
-    public class SortStringArrayTests
+    public class SortStringArrayTests : TransformationsTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public SortStringArrayTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SortSimpleDataDescending()
@@ -19,7 +17,10 @@ namespace TestTransformations.Sort
                 "SortSourceNonGeneric"
             );
             source2Columns.InsertTestData();
-            DbSource<string[]> source = new DbSource<string[]>(Connection, "SortSourceNonGeneric");
+            DbSource<string[]> source = new DbSource<string[]>(
+                SqlConnection,
+                "SortSourceNonGeneric"
+            );
 
             //Act
             List<string[]> actual = new List<string[]>();

@@ -1,16 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
-    [Collection("DataFlow")]
-    public class ExcelSourceDynamicObjectTests
+    public class ExcelSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public ExcelSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleDataNoHeader()
@@ -35,7 +30,7 @@ namespace TestFlatFileConnectors.ExcelSource
                 r.Col2 = r.Column2;
                 return r;
             });
-            DbDestination dest = new DbDestination(Connection, "ExcelDestinationDynamic");
+            DbDestination dest = new DbDestination(SqlConnection, "ExcelDestinationDynamic");
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
@@ -56,7 +51,10 @@ namespace TestFlatFileConnectors.ExcelSource
             ALE.ETLBox.DataFlow.ExcelSource source = new ALE.ETLBox.DataFlow.ExcelSource(
                 "res/Excel/TwoColumnWithHeader.xlsx"
             );
-            DbDestination dest = new DbDestination(Connection, "ExcelDestinationDynamicWithHeader");
+            DbDestination dest = new DbDestination(
+                SqlConnection,
+                "ExcelDestinationDynamicWithHeader"
+            );
 
             //Act
             source.LinkTo(dest);
@@ -80,7 +78,10 @@ namespace TestFlatFileConnectors.ExcelSource
             {
                 Range = new ExcelRange(3, 3)
             };
-            DbDestination dest = new DbDestination(Connection, "ExcelDestinationDynamicWithHeader");
+            DbDestination dest = new DbDestination(
+                SqlConnection,
+                "ExcelDestinationDynamicWithHeader"
+            );
 
             //Act
             source.LinkTo(dest);

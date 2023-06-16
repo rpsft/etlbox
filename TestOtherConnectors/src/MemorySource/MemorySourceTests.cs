@@ -1,18 +1,11 @@
-using System.Collections.Generic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using JetBrains.Annotations;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.MemorySource
 {
-    [Collection("DataFlow")]
-    public class MemorySourceTests
+    public class MemorySourceTests : OtherConnectorsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MemorySourceTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySimpleRow

@@ -1,16 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.MemoryDestination
 {
-    [Collection("DataFlow")]
-    public class MemoryDestinationStringArrayTests
+    public class MemoryDestinationStringArrayTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MemoryDestinationStringArrayTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void DataIsInList()

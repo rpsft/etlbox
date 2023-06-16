@@ -15,15 +15,11 @@ namespace ALE.ETLBox
         public SqlConnectionString(string value)
             : base(value) { }
 
-        public override string Value
-        {
-            get =>
-                base.Value.ReplaceIgnoreCase(
-                    "Integrated Security=true",
-                    "Integrated Security=SSPI"
-                );
-            set => base.Value = value;
-        }
+        protected sealed override string GetConnectionString() =>
+            Builder.ConnectionString.ReplaceIgnoreCase(
+                "Integrated Security=true",
+                "Integrated Security=SSPI"
+            );
 
         public override string DbName
         {

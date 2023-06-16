@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.

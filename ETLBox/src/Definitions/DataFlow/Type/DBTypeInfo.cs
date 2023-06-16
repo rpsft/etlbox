@@ -1,15 +1,13 @@
-﻿using System.Linq;
-
 namespace ALE.ETLBox.DataFlow
 {
     internal class DBTypeInfo : TypeInfo
     {
-        internal List<string> PropertyNames { get; set; } = new();
-        internal Dictionary<string, string> ColumnMap2Property { get; set; } = new();
-        internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; set; } = new();
+        internal List<string> PropertyNames { get; } = new();
+        internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; } = new();
+        private Dictionary<string, string> ColumnMap2Property { get; } = new();
 
-        internal DBTypeInfo(Type typ)
-            : base(typ)
+        internal DBTypeInfo(Type type)
+            : base(type)
         {
             GatherTypeInfo();
         }
@@ -21,10 +19,9 @@ namespace ALE.ETLBox.DataFlow
             AddUnderlyingType(propInfo);
         }
 
-        private void AddColumnMappingAttribute(PropertyInfo propInfo)
+        private void AddColumnMappingAttribute(MemberInfo propInfo)
         {
-            var attr = propInfo.GetCustomAttribute(typeof(ColumnMap)) as ColumnMap;
-            if (attr != null)
+            if (propInfo.GetCustomAttribute(typeof(ColumnMapAttribute)) is ColumnMapAttribute attr)
                 ColumnMap2Property.Add(attr.ColumnName, propInfo.Name);
         }
 
@@ -36,26 +33,21 @@ namespace ALE.ETLBox.DataFlow
 
         internal bool HasPropertyOrColumnMapping(string name)
         {
-            if (ColumnMap2Property.ContainsKey(name))
-                return true;
-            return PropertyNames.Any(propName => propName == name);
+            return ColumnMap2Property.ContainsKey(name) || PropertyNames.Contains(name);
         }
 
         internal PropertyInfo GetInfoByPropertyNameOrColumnMapping(string propNameOrColMapName)
         {
-            PropertyInfo result = null;
-            if (ColumnMap2Property.ContainsKey(propNameOrColMapName))
-                result = Properties[PropertyIndex[ColumnMap2Property[propNameOrColMapName]]];
-            else
-                result = Properties[PropertyIndex[propNameOrColMapName]];
-            return result;
+            return ColumnMap2Property.TryGetValue(propNameOrColMapName, out var value)
+                ? Properties[PropertyIndex[value]]
+                : Properties[PropertyIndex[propNameOrColMapName]];
         }
 
         internal int GetIndexByPropertyNameOrColumnMapping(string propNameOrColMapName)
         {
-            if (ColumnMap2Property.ContainsKey(propNameOrColMapName))
-                return PropertyIndex[ColumnMap2Property[propNameOrColMapName]];
-            return PropertyIndex[propNameOrColMapName];
+            return ColumnMap2Property.TryGetValue(propNameOrColMapName, out var value)
+                ? PropertyIndex[value]
+                : PropertyIndex[propNameOrColMapName];
         }
     }
 }

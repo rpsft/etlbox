@@ -6,13 +6,22 @@ namespace TestControlFlowTasks.Fixtures
     public class ControlFlowCollectionClass : ICollectionFixture<ControlFlowDatabaseFixture> { }
 
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    public class ControlFlowDatabaseFixture
+    public sealed class ControlFlowDatabaseFixture : IDisposable
     {
+        public const string ConfigSection = "ControlFlow";
+
         public ControlFlowDatabaseFixture()
         {
-            DatabaseHelper.RecreateSqlDatabase("ControlFlow");
-            DatabaseHelper.RecreateMySqlDatabase("ControlFlow");
-            DatabaseHelper.RecreatePostgresDatabase("ControlFlow");
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, ConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.MySqlConnection, ConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, ConfigSection);
+        }
+
+        public void Dispose()
+        {
+            DatabaseHelper.DropDatabase(Config.SqlConnection, ConfigSection);
+            DatabaseHelper.DropDatabase(Config.MySqlConnection, ConfigSection);
+            DatabaseHelper.DropDatabase(Config.PostgresConnection, ConfigSection);
         }
     }
 }

@@ -1,20 +1,14 @@
-﻿using System.Collections.Generic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 
 namespace ALE.ETLBoxTests.NonParallel.ControlFlow
 {
-    [Collection("Logging")]
-    public class DefaultDbConnectionTests : IDisposable
+    public sealed class DefaultDbConnectionTests : NonParallelTestBase, IDisposable
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
-
-        public DefaultDbConnectionTests()
+        public DefaultDbConnectionTests(LoggingDatabaseFixture fixture)
+            : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
             ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
@@ -32,10 +26,7 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
         {
             //Arrange
             //Act
-            CreateTableTask.Create(
-                "TestTable",
-                new List<TableColumn> { new TableColumn("value", "INT") }
-            );
+            CreateTableTask.Create("TestTable", new List<TableColumn> { new("value", "INT") });
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting("TestTable"));
         }
@@ -61,7 +52,7 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
             //Arrange
             CreateTableTask.Create(
                 "TestSourceTable",
-                new List<TableColumn> { new TableColumn("Col1", "VARCHAR(100)") }
+                new List<TableColumn> { new("Col1", "VARCHAR(100)") }
             );
             SqlTask.ExecuteNonQuery(
                 "Insert test data",
@@ -69,7 +60,7 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
             );
             CreateTableTask.Create(
                 "TestDestinationTable",
-                new List<TableColumn> { new TableColumn("Col1", "VARCHAR(100)") }
+                new List<TableColumn> { new("Col1", "VARCHAR(100)") }
             );
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("TestSourceTable");
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(

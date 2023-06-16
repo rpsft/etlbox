@@ -11,46 +11,37 @@ namespace ALE.ETLBox.ControlFlow
         /* ITask Interface */
         internal override string GetSql()
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
+            return ConnectionType switch
             {
-                return $@"
-SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotatedObjectName}' AND type='index';
-";
-            }
-
-            if (ConnectionType == ConnectionManagerType.SqlServer)
-            {
-                return $@"
-IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ON.UnquotatedObjectName}' AND object_id = OBJECT_ID('{OON.QuotatedFullName}'))
+                ConnectionManagerType.SQLite
+                    => $@"
+SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotedObjectName}' AND type='index';
+",
+                ConnectionManagerType.SqlServer
+                    => $@"
+IF EXISTS (SELECT *  FROM sys.indexes  WHERE name='{ON.UnquotedObjectName}' AND object_id = OBJECT_ID('{OON.QuotedFullName}'))
     SELECT 1
-";
-            }
-
-            if (ConnectionType == ConnectionManagerType.MySql)
-            {
-                return $@"
+",
+                ConnectionManagerType.MySql
+                    => $@"
 SELECT 1
 FROM information_schema.statistics 
 WHERE table_schema = DATABASE()
-  AND ( table_name = '{OON.UnquotatedFullName}' 
-  OR CONCAT(table_name,'.',table_catalog) = '{OON.UnquotatedFullName}')
-  AND index_name = '{ON.UnquotatedObjectName}'
+  AND ( table_name = '{OON.UnquotedFullName}' 
+  OR CONCAT(table_name,'.',table_catalog) = '{OON.UnquotedFullName}')
+  AND index_name = '{ON.UnquotedObjectName}'
 GROUP BY index_name
-";
-            }
-
-            if (ConnectionType == ConnectionManagerType.Postgres)
-            {
-                return $@"
+",
+                ConnectionManagerType.Postgres
+                    => $@"
 SELECT     1
 FROM       pg_indexes
-WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotatedFullName}'
-            OR tablename = '{OON.UnquotatedFullName}' )
-            AND indexname = '{ON.UnquotatedObjectName}'
-";
-            }
-
-            return string.Empty;
+WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotedFullName}'
+            OR tablename = '{OON.UnquotedFullName}' )
+            AND indexname = '{ON.UnquotedObjectName}'
+",
+                _ => string.Empty
+            };
         }
 
         /* Some constructors */

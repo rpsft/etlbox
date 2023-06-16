@@ -3,7 +3,6 @@ using ALE.ETLBox.ControlFlow;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
     public class NoConnectionManagerTests
     {
         [Fact]

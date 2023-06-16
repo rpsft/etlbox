@@ -1,12 +1,12 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     internal class ExcelTypeInfo : TypeInfo
     {
         internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; } = new();
         internal Dictionary<string, int> ExcelColumnName2PropertyIndex { get; set; } = new();
 
-        internal ExcelTypeInfo(Type typ)
-            : base(typ)
+        internal ExcelTypeInfo(Type type)
+            : base(type)
         {
             GatherTypeInfo();
         }
@@ -18,8 +18,10 @@
 
         private void AddExcelColumnAttribute(PropertyInfo propInfo, int curIndex)
         {
-            var attr = propInfo.GetCustomAttribute(typeof(ExcelColumn)) as ExcelColumn;
-            if (attr != null)
+            if (
+                propInfo.GetCustomAttribute(typeof(ExcelColumnAttribute))
+                is ExcelColumnAttribute attr
+            )
             {
                 if (attr.Index != null)
                     ExcelIndex2PropertyIndex.Add(attr.Index ?? 0, curIndex);
@@ -30,12 +32,12 @@
                 ExcelColumnName2PropertyIndex.Add(propInfo.Name, curIndex);
         }
 
-        internal object CastPropertyValue(PropertyInfo property, string value)
+        internal static object CastPropertyValue(PropertyInfo property, string value)
         {
             if (property == null || string.IsNullOrEmpty(value))
                 return null;
             if (property.PropertyType == typeof(bool))
-                return value == "1" || value == "true" || value == "on" || value == "checked";
+                return value is "1" or "true" or "on" or "checked";
             Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
             return Convert.ChangeType(value, t);
         }

@@ -66,12 +66,12 @@ namespace ALE.ETLBox.Logging
         }
 
         public static void Create(
-            string loadProcessTableName = ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME
+            string loadProcessTableName = ControlFlow.ControlFlow.DefaultLoadProcessTableName
         ) => new CreateLoadProcessTableTask(loadProcessTableName).Execute();
 
         public static void Create(
             IConnectionManager connectionManager,
-            string loadProcessTableName = ControlFlow.ControlFlow.DEFAULTLOADPROCESSTABLENAME
+            string loadProcessTableName = ControlFlow.ControlFlow.DefaultLoadProcessTableName
         ) => new CreateLoadProcessTableTask(connectionManager, loadProcessTableName).Execute();
     }
 }

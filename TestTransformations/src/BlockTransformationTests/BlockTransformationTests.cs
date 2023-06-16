@@ -1,16 +1,14 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
-    [Collection("DataFlow")]
-    public class BlockTransformationTests
+    public class BlockTransformationTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public BlockTransformationTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -27,11 +25,11 @@ namespace TestTransformations.BlockTransformationTests
             var _ = new TwoColumnsTableFixture("BlockTransDest");
 
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "BlockTransSource"
             );
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "BlockTransDest"
             );
 
@@ -49,14 +47,14 @@ namespace TestTransformations.BlockTransformationTests
             dest.Wait();
 
             //Assert
-            Assert.Equal(2, RowCountTask.Count(Connection, "BlockTransDest"));
+            Assert.Equal(2, RowCountTask.Count(SqlConnection, "BlockTransDest"));
             Assert.Equal(
                 1,
-                RowCountTask.Count(Connection, "BlockTransDest", "Col1 = 1 AND Col2='Test1'")
+                RowCountTask.Count(SqlConnection, "BlockTransDest", "Col1 = 1 AND Col2='Test1'")
             );
             Assert.Equal(
                 1,
-                RowCountTask.Count(Connection, "BlockTransDest", "Col1 = 4 AND Col2='Test4'")
+                RowCountTask.Count(SqlConnection, "BlockTransDest", "Col1 = 4 AND Col2='Test4'")
             );
         }
 
@@ -78,11 +76,11 @@ namespace TestTransformations.BlockTransformationTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
 
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "BlockTransSource"
             );
             DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(
-                Connection,
+                SqlConnection,
                 "BlockTransDest"
             );
 

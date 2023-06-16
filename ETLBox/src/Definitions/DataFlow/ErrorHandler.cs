@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
 {
+    [PublicAPI]
     public class ErrorHandler
     {
         public ISourceBlock<ETLBoxError> ErrorSourceBlock => ErrorBuffer;

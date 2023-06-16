@@ -1,10 +1,7 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
 namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
-    public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask
+    public abstract class DataFlowSource<TOutput> : DataFlowTask
     {
         public ISourceBlock<TOutput> SourceBlock => Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new();

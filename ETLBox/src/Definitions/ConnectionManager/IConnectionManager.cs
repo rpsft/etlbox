@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Globalization;
-
-namespace ALE.ETLBox.ConnectionManager
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     [PublicAPI]
     public interface IConnectionManager : IDisposable

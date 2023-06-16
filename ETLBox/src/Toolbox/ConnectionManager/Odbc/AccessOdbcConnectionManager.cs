@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Globalization;
-
-namespace ALE.ETLBox.ConnectionManager
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an ODBC connection to Access databases.
@@ -73,19 +70,19 @@ namespace ALE.ETLBox.ConnectionManager
                 QB = QB,
                 QE = QE,
                 UseParameterQuery = true,
-                AccessDummyTableName = DummyTableName,
+                AccessDummyTableName = DummyTableName
             };
             OdbcBulkInsert(data, tableName, bulkInsert);
         }
 
-        public bool CheckIfTableOrViewExists(string unquotatedFullName)
+        public bool CheckIfTableOrViewExists(string unquotedFullName)
         {
             try
             {
-                DataTable schemaTables = GetSchemaDataTable(unquotatedFullName, "Tables");
+                DataTable schemaTables = GetSchemaDataTable(unquotedFullName, "Tables");
                 if (schemaTables.Rows.Count > 0)
                     return true;
-                DataTable schemaViews = GetSchemaDataTable(unquotatedFullName, "Views");
+                DataTable schemaViews = GetSchemaDataTable(unquotedFullName, "Views");
                 if (schemaViews.Rows.Count > 0)
                     return true;
                 return false;
@@ -96,11 +93,11 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
-        private DataTable GetSchemaDataTable(string unquotatedFullName, string schemaInfo)
+        private DataTable GetSchemaDataTable(string unquotedFullName, string schemaInfo)
         {
             Open();
             string[] restrictions = new string[3];
-            restrictions[2] = unquotatedFullName;
+            restrictions[2] = unquotedFullName;
             DataTable schemaTable = DbConnection.GetSchema(schemaInfo, restrictions);
             return schemaTable;
         }
@@ -108,16 +105,16 @@ namespace ALE.ETLBox.ConnectionManager
         internal TableDefinition ReadTableDefinition(ObjectNameDescriptor tn)
         {
             TableDefinition result = new TableDefinition(tn.ObjectName);
-            DataTable schemaTable = GetSchemaDataTable(tn.UnquotatedFullName, "Columns");
+            DataTable schemaTable = GetSchemaDataTable(tn.UnquotedFullName, "Columns");
 
             foreach (var row in schemaTable.Rows)
             {
-                DataRow dr = row as DataRow;
+                DataRow dataRow = row as DataRow;
                 TableColumn col = new TableColumn
                 {
-                    Name = dr![schemaTable.Columns["COLUMN_NAME"]].ToString(),
-                    DataType = dr[schemaTable.Columns["TYPE_NAME"]].ToString(),
-                    AllowNulls = dr[schemaTable.Columns["IS_NULLABLE"]].ToString() == "YES"
+                    Name = dataRow![schemaTable.Columns["COLUMN_NAME"]].ToString(),
+                    DataType = dataRow[schemaTable.Columns["TYPE_NAME"]].ToString(),
+                    AllowNulls = dataRow[schemaTable.Columns["IS_NULLABLE"]].ToString() == "YES"
                 };
                 result.Columns.Add(col);
             }
@@ -125,13 +122,13 @@ namespace ALE.ETLBox.ConnectionManager
             return result;
         }
 
-        public override void PrepareBulkInsert(string tablename)
+        public override void PrepareBulkInsert(string tableName)
         {
             TryDropDummyTable();
             CreateDummyTable();
         }
 
-        public override void CleanUpBulkInsert(string tablename)
+        public override void CleanUpBulkInsert(string tableName)
         {
             TryDropDummyTable();
         }

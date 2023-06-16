@@ -1,15 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationNullHandlingTests
+    public class DbDestinationNullHandlingTests : DatabaseConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbDestinationNullHandlingTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -21,7 +17,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void IgnoreWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DestIgnoreNullValues"
             );
@@ -30,10 +26,10 @@ namespace TestDatabaseConnectors.DBDestination
                 DataAsList = new List<MySimpleRow>
                 {
                     null,
-                    new MySimpleRow { Col1 = 1, Col2 = "Test1" },
+                    new() { Col1 = 1, Col2 = "Test1" },
                     null,
-                    new MySimpleRow { Col1 = 2, Col2 = "Test2" },
-                    new MySimpleRow { Col1 = 3, Col2 = "Test3" },
+                    new() { Col1 = 2, Col2 = "Test2" },
+                    new() { Col1 = 3, Col2 = "Test3" },
                     null
                 }
             };
@@ -48,14 +44,14 @@ namespace TestDatabaseConnectors.DBDestination
             dest.Wait();
 
             //Assert
-            d2c.AssertTestData();
+            d2C.AssertTestData();
         }
 
         [Fact]
         public void IgnoreWithStringArray()
         {
             //Arrange
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DestIgnoreNullValuesStringArray"
             );
@@ -82,7 +78,7 @@ namespace TestDatabaseConnectors.DBDestination
             dest.Wait();
 
             //Assert
-            d2c.AssertTestData();
+            d2C.AssertTestData();
         }
     }
 }

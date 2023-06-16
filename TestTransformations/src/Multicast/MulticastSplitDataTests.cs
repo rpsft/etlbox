@@ -1,16 +1,17 @@
-using ALE.ETLBox.ConnectionManager;
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
-    [Collection("DataFlow")]
-    public class MulticastSplitDataTests
+    public class MulticastSplitDataTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MulticastSplitDataTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
+        [Serializable]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         internal class CSVPoco
         {
             public int CSVCol1 { get; set; }
@@ -19,12 +20,14 @@ namespace TestTransformations.Multicast
             public decimal CSVCol4 { get; set; }
         }
 
+        [Serializable]
         internal class Entity1
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }
         }
 
+        [Serializable]
         internal class Entity2
         {
             public string Col2 { get; set; }
@@ -48,22 +51,21 @@ namespace TestTransformations.Multicast
 
             var multicast = new Multicast<CSVPoco>();
 
-            var row1 = new RowTransformation<CSVPoco, Entity1>(input =>
-            {
-                return new Entity1 { Col1 = input.CSVCol1, Col2 = input.CSVCol2 };
-            });
-            var row2 = new RowTransformation<CSVPoco, Entity2>(input =>
-            {
-                return new Entity2
-                {
-                    Col2 = input.CSVCol2,
-                    Col3 = input.CSVCol3,
-                    Col4 = input.CSVCol4
-                };
-            });
+            var row1 = new RowTransformation<CSVPoco, Entity1>(
+                input => new Entity1 { Col1 = input.CSVCol1, Col2 = input.CSVCol2 }
+            );
+            var row2 = new RowTransformation<CSVPoco, Entity2>(
+                input =>
+                    new Entity2
+                    {
+                        Col2 = input.CSVCol2,
+                        Col3 = input.CSVCol3,
+                        Col4 = input.CSVCol4
+                    }
+            );
 
-            var destination1 = new DbDestination<Entity1>(Connection, "SplitDataDestination1");
-            var destination2 = new DbDestination<Entity2>(Connection, "SplitDataDestination2");
+            var destination1 = new DbDestination<Entity1>(SqlConnection, "SplitDataDestination1");
+            var destination2 = new DbDestination<Entity2>(SqlConnection, "SplitDataDestination2");
 
             //Act
             source.LinkTo(multicast);

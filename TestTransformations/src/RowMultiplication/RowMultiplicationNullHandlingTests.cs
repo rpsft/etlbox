@@ -2,7 +2,6 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.RowMultiplication
 {
-    [Collection("DataFlow")]
     public class RowMultiplicationNullHandlingTests
     {
         public class MySimpleRow

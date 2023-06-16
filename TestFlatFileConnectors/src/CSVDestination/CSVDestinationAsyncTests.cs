@@ -1,24 +1,26 @@
-using System.IO;
-using System.Threading.Tasks;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
-using Xunit;
-
 namespace TestFlatFileConnectors.CSVDestination
 {
-    [Collection("DataFlow")]
     public sealed class CsvDestinationAsyncTests
     {
+        private class MockDelaySource : DataFlowSource<string[]>
+        {
+            public override void Execute()
+            {
+                Buffer.SendAsync(new[] { "1", "2" }).Wait();
+                Thread.Sleep(100);
+                Buffer.SendAsync(new[] { "3", "4" }).Wait();
+                Buffer.Complete();
+            }
+        }
+
         [Theory]
-        [InlineData("AsyncTestFile.csv", 20000)]
-        public void WriteAsyncAndCheckLock(string filename, int noRecords)
+        [InlineData("AsyncTestFile.csv")]
+        public void WriteAsyncAndCheckLock(string filename)
         {
             //Arrange
             if (File.Exists(filename))
                 File.Delete(filename);
-            var source = new MemorySource<string[]>();
-            for (var i = 0; i < noRecords; i++)
-                source.DataAsList.Add(new[] { HashHelper.RandomString(100) });
+            var source = new MockDelaySource();
             var dest = new CsvDestination<string[]>(filename);
             var onCompletionRun = false;
 
@@ -47,7 +49,7 @@ namespace TestFlatFileConnectors.CSVDestination
             Assert.True(onCompletionRun, "OnCompletion action and assertion did run");
         }
 
-        private bool IsFileLocked(string filename)
+        private static bool IsFileLocked(string filename)
         {
             try
             {

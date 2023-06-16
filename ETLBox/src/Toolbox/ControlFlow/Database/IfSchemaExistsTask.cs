@@ -14,21 +14,17 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            if (ConnectionType == ConnectionManagerType.SqlServer)
+            return ConnectionType switch
             {
-                return $@"
-IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{ON.UnquotatedObjectName}')
-    SELECT 1
-";
-            }
-
-            if (ConnectionType == ConnectionManagerType.Postgres)
-            {
-                return $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ON.UnquotatedObjectName}';
-";
-            }
-
-            return string.Empty;
+                ConnectionManagerType.SqlServer
+                    => $@"IF EXISTS (SELECT schema_name(schema_id) FROM sys.schemas WHERE schema_name(schema_id) = '{ON.UnquotedObjectName}')
+                            SELECT 1
+",
+                ConnectionManagerType.Postgres
+                    => $@"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{ON.UnquotedObjectName}';
+",
+                _ => string.Empty
+            };
         }
 
         /* Some constructors */

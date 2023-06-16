@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,16 +8,16 @@ namespace ALE.ETLBox.Helper
     {
         public static string Encrypt_Char40(string text)
         {
-            if (text != null)
-            {
-                string hex = "";
-                byte[] hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
-                foreach (byte hashByte in hashValue)
-                    hex += hashByte.ToString("x2");
-                return hex.ToUpper();
-            }
+            if (text == null)
+                return string.Empty;
 
-            return "";
+            StringBuilder hexBuilder = new StringBuilder();
+            byte[] hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
+
+            foreach (byte hashByte in hashValue)
+                hexBuilder.Append(hashByte.ToString("x2"));
+
+            return hexBuilder.ToString().ToUpper();
         }
 
         public static string Encrypt_Char40(ITask task) =>

@@ -1,17 +1,15 @@
-using System;
-using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DataFlow")]
-    public class DbMergeIMergeableTests
+    public class DbMergeIMergeableTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbMergeIMergeableTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySimpleRow : IMergeableRow
@@ -24,7 +22,7 @@ namespace TestDatabaseConnectors.DBMerge
             public DateTime ChangeDate { get; set; }
             public ChangeAction? ChangeAction { get; set; }
             public string UniqueId => Key.ToString();
-            public bool IsDeletion => false;
+            public static bool IsDeletion => false;
         }
 
         [Theory, MemberData(nameof(Connections))]

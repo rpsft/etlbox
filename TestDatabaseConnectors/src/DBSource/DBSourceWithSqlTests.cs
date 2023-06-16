@@ -1,17 +1,14 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceWithSqlTests
+    public class DbSourceWithSqlTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbSourceWithSqlTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
-        public static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MySimpleRow
         {
@@ -23,9 +20,9 @@ namespace TestDatabaseConnectors.DBSource
         public void SqlWithSelectStar(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceSelectStar");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceSelectStar");
+            s2C.InsertTestData();
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DestinationSelectStar"
             );
@@ -33,7 +30,7 @@ namespace TestDatabaseConnectors.DBSource
             //Act
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>
             {
-                Sql = $@"SELECT * FROM {s2c.QB}SourceSelectStar{s2c.QE}",
+                Sql = $@"SELECT * FROM {s2C.QB}SourceSelectStar{s2C.QE}",
                 ConnectionManager = connection
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
@@ -43,7 +40,7 @@ namespace TestDatabaseConnectors.DBSource
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
-            d2c.AssertTestData();
+            d2C.AssertTestData();
             //Assert
         }
 
@@ -51,17 +48,17 @@ namespace TestDatabaseConnectors.DBSource
         public void SqlWithNamedColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceSql");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DestinationSql");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceSql");
+            s2C.InsertTestData();
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestinationSql");
 
             //Act
             DbSource<MySimpleRow> source = new DbSource<MySimpleRow>
             {
                 Sql =
-                    $@"SELECT CASE WHEN {s2c.QB}Col1{s2c.QE} IS NOT NULL THEN {s2c.QB}Col1{s2c.QE} ELSE {s2c.QB}Col1{s2c.QE} END AS {s2c.QB}Col1{s2c.QE}, 
-{s2c.QB}Col2{s2c.QE} 
-FROM {s2c.QB}SourceSql{s2c.QE}",
+                    $@"SELECT CASE WHEN {s2C.QB}Col1{s2C.QE} IS NOT NULL THEN {s2C.QB}Col1{s2C.QE} ELSE {s2C.QB}Col1{s2C.QE} END AS {s2C.QB}Col1{s2C.QE}, 
+{s2C.QB}Col2{s2C.QE} 
+FROM {s2C.QB}SourceSql{s2C.QE}",
                 ConnectionManager = connection
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
@@ -73,7 +70,7 @@ FROM {s2c.QB}SourceSql{s2c.QE}",
             dest.Wait();
 
             //Assert
-            d2c.AssertTestData();
+            d2C.AssertTestData();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
             DatabaseNames = new List<string>();
-            new SqlTask(this, Sql)
+            new SqlTask(this, GetSql())
             {
                 Actions = new List<Action<object>> { name => DatabaseNames.Add((string)name) }
             }.ExecuteReader();
@@ -42,27 +42,18 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         public List<string> DatabaseNames { get; set; }
-        public string Sql
+
+        public string GetSql()
         {
-            get
+            return ConnectionType switch
             {
-                if (ConnectionType == ConnectionManagerType.SqlServer)
-                {
-                    return "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4";
-                }
-
-                if (ConnectionType == ConnectionManagerType.MySql)
-                {
-                    return "SHOW DATABASES";
-                }
-
-                if (ConnectionType == ConnectionManagerType.Postgres)
-                {
-                    return "SELECT datname FROM pg_database WHERE datistemplate=false";
-                }
-
-                throw new ETLBoxNotSupportedException("This database is not supported!");
-            }
+                ConnectionManagerType.SqlServer
+                    => "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4",
+                ConnectionManagerType.MySql => "SHOW DATABASES",
+                ConnectionManagerType.Postgres
+                    => "SELECT datname FROM pg_database WHERE datistemplate=false",
+                _ => throw new ETLBoxNotSupportedException("This database is not supported!")
+            };
         }
 
         public GetDatabaseListTask GetList()

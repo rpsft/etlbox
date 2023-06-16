@@ -1,14 +1,14 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceTableDefinitionTests
+    public class DbSourceTableDefinitionTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbSourceTableDefinitionTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MySimpleRow
         {

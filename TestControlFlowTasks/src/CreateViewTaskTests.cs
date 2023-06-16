@@ -1,16 +1,16 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class CreateViewTaskTests
+    public class CreateViewTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
-        public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
+        public CreateViewTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
 
-        [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
+        [Theory, MemberData(nameof(AllSqlConnections)), MemberData(nameof(AccessConnection))]
         public void CreateView(IConnectionManager connection)
         {
             //Arrange
@@ -22,7 +22,7 @@ namespace TestControlFlowTasks
             Assert.Contains(td.Columns, col => col.Name == "test");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void AlterView(IConnectionManager connection)
         {
             //Arrange

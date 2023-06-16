@@ -1,10 +1,11 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
+using System.Linq;
 using ALE.ETLBox.DataFlow;
 
 namespace ALE.ETLBox
 {
-    public class TableData : TableData<object[]>
+    [PublicAPI]
+    public sealed class TableData : TableData<object[]>
     {
         public TableData(TableDefinition definition)
             : base(definition) { }
@@ -13,46 +14,43 @@ namespace ALE.ETLBox
             : base(definition, estimatedBatchSize) { }
     }
 
+    [PublicAPI]
     public class TableData<T> : ITableData
     {
-        public IColumnMappingCollection ColumnMapping
+        public IColumnMappingCollection GetColumnMapping()
         {
-            get
-            {
-                if (HasDefinition)
-                    return GetColumnMappingFromDefinition();
-                throw new ETLBoxException(
-                    "No table definition found. For Bulk insert a TableDefinition is always needed."
-                );
-            }
+            if (HasDefinition)
+                return GetColumnMappingFromDefinition();
+            throw new ETLBoxException(
+                "No table definition found. For Bulk insert a TableDefinition is always needed."
+            );
         }
 
         private IColumnMappingCollection GetColumnMappingFromDefinition()
         {
+            IEnumerable<TableColumn> columns = (TypeInfo?.IsDynamic, TypeInfo?.IsArray) switch
+            {
+                (_, true) => Definition.Columns.Where(c => !c.IsIdentity),
+                (true, false)
+                    => Definition.Columns.Where(
+                        c => !c.IsIdentity && DynamicColumnNames.ContainsKey(c.Name)
+                    ),
+                (_, _)
+                    => Definition.Columns.Where(
+                        c => !c.IsIdentity && TypeInfo.HasPropertyOrColumnMapping(c.Name)
+                    )
+            };
             var mapping = new DataColumnMappingCollection();
-            foreach (var col in Definition.Columns)
-                if (!col.IsIdentity)
-                {
-                    if (TypeInfo != null && !TypeInfo.IsDynamic && !TypeInfo.IsArray)
-                    {
-                        if (TypeInfo.HasPropertyOrColumnMapping(col.Name))
-                            mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
-                    }
-                    else if (TypeInfo.IsDynamic)
-                    {
-                        if (DynamicColumnNames.ContainsKey(col.Name))
-                            mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
-                    }
-                    else
-                    {
-                        mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
-                    }
-                }
+            mapping.AddRange(
+                columns
+                    .Select(col => new DataColumnMapping(col.SourceColumn, col.DataSetColumn))
+                    .ToArray()
+            );
             return mapping;
         }
 
-        public List<object[]> Rows { get; set; }
-        public object[] CurrentRow { get; set; }
+        public List<object[]> Rows { get; private set; }
+        public object[] CurrentRow { get; private set; }
         public Dictionary<string, int> DynamicColumnNames { get; set; } = new();
         private int ReadIndex { get; set; }
         private TableDefinition Definition { get; set; }
@@ -110,7 +108,7 @@ namespace ALE.ETLBox
         public DateTime GetDateTime(int i) =>
             Convert.ToDateTime(CurrentRow[ShiftIndexAroundIDColumn(i)]);
 
-        public IDataReader GetData(int i) => throw new NotImplementedException(); //null;
+        public IDataReader GetData(int i) => throw new NotImplementedException();
 
         public decimal GetDecimal(int i) =>
             Convert.ToDecimal(CurrentRow[ShiftIndexAroundIDColumn(i)]);
@@ -139,25 +137,20 @@ namespace ALE.ETLBox
 
         private int FindOrdinalInObject(string name)
         {
-            if (TypeInfo == null || TypeInfo.IsArray)
+            return TypeInfo?.GetTypeInfoGroup() switch
             {
-                return Definition.Columns.FindIndex(col => col.Name == name);
-            }
+                DataFlow.TypeInfo.TypeInfoGroup.Array
+                or null
+                    => Definition.Columns.FindIndex(col => col.Name == name),
+                DataFlow.TypeInfo.TypeInfoGroup.Dynamic
+                    => IncrementIfAfterIdColumn(DynamicColumnNames[name]),
+                _ => IncrementIfAfterIdColumn(TypeInfo!.GetIndexByPropertyNameOrColumnMapping(name))
+            };
 
-            if (TypeInfo.IsDynamic)
+            int IncrementIfAfterIdColumn(int ix)
             {
-                int ix = DynamicColumnNames[name]; //.FindIndex(n =>  n == name);
-                if (HasIDColumnIndex)
-                    if (ix >= IDColumnIndex)
-                        ix++;
-                return ix;
-            }
-            else
-            {
-                int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(name);
-                if (HasIDColumnIndex)
-                    if (ix >= IDColumnIndex)
-                        ix++;
+                if (HasIDColumnIndex && ix >= IDColumnIndex)
+                    ix++;
                 return ix;
             }
         }
@@ -167,9 +160,6 @@ namespace ALE.ETLBox
             throw new NotImplementedException();
         }
 
-        //public string GetDestinationDataType(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].DataType;
-        //public System.Type GetDestinationNETDataType(int i) => Definition.Columns[ShiftIndexAroundIDColumn(i)].NETDataType;
-
         public string GetString(int i) => Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
 
         public object GetValue(int i) =>
@@ -177,17 +167,12 @@ namespace ALE.ETLBox
                 ? CurrentRow[ShiftIndexAroundIDColumn(i)]
                 : null;
 
-        private int ShiftIndexAroundIDColumn(int i)
-        {
-            if (HasIDColumnIndex)
+        private int ShiftIndexAroundIDColumn(int i) =>
+            HasIDColumnIndex switch
             {
-                if (i > IDColumnIndex)
-                    return i - 1;
-                if (i <= IDColumnIndex)
-                    return i;
-            }
-            return i;
-        }
+                false => i,
+                _ => i > IDColumnIndex ? i - 1 : i
+            };
 
         public int GetValues(object[] values)
         {
@@ -197,9 +182,8 @@ namespace ALE.ETLBox
 
         public bool IsDBNull(int i)
         {
-            return CurrentRow.Length > ShiftIndexAroundIDColumn(i)
-                ? CurrentRow[ShiftIndexAroundIDColumn(i)] == null
-                : true;
+            return CurrentRow.Length <= ShiftIndexAroundIDColumn(i)
+                || CurrentRow[ShiftIndexAroundIDColumn(i)] == null;
         }
 
         public bool NextResult()
@@ -209,14 +193,14 @@ namespace ALE.ETLBox
 
         public bool Read()
         {
-            if (Rows?.Count > ReadIndex)
+            if (!(Rows?.Count > ReadIndex))
             {
-                CurrentRow = Rows[ReadIndex];
-                ReadIndex++;
-                return true;
+                return false;
             }
 
-            return false;
+            CurrentRow = Rows[ReadIndex];
+            ReadIndex++;
+            return true;
         }
 
         public void ClearData()
@@ -227,25 +211,28 @@ namespace ALE.ETLBox
         }
 
         #region IDisposable Support
-        private bool disposedValue;
+        private bool _disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue)
             {
-                if (disposing)
-                {
-                    Rows.Clear();
-                    Rows = null;
-                }
-
-                disposedValue = true;
+                return;
             }
+
+            if (disposing)
+            {
+                Rows.Clear();
+                Rows = null;
+            }
+
+            _disposedValue = true;
         }
 
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Close()

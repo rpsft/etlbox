@@ -2,17 +2,15 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceStringArrayTests
+    public class DbSourceStringArrayTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbSourceStringArrayTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [Theory, MemberData(nameof(Connections))]
         public void UsingTableDefinitions(IConnectionManager connection)
@@ -51,9 +49,9 @@ namespace TestDatabaseConnectors.DBSource
         public void WithSql(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(connection, "SourceWithSql");
-            s2c.InsertTestData();
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceWithSql");
+            s2C.InsertTestData();
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DestinationWithSql"
             );
@@ -62,7 +60,7 @@ namespace TestDatabaseConnectors.DBSource
             DbSource<string[]> source = new DbSource<string[]>
             {
                 Sql =
-                    $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceWithSql{s2c.QE}",
+                    $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceWithSql{s2C.QE}",
                 ConnectionManager = connection
             };
             DbDestination<string[]> dest = new DbDestination<string[]>(
@@ -74,23 +72,23 @@ namespace TestDatabaseConnectors.DBSource
             dest.Wait();
 
             //Assert
-            d2c.AssertTestData();
+            d2C.AssertTestData();
         }
 
         [Fact]
         public void WithSelectStar()
         {
             //Arrange
-            TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "SourceWithSelectStar"
             );
-            s2c.InsertTestData();
+            s2C.InsertTestData();
 
             //Act
             DbSource<string[]> source = new DbSource<string[]>(SqlConnection)
             {
-                Sql = $"SELECT * FROM {s2c.QB}SourceWithSelectStar{s2c.QE}",
+                Sql = $"SELECT * FROM {s2C.QB}SourceWithSelectStar{s2C.QE}"
             };
             DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "SomeTable");
 

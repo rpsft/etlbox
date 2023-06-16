@@ -40,8 +40,6 @@ indent_size = 2
 # New line preferences
 end_of_line = crlf
 charset = utf-8
-# Define the file header
-file_header_template = Copyright (c) RapidSoft. All rights reserved.\n\n
 
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
@@ -184,7 +182,7 @@ dotnet_diagnostic.SP3113.severity = suggestion
 
 # Sonar properties
 # Cognitive complexity https://rules.sonarsource.com/csharp/RSPEC-3776
-dotnet_diagnostic.S3776.severity = suggestion
+dotnet_diagnostic.S3776.severity = warning
 # Expressions should not be too complex https://rules.sonarsource.com/csharp/RSPEC-1067
 dotnet_diagnostic.S1067.severity = suggestion
 # Regular expressions should not be vulnerable to Denial of Service attacks https://rules.sonarsource.com/csharp/RSPEC-2631
@@ -232,6 +230,11 @@ dotnet_diagnostic.S2053.severity = suggestion
 # Serialization constructors should be secured
 # https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4212
 dotnet_diagnostic.S4212.severity = suggestion
+dotnet_diagnostic.S1133.severity = suggestion
+dotnet_diagnostic.S101.severity = suggestion
+
+[Test*/**/*.cs]
+dotnet_diagnostic.CS1591.severity = none
 
 # C++ Files
 [*.{cpp,h,in}]

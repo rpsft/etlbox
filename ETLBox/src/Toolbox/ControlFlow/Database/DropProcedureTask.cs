@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportProcedures)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            return $@"DROP PROCEDURE {ON.QuotatedFullName}";
+            return $@"DROP PROCEDURE {ON.QuotedFullName}";
         }
 
         public DropProcedureTask() { }

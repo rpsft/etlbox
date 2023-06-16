@@ -1,15 +1,15 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DataFlow")]
-    public class DbSourceViewsTests
+    public class DbSourceViewsTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbSourceViewsTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MySimpleRow
         {
@@ -62,17 +62,17 @@ namespace TestDatabaseConnectors.DBSource
         public void DifferentColumnsInView(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture s4c = new FourColumnsTableFixture(
+            FourColumnsTableFixture s4C = new FourColumnsTableFixture(
                 connection,
                 "dbsource_extended"
             );
-            s4c.InsertTestData();
+            s4C.InsertTestData();
             CreateViewTask.CreateOrAlter(
                 connection,
                 "DbSourceViewExtended",
-                $"SELECT {s4c.QB}Col2{s4c.QE}, {s4c.QB}Col4{s4c.QE} FROM dbsource_extended"
+                $"SELECT {s4C.QB}Col2{s4C.QE}, {s4C.QB}Col4{s4C.QE} FROM dbsource_extended"
             );
-            FourColumnsTableFixture d4c = new FourColumnsTableFixture(
+            FourColumnsTableFixture d4C = new FourColumnsTableFixture(
                 connection,
                 "DbDestinationExtended",
                 1
@@ -93,7 +93,7 @@ namespace TestDatabaseConnectors.DBSource
             dest.Wait();
 
             //Assert
-            d4c.AssertTestData();
+            d4C.AssertTestData();
         }
     }
 }

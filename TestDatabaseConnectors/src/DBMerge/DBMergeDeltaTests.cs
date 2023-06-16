@@ -1,17 +1,14 @@
-using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DataFlow")]
-    public class DbMergeDeltaTests
+    public class DbMergeDeltaTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-        public static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbMergeDeltaTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MyMergeRow : MergeableRow
         {
@@ -36,11 +33,11 @@ namespace TestDatabaseConnectors.DBMerge
             source.DataAsList.Add(new MyMergeRow { Key = 3, Value = "Test3" });
             source.DataAsList.Add(new MyMergeRow { Key = 4, DeleteThisRow = true });
             source.DataAsList.Add(new MyMergeRow { Key = 10, DeleteThisRow = true });
-            TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDeltaDestination"
             );
-            d2c.InsertTestDataSet3();
+            d2C.InsertTestDataSet3();
 
             //Act
             DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(
@@ -55,8 +52,8 @@ namespace TestDatabaseConnectors.DBMerge
             dest.Wait();
 
             //Assert
-            Assert.True(dest.UseTruncateMethod == false);
-            d2c.AssertTestData();
+            Assert.False(dest.UseTruncateMethod);
+            d2C.AssertTestData();
             Assert.True(dest.DeltaTable.Count == 4);
             Assert.True(
                 dest.DeltaTable.Count(

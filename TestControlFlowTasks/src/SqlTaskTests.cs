@@ -1,19 +1,27 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class SqlTaskTests
+    public class SqlTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public SqlTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public static IEnumerable<object[]> ConnectionsWithValue(string value) =>
-            Config.AllSqlConnectionsWithValue("ControlFlow", value);
+            new[]
+            {
+                new object[] { SqlConnection, value },
+                new object[] { PostgresConnection, value },
+                new object[] { MySqlConnection, value },
+                new object[] { SqliteConnection, value }
+            };
 
         [Theory, MemberData(nameof(Connections))]
         public void ExecuteNonQuery(IConnectionManager connection)
@@ -102,11 +110,12 @@ namespace TestControlFlowTasks
             {
                 //Arrange
                 //Act
-                DateTime result = (DateTime)SqlTask.ExecuteScalar(
-                    connection,
-                    "Test execute scalar with datatype",
-                    @"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"
-                );
+                DateTime result = (DateTime)
+                    SqlTask.ExecuteScalar(
+                        connection,
+                        "Test execute scalar with datatype",
+                        @"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"
+                    );
                 //Assert
                 Assert.Equal(DateTime.Parse("2020-02-29"), result);
             }
@@ -185,7 +194,7 @@ namespace TestControlFlowTasks
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        public class MySimpleRow : IEquatable<MySimpleRow>
+        public sealed class MySimpleRow : IEquatable<MySimpleRow>
         {
             public int Col1 { get; set; }
             public string Col2 { get; set; }

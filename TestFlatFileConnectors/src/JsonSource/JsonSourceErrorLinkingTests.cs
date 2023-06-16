@@ -1,17 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using Newtonsoft.Json;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonSource
 {
-    [Collection("DataFlow")]
-    public class JsonSourceErrorLinkingTests
+    public class JsonSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public JsonSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {

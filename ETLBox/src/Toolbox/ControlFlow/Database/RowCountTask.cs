@@ -52,7 +52,7 @@ WHERE [object_id] = object_id(N'{TableName}')
   AND [index_id] IN (0,1)"
                     : $@"
 SELECT COUNT(*)
-FROM {TN.QuotatedFullName} 
+FROM {TN.QuotedFullName} 
 {WhereClause} {Condition} {NoLockHint}";
             }
         }

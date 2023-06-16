@@ -1,16 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
-    [Collection("DataFlow")]
-    public class ExcelSourceHeaderTests
+    public class ExcelSourceHeaderTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public ExcelSourceHeaderTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -30,7 +25,7 @@ namespace TestFlatFileConnectors.ExcelSource
                 "res/Excel/TwoColumnWithHeader.xlsx"
             );
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "ExcelDestinationWithHeader"
             );
 
@@ -54,7 +49,7 @@ namespace TestFlatFileConnectors.ExcelSource
                 "res/Excel/ManyColumnsWithHeader.xlsx"
             );
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "ExcelDestinationManyColsWithHeader"
             );
 

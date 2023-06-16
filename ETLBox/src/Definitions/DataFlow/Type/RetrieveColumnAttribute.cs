@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines that this property is used to store the lookup value of the property from the object
@@ -22,11 +22,11 @@
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class RetrieveColumn : Attribute
+    public class RetrieveColumnAttribute : Attribute
     {
         public string LookupSourcePropertyName { get; set; }
 
-        public RetrieveColumn(string lookupSourcePropertyName)
+        public RetrieveColumnAttribute(string lookupSourcePropertyName)
         {
             LookupSourcePropertyName = lookupSourcePropertyName;
         }

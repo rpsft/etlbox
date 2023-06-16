@@ -1,10 +1,8 @@
-﻿using System.Data;
-
-namespace ALE.ETLBox
+﻿namespace ALE.ETLBox
 {
-    public interface ITableData : IDisposable, IDataReader
+    public interface ITableData : IDataReader
     {
-        IColumnMappingCollection ColumnMapping { get; }
+        IColumnMappingCollection GetColumnMapping();
         List<object[]> Rows { get; }
     }
 }

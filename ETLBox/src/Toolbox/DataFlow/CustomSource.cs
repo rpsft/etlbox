@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Define your own source block.

@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ALE.ETLBox.Helper
 {
@@ -11,7 +10,7 @@ namespace ALE.ETLBox.Helper
             InnerStream = innerStream ?? throw new ArgumentException(nameof(innerStream));
         }
 
-        protected Stream InnerStream { get; }
+        private Stream InnerStream { get; }
 
         public override bool CanRead => InnerStream.CanRead;
 

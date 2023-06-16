@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -66,31 +65,33 @@ namespace ALE.ETLBox.DataFlow
             while (XmlReader.Read())
             {
                 if (
-                    XmlReader.NodeType == XmlNodeType.Element
-                    && XmlReader.Name == (ElementName ?? TypeInfo.ElementName)
-                    && XNode.ReadFrom(XmlReader) is XElement el
+                    XmlReader.NodeType != XmlNodeType.Element
+                    || XmlReader.Name != (ElementName ?? TypeInfo.ElementName)
+                    || XNode.ReadFrom(XmlReader) is not XElement el
                 )
                 {
-                    ReadElement(el);
-                    LogProgress();
+                    continue;
                 }
+
+                ReadElement(el);
+                LogProgress();
             }
         }
 
-        private void ReadElement(XElement el)
+        private void ReadElement(XElement xmlElement)
         {
             try
             {
                 TOutput output;
                 if (TypeInfo.IsDynamic)
                 {
-                    string jsonText = JsonConvert.SerializeXNode(el);
+                    string jsonText = JsonConvert.SerializeXNode(xmlElement);
                     dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText);
                     output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
                 }
                 else
                 {
-                    output = (TOutput)XmlSerializer.Deserialize(el.CreateReader());
+                    output = (TOutput)XmlSerializer.Deserialize(xmlElement.CreateReader());
                 }
 
                 Buffer.SendAsync(output).Wait();
@@ -99,7 +100,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (!ErrorHandler.HasErrorBuffer)
                     throw;
-                ErrorHandler.Send(e, el.ToString());
+                ErrorHandler.Send(e, xmlElement.ToString());
             }
         }
 

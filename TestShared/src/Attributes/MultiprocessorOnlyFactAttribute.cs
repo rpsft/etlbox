@@ -1,6 +1,3 @@
-using System;
-using Xunit;
-
 namespace TestShared.Attributes
 {
     public sealed class MultiprocessorOnlyFactAttribute : FactAttribute

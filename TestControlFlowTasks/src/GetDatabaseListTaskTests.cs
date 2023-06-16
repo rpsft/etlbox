@@ -1,15 +1,15 @@
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class GetDatabaseListTaskTests
+    public class GetDatabaseListTaskTests : ControlFlowTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("ControlFlow");
-        private string DBName => Config.SqlConnection.ConnectionString("ControlFlow").DbName;
+        public GetDatabaseListTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        private static string DBName => SqlConnection.ConnectionString.DbName;
 
         [Fact]
         public void GetDatabaseList()
@@ -24,14 +24,11 @@ namespace TestControlFlowTasks
             Assert.Contains(allDatabases, name => name == DBName);
         }
 
-        private SQLiteConnectionManager SQLiteConnection =>
-            Config.SQLiteConnection.ConnectionManager("ControlFlow");
-
         [Fact]
         public void NotSupportedWithSQLite()
         {
             Assert.Throws<ETLBoxNotSupportedException>(
-                () => GetDatabaseListTask.List(SQLiteConnection)
+                () => GetDatabaseListTask.List(SqliteConnection)
             );
         }
     }

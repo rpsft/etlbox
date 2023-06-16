@@ -1,16 +1,14 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
-    [Collection("DataFlow")]
-    public class MulticastPredicateTests
+    public class MulticastPredicateTests : TransformationsTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MulticastPredicateTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySimpleRow
@@ -28,13 +26,13 @@ namespace TestTransformations.Multicast
             var _ = new TwoColumnsTableFixture("Destination1");
             var __ = new TwoColumnsTableFixture("Destination2");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "Source");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
             DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "Destination1"
             );
             DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "Destination2"
             );
 
@@ -50,15 +48,15 @@ namespace TestTransformations.Multicast
             //Assert
             Assert.Equal(
                 1,
-                RowCountTask.Count(Connection, "Destination1", "Col1 = 1 AND Col2='Test1'")
+                RowCountTask.Count(SqlConnection, "Destination1", "Col1 = 1 AND Col2='Test1'")
             );
             Assert.Equal(
                 1,
-                RowCountTask.Count(Connection, "Destination1", "Col1 = 2 AND Col2='Test2'")
+                RowCountTask.Count(SqlConnection, "Destination1", "Col1 = 2 AND Col2='Test2'")
             );
             Assert.Equal(
                 1,
-                RowCountTask.Count(Connection, "Destination2", "Col1 = 3 AND Col2='Test3'")
+                RowCountTask.Count(SqlConnection, "Destination2", "Col1 = 3 AND Col2='Test3'")
             );
         }
     }

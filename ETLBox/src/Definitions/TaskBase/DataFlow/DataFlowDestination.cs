@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowDestination<TInput> : DataFlowTask, IDataFlowDestination<TInput>
@@ -30,13 +27,15 @@ namespace ALE.ETLBox.DataFlow
             Task.WhenAll(PredecessorCompletions)
                 .ContinueWith(t =>
                 {
-                    if (!TargetBlock.Completion.IsCompleted)
+                    if (TargetBlock.Completion.IsCompleted)
                     {
-                        if (t.IsFaulted)
-                            TargetBlock.Fault(t.Exception.InnerException);
-                        else
-                            TargetBlock.Complete();
+                        return;
                     }
+
+                    if (t.IsFaulted)
+                        TargetBlock.Fault(t.Exception!.InnerException!);
+                    else
+                        TargetBlock.Complete();
                 });
         }
 
@@ -48,9 +47,9 @@ namespace ALE.ETLBox.DataFlow
             {
                 await TargetAction.Completion.ConfigureAwait(false);
             }
-            catch (AggregateException ae)
+            catch (AggregateException aggregateException)
             {
-                throw ae.InnerException;
+                throw aggregateException.InnerException!;
             }
             finally
             {

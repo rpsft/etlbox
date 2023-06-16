@@ -1,18 +1,12 @@
-using System.Collections.Generic;
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
-    [Collection("DataFlow")]
-    public class ExcelSourceBlankRowsTests
+    public class ExcelSourceBlankRowsTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public ExcelSourceBlankRowsTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MyDataRow
         {
@@ -46,7 +40,7 @@ namespace TestFlatFileConnectors.ExcelSource
             Assert.True(result.Count == 6);
         }
 
-        private IList<MyDataRow> LoadExcelIntoMemory(string filename)
+        private static IList<MyDataRow> LoadExcelIntoMemory(string filename)
         {
             MemoryDestination<MyDataRow> dest = new MemoryDestination<MyDataRow>();
 
@@ -89,7 +83,7 @@ namespace TestFlatFileConnectors.ExcelSource
                 HasNoHeader = true
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "ExcelDestinationBlankRows",
                 2
             );

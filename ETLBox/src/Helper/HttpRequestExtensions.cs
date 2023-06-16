@@ -19,7 +19,7 @@ namespace ALE.ETLBox.Helper
             return httpRequestMessage;
         }
 
-        internal static HttpContent Clone(this HttpContent content)
+        private static HttpContent Clone(this HttpContent content)
         {
             if (content == null)
                 return null;

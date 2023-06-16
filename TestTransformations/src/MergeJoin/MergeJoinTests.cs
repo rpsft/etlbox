@@ -1,16 +1,14 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.MergeJoin
 {
-    [Collection("DataFlow")]
-    public class MergeJoinTests
+    public class MergeJoinTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MergeJoinTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -29,15 +27,15 @@ namespace TestTransformations.MergeJoin
             var _ = new TwoColumnsTableFixture("MergeJoinDestination");
 
             DbSource<MySimpleRow> source1 = new DbSource<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "MergeJoinSource1"
             );
             DbSource<MySimpleRow> source2 = new DbSource<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "MergeJoinSource2"
             );
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "MergeJoinDestination"
             );
 
@@ -62,11 +60,11 @@ namespace TestTransformations.MergeJoin
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "MergeJoinDestination"));
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, "MergeJoinDestination"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "MergeJoinDestination",
                     "Col1 = 5 AND Col2='Test1Test4'"
                 )
@@ -74,7 +72,7 @@ namespace TestTransformations.MergeJoin
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "MergeJoinDestination",
                     "Col1 = 7 AND Col2='Test2Test5'"
                 )
@@ -82,7 +80,7 @@ namespace TestTransformations.MergeJoin
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "MergeJoinDestination",
                     "Col1 = 9 AND Col2='Test3Test6'"
                 )

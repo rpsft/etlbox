@@ -1,25 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using Microsoft.Data.SqlClient;
+using TestConnectionManager.Fixtures;
 using TestShared.Attributes;
-using TestShared.Helper;
-using Xunit;
 
 namespace TestConnectionManager.ConnectionManager
 {
-    [Collection("Connection Manager")]
-    public class SqlConnectionManagerTests : IDisposable
+    public sealed class SqlConnectionManagerTests : ConnectionManagerTestBase
     {
-        private string ConnectionStringParameter =>
-            Config.SqlConnection.RawConnectionString("ConnectionManager");
+        public SqlConnectionManagerTests(ConnectionManagerFixture fixture)
+            : base(fixture) { }
 
-        public void Dispose() { }
-
-        private void AssertOpenConnectionCount(int allowedOpenConnections, string connectionString)
+        private static void AssertOpenConnectionCount(
+            int allowedOpenConnections,
+            string connectionString
+        )
         {
             var conString = new SqlConnectionString(connectionString);
             var master = new SqlConnectionManager(conString.CloneWithMasterDbName());

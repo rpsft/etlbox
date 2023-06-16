@@ -1,0 +1,5 @@
+[*.cs]
+# Sonar properties for test projects
+
+# Remove the unused local variable
+dotnet_diagnostic.S1481.severity = none

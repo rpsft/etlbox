@@ -1,13 +1,13 @@
-﻿using System.Data;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox
 {
+    [PublicAPI]
     public class QueryParameter
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public object Value { get; set; }
+        public string Name { get; }
+        public string Type { get; }
+        public object Value { get; }
 
         public DbType DBType => DataTypeConverter.GetDBType(Type);
 

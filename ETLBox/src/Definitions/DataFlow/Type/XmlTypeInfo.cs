@@ -1,25 +1,24 @@
-﻿using System.Xml.Serialization;
+using System.Xml.Serialization;
 
 namespace ALE.ETLBox.DataFlow
 {
     internal class XmlTypeInfo : TypeInfo
     {
-        internal string ElementName { get; set; }
+        internal string ElementName { get; }
 
-        internal XmlTypeInfo(Type typ)
-            : base(typ)
+        internal XmlTypeInfo(Type type)
+            : base(type)
         {
             GatherTypeInfo();
-            foreach (Attribute attr in Attribute.GetCustomAttributes(typ))
+            foreach (Attribute customAttribute in Attribute.GetCustomAttributes(type))
             {
-                if (attr is XmlRootAttribute)
+                if (customAttribute is XmlRootAttribute attribute)
                 {
-                    var a = attr as XmlRootAttribute;
-                    ElementName = a.ElementName;
+                    ElementName = attribute.ElementName;
                 }
             }
             if (string.IsNullOrWhiteSpace(ElementName))
-                ElementName = typ.Name;
+                ElementName = type.Name;
         }
     }
 }

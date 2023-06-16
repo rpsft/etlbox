@@ -1,17 +1,11 @@
-using System.Xml.Serialization;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.XmlSource
 {
-    [Collection("DataFlow")]
-    public class XmlSourceTests
+    public class XmlSourceTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public XmlSourceTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -25,7 +19,7 @@ namespace TestFlatFileConnectors.XmlSource
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("XmlSource2Cols");
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "XmlSource2Cols"
             );
 
@@ -60,7 +54,7 @@ namespace TestFlatFileConnectors.XmlSource
                 "XmlSource2ColsAttribute"
             );
             DbDestination<MyAttributeRow> dest = new DbDestination<MyAttributeRow>(
-                Connection,
+                SqlConnection,
                 "XmlSource2ColsAttribute"
             );
 

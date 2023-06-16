@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace ALE.ETLBox.Helper
 {
@@ -11,33 +10,13 @@ namespace ALE.ETLBox.Helper
     {
         private readonly Func<Stream, HttpContent, TransportContext, Task> _onStreamAvailable;
 
-        public PushStreamContent(Action<Stream, HttpContent, TransportContext> onStreamAvailable)
-            : this(AsTask(onStreamAvailable), (MediaTypeHeaderValue)null) { }
-
-        public PushStreamContent(
-            Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable
-        )
-            : this(onStreamAvailable, (MediaTypeHeaderValue)null) { }
-
-        public PushStreamContent(
-            Action<Stream, HttpContent, TransportContext> onStreamAvailable,
-            string mediaType
-        )
-            : this(AsTask(onStreamAvailable), new MediaTypeHeaderValue(mediaType)) { }
-
         public PushStreamContent(
             Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable,
             string mediaType
         )
             : this(onStreamAvailable, new MediaTypeHeaderValue(mediaType)) { }
 
-        public PushStreamContent(
-            Action<Stream, HttpContent, TransportContext> onStreamAvailable,
-            MediaTypeHeaderValue mediaType
-        )
-            : this(AsTask(onStreamAvailable), mediaType) { }
-
-        public PushStreamContent(
+        private PushStreamContent(
             Func<Stream, HttpContent, TransportContext, Task> onStreamAvailable,
             MediaTypeHeaderValue mediaType
         )
@@ -47,28 +26,8 @@ namespace ALE.ETLBox.Helper
             Headers.ContentType = mediaType ?? ApplicationOctetStreamMediaType;
         }
 
-        private MediaTypeHeaderValue ApplicationOctetStreamMediaType =>
+        private static MediaTypeHeaderValue ApplicationOctetStreamMediaType =>
             new("application/octet-stream");
-
-        private static Func<Stream, HttpContent, TransportContext, Task> AsTask(
-            Action<Stream, HttpContent, TransportContext> onStreamAvailable
-        )
-        {
-            if (onStreamAvailable == null)
-                throw new ArgumentException(nameof(onStreamAvailable));
-            return (stream, content, transportContext) =>
-            {
-                onStreamAvailable(stream, content, transportContext);
-                return FromResult(new AsyncVoid());
-            };
-        }
-
-        public static Task<TResult> FromResult<TResult>(TResult result)
-        {
-            var completionSource = new TaskCompletionSource<TResult>();
-            completionSource.SetResult(result);
-            return completionSource.Task;
-        }
 
         protected override async Task SerializeToStreamAsync(
             Stream stream,
@@ -91,7 +50,7 @@ namespace ALE.ETLBox.Helper
         [StructLayout(LayoutKind.Sequential, Size = 1)]
         private struct AsyncVoid { }
 
-        internal class CompleteTaskOnCloseStream : DelegatingStream
+        private sealed class CompleteTaskOnCloseStream : DelegatingStream
         {
             private readonly TaskCompletionSource<bool> _serializeToStreamTask;
 

@@ -1,18 +1,13 @@
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.CustomDestination
 {
-    [Collection("DataFlow")]
-    public class CustomDestinationDynamicObjectTests
+    public class CustomDestinationDynamicObjectTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CustomDestinationDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void InsertIntoTable()

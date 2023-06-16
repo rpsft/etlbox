@@ -1,17 +1,11 @@
-using System.Collections.Generic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.MemorySource
 {
-    [Collection("DataFlow")]
-    public class MemorySourceStringArrayTests
+    public class MemorySourceStringArrayTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MemorySourceStringArrayTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void DataIsFromList()
@@ -31,7 +25,7 @@ namespace TestOtherConnectors.MemorySource
             {
                 new[] { "1", "Test1" },
                 new[] { "2", "Test2" },
-                new[] { "3", "Test3" },
+                new[] { "3", "Test3" }
             };
             source.LinkTo(dest);
             source.Execute();

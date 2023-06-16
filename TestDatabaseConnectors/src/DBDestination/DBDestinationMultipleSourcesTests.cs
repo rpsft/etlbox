@@ -1,14 +1,14 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationMultipleSourcesTests
+    public class DbDestinationMultipleSourcesTests : DatabaseConnectorsTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbDestinationMultipleSourcesTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MySimpleRow
         {
@@ -25,12 +25,12 @@ namespace TestDatabaseConnectors.DBDestination
             //Act
             source1.DataAsList = new List<MySimpleRow>
             {
-                new MySimpleRow { Col1 = 1, Col2 = "Test1" },
-                new MySimpleRow { Col1 = 2, Col2 = "Test2" },
+                new() { Col1 = 1, Col2 = "Test1" },
+                new() { Col1 = 2, Col2 = "Test2" }
             };
             source2.DataAsList = new List<MySimpleRow>
             {
-                new MySimpleRow { Col1 = 3, Col2 = "Test3" }
+                new() { Col1 = 3, Col2 = "Test3" }
             };
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 connection,

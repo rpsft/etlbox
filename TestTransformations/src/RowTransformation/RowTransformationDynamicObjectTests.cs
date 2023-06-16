@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
-    [Collection("DataFlow")]
-    public class RowTransformationDynamicObjectTests
+    public class RowTransformationDynamicObjectTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowTransformationDynamicObjectTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void ConvertIntoObject()
@@ -31,7 +29,7 @@ namespace TestTransformations.RowTransformation
                 return c;
             });
             DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "DestinationRowTransformationDynamic"
             );
             source.LinkTo(trans);

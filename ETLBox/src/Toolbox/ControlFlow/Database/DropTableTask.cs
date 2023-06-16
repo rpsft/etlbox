@@ -10,7 +10,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         internal override string GetSql()
         {
-            return $@"DROP TABLE {ON.QuotatedFullName}";
+            return $@"DROP TABLE {ON.QuotedFullName}";
         }
 
         public DropTableTask() { }

@@ -1,17 +1,17 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
-    [Collection("DataFlow")]
-    public class LookupStringArrayTests : IDisposable
+    public sealed class LookupStringArrayTests : TransformationsTestBase, IDisposable
     {
         private readonly CultureInfo _culture;
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
-        public LookupStringArrayTests()
+        public LookupStringArrayTests(TransformationsDatabaseFixture fixture)
+            : base(fixture)
         {
             _culture = CultureInfo.CurrentCulture;
         }

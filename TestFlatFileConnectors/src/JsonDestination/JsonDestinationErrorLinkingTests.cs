@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using ALE.ETLBox.DataFlow;
 using TestFlatFileConnectors.Helpers;
-using Xunit;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
-    [Collection("DataFlow")]
     public class JsonDestinationErrorLinkingTests
     {
         [Fact]
@@ -89,7 +83,7 @@ namespace TestFlatFileConnectors.JsonDestination
             {
                 get
                 {
-                    if (Col1 == null || Col1 == "X")
+                    if (Col1 is null or "X")
                         throw new Exception("Error record!");
                     return "Test" + Col1;
                 }

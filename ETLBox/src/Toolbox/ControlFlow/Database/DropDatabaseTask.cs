@@ -18,19 +18,23 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            if (ConnectionType == ConnectionManagerType.SqlServer)
+            return ConnectionType switch
             {
-                return $@"
+                ConnectionManagerType.SqlServer
+                    => $@"
 USE [master]
 ALTER DATABASE [{ObjectName}]
 SET SINGLE_USER WITH ROLLBACK IMMEDIATE
 ALTER DATABASE [{ObjectName}]
 SET MULTI_USER
 DROP DATABASE [{ObjectName}]  
-";
-            }
-
-            return $@"DROP DATABASE {ON.QuotatedObjectName}";
+",
+                ConnectionManagerType.Postgres
+                    => $@"
+DROP DATABASE {ON.QuotedObjectName} WITH (force)
+",
+                _ => $@"DROP DATABASE {ON.QuotedObjectName}"
+            };
         }
 
         public DropDatabaseTask() { }

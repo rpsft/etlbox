@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This destination if used as a trash.
@@ -16,22 +13,22 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName => "Void destination - Ignore data";
 
         /* Public properties */
-        public ITargetBlock<TInput> TargetBlock => _voidDestination?.TargetBlock;
+        public ITargetBlock<TInput> TargetBlock => InternalVoidDestination?.TargetBlock;
 
         /* Private stuff */
-        private CustomDestination<TInput> _voidDestination { get; set; }
+        private CustomDestination<TInput> InternalVoidDestination { get; }
 
         public VoidDestination()
         {
-            _voidDestination = new CustomDestination<TInput>(this, _ => { });
+            InternalVoidDestination = new CustomDestination<TInput>(this, _ => { });
         }
 
-        public void Wait() => _voidDestination.Wait();
+        public void Wait() => InternalVoidDestination.Wait();
 
         public void AddPredecessorCompletion(Task completion) =>
-            _voidDestination.AddPredecessorCompletion(completion);
+            InternalVoidDestination.AddPredecessorCompletion(completion);
 
-        public Task Completion => _voidDestination.Completion;
+        public Task Completion => InternalVoidDestination.Completion;
     }
 
     /// <summary>

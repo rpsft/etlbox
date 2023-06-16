@@ -1,109 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Dynamic;
-using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
+using ALE.ETLBoxTests.Performance.Fixtures;
 using ALE.ETLBoxTests.Performance.Helper;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance
 {
-    [Collection("Performance")]
-    public class CsvSourceIntoDBTests
+    public class CsvSourceIntoDBTests : PerformanceTestBase
     {
         private readonly ITestOutputHelper _output;
 
-        public CsvSourceIntoDBTests(ITestOutputHelper output)
+        public CsvSourceIntoDBTests(ITestOutputHelper output, PerformanceDatabaseFixture fixture)
+            : base(fixture)
         {
             _output = output;
-            // DotMemoryUnitTestOutput.SetOutputMethod(_output.WriteLine);
         }
 
-        public static IEnumerable<object[]> SqlConnection(
-            int numberOfRows,
-            int batchSize,
-            double deviation
-        ) =>
-            new[]
-            {
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager("Performance"),
-                    numberOfRows,
-                    batchSize,
-                    deviation
-                }
-            };
-
-        public static IEnumerable<object[]> SqlOdbcConnection(
-            int numberOfRows,
-            int batchSize,
-            double deviation
-        ) =>
-            new[]
-            {
-                new object[]
-                {
-                    Config.SqlOdbcConnection.ConnectionManager("Performance"),
-                    numberOfRows,
-                    batchSize,
-                    deviation
-                }
-            };
-
-        public static IEnumerable<object[]> MySqlConnection(
-            int numberOfRows,
-            int batchSize,
-            double deviation
-        ) =>
-            new[]
-            {
-                new object[]
-                {
-                    Config.MySqlConnection.ConnectionManager("Performance"),
-                    numberOfRows,
-                    batchSize,
-                    deviation
-                }
-            };
-
-        public static IEnumerable<object[]> PostgresConnection(
-            int numberOfRows,
-            int batchSize,
-            double deviation
-        ) =>
-            new[]
-            {
-                new object[]
-                {
-                    Config.PostgresConnection.ConnectionManager("Performance"),
-                    numberOfRows,
-                    batchSize,
-                    deviation
-                }
-            };
-
-        public static IEnumerable<object[]> SQLiteConnection(
-            int numberOfRows,
-            int batchSize,
-            double deviation
-        ) =>
-            new[]
-            {
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager("Performance"),
-                    numberOfRows,
-                    batchSize,
-                    deviation
-                }
-            };
-
-        private void ReCreateDestinationTable(IConnectionManager connection, string tableName)
+        private static void ReCreateDestinationTable(
+            IConnectionManager connection,
+            string tableName
+        )
         {
             var tableDef = new TableDefinition(tableName, BigDataCsvSource.DestTableCols);
             DropTableTask.DropIfExists(connection, tableName);
@@ -129,7 +46,7 @@ namespace ALE.ETLBoxTests.Performance
         )
         {
             //Arrange
-            BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
+            BigDataCsvSource.CreateCsvFileIfNeeded(numberOfRows);
             ReCreateDestinationTable(connection, "CsvDestinationNonGenericETLBox");
             ReCreateDestinationTable(connection, "CsvDestinationBulkInsert");
             ReCreateDestinationTable(connection, "CsvDestinationGenericETLBox");
@@ -142,10 +59,10 @@ namespace ALE.ETLBoxTests.Performance
                 "CsvDestinationNonGenericETLBox",
                 batchSize
             );
-            var sourceGeneric = new CsvSource<CSVData>(
+            var sourceGeneric = new CsvSource<CsvData>(
                 BigDataCsvSource.GetCompleteFilePath(numberOfRows)
             );
-            var destGeneric = new DbDestination<CSVData>(
+            var destGeneric = new DbDestination<CsvData>(
                 connection,
                 "CsvDestinationGenericETLBox",
                 batchSize
@@ -223,14 +140,14 @@ namespace ALE.ETLBoxTests.Performance
         )
         {
             //Arrange
-            BigDataCsvSource.CreateCSVFileIfNeeded(numberOfRows);
+            BigDataCsvSource.CreateCsvFileIfNeeded(numberOfRows);
             ReCreateDestinationTable(connection, "CsvDestinationWithTransformation");
 
             var sourceExpando = new CsvSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var trans = new RowTransformation<ExpandoObject, CSVData>(row =>
+            var trans = new RowTransformation<ExpandoObject, CsvData>(row =>
             {
                 dynamic r = row;
-                return new CSVData
+                return new CsvData
                 {
                     Col1 = r.Col1,
                     Col2 = r.Col2,
@@ -238,7 +155,7 @@ namespace ALE.ETLBoxTests.Performance
                     Col4 = r.Col4
                 };
             });
-            var destGeneric = new DbDestination<CSVData>(
+            var destGeneric = new DbDestination<CsvData>(
                 connection,
                 "CsvDestinationWithTransformation",
                 batchSize
@@ -249,7 +166,6 @@ namespace ALE.ETLBoxTests.Performance
             //Act
             long memAfter;
             long memBefore = 0;
-            // MemoryCheckPoint memoryCheckPointBefore;
             var startCheck = true;
             var count = 1;
             destGeneric.AfterBatchWrite = _ =>
@@ -263,15 +179,9 @@ namespace ALE.ETLBoxTests.Performance
                 if (startCheck)
                 {
                     memBefore = memAfter;
-                    // memoryCheckPointBefore = dotMemory.Check();
                     startCheck = false;
                 }
                 Assert.InRange(memAfter, 0, memBefore + memBefore * deviation);
-                // dotMemory.Check(memory =>
-                // {
-                //     Assert.InRange(memory.GetTrafficFrom(memoryCheckPointBefore).AllocatedMemory.SizeInBytes, 0,
-                //         memBefore * deviation);
-                // });
             };
 
             var timeElapsedETLBox = BigDataHelper.LogExecutionTime(
@@ -297,13 +207,13 @@ namespace ALE.ETLBoxTests.Performance
             //10.000.000 rows, batch size  1.000: ~10 min 10 sec
         }
 
-        private IEnumerable<CSVData> GenerateWithYield(int numberOfRows)
+        private static IEnumerable<CsvData> GenerateWithYield(int numberOfRows)
         {
             var i = 0;
             while (i < numberOfRows)
             {
                 i++;
-                yield return new CSVData
+                yield return new CsvData
                 {
                     Col1 = HashHelper.RandomString(255),
                     Col2 = HashHelper.RandomString(255),
@@ -328,8 +238,8 @@ namespace ALE.ETLBoxTests.Performance
             //Arrange
             ReCreateDestinationTable(connection, "MemoryDestination");
 
-            var source = new MemorySource<CSVData> { Data = GenerateWithYield(numberOfRows) };
-            var dest = new DbDestination<CSVData>(connection, "MemoryDestination", batchSize);
+            var source = new MemorySource<CsvData> { Data = GenerateWithYield(numberOfRows) };
+            var dest = new DbDestination<CsvData>(connection, "MemoryDestination", batchSize);
 
             //Act
             source.LinkTo(dest);

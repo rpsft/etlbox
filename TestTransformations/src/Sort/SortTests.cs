@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Sort
 {
-    [Collection("DataFlow")]
-    public class SortTests
+    public class SortTests : TransformationsTestBase
     {
-        private SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public SortTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         private class MySimpleRow
@@ -24,7 +22,7 @@ namespace TestTransformations.Sort
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SortSource");
             source2Columns.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "SortSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "SortSource");
 
             //Act
             List<MySimpleRow> actual = new List<MySimpleRow>();

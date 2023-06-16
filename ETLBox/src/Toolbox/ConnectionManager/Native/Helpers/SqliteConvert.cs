@@ -1,4 +1,3 @@
-using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ALE.ETLBox.ConnectionManager.Helpers;
@@ -9,27 +8,7 @@ namespace ALE.ETLBox.ConnectionManager.Helpers;
 [PublicAPI]
 public abstract class SqliteConvert
 {
-    /// <summary>
-    /// For a given intrinsic type, return a DbType
-    /// </summary>
-    /// <param name="typ">The native type to convert</param>
-    /// <returns>The corresponding (closest match) DbType</returns>
-    private static DbType TypeToDbType(Type typ)
-    {
-        var tc = Type.GetTypeCode(typ);
-        if (tc == TypeCode.Object)
-        {
-            if (typ == typeof(byte[]))
-                return DbType.Binary;
-            if (typ == typeof(Guid))
-                return DbType.Guid;
-            return DbType.String;
-        }
-
-        return s_dbTypeMappings[(int)tc];
-    }
-
-    private static readonly DbType[] s_dbTypeMappings =
+    private static readonly DbType[] s_dbTypeMappings = new[]
     {
         DbType.Object, // Empty (0)
         DbType.Binary, // Object (1)
@@ -52,14 +31,30 @@ public abstract class SqliteConvert
         DbType.String // String (18)
     };
 
+    /// <summary>
+    /// For a given intrinsic type, return a DbType
+    /// </summary>
+    /// <param name="objValue">The native type to convert</param>
+    /// <returns>The corresponding (closest match) DbType</returns>
     public static DbType TypeToDbType(object objValue)
     {
-        if (objValue != null && objValue != DBNull.Value)
+        if (objValue == null || objValue == DBNull.Value)
         {
-            return TypeToDbType(objValue.GetType());
+            return DbType.String; // Unassigned default value is String
         }
 
-        return DbType.String; // Unassigned default value is String
+        var tc = Type.GetTypeCode(objValue.GetType());
+        if (tc != TypeCode.Object)
+        {
+            return s_dbTypeMappings[(int)tc];
+        }
+
+        return objValue switch
+        {
+            byte[] => DbType.Binary,
+            Guid => DbType.Guid,
+            _ => DbType.String
+        };
     }
 
     public static SqliteType TypeToAffinity(object objValue)
@@ -75,14 +70,14 @@ public abstract class SqliteConvert
     /// <summary>
     /// For a given type, return the closest-match SQLite TypeAffinity, which only understands a very limited subset of types.
     /// </summary>
-    /// <param name="typ">The type to evaluate</param>
+    /// <param name="type">The type to evaluate</param>
     /// <returns>The SQLite type affinity for that type.</returns>
-    public static SqliteType TypeToAffinity(Type typ)
+    public static SqliteType TypeToAffinity(Type type)
     {
-        var tc = Type.GetTypeCode(typ);
+        var tc = Type.GetTypeCode(type);
         if (tc == TypeCode.Object)
         {
-            if (typ == typeof(byte[]) || typ == typeof(Guid))
+            if (type == typeof(byte[]) || type == typeof(Guid))
                 return SqliteType.Blob;
             return SqliteType.Text;
         }

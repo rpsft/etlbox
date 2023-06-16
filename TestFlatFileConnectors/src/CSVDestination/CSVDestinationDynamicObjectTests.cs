@@ -1,18 +1,11 @@
-using System.Dynamic;
-using System.IO;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVDestination
 {
-    [Collection("DataFlow")]
-    public class CsvDestinationDynamicObjectTests
+    public class CsvDestinationDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvDestinationDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleFlow()

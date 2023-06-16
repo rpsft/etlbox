@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -28,12 +28,9 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (
-                    ConnectionType == ConnectionManagerType.SQLite
-                    || ConnectionType == ConnectionManagerType.Access
-                )
-                    return $@"DELETE FROM {TN.QuotatedFullName}";
-                return $@"TRUNCATE TABLE {TN.QuotatedFullName}";
+                if (ConnectionType is ConnectionManagerType.SQLite or ConnectionManagerType.Access)
+                    return $@"DELETE FROM {TN.QuotedFullName}";
+                return $@"TRUNCATE TABLE {TN.QuotedFullName}";
             }
         }
 

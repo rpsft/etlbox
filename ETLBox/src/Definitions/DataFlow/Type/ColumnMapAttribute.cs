@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines a column name to which the value of the property is mapped when writing or reading
@@ -14,11 +14,11 @@
     /// }
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ColumnMap : Attribute
+    public class ColumnMapAttribute : Attribute
     {
         public string ColumnName { get; set; }
 
-        public ColumnMap(string columnName)
+        public ColumnMapAttribute(string columnName)
         {
             ColumnName = columnName;
         }

@@ -1,17 +1,11 @@
-using System.IO;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVDestination
 {
-    [Collection("DataFlow")]
-    public class CsvDestinationStringArrayTests
+    public class CsvDestinationStringArrayTests : FlatFileConnectorsTestBase
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvDestinationStringArrayTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SimpleNonGeneric()

@@ -1,17 +1,12 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
 using CsvHelper.TypeConversion;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.CSVSource
 {
-    [Collection("DataFlow")]
-    public class CsvSourceErrorLinkingTests
+    public class CsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CsvSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {

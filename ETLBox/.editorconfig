@@ -1,0 +1,5 @@
+# Code files
+[*.cs]
+
+# All performance - related inspections
+dotnet_analyzer_diagnostic.category-Performance.severity = warning

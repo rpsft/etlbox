@@ -1,30 +1,29 @@
-using System;
 using System.Globalization;
-using System.Linq;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationDataTypeTests
+    public class DbDestinationDataTypeTests : DatabaseConnectorsTestBase
     {
+        public DbDestinationDataTypeTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
         public enum EnumType
         {
             Value1 = 1,
             Value2 = 2
         }
 
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
-
-        public static IEnumerable<CultureInfo> Cultures => Config.AllLocalCultures();
-
         // Each culture for each database
+
         public static IEnumerable<object[]> Combinations =>
-            Connections.SelectMany(_ => Cultures, (conn, culture) => new[] { conn[0], culture });
+            AllSqlConnections.SelectMany(
+                _ => AllLocalCultures,
+                (conn, culture) => new[] { conn[0], culture }
+            );
 
         [Theory]
         [MemberData(nameof(Combinations))]

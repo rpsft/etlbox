@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
-    [Collection("DataFlow")]
-    public class RowMultiplicationTests
+    public class RowMultiplicationTests : TransformationsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public RowMultiplicationTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -88,7 +86,7 @@ namespace TestTransformations.RowMultiplication
                 List<MyOtherRow> result = new List<MyOtherRow>();
                 for (int i = 0; i <= row.Col1; i++)
                 {
-                    result.Add(new MyOtherRow { Col3 = i * row.Col1, });
+                    result.Add(new MyOtherRow { Col3 = i * row.Col1 });
                 }
                 return result;
             });

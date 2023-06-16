@@ -37,7 +37,7 @@ namespace TestShared.SharedFixtures
                     new("Col1", "INT", allowNulls: false),
                     new("Col2", "NVARCHAR(100)", allowNulls: true),
                     new("ChangeDate", "DATETIME", allowNulls: false),
-                    new("ChangeAction", "INT", allowNulls: false),
+                    new("ChangeAction", "INT", allowNulls: false)
                 }
             );
             TableDefinition.CreateTable(Connection);

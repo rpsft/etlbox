@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ALE.ETLBox.ConnectionManager;
 
@@ -24,15 +24,21 @@ namespace ALE.ETLBox.ControlFlow
         public void Execute()
         {
             CheckTableDefinition();
+
             bool tableExists = new IfTableOrViewExistsTask(TableName)
             {
                 ConnectionManager = ConnectionManager,
                 DisableLogging = true
             }.Exists();
-            if (tableExists && ThrowErrorIfTableExists)
-                throw new ETLBoxException($"Table {TableName} already exists!");
-            if (!tableExists)
-                new SqlTask(this, Sql).ExecuteNonQuery();
+
+            switch (tableExists)
+            {
+                case true when ThrowErrorIfTableExists:
+                    throw new ETLBoxException($"Table {TableName} already exists!");
+                case false:
+                    new SqlTask(this, Sql).ExecuteNonQuery();
+                    break;
+            }
         }
 
         /* Public properties */
@@ -57,7 +63,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                return $@"CREATE TABLE {TN.QuotatedFullName} (
+                return $@"CREATE TABLE {TN.QuotedFullName} (
 {ColumnsDefinitionSql}
 {PrimaryKeySql}
 )
@@ -119,11 +125,11 @@ namespace ALE.ETLBox.ControlFlow
                 throw new ETLBoxException(
                     "You did not provide any columns for the table - please define at least one table column."
                 );
-            if (Columns.Any(col => string.IsNullOrEmpty(col.Name)))
+            if (Columns.Exists(col => string.IsNullOrEmpty(col.Name)))
                 throw new ETLBoxException(
                     "One of the provided columns is either null or empty - can't create table."
                 );
-            if (Columns.Any(col => string.IsNullOrEmpty(col.DataType)))
+            if (Columns.Exists(col => string.IsNullOrEmpty(col.DataType)))
                 throw new ETLBoxException(
                     "One of the provided columns has a datatype that is either null or empty - can't create table."
                 );
@@ -147,61 +153,64 @@ namespace ALE.ETLBox.ControlFlow
 
         private string CreateDataTypeSql(ITableColumn col)
         {
-            if (ConnectionType == ConnectionManagerType.SqlServer && col.HasComputedColumn)
-                return string.Empty;
-            if (ConnectionType == ConnectionManagerType.Postgres && col.IsIdentity)
-                return string.Empty;
-            return DataTypeConverter.TryGetDBSpecificType(col.DataType, ConnectionType);
+            return ConnectionType switch
+            {
+                ConnectionManagerType.SqlServer when col.HasComputedColumn => string.Empty,
+                ConnectionManagerType.Postgres when col.IsIdentity => string.Empty,
+                _ => DataTypeConverter.TryGetDBSpecificType(col.DataType, ConnectionType)
+            };
         }
 
         private string CreateIdentitySql(ITableColumn col)
         {
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                return string.Empty;
-            if (col.IsIdentity)
+            if (ConnectionType == ConnectionManagerType.SQLite || !col.IsIdentity)
             {
-                if (ConnectionType == ConnectionManagerType.MySql)
-                    return "AUTO_INCREMENT";
-                if (ConnectionType == ConnectionManagerType.Postgres)
-                    return "SERIAL";
-                return $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})";
+                return string.Empty;
             }
 
-            return string.Empty;
+            return ConnectionType switch
+            {
+                ConnectionManagerType.MySql => "AUTO_INCREMENT",
+                ConnectionManagerType.Postgres => "SERIAL",
+                _ => $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})"
+            };
         }
 
         private string CreateNotNullSql(ITableColumn col)
         {
-            string nullSql = string.Empty;
-            if (ConnectionType == ConnectionManagerType.Postgres && col.IsIdentity)
-                return string.Empty;
-            if (ConnectionType == ConnectionManagerType.Access)
-                return string.Empty;
-            if (string.IsNullOrWhiteSpace(col.ComputedColumn))
-                nullSql = col.AllowNulls ? "NULL" : "NOT NULL";
-            return nullSql;
+            switch (ConnectionType)
+            {
+                case ConnectionManagerType.Postgres when col.IsIdentity:
+                case ConnectionManagerType.Access:
+                    return string.Empty;
+                default:
+                    if (string.IsNullOrWhiteSpace(col.ComputedColumn))
+                        return col.AllowNulls ? "NULL" : "NOT NULL";
+                    return string.Empty;
+            }
         }
 
         private string CreatePrimaryKeyConstraint()
         {
             string result = string.Empty;
-            if (Columns?.Any(col => col.IsPrimaryKey) ?? false)
+            if (!(Columns?.Exists(col => col.IsPrimaryKey) ?? false))
             {
-                var pkCols = Columns.Where(col => col.IsPrimaryKey).ToArray();
-                string pkConstName =
-                    TableDefinition.PrimaryKeyConstraintName
-                    ?? $"pk_{TN.UnquotatedFullName}_{string.Join("_", pkCols.Select(col => col.Name))}";
-                string constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
-                if (ConnectionType == ConnectionManagerType.SQLite)
-                    constraint = "";
-                string pkConst =
-                    $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
-                return pkConst;
+                return result;
             }
-            return result;
+
+            var pkCols = Columns.Where(col => col.IsPrimaryKey).ToArray();
+            string pkConstName =
+                TableDefinition.PrimaryKeyConstraintName
+                ?? $"pk_{TN.UnquotedFullName}_{string.Join("_", pkCols.Select(col => col.Name))}";
+            string constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
+            if (ConnectionType == ConnectionManagerType.SQLite)
+                constraint = "";
+            string pkConst =
+                $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
+            return pkConst;
         }
 
-        private string CreateDefaultSql(ITableColumn col)
+        private static string CreateDefaultSql(ITableColumn col)
         {
             string defaultSql = string.Empty;
             if (!col.IsPrimaryKey)
@@ -214,12 +223,13 @@ namespace ALE.ETLBox.ControlFlow
 
         private string CreateComputedColumnSql(ITableColumn col)
         {
-            if (col.HasComputedColumn && !DbConnectionManager.SupportComputedColumns)
-                throw new ETLBoxNotSupportedException("Computed columns are not supported.");
-
-            if (col.HasComputedColumn)
-                return $"AS {col.ComputedColumn}";
-            return string.Empty;
+            return col.HasComputedColumn switch
+            {
+                true when !DbConnectionManager.SupportComputedColumns
+                    => throw new ETLBoxNotSupportedException("Computed columns are not supported."),
+                true => $"AS {col.ComputedColumn}",
+                _ => string.Empty
+            };
         }
 
         private string CreateCommentSql(ITableColumn col)
@@ -232,11 +242,11 @@ namespace ALE.ETLBox.ControlFlow
             return string.Empty;
         }
 
-        private string SetQuotesIfString(string value)
+        private static string SetQuotesIfString(string value)
         {
-            if (!Regex.IsMatch(value, @"^\d+(\.\d+|)$")) //@" ^ (\d|\.)+$"))
-                return $"'{value}'";
-            return value;
+            return !Regex.IsMatch(value, @"^\d+(\.\d+|)$") //@" ^ (\d|\.)+$"))
+                ? $"'{value}'"
+                : value;
         }
     }
 }

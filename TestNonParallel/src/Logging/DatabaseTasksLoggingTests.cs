@@ -1,19 +1,13 @@
-﻿using System.Collections.Generic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using TestShared.Helper;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging
 {
-    [Collection("Logging")]
-    public class DatabaseTasksLoggingTests : IDisposable
+    public sealed class DatabaseTasksLoggingTests : NonParallelTestBase, IDisposable
     {
-        private SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("Logging");
-
-        public DatabaseTasksLoggingTests()
+        public DatabaseTasksLoggingTests(LoggingDatabaseFixture fixture)
+            : base(fixture)
         {
             CreateSchemaTask.Create(SqlConnection, "etl");
             CreateLogTableTask.Create(SqlConnection);
@@ -168,7 +162,7 @@ GROUP BY task_hash"
             CreateTableTask.Create(
                 SqlConnection,
                 "dbo.CreateTable",
-                new List<TableColumn> { new TableColumn("value", "INT") }
+                new List<TableColumn> { new("value", "INT") }
             );
             //Assert
             Assert.Equal(2, CountLogEntries("CreateTableTask"));

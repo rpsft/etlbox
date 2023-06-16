@@ -1,11 +1,8 @@
-using System;
 using ALE.ETLBox;
 using ALE.ETLBox.DataFlow;
-using Xunit;
 
 namespace TestConnectionManager.ConnectionManager
 {
-    [Collection("DataFlow")]
     public class NoConnectionManagerTests
     {
         [Fact]

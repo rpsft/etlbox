@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using System.Text;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 
@@ -38,7 +38,7 @@ namespace ALE.ETLBox.Logging
                     col => LoadProcess.EndMessage = (string)col,
                     col => LoadProcess.WasSuccessful = Convert.ToInt16(col) > 0,
                     col => LoadProcess.AbortMessage = (string)col,
-                    col => LoadProcess.WasAborted = Convert.ToInt16(col) > 0,
+                    col => LoadProcess.WasAborted = Convert.ToInt16(col) > 0
                 }
             };
             if (ReadOption == ReadOptions.ReadAllProcesses)
@@ -60,33 +60,50 @@ namespace ALE.ETLBox.Logging
         public List<LoadProcess> AllLoadProcesses { get; set; }
 
         public LoadProcess LastFinished { get; private set; }
-        public LoadProcess LastTransfered { get; private set; }
+        public LoadProcess LastTransferred { get; private set; }
         public ReadOptions ReadOption { get; set; } = ReadOptions.ReadSingleProcess;
 
         public string Sql
         {
             get
             {
-                string sql =
+                StringBuilder sqlBuilder = new();
+                sqlBuilder.Append(
                     $@"
 SELECT {Top1Sql} {QB}id{QE}, {QB}start_date{QE}, {QB}end_date{QE}, {QB}source{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}is_running{QE}, {QB}end_message{QE}, {QB}was_successful{QE}, {QB}abort_message{QE}, {QB}was_aborted{QE}
-FROM {Tn.QuotatedFullName}";
-                if (ReadOption == ReadOptions.ReadSingleProcess)
-                    sql += $@"WHERE id = {LoadProcessId}";
-                else if (ReadOption == ReadOptions.ReadLastFinishedProcess)
-                    sql +=
-                        @"WHERE was_successful = 1 || was_aborted = 1
-ORDER BY end_date desc, id DESC";
-                else if (ReadOption == ReadOptions.ReadLastSuccessful)
-                    sql +=
-                        @"WHERE was_successful = 1
-ORDER BY end_date desc, id DESC";
-                else if (ReadOption == ReadOptions.ReadLastAborted)
-                    sql +=
-                        @"WHERE was_aborted = 1
-ORDER BY end_date desc, id DESC";
-                sql += Environment.NewLine + Limit1Sql;
-                return sql;
+FROM {Tn.QuotedFullName}"
+                );
+                switch (ReadOption)
+                {
+                    case ReadOptions.ReadSingleProcess:
+                        sqlBuilder.Append($"WHERE id = {LoadProcessId.ToString()}");
+                        break;
+                    case ReadOptions.ReadLastFinishedProcess:
+                        sqlBuilder.Append(
+                            @"WHERE was_successful = 1 || was_aborted = 1
+                              ORDER BY end_date desc, id DESC"
+                        );
+                        break;
+                    case ReadOptions.ReadLastSuccessful:
+                        sqlBuilder.Append(
+                            @"WHERE was_successful = 1
+                              ORDER BY end_date desc, id DESC"
+                        );
+                        break;
+                    case ReadOptions.ReadLastAborted:
+                        sqlBuilder.Append(
+                            @"WHERE was_aborted = 1
+                              ORDER BY end_date desc, id DESC"
+                        );
+                        break;
+                    case ReadOptions.ReadAllProcesses:
+                    default:
+                        break;
+                }
+
+                sqlBuilder.Append(Environment.NewLine);
+                sqlBuilder.Append(Limit1Sql);
+                return sqlBuilder.ToString();
             }
         }
 

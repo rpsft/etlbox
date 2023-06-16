@@ -1,13 +1,5 @@
-using System;
-using System.IO;
-using ALE.ETLBox.DataFlow;
-using CsvHelper.Configuration.Attributes;
-using JetBrains.Annotations;
-using Xunit;
-
 namespace TestFlatFileConnectors.CSVDestination
 {
-    [Collection("DataFlow")]
     public class CsvDestinationSerializationTests
     {
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]

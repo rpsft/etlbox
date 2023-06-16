@@ -2,16 +2,15 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DataFlow")]
-    public class DbMergeCompositeKeysTests
+    public class DbMergeCompositeKeysTests : DatabaseConnectorsTestBase
     {
-        public SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("DataFlow");
+        public DbMergeCompositeKeysTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         public class MyMergeRow : MergeableRow
         {
@@ -28,58 +27,61 @@ namespace TestDatabaseConnectors.DBMerge
             public string ColValue2 { get; set; }
         }
 
-        private void ReCreateTable(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void ReCreateTable(IConnectionManager connection, ObjectNameDescriptor tn)
         {
-            DropTableTask.DropIfExists(connection, TN.ObjectName);
+            DropTableTask.DropIfExists(connection, tn.ObjectName);
 
             CreateTableTask.Create(
                 connection,
-                TN.ObjectName,
+                tn.ObjectName,
                 new List<TableColumn>
                 {
                     new("ColKey1", "INT", allowNulls: false, isPrimaryKey: true),
                     new("ColKey2", "CHAR(1)", allowNulls: false, isPrimaryKey: true),
                     new("ColValue1", "NVARCHAR(100)", allowNulls: true, isPrimaryKey: false),
-                    new("ColValue2", "NVARCHAR(100)", allowNulls: true, isPrimaryKey: false),
+                    new("ColValue2", "NVARCHAR(100)", allowNulls: true, isPrimaryKey: false)
                 }
             );
         }
 
-        private void InsertSourceData(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void InsertSourceData(IConnectionManager connection, ObjectNameDescriptor tn)
         {
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'I','Insert', 'Test1')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1,'I','Insert', 'Test1')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'U','Update', 'Test2')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1,'U','Update', 'Test2')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'E','NoChange', 'Test3')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1,'E','NoChange', 'Test3')"
             );
         }
 
-        private void InsertDestinationData(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void InsertDestinationData(
+            IConnectionManager connection,
+            ObjectNameDescriptor tn
+        )
         {
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'U','Update', 'XXX')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1,'U','Update', 'XXX')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'E','NoChange', 'Test3')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1,'E','NoChange', 'Test3')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {TN.QuotatedFullName} VALUES(1,'D','Delete', 'Test4')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1,'D','Delete', 'Test4')"
             );
         }
 
@@ -87,20 +89,20 @@ namespace TestDatabaseConnectors.DBMerge
         public void MergeWithCompositeKey(IConnectionManager connection)
         {
             //Arrange
-            ObjectNameDescriptor TNS = new ObjectNameDescriptor(
+            ObjectNameDescriptor sourceTn = new ObjectNameDescriptor(
                 "DBMergeSource",
                 connection.QB,
                 connection.QE
             );
-            ObjectNameDescriptor TND = new ObjectNameDescriptor(
+            ObjectNameDescriptor destinationTn = new ObjectNameDescriptor(
                 "DBMergeDestination",
                 connection.QB,
                 connection.QE
             );
-            ReCreateTable(connection, TNS);
-            ReCreateTable(connection, TND);
-            InsertSourceData(connection, TNS);
-            InsertDestinationData(connection, TND);
+            ReCreateTable(connection, sourceTn);
+            ReCreateTable(connection, destinationTn);
+            InsertSourceData(connection, sourceTn);
+            InsertDestinationData(connection, destinationTn);
             //Act
             DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
             DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
@@ -115,7 +117,7 @@ namespace TestDatabaseConnectors.DBMerge
                 RowCountTask.Count(
                     connection,
                     "DBMergeDestination",
-                    $"{TND.QB}ColKey2{TND.QE} = 'E' and {TND.QB}ColValue2{TND.QE} = 'Test3'"
+                    $"{destinationTn.QB}ColKey2{destinationTn.QE} = 'E' and {destinationTn.QB}ColValue2{destinationTn.QE} = 'Test3'"
                 )
             );
             Assert.Equal(
@@ -123,7 +125,7 @@ namespace TestDatabaseConnectors.DBMerge
                 RowCountTask.Count(
                     connection,
                     "DBMergeDestination",
-                    $"{TND.QB}ColKey2{TND.QE} = 'U' and {TND.QB}ColValue2{TND.QE} = 'Test2'"
+                    $"{destinationTn.QB}ColKey2{destinationTn.QE} = 'U' and {destinationTn.QB}ColValue2{destinationTn.QE} = 'Test2'"
                 )
             );
             Assert.Equal(
@@ -131,7 +133,7 @@ namespace TestDatabaseConnectors.DBMerge
                 RowCountTask.Count(
                     connection,
                     "DBMergeDestination",
-                    $"{TND.QB}ColKey2{TND.QE} = 'I' and {TND.QB}ColValue2{TND.QE} = 'Test1'"
+                    $"{destinationTn.QB}ColKey2{destinationTn.QE} = 'I' and {destinationTn.QB}ColValue2{destinationTn.QE} = 'Test1'"
                 )
             );
         }

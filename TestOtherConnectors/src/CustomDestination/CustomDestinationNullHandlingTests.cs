@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using ALE.ETLBox.DataFlow;
-using Xunit;
-
 namespace TestOtherConnectors.CustomDestination
 {
-    [Collection("DataFlow")]
     public class CustomDestinationNullHandlingTests
     {
         public class MySimpleRow

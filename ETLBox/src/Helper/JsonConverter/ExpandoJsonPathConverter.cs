@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -37,7 +37,7 @@ namespace ALE.ETLBox.Helper
     /// </remarks>
     public class ExpandoJsonPathConverter : JsonConverter
     {
-        public IEnumerable<JsonProperty2JsonPath> PathLookups { get; set; }
+        private IEnumerable<JsonProperty2JsonPath> PathLookups { get; set; }
 
         public ExpandoJsonPathConverter(IEnumerable<JsonProperty2JsonPath> pathLookups)
         {
@@ -114,38 +114,43 @@ namespace ALE.ETLBox.Helper
             }
             else
             {
-                var jo = JToken.Load(reader);
-                foreach (var pl in PathLookups.Where(l => l.JsonPropertyName == propertyName))
+                var jsonObject = JToken.Load(reader);
+                foreach (
+                    var pl in PathLookups.Where(
+                        l => l.JsonPropertyName == propertyName && l.Validate()
+                    )
+                )
                 {
-                    if (pl?.Validate() ?? false)
-                        expandoObject[pl.NewPropertyName] = GetValueFromJsonPath(jo, pl.JsonPath);
+                    expandoObject[pl.NewPropertyName] = GetValueFromJsonPath(
+                        jsonObject,
+                        pl.JsonPath
+                    );
                 }
             }
         }
 
-        private object GetValueFromJsonPath(JToken jo, string path)
+        private static object GetValueFromJsonPath(JToken jsonObject, string path)
         {
             object val = null;
-            //JToken t = jo.SelectToken(path);
-            List<JToken> tokens = jo.SelectTokens(path).ToList();
-            if (tokens.Count == 1)
+            List<JToken> tokens = jsonObject.SelectTokens(path).ToList();
+            switch (tokens.Count)
             {
-                JToken t = tokens.First();
-                val = ParseToken(t);
-            }
-            else if (tokens.Count > 1)
-            {
-                List<object> result = new List<object>();
-                foreach (var t in tokens)
+                case 1:
                 {
-                    result.Add(ParseToken(t));
+                    JToken t = tokens[0];
+                    val = ParseToken(t);
+                    break;
                 }
-                val = result;
+                case > 1:
+                {
+                    val = tokens.Select(ParseToken).ToList();
+                    break;
+                }
             }
             return val;
         }
 
-        private object ParseToken(JToken t)
+        private static object ParseToken(JToken t)
         {
             return t is JValue value ? value.Value : t.ToString();
         }
@@ -160,7 +165,7 @@ namespace ALE.ETLBox.Helper
         public override bool CanWrite => false;
 
         /// https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/JsonTokenUtils.cs
-        private bool IsPrimitiveToken(JsonToken token)
+        private static bool IsPrimitiveToken(JsonToken token)
         {
             return token switch
             {

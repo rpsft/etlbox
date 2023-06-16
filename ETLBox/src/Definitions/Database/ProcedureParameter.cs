@@ -1,5 +1,6 @@
 ﻿namespace ALE.ETLBox
 {
+    [PublicAPI]
     public class ProcedureParameter
     {
         public string Name { get; set; }
@@ -9,7 +10,7 @@
         public bool ReadOnly { get; set; }
         public bool Out { get; set; }
 
-        public ProcedureParameter() { }
+        private ProcedureParameter() { }
 
         public ProcedureParameter(string name, string dataType)
             : this()

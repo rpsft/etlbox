@@ -2,7 +2,6 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using System.Linq;
-using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -36,26 +35,23 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (HasSql)
                     return Sql;
-                else
-                {
-                    if (!HasSourceTableDefinition)
-                        LoadTableDefinition();
-                    var tn = new ObjectNameDescriptor(SourceTableDefinition.Name, QB, QE);
-                    return $@"SELECT {SourceTableDefinition.Columns.AsString("", QB, QE)} FROM {tn.QuotatedFullName}";
-                }
+                if (!HasSourceTableDefinition)
+                    LoadTableDefinition();
+                var tn = new ObjectNameDescriptor(SourceTableDefinition.Name, QB, QE);
+                return $@"SELECT {SourceTableDefinition.Columns.AsString("", QB, QE)} FROM {tn.QuotedFullName}";
             }
         }
 
-        public List<string> ColumnNamesEvaluated
+        public IEnumerable<string> ColumnNamesEvaluated
         {
             get
             {
                 if (ColumnNames?.Count > 0)
                     return ColumnNames;
-                else if (HasSourceTableDefinition)
-                    return SourceTableDefinition?.Columns?.Select(col => col.Name).ToList();
-                else
-                    return ParseColumnNamesFromQuery();
+
+                return HasSourceTableDefinition
+                    ? SourceTableDefinition?.Columns?.Select(col => col.Name)
+                    : ParseColumnNamesFromQuery();
             }
         }
 
@@ -66,15 +62,13 @@ namespace ALE.ETLBox.DataFlow
 
         private string SourceDescription
         {
-            get
-            {
-                if (HasSourceTableDefinition)
-                    return $"table {SourceTableDefinition.Name}";
-                if (HasTableName)
-                    return $"table {TableName}";
-                else
-                    return "custom sql";
-            }
+            get =>
+                (HasSourceTableDefinition, HasTableName) switch
+                {
+                    (true, _) => $"table {SourceTableDefinition.Name}",
+                    (_, true) => $"table {TableName}",
+                    (_, _) => "custom sql"
+                };
         }
 
         public DbSource()
@@ -133,7 +127,7 @@ namespace ALE.ETLBox.DataFlow
         private void ReadAll()
         {
             SqlTask sqlT = CreateSqlTask(SqlForRead);
-            DefineActions(sqlT, ColumnNamesEvaluated);
+            DefineActions(sqlT, ColumnNamesEvaluated.ToList());
             sqlT.ExecuteReader();
             CleanupSqlTask(sqlT);
         }
@@ -142,7 +136,7 @@ namespace ALE.ETLBox.DataFlow
         {
             if (HasTableName)
                 SourceTableDefinition = TableDefinition.GetDefinitionFromTableName(
-                    this.DbConnectionManager,
+                    DbConnectionManager,
                     TableName
                 );
             else if (!HasSourceTableDefinition && !HasTableName)
@@ -161,19 +155,29 @@ namespace ALE.ETLBox.DataFlow
             _row = default;
             if (TypeInfo.IsArray)
             {
+                // Create array buffer of given size
                 sqlT.BeforeRowReadAction = () =>
                     _row = (TOutput)Activator.CreateInstance(typeof(TOutput), columnNames.Count);
-                int index = 0;
-                foreach (var _ in columnNames)
-                    index = SetupArrayFillAction(sqlT, index);
+                // Set up copy action for each column
+                for (var i = 0; i < columnNames.Count; i++)
+                {
+                    int currentIndexAvoidingClosure = i;
+                    sqlT.Actions!.Add(col =>
+                    {
+                        CopyColumnToArray(col, currentIndexAvoidingClosure);
+                    });
+                }
             }
             else
             {
-                if (columnNames?.Count == 0)
-                    columnNames = TypeInfo.PropertyNames;
-                SetupNonArrayFillAction(sqlT, columnNames);
+                // Create object row buffer of given type
                 sqlT.BeforeRowReadAction = () =>
                     _row = (TOutput)Activator.CreateInstance(typeof(TOutput));
+                // Fill column names from object properties if needed
+                if (columnNames?.Count is 0 or null)
+                    columnNames = TypeInfo.PropertyNames;
+                // Set up copy actions for all columns
+                sqlT.Actions!.AddRange(columnNames.Select(GenerateColumnCopyAction));
             }
             sqlT.AfterRowReadAction = () =>
             {
@@ -185,100 +189,91 @@ namespace ALE.ETLBox.DataFlow
             };
         }
 
-        private void SetupNonArrayFillAction(SqlTask sqlT, List<string> columnNames)
-        {
-            foreach (var colName in columnNames)
+        private Action<object> GenerateColumnCopyAction(string colName) =>
+            (TypeInfo.IsDynamic, TypeInfo.HasPropertyOrColumnMapping(colName)) switch
             {
-                if (TypeInfo.HasPropertyOrColumnMapping(colName))
-                    SetupObjectFillAction(sqlT, colName);
-                else if (TypeInfo.IsDynamic)
-                    SetupDynamicObjectFillAction(sqlT, colName);
-                else
-                    sqlT.Actions.Add(_ => { });
+                (_, true)
+                    => colValue =>
+                    {
+                        CopyColumnToObjectWithReflection(colName, colValue);
+                    },
+                (true, false)
+                    => colValue =>
+                    {
+                        CopyColumnToDynamicObject(colName, colValue);
+                    },
+                (_, _) => _ => { }
+            };
+
+        private void CopyColumnToArray(object columnValue, int columnIndex)
+        {
+            try
+            {
+                if (_row != null)
+                {
+                    var ar = _row as Array;
+                    var con = Convert.ChangeType(columnValue, typeof(TOutput).GetElementType()!);
+                    ar!.SetValue(con, columnIndex);
+                }
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                _row = default;
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
             }
         }
 
-        private int SetupArrayFillAction(SqlTask sqlT, int index)
+        private void CopyColumnToObjectWithReflection(string colName, object colValue)
         {
-            int currentIndexAvoidingClosure = index;
-            sqlT.Actions.Add(col =>
+            try
             {
-                try
+                if (_row == null)
+                    return;
+
+                var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
+
+                var con = (colValue, TypeInfo.UnderlyingPropType[propInfo].IsEnum) switch
                 {
-                    if (_row != null)
-                    {
-                        var ar = _row as Array;
-                        var con = Convert.ChangeType(col, typeof(TOutput).GetElementType()!);
-                        ar!.SetValue(con, currentIndexAvoidingClosure);
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (!ErrorHandler.HasErrorBuffer)
-                        throw;
-                    _row = default;
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
-                }
-            });
-            index++;
-            return index;
+                    (null, _) => null,
+                    (_, true) => colValue,
+                    (_, _) => Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo])
+                };
+
+                propInfo.TrySetValue(_row, con, TypeInfo.UnderlyingPropType[propInfo]);
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                _row = default;
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
+            }
         }
 
-        private void SetupObjectFillAction(SqlTask sqlT, string colName)
+        private void CopyColumnToDynamicObject(string colName, object colValue)
         {
-            sqlT.Actions.Add(colValue =>
+            try
             {
-                try
+                if (_row == null)
                 {
-                    if (_row != null)
-                    {
-                        var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
-                        var con =
-                            colValue != null
-                                ? TypeInfo.UnderlyingPropType[propInfo].IsEnum
-                                    ? colValue
-                                    : Convert.ChangeType(
-                                        colValue,
-                                        TypeInfo.UnderlyingPropType[propInfo]
-                                    )
-                                : null;
+                    return;
+                }
 
-                        propInfo.TrySetValue(_row, con, TypeInfo.UnderlyingPropType[propInfo]);
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (!ErrorHandler.HasErrorBuffer)
-                        throw;
-                    _row = default;
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
-                }
-            });
+                IDictionary<string, object> r = _row as ExpandoObject;
+                r!.Add(colName, colValue);
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                _row = default;
+                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
+            }
         }
 
-        private void SetupDynamicObjectFillAction(SqlTask sqlT, string colName)
-        {
-            sqlT.Actions.Add(colValue =>
-            {
-                try
-                {
-                    if (_row != null)
-                    {
-                        IDictionary<string, object> r = _row as ExpandoObject;
-                        r!.Add(colName, colValue);
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (!ErrorHandler.HasErrorBuffer)
-                        throw;
-                    _row = default;
-                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(_row));
-                }
-            });
-        }
-
-        private void CleanupSqlTask(SqlTask sqlT)
+        private static void CleanupSqlTask(SqlTask sqlT)
         {
             sqlT.Actions = null;
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using ALE.ETLBox.Helper;
-using Xunit;
 
 namespace TestHelper
 {
@@ -54,7 +53,7 @@ namespace TestHelper
             TestNullableEnumClass t = new TestNullableEnumClass { TestEnumProp = EnumType.Value2 };
             Assert.Equal(EnumType.Value2, t.TestEnumProp);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestEnumProp");
-            propInfo1.TrySetValue(t, 1, Nullable.GetUnderlyingType(propInfo1.PropertyType));
+            propInfo1.TrySetValue(t, 1, Nullable.GetUnderlyingType(propInfo1!.PropertyType));
             Assert.Equal(EnumType.Value1, t.TestEnumProp);
         }
     }

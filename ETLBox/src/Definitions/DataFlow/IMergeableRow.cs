@@ -17,7 +17,6 @@
         /// <summary>
         /// The result of a merge operation
         /// </summary>
-        /// <remarks><see cref="SetChangeTime"/> is called when this value is set</remarks>
         /// <value>null means not determined yet</value>
         ChangeAction? ChangeAction { get; set; }
     }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using ALE.ETLBox;
+﻿using System.IO;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance.Helper
@@ -13,7 +11,7 @@ namespace ALE.ETLBoxTests.Performance.Helper
                 new TableColumn("Col1", "CHAR(255)", allowNulls: false),
                 new TableColumn("Col2", "CHAR(255)", allowNulls: false),
                 new TableColumn("Col3", "CHAR(255)", allowNulls: false),
-                new TableColumn("Col4", "CHAR(255)", allowNulls: true),
+                new TableColumn("Col4", "CHAR(255)", allowNulls: true)
             };
 
         internal static string CSVFolderName = "res/Csv";
@@ -21,18 +19,20 @@ namespace ALE.ETLBoxTests.Performance.Helper
         internal static string GetCompleteFilePath(int numberOfRows) =>
             Path.GetFullPath(Path.Combine(CSVFolderName, "TestData" + numberOfRows + ".csv"));
 
-        internal static void CreateCSVFileIfNeeded(int numberOfRows)
+        internal static void CreateCsvFileIfNeeded(int numberOfRows)
         {
-            if (!File.Exists(GetCompleteFilePath(numberOfRows)))
+            if (File.Exists(GetCompleteFilePath(numberOfRows)))
             {
-                BigDataHelper bigData = new BigDataHelper
-                {
-                    FileName = GetCompleteFilePath(numberOfRows),
-                    NumberOfRows = numberOfRows,
-                    TableDefinition = new TableDefinition("CSV", DestTableCols)
-                };
-                bigData.CreateBigDataCSV();
+                return;
             }
+
+            BigDataHelper bigData = new BigDataHelper
+            {
+                FileName = GetCompleteFilePath(numberOfRows),
+                NumberOfRows = numberOfRows,
+                TableDefinition = new TableDefinition("CSV", DestTableCols)
+            };
+            bigData.CreateBigDataCSV();
         }
     }
 }

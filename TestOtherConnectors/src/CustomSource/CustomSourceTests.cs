@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestOtherConnectors.CustomSource
 {
-    [Collection("DataFlow")]
-    public class CustomSourceTests
+    public class CustomSourceTests : OtherConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public CustomSourceTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture) { }
 
+        [Serializable]
         public class MySimpleRow
         {
             public int Col1 { get; set; }
@@ -27,21 +21,22 @@ namespace TestOtherConnectors.CustomSource
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSource"
             );
-            List<string> Data = new List<string> { "Test1", "Test2", "Test3" };
-            int _readIndex = 0;
-            Func<MySimpleRow> ReadData = () =>
-            {
-                var result = new MySimpleRow { Col1 = _readIndex + 1, Col2 = Data[_readIndex] };
-                _readIndex++;
-                return result;
-            };
+            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
+            int readIndex = 0;
 
-            Func<bool> EndOfData = () => _readIndex >= Data.Count;
+            MySimpleRow ReadData()
+            {
+                var result = new MySimpleRow { Col1 = readIndex + 1, Col2 = data[readIndex] };
+                readIndex++;
+                return result;
+            }
+
+            bool EndOfData() => readIndex >= data.Count;
 
             //Act
             CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "Destination4CustomSource"
             );
             source.LinkTo(dest);

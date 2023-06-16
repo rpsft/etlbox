@@ -1,5 +1,3 @@
-using System;
-
 namespace TestOtherConnectors.Helpers
 {
     public static class StringExtensions

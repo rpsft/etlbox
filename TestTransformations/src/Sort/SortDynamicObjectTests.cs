@@ -1,15 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.Sort
 {
-    [Collection("DataFlow")]
-    public class SortDynamicObjectTests
+    public class SortDynamicObjectTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public SortDynamicObjectTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void SortSimpleDataDescending()
@@ -20,7 +18,7 @@ namespace TestTransformations.Sort
             );
             source2Columns.InsertTestData();
             DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "SortSourceNonGeneric"
             );
 

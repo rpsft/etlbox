@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace ALE.ETLBox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
@@ -110,7 +108,7 @@ namespace ALE.ETLBox.DataFlow
                         TaskType,
                         "LOG",
                         TaskHash,
-                        ControlFlow.ControlFlow.STAGE,
+                        ControlFlow.ControlFlow.Stage,
                         ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                     );
             }

@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace ALE.ETLBox.ConnectionManager
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Sql Connection manager for an ODBC connection based on ADO.NET to Sql Server.
@@ -20,6 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
     ///     "Driver={SQL Server};Server=.;Database=ETLBox;Trusted_Connection=Yes;"));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class SqlOdbcConnectionManager : OdbcConnectionManager
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =
@@ -42,7 +41,7 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 UseParameterQuery = true,
                 QB = QB,
-                QE = QE,
+                QE = QE
                 //ConnectionType = ConnectionManagerType.SqlServer
             };
             OdbcBulkInsert(data, tableName, bulkInsert);
@@ -63,8 +62,8 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void AfterBulkInsert(string tableName) { }
 
-        public override void PrepareBulkInsert(string tablename) { }
+        public override void PrepareBulkInsert(string tableName) { }
 
-        public override void CleanUpBulkInsert(string tablename) { }
+        public override void CleanUpBulkInsert(string tableName) { }
     }
 }

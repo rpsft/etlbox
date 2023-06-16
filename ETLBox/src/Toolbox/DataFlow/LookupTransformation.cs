@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.Helper;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -87,7 +86,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void DefaultInitWithMatchRetrieveAttributes()
         {
-            _rowTransformationFunc = row => FindRowByAttributes(row);
+            _rowTransformationFunc = FindRowByAttributes;
             InitRowTransformation(() =>
             {
                 ReadAndCheckTypeInfo();
@@ -117,13 +116,15 @@ namespace ALE.ETLBox.DataFlow
                 }
                 return same;
             });
-            if (lookupHit != null)
+            if (lookupHit == null)
             {
-                foreach (var rc in TypeInfo.RetrieveColumns)
-                {
-                    var retrieveValue = rc.PropInOutput.GetValue(lookupHit);
-                    rc.PropInInput.TrySetValue(row, retrieveValue);
-                }
+                return row;
+            }
+
+            foreach (var rc in TypeInfo.RetrieveColumns)
+            {
+                var retrieveValue = rc.PropInOutput.GetValue(lookupHit);
+                rc.PropInInput.TrySetValue(row, retrieveValue);
             }
             return row;
         }
@@ -145,8 +146,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void FillBuffer(TSourceOutput sourceRow)
         {
-            if (LookupData == null)
-                LookupData = new List<TSourceOutput>();
+            LookupData ??= new List<TSourceOutput>();
             LookupData.Add(sourceRow);
         }
 

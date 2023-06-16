@@ -1,18 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using JetBrains.Annotations;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
-using Xunit;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
-    [Collection("DataFlow")]
-    public class ExcelSourceTests
+    public class ExcelSourceTests : FlatFileConnectorsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public ExcelSourceTests(FlatFileToDatabaseFixture fixture)
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -37,7 +30,7 @@ namespace TestFlatFileConnectors.ExcelSource
                 HasNoHeader = true
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                Connection,
+                SqlConnection,
                 "ExcelDestination1",
                 2
             );
@@ -72,7 +65,7 @@ namespace TestFlatFileConnectors.ExcelSource
                 HasNoHeader = true
             };
             DbDestination<OneExcelColumn> dest = new DbDestination<OneExcelColumn>(
-                Connection,
+                SqlConnection,
                 "ExcelDestination2",
                 2
             );
@@ -85,7 +78,7 @@ namespace TestFlatFileConnectors.ExcelSource
             Assert.Equal(
                 3,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "ExcelDestination2",
                     "Col1 = 0 AND Col2 LIKE 'Test%'"
                 )
@@ -123,7 +116,7 @@ namespace TestFlatFileConnectors.ExcelSource
             };
 
             DbDestination<ExcelDataSheet2> dest = new DbDestination<ExcelDataSheet2>(
-                Connection,
+                SqlConnection,
                 "ExcelDestination3"
             );
 
@@ -132,11 +125,11 @@ namespace TestFlatFileConnectors.ExcelSource
             dest.Wait();
 
             //Assert
-            Assert.Equal(5, RowCountTask.Count(Connection, "ExcelDestination3"));
+            Assert.Equal(5, RowCountTask.Count(SqlConnection, "ExcelDestination3"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "ExcelDestination3",
                     "Col2 = 'Wert1' AND Col3 = 5 AND Col4 = 1"
                 )
@@ -144,7 +137,7 @@ namespace TestFlatFileConnectors.ExcelSource
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "ExcelDestination3",
                     "Col2 IS NULL AND Col3 = 0 AND Col4 = 1.2"
                 )
@@ -152,7 +145,7 @@ namespace TestFlatFileConnectors.ExcelSource
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "ExcelDestination3",
                     "Col2 IS NULL AND Col3 = 7 AND Col4 = 1.234"
                 )
@@ -160,7 +153,7 @@ namespace TestFlatFileConnectors.ExcelSource
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "ExcelDestination3",
                     "Col2 = 'Wert4' AND Col3 = 8 AND Col4 = 1.2345"
                 )
@@ -168,13 +161,14 @@ namespace TestFlatFileConnectors.ExcelSource
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "ExcelDestination3",
                     "Col2 = 'Wert5' AND Col3 = 9 AND Col4 = 2"
                 )
             );
         }
 
+        [Serializable]
         public class Excel21Cols
         {
             [ExcelColumn(0)]
@@ -191,7 +185,7 @@ namespace TestFlatFileConnectors.ExcelSource
         }
 
         [Fact]
-        public void Exceding20Columns()
+        public void Exceeding20Columns()
         {
             //Arrange
 

@@ -1,5 +1,6 @@
 ﻿namespace ALE.ETLBox
 {
+    [PublicAPI]
     public class ProcedureDefinition
     {
         public string Name { get; set; }

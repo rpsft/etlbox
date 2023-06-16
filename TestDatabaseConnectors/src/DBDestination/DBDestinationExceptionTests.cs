@@ -1,16 +1,12 @@
-using System;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DataFlow")]
-    public class DbDestinationExceptionTests
+    public class DbDestinationExceptionTests : DatabaseConnectorsTestBase
     {
-        public static SqlConnectionManager SqlConnection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public DbDestinationExceptionTests(DatabaseSourceDestinationFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void UnknownTable()
@@ -35,7 +31,7 @@ namespace TestDatabaseConnectors.DBDestination
                 }
                 catch (AggregateException e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
         }
@@ -70,7 +66,7 @@ namespace TestDatabaseConnectors.DBDestination
                 }
                 catch (AggregateException e)
                 {
-                    throw e.InnerException;
+                    throw e.InnerException!;
                 }
             });
         }

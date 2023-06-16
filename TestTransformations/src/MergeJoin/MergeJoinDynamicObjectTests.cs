@@ -1,16 +1,14 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using TestShared.Helper;
 using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
 namespace TestTransformations.MergeJoin
 {
-    [Collection("DataFlow")]
-    public class MergeJoinDynamicObjectTests
+    public class MergeJoinDynamicObjectTests : TransformationsTestBase
     {
-        public SqlConnectionManager Connection =>
-            Config.SqlConnection.ConnectionManager("DataFlow");
+        public MergeJoinDynamicObjectTests(TransformationsDatabaseFixture fixture)
+            : base(fixture) { }
 
         [Fact]
         public void MergeJoinUsingOneObject()
@@ -27,15 +25,15 @@ namespace TestTransformations.MergeJoin
             var _ = new TwoColumnsTableFixture("MergeJoinDynamicDestination");
 
             DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "MergeJoinDynamicSource1"
             );
             DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "MergeJoinDynamicSource2"
             );
             DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
-                Connection,
+                SqlConnection,
                 "MergeJoinDynamicDestination"
             );
 
@@ -45,8 +43,8 @@ namespace TestTransformations.MergeJoin
                 {
                     dynamic ir1 = inputRow1;
                     dynamic ir2 = inputRow2;
-                    ir1.Col1 = ir1.Col1 + ir2.Col1;
-                    ir1.Col2 = ir1.Col2 + ir2.Col2;
+                    ir1.Col1 += ir2.Col1;
+                    ir1.Col2 += ir2.Col2;
                     return inputRow1;
                 }
             );
@@ -58,11 +56,11 @@ namespace TestTransformations.MergeJoin
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(Connection, "MergeJoinDynamicDestination"));
+            Assert.Equal(3, RowCountTask.Count(SqlConnection, "MergeJoinDynamicDestination"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "MergeJoinDynamicDestination",
                     "Col1 = 5 AND Col2='Test1Test4'"
                 )
@@ -70,7 +68,7 @@ namespace TestTransformations.MergeJoin
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "MergeJoinDynamicDestination",
                     "Col1 = 7 AND Col2='Test2Test5'"
                 )
@@ -78,7 +76,7 @@ namespace TestTransformations.MergeJoin
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    Connection,
+                    SqlConnection,
                     "MergeJoinDynamicDestination",
                     "Col1 = 9 AND Col2='Test3Test6'"
                 )

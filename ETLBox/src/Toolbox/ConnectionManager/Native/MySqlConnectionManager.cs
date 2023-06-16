@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -11,6 +10,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// ControlFlow.DefaultDbConnection = new SqlConnectionManager(new ConnectionString("Data Source=.;"));
     /// </code>
     /// </example>
+    [PublicAPI]
     public class MySqlConnectionManager : DbConnectionManager<MySqlConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =
@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override string QB { get; } = @"`";
         public override string QE { get; } = @"`";
         public override CultureInfo ConnectionCulture => CultureInfo.InvariantCulture;
-        public override bool SupportSchemas { get; } = false;
+        public override bool SupportSchemas { get; }
 
         public MySqlConnectionManager() { }
 
@@ -35,7 +35,7 @@ namespace ALE.ETLBox.ConnectionManager
                 ConnectionType = ConnectionManagerType.MySql,
                 QB = QB,
                 QE = QE,
-                UseParameterQuery = true,
+                UseParameterQuery = true
             };
             string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();
@@ -46,9 +46,9 @@ namespace ALE.ETLBox.ConnectionManager
             cmd.ExecuteNonQuery();
         }
 
-        public override void PrepareBulkInsert(string tablename) { }
+        public override void PrepareBulkInsert(string tableName) { }
 
-        public override void CleanUpBulkInsert(string tablename) { }
+        public override void CleanUpBulkInsert(string tableName) { }
 
         public override void BeforeBulkInsert(string tableName) { }
 

@@ -1,12 +1,15 @@
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
-    public class DropViewTaskTests
+    public class DropViewTaskTests : ControlFlowTestBase
     {
-        public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
+        public DropViewTaskTests(ControlFlowDatabaseFixture fixture)
+            : base(fixture) { }
+
+        public static IEnumerable<object[]> Connections => AllSqlConnections;
 
         [Theory, MemberData(nameof(Connections))]
         public void Drop(IConnectionManager connection)

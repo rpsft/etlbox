@@ -1,31 +1,36 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     internal abstract class MappingTypeInfo
     {
-        protected Dictionary<string, PropertyInfo> InputPropertiesByName { get; set; } = new();
-        internal bool IsArray => IsArrayInput || IsArrayOutput;
-        internal bool IsArrayInput { get; set; }
-        internal bool IsArrayOutput { get; set; }
-        internal bool IsDynamic { get; set; }
+        private Dictionary<string, PropertyInfo> InputPropertiesByName { get; } = new();
+        private bool IsArray => IsArrayInput || IsArrayOutput;
+        private bool IsArrayInput { get; }
+        internal bool IsArrayOutput { get; }
+        private bool IsDynamic { get; }
 
-        internal MappingTypeInfo(Type inputType, Type outputType)
+        private protected MappingTypeInfo(Type inputType, Type outputType)
         {
             IsArrayInput = inputType.IsArray;
             IsArrayOutput = outputType.IsArray;
             IsDynamic =
                 typeof(IDynamicMetaObjectProvider).IsAssignableFrom(inputType)
                 || typeof(IDynamicMetaObjectProvider).IsAssignableFrom(outputType);
+        }
 
-            if (!IsArray && !IsDynamic)
+        protected void InitMappings(Type inputType, Type outputType)
+        {
+            if (IsArray || IsDynamic)
             {
-                foreach (var propInfo in outputType.GetProperties())
-                    AddAttributeInfoMapping(propInfo);
-
-                foreach (var propInfo in inputType.GetProperties())
-                    InputPropertiesByName.Add(propInfo.Name, propInfo);
-
-                CombineInputAndOutputMapping();
+                return;
             }
+
+            foreach (var propInfo in outputType.GetProperties())
+                AddAttributeInfoMapping(propInfo);
+
+            foreach (var propInfo in inputType.GetProperties())
+                InputPropertiesByName.Add(propInfo.Name, propInfo);
+
+            CombineInputAndOutputMapping();
         }
 
         protected abstract void AddAttributeInfoMapping(PropertyInfo propInfo);
@@ -34,13 +39,15 @@
 
         protected void AssignInputProperty(List<AttributeMappingInfo> columnList)
         {
-            foreach (var ami in columnList)
+            foreach (var attributeMappingInfo in columnList)
             {
-                if (!InputPropertiesByName.ContainsKey(ami.PropNameInInput))
+                if (!InputPropertiesByName.ContainsKey(attributeMappingInfo.PropNameInInput))
                     throw new ETLBoxException(
-                        $"Property {ami.PropNameInInput} does not exists in target object!"
+                        $"Property {attributeMappingInfo.PropNameInInput} does not exists in target object!"
                     );
-                ami.PropInInput = InputPropertiesByName[ami.PropNameInInput];
+                attributeMappingInfo.PropInInput = InputPropertiesByName[
+                    attributeMappingInfo.PropNameInInput
+                ];
             }
         }
     }

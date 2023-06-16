@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using TSQL;
 using TSQL.Statements;
 using TSQL.Tokens;
@@ -18,31 +18,37 @@ namespace ALE.ETLBox.Helper
                 return result;
 
             int bracesNestingLevel = 0;
-            string prevToken = string.Empty;
+            string previousToken = string.Empty;
             foreach (var token in statement.Select.Tokens)
             {
                 CheckOpeningAndClosingBraces(token, ref bracesNestingLevel);
 
-                if (token.Type == TSQLTokenType.Identifier)
-                    prevToken = token.Text;
-                if (
-                    token.Type == TSQLTokenType.Character
-                    && bracesNestingLevel <= 0
-                    && token.Text == ","
-                )
-                    result.Add(prevToken);
+                switch (token.Type)
+                {
+                    case TSQLTokenType.Identifier:
+                        previousToken = token.Text;
+                        break;
+                    case TSQLTokenType.Character when bracesNestingLevel <= 0 && token.Text == ",":
+                        result.Add(previousToken);
+                        break;
+                }
             }
-            if (prevToken != string.Empty)
-                result.Add(prevToken);
+            if (previousToken != string.Empty)
+                result.Add(previousToken);
             return result;
         }
 
         private static void CheckOpeningAndClosingBraces(TSQLToken token, ref int bracesNesting)
         {
-            if (token.Type == TSQLTokenType.Character && token.Text == "(")
-                bracesNesting++;
-            else if (token.Type == TSQLTokenType.Character && token.Text == ")")
-                bracesNesting--;
+            switch (token.Type)
+            {
+                case TSQLTokenType.Character when token.Text == "(":
+                    bracesNesting++;
+                    break;
+                case TSQLTokenType.Character when token.Text == ")":
+                    bracesNesting--;
+                    break;
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Helper;
 using NLog;
 using CF = ALE.ETLBox.ControlFlow;
@@ -40,10 +39,7 @@ namespace ALE.ETLBox
         private bool _disableLogging;
         public virtual bool DisableLogging
         {
-            get =>
-                CF.ControlFlow.DisableAllLogging == false
-                    ? _disableLogging
-                    : CF.ControlFlow.DisableAllLogging;
+            get => CF.ControlFlow.DisableAllLogging || _disableLogging;
             set => _disableLogging = value;
         }
 
