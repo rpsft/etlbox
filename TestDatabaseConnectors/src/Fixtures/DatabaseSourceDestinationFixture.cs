@@ -6,6 +6,7 @@ namespace TestDatabaseConnectors.Fixtures
     public sealed class DatabaseSourceDestinationFixture : IDisposable
     {
         private readonly string _sqliteFilePath;
+        private string SqliteBackupFileName => _sqliteFilePath + ".bak";
         public const string SourceConfigSection = "DataFlowSource";
         public const string DestinationConfigSection = "DataFlowDestination";
         public const string OtherConfigSection = "Other";
@@ -19,7 +20,8 @@ namespace TestDatabaseConnectors.Fixtures
             DatabaseHelper.RecreateDatabase(Config.MySqlConnection, DestinationConfigSection);
             DatabaseHelper.RecreateDatabase(Config.PostgresConnection, SourceConfigSection);
             DatabaseHelper.RecreateDatabase(Config.PostgresConnection, DestinationConfigSection);
-            File.Copy(_sqliteFilePath, _sqliteFilePath + ".bak");
+            if (!File.Exists(SqliteBackupFileName))
+                File.Copy(_sqliteFilePath, SqliteBackupFileName);
         }
 
         public void Dispose()
@@ -31,7 +33,7 @@ namespace TestDatabaseConnectors.Fixtures
             DatabaseHelper.DropDatabase(Config.PostgresConnection, SourceConfigSection);
             DatabaseHelper.DropDatabase(Config.PostgresConnection, DestinationConfigSection);
             File.Delete(_sqliteFilePath);
-            File.Move(_sqliteFilePath + ".bak", _sqliteFilePath);
+            File.Move(SqliteBackupFileName, _sqliteFilePath);
         }
     }
 }
