@@ -1,4 +1,3 @@
-using System.Globalization;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;

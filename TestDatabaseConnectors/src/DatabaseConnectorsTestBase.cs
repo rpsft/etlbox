@@ -1,29 +1,33 @@
-﻿using System.Globalization;
-using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.ConnectionManager;
 using TestShared.Helper;
+
 
 namespace TestDatabaseConnectors
 {
-    [CollectionDefinition("DatabaseConnectors", DisableParallelization = true)]
+    [CollectionDefinition("DatabaseConnectors", DisableParallelization = false)]
     public class DataFlowSourceDestinationCollectionClass
         : ICollectionFixture<DatabaseSourceDestinationFixture> { }
 
     [Collection("DatabaseConnectors")]
     public class DatabaseConnectorsTestBase
     {
-        protected const string SourceConfigSection =
+        private const string SourceConfigSection =
             DatabaseSourceDestinationFixture.SourceConfigSection;
-        protected const string DestinationConfigSection =
+
+        private const string DestinationConfigSection =
             DatabaseSourceDestinationFixture.DestinationConfigSection;
-        protected const string OtherConfigSection = "Other";
+
+        private const string OtherConfigSection =
+            DatabaseSourceDestinationFixture.OtherConfigSection;
+
         protected readonly DatabaseSourceDestinationFixture Fixture;
 
-        public DatabaseConnectorsTestBase(DatabaseSourceDestinationFixture fixture)
+        protected DatabaseConnectorsTestBase(DatabaseSourceDestinationFixture fixture)
         {
             Fixture = fixture;
         }
 
-        public static SqlConnectionManager SqlConnection =>
+        protected static SqlConnectionManager SqlConnection =>
             Config.SqlConnection.ConnectionManager(SourceConfigSection);
 
         protected AccessOdbcConnectionManager AccessOdbcConnection =>
@@ -35,7 +39,7 @@ namespace TestDatabaseConnectors
         public static IEnumerable<object[]> AllSqlConnections =>
             Config.AllSqlConnections(SourceConfigSection);
 
-        public static IEnumerable<CultureInfo> AllLocalCultures => Config.AllLocalCultures();
+        protected static IEnumerable<CultureInfo> AllLocalCultures => Config.AllLocalCultures();
 
         public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
             Config.AllConnectionsWithoutSQLite(SourceConfigSection);

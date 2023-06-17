@@ -24,7 +24,7 @@ public static class Config
     public static ConnectionDetails<
         SQLiteConnectionString,
         SQLiteConnectionManager
-    > SQLiteConnection { get; set; } = new("SQLiteConnectionString");
+    > SQLiteConnection { get; } = new("SQLiteConnectionString");
 
     public static ConnectionDetails<
         MySqlConnectionString,
