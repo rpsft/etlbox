@@ -77,7 +77,7 @@ test_job:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt
     - echo 'End Summary'
-  coverage: /Line coverage[\s\S].+%/
+  coverage: /Line coverage:[\s\S].+%/
   rules:
     - !reference [.default_rules, rules]
   artifacts:
