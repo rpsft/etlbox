@@ -111,6 +111,7 @@ publish:nuget-org:
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
     - dotnet nuget push "$NUPKG_FOLDER/*.snupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - !reference [.default_rules, rules]
     - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]-beta/ )
+      variables:
+        PACKAGE_VERSION: $CI_COMMIT_TAG
       when: manual
