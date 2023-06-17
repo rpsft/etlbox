@@ -4,11 +4,11 @@ using TestShared.Helper;
 
 namespace TestDatabaseConnectors
 {
-    [CollectionDefinition("DataFlow Source and Destination")]
+    [CollectionDefinition("DatabaseConnectors", DisableParallelization = true)]
     public class DataFlowSourceDestinationCollectionClass
         : ICollectionFixture<DatabaseSourceDestinationFixture> { }
 
-    [Collection("DataFlow Source and Destination")]
+    [Collection("DatabaseConnectors")]
     public class DatabaseConnectorsTestBase
     {
         protected const string SourceConfigSection =
