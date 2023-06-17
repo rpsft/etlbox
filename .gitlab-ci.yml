@@ -107,9 +107,8 @@ publish:nuget-org:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - echo "Packing version $PACKAGE_VERSION"
-    - dotnet pack -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER
+    - dotnet pack -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
-    - dotnet nuget push "$NUPKG_FOLDER/*.snupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta$/ )
       variables:
