@@ -98,6 +98,9 @@ publish:internal:
     - echo "Packing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet pack -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
+  artifacts:
+    paths:
+      - $NUPKG_FOLDER/*.nupkg
   rules:
     - !reference [.default_rules, rules]
 
