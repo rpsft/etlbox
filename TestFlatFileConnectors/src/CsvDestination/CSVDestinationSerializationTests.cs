@@ -1,4 +1,4 @@
-namespace TestFlatFileConnectors.CSVDestination
+namespace TestFlatFileConnectors.CsvDestination
 {
     public class CsvDestinationSerializationTests
     {
