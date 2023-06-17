@@ -1,10 +1,10 @@
 using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.CSVSource
+namespace TestFlatFileConnectors.CsvSource
 {
-    public class CsvSourceNoHeaderTests : FlatFileConnectorsTestBase
+    public class ACsvSourceNoHeaderTests : FlatFileConnectorsTestBase
     {
-        public CsvSourceNoHeaderTests(FlatFileToDatabaseFixture fixture)
+        public ACsvSourceNoHeaderTests(FlatFileToDatabaseFixture fixture)
             : base(fixture) { }
 
         public class MySimpleRow

@@ -1,11 +1,11 @@
 using CsvHelper.TypeConversion;
 using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.CSVSource
+namespace TestFlatFileConnectors.CsvSource
 {
-    public class CsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
+    public class ACsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
-        public CsvSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
+        public ACsvSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
             : base(fixture) { }
 
         public class MySimpleRow

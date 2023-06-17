@@ -1,10 +1,10 @@
 using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.CSVSource
+namespace TestFlatFileConnectors.CsvSource
 {
-    public sealed class CsvSourceDynamicObjectTests : FlatFileConnectorsTestBase
+    public sealed class ACsvSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        public CsvSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+        public ACsvSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
             : base(fixture) { }
 
         [Fact]

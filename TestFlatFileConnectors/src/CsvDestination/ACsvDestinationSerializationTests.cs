@@ -1,6 +1,6 @@
 namespace TestFlatFileConnectors.CsvDestination
 {
-    public class CsvDestinationSerializationTests
+    public class ACsvDestinationSerializationTests
     {
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         public class MySeriRow

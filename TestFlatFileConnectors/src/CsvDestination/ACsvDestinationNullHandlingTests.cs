@@ -1,6 +1,6 @@
 namespace TestFlatFileConnectors.CsvDestination
 {
-    public class CsvDestinationNullHandlingTests
+    public class ACsvDestinationNullHandlingTests
     {
         [Serializable]
         public class MySimpleRow
