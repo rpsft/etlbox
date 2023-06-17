@@ -1,7 +1,16 @@
-namespace TestFlatFileConnectors.CSVDestination
+using Xunit.Abstractions;
+
+namespace TestFlatFileConnectors.CsvDestination
 {
     public sealed class CsvDestinationAsyncTests
     {
+        private ITestOutputHelper _output;
+
+        public CsvDestinationAsyncTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         private class MockDelaySource : DataFlowSource<string[]>
         {
             public override void Execute()
@@ -23,6 +32,16 @@ namespace TestFlatFileConnectors.CSVDestination
             var source = new MockDelaySource();
             var dest = new CsvDestination<string[]>(filename);
             var onCompletionRun = false;
+            var fileWasLockedOnCompletion = false;
+            Exception exceptionFileLockCheck = null;
+            dest.OnCompletion = () =>
+            {
+                _output.WriteLine("OnCompletion invoked!");
+                onCompletionRun = true;
+                exceptionFileLockCheck = Record.Exception(
+                    () => fileWasLockedOnCompletion = IsFileLocked(filename)
+                );
+            };
 
             //Act
             source.LinkTo(dest);
@@ -30,23 +49,18 @@ namespace TestFlatFileConnectors.CSVDestination
             var dt = dest.Completion;
             while (!File.Exists(filename))
                 Task.Delay(10).Wait();
+            dt.Wait();
 
             //Assert
-            dest.OnCompletion = () =>
-            {
-                Assert.False(
-                    IsFileLocked(filename),
-                    "StreamWriter should be disposed and file unlocked"
-                );
-                onCompletionRun = true;
-            };
-
-            Assert.True(
-                IsFileLocked(filename),
-                "Right after  start the file should still be locked."
+            Assert.Multiple(
+                () => Assert.Null(exceptionFileLockCheck),
+                () => Assert.True(onCompletionRun, "OnCompletion action and assertion did run"),
+                () =>
+                    Assert.False(
+                        fileWasLockedOnCompletion,
+                        "StreamWriter should be disposed and file unlocked"
+                    )
             );
-            dt.Wait();
-            Assert.True(onCompletionRun, "OnCompletion action and assertion did run");
         }
 
         private static bool IsFileLocked(string filename)

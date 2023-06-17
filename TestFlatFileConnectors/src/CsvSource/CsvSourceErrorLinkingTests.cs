@@ -1,7 +1,7 @@
 using CsvHelper.TypeConversion;
 using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.CSVSource
+namespace TestFlatFileConnectors.CsvSource
 {
     public class CsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {

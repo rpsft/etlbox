@@ -1,5 +1,9 @@
 # <span><img src="ETLBox/img/logo_bw.png" alt="ETLBox logo" height="32" /> ETLBox.Classic</span>
 
+[![Latest Release](https://git.rapidsoft.ru/open-source/etlbox/-/badges/release.svg)](https://git.rapidsoft.ru/open-source/etlbox/-/releases)
+[![coverage report](https://git.rapidsoft.ru/open-source/etlbox/badges/master/coverage.svg)](https://git.rapidsoft.ru/open-source/etlbox/-/commits/master)
+[![pipeline status](https://git.rapidsoft.ru/open-source/etlbox/badges/master/pipeline.svg)](https://git.rapidsoft.ru/open-source/etlbox/-/commits/master)
+
 ## ETLBox.Classic
 
 This is a fully open-source (MIT) fork from original ETLBox library.

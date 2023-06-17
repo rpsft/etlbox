@@ -46,27 +46,30 @@ namespace TestDatabaseConnectors.DBDestination
 
         [Theory]
         [MemberData(nameof(Connections))]
-        public void CloseConnectionDuringTransaction(IConnectionManager connection)
+        public void CloseConnectionDuringTransaction(IConnectionManager sourceConnection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "TransactionSource");
+            var s2C = new TwoColumnsTableFixture(sourceConnection, "TransactionSource");
             s2C.InsertTestData();
-            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
-            var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
-            var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
+            var source = new DbSource<MySimpleRow>(sourceConnection, "TransactionSource");
+
+            var destinationConnection = sourceConnection.Clone();
+            var _ = new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
+            var dest = new DbDestination<MySimpleRow>(destinationConnection, "TransactionDest", 2);
 
             //Act & Assert
-            connection.BeginTransaction();
+            destinationConnection.BeginTransaction();
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
-            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
-            connection.Close();
-            Assert.Equal(0, RowCountTask.Count(connection, "TransactionDest"));
+            Assert.Equal(3, RowCountTask.Count(destinationConnection, "TransactionDest"));
+            destinationConnection.Close();
+            Assert.Equal(0, RowCountTask.Count(destinationConnection, "TransactionDest"));
 
             //Assert Connections are closed
             Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
+            Assert.True(sourceConnection.State == null);
+            Assert.True(destinationConnection.State == null);
         }
 
         [Theory]
@@ -108,28 +111,31 @@ namespace TestDatabaseConnectors.DBDestination
 
         [Theory]
         [MemberData(nameof(Connections))]
-        public void RollbackTransaction(IConnectionManager connection)
+        public void RollbackTransaction(IConnectionManager sourceConnection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "TransactionSource");
+            var s2C = new TwoColumnsTableFixture(sourceConnection, "TransactionSource");
             s2C.InsertTestData();
-            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
-            var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
-            var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
+            var source = new DbSource<MySimpleRow>(sourceConnection, "TransactionSource");
+
+            var destinationConnection = sourceConnection.Clone();
+            var _ = new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
+            var dest = new DbDestination<MySimpleRow>(destinationConnection, "TransactionDest", 2);
 
             //Act & Assert
-            connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            destinationConnection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
 
             source.Execute();
             dest.Wait();
-            Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
-            connection.RollbackTransaction();
-            Assert.Equal(0, RowCountTask.Count(connection, "TransactionDest"));
+            Assert.Equal(3, RowCountTask.Count(destinationConnection, "TransactionDest"));
+            destinationConnection.RollbackTransaction();
+            Assert.Equal(0, RowCountTask.Count(destinationConnection, "TransactionDest"));
 
             //Assert Connections are closed
             Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
+            Assert.True(destinationConnection.State == null);
+            Assert.True(sourceConnection.State == null);
         }
 
         [Theory]

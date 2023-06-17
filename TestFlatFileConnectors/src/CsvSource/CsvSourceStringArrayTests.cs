@@ -1,6 +1,6 @@
 using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.CSVSource
+namespace TestFlatFileConnectors.CsvSource
 {
     public class CsvSourceStringArrayTests : FlatFileConnectorsTestBase
     {
