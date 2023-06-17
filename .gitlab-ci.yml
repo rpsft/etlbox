@@ -8,7 +8,7 @@ variables:
   FF_NETWORK_PER_BUILD: "true"
 
   # Package version "by default", from .version.yml and added current pipeline no
-  # (при запуска пайплайна по тегу, версия берётся из тега)
+  # (when pipeline is started on a tag, the tag name provides version number)
   PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}-${CI_PIPELINE_IID}"
   NUPKG_FOLDER: '.packages'
 
@@ -63,15 +63,7 @@ test_job:
     ACCEPT_EULA: 'Y'
     SA_PASSWORD: 'YourStrong@Passw0rd'
     MSSQL_PID: 'Developer'
-
-    # dotnet settings
-    DOT_NET_TEST_OPTIONS: --configuration=Release --filter="Category!=Performance" --no-build --logger="console;verbosity=detailed" --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
   before_script:
-    # mysql -uroot -petlboxpassword
-
-    # ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY 'etlboxpassword';
-    # ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'etlboxpassword';
-    # FLUSH PRIVILEGES;
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd

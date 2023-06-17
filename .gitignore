@@ -6,9 +6,10 @@
 /docs
 
 # dotnet tools and artifacts in CI
-/.tools
-/artifacts
-/.coverare
+/.tools/
+/artifacts/
+/.coverare/
+/.packages/
 
 # CONFIG files (only templates are versioned)
 /TestDatabaseConnectors/default.config.json
