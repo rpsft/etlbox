@@ -2,9 +2,9 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvDestination
 {
-    public class ACsvDestinationDynamicObjectTests : FlatFileConnectorsTestBase
+    public class CsvDestinationDynamicObjectTests : FlatFileConnectorsTestBase
     {
-        public ACsvDestinationDynamicObjectTests(FlatFileToDatabaseFixture fixture)
+        public CsvDestinationDynamicObjectTests(FlatFileToDatabaseFixture fixture)
             : base(fixture) { }
 
         [Fact]

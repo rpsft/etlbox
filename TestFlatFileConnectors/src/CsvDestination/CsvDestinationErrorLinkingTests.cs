@@ -1,6 +1,6 @@
 namespace TestFlatFileConnectors.CsvDestination
 {
-    public class ACsvDestinationErrorLinkingTests
+    public class CsvDestinationErrorLinkingTests
     {
         public class MySimpleRow
         {

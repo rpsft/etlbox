@@ -1,6 +1,6 @@
 namespace TestFlatFileConnectors.CsvDestination
 {
-    public sealed class ACsvDestinationAsyncTests
+    public sealed class CsvDestinationAsyncTests
     {
         private class MockDelaySource : DataFlowSource<string[]>
         {

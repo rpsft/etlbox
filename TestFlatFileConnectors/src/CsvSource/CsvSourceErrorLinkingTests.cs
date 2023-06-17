@@ -3,9 +3,9 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource
 {
-    public class ACsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
+    public class CsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
-        public ACsvSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
+        public CsvSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
             : base(fixture) { }
 
         public class MySimpleRow
