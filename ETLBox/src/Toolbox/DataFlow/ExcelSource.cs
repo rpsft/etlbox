@@ -213,14 +213,13 @@ namespace ALE.ETLBox.DataFlow
         {
             PropertyInfo propInfo = null;
             if (
-                HasHeaderData
-                && TypeInfo.ExcelColumnName2PropertyIndex.ContainsKey(_headerColumns[colNrInRange])
-            )
-                propInfo = TypeInfo.Properties[
-                    TypeInfo.ExcelColumnName2PropertyIndex[_headerColumns[colNrInRange]]
-                ];
-            else if (
-                TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out var propertyIndex)
+                (
+                    HasHeaderData
+                    && TypeInfo.ExcelColumnName2PropertyIndex.TryGetValue(
+                        _headerColumns[colNrInRange],
+                        out var propertyIndex
+                    )
+                ) || TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out propertyIndex)
             )
                 propInfo = TypeInfo.Properties[propertyIndex];
             propInfo?.TrySetValue(

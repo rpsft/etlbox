@@ -32,8 +32,8 @@ build_job:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - echo "Building version $PACKAGE_VERSION"
-    - dotnet build ETLBox.sln -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER
-    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - dotnet build ETLBox/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet pack ETLBox/ --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:

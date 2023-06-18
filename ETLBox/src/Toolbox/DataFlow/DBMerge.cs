@@ -185,8 +185,8 @@ namespace ALE.ETLBox.DataFlow
             bool result = true;
             foreach (var deleteColumn in MergeProperties.DeletionProperties)
             {
-                if (r!.ContainsKey(deleteColumn.Key))
-                    result &= r[deleteColumn.Key]?.Equals(deleteColumn.Value) ?? true;
+                if (r!.TryGetValue(deleteColumn.Key, out var property))
+                    result &= property?.Equals(deleteColumn.Value) ?? true;
                 else
                     result = false;
             }

@@ -158,5 +158,5 @@ namespace ALE.ETLBox.ConnectionManager
         }
     }
 
-    internal class BulkInsertSql : BulkInsertSql<OdbcParameter> { }
+    internal sealed class BulkInsertSql : BulkInsertSql<OdbcParameter> { }
 }

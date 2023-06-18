@@ -61,7 +61,7 @@ namespace ALE.ETLBox.DataFlow
         }
     }
 
-    internal class AggregateAttributeMapping : AttributeMappingInfo
+    internal sealed class AggregateAttributeMapping : AttributeMappingInfo
     {
         internal AggregationMethod AggregationMethod { get; set; }
     }

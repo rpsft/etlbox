@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace ALE.ETLBox.Helper
 {
-    internal class PushStreamContent : HttpContent
+    internal sealed class PushStreamContent : HttpContent
     {
         private readonly Func<Stream, HttpContent, TransportContext, Task> _onStreamAvailable;
 

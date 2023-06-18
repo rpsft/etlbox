@@ -1,6 +1,6 @@
 namespace ALE.ETLBox.DataFlow
 {
-    internal class DBTypeInfo : TypeInfo
+    internal sealed class DBTypeInfo : TypeInfo
     {
         internal List<string> PropertyNames { get; } = new();
         internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; } = new();

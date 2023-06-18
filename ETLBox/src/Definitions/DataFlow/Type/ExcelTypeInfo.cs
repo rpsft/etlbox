@@ -1,6 +1,6 @@
 namespace ALE.ETLBox.DataFlow
 {
-    internal class ExcelTypeInfo : TypeInfo
+    internal sealed class ExcelTypeInfo : TypeInfo
     {
         internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; } = new();
         internal Dictionary<string, int> ExcelColumnName2PropertyIndex { get; set; } = new();

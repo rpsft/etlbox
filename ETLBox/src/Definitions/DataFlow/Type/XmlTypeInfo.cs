@@ -2,7 +2,7 @@ using System.Xml.Serialization;
 
 namespace ALE.ETLBox.DataFlow
 {
-    internal class XmlTypeInfo : TypeInfo
+    internal sealed class XmlTypeInfo : TypeInfo
     {
         internal string ElementName { get; }
 

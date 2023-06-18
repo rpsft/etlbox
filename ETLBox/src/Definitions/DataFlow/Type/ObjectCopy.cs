@@ -2,7 +2,7 @@ using ALE.ETLBox.Helper;
 
 namespace ALE.ETLBox.DataFlow
 {
-    internal class ObjectCopy<TInput>
+    internal sealed class ObjectCopy<TInput>
     {
         private TypeInfo TypeInfo { get; }
 
