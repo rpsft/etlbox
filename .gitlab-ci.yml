@@ -22,6 +22,9 @@ variables:
         PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $PACKAGE_VERSION == ""
       variables: 
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-merge.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == ""
+      variables: 
         # Package version "by default", from .version.yml and added current pipeline no
         # (when pipeline is started on a tag, the tag name provides version number)
         PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
