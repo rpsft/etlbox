@@ -37,8 +37,14 @@ build_job:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - echo "Building version $PACKAGE_VERSION"
-    - dotnet build ETLBox/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet build ETLBox/ --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
     - dotnet pack ETLBox/ --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+  cache:
+    key: dotnet-packages-cache
+    paths:
+      - .nuget/packages/
+      - tools/
+    unprotect: true
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
@@ -76,7 +82,8 @@ test_job:
     - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
   script:
     - >
-      dotnet test --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
+      dotnet test --configuration=Release --packages .nuget/packages/ 
+      --filter="Category!=Performance" --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
       --collect="XPlat Code Coverage"
   after_script:
@@ -84,6 +91,12 @@ test_job:
     - cat .coverage/Summary.txt
     - echo 'End Summary'
   coverage: /Line coverage:[\s\S].+%/
+  cache:
+    key: dotnet-packages-cache
+    paths:
+      - .nuget/packages/
+      - tools/
+    unprotect: true
   rules:
     - !reference [.default_rules, rules]
   artifacts:
