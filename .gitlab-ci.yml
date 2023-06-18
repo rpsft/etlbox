@@ -9,7 +9,7 @@ variables:
 
   # Package version "by default", from .version.yml and added current pipeline no
   # (when pipeline is started on a tag, the tag name provides version number)
-  PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}-${CI_PIPELINE_IID}"
+  PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
   NUPKG_FOLDER: '.packages'
 
 .default_rules:
@@ -18,7 +18,12 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
       variables:
         PACKAGE_VERSION: $CI_COMMIT_TAG
-    - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/))
+    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
+      variables:
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}${CI_COMMIT_BRANCH}.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
+      variables:
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}rc.${CI_PIPELINE_IID}"
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
 
