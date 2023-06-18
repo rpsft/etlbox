@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solutio
 		.editorconfig = .editorconfig
 		.gitlab-ci.yml = .gitlab-ci.yml
 		.gitignore = .gitignore
+		.version.yml = .version.yml
 	EndProjectSection
 EndProject
 Global

@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionSuffix>alpha</VersionSuffix>
+    <VersionSuffix>development</VersionSuffix>
     <VersionPrefix>1.9.0</VersionPrefix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
     <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
@@ -24,20 +24,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="/" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="/" Visible="false"/>
   </ItemGroup>
 
   <PropertyGroup>
     <BuildDependsOn>
       InstallHusky;
+      ParseVersionFile;
       $(BuildDependsOn)
     </BuildDependsOn>
   </PropertyGroup>
-  
+
   <Target Name="InstallHusky" Condition="!Exists('$(MSBuildThisFileDirectory).husky/_/husky.sh') And '$(IsCI)'!='true'">
-    <Message Importance="high" Text="Installing Husky into $(MSBuildThisFileDirectory).husky/_/husky.sh" />
-    <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High" />
-    <Exec Command="dotnet husky install" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High" />
+    <Message Importance="high" Text="Installing Husky into $(MSBuildThisFileDirectory).husky/_/husky.sh"/>
+    <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High"/>
+    <Exec Command="dotnet husky install" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High"/>
+  </Target>
+
+  <Target Name="ParseVersionFile">
+    <PropertyGroup Condition="$([System.IO.File]::Exists('$(MSBuildThisFileDirectory).version.yml'))">
+      <VersionYmlText>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory).version.yml'))</VersionYmlText>
+      <VersionPrefix>$([System.Text.RegularExpressions.Regex]::Match($(VersionYmlText), 'PACKAGE_RELEASE:\s*([^\s]+)').Groups[1].Value)</VersionPrefix>
+      <VersionSuffix>$([System.Text.RegularExpressions.Regex]::Match($(VersionYmlText), 'PACKAGE_POSTFIX:[\s\-]*([^\s\-][^\s]*)').Groups[1].Value)</VersionSuffix>
+      <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+      <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
+      <PackageVersion>$(Version)</PackageVersion>
+    </PropertyGroup>
+    <Message Text="Building package version: $(PackageVersion)" Importance="high"/>
   </Target>
 
 </Project>

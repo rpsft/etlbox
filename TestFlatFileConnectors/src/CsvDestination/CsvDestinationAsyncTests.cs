@@ -4,7 +4,7 @@ namespace TestFlatFileConnectors.CsvDestination
 {
     public sealed class CsvDestinationAsyncTests
     {
-        private ITestOutputHelper _output;
+        private readonly ITestOutputHelper _output;
 
         public CsvDestinationAsyncTests(ITestOutputHelper output)
         {
