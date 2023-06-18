@@ -1,3 +1,3 @@
 variables:
-    PACKAGE_RELEASE: 1.9.2
+    PACKAGE_RELEASE: 1.9.1
     PACKAGE_POSTFIX: -alpha

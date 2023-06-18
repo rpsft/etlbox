@@ -1,6 +1,6 @@
 namespace ALE.ETLBox.DataFlow
 {
-    internal class DBMergeTypeInfo : TypeInfo
+    internal sealed class DBMergeTypeInfo : TypeInfo
     {
         internal List<string> IdColumnNames { get; set; } = new();
         internal List<PropertyInfo> IdAttributeProps { get; } = new();

@@ -7,18 +7,27 @@ variables:
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
 
-  # Package version "by default", from .version.yml and added current pipeline no
-  # (when pipeline is started on a tag, the tag name provides version number)
-  PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}-${CI_PIPELINE_IID}"
   NUPKG_FOLDER: '.packages'
 
 .default_rules:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
       variables:
         PACKAGE_VERSION: $CI_COMMIT_TAG
-    - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/))
+    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
+      variables:
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-${CI_COMMIT_BRANCH}.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
+      variables:
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $PACKAGE_VERSION == ""
+      variables: 
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-merge.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == ""
+      variables: 
+        # Package version "by default", from .version.yml and added current pipeline no
+        # (when pipeline is started on a tag, the tag name provides version number)
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
 
@@ -32,8 +41,14 @@ build_job:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - echo "Building version $PACKAGE_VERSION"
-    - dotnet build ETLBox.sln -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER
-    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - dotnet build ETLBox/ --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet pack ETLBox/ --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+  cache:
+    key: dotnet-packages-cache
+    paths:
+      - .nuget/packages/
+      - tools/
+    unprotect: true
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
@@ -69,9 +84,10 @@ test_job:
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
     - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
   script:
     - >
-      dotnet test --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
+      dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
       --collect="XPlat Code Coverage"
   after_script:
@@ -79,6 +95,12 @@ test_job:
     - cat .coverage/Summary.txt
     - echo 'End Summary'
   coverage: /Line coverage:[\s\S].+%/
+  cache:
+    key: dotnet-packages-cache
+    paths:
+      - .nuget/packages/
+      - tools/
+    unprotect: true
   rules:
     - !reference [.default_rules, rules]
   artifacts:
@@ -102,6 +124,7 @@ publish:internal:
     - !reference [.default_rules, rules]
   needs:
     - build_job
+    - test_job
 
 publish:nuget-org:
   stage: deploy
@@ -110,7 +133,8 @@ publish:nuget-org:
     - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta$/ )
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta.*$/ )
       when: manual
   needs:
     - build_job
+    - test_job

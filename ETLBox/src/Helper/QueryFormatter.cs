@@ -3,7 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.Helper
 {
-    internal class QueryFormatter : IFormatProvider, ICustomFormatter
+    internal sealed class QueryFormatter : IFormatProvider, ICustomFormatter
     {
         private static readonly ConcurrentDictionary<
             ConnectionManagerType,

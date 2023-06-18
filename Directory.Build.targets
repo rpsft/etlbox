@@ -49,7 +49,7 @@
       <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
       <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
     </PropertyGroup>
-    <Message Text="Building package version: $(PackageVersion)" Importance="high"/>
+    <Message Text="Building project $(MSBuildProjectName) version: $(PackageVersion)" Importance="high"/>
   </Target>
   
 

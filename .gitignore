@@ -10,6 +10,7 @@
 /artifacts/
 /.coverare/
 /.packages/
+/.nuget/
 
 # CONFIG files (only templates are versioned)
 /TestDatabaseConnectors/default.config.json
