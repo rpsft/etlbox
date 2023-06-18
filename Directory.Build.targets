@@ -1,12 +1,5 @@
 <Project>
   <PropertyGroup>
-    <VersionSuffix>development</VersionSuffix>
-    <VersionPrefix>1.9.0</VersionPrefix>
-    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
-    <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
-  </PropertyGroup>
-  
-  <PropertyGroup>
     <PackageVersion>$(Version)</PackageVersion>
     <Copyright>© 2018 Andreas Lennartz, © 2021-2023 RapidSoft</Copyright>
     <PackageAuthors>RapidSoft</PackageAuthors>
@@ -42,7 +35,7 @@
   </Target>
 
   <Target Name="ParseVersionFile">
-    <PropertyGroup Condition="$([System.IO.File]::Exists('$(MSBuildThisFileDirectory).version.yml'))">
+    <PropertyGroup Condition="$([System.IO.File]::Exists('$(MSBuildThisFileDirectory).version.yml')) And '$(Version)' == '1.0.0' ">
       <VersionYmlText>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory).version.yml'))</VersionYmlText>
       <VersionPrefix>$([System.Text.RegularExpressions.Regex]::Match($(VersionYmlText), 'PACKAGE_RELEASE:\s*([^\s]+)').Groups[1].Value)</VersionPrefix>
       <VersionSuffix>$([System.Text.RegularExpressions.Regex]::Match($(VersionYmlText), 'PACKAGE_POSTFIX:[\s\-]*([^\s\-][^\s]*)').Groups[1].Value)</VersionSuffix>
@@ -50,7 +43,14 @@
       <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
       <PackageVersion>$(Version)</PackageVersion>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Version)' == '1.0.0' ">
+      <VersionSuffix>development</VersionSuffix>
+      <VersionPrefix>1.9.0</VersionPrefix>
+      <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+      <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
+    </PropertyGroup>
     <Message Text="Building package version: $(PackageVersion)" Importance="high"/>
   </Target>
+  
 
 </Project>
