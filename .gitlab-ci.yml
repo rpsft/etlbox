@@ -107,6 +107,7 @@ publish:internal:
     - !reference [.default_rules, rules]
   needs:
     - build_job
+    - test_job
 
 publish:nuget-org:
   stage: deploy
@@ -119,3 +120,4 @@ publish:nuget-org:
       when: manual
   needs:
     - build_job
+    - test_job
