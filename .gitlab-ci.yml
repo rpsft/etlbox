@@ -81,10 +81,10 @@ test_job:
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
     - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
   script:
     - >
-      dotnet test --configuration=Release --packages .nuget/packages/ 
-      --filter="Category!=Performance" --logger="console;verbosity=detailed"
+      dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
       --collect="XPlat Code Coverage"
   after_script:
