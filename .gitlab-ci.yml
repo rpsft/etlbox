@@ -26,6 +26,8 @@ variables:
         PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
+    - if: $CI_OPEN_MERGE_REQUESTS
+      when: never # Avoid duplicate pipelines on open merge request branches
 
 stages:
   - build
