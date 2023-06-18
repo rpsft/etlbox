@@ -33,6 +33,7 @@ build_job:
   script:
     - echo "Building version $PACKAGE_VERSION"
     - dotnet build ETLBox.sln -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER
+    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
@@ -95,23 +96,21 @@ publish:internal:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Packing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
-    - dotnet pack -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
-  artifacts:
-    paths:
-      - $NUPKG_FOLDER/*.nupkg
   rules:
     - !reference [.default_rules, rules]
+  needs:
+    - build_job
 
 publish:nuget-org:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Packing version $PACKAGE_VERSION"
+    - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta$/ )
       when: manual
   needs:
-    - publish:internal
+    - build_job
