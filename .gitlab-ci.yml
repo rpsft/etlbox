@@ -115,7 +115,7 @@ publish:nuget-org:
     - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta$/ )
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta.*$/ )
       when: manual
   needs:
     - build_job
