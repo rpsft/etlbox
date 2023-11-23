@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>ALE.ETLBox</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="ETLBox;ETLBox.Kafka"/>
+  </ItemGroup>
+
+</Project>
