@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
@@ -22,7 +22,7 @@
         public sealed override string TaskName { get; set; } = "Execute row transformation";
 
         /* Public Properties */
-        public Func<TInput, TOutput> TransformationFunc
+        public virtual Func<TInput, TOutput> TransformationFunc
         {
             get { return _transformationFunc; }
             set
@@ -52,6 +52,7 @@
 
         /* Private stuff */
         private Func<TInput, TOutput> _transformationFunc;
+
         internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
         internal ErrorHandler ErrorHandler { get; set; } = new();
 
