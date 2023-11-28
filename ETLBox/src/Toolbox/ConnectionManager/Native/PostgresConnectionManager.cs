@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Npgsql;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -29,6 +29,7 @@ namespace ALE.ETLBox.ConnectionManager
             : base(new PostgresConnectionString(connectionString)) { }
 
         private TableDefinition DestTableDef { get; set; }
+
         private Dictionary<string, TableColumn> DestinationColumns { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName)

@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 
@@ -38,6 +38,10 @@ namespace ALE.ETLBox
             Columns = columns;
         }
 
+        public string Engine { get; set; }
+
+        public string OrderBy { get; set; }
+        
         public void CreateTable(IConnectionManager connectionManager) =>
             CreateTableTask.Create(connectionManager, this);
 
@@ -61,11 +65,53 @@ namespace ALE.ETLBox
                 ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(connection, tn),
                 ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(connection, tn),
                 ConnectionManagerType.Access => ReadTableDefinitionFromAccess(connection, tn),
+                ConnectionManagerType.ClickHouse => ReadTableDefinitionFromClickHouse(connection, tn),
                 _
                     => throw new ETLBoxException(
                         "Unknown connection type - please pass a valid TableDefinition!"
                     )
             };
+        }
+
+        private static TableDefinition ReadTableDefinitionFromClickHouse(
+            IConnectionManager connection, ObjectNameDescriptor tn)
+        {
+            TableDefinition result = new TableDefinition(tn.ObjectName);
+            TableColumn curCol = null;
+
+            var readMetaSql = new SqlTask(
+                $"Read column meta data for table {tn.ObjectName}",
+                $@"
+                SELECT 
+                     name
+                    ,type as type
+                    ,is_in_primary_key as primary_key
+                    ,default_expression as default_value
+                FROM system.columns
+                WHERE database = currentDatabase()
+                  AND table = '{tn.ObjectName}'",
+                () =>
+                {
+                    curCol = new TableColumn();
+                },
+                () =>
+                {
+                    result.Columns.Add(curCol);
+                },
+                name => curCol.Name = name.ToString(),
+                type => curCol.DataType = type.ToString(),
+                primaryKey => curCol.IsPrimaryKey = Convert.ToBoolean(primaryKey),
+                defaultValue =>
+                    curCol.DefaultValue = defaultValue
+                        ?.ToString()
+                        .Substring(2, defaultValue.ToString().Length - 4)
+            )
+            {
+                DisableLogging = true,
+                ConnectionManager = connection
+            };
+            readMetaSql.ExecuteReader();
+            return result;
         }
 
         private static TableDefinition ReadTableDefinitionFromSqlServer(

@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.ConnectionManager
 {
     public enum ConnectionManagerType
     {
@@ -8,6 +8,7 @@
         SQLite,
         MySql,
         Postgres,
-        Access
+        Access,
+        ClickHouse
     }
 }

@@ -1,7 +1,7 @@
 using ALE.ETLBox;
 using ALE.ETLBox.DataFlow;
 
-namespace TestConnectionManager.ConnectionManager
+namespace TestConnectionManager.src.ConnectionManager
 {
     public class NoConnectionManagerTests
     {
@@ -9,8 +9,8 @@ namespace TestConnectionManager.ConnectionManager
         public void DbSource()
         {
             //Arrange
-            DbSource<string[]> source = new DbSource<string[]>("test");
-            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
+            var source = new DbSource<string[]>("test");
+            var dest = new MemoryDestination<string[]>();
             source.LinkTo(dest);
 
             //Act & Assert
@@ -26,9 +26,9 @@ namespace TestConnectionManager.ConnectionManager
         {
             //Arrange
             string[] data = { "1", "2" };
-            MemorySource<string[]> source = new MemorySource<string[]>();
+            var source = new MemorySource<string[]>();
             source.DataAsList.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>("test");
+            var dest = new DbDestination<string[]>("test");
             source.LinkTo(dest);
 
             //Act & Assert

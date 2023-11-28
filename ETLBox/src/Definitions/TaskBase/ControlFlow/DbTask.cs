@@ -1,7 +1,8 @@
-﻿using System.Data.Odbc;
+using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ALE.ETLBox.ConnectionManager;
+using CsvHelper;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -186,6 +187,16 @@ namespace ALE.ETLBox.ControlFlow
                         }
                         else
                         {
+                            // Бага ClickHouseDataReader, по-умолчанию не переходит на Result
+                            // https://github.com/killwort/clickhouse-net/issues/68
+                            if (conn.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+                            {
+                                var hasNextResult = reader.NextResult();
+                                if (hasNextResult)
+                                {
+                                    continue;
+                                }
+                            }
                             break;
                         }
                     }

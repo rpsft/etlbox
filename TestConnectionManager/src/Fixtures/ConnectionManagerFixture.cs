@@ -1,11 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using TestShared.Helper;
 
-namespace TestConnectionManager.Fixtures
+namespace TestConnectionManager.src.Fixtures
 {
     [CollectionDefinition("Connection Manager", DisableParallelization = true)]
     public class CollectionConnectionManagerFixture
-        : ICollectionFixture<ConnectionManagerFixture> { }
+        : ICollectionFixture<ConnectionManagerFixture>
+    { }
 
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public sealed class ConnectionManagerFixture : IDisposable

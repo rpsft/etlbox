@@ -8,3 +8,8 @@ if ( $LastExitCode -ne 0 ) { exit $LastExitCode }
 
 & docker run --rm -d -e "POSTGRES_PASSWORD=etlboxpassword" -p 5432:5432 --name localpostgres -d postgres
 if ( $LastExitCode -ne 0 ) { exit $LastExitCode }
+
+& docker run --rm -d -p 8123:8123 --name clickhouse-container 
+	-e CLICKHOUSE_USER=clickhouse \
+    -e CLICKHOUSE_PASSWORD=Qwe123456 \
+	--privileged clickhouse-server

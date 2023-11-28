@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -16,21 +16,27 @@ namespace ALE.ETLBox.ControlFlow
                     return $@"SELECT 1 FROM sqlite_master WHERE name='{ON.UnquotedObjectName}';";
                 case ConnectionManagerType.SqlServer:
                     return $@"IF ( OBJECT_ID('{ON.QuotedFullName}', 'U') IS NOT NULL OR OBJECT_ID('{ON.QuotedFullName}', 'V') IS NOT NULL)
-    SELECT 1";
+                            SELECT 1";
                 case ConnectionManagerType.MySql:
                     return $@"SELECT EXISTS(
                                     SELECT table_name
                                     FROM information_schema.tables
                                     WHERE table_schema = DATABASE()
-                                    AND ( table_name = '{ON.UnquotedFullName}' OR CONCAT(table_catalog, '.', table_name) = '{ON.UnquotedFullName}')
+                                      AND ( table_name = '{ON.UnquotedFullName}' OR CONCAT(table_catalog, '.', table_name) = '{ON.UnquotedFullName}')
                                 ) AS 'DoesExist'";
                 case ConnectionManagerType.Postgres:
                     return $@"SELECT EXISTS(
                                     SELECT table_name
                                     FROM information_schema.tables
                                     WHERE table_catalog = CURRENT_DATABASE()
-                                    AND ( table_name = '{ON.UnquotedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotedFullName}')
+                                      AND ( table_name = '{ON.UnquotedFullName}' OR CONCAT(table_schema, '.', table_name) = '{ON.UnquotedFullName}')
                                     )";
+                case ConnectionManagerType.ClickHouse:
+                    return $@"SELECT EXISTS(
+                                    SELECT *
+                                    FROM system.tables
+                                    WHERE database = currentDatabase()
+                                      AND name = '{ON.UnquotedFullName}')";
             }
 
             if (ConnectionType != ConnectionManagerType.Access)

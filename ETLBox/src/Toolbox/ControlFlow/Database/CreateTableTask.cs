@@ -66,7 +66,8 @@ namespace ALE.ETLBox.ControlFlow
                 return $@"CREATE TABLE {TN.QuotedFullName} (
 {ColumnsDefinitionSql}
 {PrimaryKeySql}
-)
+) {(!string.IsNullOrEmpty(TableDefinition?.Engine) ? $"ENGINE = {TableDefinition?.Engine}" : "")}
+{(!string.IsNullOrEmpty(TableDefinition?.OrderBy) ? $"ORDER BY {TableDefinition?.OrderBy}" : "")}
 ";
             }
         }
@@ -136,6 +137,8 @@ namespace ALE.ETLBox.ControlFlow
         }
 
         private string PrimaryKeySql => CreatePrimaryKeyConstraint();
+
+        public object Engine => TableDefinition?.Engine;
 
         private string CreateTableDefinition(ITableColumn col)
         {

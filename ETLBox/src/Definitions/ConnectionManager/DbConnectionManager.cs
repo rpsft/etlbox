@@ -18,7 +18,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbConnectionString ConnectionString { get; set; }
 
-        internal TConnection DbConnection { get; private set; }
+        protected TConnection DbConnection { get; private set; }
         public ConnectionState? State => DbConnection?.State;
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
@@ -92,6 +92,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
+            cmd.CommandType = CommandType.Text;
             cmd.CommandText = commandText;
             if (parameterList != null)
             {

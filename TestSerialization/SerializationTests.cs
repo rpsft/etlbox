@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using CsvHelper.Configuration;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 
 namespace TestSerialization
 {
@@ -18,11 +19,8 @@ namespace TestSerialization
         public void Test()
         {
             var xml = @"<Step>
-                <CsvSource>
-                    <Configuration>
-                        <Delimiter>;</Delimiter>
-                    </Configuration>
-                    <Uri>C:/Temp/1.csv</Uri>
+                <JsonSource>
+                    <Uri>C:/Temp/1.json</Uri>
                     <LinkTo>
                         <JsonTransformation>
                             <Mappings>        
@@ -35,9 +33,9 @@ namespace TestSerialization
                                 </Mapping>
                             </Mappings>        
                             <LinkTo>
-                                <JsonDestination>
-                                    <Uri>C:/Temp/1.json</Uri>
-                                </JsonDestination>
+                                <CsvDestination>
+                                    <Uri>C:/Temp/1.csv</Uri>
+                                </CsvDestination>
                                 <DbDestination>
                                     <TableName>dbo.TestTable</TableName>
                                     <ConnectionManager type=""PostgresConnectionManager"">
@@ -49,7 +47,7 @@ namespace TestSerialization
                             </LinkTo>
                         </JsonTransformation>
                     </LinkTo>
-                </CsvSource>
+                </JsonSource>
             </Step>";
 
             using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
@@ -58,13 +56,15 @@ namespace TestSerialization
 
             step.Should().NotBeNull();
             step!.Source.Should().BeOfType<CsvSource<ExpandoObject>>();
-            ((CsvSource<ExpandoObject>)step.Source).Uri.Should().Be("C:/Temp/1.csv");
+            ((CsvSource<ExpandoObject>)step.Source).Uri.Should().Be("C:/Temp/1.json");
         }
     }
 
     public class Step : IXmlSerializable
     {
         private readonly Type[] _types;
+
+        private List<IDataFlowDestination<ExpandoObject>> _destinations = new();
 
         public Step()
         {
@@ -209,6 +209,10 @@ namespace TestSerialization
                      && method.GetParameters()[0].ParameterType.IsInterface
                      && method.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(IDataFlowLinkTarget<>))
                     {
+                        if (target is IDataFlowDestination<ExpandoObject> dest)
+                        {
+                            _destinations.Add(dest);
+                        }
                         method?.Invoke(source, new[] { target });
                     }
                 }
@@ -243,11 +247,13 @@ namespace TestSerialization
                 .FirstOrDefault(t => t.Name == typeName);
     }
 
+    // Класс вместе с шагом нужно перенести в RapidSoft.Etl
     public static class Extensions
     {
         public static CsvConfiguration Create()
             => new CsvConfiguration(CultureInfo.InvariantCulture);
 
+        // Находим метод, возвращающий экземпляр требуемого типа
         public static MethodInfo GetMethod(Type type)
         {
             var method = typeof(Extensions).GetMethods(BindingFlags.Public | BindingFlags.Static)

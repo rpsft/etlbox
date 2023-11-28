@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
+using EtlBox.ClickHouse.ConnectionManager;
+using EtlBox.ClickHouse.ConnectionStrings;
 using Microsoft.Extensions.Configuration;
 
 namespace TestShared.Helper;
@@ -50,6 +52,11 @@ public static class Config
         SqlConnectionString,
         SqlConnectionManager
     > AzureSqlConnection { get; } = new("AzureSqlConnectionString");
+
+    public static ConnectionDetails<
+        ClickHouseConnectionString,
+        ClickHouseConnectionManager
+    > ClickHouseConnection { get; } = new("ClickHouseConnectionString");
 
     private static IConfigurationRoot DefaultConfigFile
     {

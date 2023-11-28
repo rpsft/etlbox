@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 

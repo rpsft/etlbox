@@ -2,10 +2,10 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using Microsoft.Data.SqlClient;
-using TestConnectionManager.Fixtures;
+using TestConnectionManager.src.Fixtures;
 using TestShared.Attributes;
 
-namespace TestConnectionManager.ConnectionManager
+namespace TestConnectionManager.src.ConnectionManager
 {
     public sealed class SqlConnectionManagerTests : ConnectionManagerTestBase
     {

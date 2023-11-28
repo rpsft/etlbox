@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -55,6 +55,11 @@ BEGIN
 SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
 END
 ";
+                }
+
+                if (ConnectionType == ConnectionManagerType.ClickHouse)
+                { 
+                    return $@"CREATE DATABASE {QB}{DatabaseName}{QE}";
                 }
 
                 return $@"CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString}";
