@@ -46,7 +46,7 @@ public class ScriptBuilderTests
     {
         var factory = new ScriptBuilder();
         string script =
-            "(Global1.Number+WhatEverNameIWant.Number).ToString() + Global1.Text + WhatEverNameIWant.Text";
+            "(Global1.Number+WhatEverNameIWant.Number+Global2.Number).ToString() + Global1.Text + WhatEverNameIWant.Text";
 
         dynamic globals = new ExpandoObject();
         globals.Global1 = new MyCoolClass() { Number = 100, Text = "Something" };
@@ -60,7 +60,7 @@ public class ScriptBuilderTests
         var result = await runner.RunAsync(globals);
 
         // Assert
-        Assert.Equal("600SomethingLonger Text Value", result.ReturnValue);
+        Assert.Equal("1200SomethingLonger Text Value", result.ReturnValue);
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
