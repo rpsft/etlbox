@@ -10,6 +10,7 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ALE.ETLBox.Scripting;
 
@@ -213,26 +214,35 @@ public class {typeName}
 
         throw new CompilationErrorException(
             $@"Failed to compile dynamic type.
-SOURCE CODE:
-{emitResult.Diagnostics.FirstOrDefault()?.Location.SourceTree?.GetText()}
 COMPILATION ERRORS:
-{GetErrorMessages(emitResult.Diagnostics)}",
+{GetErrorMessages(emitResult.Diagnostics)}
+SOURCE CODE:
+{emitResult.Diagnostics.FirstOrDefault()?.Location.SourceTree?.GetText()}",
             emitResult.Diagnostics
         );
     }
 
-    private static string GetErrorMessages(ImmutableArray<Diagnostic> emitResultDiagnostics)
+    private static string GetErrorMessages(ImmutableArray<Diagnostic> emitResultDiagnostics) =>
+        string.Join(
+            Environment.NewLine,
+            emitResultDiagnostics
+                .Where(
+                    diagnostic =>
+                        diagnostic.IsWarningAsError
+                        || diagnostic.Severity == DiagnosticSeverity.Error
+                )
+                .Select(GetLineError)
+        );
+
+    private static string GetLineError(Diagnostic diagnostic)
     {
-        var messages = emitResultDiagnostics
-            .Where(
-                diagnostic =>
-                    diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error
-            )
-            .Select(
-                diagnostic =>
-                    $"{diagnostic.ToString()} near '{diagnostic.Location.SourceTree?.GetText().ToString(diagnostic.Location.SourceSpan)}'"
-            );
-        return string.Join(Environment.NewLine, messages);
+        var text = diagnostic.Location.SourceTree?.GetText();
+        var startLinePosition = diagnostic.Location.GetLineSpan().StartLinePosition;
+        var line = text?.Lines[startLinePosition.Line];
+        var pointer = new string(' ', startLinePosition.Character) + "^";
+        return line == null
+            ? $"{diagnostic.ToString()} near '{text?.ToString(diagnostic.Location.SourceSpan)}'"
+            : $"{line}\n{pointer}\n{diagnostic.ToString()} near '{text?.ToString(diagnostic.Location.SourceSpan)}'";
     }
 
     private static int GetExpandoObjectTypeHash(IDictionary<string, object?> expando)
