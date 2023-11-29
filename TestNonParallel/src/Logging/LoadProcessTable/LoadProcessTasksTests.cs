@@ -159,7 +159,9 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             //Assert
             Assert.False(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
             Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.WasAborted);
-            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.AbortMessage == null);
+            Assert.True(
+                ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.AbortMessage == null
+            );
             Assert.Equal(
                 1,
                 RowCountTask.Count(

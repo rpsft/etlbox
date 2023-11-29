@@ -26,9 +26,7 @@ namespace TestShared.Helper
                     ",",
                     TableDefinition.Columns.Select(col =>
                     {
-                        int length = DataTypeConverter.GetStringLengthFromCharString(
-                            col.DataType
-                        );
+                        int length = DataTypeConverter.GetStringLengthFromCharString(col.DataType);
                         return HashHelper.RandomString(length);
                     })
                 );

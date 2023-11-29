@@ -1,7 +1,6 @@
 ﻿using ALE.ETLBox.ConnectionManager;
 using TestShared.Helper;
 
-
 namespace TestDatabaseConnectors
 {
     [CollectionDefinition("DatabaseConnectors", DisableParallelization = false)]

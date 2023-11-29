@@ -52,7 +52,8 @@ namespace ALE.ETLBox.Logging
   WHERE id = @LoadProcessId
 ";
 
-        private ObjectNameDescriptor TN => new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
+        private ObjectNameDescriptor TN =>
+            new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
         public AbortLoadProcessTask() { }
 

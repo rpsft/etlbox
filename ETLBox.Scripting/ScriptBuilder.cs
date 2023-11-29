@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -129,6 +130,8 @@ public class ScriptBuilder
             }
             else
             {
+                if (IsAnonymousType(pair.Value?.GetType()))
+                    throw new ArgumentException("Anonymous types are not supported.");
                 typedMembers.Add(pair.Key, pair.Value?.GetType());
             }
         }
@@ -176,9 +179,26 @@ public class {typeName}
     // Nested type declarations
     {string.Join(Environment.NewLine, nestedTypeDeclarations.Select(pair => pair.Value.code))}
 }}";
+    }
 
-        // Fix naming of nested types like "ETLBox.Scripting.Tests.ScriptBuilderTests+MyCoolClass"
-        string FullTypeName(Type? type) => type?.FullName?.Replace('+', '.') ?? "object";
+    /// <summary>
+    /// Fix naming of nested types like "ETLBox.Scripting.Tests.ScriptBuilderTests+MyCoolClass"
+    /// </summary>
+    private string FullTypeName(Type? type) => type?.FullName?.Replace('+', '.') ?? "object";
+
+    /// <summary>
+    /// Detect anonymous types
+    /// </summary>
+    private bool IsAnonymousType(Type? type)
+    {
+        if (type == null)
+            return false;
+        bool hasCompilerGeneratedAttribute =
+            type.GetCustomAttribute<CompilerGeneratedAttribute>() != null;
+        bool nameContainsAnonymousType = type.FullName?.Contains("AnonymousType") ?? false;
+        bool nameStartsWithLessThan = type.Name.StartsWith("<>");
+
+        return hasCompilerGeneratedAttribute && nameContainsAnonymousType && nameStartsWithLessThan;
     }
 
     private static ImmutableArray<byte> EmitToArray(Compilation compilation)
@@ -192,7 +212,11 @@ public class {typeName}
         }
 
         throw new CompilationErrorException(
-            $"Failed to compile dynamic type.\n{GetErrorMessages(emitResult.Diagnostics)}",
+            $@"Failed to compile dynamic type.
+SOURCE CODE:
+{emitResult.Diagnostics.FirstOrDefault()?.Location.SourceTree?.GetText()}
+COMPILATION ERRORS:
+{GetErrorMessages(emitResult.Diagnostics)}",
             emitResult.Diagnostics
         );
     }

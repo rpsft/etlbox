@@ -84,11 +84,7 @@ namespace ALE.ETLBox.DataFlow
             Predicate<TOutput> rowsToKeep,
             Predicate<TOutput> rowsIntoVoid
         ) =>
-            new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(
-                target,
-                rowsToKeep,
-                rowsIntoVoid
-            );
+            new DataFlowLinker<TOutput>(this, SourceBlock).LinkTo(target, rowsToKeep, rowsIntoVoid);
 
         public IDataFlowLinkSource<TConvert> LinkTo<TConvert>(
             IDataFlowLinkTarget<TOutput> target

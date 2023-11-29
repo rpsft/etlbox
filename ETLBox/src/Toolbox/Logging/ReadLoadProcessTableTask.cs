@@ -134,7 +134,8 @@ FROM {Tn.QuotedFullName}"
             }
         }
 
-        private ObjectNameDescriptor Tn => new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
+        private ObjectNameDescriptor Tn =>
+            new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
         public ReadLoadProcessTableTask() { }
 
