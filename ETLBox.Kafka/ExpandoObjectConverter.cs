@@ -54,35 +54,30 @@ namespace ALE.ETLBox.DataFlow
 
         private object? ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            switch (reader.TokenType)
+            return reader.TokenType switch
             {
-                case JsonTokenType.StartObject:
-                    return Read(ref reader, typeof(ExpandoObject), options);
-                case JsonTokenType.StartArray:
-                    var list = new List<object>();
-                    while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
-                    {
-                        var readValue = ReadValue(ref reader, options);
-                        if (readValue != null)
-                            list.Add(readValue);
-                    }
-                    return list.ToArray();
-                case JsonTokenType.String:
-                    return reader.GetString();
-                case JsonTokenType.Number:
-                    if (reader.TryGetInt64(out long l))
-                    {
-                        return l;
-                    }
-                    return reader.GetDouble();
-                case JsonTokenType.True:
-                case JsonTokenType.False:
-                    return reader.GetBoolean();
-                case JsonTokenType.Null:
-                    return null;
-                default:
-                    throw new JsonException();
+                JsonTokenType.StartObject => Read(ref reader, typeof(ExpandoObject), options),
+                JsonTokenType.StartArray => ReadArray(ref reader, options),
+                JsonTokenType.String => reader.GetString(),
+                JsonTokenType.Number => reader.TryGetInt64(out long l) ? l : reader.GetDouble(),
+                JsonTokenType.True => reader.GetBoolean(),
+                JsonTokenType.False => reader.GetBoolean(),
+                JsonTokenType.Null => null,
+                _ => throw new JsonException()
+            };
+        }
+
+        private object ReadArray(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            var list = new List<object>();
+            while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+            {
+                var readValue = ReadValue(ref reader, options);
+                if (readValue != null)
+                    list.Add(readValue);
             }
+
+            return list.ToArray();
         }
     }
 }

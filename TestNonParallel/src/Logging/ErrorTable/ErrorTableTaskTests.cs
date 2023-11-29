@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
 {
@@ -12,7 +12,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
 
         public void Dispose()
         {
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Theory, MemberData(nameof(AllSqlConnections))]

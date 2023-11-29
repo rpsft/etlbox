@@ -1,5 +1,6 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {

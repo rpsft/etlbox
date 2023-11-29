@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using ETLBox.Primitives;
+using Microsoft.Data.SqlClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {

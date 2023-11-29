@@ -1,3 +1,4 @@
+using ALE.ETLBox.Common.DataFlow;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.XmlSource

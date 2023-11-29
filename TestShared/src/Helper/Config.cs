@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 using Microsoft.Extensions.Configuration;
 
 namespace TestShared.Helper;

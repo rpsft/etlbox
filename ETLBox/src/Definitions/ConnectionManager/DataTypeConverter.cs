@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {

@@ -43,6 +43,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Common", "ETLBox.Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Primitives", "ETLBox.Primitives\ETLBox.Primitives.csproj", "{C0789F9C-4682-4E0E-85BA-454403AFC475}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Scripting", "ETLBox.Scripting\ETLBox.Scripting.csproj", "{14D9541D-CEA0-4393-82B5-FF4F2847DFED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Scripting.Tests", "ETLBox.Scripting.Tests\ETLBox.Scripting.Tests.csproj", "{B960D5A4-FBB3-41BC-B612-8811838CA2DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +113,14 @@ Global
 		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

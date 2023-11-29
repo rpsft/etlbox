@@ -1,5 +1,8 @@
 using System.Linq;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
 {

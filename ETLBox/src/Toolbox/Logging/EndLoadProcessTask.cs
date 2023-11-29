@@ -1,5 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Logging
 {
@@ -29,14 +31,14 @@ namespace ALE.ETLBox.Logging
                 DisableLogging = true
             };
             readLoadProcessTableTask.Execute();
-            ControlFlow.ControlFlow.CurrentLoadProcess = readLoadProcessTableTask.LoadProcess;
+            Common.ControlFlow.ControlFlow.CurrentLoadProcess = readLoadProcessTableTask.LoadProcess;
         }
 
         /* Public properties */
         private long? _loadProcessId;
         public long? LoadProcessId
         {
-            get { return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
+            get { return _loadProcessId ?? Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
             set { _loadProcessId = value; }
         }
         public string EndMessage { get; set; }
@@ -52,7 +54,7 @@ namespace ALE.ETLBox.Logging
   WHERE id = @LoadProcessId
 ";
 
-        private ObjectNameDescriptor TN => new(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
+        private ObjectNameDescriptor TN => new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
         public EndLoadProcessTask() { }
 

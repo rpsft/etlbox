@@ -1,5 +1,5 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {

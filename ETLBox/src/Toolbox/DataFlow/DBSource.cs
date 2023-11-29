@@ -1,7 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using System.Linq;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.DataFlow
 {

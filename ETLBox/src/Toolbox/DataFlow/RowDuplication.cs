@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.Common.DataFlow;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Creates one or more duplicates of your incoming rows.

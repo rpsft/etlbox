@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using ETLBox.Primitives;
+using MySql.Data.MySqlClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {

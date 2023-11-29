@@ -1,4 +1,9 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.

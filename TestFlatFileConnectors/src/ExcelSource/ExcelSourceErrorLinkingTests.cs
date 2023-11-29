@@ -1,3 +1,4 @@
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.ExcelSource

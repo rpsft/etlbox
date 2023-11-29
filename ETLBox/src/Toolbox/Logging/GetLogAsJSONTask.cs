@@ -1,5 +1,7 @@
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -82,7 +84,7 @@ namespace ALE.ETLBox.Logging
         private long? _loadProcessKey;
         public long? LoadProcessKey
         {
-            get { return _loadProcessKey ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
+            get { return _loadProcessKey ?? Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
             set { _loadProcessKey = value; }
         }
 

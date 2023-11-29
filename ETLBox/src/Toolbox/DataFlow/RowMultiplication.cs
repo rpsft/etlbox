@@ -1,4 +1,8 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.

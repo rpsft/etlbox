@@ -1,9 +1,10 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox
 {
     [PublicAPI]
-    public class QueryParameter
+    public class QueryParameter : IQueryParameter
     {
         public string Name { get; }
         public string Type { get; }

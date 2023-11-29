@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.Common.DataFlow
 {
     internal class TypeInfo
     {

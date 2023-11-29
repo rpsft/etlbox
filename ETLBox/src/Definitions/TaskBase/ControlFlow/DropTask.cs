@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.ControlFlow
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+
+namespace ALE.ETLBox.ControlFlow
 {
     [PublicAPI]
     public abstract class DropTask<T> : GenericTask

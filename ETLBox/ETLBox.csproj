@@ -32,7 +32,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.5" />
     <PackageReference Include="MySql.Data" Version="8.0.33" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog" Version="5.2.0" />
+    <PackageReference Include="NLog" Version="5.2.6" />
     <PackageReference Include="NLog.Database" Version="5.2.0" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.3.0" />
     <PackageReference Include="Npgsql" Version="7.0.4" />
@@ -51,6 +51,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="src\Logging\" />
   </ItemGroup>
 
 </Project>

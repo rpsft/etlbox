@@ -1,6 +1,8 @@
 ﻿using System.Data.Common;
 using System.Linq;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox
 {
@@ -139,10 +141,10 @@ namespace ALE.ETLBox
         {
             return TypeInfo?.GetTypeInfoGroup() switch
             {
-                DataFlow.TypeInfo.TypeInfoGroup.Array
+                Common.DataFlow.TypeInfo.TypeInfoGroup.Array
                 or null
                     => Definition.Columns.FindIndex(col => col.Name == name),
-                DataFlow.TypeInfo.TypeInfoGroup.Dynamic
+                Common.DataFlow.TypeInfo.TypeInfoGroup.Dynamic
                     => IncrementIfAfterIdColumn(DynamicColumnNames[name]),
                 _ => IncrementIfAfterIdColumn(TypeInfo!.GetIndexByPropertyNameOrColumnMapping(name))
             };

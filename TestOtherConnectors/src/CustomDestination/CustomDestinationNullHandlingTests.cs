@@ -1,3 +1,6 @@
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
+
 namespace TestOtherConnectors.CustomDestination
 {
     public class CustomDestinationNullHandlingTests

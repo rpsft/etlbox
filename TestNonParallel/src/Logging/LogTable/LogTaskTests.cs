@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+﻿using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Primitives;
 using NLog;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
@@ -15,7 +15,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
 
         public void Dispose()
         {
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Theory, MemberData(nameof(AllSqlConnections))]
@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             //Arrange
             CreateLogTableTask.Create(connection, "test_log");
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
+            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
                 connection,
                 LogLevel.Trace,
                 "test_log"
@@ -55,7 +55,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LogTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LogTable,
                     "message = 'Error!' AND level = 'Error' and task_action = 'LOG'"
                 )
             );
@@ -63,7 +63,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LogTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LogTable,
                     "message = 'Warn!' AND level = 'Warn' and task_action = 'LOG'"
                 )
             );
@@ -71,7 +71,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LogTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LogTable,
                     "message = 'Info!' AND level = 'Info' and task_action = 'LOG'"
                 )
             );
@@ -79,7 +79,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LogTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LogTable,
                     "message = 'Debug!' AND level = 'Debug' and task_action = 'LOG'"
                 )
             );
@@ -87,7 +87,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LogTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LogTable,
                     "message = 'Trace!' AND level = 'Trace' and task_action = 'LOG'"
                 )
             );
@@ -95,13 +95,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LogTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LogTable,
                     "message = 'Fatal!' AND level = 'Fatal' and task_action = 'LOG'"
                 )
             );
 
             //Cleanup
-            DropTableTask.Drop(connection, ETLBox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(connection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
         }
 
         [Fact]
@@ -109,14 +109,14 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             //Arrange
             CreateLogTableTask.Create(SqlConnection, "test_log_stage");
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
+            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
                 SqlConnection,
                 LogLevel.Debug,
                 "test_log_stage"
             );
 
             //Act
-            ETLBox.ControlFlow.ControlFlow.Stage = "SETUP";
+            ETLBox.Common.ControlFlow.ControlFlow.Stage = "SETUP";
             SqlTask.ExecuteNonQuery(SqlConnection, "Test Task", "Select 1 as test");
 
             //Assert
@@ -132,7 +132,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             );
 
             //Cleanup
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
         }
 
         [Theory, MemberData(nameof(AllSqlConnections))]
@@ -140,7 +140,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             //Arrange
             CreateLogTableTask.Create(connection, "test_readlog");
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
+            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
                 connection,
                 LogLevel.Info,
                 "test_readlog"
@@ -166,7 +166,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             );
 
             //Cleanup
-            DropTableTask.Drop(connection, ETLBox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(connection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
         }
     }
 }

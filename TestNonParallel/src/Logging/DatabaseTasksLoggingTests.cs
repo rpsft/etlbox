@@ -11,13 +11,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             CreateSchemaTask.Create(SqlConnection, "etl");
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private int? CountLogEntries(string taskName)

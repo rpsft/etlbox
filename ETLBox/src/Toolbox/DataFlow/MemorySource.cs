@@ -1,4 +1,8 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.

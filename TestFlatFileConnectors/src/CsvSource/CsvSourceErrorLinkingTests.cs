@@ -1,4 +1,5 @@
 using CsvHelper.TypeConversion;
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource

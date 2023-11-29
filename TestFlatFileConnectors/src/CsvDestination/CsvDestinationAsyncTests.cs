@@ -1,3 +1,5 @@
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using Xunit.Abstractions;
 
 namespace TestFlatFileConnectors.CsvDestination

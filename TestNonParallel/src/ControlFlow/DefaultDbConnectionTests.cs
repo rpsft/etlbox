@@ -11,14 +11,14 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
             : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Fact]

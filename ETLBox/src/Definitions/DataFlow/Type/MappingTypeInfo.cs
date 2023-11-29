@@ -1,3 +1,5 @@
+using ALE.ETLBox.Common;
+
 namespace ALE.ETLBox.DataFlow
 {
     internal abstract class MappingTypeInfo

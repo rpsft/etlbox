@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.DataFlow;
 using Confluent.Kafka;
-using ETLBox.Kafka.Tests.Utilities;
+using ETLBox.Primitives;
 using Moq;
 
 namespace ETLBox.Kafka.Tests;

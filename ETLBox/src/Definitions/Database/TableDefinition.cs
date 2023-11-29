@@ -1,6 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox
 {
