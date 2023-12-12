@@ -1,35 +1,37 @@
+using System.Net.Http;
+
 namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
-    internal sealed class RestMethodInfo
+    public sealed class RestMethodInfo
     {
         /// <summary>
         /// шаблон url (формат Liquid)
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
 
         /// <summary>
         /// массив заголовков
         /// </summary>
-        internal string[] Headers { get; set; }
+        public Tuple<string, string>[] Headers { get; set; }
 
         /// <summary>
         /// { GET, POST, PUT, DELETE }
         /// </summary>
-        internal string Method { get; set; }
+        public HttpMethod Method { get; set; }
 
         /// <summary>
         /// шаблон тела запроса(формат Liquid)
         /// </summary>
-        internal string Body { get; set; }
+        public string Body { get; set; }
 
         /// <summary>
         /// количество повторений запроса
         /// </summary>
-        internal int RetryCount { get; set; }
+        public int RetryCount { get; set; }
 
         /// <summary>
         /// пауза между попытками(сек.) повторения запроса
         /// </summary>
-        internal int RetryInterval { get; set; }
+        public int RetryInterval { get; set; }
     }
 }

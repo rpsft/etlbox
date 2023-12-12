@@ -1,10 +1,11 @@
 using System.Net.Http;
+using ALE.ETLBox.src.Definitions.Exceptions;
 
 namespace ALE.ETLBox.src.Definitions.DataFlow
 {
     internal class HttpClient : IHttpClient
     {
-        readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient();
+        private readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient();
 
         public void Dispose()
         {
@@ -27,7 +28,14 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
 
                 var response = await _httpClient.SendAsync(request);
 
-                return await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new HttpStatusCodeException(response.StatusCode, await response.Content.ReadAsStringAsync());
+                }
             }
         }
     }
