@@ -12,9 +12,9 @@ namespace TestTransformations.RestTransformation
 {
     public class RestTransformationTests
     {
-        //TODO: тест не работает, надо чинить. НЕ\е работает дессиреализация в RestMethodAsync
+        //TODO: тест не работает, надо чинить. Не работает дессиреализация в RestMethodAsync
         [Fact]
-        public void UsingDifferentObjectTypes()
+        public void RestTransformationRestMethodAsyncTest()
         {
             //Arrange
             dynamic data = new ExpandoObject();
