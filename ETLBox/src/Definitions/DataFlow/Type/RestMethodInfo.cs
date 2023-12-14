@@ -1,6 +1,6 @@
 using System.Net.Http;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     public sealed class RestMethodInfo
     {

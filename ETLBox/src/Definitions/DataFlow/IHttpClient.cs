@@ -1,6 +1,6 @@
 using System.Net.Http;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     public interface IHttpClient: IDisposable 
     {

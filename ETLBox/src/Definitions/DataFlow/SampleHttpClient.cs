@@ -1,9 +1,8 @@
 using System.Net.Http;
-using ALE.ETLBox.src.Definitions.Exceptions;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
-    internal class HttpClient : IHttpClient
+    public class SampleHttpClient : IHttpClient
     {
         private readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient();
 

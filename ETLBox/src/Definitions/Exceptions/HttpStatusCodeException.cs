@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace ALE.ETLBox.src.Definitions.Exceptions
+namespace ALE.ETLBox
 {
     internal class HttpStatusCodeException(HttpStatusCode statusCode, string content) : Exception(content)
     {

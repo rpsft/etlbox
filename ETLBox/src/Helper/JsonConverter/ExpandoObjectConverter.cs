@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ALE.ETLBox.src.Helper.JsonConverter
+namespace ALE.ETLBox.Helper
 {
     internal class ExpandoObjectConverter : JsonConverter<ExpandoObject>
     {

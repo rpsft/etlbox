@@ -1,13 +1,11 @@
+using System.Text;
+using System;
 using System.Text.Json;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Helper.JsonConverter;
+using ALE.ETLBox.Helper;
 using DotLiquid;
 using Microsoft.Extensions.Logging;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public class RestTransformation : RowTransformation<ExpandoObject>
@@ -30,13 +28,9 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
             TransformationFunc = (ExpandoObject source) => RestMethodAsync(source).Result;
         }
 
-        public RestTransformation(ILogger logger, IHttpClient client, RestMethodInfo restMethodInfo, string resultField) : this()
+        public RestTransformation(IHttpClient client) : this()
         {
             _httpClient = client;
-
-            Logger = logger;            
-            RestMethodInfo = restMethodInfo;
-            ResultField = resultField;
         }
 
 #nullable enable
@@ -52,11 +46,11 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
             }
 
             var templateUrl = Template.Parse(RestMethodInfo.Url);
-            var url = templateUrl.Render(Hash.FromAnonymousObject(input));
+            var url = templateUrl.Render(Hash.FromDictionary(input));
             var templateBody = Template.Parse(RestMethodInfo.Body);
-            var body = templateBody.Render(Hash.FromAnonymousObject(input));
+            var body = templateBody.Render(Hash.FromDictionary(input));
 
-            var httpClient = _httpClient ?? new HttpClient();
+            var httpClient = _httpClient ?? new SampleHttpClient();
             var retryCount = 0;
             while (retryCount <= RestMethodInfo.RetryCount)
             {
