@@ -4,14 +4,14 @@ namespace ALE.ETLBox.DataFlow
 {
     public class SampleHttpClient : IHttpClient
     {
-        private readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
 
         public void Dispose()
         {
             _httpClient.Dispose();
         }
 
-        public async Task<string> InvokeAsync(string url, HttpMethod method, Tuple<string, string>[] headers, string body)
+        public async Task<string> InvokeAsync(string url, HttpMethod method, (string Key, string Value)[] headers, string body)
         {
             using (var request = new HttpRequestMessage(method, url))
             {
@@ -22,7 +22,7 @@ namespace ALE.ETLBox.DataFlow
 
                 foreach (var header in headers)
                 {
-                    request.Headers.Add(header.Item1, header.Item2);
+                    request.Headers.Add(header.Key, header.Value);
                 }
 
                 var response = await _httpClient.SendAsync(request);

@@ -12,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// массив заголовков
         /// </summary>
-        public Tuple<string, string>[] Headers { get; set; }
+        public (string Key, string Value)[] Headers { get; set; }
 
         /// <summary>
         /// { GET, POST, PUT, DELETE }
