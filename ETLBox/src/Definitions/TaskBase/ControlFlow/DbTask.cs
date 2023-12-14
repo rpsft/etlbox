@@ -241,7 +241,7 @@ namespace ALE.ETLBox.ControlFlow
 
         private void LoggingStart(LogType logType = LogType.None)
         {
-            NLogger.Info(
+            Logger.Info(
                 TaskName,
                 TaskType,
                 "START",
@@ -249,7 +249,7 @@ namespace ALE.ETLBox.ControlFlow
                 ControlFlow.Stage,
                 ControlFlow.CurrentLoadProcess?.Id
             );
-            NLogger.Debug(
+            Logger.Debug(
                 logType == LogType.Bulk ? "SQL Bulk Insert" : $"{Command}",
                 TaskType,
                 "RUN",
@@ -261,7 +261,7 @@ namespace ALE.ETLBox.ControlFlow
 
         private void LoggingEnd(LogType logType = LogType.None)
         {
-            NLogger.Info(
+            Logger.Info(
                 TaskName,
                 TaskType,
                 "END",
@@ -270,7 +270,7 @@ namespace ALE.ETLBox.ControlFlow
                 ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
-                NLogger.Debug(
+                Logger.Debug(
                     $"Rows affected: {RowsAffected ?? 0}",
                     TaskType,
                     "RUN",

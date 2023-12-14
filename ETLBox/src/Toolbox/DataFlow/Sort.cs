@@ -41,7 +41,7 @@ namespace ALE.ETLBox.DataFlow
 
         public Sort()
         {
-            NLogger = LogManager.GetLogger("ETL");
+            Logger = LogManager.GetLogger("ETL");
         }
 
         public Sort(Comparison<TInput> sortFunction)

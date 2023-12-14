@@ -58,7 +58,7 @@ namespace ALE.ETLBox.ControlFlow
         private void NLogStart()
         {
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "START",
@@ -71,7 +71,7 @@ namespace ALE.ETLBox.ControlFlow
         private void NLogFinish()
         {
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "END",

@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.NonParallel.Fixtures;
-using NLog;
+using EtlBox.Logging.Configuration.Database;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 {
@@ -179,11 +180,12 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             //Arrange
             CreateLoadProcessTableTask.Create(connection, "test_lpkey_inlog");
             CreateLogTableTask.Create(connection, "test_lpkey_log");
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(
                 connection,
-                LogLevel.Info,
+                LogLevel.Information,
                 "test_lpkey_log"
             );
+
             StartLoadProcessTask.Start(connection, "Test process 5");
 
             //Act
@@ -273,9 +275,9 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lp_restart");
             CreateLogTableTask.Create("test_log_restart");
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(
                 SqlConnection,
-                LogLevel.Info,
+                LogLevel.Information,
                 "test_log_restart"
             );
 
@@ -327,9 +329,9 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lp_logtask");
             CreateLogTableTask.Create("test_log_logtask");
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(
                 SqlConnection,
-                LogLevel.Info,
+                LogLevel.Information,
                 "test_log_logtask"
             );
 

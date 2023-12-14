@@ -103,7 +103,7 @@ namespace ALE.ETLBox.DataFlow
                 InitAction?.Invoke();
                 WasInitialized = true;
                 if (!DisableLogging)
-                    NLogger.Debug(
+                    Logger.Debug(
                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                         TaskName + " was initialized!",
                         TaskType,

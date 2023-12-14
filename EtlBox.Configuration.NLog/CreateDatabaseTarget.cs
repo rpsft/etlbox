@@ -1,8 +1,10 @@
+using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
+using JetBrains.Annotations;
 using NLog.Layouts;
 using NLog.Targets;
 
-namespace ALE.ETLBox.Logging
+namespace EtlBox.Logging.Configuration.Database
 {
     [PublicAPI]
     public class CreateDatabaseTarget
@@ -61,7 +63,7 @@ SELECT {LogDate}
 
         public DatabaseTarget GetNLogDatabaseTarget()
         {
-            DatabaseTarget dbTarget = new DatabaseTarget();
+            var dbTarget = new DatabaseTarget();
             AddParameter(dbTarget, "LogDate", @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff}");
             AddParameter(dbTarget, "Level", @"${level}");
             AddParameter(dbTarget, "Stage", @"${etllog:LogType=Stage}");

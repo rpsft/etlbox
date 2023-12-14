@@ -1,37 +1,17 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Logging;
-using ExcelDataReader.Log.Logger;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace ALE.ETLBox.ControlFlow
+namespace EtlBox.Logging.Configuration
 {
     /// <summary>
     /// Contains static information which affects all ETLBox tasks.
     /// Here you can set default connections string, disbale the logging for all processes or set the current stage used in your logging configuration.
     /// </summary>
     [PublicAPI]
-    public static class ControlFlow
+    public static class LoggingFactory
     {
-        private static IConnectionManager s_defaultDbConnection;
-
-        /// <summary>
-        /// You can store your general database connection string here. This connection will then used by all Tasks where no DB connection is excplicitly set.
-        /// </summary>
-        public static IConnectionManager DefaultDbConnection
-        {
-            get
-            {
-                return s_defaultDbConnection
-                    ?? throw new ETLBoxException(
-                        "No connection manager found! The component or task you are "
-                            + "using expected a  connection manager to connect to the database."
-                            + "Either pass a connection manager or set a default connection manager within the "
-                            + "ControlFlow.DefaultDbConnection property!"
-                    );
-            }
-            set { s_defaultDbConnection = value; }
-        }
+        private static NullLoggerFactory s_defaultLoggingFactory;
 
         /// <summary>
         /// If set to true, nothing will be logged by any control flow task or data flow component.
@@ -57,20 +37,29 @@ namespace ALE.ETLBox.ControlFlow
         /// </summary>
         public static string LoadProcessTable { get; set; } = DefaultLoadProcessTableName;
 
-        public const string DefaultLogTableName = "etlbox_log";
 
         /// <summary>
-        /// TableName of the current log process logging table
+        /// You can also set the logging database in the nlog.config file.
+        /// If you want to programmatically change the logging database,  use this method.
         /// </summary>
-        public static string LogTable { get; set; } = DefaultLogTableName;
+        /// <param name="connection">The new logging database connection manager</param>
+        /// <param name="minLogLevel">Logging level</param>
+        /// <param name="logTableName">Table to hold logs</param>
+        public static void AddLoggingConfiguration(
 
-        /// <summary>
-        /// Фабрика для создания логгера
-        /// </summary>
-        public static ILoggerFactory LoggerFactory { get; set; } = NullLoggerFactory.Instance;
+        )
+        {
+            s_defaultLoggingFactory = NullLoggerFactory.Instance;
 
-        public static ILogger GetLogger<T>()
-            => LoggerFactory.CreateLogger<T>();
+            s_defaultLoggingFactory = new LoggerFactory(builder)
+        }
+
+        private static bool s_isLayoutRendererRegistered;
+
+        public static ILogger GetLogger()
+        {
+            return s_defaultLoggingFactory.GetLo
+        }
 
         /// <summary>
         /// Set all settings back to default (which is null or false)

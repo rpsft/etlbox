@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ALE.ETLBox
 {
@@ -26,7 +26,7 @@ namespace ALE.ETLBox
         protected void NLogStart()
         {
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "START",
@@ -39,7 +39,7 @@ namespace ALE.ETLBox
         protected void NLogFinish()
         {
             if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(
+                Logger.Info(
                     TaskName + $" processed {ProgressCount} records in total.",
                     TaskType,
                     "LOG",
@@ -48,7 +48,7 @@ namespace ALE.ETLBox
                     ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "END",
@@ -70,7 +70,7 @@ namespace ALE.ETLBox
                 return;
             }
 
-            NLogger.Info(
+            Logger.Info(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",
@@ -93,7 +93,7 @@ namespace ALE.ETLBox
                 return;
             }
 
-            NLogger.Info(
+            Logger.Info(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",

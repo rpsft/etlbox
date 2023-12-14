@@ -35,7 +35,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Trace();
 
         public void Trace() =>
-            NLogger?.Trace(
+            Logger?.Trace(
                 Message,
                 TaskType,
                 "LOG",
@@ -50,7 +50,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Debug();
 
         public void Debug() =>
-            NLogger?.Debug(
+            Logger?.Debug(
                 Message,
                 TaskType,
                 "LOG",
@@ -65,7 +65,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Info();
 
         public void Info() =>
-            NLogger?.Info(
+            Logger?.Info(
                 Message,
                 TaskType,
                 "LOG",
@@ -80,7 +80,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Warn();
 
         public void Warn() =>
-            NLogger?.Warn(
+            Logger?.Warn(
                 Message,
                 TaskType,
                 "LOG",
@@ -95,7 +95,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Error();
 
         public void Error() =>
-            NLogger?.Error(
+            Logger?.Error(
                 Message,
                 TaskType,
                 "LOG",
@@ -110,7 +110,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
 
         public void Fatal() =>
-            NLogger?.Fatal(
+            Logger?.Fatal(
                 Message,
                 TaskType,
                 "LOG",

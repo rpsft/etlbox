@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.Helper;
-using NLog;
+using Microsoft.Extensions.Logging;
 using CF = ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox
@@ -15,7 +15,8 @@ namespace ALE.ETLBox
             set => _taskType = value;
         }
         public virtual string TaskName { get; set; } = "N/A";
-        public Logger NLogger { get; set; } = CF.ControlFlow.GetLogger();
+
+        public ILogger Logger { get; set; } = CF.ControlFlow.LoggerFactory.CreateLogger<GenericTask>();
 
         public IConnectionManager ConnectionManager
         {
