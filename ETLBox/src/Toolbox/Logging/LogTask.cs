@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.ConnectionManager;
+using System.Diagnostics.CodeAnalysis;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Used this task for custom log messages.
@@ -35,7 +37,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Trace();
 
         public void Trace() =>
-            Logger?.Trace(
+            Logger.Trace<LogTask>(
                 Message,
                 TaskType,
                 "LOG",
@@ -50,7 +52,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Debug();
 
         public void Debug() =>
-            Logger?.Debug(
+            Logger.Debug<LogTask>(
                 Message,
                 TaskType,
                 "LOG",
@@ -65,7 +67,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Info();
 
         public void Info() =>
-            Logger?.Info(
+            Logger.Info<LogTask>(
                 Message,
                 TaskType,
                 "LOG",
@@ -80,7 +82,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Warn();
 
         public void Warn() =>
-            Logger?.Warn(
+            Logger.Warn<LogTask>(
                 Message,
                 TaskType,
                 "LOG",
@@ -95,7 +97,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Error();
 
         public void Error() =>
-            Logger?.Error(
+            Logger.Error<LogTask>(
                 Message,
                 TaskType,
                 "LOG",
@@ -110,7 +112,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
 
         public void Fatal() =>
-            Logger?.Fatal(
+            Logger.Error<LogTask>(
                 Message,
                 TaskType,
                 "LOG",

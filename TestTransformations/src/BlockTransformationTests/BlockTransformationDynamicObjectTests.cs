@@ -1,9 +1,10 @@
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.BlockTransformationTests
+namespace TestTransformations.src.BlockTransformationTests
 {
     public class BlockTransformationDynamicObjectTests : TransformationsTestBase
     {
@@ -14,23 +15,23 @@ namespace TestTransformations.BlockTransformationTests
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "BlockTransSourceDynamic"
             );
             source2Columns.InsertTestData();
             var _ = new TwoColumnsTableFixture("BlockTransDestDynamic");
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "BlockTransSourceDynamic"
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "BlockTransDestDynamic"
             );
 
             //Act
-            BlockTransformation<ExpandoObject> block =
+            var block =
                 new BlockTransformation<ExpandoObject>(inputData =>
                 {
                     inputData.RemoveRange(1, 2);

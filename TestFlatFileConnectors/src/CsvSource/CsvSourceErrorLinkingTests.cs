@@ -1,7 +1,11 @@
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 using CsvHelper.TypeConversion;
-using TestShared.SharedFixtures;
+using TestFlatFileConnectors.src;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.CsvSource
+namespace TestFlatFileConnectors.src.CsvSource
 {
     public class CsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
@@ -18,17 +22,17 @@ namespace TestFlatFileConnectors.CsvSource
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CsvSourceErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "CsvSourceErrorLinking"
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>(
+            var source = new CsvSource<MySimpleRow>(
                 "res/CsvSource/TwoColumnsErrorLinking.csv"
             );
 
@@ -65,10 +69,10 @@ namespace TestFlatFileConnectors.CsvSource
         public void WithoutErrorLinking()
         {
             //Arrange
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>(
+            var source = new CsvSource<MySimpleRow>(
                 "res/CsvSource/TwoColumnsErrorLinking.csv"
             );
 

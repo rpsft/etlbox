@@ -1,10 +1,15 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Inserts, updates and (optionally) deletes data in db target.
@@ -141,7 +146,7 @@ namespace ALE.ETLBox.DataFlow
             if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
             {
                 var r = row as IDictionary<string, object>;
-                foreach (string idColumn in MergeProperties.IdPropertyNames)
+                foreach (var idColumn in MergeProperties.IdPropertyNames)
                 {
                     if (!r!.ContainsKey(idColumn))
                         r.Add(idColumn, null);
@@ -182,7 +187,7 @@ namespace ALE.ETLBox.DataFlow
 
         private bool FindDeletionDynamicProperty(IDictionary<string, object> r)
         {
-            bool result = true;
+            var result = true;
             foreach (var deleteColumn in MergeProperties.DeletionProperties)
             {
                 if (r!.TryGetValue(deleteColumn.Key, out var property))
@@ -295,7 +300,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitOutputFlow()
         {
-            int x = 0;
+            var x = 0;
             OutputSource = new CustomSource<TInput>(
                 () => DeltaTable[x++],
                 () => x >= DeltaTable.Count
@@ -410,7 +415,7 @@ namespace ALE.ETLBox.DataFlow
             if (!delete.Any())
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
-            string idNames = $"{QB}{IdColumnNames[0]}{QE}";
+            var idNames = $"{QB}{IdColumnNames[0]}{QE}";
             if (IdColumnNames.Count > 1)
                 idNames = CreateConcatSqlForNames();
             new SqlTask(
@@ -428,7 +433,7 @@ namespace ALE.ETLBox.DataFlow
 
         private string CreateConcatSqlForNames()
         {
-            string result =
+            var result =
                 $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
             if (ConnectionType == ConnectionManagerType.SQLite)
                 result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";

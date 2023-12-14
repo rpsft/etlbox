@@ -1,9 +1,11 @@
 using System.Net;
 using System.Net.Http;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 using Moq;
 using Moq.Protected;
 
-namespace TestFlatFileConnectors.JsonSource
+namespace TestFlatFileConnectors.src.JsonSource
 {
     public class JsonSourceWebServiceTests
     {
@@ -21,10 +23,10 @@ namespace TestFlatFileConnectors.JsonSource
             HttpClient httpClient = MoqJsonResponse(File.ReadAllText("res/JsonSource/Todos.json"));
 
             //Arrange
-            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
+            var dest = new MemoryDestination<Todo>();
 
             //Act
-            JsonSource<Todo> source = new JsonSource<Todo>("http://test.com/")
+            var source = new JsonSource<Todo>("http://test.com/")
             {
                 HttpClient = httpClient
             };
@@ -63,10 +65,10 @@ namespace TestFlatFileConnectors.JsonSource
         public void PaginatedRequest()
         {
             //Arrange
-            MemoryDestination<Todo> dest = new MemoryDestination<Todo>();
-            int page = 1;
+            var dest = new MemoryDestination<Todo>();
+            var page = 1;
             //Act
-            JsonSource<Todo> source = new JsonSource<Todo>
+            var source = new JsonSource<Todo>
             {
                 GetNextUri = _ => "res/JsonSource/Todos_Page" + page++ + ".json",
                 HasNextUri = _ => page <= 3,

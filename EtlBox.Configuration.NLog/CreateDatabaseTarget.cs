@@ -1,10 +1,11 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+using System;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
 using JetBrains.Annotations;
 using NLog.Layouts;
 using NLog.Targets;
 
-namespace EtlBox.Logging.Configuration.Database
+namespace EtlBox.Logging.Database
 {
     [PublicAPI]
     public class CreateDatabaseTarget

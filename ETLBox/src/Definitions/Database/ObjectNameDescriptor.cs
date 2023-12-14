@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
+using ALE.ETLBox.src.Definitions.Exceptions;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.Database
 {
     public sealed class ObjectNameDescriptor
     {
@@ -114,13 +115,13 @@ namespace ALE.ETLBox
         {
             get
             {
-                string beginningQuote = QB switch
+                var beginningQuote = QB switch
                 {
                     "[" => @"\[",
                     "" => @"""",
                     _ => QB
                 };
-                string endingQuote = QE switch
+                var endingQuote = QE switch
                 {
                     "]" => @"\]",
                     "" => @"""",

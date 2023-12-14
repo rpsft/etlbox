@@ -1,8 +1,10 @@
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceDynamicObjectTests : DatabaseConnectorsTestBase
     {
@@ -15,22 +17,22 @@ namespace TestDatabaseConnectors.DBSource
         public void SourceAndDestinationSameColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 connection,
                 "SourceDynamic"
             );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "DestinationDynamic"
             );
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(
                 connection,
                 "SourceDynamic"
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 connection,
                 "DestinationDynamic"
             );

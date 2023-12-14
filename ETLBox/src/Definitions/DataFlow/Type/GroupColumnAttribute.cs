@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     /// <summary>
     /// This attribute is used to identify the grouping property for aggregations. The passed column name

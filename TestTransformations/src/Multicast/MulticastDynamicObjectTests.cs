@@ -1,8 +1,8 @@
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.Multicast
+namespace TestTransformations.src.Multicast
 {
     public class MulticastDynamicObjectTests : TransformationsTestBase
     {
@@ -13,23 +13,23 @@ namespace TestTransformations.Multicast
         public void SplitInto2Tables()
         {
             //Arrange
-            TwoColumnsTableFixture sourceTable = new TwoColumnsTableFixture("Source");
+            var sourceTable = new TwoColumnsTableFixture("Source");
             sourceTable.InsertTestData();
-            TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("Destination1");
-            TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
+            var dest1Table = new TwoColumnsTableFixture("Destination1");
+            var dest2Table = new TwoColumnsTableFixture("Destination2");
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "Source");
-            DbDestination<ExpandoObject> dest1 = new DbDestination<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(SqlConnection, "Source");
+            var dest1 = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "Destination1"
             );
-            DbDestination<ExpandoObject> dest2 = new DbDestination<ExpandoObject>(
+            var dest2 = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "Destination2"
             );
 
             //Act
-            Multicast<ExpandoObject> multicast = new Multicast<ExpandoObject>();
+            var multicast = new Multicast<ExpandoObject>();
 
             source.LinkTo(multicast);
             multicast.LinkTo(dest1);

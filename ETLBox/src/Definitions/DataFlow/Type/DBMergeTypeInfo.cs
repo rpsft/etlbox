@@ -1,4 +1,6 @@
-namespace ALE.ETLBox.DataFlow
+using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class DBMergeTypeInfo : TypeInfo
     {
@@ -10,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
         internal PropertyInfo ChangeActionProperty { get; private set; }
         private MergeProperties MergeProps { get; }
 
-        internal DBMergeTypeInfo(Type type, MergeProperties mergeProps)
+        internal DBMergeTypeInfo(System.Type type, MergeProperties mergeProps)
             : base(type)
         {
             MergeProps = mergeProps;

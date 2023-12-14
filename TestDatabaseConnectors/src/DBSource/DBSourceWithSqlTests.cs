@@ -1,7 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceWithSqlTests : DatabaseConnectorsTestBase
     {
@@ -20,20 +23,20 @@ namespace TestDatabaseConnectors.DBSource
         public void SqlWithSelectStar(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceSelectStar");
+            var s2C = new TwoColumnsTableFixture(connection, "SourceSelectStar");
             s2C.InsertTestData();
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 connection,
                 "DestinationSelectStar"
             );
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>
+            var source = new DbSource<MySimpleRow>
             {
                 Sql = $@"SELECT * FROM {s2C.QB}SourceSelectStar{s2C.QE}",
                 ConnectionManager = connection
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DestinationSelectStar"
             );
@@ -48,12 +51,12 @@ namespace TestDatabaseConnectors.DBSource
         public void SqlWithNamedColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceSql");
+            var s2C = new TwoColumnsTableFixture(connection, "SourceSql");
             s2C.InsertTestData();
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestinationSql");
+            var d2C = new TwoColumnsTableFixture(connection, "DestinationSql");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>
+            var source = new DbSource<MySimpleRow>
             {
                 Sql =
                     $@"SELECT CASE WHEN {s2C.QB}Col1{s2C.QE} IS NOT NULL THEN {s2C.QB}Col1{s2C.QE} ELSE {s2C.QB}Col1{s2C.QE} END AS {s2C.QB}Col1{s2C.QE}, 
@@ -61,7 +64,7 @@ namespace TestDatabaseConnectors.DBSource
 FROM {s2C.QB}SourceSql{s2C.QE}",
                 ConnectionManager = connection
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DestinationSql"
             );

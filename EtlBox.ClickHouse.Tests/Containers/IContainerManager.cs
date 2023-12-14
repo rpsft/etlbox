@@ -1,4 +1,4 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
 
 namespace EtlBox.Database.Tests.Containers
 {

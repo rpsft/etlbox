@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.src.Helper
 {
     public static class ConnectionManagerExtensions
     {

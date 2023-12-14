@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Definitions.ConnectionManager
 {
     public enum ConnectionManagerType
     {

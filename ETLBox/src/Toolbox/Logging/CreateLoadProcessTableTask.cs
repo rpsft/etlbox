@@ -1,7 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Will create the default load process table for the default database logging.
@@ -45,7 +47,7 @@ namespace ALE.ETLBox.Logging
 
         private void InitCreateTableTask()
         {
-            List<TableColumn> lpColumns = new List<TableColumn>
+            var lpColumns = new List<TableColumn>
             {
                 new("id", "BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("start_date", "DATETIME", allowNulls: false),

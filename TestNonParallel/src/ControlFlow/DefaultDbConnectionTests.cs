@@ -1,9 +1,12 @@
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBoxTests.NonParallel.src;
+using ALE.ETLBoxTests.NonParallel.src.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace ALE.ETLBoxTests.NonParallel.ControlFlow
+namespace ALE.ETLBoxTests.NonParallel.src.ControlFlow
 {
     public sealed class DefaultDbConnectionTests : NonParallelTestBase, IDisposable
     {
@@ -11,14 +14,14 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
             : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Fact]
@@ -62,8 +65,8 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
                 "TestDestinationTable",
                 new List<TableColumn> { new("Col1", "VARCHAR(100)") }
             );
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("TestSourceTable");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>("TestSourceTable");
+            var dest = new DbDestination<MySimpleRow>(
                 "TestDestinationTable"
             );
 

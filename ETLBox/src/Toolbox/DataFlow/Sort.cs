@@ -1,6 +1,6 @@
-﻿using NLog;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Sort the input with the given sort function.
@@ -41,7 +41,7 @@ namespace ALE.ETLBox.DataFlow
 
         public Sort()
         {
-            Logger = LogManager.GetLogger("ETL");
+            Logger = ControlFlow.ControlFlow.GetLogger<Sort>();
         }
 
         public Sort(Comparison<TInput> sortFunction)

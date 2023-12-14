@@ -1,7 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceTableDefinitionTests : DatabaseConnectorsTestBase
     {
@@ -20,23 +22,23 @@ namespace TestDatabaseConnectors.DBSource
         public void WithTableDefinition(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 connection,
                 "Source"
             );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "Destination"
             );
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>
+            var source = new DbSource<MySimpleRow>
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
                 ConnectionManager = connection
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>
+            var dest = new DbDestination<MySimpleRow>
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
                 ConnectionManager = connection

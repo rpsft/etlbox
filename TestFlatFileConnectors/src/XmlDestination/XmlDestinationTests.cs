@@ -1,7 +1,11 @@
-using TestFlatFileConnectors.Helpers;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src;
+using TestFlatFileConnectors.src.Fixture;
+using TestFlatFileConnectors.src.Helpers;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.XmlDestination
+namespace TestFlatFileConnectors.src.XmlDestination
 {
     public class XmlDestinationTests : FlatFileConnectorsTestBase
     {
@@ -18,15 +22,15 @@ namespace TestFlatFileConnectors.XmlDestination
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestSimple");
+            var s2C = new TwoColumnsTableFixture("XmlDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "XmlDestSimple"
             );
 
             //Act
-            XmlDestination<MySimpleRow> dest = new XmlDestination<MySimpleRow>(
+            var dest = new XmlDestination<MySimpleRow>(
                 "./SimpleWithObject.xml",
                 ResourceType.File
             );
@@ -55,15 +59,15 @@ namespace TestFlatFileConnectors.XmlDestination
         public void SimpleOnlyAttributes()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestOnlyAttributes");
+            var s2C = new TwoColumnsTableFixture("XmlDestOnlyAttributes");
             s2C.InsertTestDataSet3();
-            DbSource<MyAttributeRow> source = new DbSource<MyAttributeRow>(
+            var source = new DbSource<MyAttributeRow>(
                 SqlConnection,
                 "XmlDestOnlyAttributes"
             );
 
             //Act
-            XmlDestination<MyAttributeRow> dest = new XmlDestination<MyAttributeRow>(
+            var dest = new XmlDestination<MyAttributeRow>(
                 "./SimpleOnlyAttributes.xml",
                 ResourceType.File
             );

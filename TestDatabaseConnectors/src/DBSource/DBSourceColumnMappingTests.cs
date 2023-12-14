@@ -1,7 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceColumnMappingTests : DatabaseConnectorsTestBase
     {
@@ -23,15 +26,15 @@ namespace TestDatabaseConnectors.DBSource
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 connection,
                 "Source"
             );
             source2Columns.InsertTestData();
 
             //Act
-            DbSource<ColumnMapRow> source = new DbSource<ColumnMapRow>(connection, "Source");
-            CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(AssertInput);
+            var source = new DbSource<ColumnMapRow>(connection, "Source");
+            var dest = new CustomDestination<ColumnMapRow>(AssertInput);
 
             source.LinkTo(dest);
             source.Execute();
@@ -65,7 +68,7 @@ namespace TestDatabaseConnectors.DBSource
         public void ColumnMappingExtended(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "SourceColumnMapping",
                 identityColumnIndex: 0
@@ -73,11 +76,11 @@ namespace TestDatabaseConnectors.DBSource
             source4Columns.InsertTestData();
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(
+            var source = new DbSource<MyExtendedRow>(
                 connection,
                 "SourceColumnMapping"
             );
-            CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(input =>
+            var dest = new CustomDestination<MyExtendedRow>(input =>
             {
                 //Assert
                 Assert.InRange(input.Id, 1, 3);

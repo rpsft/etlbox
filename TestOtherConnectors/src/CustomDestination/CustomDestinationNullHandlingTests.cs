@@ -1,4 +1,6 @@
-namespace TestOtherConnectors.CustomDestination
+using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace TestOtherConnectors.src.CustomDestination
 {
     public class CustomDestinationNullHandlingTests
     {
@@ -12,7 +14,7 @@ namespace TestOtherConnectors.CustomDestination
         public void IgnoreWithObject()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -26,8 +28,8 @@ namespace TestOtherConnectors.CustomDestination
             };
 
             //Act
-            List<MySimpleRow> result = new List<MySimpleRow>();
-            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
+            var result = new List<MySimpleRow>();
+            var dest = new CustomDestination<MySimpleRow>(
                 row => result.Add(row)
             );
             source.LinkTo(dest);

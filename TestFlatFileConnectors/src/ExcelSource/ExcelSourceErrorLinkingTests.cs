@@ -1,6 +1,10 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.ExcelSource
+namespace TestFlatFileConnectors.src.ExcelSource
 {
     public class ExcelSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
@@ -20,17 +24,17 @@ namespace TestFlatFileConnectors.ExcelSource
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelSourceErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ExcelSourceErrorLinking"
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnErrorLinking.xlsx"
             )
             {
@@ -57,13 +61,13 @@ namespace TestFlatFileConnectors.ExcelSource
         public void WithoutErrorLinking()
         {
             //Arrange
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnErrorLinking.xlsx"
             )
             {
                 HasNoHeader = true
             };
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act & Assert
             Assert.Throws<FormatException>(() =>

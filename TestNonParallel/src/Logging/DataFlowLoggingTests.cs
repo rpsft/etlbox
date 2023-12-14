@@ -1,11 +1,13 @@
 using System.Dynamic;
 using System.Threading.Tasks;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBoxTests.NonParallel.src.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging
+namespace ALE.ETLBoxTests.NonParallel.src.Logging
 {
     public sealed class DataFlowLoggingTests : NonParallelTestBase, IDisposable
     {
@@ -13,13 +15,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 
@@ -49,7 +51,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
 
         private void InsertTestData(string tableName)
         {
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
                 new SqlTask("Insert demo data", $"INSERT INTO {tableName} VALUES({i},'Test{i}')")
                 {
                     ConnectionManager = SqlConnection,
@@ -64,8 +66,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             CreateTestTable("DbSource");
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
-            DbSource source = new DbSource(SqlConnection, "DbSource");
-            DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
+            var source = new DbSource(SqlConnection, "DbSource");
+            var dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 3;
@@ -106,8 +108,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             CreateTestTable("DbSource");
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
-            DbSource source = new DbSource(SqlConnection, "DbSource");
-            DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
+            var source = new DbSource(SqlConnection, "DbSource");
+            var dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 0;
@@ -147,9 +149,9 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             CreateTestTable("DbSource");
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
-            DbSource source = new DbSource(SqlConnection, "DbSource");
-            DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
-            RowTransformation rowTrans = new RowTransformation(row => row);
+            var source = new DbSource(SqlConnection, "DbSource");
+            var dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
+            var rowTrans = new RowTransformation(row => row);
 
             //Act
             DataFlow.LoggingThresholdRows = 3;
@@ -179,10 +181,10 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             //Arrange
             CreateTestTable("DbDestination");
-            CsvSource<string[]> source = new CsvSource<string[]>(
+            var source = new CsvSource<string[]>(
                 "res/DataFlowLogging/TwoColumns.csv"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "DbDestination",
                 batchSize: 3
@@ -212,8 +214,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             //Arrange
             CreateTestTable("Destination4CustomSource");
-            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
-            int readIndex = 0;
+            var data = new List<string> { "Test1", "Test2", "Test3" };
+            var readIndex = 0;
 
             ExpandoObject ReadData()
             {
@@ -227,8 +229,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             bool EndOfData() => readIndex >= data.Count;
 
             //Act
-            CustomSource source = new CustomSource(ReadData, EndOfData);
-            DbDestination dest = new DbDestination(SqlConnection, "Destination4CustomSource");
+            var source = new CustomSource(ReadData, EndOfData);
+            var dest = new DbDestination(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion;

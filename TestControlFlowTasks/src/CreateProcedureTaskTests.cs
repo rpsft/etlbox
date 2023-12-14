@@ -1,9 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class CreateProcedureTaskTests : ControlFlowTestBase
     {
@@ -38,7 +39,7 @@ namespace TestControlFlowTasks
         public void CreateProcedureWithParameter(IConnectionManager connection)
         {
             //Arrange
-            List<ProcedureParameter> pars = new List<ProcedureParameter>
+            var pars = new List<ProcedureParameter>
             {
                 new("Par1", "VARCHAR(10)"),
                 new("Par2", "INT", "7")
@@ -53,12 +54,12 @@ namespace TestControlFlowTasks
         public void CreateProcedureWithProcedureObject(IConnectionManager connection)
         {
             //Arrange
-            List<ProcedureParameter> pars = new List<ProcedureParameter>
+            var pars = new List<ProcedureParameter>
             {
                 new("Par1", "varchar(10)"),
                 new("Par2", "int", "7")
             };
-            ProcedureDefinition procDef = new ProcedureDefinition("Proc4", "SELECT 1;", pars);
+            var procDef = new ProcedureDefinition("Proc4", "SELECT 1;", pars);
             //Act
             CreateProcedureTask.CreateOrAlter(connection, procDef);
             //Assert

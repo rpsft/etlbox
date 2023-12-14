@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox
+﻿namespace ALE.ETLBox.src.Definitions.Database
 {
     [PublicAPI]
     public class ProcedureParameter

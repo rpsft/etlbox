@@ -1,9 +1,9 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class CreateIndexTaskTests : ControlFlowTestBase
     {

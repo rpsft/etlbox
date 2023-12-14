@@ -1,9 +1,10 @@
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.Multicast
+namespace TestTransformations.src.Multicast
 {
     public class MulticastPredicateTests : TransformationsTestBase
     {
@@ -21,23 +22,23 @@ namespace TestTransformations.Multicast
         public void PredicateFilteringWithInteger()
         {
             //Arrange
-            TwoColumnsTableFixture sourceTable = new TwoColumnsTableFixture("Source");
+            var sourceTable = new TwoColumnsTableFixture("Source");
             sourceTable.InsertTestData();
             var _ = new TwoColumnsTableFixture("Destination1");
             var __ = new TwoColumnsTableFixture("Destination2");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
-            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(SqlConnection, "Source");
+            var dest1 = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination1"
             );
-            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(
+            var dest2 = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination2"
             );
 
             //Act
-            Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
+            var multicast = new Multicast<MySimpleRow>();
             source.LinkTo(multicast);
             multicast.LinkTo(dest1, row => row.Col1 <= 2);
             multicast.LinkTo(dest2, row => row.Col1 > 2);

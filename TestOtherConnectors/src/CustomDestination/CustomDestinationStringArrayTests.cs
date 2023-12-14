@@ -1,7 +1,10 @@
-using ALE.ETLBox.ControlFlow;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestOtherConnectors.src;
+using TestOtherConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestOtherConnectors.CustomDestination
+namespace TestOtherConnectors.src.CustomDestination
 {
     public class CustomDestinationStringArrayTests : OtherConnectorsTestBase
     {
@@ -12,20 +15,20 @@ namespace TestOtherConnectors.CustomDestination
         public void InsertIntoTable()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "CustomDestinationNonGenericSource"
             );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CustomDestinationNonGenericDestination"
             );
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "CustomDestinationNonGenericSource"
             );
-            CustomDestination<string[]> dest = new CustomDestination<string[]>(row =>
+            var dest = new CustomDestination<string[]>(row =>
             {
                 SqlTask.ExecuteNonQuery(
                     SqlConnection,

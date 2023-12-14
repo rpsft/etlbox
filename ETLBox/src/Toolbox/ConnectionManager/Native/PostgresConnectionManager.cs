@@ -1,7 +1,10 @@
 using System.Linq;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Database;
 using Npgsql;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native
 {
     /// <summary>
     /// Connection manager of a classic ADO.NET connection to a (Microsoft) Sql Server.
@@ -52,11 +55,11 @@ FROM STDIN (FORMAT BINARY)"
                 foreach (var destCol in destColumnNames)
                 {
                     TableColumn colDef = DestinationColumns[destCol];
-                    int ordinal = data.GetOrdinal(destCol);
-                    object val = data.GetValue(ordinal);
+                    var ordinal = data.GetOrdinal(destCol);
+                    var val = data.GetValue(ordinal);
                     if (val != null)
                     {
-                        object convertedVal = Convert.ChangeType(
+                        var convertedVal = Convert.ChangeType(
                             data.GetValue(ordinal),
                             colDef.NETDataType
                         );
@@ -98,7 +101,7 @@ FROM STDIN (FORMAT BINARY)"
 
         public override IConnectionManager Clone()
         {
-            PostgresConnectionManager clone = new PostgresConnectionManager(
+            var clone = new PostgresConnectionManager(
                 (PostgresConnectionString)ConnectionString
             )
             {

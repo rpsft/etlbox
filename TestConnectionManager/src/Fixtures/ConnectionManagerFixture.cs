@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using TestShared.Helper;
+using TestShared.src.Helper;
 
 namespace TestConnectionManager.src.Fixtures
 {

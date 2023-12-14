@@ -1,9 +1,8 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Helper;
 using Microsoft.Extensions.Logging;
-using CF = ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.TaskBase
 {
     [PublicAPI]
     public abstract class GenericTask : ITask
@@ -16,7 +15,7 @@ namespace ALE.ETLBox
         }
         public virtual string TaskName { get; set; } = "N/A";
 
-        public ILogger Logger { get; set; } = CF.ControlFlow.LoggerFactory.CreateLogger<GenericTask>();
+        public ILogger Logger { get; set; } = Toolbox.ControlFlow.ControlFlow.LoggerFactory.CreateLogger<GenericTask>();
 
         public IConnectionManager ConnectionManager
         {
@@ -31,7 +30,7 @@ namespace ALE.ETLBox
         protected virtual void OnConnectionManagerChanged(IConnectionManager value) { }
 
         internal virtual IConnectionManager DbConnectionManager =>
-            ConnectionManager ?? CF.ControlFlow.DefaultDbConnection;
+            ConnectionManager ?? Toolbox.ControlFlow.ControlFlow.DefaultDbConnection;
 
         public ConnectionManagerType ConnectionType => DbConnectionManager.ConnectionManagerType;
         public string QB => DbConnectionManager.QB;
@@ -40,7 +39,7 @@ namespace ALE.ETLBox
         private bool _disableLogging;
         public virtual bool DisableLogging
         {
-            get => CF.ControlFlow.DisableAllLogging || _disableLogging;
+            get => Toolbox.ControlFlow.ControlFlow.DisableAllLogging || _disableLogging;
             set => _disableLogging = value;
         }
 

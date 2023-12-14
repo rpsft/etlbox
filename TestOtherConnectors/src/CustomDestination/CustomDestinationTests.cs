@@ -1,8 +1,10 @@
-using ALE.ETLBox.ControlFlow;
-using TestOtherConnectors.Helpers;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestOtherConnectors.src.Fixture;
+using TestOtherConnectors.src.Helpers;
+using TestShared.src.SharedFixtures;
 
-namespace TestOtherConnectors.CustomDestination
+namespace TestOtherConnectors.src.CustomDestination
 {
     public class CustomDestinationTests : OtherConnectorsTestBase
     {

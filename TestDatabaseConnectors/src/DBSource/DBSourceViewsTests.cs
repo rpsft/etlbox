@@ -1,8 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceViewsTests : DatabaseConnectorsTestBase
     {
@@ -21,7 +23,7 @@ namespace TestDatabaseConnectors.DBSource
         public void SimpleFlow(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 connection,
                 "dbsource_simple"
             );
@@ -31,14 +33,14 @@ namespace TestDatabaseConnectors.DBSource
                 "DbSourceView",
                 "SELECT * FROM dbsource_simple"
             );
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "DbDestinationSimple"
             );
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceView");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(connection, "DbSourceView");
+            var dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DbDestinationSimple"
             );
@@ -62,7 +64,7 @@ namespace TestDatabaseConnectors.DBSource
         public void DifferentColumnsInView(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture s4C = new FourColumnsTableFixture(
+            var s4C = new FourColumnsTableFixture(
                 connection,
                 "dbsource_extended"
             );
@@ -72,18 +74,18 @@ namespace TestDatabaseConnectors.DBSource
                 "DbSourceViewExtended",
                 $"SELECT {s4C.QB}Col2{s4C.QE}, {s4C.QB}Col4{s4C.QE} FROM dbsource_extended"
             );
-            FourColumnsTableFixture d4C = new FourColumnsTableFixture(
+            var d4C = new FourColumnsTableFixture(
                 connection,
                 "DbDestinationExtended",
                 1
             );
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(
+            var source = new DbSource<MyExtendedRow>(
                 connection,
                 "DbSourceViewExtended"
             );
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(
+            var dest = new DbDestination<MyExtendedRow>(
                 connection,
                 "DbDestinationExtended"
             );

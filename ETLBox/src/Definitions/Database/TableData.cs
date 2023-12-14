@@ -1,8 +1,10 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using System.Linq;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using static ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.Database
 {
     [PublicAPI]
     public sealed class TableData : TableData<object[]>
@@ -100,7 +102,7 @@ namespace ALE.ETLBox
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            string value = Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
+            var value = Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
             buffer = value.Substring(bufferoffset, length).ToCharArray();
             return buffer.Length;
         }
@@ -139,10 +141,10 @@ namespace ALE.ETLBox
         {
             return TypeInfo?.GetTypeInfoGroup() switch
             {
-                DataFlow.TypeInfo.TypeInfoGroup.Array
+                TypeInfoGroup.Array
                 or null
                     => Definition.Columns.FindIndex(col => col.Name == name),
-                DataFlow.TypeInfo.TypeInfoGroup.Dynamic
+                TypeInfoGroup.Dynamic
                     => IncrementIfAfterIdColumn(DynamicColumnNames[name]),
                 _ => IncrementIfAfterIdColumn(TypeInfo!.GetIndexByPropertyNameOrColumnMapping(name))
             };

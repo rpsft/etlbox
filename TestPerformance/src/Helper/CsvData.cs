@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBoxTests.Performance.Helper
+﻿namespace ALE.ETLBoxTests.Performance.src.Helper
 {
     public class CsvData
     {

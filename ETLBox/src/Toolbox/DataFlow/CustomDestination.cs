@@ -1,4 +1,8 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Define your own destination block.
@@ -55,7 +59,7 @@
             return input =>
             {
                 if (ProgressCount == 0)
-                    NLogStart();
+                    LogStart();
                 try
                 {
                     if (input != null)

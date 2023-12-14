@@ -1,9 +1,12 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using Newtonsoft.Json;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// A Xml destination defines a xml file where data from the flow is inserted.
@@ -69,7 +72,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (TypeInfo.IsDynamic)
                 {
-                    string json = JsonConvert.SerializeObject(data);
+                    var json = JsonConvert.SerializeObject(data);
                     XDocument doc = JsonConvert.DeserializeXNode(
                         json,
                         DynamicElementName ?? "Dynamic"

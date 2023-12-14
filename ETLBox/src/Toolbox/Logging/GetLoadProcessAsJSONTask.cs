@@ -1,8 +1,10 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Logging;
+using ALE.ETLBox.src.Definitions.TaskBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Returns the content of the LoadProcess table as JSON.

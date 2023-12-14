@@ -1,6 +1,9 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.JsonSource
+namespace TestFlatFileConnectors.src.JsonSource
 {
     public class JsonSourceTests : FlatFileConnectorsTestBase
     {
@@ -17,14 +20,14 @@ namespace TestFlatFileConnectors.JsonSource
         public void JsonFromFile()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("JsonSource2Cols");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest2Columns = new TwoColumnsTableFixture("JsonSource2Cols");
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "JsonSource2Cols"
             );
 
             //Act
-            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>(
+            var source = new JsonSource<MySimpleRow>(
                 "res/JsonSource/TwoColumns.json",
                 ResourceType.File
             );
@@ -40,16 +43,16 @@ namespace TestFlatFileConnectors.JsonSource
         public void ArrayInObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "JsonSourceArrayInObject"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "JsonSourceArrayInObject"
             );
 
             //Act
-            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>(
+            var source = new JsonSource<MySimpleRow>(
                 "res/JsonSource/ArrayInObject.json",
                 ResourceType.File
             );

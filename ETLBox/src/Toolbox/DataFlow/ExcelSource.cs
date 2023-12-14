@@ -1,7 +1,10 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Helper;
 using ExcelDataReader;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Reads data from a excel source. While reading the data from the file, data is also asnychronously posted into the targets.
@@ -54,7 +57,7 @@ namespace ALE.ETLBox.DataFlow
         {
             do
             {
-                int rowNr = 0;
+                var rowNr = 0;
 
                 while (ExcelDataReader.Read())
                 {
@@ -145,13 +148,13 @@ namespace ALE.ETLBox.DataFlow
 
         private void ParseHeader()
         {
-            for (int col = 0; col < ExcelDataReader.FieldCount; col++)
+            for (var col = 0; col < ExcelDataReader.FieldCount; col++)
             {
                 if (HasRange && col > Range.EndColumnIfSet)
                     break;
                 if (HasRange && col + 1 < Range.StartColumn)
                     continue;
-                string value = Convert.ToString(ExcelDataReader.GetValue(col));
+                var value = Convert.ToString(ExcelDataReader.GetValue(col));
                 _headerColumns.Add(value);
             }
             IsHeaderRead = true;
@@ -160,7 +163,7 @@ namespace ALE.ETLBox.DataFlow
         private TOutput ParseDataRow()
         {
             TOutput row = GetNewOutputInstance();
-            bool emptyRow = true;
+            var emptyRow = true;
             for (int col = 0, colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
             {
                 if (HasRange && col > Range.EndColumnIfSet)
@@ -169,7 +172,7 @@ namespace ALE.ETLBox.DataFlow
                     continue;
                 colNrInRange++;
                 emptyRow &= ExcelDataReader.IsDBNull(col);
-                object value = ExcelDataReader.GetValue(col);
+                var value = ExcelDataReader.GetValue(col);
                 SetOutputValue(row, colNrInRange, value);
             }
 
@@ -213,13 +216,13 @@ namespace ALE.ETLBox.DataFlow
         {
             PropertyInfo propInfo = null;
             if (
-                (
+
                     HasHeaderData
                     && TypeInfo.ExcelColumnName2PropertyIndex.TryGetValue(
                         _headerColumns[colNrInRange],
                         out var propertyIndex
                     )
-                ) || TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out propertyIndex)
+                 || TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out propertyIndex)
             )
                 propInfo = TypeInfo.Properties[propertyIndex];
             propInfo?.TrySetValue(

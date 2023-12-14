@@ -1,6 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Drops a schema. Use DropIfExists to drop a schema only if it exists. For MySql, use the DropDatabase task instead.
@@ -13,7 +15,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            string sql = $@"DROP SCHEMA {ON.QuotedFullName}";
+            var sql = $@"DROP SCHEMA {ON.QuotedFullName}";
             return sql;
         }
 

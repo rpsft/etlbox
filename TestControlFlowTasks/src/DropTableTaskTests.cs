@@ -1,9 +1,9 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class DropTableTaskTests : ControlFlowTestBase
     {
@@ -18,7 +18,7 @@ namespace TestControlFlowTasks
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> { new("value", "int") };
+            var columns = new List<TableColumn> { new("value", "int") };
             CreateTableTask.Create(connection, "DropTableTest", columns);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropTableTest"));
 
@@ -34,7 +34,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             DropTableTask.DropIfExists(connection, "DropIfExistsTableTest");
-            List<TableColumn> columns = new List<TableColumn> { new("value", "int") };
+            var columns = new List<TableColumn> { new("value", "int") };
             CreateTableTask.Create(connection, "DropIfExistsTableTest", columns);
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "DropIfExistsTableTest"));
 

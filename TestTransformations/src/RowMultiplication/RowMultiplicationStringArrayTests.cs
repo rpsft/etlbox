@@ -1,8 +1,9 @@
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.RowMultiplication
+namespace TestTransformations.src.RowMultiplication
 {
     public class RowMultiplicationStringArrayTests : TransformationsTestBase
     {
@@ -13,26 +14,26 @@ namespace TestTransformations.RowMultiplication
         public void RandomDoubling()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowMultiplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "RowMultiplicationSource"
             );
-            RowMultiplication<string[]> multiplication = new RowMultiplication<string[]>(row =>
+            var multiplication = new RowMultiplication<string[]>(row =>
             {
-                List<string[]> result = new List<string[]>();
-                int id = int.Parse(row[0]);
-                for (int i = 0; i < id; i++)
+                var result = new List<string[]>();
+                var id = int.Parse(row[0]);
+                for (var i = 0; i < id; i++)
                 {
                     result.Add(new[] { (id + i).ToString(), "Test" + (id + i) });
                 }
                 return result;
             });
-            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
+            var dest = new MemoryDestination<string[]>();
 
             //Act
             source.LinkTo(multiplication);

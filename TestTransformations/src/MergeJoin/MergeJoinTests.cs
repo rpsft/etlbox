@@ -1,9 +1,10 @@
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.MergeJoin
+namespace TestTransformations.src.MergeJoin
 {
     public class MergeJoinTests : TransformationsTestBase
     {
@@ -20,27 +21,27 @@ namespace TestTransformations.MergeJoin
         public void MergeJoinUsingOneObject()
         {
             //Arrange
-            TwoColumnsTableFixture source1Table = new TwoColumnsTableFixture("MergeJoinSource1");
+            var source1Table = new TwoColumnsTableFixture("MergeJoinSource1");
             source1Table.InsertTestData();
-            TwoColumnsTableFixture source2Table = new TwoColumnsTableFixture("MergeJoinSource2");
+            var source2Table = new TwoColumnsTableFixture("MergeJoinSource2");
             source2Table.InsertTestDataSet2();
             var _ = new TwoColumnsTableFixture("MergeJoinDestination");
 
-            DbSource<MySimpleRow> source1 = new DbSource<MySimpleRow>(
+            var source1 = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "MergeJoinSource1"
             );
-            DbSource<MySimpleRow> source2 = new DbSource<MySimpleRow>(
+            var source2 = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "MergeJoinSource2"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "MergeJoinDestination"
             );
 
             //Act
-            MergeJoin<MySimpleRow, MySimpleRow, MySimpleRow> join = new MergeJoin<
+            var join = new MergeJoin<
                 MySimpleRow,
                 MySimpleRow,
                 MySimpleRow

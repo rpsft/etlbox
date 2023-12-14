@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.Multicast
+namespace TestTransformations.src.Multicast
 {
     public class MulticastSplitDataTests : TransformationsTestBase
     {
@@ -39,8 +39,8 @@ namespace TestTransformations.Multicast
         public void SplitCsvSourceIn2Tables()
         {
             //Arrange
-            TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
-            FourColumnsTableFixture dest2Table = new FourColumnsTableFixture(
+            var dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
+            var dest2Table = new FourColumnsTableFixture(
                 "SplitDataDestination2"
             );
 

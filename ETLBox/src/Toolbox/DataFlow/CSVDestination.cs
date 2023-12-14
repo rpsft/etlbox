@@ -1,7 +1,11 @@
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using CsvHelper;
 using CsvHelper.Configuration;
+using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// A Csv destination defines a csv file where data from the flow is inserted.

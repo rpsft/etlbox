@@ -1,8 +1,11 @@
 using System.Dynamic;
-using ALE.ETLBox.ControlFlow;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestOtherConnectors.src;
+using TestOtherConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestOtherConnectors.CustomDestination
+namespace TestOtherConnectors.src.CustomDestination
 {
     public class CustomDestinationDynamicObjectTests : OtherConnectorsTestBase
     {
@@ -13,20 +16,20 @@ namespace TestOtherConnectors.CustomDestination
         public void InsertIntoTable()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "CustomDestinationDynamicSource"
             );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CustomDestinationDynamicDestination"
             );
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "CustomDestinationDynamicSource"
             );
-            CustomDestination<ExpandoObject> dest = new CustomDestination<ExpandoObject>(row =>
+            var dest = new CustomDestination<ExpandoObject>(row =>
             {
                 dynamic r = row;
                 SqlTask.ExecuteNonQuery(

@@ -1,5 +1,5 @@
 using System.Data;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ClickHouse.Ado;
 using DotNet.Testcontainers.Containers;
 using EtlBox.ClickHouse.ConnectionManager;

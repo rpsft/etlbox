@@ -1,4 +1,7 @@
-namespace TestOtherConnectors.CustomDestination
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace TestOtherConnectors.src.CustomDestination
 {
     public class CustomDestinationErrorLinkingTests
     {
@@ -13,7 +16,7 @@ namespace TestOtherConnectors.CustomDestination
         public void TestErrorLink()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -22,12 +25,12 @@ namespace TestOtherConnectors.CustomDestination
                     new() { Col1 = 3, Col2 = "Test3" }
                 }
             };
-            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(row =>
+            var dest = new CustomDestination<MySimpleRow>(row =>
             {
                 if (row.Col1 == 2)
                     throw new Exception("Error record!");
             });
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
             source.LinkTo(dest);

@@ -1,10 +1,14 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.RegularExpressions;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBoxTests.NonParallel.src;
+using ALE.ETLBoxTests.NonParallel.src.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
+namespace ALE.ETLBoxTests.NonParallel.src.Logging.LogTable
 {
     public sealed class GetLogAsJsonTests : NonParallelTestBase, IDisposable
     {
@@ -13,15 +17,15 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             CreateLoadProcessTableTask.Create(SqlConnection);
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LoadProcessTable);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private static string RemoveHashes(string jsonresult) =>
@@ -115,13 +119,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             //Arrange
             RunDemoProcess();
-            string jsonresult = GetLogAsJSONTask.GetJSON();
+            var jsonresult = GetLogAsJSONTask.GetJSON();
 
             //Act
             jsonresult = NormalizeJsonResult(jsonresult);
 
             //Assert
-            string expectedresult = NormalizeJsonResult(
+            var expectedresult = NormalizeJsonResult(
                 File.ReadAllText("res/Demo/demolog_tobe.json")
             );
             Assert.Equal(expectedresult, jsonresult);

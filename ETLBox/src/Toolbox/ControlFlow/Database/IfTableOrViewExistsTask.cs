@@ -1,6 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Checks if a table exists.
@@ -78,7 +81,7 @@ namespace ALE.ETLBox.ControlFlow
             string tableName
         )
         {
-            bool tableExists = new IfTableOrViewExistsTask(tableName)
+            var tableExists = new IfTableOrViewExistsTask(tableName)
             {
                 ConnectionManager = connectionManager,
                 DisableLogging = true

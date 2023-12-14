@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Definitions.ConnectionManager
 {
     [PublicAPI]
     public static class DataTypeConverter
@@ -21,7 +21,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public static int GetStringLengthFromCharString(string value)
         {
-            string possibleResult = System.Text.RegularExpressions.Regex.Replace(
+            var possibleResult = System.Text.RegularExpressions.Regex.Replace(
                 value,
                 Regex,
                 "${2}",
@@ -110,11 +110,11 @@ namespace ALE.ETLBox.ConnectionManager
                 case ConnectionManagerType.Access when typeName == "INT":
                     return "INTEGER";
                 case ConnectionManagerType.Access when IsCharTypeDefinition(typeName):
-                {
-                    if (typeName.StartsWith("N"))
-                        typeName = typeName.Substring(1);
-                    return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
-                }
+                    {
+                        if (typeName.StartsWith("N"))
+                            typeName = typeName.Substring(1);
+                        return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
+                    }
                 case ConnectionManagerType.Access:
                     return dbSpecificTypeName;
                 case ConnectionManagerType.SQLite when typeName is "INT" or "BIGINT":
@@ -122,16 +122,16 @@ namespace ALE.ETLBox.ConnectionManager
                 case ConnectionManagerType.SQLite:
                     return dbSpecificTypeName;
                 case ConnectionManagerType.Postgres:
-                {
-                    if (IsCharTypeDefinition(typeName))
                     {
-                        if (typeName.StartsWith("N"))
-                            return typeName.Substring(1);
+                        if (IsCharTypeDefinition(typeName))
+                        {
+                            if (typeName.StartsWith("N"))
+                                return typeName.Substring(1);
+                        }
+                        else if (typeName == "DATETIME")
+                            return "TIMESTAMP";
+                        return dbSpecificTypeName;
                     }
-                    else if (typeName == "DATETIME")
-                        return "TIMESTAMP";
-                    return dbSpecificTypeName;
-                }
                 case ConnectionManagerType.Unknown:
                 case ConnectionManagerType.Adomd:
                 case ConnectionManagerType.MySql:

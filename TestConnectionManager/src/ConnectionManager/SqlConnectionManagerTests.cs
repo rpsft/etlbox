@@ -1,9 +1,9 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 using Microsoft.Data.SqlClient;
 using TestConnectionManager.src.Fixtures;
-using TestShared.Attributes;
+using TestShared.src.Attributes;
 
 namespace TestConnectionManager.src.ConnectionManager
 {

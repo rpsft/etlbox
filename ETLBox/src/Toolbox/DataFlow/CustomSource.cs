@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.DataFlow
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Define your own source block.
@@ -33,7 +36,7 @@
 
         public override void Execute()
         {
-            NLogStart();
+            LogStart();
             while (!ReadCompletedFunc.Invoke())
             {
                 try
@@ -49,7 +52,7 @@
                 LogProgress();
             }
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
     }
 

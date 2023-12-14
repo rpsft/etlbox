@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.AggregationTests
+namespace TestTransformations.src.AggregationTests
 {
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public class AggregationGroupingAttributeTests
@@ -30,7 +31,7 @@ namespace TestTransformations.AggregationTests
         public void WithGrouping()
         {
             //Arrange
-            MemorySource<MyRow> source = new MemorySource<MyRow>
+            var source = new MemorySource<MyRow>
             {
                 DataAsList = new List<MyRow>
                 {
@@ -85,9 +86,9 @@ namespace TestTransformations.AggregationTests
                 }
             };
 
-            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>();
+            var agg = new Aggregation<MyRow, MyAggRow>();
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            var dest = new MemoryDestination<MyAggRow>();
 
             //Act
             source.LinkTo(agg);
@@ -127,7 +128,7 @@ namespace TestTransformations.AggregationTests
         public void WithNullable()
         {
             //Arrange
-            MemorySource<MyRowNullable> source = new MemorySource<MyRowNullable>
+            var source = new MemorySource<MyRowNullable>
             {
                 DataAsList = new List<MyRowNullable>
                 {
@@ -182,10 +183,10 @@ namespace TestTransformations.AggregationTests
                 }
             };
 
-            Aggregation<MyRowNullable, MyAggRowNullable> agg =
+            var agg =
                 new Aggregation<MyRowNullable, MyAggRowNullable>();
 
-            MemoryDestination<MyAggRowNullable> dest = new MemoryDestination<MyAggRowNullable>();
+            var dest = new MemoryDestination<MyAggRowNullable>();
 
             //Act
             source.LinkTo(agg);
@@ -233,7 +234,7 @@ namespace TestTransformations.AggregationTests
         public void WithMultipleGroupingAndAggregation()
         {
             //Arrange
-            MemorySource<MyRowMultiple> source = new MemorySource<MyRowMultiple>
+            var source = new MemorySource<MyRowMultiple>
             {
                 DataAsList = new List<MyRowMultiple>
                 {
@@ -275,10 +276,10 @@ namespace TestTransformations.AggregationTests
                 }
             };
 
-            Aggregation<MyRowMultiple, MyAggRowMultiple> agg =
+            var agg =
                 new Aggregation<MyRowMultiple, MyAggRowMultiple>();
 
-            MemoryDestination<MyAggRowMultiple> dest = new MemoryDestination<MyAggRowMultiple>();
+            var dest = new MemoryDestination<MyAggRowMultiple>();
 
             //Act
             source.LinkTo(agg);

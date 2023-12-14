@@ -1,9 +1,10 @@
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.BlockTransformationTests
+namespace TestTransformations.src.BlockTransformationTests
 {
     public class BlockTransformationStringArrayTests : TransformationsTestBase
     {
@@ -14,23 +15,23 @@ namespace TestTransformations.BlockTransformationTests
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "BlockTransSourceNonGeneric"
             );
             source2Columns.InsertTestData();
             var _ = new TwoColumnsTableFixture("BlockTransDestNonGeneric");
 
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "BlockTransSourceNonGeneric"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "BlockTransDestNonGeneric"
             );
 
             //Act
-            BlockTransformation<string[]> block = new BlockTransformation<string[]>(inputData =>
+            var block = new BlockTransformation<string[]>(inputData =>
             {
                 inputData.RemoveRange(1, 2);
                 inputData.Add(new[] { "4", "Test4" });

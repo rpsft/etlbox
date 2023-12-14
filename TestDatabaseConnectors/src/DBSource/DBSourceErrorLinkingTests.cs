@@ -1,10 +1,15 @@
 using System.Threading.Tasks;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceErrorLinkingTests : DatabaseConnectorsTestBase
     {
@@ -30,21 +35,21 @@ namespace TestDatabaseConnectors.DBSource
 
             //Arrange
             CreateSourceTable(connection, "DbSourceErrorLinking");
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "DbDestinationErrorLinking"
             );
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 connection,
                 "DbSourceErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DbDestinationErrorLinking"
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
             source.Execute();
@@ -79,11 +84,11 @@ namespace TestDatabaseConnectors.DBSource
             var _ = new TwoColumnsTableFixture(connection, "DbDestinationNoErrorLinking");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 connection,
                 "DbSourceNoErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DbDestinationNoErrorLinking"
             );
@@ -111,7 +116,7 @@ namespace TestDatabaseConnectors.DBSource
                 }
             );
             tableDefinition.CreateTable(connection);
-            ObjectNameDescriptor tn = new ObjectNameDescriptor(
+            var tn = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE

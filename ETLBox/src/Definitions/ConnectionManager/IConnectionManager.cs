@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.ConnectionManager
+﻿using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Database;
+
+namespace ALE.ETLBox.src.Definitions.ConnectionManager
 {
     [PublicAPI]
     public interface IConnectionManager : IDisposable

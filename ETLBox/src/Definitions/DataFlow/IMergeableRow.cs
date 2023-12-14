@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace ALE.ETLBox.src.Definitions.DataFlow
 {
     /// <summary>
     /// Represents table row in destination database for <see cref="DbMerge{T}"/>

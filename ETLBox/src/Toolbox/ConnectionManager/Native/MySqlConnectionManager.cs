@@ -1,6 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Database;
+using MySql.Data.MySqlClient;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native
 {
     /// <summary>
     /// Connection manager of a classic ADO.NET connection to a (Microsoft) Sql Server.
@@ -30,14 +33,14 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            BulkInsertSql<MySqlParameter> bulkInsert = new BulkInsertSql<MySqlParameter>
+            var bulkInsert = new BulkInsertSql<MySqlParameter>
             {
                 ConnectionType = ConnectionManagerType.MySql,
                 QB = QB,
                 QE = QE,
                 UseParameterQuery = true
             };
-            string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
+            var sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();
             cmd.Transaction = Transaction as MySqlTransaction;
             cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());
@@ -56,7 +59,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            MySqlConnectionManager clone = new MySqlConnectionManager(
+            var clone = new MySqlConnectionManager(
                 (MySqlConnectionString)ConnectionString
             )
             {

@@ -1,6 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Creates a schema if the schema doesn't exists. For MySql, use the CreateDatabaseTask instead.
@@ -21,7 +24,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            bool schemaExists = new IfSchemaExistsTask(SchemaName)
+            var schemaExists = new IfSchemaExistsTask(SchemaName)
             {
                 ConnectionManager = ConnectionManager,
                 DisableLogging = true

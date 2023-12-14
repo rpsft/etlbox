@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.AggregationTests
+namespace TestTransformations.src.AggregationTests
 {
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public sealed class AggregationStringArrayTests : IDisposable
@@ -24,7 +24,7 @@ namespace TestTransformations.AggregationTests
         {
             //Arrange
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            MemorySource<string[]> source = new MemorySource<string[]>();
+            var source = new MemorySource<string[]>();
             source.DataAsList.Add(new[] { "Class1", "3.5" });
             source.DataAsList.Add(new[] { "Class1", "6.5" });
             source.DataAsList.Add(new[] { "Class2", "10" });
@@ -35,7 +35,7 @@ namespace TestTransformations.AggregationTests
                 (key, agg) => agg.GroupName = (string)key
             );
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            var dest = new MemoryDestination<MyAggRow>();
 
             //Act
             source.LinkTo(agg);

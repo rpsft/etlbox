@@ -1,10 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBoxTests.NonParallel.src.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging
+namespace ALE.ETLBoxTests.NonParallel.src.Logging
 {
     public sealed class DifferentLoggingDBTests
         : NonParallelTestBase,
@@ -24,13 +25,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             NoLoggingDatabaseFixture = noLoggingDatabaseFixture;
             CreateLogTableTask.Create(LoggingConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(LoggingConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(LoggingConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(LoggingConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(LoggingConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 
@@ -47,7 +48,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
             );
 
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
 
             SqlTask.ExecuteNonQuery(
                 "Insert demo data",
@@ -101,8 +102,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
             );
 
-            DbSource source = new DbSource(NoLogConnection, "DFLogSource");
-            DbDestination dest = new DbDestination(LoggingConnection, "DFLogDestination");
+            var source = new DbSource(NoLogConnection, "DFLogSource");
+            var dest = new DbDestination(LoggingConnection, "DFLogDestination");
 
             //Act
             source.LinkTo(dest);

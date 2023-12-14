@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using TestShared.src.Helper;
 
-namespace TestControlFlowTasks.Fixtures
+namespace TestControlFlowTasks.src.Fixtures
 {
     [CollectionDefinition("ControlFlow")]
     public class ControlFlowCollectionClass : ICollectionFixture<ControlFlowDatabaseFixture> { }

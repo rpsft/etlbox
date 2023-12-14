@@ -1,9 +1,10 @@
-﻿using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBoxTests.NonParallel.src.Fixtures;
+using EtlBox.Logging.Database;
 using Newtonsoft.Json.Linq;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
+namespace ALE.ETLBoxTests.NonParallel.src.Logging.LoadProcessTable
 {
     public sealed class GetLoadProcessAsJSONTaskTests : NonParallelTestBase, IDisposable
     {
@@ -12,14 +13,14 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
         {
             CreateLogTableTask.Create(SqlConnection);
             CreateLoadProcessTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LoadProcessTable);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private void RunProcess1()
@@ -36,8 +37,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             RunProcess1();
 
             //Act
-            string response = GetLoadProcessAsJSONTask.GetJSON(SqlConnection);
-            JArray json = JArray.Parse(response);
+            var response = GetLoadProcessAsJSONTask.GetJSON(SqlConnection);
+            var json = JArray.Parse(response);
 
             //Assert
             Assert.Equal("Process 1", (string)json[0]["processName"]);

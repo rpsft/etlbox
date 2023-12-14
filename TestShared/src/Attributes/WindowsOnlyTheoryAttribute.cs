@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace TestShared.Attributes
+namespace TestShared.src.Attributes
 {
     public sealed class WindowsOnlyTheoryAttribute : TheoryAttribute
     {

@@ -1,10 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Logging;
+using System.Linq;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.Logging;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
 using ExcelDataReader.Log.Logger;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow
 {
     /// <summary>
     /// Contains static information which affects all ETLBox tasks.
@@ -83,6 +86,27 @@ namespace ALE.ETLBox.ControlFlow
             LoadProcessTable = DefaultLoadProcessTableName;
             LogTable = DefaultLogTableName;
             Stage = null;
+        }
+
+        public static void Trace<T>(this ILogger logger, params object[] args)
+            => logger.Log<T>(LogLevel.Trace, args);
+
+        public static void Debug<T>(this ILogger logger, params object[] args)
+            => logger.Log<T>(LogLevel.Debug, args);
+
+        public static void Info<T>(this ILogger logger, params object[] args)
+            => logger.Log<T>(LogLevel.Information, args);
+
+        public static void Warn<T>(this ILogger logger, params object[] args)
+            => logger.Log<T>(LogLevel.Warning, args);
+
+        public static void Error<T>(this ILogger logger, params object[] args)
+            => logger.Log<T>(LogLevel.Error, args);
+
+        private static void Log<T>(this ILogger logger, LogLevel logLevel, params object[] args)
+        {
+            var infoFormat = string.Join(" ", args.Select((a, i) => $"{i}"));
+            logger.Log(logLevel, infoFormat, args);
         }
     }
 }

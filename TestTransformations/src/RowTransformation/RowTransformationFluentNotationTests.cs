@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.RowTransformation
+namespace TestTransformations.src.RowTransformation
 {
     public class RowTransformationFluentNotationTests : TransformationsTestBase
     {
@@ -20,25 +21,25 @@ namespace TestTransformations.RowTransformation
         public void Linking3Transformations()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "SourceMultipleLinks"
             );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationMultipleLinks"
             );
 
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "SourceMultipleLinks"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "DestinationMultipleLinks"
             );
-            RowTransformation<string[]> trans1 = new RowTransformation<string[]>(row => row);
-            RowTransformation<string[]> trans2 = new RowTransformation<string[]>(row => row);
-            RowTransformation<string[]> trans3 = new RowTransformation<string[]>(row => row);
+            var trans1 = new RowTransformation<string[]>(row => row);
+            var trans2 = new RowTransformation<string[]>(row => row);
+            var trans3 = new RowTransformation<string[]>(row => row);
 
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
@@ -55,24 +56,24 @@ namespace TestTransformations.RowTransformation
         public void UsingFluentVoidPredicate()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "SourceMultipleLinks"
             );
             source2Columns.InsertTestData();
             source2Columns.InsertTestDataSet2();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationMultipleLinks"
             );
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "SourceMultipleLinks"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "DestinationMultipleLinks"
             );
-            RowTransformation<MySimpleRow> trans1 = new RowTransformation<MySimpleRow>(row => row);
+            var trans1 = new RowTransformation<MySimpleRow>(row => row);
 
             //Act
             source.LinkTo(trans1, row => row.Col1 < 4, row => row.Col1 >= 4).LinkTo(dest);
@@ -98,23 +99,23 @@ namespace TestTransformations.RowTransformation
         public void UsingDifferentObjectTypes()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "SourceMultipleLinks"
             );
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationMultipleLinks"
             );
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "SourceMultipleLinks"
             );
-            DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(
+            var dest = new DbDestination<MyOtherRow>(
                 SqlConnection,
                 "DestinationMultipleLinks"
             );
-            RowTransformation<MySimpleRow, MyOtherRow> trans1 = new RowTransformation<
+            var trans1 = new RowTransformation<
                 MySimpleRow,
                 MyOtherRow
             >(row => new MyOtherRow { ColA = row.Col1, ColB = row.Col2 });

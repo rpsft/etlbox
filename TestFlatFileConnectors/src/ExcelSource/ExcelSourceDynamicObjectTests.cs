@@ -1,6 +1,9 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.ExcelSource
+namespace TestFlatFileConnectors.src.ExcelSource
 {
     public class ExcelSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
@@ -11,26 +14,26 @@ namespace TestFlatFileConnectors.ExcelSource
         public void SimpleDataNoHeader()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationDynamic"
             );
 
             //Act
-            ALE.ETLBox.DataFlow.ExcelSource source = new ALE.ETLBox.DataFlow.ExcelSource(
+            ALE.ETLBox.src.Toolbox.DataFlow.ExcelSource source = new ALE.ETLBox.src.Toolbox.DataFlow.ExcelSource(
                 "res/Excel/TwoColumnShiftedData.xlsx"
             )
             {
                 Range = new ExcelRange(3, 4),
                 HasNoHeader = true
             };
-            RowTransformation trans = new RowTransformation(row =>
+            var trans = new RowTransformation(row =>
             {
                 dynamic r = row;
                 r.Col1 = r.Column1;
                 r.Col2 = r.Column2;
                 return r;
             });
-            DbDestination dest = new DbDestination(SqlConnection, "ExcelDestinationDynamic");
+            var dest = new DbDestination(SqlConnection, "ExcelDestinationDynamic");
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
@@ -45,13 +48,13 @@ namespace TestFlatFileConnectors.ExcelSource
         public void SimpleDataWithHeader()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationDynamicWithHeader"
             );
-            ALE.ETLBox.DataFlow.ExcelSource source = new ALE.ETLBox.DataFlow.ExcelSource(
+            ALE.ETLBox.src.Toolbox.DataFlow.ExcelSource source = new ALE.ETLBox.src.Toolbox.DataFlow.ExcelSource(
                 "res/Excel/TwoColumnWithHeader.xlsx"
             );
-            DbDestination dest = new DbDestination(
+            var dest = new DbDestination(
                 SqlConnection,
                 "ExcelDestinationDynamicWithHeader"
             );
@@ -69,16 +72,16 @@ namespace TestFlatFileConnectors.ExcelSource
         public void ShiftedDataWithHeader()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationDynamicWithHeader"
             );
-            ALE.ETLBox.DataFlow.ExcelSource source = new ALE.ETLBox.DataFlow.ExcelSource(
+            ALE.ETLBox.src.Toolbox.DataFlow.ExcelSource source = new ALE.ETLBox.src.Toolbox.DataFlow.ExcelSource(
                 "res/Excel/TwoColumnShiftedDataWithHeader.xlsx"
             )
             {
                 Range = new ExcelRange(3, 3)
             };
-            DbDestination dest = new DbDestination(
+            var dest = new DbDestination(
                 SqlConnection,
                 "ExcelDestinationDynamicWithHeader"
             );

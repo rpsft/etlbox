@@ -1,8 +1,9 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using ALE.ETLBox.src.Definitions.TaskBase;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.src.Helper
 {
     public static class HashHelper
     {
@@ -11,10 +12,10 @@ namespace ALE.ETLBox.Helper
             if (text == null)
                 return string.Empty;
 
-            StringBuilder hexBuilder = new StringBuilder();
-            byte[] hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
+            var hexBuilder = new StringBuilder();
+            var hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
 
-            foreach (byte hashByte in hashValue)
+            foreach (var hashByte in hashValue)
                 hexBuilder.Append(hashByte.ToString("x2"));
 
             return hexBuilder.ToString().ToUpper();

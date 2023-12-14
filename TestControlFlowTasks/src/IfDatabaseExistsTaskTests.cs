@@ -1,10 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class IfDatabaseExistsTaskTests : ControlFlowTestBase
     {
@@ -17,7 +17,7 @@ namespace TestControlFlowTasks
         public void IfDatabaseExists(IConnectionManager connection)
         {
             //Arrange
-            string dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
+            var dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
             var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
             //Act

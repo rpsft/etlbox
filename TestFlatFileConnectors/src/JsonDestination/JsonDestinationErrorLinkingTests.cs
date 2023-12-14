@@ -1,7 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
-using TestFlatFileConnectors.Helpers;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Helpers;
 
-namespace TestFlatFileConnectors.JsonDestination
+namespace TestFlatFileConnectors.src.JsonDestination
 {
     public class JsonDestinationErrorLinkingTests
     {

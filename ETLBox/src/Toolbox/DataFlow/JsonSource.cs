@@ -1,7 +1,10 @@
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Reads data from a json source. This can be any http resource or a file.
@@ -53,7 +56,7 @@ namespace ALE.ETLBox.DataFlow
         {
             SkipToStartOfArray();
 
-            bool skipRecord = false;
+            var skipRecord = false;
 
             if (ErrorHandler.HasErrorBuffer)
             {

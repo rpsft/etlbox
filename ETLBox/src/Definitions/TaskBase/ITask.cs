@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.TaskBase
 {
     [PublicAPI]
     public interface ITask

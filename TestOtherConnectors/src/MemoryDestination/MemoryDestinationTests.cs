@@ -1,6 +1,9 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestOtherConnectors.src;
+using TestOtherConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestOtherConnectors.MemoryDestination
+namespace TestOtherConnectors.src.MemoryDestination
 {
     public class MemoryDestinationTests : OtherConnectorsTestBase
     {
@@ -18,16 +21,16 @@ namespace TestOtherConnectors.MemoryDestination
         public void DataIsInList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "MemoryDestinationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "MemoryDestinationSource"
             );
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
             source.LinkTo(dest);

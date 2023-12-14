@@ -1,11 +1,11 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class LookupTypeInfo : MappingTypeInfo
     {
         internal List<AttributeMappingInfo> MatchColumns { get; set; } = new();
         internal List<AttributeMappingInfo> RetrieveColumns { get; set; } = new();
 
-        internal LookupTypeInfo(Type inputType, Type sourceType)
+        internal LookupTypeInfo(System.Type inputType, System.Type sourceType)
             : base(inputType, sourceType)
         {
             InitMappings(inputType, sourceType);

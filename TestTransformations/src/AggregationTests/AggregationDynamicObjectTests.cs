@@ -1,6 +1,6 @@
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.AggregationTests
+namespace TestTransformations.src.AggregationTests
 {
     public class AggregationDynamicObjectTests
     {
@@ -8,7 +8,7 @@ namespace TestTransformations.AggregationTests
         public void GroupingUsingDynamicObject()
         {
             //Arrange
-            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>();
+            var source = new MemorySource<ExpandoObject>();
             dynamic row1 = new ExpandoObject();
             row1.ClassName = "Class1";
             row1.DetailValue = 3.5;
@@ -22,7 +22,7 @@ namespace TestTransformations.AggregationTests
             source.DataAsList.Add(row2);
             source.DataAsList.Add(row3);
 
-            Aggregation<ExpandoObject, ExpandoObject> agg = new Aggregation<
+            var agg = new Aggregation<
                 ExpandoObject,
                 ExpandoObject
             >(
@@ -47,7 +47,7 @@ namespace TestTransformations.AggregationTests
                 }
             );
 
-            MemoryDestination<ExpandoObject> dest = new MemoryDestination<ExpandoObject>();
+            var dest = new MemoryDestination<ExpandoObject>();
 
             //Act
             source.LinkTo(agg);

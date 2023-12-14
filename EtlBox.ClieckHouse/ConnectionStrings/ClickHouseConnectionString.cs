@@ -1,4 +1,4 @@
-using ALE.ETLBox;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
 
 namespace EtlBox.ClickHouse.ConnectionStrings
 {

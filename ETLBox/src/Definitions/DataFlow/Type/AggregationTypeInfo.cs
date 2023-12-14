@@ -1,13 +1,14 @@
 using System.Linq;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class AggregationTypeInfo : MappingTypeInfo
     {
         internal List<AggregateAttributeMapping> AggregateColumns { get; } = new();
         internal List<AttributeMappingInfo> GroupColumns { get; } = new();
 
-        internal AggregationTypeInfo(Type inputType, Type aggType)
+        internal AggregationTypeInfo(System.Type inputType, System.Type aggType)
             : base(inputType, aggType)
         {
             InitMappings(inputType, aggType);

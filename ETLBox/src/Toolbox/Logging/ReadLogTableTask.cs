@@ -1,7 +1,10 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Logging;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Reads data from the etl.Log table.
@@ -15,7 +18,7 @@ namespace ALE.ETLBox.Logging
         public void Execute()
         {
             LogEntries = new List<LogEntry>();
-            LogEntry current = new LogEntry();
+            var current = new LogEntry();
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,

@@ -1,9 +1,11 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class CreateTableTaskTests : ControlFlowTestBase
     {
@@ -18,7 +20,7 @@ namespace TestControlFlowTasks
         public void CreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> { new("Col1", "INT") };
+            var columns = new List<TableColumn> { new("Col1", "INT") };
 
             //Act
             CreateTableTask.Create(connection, "CreateTable1", columns);
@@ -31,7 +33,7 @@ namespace TestControlFlowTasks
         public void ReCreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> { new("value", "INT") };
+            var columns = new List<TableColumn> { new("value", "INT") };
             CreateTableTask.Create(connection, "CreateTable2", columns);
             //Act
             CreateTableTask.Create(connection, "CreateTable2", columns);
@@ -43,7 +45,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithNullable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("value", "INT"),
                 new("value2", "DATE", true)
@@ -60,7 +62,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithPrimaryKey(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("Id", "INT", allowNulls: false, isPrimaryKey: true),
                 new("value2", "DATE", allowNulls: true)
@@ -79,7 +81,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithPrimaryKeyAndIndex(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("Id", "INT", allowNulls: false, isPrimaryKey: true),
                 new("value2", "DATE", allowNulls: true)
@@ -106,7 +108,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithCompositePrimaryKey(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("Id1", "INT", allowNulls: false, isPrimaryKey: true),
                 new("Id2", "INT", allowNulls: false, isPrimaryKey: true),
@@ -128,7 +130,7 @@ namespace TestControlFlowTasks
         public void ThrowingException(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("value1", "INT", allowNulls: false),
                 new("value2", "DATE", allowNulls: true)
@@ -151,7 +153,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithIdentity(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("value1", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true)
             };
@@ -174,7 +176,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithIdentityIncrement()
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("value1", "INT", allowNulls: false)
                 {
@@ -200,7 +202,7 @@ namespace TestControlFlowTasks
         public void CreateTableWithDefault(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("value1", "INT", allowNulls: false) { DefaultValue = "0" },
                 new("value2", "NVARCHAR(10)", allowNulls: false) { DefaultValue = "Test" },
@@ -228,7 +230,7 @@ namespace TestControlFlowTasks
             }
 
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("value1", "INT", allowNulls: false),
                 new("value2", "INT", allowNulls: false),
@@ -254,7 +256,7 @@ namespace TestControlFlowTasks
         public void SpecialCharsInTableName(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("Id1", "INT", allowNulls: false, isPrimaryKey: true),
                 new("Id2", "INT", allowNulls: false, isPrimaryKey: true),
@@ -283,7 +285,7 @@ namespace TestControlFlowTasks
         public void CheckExceptionHandling()
         {
             //Arrange
-            TableDefinition td = new TableDefinition { Name = "Test" };
+            var td = new TableDefinition { Name = "Test" };
             Assert.Throws<ETLBoxException>(() => CreateTableTask.Create(SqlConnection, td));
 
             Assert.Throws<ETLBoxException>(
@@ -317,7 +319,7 @@ namespace TestControlFlowTasks
         public void CopyTableUsingTableDefinition(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn>
+            var columns = new List<TableColumn>
             {
                 new("Id", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("value1", "NVARCHAR(10)", allowNulls: true),

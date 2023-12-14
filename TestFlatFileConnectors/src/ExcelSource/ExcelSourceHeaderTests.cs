@@ -1,6 +1,9 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.ExcelSource
+namespace TestFlatFileConnectors.src.ExcelSource
 {
     public class ExcelSourceHeaderTests : FlatFileConnectorsTestBase
     {
@@ -18,13 +21,13 @@ namespace TestFlatFileConnectors.ExcelSource
         public void SimpleData()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationWithHeader"
             );
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnWithHeader.xlsx"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ExcelDestinationWithHeader"
             );
@@ -42,13 +45,13 @@ namespace TestFlatFileConnectors.ExcelSource
         public void MoreHeaderColumns()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationManyColsWithHeader"
             );
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/ManyColumnsWithHeader.xlsx"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ExcelDestinationManyColsWithHeader"
             );

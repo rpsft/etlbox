@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.ControlFlow
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+
+namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
 {
     [PublicAPI]
     public abstract class DropTask<T> : GenericTask
@@ -8,7 +11,7 @@
 
         public void Execute()
         {
-            bool objectExists = new T
+            var objectExists = new T
             {
                 ObjectName = ObjectName,
                 OnObjectName = OnObjectName,

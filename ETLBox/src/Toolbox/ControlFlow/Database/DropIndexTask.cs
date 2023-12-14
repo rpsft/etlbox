@@ -1,6 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Drops an index. Use DropIfExists to drop an index only if it exists.
@@ -13,7 +15,7 @@ namespace ALE.ETLBox.ControlFlow
 
         internal override string GetSql()
         {
-            string sql = $@"DROP INDEX {ON.QuotedFullName}";
+            var sql = $@"DROP INDEX {ON.QuotedFullName}";
             if (
                 ConnectionType != ConnectionManagerType.SQLite
                 && ConnectionType != ConnectionManagerType.Postgres

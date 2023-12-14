@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.UseCases
+namespace TestTransformations.src.UseCases
 {
     public class ReuseDataFlowAsyncTests
     {
@@ -9,8 +9,8 @@ namespace TestTransformations.UseCases
         public void RunReusableFlow()
         {
             //Arrange
-            ReferenceDataFlow r1 = new ReferenceDataFlow(1, "Flow1");
-            ReferenceDataFlow r2 = new ReferenceDataFlow(1, "Flow2");
+            var r1 = new ReferenceDataFlow(1, "Flow1");
+            var r2 = new ReferenceDataFlow(1, "Flow2");
 
             //Act
             Task.WaitAll(r1.Initialized, r2.Initialized);

@@ -1,6 +1,10 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.JsonSource
+namespace TestFlatFileConnectors.src.JsonSource
 {
     public class JsonSourceStringArrayTests : FlatFileConnectorsTestBase
     {
@@ -11,16 +15,16 @@ namespace TestFlatFileConnectors.JsonSource
         public void SimpleFlowWithStringArray()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "JsonSource2ColsNonGen"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "JsonSource2ColsNonGen"
             );
 
             //Act
-            JsonSource<string[]> source = new JsonSource<string[]>(
+            var source = new JsonSource<string[]>(
                 "res/JsonSource/TwoColumnsStringArray.json",
                 ResourceType.File
             );

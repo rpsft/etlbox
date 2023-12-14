@@ -1,6 +1,7 @@
-﻿using Microsoft.Data.Sqlite;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using Microsoft.Data.Sqlite;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.ConnectionStrings
 {
     /// <summary>
     /// A helper class for encapsulating a connection string in an object.

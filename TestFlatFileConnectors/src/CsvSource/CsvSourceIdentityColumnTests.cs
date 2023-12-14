@@ -1,6 +1,8 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.CsvSource
+namespace TestFlatFileConnectors.src.CsvSource
 {
     public class CsvSourceIdentityColumnTests : FlatFileConnectorsTestBase
     {

@@ -1,6 +1,8 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.CsvSource
+namespace TestFlatFileConnectors.src.CsvSource
 {
     public class CsvSourceTests : FlatFileConnectorsTestBase
     {
@@ -20,14 +22,14 @@ namespace TestFlatFileConnectors.CsvSource
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSource2Cols");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest2Columns = new TwoColumnsTableFixture("CsvSource2Cols");
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "CsvSource2Cols"
             );
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>(
+            var source = new CsvSource<MySimpleRow>(
                 "res/CsvSource/TwoColumns.csv"
             );
             source.LinkTo(dest);
@@ -42,14 +44,14 @@ namespace TestFlatFileConnectors.CsvSource
         public void CSVGenericWithSkipRows_DB()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceSkipRows");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest2Columns = new TwoColumnsTableFixture("CsvSourceSkipRows");
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "CsvSourceSkipRows"
             );
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>(
+            var source = new CsvSource<MySimpleRow>(
                 "res/CsvSource/TwoColumnsSkipRows.csv"
             )
             {

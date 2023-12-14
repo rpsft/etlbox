@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     /// <summary>
     /// This attribute defines either which column index is mapped to the property or the

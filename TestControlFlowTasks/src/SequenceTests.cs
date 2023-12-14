@@ -1,6 +1,6 @@
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class SequenceTests
     {

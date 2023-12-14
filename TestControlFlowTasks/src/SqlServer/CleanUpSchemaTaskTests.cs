@@ -1,10 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.ControlFlow.SqlServer;
-using ALE.ETLBox.Helper;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks.SqlServer
+namespace TestControlFlowTasks.src.SqlServer
 {
     public class CleanUpSchemaTaskTests : ControlFlowTestBase
     {
@@ -15,7 +15,7 @@ namespace TestControlFlowTasks.SqlServer
         public void CleanUpSchema()
         {
             //Arrange
-            string schemaName = "s" + HashHelper.RandomString(9);
+            var schemaName = "s" + HashHelper.RandomString(9);
             SqlTask.ExecuteNonQuery(SqlConnection, "Create schema", $"CREATE SCHEMA {schemaName}");
             SqlTask.ExecuteNonQuery(
                 SqlConnection,

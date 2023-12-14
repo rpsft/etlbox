@@ -1,8 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.Database
 {
     public class TableDefinition
     {
@@ -41,7 +43,7 @@ namespace ALE.ETLBox
         public string Engine { get; set; }
 
         public string OrderBy { get; set; }
-        
+
         public void CreateTable(IConnectionManager connectionManager) =>
             CreateTableTask.Create(connectionManager, this);
 
@@ -52,7 +54,7 @@ namespace ALE.ETLBox
         {
             IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
             ConnectionManagerType connectionType = connection.ConnectionManagerType;
-            ObjectNameDescriptor tn = new ObjectNameDescriptor(
+            var tn = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE
@@ -76,7 +78,7 @@ namespace ALE.ETLBox
         private static TableDefinition ReadTableDefinitionFromClickHouse(
             IConnectionManager connection, ObjectNameDescriptor tn)
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
@@ -119,7 +121,7 @@ namespace ALE.ETLBox
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
@@ -207,7 +209,7 @@ ORDER BY cols.column_id
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
             var readMetaSql = new SqlTask(
                 $"Read column meta data for table {tn.ObjectName}",
@@ -240,7 +242,7 @@ ORDER BY cols.column_id
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
@@ -304,7 +306,7 @@ ORDER BY cols.ordinal_position
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(

@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     /// <summary>
     /// This attribute defines that this property is used to store the lookup value of the property from the object

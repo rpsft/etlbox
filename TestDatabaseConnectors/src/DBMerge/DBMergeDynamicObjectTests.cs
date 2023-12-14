@@ -1,8 +1,12 @@
 using System.Dynamic;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBMerge
+namespace TestDatabaseConnectors.src.DBMerge
 {
     public class DbMergeDynamicObjectTests : DatabaseConnectorsTestBase
     {
@@ -13,18 +17,18 @@ namespace TestDatabaseConnectors.DBMerge
         public void SimpleMergeWithDynamic()
         {
             //Arrange
-            MemorySource source = new MemorySource();
+            var source = new MemorySource();
             source.DataAsList.Add(CreateDynamicRow(1, "Test1"));
             source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeDynamicDestination"
             );
             d2C.InsertTestDataSet3();
 
             //Act
-            DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDestination");
+            var dest = new DbMerge(SqlConnection, "DBMergeDynamicDestination");
             dest.MergeProperties.IdPropertyNames.Add("Col1");
             dest.MergeProperties.ComparePropertyNames.Add("Col2");
             source.LinkTo(dest);
@@ -96,19 +100,19 @@ namespace TestDatabaseConnectors.DBMerge
         public void DeltaLoadWithDeletion()
         {
             //Arrange
-            MemorySource source = new MemorySource();
+            var source = new MemorySource();
             source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
             source.DataAsList.Add(CreateDynamicRow(4, delete: true));
             source.DataAsList.Add(CreateDynamicRow(10, delete: true));
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeDynamicDeltaDestination"
             );
             d2C.InsertTestDataSet3();
 
             //Act
-            DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
+            var dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
             {
                 DeltaMode = DeltaMode.Delta
             };

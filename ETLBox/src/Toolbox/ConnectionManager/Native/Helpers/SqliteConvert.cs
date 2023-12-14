@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 
-namespace ALE.ETLBox.ConnectionManager.Helpers;
+namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native.Helpers;
 
 /// <summary>
 /// This base class provides datatype conversion services for the Sqlite provider.

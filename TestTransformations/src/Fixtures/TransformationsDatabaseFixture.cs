@@ -1,6 +1,6 @@
-﻿using TestShared.Helper;
+﻿using TestShared.src.Helper;
 
-namespace TestTransformations.Fixtures
+namespace TestTransformations.src.Fixtures
 {
     public sealed class TransformationsDatabaseFixture : IDisposable
     {

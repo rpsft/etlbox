@@ -1,8 +1,8 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class GetDatabaseListTaskTests : ControlFlowTestBase
     {

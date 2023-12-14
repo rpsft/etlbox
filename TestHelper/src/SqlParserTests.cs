@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Helper;
 
-namespace TestHelper
+namespace TestHelper.src
 {
     public class SqlParserTests
     {
@@ -9,7 +9,7 @@ namespace TestHelper
         public void SqlSimple()
         {
             //Arrange
-            List<string> expected = new List<string> { "Col1", "Col2" };
+            var expected = new List<string> { "Col1", "Col2" };
             const string sql = @"SELECT Col1, Col2 FROM Table";
 
             //Act
@@ -23,7 +23,7 @@ namespace TestHelper
         public void SqlOneColumn()
         {
             //Arrange
-            List<string> expected = new List<string> { "Col1" };
+            var expected = new List<string> { "Col1" };
             const string sql = @"SELECT Col1";
 
             //Act
@@ -37,7 +37,7 @@ namespace TestHelper
         public void SqlWithFunction()
         {
             //Arrange
-            List<string> expected = new List<string> { "Col1", "Col2" };
+            var expected = new List<string> { "Col1", "Col2" };
             const string sql =
                 @"SELECT CASE WHEN ISNULL(Col1,'') IS NOT NULL THEN Col1 ELSE Col1 END AS Col1, 
 Col2 
@@ -54,7 +54,7 @@ FROM Table";
         public void SqlWithSeveralFunctions()
         {
             //Arrange
-            List<string> expected = new List<string> { "Col1", "Col2" };
+            var expected = new List<string> { "Col1", "Col2" };
             const string sql =
                 @"SELECT CONCAT('','Test',ISNULL(Col1,''), GETDATE()) AS Col1, 
 ( CONVERT(INT, Col2) * 5) Col2 
@@ -71,7 +71,7 @@ FROM Table";
         public void SqlSelectStart()
         {
             //Arrange
-            List<string> expected = new List<string>();
+            var expected = new List<string>();
             const string sql = @"SELECT * FROM Table";
 
             //Act
@@ -85,7 +85,7 @@ FROM Table";
         public void SqlWithSchema()
         {
             //Arrange
-            List<string> expected = new List<string> { "Col1", "Col2" };
+            var expected = new List<string> { "Col1", "Col2" };
             const string sql = @"SELECT sou.Col1, sou.Col2 FROM table AS sou";
 
             //Act
@@ -99,7 +99,7 @@ FROM Table";
         public void SqlWithSchemaOneColumn()
         {
             //Arrange
-            List<string> expected = new List<string> { "Col1" };
+            var expected = new List<string> { "Col1" };
             const string sql = @"SELECT sou.Col1 FROM table AS sou";
 
             //Act

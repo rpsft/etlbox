@@ -1,7 +1,10 @@
 using System.Net.Http;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestOtherConnectors.src;
+using TestOtherConnectors.src.Fixture;
 
-namespace TestOtherConnectors.CustomSource
+namespace TestOtherConnectors.src.CustomSource
 {
     public class CustomSourceWebServiceTests : OtherConnectorsTestBase
     {
@@ -22,14 +25,14 @@ namespace TestOtherConnectors.CustomSource
                 @"CREATE TABLE dbo.WebServiceDestination 
                 ( Id INT NOT NULL, UserId INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
             );
-            DbDestination<Todo> dest = new DbDestination<Todo>(
+            var dest = new DbDestination<Todo>(
                 SqlConnection,
                 "dbo.WebServiceDestination"
             );
-            WebserviceReader wsreader = new WebserviceReader();
+            var wsreader = new WebserviceReader();
 
             //Act
-            CustomSource<Todo> source = new CustomSource<Todo>(
+            var source = new CustomSource<Todo>(
                 wsreader.ReadTodo,
                 wsreader.EndOfData
             );

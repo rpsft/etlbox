@@ -3,22 +3,22 @@ using TSQL;
 using TSQL.Statements;
 using TSQL.Tokens;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.src.Helper
 {
     [PublicAPI]
     public static class SqlParser
     {
         public static List<string> ParseColumnNames(string sql)
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
             if (
                 TSQLStatementReader.ParseStatements(sql).FirstOrDefault()
                 is not TSQLSelectStatement statement
             )
                 return result;
 
-            int bracesNestingLevel = 0;
-            string previousToken = string.Empty;
+            var bracesNestingLevel = 0;
+            var previousToken = string.Empty;
             foreach (var token in statement.Select.Tokens)
             {
                 CheckOpeningAndClosingBraces(token, ref bracesNestingLevel);

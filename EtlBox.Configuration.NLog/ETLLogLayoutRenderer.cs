@@ -3,7 +3,7 @@ using NLog;
 using NLog.Config;
 using NLog.LayoutRenderers;
 
-namespace EtlBox.Logging.Configuration.Database
+namespace EtlBox.Logging.Database
 {
     [LayoutRenderer("etllog")]
     public class ETLLogLayoutRenderer : LayoutRenderer

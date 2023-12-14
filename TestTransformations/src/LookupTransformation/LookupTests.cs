@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.LookupTransformation
+namespace TestTransformations.src.LookupTransformation
 {
     public class LookupTests : TransformationsTestBase
     {
@@ -38,26 +39,26 @@ namespace TestTransformations.LookupTransformation
         public void InputTypeSameAsOutput(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "SourceLookupSameType"
             );
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "DestinationLookupSameType"
             );
-            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(
+            var lookup4Columns = new FourColumnsTableFixture(
                 connection,
                 "LookupSameType"
             );
             lookup4Columns.InsertTestData();
 
-            DbSource<MyDataRow> source = new DbSource<MyDataRow>(
+            var source = new DbSource<MyDataRow>(
                 connection,
                 "SourceLookupSameType"
             );
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(
+            var lookupSource = new DbSource<MyLookupRow>(
                 connection,
                 "LookupSameType"
             );
@@ -76,7 +77,7 @@ namespace TestTransformations.LookupTransformation
                 return row;
             };
             lookup.Source = lookupSource;
-            DbDestination<MyDataRow> dest = new DbDestination<MyDataRow>(
+            var dest = new DbDestination<MyDataRow>(
                 connection,
                 "DestinationLookupSameType"
             );

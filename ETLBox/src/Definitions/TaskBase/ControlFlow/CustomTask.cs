@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
 {
     /// <summary>
     /// A custom task allows you to run your own code (defined as an Action object), with additionally logging in place. (TaskType: CUSTOM)
@@ -24,23 +26,23 @@ namespace ALE.ETLBox.ControlFlow
 
         public void Execute(Action task)
         {
-            NLogStart();
+            LogStart();
             task.Invoke();
-            NLogFinish();
+            LogFinish();
         }
 
         public void Execute<T1>(Action<T1> task, T1 param1)
         {
-            NLogStart();
+            LogStart();
             task.Invoke(param1);
-            NLogFinish();
+            LogFinish();
         }
 
         public void Execute<T1, T2>(Action<T1, T2> task, T1 param1, T2 param2)
         {
-            NLogStart();
+            LogStart();
             task.Invoke(param1, param2);
-            NLogFinish();
+            LogFinish();
         }
 
         public static void Execute(string name, Action task) => new CustomTask(name).Execute(task);
@@ -55,29 +57,29 @@ namespace ALE.ETLBox.ControlFlow
             T2 param2
         ) => new CustomTask(name).Execute(task, param1, param2);
 
-        private void NLogStart()
+        private void LogStart()
         {
             if (!DisableLogging)
-                Logger.Info(
+                Logger.Info<CustomTask>(
                     TaskName,
                     TaskType,
                     "START",
                     TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    Toolbox.ControlFlow.ControlFlow.Stage,
+                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
-        private void NLogFinish()
+        private void LogFinish()
         {
             if (!DisableLogging)
-                Logger.Info(
+                Logger.Info<CustomTask>(
                     TaskName,
                     TaskType,
                     "END",
                     TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    Toolbox.ControlFlow.ControlFlow.Stage,
+                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
     }

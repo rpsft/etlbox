@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.src.Definitions.DataFlow.Type;
+
+namespace ALE.ETLBox.src.Definitions.DataFlow
 {
     /// <summary>
     /// Inherit from this class if you want to use your data object with a DBMerge,

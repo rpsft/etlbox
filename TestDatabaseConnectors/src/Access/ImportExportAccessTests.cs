@@ -1,8 +1,12 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.Attributes;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.Access
+namespace TestDatabaseConnectors.src.Access
 {
     public sealed class ImportExportAccessTests : DatabaseConnectorsTestBase, IDisposable
     {
@@ -34,7 +38,7 @@ namespace TestDatabaseConnectors.Access
                 // ignored
             }
 
-            TableDefinition testTable = new TableDefinition(
+            var testTable = new TableDefinition(
                 tableName,
                 new List<TableColumn>
                 {
@@ -71,8 +75,8 @@ namespace TestDatabaseConnectors.Access
             //Arrange
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/Access/AccessData.csv");
-            DbDestination<string[]> dest = new DbDestination<string[]>(batchSize: 2)
+            var source = new CsvSource<string[]>("res/Access/AccessData.csv");
+            var dest = new DbDestination<string[]>(batchSize: 2)
             {
                 DestinationTableDefinition = _destinationTable,
                 ConnectionManager = AccessOdbcConnection
@@ -101,17 +105,17 @@ namespace TestDatabaseConnectors.Access
         {
             //Arrange
             InsertTestData(_sourceTable);
-            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
+            var destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTableWTD"
             );
 
             //Act
-            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection)
+            var source = new DbSource<Data>(AccessOdbcConnection)
             {
                 SourceTableDefinition = _sourceTable
             };
-            DbDestination<Data> dest = new DbDestination<Data>(
+            var dest = new DbDestination<Data>(
                 SqlConnection,
                 "dbo.AccessTargetTableWTD"
             );
@@ -148,14 +152,14 @@ namespace TestDatabaseConnectors.Access
             //Arrange
             var sourceTable = RecreateAccessTestTable(nameof(AccessIntoDB));
             InsertTestData(sourceTable);
-            TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
+            var destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTable"
             );
 
             //Act
-            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection, sourceTable.Name);
-            DbDestination<Data> dest = new DbDestination<Data>(
+            var source = new DbSource<Data>(AccessOdbcConnection, sourceTable.Name);
+            var dest = new DbDestination<Data>(
                 SqlConnection,
                 destTable.TableDefinition.Name
             );

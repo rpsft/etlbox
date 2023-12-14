@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.LookupTransformation
+namespace TestTransformations.src.LookupTransformation
 {
     public sealed class LookupDynamicObjectTests : TransformationsTestBase, IDisposable
     {
@@ -20,30 +21,30 @@ namespace TestTransformations.LookupTransformation
         {
             //Arrange
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 connection,
                 "SourceLookupDynamicObject"
             );
             source2Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "DestinationLookupDynamicObject",
                 -1
             );
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(
                 connection,
                 "SourceLookupDynamicObject"
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 connection,
                 "DestinationLookupDynamicObject"
             );
 
             //Act
-            List<ExpandoObject> lookupList = new List<ExpandoObject>();
+            var lookupList = new List<ExpandoObject>();
 
-            CsvSource<ExpandoObject> lookupSource = new CsvSource<ExpandoObject>(
+            var lookupSource = new CsvSource<ExpandoObject>(
                 "res/Lookup/LookupSource.csv"
             );
 

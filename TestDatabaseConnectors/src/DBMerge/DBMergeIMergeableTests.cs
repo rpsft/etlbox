@@ -1,8 +1,13 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBMerge
+namespace TestDatabaseConnectors.src.DBMerge
 {
     public class DbMergeIMergeableTests : DatabaseConnectorsTestBase
     {
@@ -29,18 +34,18 @@ namespace TestDatabaseConnectors.DBMerge
         public void IdColumnOnlyWithGetter(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
+            var s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
             s2C.InsertTestData();
             s2C.InsertTestDataSet2();
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDestination"
             );
             d2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
+            var source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
 
             //Act
-            DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
+            var dest = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
             dest.MergeProperties.IdPropertyNames.Add("UniqueId");
             dest.UseTruncateMethod = true;
             source.LinkTo(dest);
@@ -71,23 +76,23 @@ namespace TestDatabaseConnectors.DBMerge
         public void WithDeltaDestinationAndTruncate(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
+            var s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
             s2C.InsertTestData();
             s2C.InsertTestDataSet2();
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDestination"
             );
             d2C.InsertTestDataSet3();
             var _ = new TwoColumnsDeltaTableFixture(connection, "DBMergeDelta");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
+            var source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
 
             //Act
-            DbMerge<MySimpleRow> merge = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
+            var merge = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
             merge.MergeProperties.IdPropertyNames.Add("UniqueId");
             merge.UseTruncateMethod = true;
-            DbDestination<MySimpleRow> delta = new DbDestination<MySimpleRow>(
+            var delta = new DbDestination<MySimpleRow>(
                 connection,
                 "DBMergeDelta"
             );

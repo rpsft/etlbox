@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.src.Helper
 {
     internal sealed class QueryFormatter : IFormatProvider, ICustomFormatter
     {

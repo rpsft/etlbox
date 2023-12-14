@@ -1,6 +1,6 @@
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.RowDuplication;
+namespace TestTransformations.src.RowDuplication;
 
 public class RowDuplicationEnumTests
 {

@@ -1,9 +1,11 @@
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Logging;
+using ALE.ETLBox.src.Definitions.TaskBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Returns the content of the etl.Log table as a JSON string.
@@ -46,7 +48,7 @@ namespace ALE.ETLBox.Logging
 
         private static LogHierarchyEntry CreateHierarchyStructure(List<LogEntry> entries)
         {
-            LogHierarchyEntry root = new LogHierarchyEntry(new LogEntry { TaskType = "ROOT" });
+            var root = new LogHierarchyEntry(new LogEntry { TaskType = "ROOT" });
             var currentParent = root;
             var currentList = root.Children;
             foreach (LogEntry entry in entries)

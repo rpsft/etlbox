@@ -1,11 +1,11 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class ExcelTypeInfo : TypeInfo
     {
         internal Dictionary<int, int> ExcelIndex2PropertyIndex { get; set; } = new();
         internal Dictionary<string, int> ExcelColumnName2PropertyIndex { get; set; } = new();
 
-        internal ExcelTypeInfo(Type type)
+        internal ExcelTypeInfo(System.Type type)
             : base(type)
         {
             GatherTypeInfo();
@@ -38,7 +38,7 @@ namespace ALE.ETLBox.DataFlow
                 return null;
             if (property.PropertyType == typeof(bool))
                 return value is "1" or "true" or "on" or "checked";
-            Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+            System.Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
             return Convert.ChangeType(value, t);
         }
     }

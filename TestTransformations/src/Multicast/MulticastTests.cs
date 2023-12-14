@@ -1,8 +1,8 @@
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.Multicast
+namespace TestTransformations.src.Multicast
 {
     public class MulticastTests : TransformationsTestBase
     {
@@ -20,28 +20,28 @@ namespace TestTransformations.Multicast
         public void DuplicateDataInto3Destinations()
         {
             //Arrange
-            TwoColumnsTableFixture sourceTable = new TwoColumnsTableFixture("Source");
+            var sourceTable = new TwoColumnsTableFixture("Source");
             sourceTable.InsertTestData();
-            TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("Destination1");
-            TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
-            TwoColumnsTableFixture dest3Table = new TwoColumnsTableFixture("Destination3");
+            var dest1Table = new TwoColumnsTableFixture("Destination1");
+            var dest2Table = new TwoColumnsTableFixture("Destination2");
+            var dest3Table = new TwoColumnsTableFixture("Destination3");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
-            DbDestination<MySimpleRow> dest1 = new DbDestination<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(SqlConnection, "Source");
+            var dest1 = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination1"
             );
-            DbDestination<MySimpleRow> dest2 = new DbDestination<MySimpleRow>(
+            var dest2 = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination2"
             );
-            DbDestination<MySimpleRow> dest3 = new DbDestination<MySimpleRow>(
+            var dest3 = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination3"
             );
 
             //Act
-            Multicast<MySimpleRow> multicast = new Multicast<MySimpleRow>();
+            var multicast = new Multicast<MySimpleRow>();
             source.LinkTo(multicast);
             multicast.LinkTo(dest1);
             multicast.LinkTo(dest2);

@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.
@@ -30,7 +33,7 @@
         public RowMultiplication()
         {
             TransformBlock = new TransformManyBlock<TInput, TOutput>(
-                (Func<TInput, IEnumerable<TOutput>>)MultiplyRow
+                MultiplyRow
             );
         }
 

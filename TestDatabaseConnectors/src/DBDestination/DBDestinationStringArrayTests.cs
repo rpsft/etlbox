@@ -1,8 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBDestination
+namespace TestDatabaseConnectors.src.DBDestination
 {
     public class DbDestinationStringArrayTests : DatabaseConnectorsTestBase
     {
@@ -15,7 +18,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithSqlNotMatchingColumns(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
+            var s2C = new TwoColumnsTableFixture(
                 connection,
                 "SourceNotMatchingCols"
             );
@@ -30,13 +33,13 @@ namespace TestDatabaseConnectors.DBDestination
             );
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>
+            var source = new DbSource<string[]>
             {
                 Sql =
                     $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceNotMatchingCols{s2C.QE}",
                 ConnectionManager = connection
             };
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 connection,
                 "destination_notmatchingcols"
             );
@@ -76,7 +79,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithLessColumnsInDestination(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
+            var s2C = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
             s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
                 connection,
@@ -86,8 +89,8 @@ namespace TestDatabaseConnectors.DBDestination
             );
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "SourceTwoColumns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var source = new DbSource<string[]>(connection, "SourceTwoColumns");
+            var dest = new DbDestination<string[]>(
                 connection,
                 "destination_onecolumn"
             );
@@ -106,7 +109,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithAdditionalNullableCol(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
+            var s2C = new TwoColumnsTableFixture(
                 connection,
                 "source_additionalnullcol"
             );
@@ -119,11 +122,11 @@ namespace TestDatabaseConnectors.DBDestination
             );
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 connection,
                 "source_additionalnullcol"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 connection,
                 "destination_additionalnullcol"
             );
@@ -139,7 +142,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithAdditionalNotNullCol(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
+            var s2C = new TwoColumnsTableFixture(
                 connection,
                 "source_additionalnotnullcol"
             );
@@ -152,11 +155,11 @@ namespace TestDatabaseConnectors.DBDestination
             );
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 connection,
                 "source_additionalnotnullcol"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 connection,
                 "destination_additionalnotnullcol"
             );

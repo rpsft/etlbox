@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestShared.Helper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestShared.src.Helper;
 
-namespace TestShared.SharedFixtures
+namespace TestShared.src.SharedFixtures
 {
     public class TwoColumnsTableFixture
     {

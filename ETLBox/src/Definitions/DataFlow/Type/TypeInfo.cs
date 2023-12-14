@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal class TypeInfo
     {
@@ -9,9 +9,9 @@ namespace ALE.ETLBox.DataFlow
         internal bool IsDynamic { get; private set; }
         internal int ArrayLength { get; set; }
 
-        private Type InternalType { get; set; }
+        private System.Type InternalType { get; set; }
 
-        internal TypeInfo(Type type)
+        internal TypeInfo(System.Type type)
         {
             InternalType = type;
         }
@@ -24,19 +24,19 @@ namespace ALE.ETLBox.DataFlow
             switch (IsArray, IsDynamic)
             {
                 case (false, false):
-                {
-                    Properties = InternalType.GetProperties();
-                    PropertyLength = Properties.Length;
-                    int index = 0;
-                    foreach (var propInfo in Properties)
                     {
-                        PropertyIndex.Add(propInfo.Name, index);
-                        RetrieveAdditionalTypeInfo(propInfo, index);
-                        index++;
-                    }
+                        Properties = InternalType.GetProperties();
+                        PropertyLength = Properties.Length;
+                        var index = 0;
+                        foreach (var propInfo in Properties)
+                        {
+                            PropertyIndex.Add(propInfo.Name, index);
+                            RetrieveAdditionalTypeInfo(propInfo, index);
+                            index++;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case (true, _):
                     ArrayLength = InternalType.GetArrayRank();
                     break;
@@ -44,7 +44,7 @@ namespace ALE.ETLBox.DataFlow
             return this;
         }
 
-        internal static Type TryGetUnderlyingType(PropertyInfo propInfo)
+        internal static System.Type TryGetUnderlyingType(PropertyInfo propInfo)
         {
             return Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
         }
@@ -52,7 +52,8 @@ namespace ALE.ETLBox.DataFlow
         protected virtual void RetrieveAdditionalTypeInfo(
             PropertyInfo propInfo,
             int currentIndex
-        ) { }
+        )
+        { }
 
         internal enum TypeInfoGroup
         {

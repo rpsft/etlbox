@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Database;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Definitions.ConnectionManager
 {
     [PublicAPI]
     [DebuggerDisplay("{ConnectionManagerType}:{ConnectionString}")]
@@ -59,9 +61,9 @@ namespace ALE.ETLBox.ConnectionManager
 
         private void TryOpenConnectionXTimes()
         {
-            bool successfullyConnected = false;
+            var successfullyConnected = false;
             Exception lastException = null;
-            for (int i = 1; i <= MaxLoginAttempts; i++)
+            for (var i = 1; i <= MaxLoginAttempts; i++)
             {
                 try
                 {

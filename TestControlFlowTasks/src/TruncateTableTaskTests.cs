@@ -1,9 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class TruncateTableTaskTests : ControlFlowTestBase
     {
@@ -18,7 +18,7 @@ namespace TestControlFlowTasks
         public void Truncate(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(
+            var tableDef = new TwoColumnsTableFixture(
                 connection,
                 "TruncateTableTest"
             );

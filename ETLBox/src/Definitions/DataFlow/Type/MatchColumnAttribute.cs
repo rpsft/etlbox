@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     /// <summary>
     /// This attribute defines that this property is used to match with the property of the object

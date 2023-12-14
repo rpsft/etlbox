@@ -1,4 +1,7 @@
-namespace TestFlatFileConnectors.CsvDestination
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace TestFlatFileConnectors.src.CsvDestination
 {
     public class CsvDestinationErrorLinkingTests
     {
@@ -20,7 +23,7 @@ namespace TestFlatFileConnectors.CsvDestination
         public void RedirectSingleRecordWithObject()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -31,8 +34,8 @@ namespace TestFlatFileConnectors.CsvDestination
                     new() { Col1 = "3" }
                 }
             };
-            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("ErrorFile.csv");
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var dest = new CsvDestination<MySimpleRow>("ErrorFile.csv");
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
             source.LinkTo(dest);
@@ -63,7 +66,7 @@ namespace TestFlatFileConnectors.CsvDestination
         public void NoErrorHandling()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -72,7 +75,7 @@ namespace TestFlatFileConnectors.CsvDestination
                     new() { Col1 = null }
                 }
             };
-            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>(
+            var dest = new CsvDestination<MySimpleRow>(
                 "ErrorFileNoError.csv"
             );
 

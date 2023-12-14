@@ -1,6 +1,7 @@
 using System.Data.Odbc;
+using ALE.ETLBox.src.Definitions.Exceptions;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.ConnectionStrings
 {
     /// <summary>
     /// A helper class for encapsulating a connection string in an object.

@@ -1,11 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestControlFlowTasks.Fixtures;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class SqlTaskTests : ControlFlowTestBase
     {
@@ -27,7 +28,7 @@ namespace TestControlFlowTasks
         public void ExecuteNonQuery(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "NonQueryTest");
+            var tc = new TwoColumnsTableFixture(connection, "NonQueryTest");
 
             //Act
             SqlTask.ExecuteNonQuery(
@@ -51,7 +52,7 @@ namespace TestControlFlowTasks
         public void ExecuteNonQueryWithParameter(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ParameterTest");
+            var tc = new TwoColumnsTableFixture(connection, "ParameterTest");
 
             //Act
             var parameter = new List<QueryParameter>
@@ -82,7 +83,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             //Act
-            object result = SqlTask.ExecuteScalar(
+            var result = SqlTask.ExecuteScalar(
                 connection,
                 "Test execute scalar",
                 @"SELECT 'Hallo Welt' AS ScalarResult"
@@ -98,7 +99,7 @@ namespace TestControlFlowTasks
             {
                 //Arrange
                 //Act
-                double? result = SqlTask.ExecuteScalar<double>(
+                var result = SqlTask.ExecuteScalar<double>(
                     connection,
                     "Test execute scalar with datatype",
                     @"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"
@@ -110,7 +111,7 @@ namespace TestControlFlowTasks
             {
                 //Arrange
                 //Act
-                DateTime result = (DateTime)
+                var result = (DateTime)
                     SqlTask.ExecuteScalar(
                         connection,
                         "Test execute scalar with datatype",
@@ -132,7 +133,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             //Act
-            bool result = SqlTask.ExecuteScalarAsBool(
+            var result = SqlTask.ExecuteScalarAsBool(
                 connection,
                 "Test execute scalar as bool",
                 $"SELECT {sqlBoolValue} AS Bool"
@@ -148,10 +149,10 @@ namespace TestControlFlowTasks
         public void ExecuteReaderSingleColumn(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ExecuteReader");
+            var tc = new TwoColumnsTableFixture(connection, "ExecuteReader");
             tc.InsertTestData();
-            List<int> asIsResult = new List<int>();
-            List<int> toBeResult = new List<int> { 1, 2, 3 };
+            var asIsResult = new List<int>();
+            var toBeResult = new List<int> { 1, 2, 3 };
 
             //Act
             SqlTask.ExecuteReader(
@@ -169,15 +170,15 @@ namespace TestControlFlowTasks
         public void ExecuteReaderWithParameter(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(
+            var tc = new TwoColumnsTableFixture(
                 connection,
                 "ExecuteReaderWithPar"
             );
             tc.InsertTestData();
-            List<int> asIsResult = new List<int>();
-            List<int> toBeResult = new List<int> { 2 };
+            var asIsResult = new List<int>();
+            var toBeResult = new List<int> { 2 };
 
-            List<QueryParameter> parameter = new List<QueryParameter>
+            var parameter = new List<QueryParameter>
             {
                 new("par1", "NVARCHAR(10)", "Test2")
             };
@@ -225,17 +226,17 @@ namespace TestControlFlowTasks
         public void ExecuteReaderMultiColumn(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "MultiColumnRead");
+            var tc = new TwoColumnsTableFixture(connection, "MultiColumnRead");
             tc.InsertTestData();
 
-            List<MySimpleRow> asIsResult = new List<MySimpleRow>();
-            List<MySimpleRow> toBeResult = new List<MySimpleRow>
+            var asIsResult = new List<MySimpleRow>();
+            var toBeResult = new List<MySimpleRow>
             {
                 new(1, "Test1"),
                 new(2, "Test2"),
                 new(3, "Test3")
             };
-            MySimpleRow CurColumn = new MySimpleRow();
+            var CurColumn = new MySimpleRow();
 
             //Act
             SqlTask.ExecuteReader(

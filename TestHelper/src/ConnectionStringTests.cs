@@ -1,6 +1,7 @@
-using ALE.ETLBox;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Exceptions;
 
-namespace TestHelper
+namespace TestHelper.src
 {
     public class ConnectionStringTests
     {

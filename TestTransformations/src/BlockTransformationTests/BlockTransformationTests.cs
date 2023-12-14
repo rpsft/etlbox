@@ -1,9 +1,11 @@
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.BlockTransformationTests
+namespace TestTransformations.src.BlockTransformationTests
 {
     public class BlockTransformationTests : TransformationsTestBase
     {
@@ -20,21 +22,21 @@ namespace TestTransformations.BlockTransformationTests
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSource");
+            var source2Columns = new TwoColumnsTableFixture("BlockTransSource");
             source2Columns.InsertTestData();
             var _ = new TwoColumnsTableFixture("BlockTransDest");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "BlockTransSource"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "BlockTransDest"
             );
 
             //Act
-            BlockTransformation<MySimpleRow> block =
+            var block =
                 new BlockTransformation<MySimpleRow>(inputData =>
                 {
                     inputData.RemoveRange(1, 2);
@@ -71,21 +73,21 @@ namespace TestTransformations.BlockTransformationTests
         public void ConvertObjects()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSource");
+            var source2Columns = new TwoColumnsTableFixture("BlockTransSource");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
+            var dest2Columns = new TwoColumnsTableFixture("BlockTransDest");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "BlockTransSource"
             );
-            DbDestination<MyOtherRow> dest = new DbDestination<MyOtherRow>(
+            var dest = new DbDestination<MyOtherRow>(
                 SqlConnection,
                 "BlockTransDest"
             );
 
             //Act
-            BlockTransformation<MySimpleRow, MyOtherRow> block = new BlockTransformation<
+            var block = new BlockTransformation<
                 MySimpleRow,
                 MyOtherRow
             >(inputData =>

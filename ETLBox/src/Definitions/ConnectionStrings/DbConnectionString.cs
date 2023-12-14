@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.ConnectionStrings
 {
     /// <summary>
     /// <see cref="IDbConnectionString"/> base

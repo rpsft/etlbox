@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
-using ALE.ETLBox.Logging;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.Logging;
 
-namespace TestShared.Helper
+namespace TestShared.src.Helper
 {
     public class BigDataHelper
     {
@@ -17,16 +17,16 @@ namespace TestShared.Helper
         public void CreateBigDataCSV()
         {
             using FileStream stream = File.Open(FileName, FileMode.Create);
-            using StreamWriter writer = new StreamWriter(stream);
-            string header = string.Join(",", TableDefinition.Columns.Select(col => col.Name));
+            using var writer = new StreamWriter(stream);
+            var header = string.Join(",", TableDefinition.Columns.Select(col => col.Name));
             writer.WriteLine(header);
-            for (int i = 0; i < NumberOfRows; i++)
+            for (var i = 0; i < NumberOfRows; i++)
             {
-                string line = string.Join(
+                var line = string.Join(
                     ",",
                     TableDefinition.Columns.Select(col =>
                     {
-                        int length = DataTypeConverter.GetStringLengthFromCharString(
+                        var length = DataTypeConverter.GetStringLengthFromCharString(
                             col.DataType
                         );
                         return HashHelper.RandomString(length);
@@ -38,7 +38,7 @@ namespace TestShared.Helper
 
         public static TimeSpan LogExecutionTime(string name, Action action)
         {
-            Stopwatch watch = new Stopwatch();
+            var watch = new Stopwatch();
             LogTask.Warn($"Starting: {name}");
             watch.Start();
             action.Invoke();

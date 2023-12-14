@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.
@@ -32,11 +35,11 @@
 
         public override void Execute()
         {
-            NLogStart();
+            LogStart();
             ReadRecordAndSendIntoBuffer();
             LogProgress();
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
 
         private void ReadRecordAndSendIntoBuffer()

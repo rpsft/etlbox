@@ -1,7 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBDestination
+namespace TestDatabaseConnectors.src.DBDestination
 {
     public class DbDestinationErrorLinkingTests : DatabaseConnectorsTestBase
     {
@@ -20,8 +23,8 @@ namespace TestDatabaseConnectors.DBDestination
         public void RedirectBatch(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestLinkError");
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var d2C = new TwoColumnsTableFixture(connection, "DestLinkError");
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -34,12 +37,12 @@ namespace TestDatabaseConnectors.DBDestination
                     new() { Col1 = "3", Col2 = "Test3" }
                 }
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DestLinkError",
                 batchSize: 2
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
             source.LinkTo(dest);

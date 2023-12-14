@@ -1,12 +1,12 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class DBTypeInfo : TypeInfo
     {
         internal List<string> PropertyNames { get; } = new();
-        internal Dictionary<PropertyInfo, Type> UnderlyingPropType { get; } = new();
+        internal Dictionary<PropertyInfo, System.Type> UnderlyingPropType { get; } = new();
         private Dictionary<string, string> ColumnMap2Property { get; } = new();
 
-        internal DBTypeInfo(Type type)
+        internal DBTypeInfo(System.Type type)
             : base(type)
         {
             GatherTypeInfo();
@@ -27,7 +27,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void AddUnderlyingType(PropertyInfo propInfo)
         {
-            Type t = TryGetUnderlyingType(propInfo);
+            System.Type t = TryGetUnderlyingType(propInfo);
             UnderlyingPropType.Add(propInfo, t);
         }
 

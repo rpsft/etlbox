@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.Helper;
+﻿using ALE.ETLBox.src.Helper;
 using Microsoft.Data.SqlClient;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.ConnectionStrings
 {
     /// <summary>
     /// A helper class for encapsulating a connection string to a sql server in an object.

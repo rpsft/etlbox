@@ -1,6 +1,6 @@
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Helper;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class ObjectCopy<TInput>
     {
@@ -16,9 +16,9 @@ namespace ALE.ETLBox.DataFlow
             TInput clone;
             if (TypeInfo.IsArray)
             {
-                Array source = row as Array;
+                var source = row as Array;
                 clone = (TInput)Activator.CreateInstance(typeof(TInput), source!.Length);
-                Array dest = clone as Array;
+                var dest = clone as Array;
                 Array.Copy(source, dest!, source.Length);
             }
             else if (TypeInfo.IsDynamic)

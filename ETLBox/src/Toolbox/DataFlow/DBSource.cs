@@ -1,9 +1,14 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 using System.Linq;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
@@ -109,7 +114,7 @@ namespace ALE.ETLBox.DataFlow
 
         public override void Execute()
         {
-            NLogStart();
+            LogStart();
             try
             {
                 ReadAll();
@@ -121,7 +126,7 @@ namespace ALE.ETLBox.DataFlow
                 throw;
             }
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
 
         private void ReadAll()
@@ -161,7 +166,7 @@ namespace ALE.ETLBox.DataFlow
                 // Set up copy action for each column
                 for (var i = 0; i < columnNames.Count; i++)
                 {
-                    int currentIndexAvoidingClosure = i;
+                    var currentIndexAvoidingClosure = i;
                     sqlT.Actions!.Add(col =>
                     {
                         CopyColumnToArray(col, currentIndexAvoidingClosure);
@@ -196,12 +201,14 @@ namespace ALE.ETLBox.DataFlow
                     => colValue =>
                     {
                         CopyColumnToObjectWithReflection(colName, colValue);
-                    },
+                    }
+                ,
                 (true, false)
                     => colValue =>
                     {
                         CopyColumnToDynamicObject(colName, colValue);
-                    },
+                    }
+                ,
                 (_, _) => _ => { }
             };
 

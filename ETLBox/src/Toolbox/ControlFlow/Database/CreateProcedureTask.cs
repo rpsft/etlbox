@@ -1,7 +1,10 @@
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Creates or updates a procedure.
@@ -140,7 +143,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                string result = "";
+                var result = "";
                 if (ConnectionType is ConnectionManagerType.Postgres or ConnectionManagerType.MySql)
                     result += "(";
                 result +=
@@ -155,7 +158,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public string ParameterSql(ProcedureParameter par)
         {
-            string sql = Environment.NewLine + "";
+            var sql = Environment.NewLine + "";
             if (ConnectionType == ConnectionManagerType.SqlServer)
                 sql += "@";
             if (ConnectionType == ConnectionManagerType.MySql)

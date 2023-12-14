@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     /// <summary>
     /// This attribute defines if the column is used as an Id for the DBMerge. It it supposed

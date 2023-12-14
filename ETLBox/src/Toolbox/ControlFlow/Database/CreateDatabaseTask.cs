@@ -1,6 +1,8 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Will create a database if the database doesn't exists. In MySql, this will create a schema.
@@ -21,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            bool doesExist = new IfDatabaseExistsTask(DatabaseName)
+            var doesExist = new IfDatabaseExistsTask(DatabaseName)
             {
                 DisableLogging = true,
                 ConnectionManager = ConnectionManager
@@ -58,7 +60,7 @@ END
                 }
 
                 if (ConnectionType == ConnectionManagerType.ClickHouse)
-                { 
+                {
                     return $@"CREATE DATABASE {QB}{DatabaseName}{QE}";
                 }
 

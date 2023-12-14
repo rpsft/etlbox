@@ -1,7 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using TestShared.Helper;
+﻿using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.Helper;
 
-namespace TestFlatFileConnectors
+namespace TestFlatFileConnectors.src
 {
     [CollectionDefinition("FlatFilesToDatabase")]
     public class DataFlowCollectionClass : ICollectionFixture<FlatFileToDatabaseFixture> { }

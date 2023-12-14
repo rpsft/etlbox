@@ -1,8 +1,11 @@
-﻿using System.Text;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using System.Text;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Logging;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Read load processes by Id, all processes or last finished/successful/aborted.

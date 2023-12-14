@@ -1,6 +1,9 @@
-﻿using Microsoft.AnalysisServices.AdomdClient;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Database;
+using Microsoft.AnalysisServices.AdomdClient;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native
 {
     /// <summary>
     /// Connection manager for Adomd connection to a sql server analysis server.
@@ -42,7 +45,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            AdomdConnectionManager clone = new AdomdConnectionManager(
+            var clone = new AdomdConnectionManager(
                 (SqlConnectionString)ConnectionString
             )
             {

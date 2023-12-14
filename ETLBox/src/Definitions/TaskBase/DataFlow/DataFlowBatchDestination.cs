@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.DataFlow
+using ALE.ETLBox.src.Definitions.DataFlow;
+
+namespace ALE.ETLBox.src.Definitions.TaskBase.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowBatchDestination<TInput>
@@ -84,7 +86,7 @@
         protected void WriteBatch(TInput[] data)
         {
             if (ProgressCount == 0)
-                NLogStart();
+                LogStart();
             if (BeforeBatchWrite != null)
                 data = BeforeBatchWrite.Invoke(data);
             if (!WasInitialized)

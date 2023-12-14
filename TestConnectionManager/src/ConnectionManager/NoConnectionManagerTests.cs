@@ -1,5 +1,5 @@
-using ALE.ETLBox;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
 namespace TestConnectionManager.src.ConnectionManager
 {

@@ -1,7 +1,11 @@
 using System.Linq;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Helper;
+using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Aggregates data by the given aggregation method.
@@ -106,13 +110,13 @@ namespace ALE.ETLBox.DataFlow
         {
             foreach (var attributeMapping in AggTypeInfo.AggregateColumns)
             {
-                decimal? inputVal = ConvertToDecimal(
+                var inputVal = ConvertToDecimal(
                     attributeMapping.PropInInput.GetValue(inputRow)
                 );
-                decimal? aggVal = ConvertToDecimal(
+                var aggVal = ConvertToDecimal(
                     attributeMapping.PropInOutput.GetValue(aggOutput)
                 );
-                decimal? res = (aggVal, attributeMapping.AggregationMethod) switch
+                var res = (aggVal, attributeMapping.AggregationMethod) switch
                 {
                     (null, AggregationMethod.Count) => 1,
                     (null, _) => inputVal,
@@ -123,7 +127,7 @@ namespace ALE.ETLBox.DataFlow
                     (_, _) => null
                 };
 
-                object output = Convert.ChangeType(
+                var output = Convert.ChangeType(
                     res,
                     TypeInfo.TryGetUnderlyingType(attributeMapping.PropInOutput)
                 );
@@ -159,19 +163,19 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteIntoOutput()
         {
-            NLogStart();
+            LogStart();
             foreach (var row in AggregationData)
             {
                 StoreKeyAction?.Invoke(row.Key, row.Value);
                 OutputBuffer.SendAsync(row.Value).Wait();
                 LogProgress();
             }
-            NLogFinish();
+            LogFinish();
         }
 
         private void WrapAggregationAction(TInput row)
         {
-            object key = GroupingFunc?.Invoke(row) ?? string.Empty;
+            var key = GroupingFunc?.Invoke(row) ?? string.Empty;
 
             if (!AggregationData.ContainsKey(key))
                 AddRecordToDict(key);
@@ -192,7 +196,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 unchecked
                 {
-                    int hash = 29;
+                    var hash = 29;
                     foreach (var map in GroupingObjectsByProperty)
                         hash = hash * 486187739 + (map.Value?.GetHashCode() ?? 17);
                     return hash;

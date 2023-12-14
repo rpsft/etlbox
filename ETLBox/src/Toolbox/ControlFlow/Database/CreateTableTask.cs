@@ -1,8 +1,11 @@
 using System.Linq;
 using System.Text.RegularExpressions;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {
     /// <summary>
     /// Creates a table. If the tables exists, this task won't change the table.
@@ -25,7 +28,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             CheckTableDefinition();
 
-            bool tableExists = new IfTableOrViewExistsTask(TableName)
+            var tableExists = new IfTableOrViewExistsTask(TableName)
             {
                 ConnectionManager = ConnectionManager,
                 DisableLogging = true
@@ -143,14 +146,14 @@ namespace ALE.ETLBox.ControlFlow
         private string CreateTableDefinition(ITableColumn col)
         {
             var dataType = CreateDataTypeSql(col);
-            string identitySql = CreateIdentitySql(col);
-            string collationSql = !string.IsNullOrWhiteSpace(col.Collation)
+            var identitySql = CreateIdentitySql(col);
+            var collationSql = !string.IsNullOrWhiteSpace(col.Collation)
                 ? $"COLLATE {col.Collation}"
                 : string.Empty;
-            string nullSql = CreateNotNullSql(col);
-            string defaultSql = CreateDefaultSql(col);
-            string computedColumnSql = CreateComputedColumnSql(col);
-            string comment = CreateCommentSql(col);
+            var nullSql = CreateNotNullSql(col);
+            var defaultSql = CreateDefaultSql(col);
+            var computedColumnSql = CreateComputedColumnSql(col);
+            var comment = CreateCommentSql(col);
             return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql} {comment}";
         }
 
@@ -195,27 +198,27 @@ namespace ALE.ETLBox.ControlFlow
 
         private string CreatePrimaryKeyConstraint()
         {
-            string result = string.Empty;
+            var result = string.Empty;
             if (!(Columns?.Exists(col => col.IsPrimaryKey) ?? false))
             {
                 return result;
             }
 
             var pkCols = Columns.Where(col => col.IsPrimaryKey).ToArray();
-            string pkConstName =
+            var pkConstName =
                 TableDefinition.PrimaryKeyConstraintName
                 ?? $"pk_{TN.UnquotedFullName}_{string.Join("_", pkCols.Select(col => col.Name))}";
-            string constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
+            var constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
             if (ConnectionType == ConnectionManagerType.SQLite)
                 constraint = "";
-            string pkConst =
+            var pkConst =
                 $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
             return pkConst;
         }
 
         private static string CreateDefaultSql(ITableColumn col)
         {
-            string defaultSql = string.Empty;
+            var defaultSql = string.Empty;
             if (!col.IsPrimaryKey)
                 defaultSql =
                     col.DefaultValue != null

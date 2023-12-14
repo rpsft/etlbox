@@ -1,7 +1,10 @@
-using TestFlatFileConnectors.Helpers;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestFlatFileConnectors.src.Helpers;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.XmlDestination
+namespace TestFlatFileConnectors.src.XmlDestination
 {
     public class XmlDestinationDynamicObjectTests : FlatFileConnectorsTestBase
     {

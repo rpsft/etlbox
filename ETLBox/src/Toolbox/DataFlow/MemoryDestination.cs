@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// A destination in memory - it will store all you data in a list.
@@ -40,7 +42,7 @@ namespace ALE.ETLBox.DataFlow
         {
             Data?.CompleteAdding();
             OnCompletion?.Invoke();
-            NLogFinish();
+            LogFinish();
         }
     }
 

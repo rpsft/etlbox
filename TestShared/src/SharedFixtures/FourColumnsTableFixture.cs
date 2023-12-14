@@ -1,11 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using TestShared.Helper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestShared.src.Helper;
 
-namespace TestShared.SharedFixtures
+namespace TestShared.src.SharedFixtures
 {
     public class FourColumnsTableFixture
     {
@@ -51,7 +52,7 @@ namespace TestShared.SharedFixtures
         public void RecreateTable(int identityColumnIndex)
         {
             DropTableTask.DropIfExists(Connection, TableName);
-            bool hasIdentityCol = identityColumnIndex >= 0;
+            var hasIdentityCol = identityColumnIndex >= 0;
             var columns = new ObservableCollection<TableColumn>
             {
                 new(

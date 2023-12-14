@@ -1,7 +1,8 @@
-﻿using System.IO;
-using TestShared.Helper;
+using System.IO;
+using ALE.ETLBox.src.Definitions.Database;
+using TestShared.src.Helper;
 
-namespace ALE.ETLBoxTests.Performance.Helper
+namespace ALE.ETLBoxTests.Performance.src.Helper
 {
     public static class BigDataCsvSource
     {
@@ -26,7 +27,7 @@ namespace ALE.ETLBoxTests.Performance.Helper
                 return;
             }
 
-            BigDataHelper bigData = new BigDataHelper
+            var bigData = new BigDataHelper
             {
                 FileName = GetCompleteFilePath(numberOfRows),
                 NumberOfRows = numberOfRows,

@@ -1,7 +1,8 @@
-using ALE.ETLBox;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.LookupTransformation
+namespace TestTransformations.src.LookupTransformation
 {
     public class LookupExceptionTests
     {
@@ -25,12 +26,12 @@ namespace TestTransformations.LookupTransformation
         public void NoLookupSource()
         {
             //Arrange
-            MemorySource<MyDataRow> source = new MemorySource<MyDataRow>();
+            var source = new MemorySource<MyDataRow>();
             source.DataAsList.Add(new MyDataRow { Col1 = 1, Col2 = "Test1" });
 
             //Act
             var lookup = new LookupTransformation<MyDataRow, MyLookupRow>();
-            MemoryDestination<MyDataRow> dest = new MemoryDestination<MyDataRow>();
+            var dest = new MemoryDestination<MyDataRow>();
 
             //Assert
             Assert.Throws<ETLBoxException>(() =>

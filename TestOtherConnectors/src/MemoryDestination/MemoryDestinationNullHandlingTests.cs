@@ -1,4 +1,6 @@
-namespace TestOtherConnectors.MemoryDestination
+using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace TestOtherConnectors.src.MemoryDestination
 {
     public class MemoryDestinationNullHandlingTests
     {
@@ -12,7 +14,7 @@ namespace TestOtherConnectors.MemoryDestination
         public void IgnoreWithObject()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -26,7 +28,7 @@ namespace TestOtherConnectors.MemoryDestination
             };
 
             //Act
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

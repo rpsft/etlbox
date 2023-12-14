@@ -1,7 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBMerge
+namespace TestDatabaseConnectors.src.DBMerge
 {
     public class DbMergeDeltaTests : DatabaseConnectorsTestBase
     {
@@ -28,19 +32,19 @@ namespace TestDatabaseConnectors.DBMerge
         public void DeltaLoadWithDeletion(IConnectionManager connection)
         {
             //Arrange
-            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
+            var source = new MemorySource<MyMergeRow>();
             source.DataAsList.Add(new MyMergeRow { Key = 2, Value = "Test2" });
             source.DataAsList.Add(new MyMergeRow { Key = 3, Value = "Test3" });
             source.DataAsList.Add(new MyMergeRow { Key = 4, DeleteThisRow = true });
             source.DataAsList.Add(new MyMergeRow { Key = 10, DeleteThisRow = true });
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDeltaDestination"
             );
             d2C.InsertTestDataSet3();
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(
+            var dest = new DbMerge<MyMergeRow>(
                 connection,
                 "DBMergeDeltaDestination"
             )

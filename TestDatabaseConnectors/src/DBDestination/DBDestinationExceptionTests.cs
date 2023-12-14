@@ -1,7 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
 
-namespace TestDatabaseConnectors.DBDestination
+namespace TestDatabaseConnectors.src.DBDestination
 {
     public class DbDestinationExceptionTests : DatabaseConnectorsTestBase
     {
@@ -13,9 +16,9 @@ namespace TestDatabaseConnectors.DBDestination
         {
             //Arrange
             string[] data = { "1", "2" };
-            MemorySource<string[]> source = new MemorySource<string[]>();
+            var source = new MemorySource<string[]>();
             source.DataAsList.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "UnknownTable"
             );
@@ -40,16 +43,16 @@ namespace TestDatabaseConnectors.DBDestination
         public void UnknownTableViaTableDefinition()
         {
             //Arrange
-            TableDefinition def = new TableDefinition(
+            var def = new TableDefinition(
                 "UnknownTable",
                 new List<TableColumn> { new("id", "INT") }
             );
 
             //Arrange
             string[] data = { "1", "2" };
-            MemorySource<string[]> source = new MemorySource<string[]>();
+            var source = new MemorySource<string[]>();
             source.DataAsList.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>
+            var dest = new DbDestination<string[]>
             {
                 ConnectionManager = SqlConnection,
                 DestinationTableDefinition = def

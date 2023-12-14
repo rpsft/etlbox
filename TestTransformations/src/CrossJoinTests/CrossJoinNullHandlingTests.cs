@@ -1,6 +1,6 @@
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.CrossJoinTests
+namespace TestTransformations.src.CrossJoinTests
 {
     public class CrossJoinNullHandlingTests
     {
@@ -14,15 +14,15 @@ namespace TestTransformations.CrossJoinTests
         public void IgnoreNullValues()
         {
             //Arrange
-            MemorySource<string> source1 = new MemorySource<string>
+            var source1 = new MemorySource<string>
             {
                 DataAsList = new List<string> { "A", null, "B", "C" }
             };
-            MemorySource<int?> source2 = new MemorySource<int?>
+            var source2 = new MemorySource<int?>
             {
                 DataAsList = new List<int?> { 1, null, 2, null, 3 }
             };
-            CrossJoin<string, int?, string> crossJoin = new CrossJoin<string, int?, string>(
+            var crossJoin = new CrossJoin<string, int?, string>(
                 (data1, data2) =>
                 {
                     if (data1 == "C")
@@ -30,7 +30,7 @@ namespace TestTransformations.CrossJoinTests
                     return data1 + data2;
                 }
             );
-            MemoryDestination<string> dest = new MemoryDestination<string>();
+            var dest = new MemoryDestination<string>();
 
             //Act
             source1.LinkTo(crossJoin.InMemoryTarget);

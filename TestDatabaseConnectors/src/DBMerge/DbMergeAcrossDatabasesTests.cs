@@ -1,10 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
 
-namespace TestDatabaseConnectors.DBMerge
+namespace TestDatabaseConnectors.src.DBMerge
 {
     public class DbMergeAcrossDatabasesTests : DatabaseConnectorsTestBase
     {
@@ -60,8 +63,8 @@ namespace TestDatabaseConnectors.DBMerge
             personMerge.Wait();
 
             //Assert
-            string qb = destConnection.QB;
-            string qe = destConnection.QE;
+            var qb = destConnection.QB;
+            var qe = destConnection.QE;
             Assert.Equal(
                 1,
                 RowCountTask.Count(

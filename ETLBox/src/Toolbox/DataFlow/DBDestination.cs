@@ -1,8 +1,14 @@
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// A database destination represents a table where data from the flow is inserted.
@@ -149,7 +155,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 foreach (var key in dynamicObject.Select(c => c.Key))
                 {
-                    int newPropIndex = TableData.DynamicColumnNames.Count;
+                    var newPropIndex = TableData.DynamicColumnNames.Count;
                     if (!TableData.DynamicColumnNames.ContainsKey(key))
                         TableData.DynamicColumnNames.Add(key, newPropIndex);
                 }
@@ -178,7 +184,7 @@ namespace ALE.ETLBox.DataFlow
         private object[] ConvertObjectRow(TInput currentRow)
         {
             var rowResult = new object[TypeInfo.PropertyLength];
-            int index = 0;
+            var index = 0;
             foreach (PropertyInfo propInfo in TypeInfo.Properties)
             {
                 rowResult[index] = propInfo.GetValue(currentRow);
@@ -193,7 +199,7 @@ namespace ALE.ETLBox.DataFlow
             var rowResult = new object[TableData.DynamicColumnNames.Count];
             foreach (var prop in propertyValues)
             {
-                int columnIndex = TableData.DynamicColumnNames[prop.Key];
+                var columnIndex = TableData.DynamicColumnNames[prop.Key];
                 rowResult[columnIndex] = prop.Value;
             }
 

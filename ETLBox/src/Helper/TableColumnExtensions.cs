@@ -1,6 +1,7 @@
 using System.Linq;
+using ALE.ETLBox.src.Definitions.Database;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.src.Helper
 {
     [PublicAPI]
     public static class TableColumnExtensions

@@ -1,9 +1,12 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
 
-namespace TestDatabaseConnectors.DBMerge
+namespace TestDatabaseConnectors.src.DBMerge
 {
     public class DbMergeCompositeKeysTests : DatabaseConnectorsTestBase
     {
@@ -89,12 +92,12 @@ namespace TestDatabaseConnectors.DBMerge
         public void MergeWithCompositeKey(IConnectionManager connection)
         {
             //Arrange
-            ObjectNameDescriptor sourceTn = new ObjectNameDescriptor(
+            var sourceTn = new ObjectNameDescriptor(
                 "DBMergeSource",
                 connection.QB,
                 connection.QE
             );
-            ObjectNameDescriptor destinationTn = new ObjectNameDescriptor(
+            var destinationTn = new ObjectNameDescriptor(
                 "DBMergeDestination",
                 connection.QB,
                 connection.QE
@@ -104,8 +107,8 @@ namespace TestDatabaseConnectors.DBMerge
             InsertSourceData(connection, sourceTn);
             InsertDestinationData(connection, destinationTn);
             //Act
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            var source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            var dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -1,4 +1,6 @@
-namespace TestFlatFileConnectors.CsvDestination
+using ALE.ETLBox.src.Toolbox.DataFlow;
+
+namespace TestFlatFileConnectors.src.CsvDestination
 {
     public class CsvDestinationSerializationTests
     {
@@ -17,15 +19,15 @@ namespace TestFlatFileConnectors.CsvDestination
         [Fact]
         public void SerializingDateTime()
         {
-            int rowCount = 0;
+            var rowCount = 0;
             //Arrange
-            CustomSource<MySeriRow> source = new CustomSource<MySeriRow>(
+            var source = new CustomSource<MySeriRow>(
                 () => new MySeriRow { Col1 = 1, Col2 = new DateTime(2010, 02, 05) },
                 () => rowCount++ == 1
             );
 
             //Act
-            CsvDestination<MySeriRow> dest = new CsvDestination<MySeriRow>(
+            var dest = new CsvDestination<MySeriRow>(
                 "./DateTimeSerialization.csv"
             );
             source.LinkTo(dest);

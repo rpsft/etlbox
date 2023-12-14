@@ -1,7 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBSource
+namespace TestDatabaseConnectors.src.DBSource
 {
     public class DbSourceIdentityColumnTests : DatabaseConnectorsTestBase
     {
@@ -18,8 +21,8 @@ namespace TestDatabaseConnectors.DBSource
 
         private static void DataFlowForIdentityColumn(IConnectionManager connection)
         {
-            DbSource<MyPartialRow> source = new DbSource<MyPartialRow>(connection, "Source4Cols");
-            DbDestination<MyPartialRow> dest = new DbDestination<MyPartialRow>(
+            var source = new DbSource<MyPartialRow>(connection, "Source4Cols");
+            var dest = new DbDestination<MyPartialRow>(
                 connection,
                 "Destination4Cols"
             );
@@ -32,13 +35,13 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnsAtTheBeginning(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
                 identityColumnIndex: 0
             );
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
                 identityColumnIndex: 0
@@ -55,13 +58,13 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnInTheMiddle(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
                 identityColumnIndex: 1
             );
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
                 identityColumnIndex: 2
@@ -78,13 +81,13 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnAtTheEnd(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
                 identityColumnIndex: 3
             );
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
                 identityColumnIndex: 3

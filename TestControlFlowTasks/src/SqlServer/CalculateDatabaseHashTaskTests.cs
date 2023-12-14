@@ -1,9 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.ControlFlow.SqlServer;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks.SqlServer
+namespace TestControlFlowTasks.src.SqlServer
 {
     public class CalculateDatabaseHashTaskTests : ControlFlowTestBase
     {
@@ -15,15 +16,15 @@ namespace TestControlFlowTasks.SqlServer
         {
             //Arrange
             CreateSchemaTask.Create(SqlConnection, "hash");
-            List<TableColumn> columns = new List<TableColumn> { new("value", "int") };
+            var columns = new List<TableColumn> { new("value", "int") };
             CreateTableTask.Create(SqlConnection, "DatabaseHash", columns);
 
             //Act
-            string hash = CalculateDatabaseHashTask.Calculate(
+            var hash = CalculateDatabaseHashTask.Calculate(
                 SqlConnection,
                 new List<string> { "hash" }
             );
-            string hashAgain = CalculateDatabaseHashTask.Calculate(
+            var hashAgain = CalculateDatabaseHashTask.Calculate(
                 SqlConnection,
                 new List<string> { "hash" }
             );

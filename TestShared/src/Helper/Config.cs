@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
 using EtlBox.ClickHouse.ConnectionManager;
 using EtlBox.ClickHouse.ConnectionStrings;
 using Microsoft.Extensions.Configuration;
 
-namespace TestShared.Helper;
+namespace TestShared.src.Helper;
 
 public static class Config
 {
@@ -16,47 +18,56 @@ public static class Config
     public static ConnectionDetails<
         SqlConnectionString,
         SqlConnectionManager
-    > SqlConnection { get; } = new("SqlConnectionString");
+    > SqlConnection
+    { get; } = new("SqlConnectionString");
 
     public static ConnectionDetails<
         SqlConnectionString,
         AdomdConnectionManager
-    > SSASConnection { get; } = new("SSASConnectionString");
+    > SSASConnection
+    { get; } = new("SSASConnectionString");
 
     public static ConnectionDetails<
         SQLiteConnectionString,
         SQLiteConnectionManager
-    > SQLiteConnection { get; } = new("SQLiteConnectionString");
+    > SQLiteConnection
+    { get; } = new("SQLiteConnectionString");
 
     public static ConnectionDetails<
         MySqlConnectionString,
         MySqlConnectionManager
-    > MySqlConnection { get; } = new("MySqlConnectionString");
+    > MySqlConnection
+    { get; } = new("MySqlConnectionString");
 
     public static ConnectionDetails<
         PostgresConnectionString,
         PostgresConnectionManager
-    > PostgresConnection { get; } = new("PostgresConnectionString");
+    > PostgresConnection
+    { get; } = new("PostgresConnectionString");
 
     public static ConnectionDetails<
         OdbcConnectionString,
         AccessOdbcConnectionManager
-    > AccessOdbcConnection { get; } = new("AccessOdbcConnectionString");
+    > AccessOdbcConnection
+    { get; } = new("AccessOdbcConnectionString");
 
     public static ConnectionDetails<
         OdbcConnectionString,
         SqlOdbcConnectionManager
-    > SqlOdbcConnection { get; } = new("SqlOdbcConnectionString");
+    > SqlOdbcConnection
+    { get; } = new("SqlOdbcConnectionString");
 
     public static ConnectionDetails<
         SqlConnectionString,
         SqlConnectionManager
-    > AzureSqlConnection { get; } = new("AzureSqlConnectionString");
+    > AzureSqlConnection
+    { get; } = new("AzureSqlConnectionString");
 
     public static ConnectionDetails<
         ClickHouseConnectionString,
         ClickHouseConnectionManager
-    > ClickHouseConnection { get; } = new("ClickHouseConnectionString");
+    > ClickHouseConnection
+    { get; } = new("ClickHouseConnectionString");
 
     private static IConfigurationRoot DefaultConfigFile
     {

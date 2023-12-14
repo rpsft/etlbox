@@ -1,7 +1,8 @@
-﻿using ALE.ETLBoxTests.Performance.Helper;
-using TestShared.Helper;
+﻿using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBoxTests.Performance.src.Helper;
+using TestShared.src.Helper;
 
-namespace ALE.ETLBoxTests.Performance
+namespace ALE.ETLBoxTests.Performance.src
 {
     public class MemoryDestinationTests
     {

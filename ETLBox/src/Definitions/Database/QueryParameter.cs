@@ -1,6 +1,6 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.Database
 {
     [PublicAPI]
     public class QueryParameter

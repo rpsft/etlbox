@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.ControlFlow
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+
+namespace ALE.ETLBox.src.Toolbox.ControlFlow
 {
     /// <summary>
     /// A sequence is a shortcute for custom task, but with the TaskType "SEQUENCE".

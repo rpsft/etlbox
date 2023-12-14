@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
 
-namespace ALE.ETLBox
+namespace ALE.ETLBox.src.Definitions.TaskBase
 {
     [PublicAPI]
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
@@ -11,8 +12,8 @@ namespace ALE.ETLBox
         {
             get
             {
-                return DataFlow.DataFlow.HasLoggingThresholdRows
-                    ? DataFlow.DataFlow.LoggingThresholdRows
+                return HasLoggingThresholdRows
+                    ? LoggingThresholdRows
                     : _loggingThresholdRows;
             }
             set { _loggingThresholdRows = value; }
@@ -23,38 +24,38 @@ namespace ALE.ETLBox
         protected bool HasLoggingThresholdRows => LoggingThresholdRows is > 0;
         protected int ThresholdCount { get; set; } = 1;
 
-        protected void NLogStart()
+        protected void LogStart()
         {
             if (!DisableLogging)
-                Logger.Info(
+                Logger.Info<DataFlowTask>(
                     TaskName,
                     TaskType,
                     "START",
                     TaskHash,
-                    ControlFlow.ControlFlow.Stage,
-                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    Toolbox.ControlFlow.ControlFlow.Stage,
+                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
-        protected void NLogFinish()
+        protected void LogFinish()
         {
             if (!DisableLogging && HasLoggingThresholdRows)
-                Logger.Info(
+                Logger.Info<DataFlowTask>(
                     TaskName + $" processed {ProgressCount} records in total.",
                     TaskType,
                     "LOG",
                     TaskHash,
-                    ControlFlow.ControlFlow.Stage,
-                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    Toolbox.ControlFlow.ControlFlow.Stage,
+                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             if (!DisableLogging)
-                Logger.Info(
+                Logger.Info<DataFlowTask>(
                     TaskName,
                     TaskType,
                     "END",
                     TaskHash,
-                    ControlFlow.ControlFlow.Stage,
-                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    Toolbox.ControlFlow.ControlFlow.Stage,
+                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
@@ -70,13 +71,13 @@ namespace ALE.ETLBox
                 return;
             }
 
-            Logger.Info(
+            Logger.Info<DataFlowTask>(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Toolbox.ControlFlow.ControlFlow.Stage,
+                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             ThresholdCount++;
         }
@@ -93,13 +94,13 @@ namespace ALE.ETLBox
                 return;
             }
 
-            Logger.Info(
+            Logger.Info<DataFlowTask>(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Toolbox.ControlFlow.ControlFlow.Stage,
+                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
         }
     }

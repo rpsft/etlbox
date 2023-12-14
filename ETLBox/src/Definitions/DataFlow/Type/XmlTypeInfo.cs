@@ -1,12 +1,12 @@
 using System.Xml.Serialization;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Definitions.DataFlow.Type
 {
     internal sealed class XmlTypeInfo : TypeInfo
     {
         internal string ElementName { get; }
 
-        internal XmlTypeInfo(Type type)
+        internal XmlTypeInfo(System.Type type)
             : base(type)
         {
             GatherTypeInfo();

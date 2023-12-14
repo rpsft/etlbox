@@ -1,12 +1,15 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using TestShared.Helper;
+﻿using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.Helper;
 
 
-namespace TestDatabaseConnectors
+namespace TestDatabaseConnectors.src
 {
     [CollectionDefinition("DatabaseConnectors", DisableParallelization = false)]
     public class DataFlowSourceDestinationCollectionClass
-        : ICollectionFixture<DatabaseSourceDestinationFixture> { }
+        : ICollectionFixture<DatabaseSourceDestinationFixture>
+    { }
 
     [Collection("DatabaseConnectors")]
     public class DatabaseConnectorsTestBase

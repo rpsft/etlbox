@@ -1,8 +1,13 @@
-﻿using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBoxTests.NonParallel.src;
+using ALE.ETLBoxTests.NonParallel.src.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging
+namespace ALE.ETLBoxTests.NonParallel.src.Logging
 {
     public sealed class DatabaseTasksLoggingTests : NonParallelTestBase, IDisposable
     {
@@ -11,13 +16,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             CreateSchemaTask.Create(SqlConnection, "etl");
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
+            ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private int? CountLogEntries(string taskName)

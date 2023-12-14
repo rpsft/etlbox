@@ -1,6 +1,10 @@
-﻿using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Helper;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// A lookup task - data from the input can be enriched with data retrieved from the lookup source.
@@ -107,7 +111,7 @@ namespace ALE.ETLBox.DataFlow
         {
             var lookupHit = LookupData.Find(e =>
             {
-                bool same = true;
+                var same = true;
                 foreach (var mc in TypeInfo.MatchColumns)
                 {
                     same &= mc.PropInInput.GetValue(row).Equals(mc.PropInOutput.GetValue(e));

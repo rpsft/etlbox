@@ -1,8 +1,8 @@
 using System;
 using System.Reflection;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.src.Helper;
 
-namespace TestHelper
+namespace TestHelper.src
 {
     public class PropertyInfoExtensionsTests
     {
@@ -14,7 +14,7 @@ namespace TestHelper
         [Fact]
         public void TestTrySetValue()
         {
-            TestClass t = new TestClass { TestProp1 = 1 };
+            var t = new TestClass { TestProp1 = 1 };
             Assert.Equal(1, t.TestProp1);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestProp1");
             propInfo1.TrySetValue(t, 5);
@@ -35,7 +35,7 @@ namespace TestHelper
         [Fact]
         public void TestTrySetEnumValue()
         {
-            TestEnumClass t = new TestEnumClass { TestEnumProp = EnumType.Value2 };
+            var t = new TestEnumClass { TestEnumProp = EnumType.Value2 };
             Assert.Equal(EnumType.Value2, t.TestEnumProp);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestEnumProp");
             propInfo1.TrySetValue(t, 1);
@@ -50,7 +50,7 @@ namespace TestHelper
         [Fact]
         public void TestTrySetNullableEnumValue()
         {
-            TestNullableEnumClass t = new TestNullableEnumClass { TestEnumProp = EnumType.Value2 };
+            var t = new TestNullableEnumClass { TestEnumProp = EnumType.Value2 };
             Assert.Equal(EnumType.Value2, t.TestEnumProp);
             PropertyInfo propInfo1 = t.GetType().GetProperty("TestEnumProp");
             propInfo1.TrySetValue(t, 1, Nullable.GetUnderlyingType(propInfo1!.PropertyType));

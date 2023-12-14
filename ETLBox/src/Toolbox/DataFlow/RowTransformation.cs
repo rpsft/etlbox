@@ -1,4 +1,10 @@
-namespace ALE.ETLBox.DataFlow
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
+using Microsoft.Extensions.Logging;
+
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
@@ -103,7 +109,7 @@ namespace ALE.ETLBox.DataFlow
                 InitAction?.Invoke();
                 WasInitialized = true;
                 if (!DisableLogging)
-                    Logger.Debug(
+                    Logger.Debug<RowTransformation<TInput, TOutput>>(
                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                         TaskName + " was initialized!",
                         TaskType,

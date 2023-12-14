@@ -1,9 +1,11 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src;
+using TestDatabaseConnectors.src.Fixtures;
 
-namespace TestDatabaseConnectors.DBDestination
+namespace TestDatabaseConnectors.src.DBDestination
 {
     public class DbDestinationForeignKeyTests : DatabaseConnectorsTestBase
     {
@@ -30,7 +32,7 @@ namespace TestDatabaseConnectors.DBDestination
                     new("Other", "VARCHAR(100)", allowNulls: true, isPrimaryKey: false)
                 }
             );
-            ObjectNameDescriptor tn = new ObjectNameDescriptor(
+            var tn = new ObjectNameDescriptor(
                 tablename,
                 connection.QB,
                 connection.QE
@@ -64,12 +66,12 @@ namespace TestDatabaseConnectors.DBDestination
             string referenceTableName
         )
         {
-            ObjectNameDescriptor tn = new ObjectNameDescriptor(
+            var tn = new ObjectNameDescriptor(
                 sourceTableName,
                 connection.QB,
                 connection.QE
             );
-            ObjectNameDescriptor referenceTn = new ObjectNameDescriptor(
+            var referenceTn = new ObjectNameDescriptor(
                 referenceTableName,
                 connection.QB,
                 connection.QE
@@ -87,7 +89,7 @@ ON DELETE CASCADE;"
 
         private static void InsertTestData(IConnectionManager connection, string tableName)
         {
-            ObjectNameDescriptor tn = new ObjectNameDescriptor(
+            var tn = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE
@@ -119,10 +121,10 @@ ON DELETE CASCADE;"
             InsertTestData(connection, "FKSourceTable");
             AddFkConstraint(connection, "FKDestTable", "FKReferenceTable");
 
-            DbSource<MyRow> source = new DbSource<MyRow>(connection, "FKSourceTable");
+            var source = new DbSource<MyRow>(connection, "FKSourceTable");
 
             //Act
-            DbDestination<MyRow> dest = new DbDestination<MyRow>(connection, "FKDestTable");
+            var dest = new DbDestination<MyRow>(connection, "FKDestTable");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

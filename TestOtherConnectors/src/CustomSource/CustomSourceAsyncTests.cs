@@ -1,8 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Definitions.Exceptions;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestOtherConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestOtherConnectors.CustomSource
+namespace TestOtherConnectors.src.CustomSource
 {
     public class CustomSourceAsyncTests : OtherConnectorsTestBase
     {
@@ -19,11 +21,11 @@ namespace TestOtherConnectors.CustomSource
         public void SimpleAsyncFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSource"
             );
-            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
-            int readIndex = 0;
+            var data = new List<string> { "Test1", "Test2", "Test3" };
+            var readIndex = 0;
 
             MySimpleRow ReadData()
             {
@@ -37,8 +39,8 @@ namespace TestOtherConnectors.CustomSource
             bool EndOfData() => readIndex >= data.Count;
 
             //Act
-            CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination4CustomSource"
             );
@@ -57,12 +59,12 @@ namespace TestOtherConnectors.CustomSource
         public void ExceptionalAsyncFlow()
         {
             //Arrange
-            ALE.ETLBox.DataFlow.CustomSource source = new ALE.ETLBox.DataFlow.CustomSource(
+            ALE.ETLBox.src.Toolbox.DataFlow.CustomSource source = new ALE.ETLBox.src.Toolbox.DataFlow.CustomSource(
                 () => throw new ETLBoxException("Test Exception"),
                 () => false
             );
-            ALE.ETLBox.DataFlow.CustomDestination dest =
-                new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
+            ALE.ETLBox.src.Toolbox.DataFlow.CustomDestination dest =
+                new ALE.ETLBox.src.Toolbox.DataFlow.CustomDestination(_ => { });
 
             //Act
             source.LinkTo(dest);

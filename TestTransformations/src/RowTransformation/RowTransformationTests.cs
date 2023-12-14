@@ -1,8 +1,9 @@
-using ALE.ETLBox.DataFlow;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.RowTransformation
+namespace TestTransformations.src.RowTransformation
 {
     public class RowTransformationTests : TransformationsTestBase
     {
@@ -19,19 +20,19 @@ namespace TestTransformations.RowTransformation
         public void ConvertIntoObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationRowTransformation"
             );
-            CsvSource<string[]> source = new CsvSource<string[]>(
+            var source = new CsvSource<string[]>(
                 "res/RowTransformation/TwoColumns.csv"
             );
 
             //Act
-            RowTransformation<string[], MySimpleRow> trans = new RowTransformation<
+            var trans = new RowTransformation<
                 string[],
                 MySimpleRow
             >(csvdata => new MySimpleRow { Col1 = int.Parse(csvdata[0]), Col2 = csvdata[1] });
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "DestinationRowTransformation"
             );
@@ -48,16 +49,16 @@ namespace TestTransformations.RowTransformation
         public void InitAction()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationRowTransformation"
             );
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>(
+            var source = new CsvSource<MySimpleRow>(
                 "res/RowTransformation/TwoColumnsIdMinus1.csv"
             );
 
             //Act
-            int IdOffset = 0;
-            RowTransformation<MySimpleRow, MySimpleRow> trans = new RowTransformation<
+            var IdOffset = 0;
+            var trans = new RowTransformation<
                 MySimpleRow,
                 MySimpleRow
             >(
@@ -69,7 +70,7 @@ namespace TestTransformations.RowTransformation
                 },
                 () => IdOffset += 1
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "DestinationRowTransformation"
             );

@@ -1,4 +1,4 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
 using EtlBox.Database.Tests.Containers;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;

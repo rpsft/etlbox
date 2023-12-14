@@ -1,8 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBDestination
+namespace TestDatabaseConnectors.src.DBDestination
 {
     public class DbDestinationBatchChangesTests : DatabaseConnectorsTestBase
     {
@@ -13,11 +15,11 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithBatchChanges(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+            var d2C = new TwoColumnsTableFixture(
                 connection,
                 "DbDestinationBatchChanges"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 connection,
                 "DbDestinationBatchChanges",
                 batchSize: 2
@@ -31,7 +33,7 @@ namespace TestDatabaseConnectors.DBDestination
             };
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
+            var source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -60,9 +62,9 @@ namespace TestDatabaseConnectors.DBDestination
         public void AfterBatchWrite(IConnectionManager connection)
         {
             //Arrange
-            bool wasExecuted = false;
+            var wasExecuted = false;
             var _ = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 connection,
                 "DbDestinationBatchChanges",
                 batchSize: 1
@@ -76,7 +78,7 @@ namespace TestDatabaseConnectors.DBDestination
             };
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
+            var source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

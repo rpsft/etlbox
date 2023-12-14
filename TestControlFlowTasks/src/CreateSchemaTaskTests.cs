@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
-using TestControlFlowTasks.Fixtures;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using TestControlFlowTasks.src.Fixtures;
 
-namespace TestControlFlowTasks
+namespace TestControlFlowTasks.src
 {
     public class CreateSchemaTaskTests : ControlFlowTestBase
     {
@@ -19,7 +20,7 @@ namespace TestControlFlowTasks
             }
 
             //Arrange
-            string schemaName = "s" + HashHelper.RandomString(9);
+            var schemaName = "s" + HashHelper.RandomString(9);
             //Act
             CreateSchemaTask.Create(connection, schemaName);
             //Assert
@@ -34,10 +35,10 @@ namespace TestControlFlowTasks
                 return;
             }
 
-            string qb = connection.QB;
-            string qe = connection.QE;
+            var qb = connection.QB;
+            var qe = connection.QE;
             //Arrange
-            string schemaName = $"{qb} s#!/ {qe}";
+            var schemaName = $"{qb} s#!/ {qe}";
             //Act
             CreateSchemaTask.Create(connection, schemaName);
             //Assert

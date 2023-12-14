@@ -2,7 +2,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ALE.ETLBox.Helper
+namespace ALE.ETLBox.src.Helper.JsonConverter
 {
     [PublicAPI]
     public class JsonProperty2JsonPath
@@ -35,7 +35,7 @@ namespace ALE.ETLBox.Helper
     /// <remarks>
     /// https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Converters/ExpandoObjectConverter.cs
     /// </remarks>
-    public class ExpandoJsonPathConverter : JsonConverter
+    public class ExpandoJsonPathConverter : Newtonsoft.Json.JsonConverter
     {
         private IEnumerable<JsonProperty2JsonPath> PathLookups { get; set; }
 
@@ -86,7 +86,7 @@ namespace ALE.ETLBox.Helper
                 switch (reader.TokenType)
                 {
                     case JsonToken.PropertyName:
-                        string propertyName = reader.Value?.ToString();
+                        var propertyName = reader.Value?.ToString();
                         ReadProperty(reader, expandoObject, propertyName);
                         break;
                     case JsonToken.Comment:
@@ -132,20 +132,20 @@ namespace ALE.ETLBox.Helper
         private static object GetValueFromJsonPath(JToken jsonObject, string path)
         {
             object val = null;
-            List<JToken> tokens = jsonObject.SelectTokens(path).ToList();
+            var tokens = jsonObject.SelectTokens(path).ToList();
             switch (tokens.Count)
             {
                 case 1:
-                {
-                    JToken t = tokens[0];
-                    val = ParseToken(t);
-                    break;
-                }
+                    {
+                        JToken t = tokens[0];
+                        val = ParseToken(t);
+                        break;
+                    }
                 case > 1:
-                {
-                    val = tokens.Select(ParseToken).ToList();
-                    break;
-                }
+                    {
+                        val = tokens.Select(ParseToken).ToList();
+                        break;
+                    }
             }
             return val;
         }

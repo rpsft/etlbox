@@ -1,6 +1,8 @@
 using System.Data.Odbc;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Definitions.Database;
 
-namespace ALE.ETLBox.ConnectionManager
+namespace ALE.ETLBox.src.Definitions.ConnectionManager
 {
     public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection>
     {
@@ -11,7 +13,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         internal void OdbcBulkInsert(ITableData data, string tableName, BulkInsertSql bulkInsert)
         {
-            string sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
+            var sql = bulkInsert.CreateBulkInsertStatement(data, tableName);
             var cmd = DbConnection.CreateCommand();
             cmd.Transaction = Transaction as OdbcTransaction;
             cmd.Parameters.AddRange(bulkInsert.Parameters.ToArray());

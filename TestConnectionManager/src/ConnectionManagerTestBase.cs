@@ -1,5 +1,5 @@
 using TestConnectionManager.src.Fixtures;
-using TestShared.Helper;
+using TestShared.src.Helper;
 
 namespace TestConnectionManager.src
 {

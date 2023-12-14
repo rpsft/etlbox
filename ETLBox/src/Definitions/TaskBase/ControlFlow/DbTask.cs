@@ -1,10 +1,11 @@
 using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
-using CsvHelper;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Toolbox.ControlFlow;
 
-namespace ALE.ETLBox.ControlFlow
+namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
 {
     [PublicAPI]
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
@@ -139,7 +140,7 @@ namespace ALE.ETLBox.ControlFlow
         public T? ExecuteScalar<T>()
             where T : struct
         {
-            object result = ExecuteScalar();
+            var result = ExecuteScalar();
             if (result == null || result == DBNull.Value)
                 return null;
             return (T)Convert.ChangeType(result, typeof(T));
@@ -147,7 +148,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public bool ExecuteScalarAsBool()
         {
-            object result = ExecuteScalar();
+            var result = ExecuteScalar();
             return ObjectToBool(result);
         }
 
@@ -172,12 +173,12 @@ namespace ALE.ETLBox.ControlFlow
                     LoggingStart();
                 using (IDataReader reader = conn.ExecuteReader(Command, Parameter))
                 {
-                    for (int rowNr = 0; rowNr < Limit; rowNr++)
+                    for (var rowNr = 0; rowNr < Limit; rowNr++)
                     {
                         if (reader.Read())
                         {
                             BeforeRowReadAction?.Invoke();
-                            for (int i = 0; i < Actions?.Count; i++)
+                            for (var i = 0; i < Actions?.Count; i++)
                             {
                                 Actions?[i]?.Invoke(
                                     !reader.IsDBNull(i) ? reader.GetValue(i) : null
@@ -241,42 +242,42 @@ namespace ALE.ETLBox.ControlFlow
 
         private void LoggingStart(LogType logType = LogType.None)
         {
-            Logger.Info(
+            Logger.Info<DbTask>(
                 TaskName,
                 TaskType,
                 "START",
                 TaskHash,
-                ControlFlow.Stage,
-                ControlFlow.CurrentLoadProcess?.Id
+                Toolbox.ControlFlow.ControlFlow.Stage,
+                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
-            Logger.Debug(
+            Logger.Debug<DbTask>(
                 logType == LogType.Bulk ? "SQL Bulk Insert" : $"{Command}",
                 TaskType,
                 "RUN",
                 TaskHash,
-                ControlFlow.Stage,
-                ControlFlow.CurrentLoadProcess?.Id
+                Toolbox.ControlFlow.ControlFlow.Stage,
+                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
         }
 
         private void LoggingEnd(LogType logType = LogType.None)
         {
-            Logger.Info(
+            Logger.Info<DbTask>(
                 TaskName,
                 TaskType,
                 "END",
                 TaskHash,
-                ControlFlow.Stage,
-                ControlFlow.CurrentLoadProcess?.Id
+                Toolbox.ControlFlow.ControlFlow.Stage,
+                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
-                Logger.Debug(
+                Logger.Debug<DbTask>(
                     $"Rows affected: {RowsAffected ?? 0}",
                     TaskType,
                     "RUN",
                     TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    Toolbox.ControlFlow.ControlFlow.Stage,
+                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
     }

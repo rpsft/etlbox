@@ -1,12 +1,9 @@
-using System.Runtime.InteropServices;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.src.Toolbox.DataFlow;
 using ALE.ETLBox.src.Toolbox.DataFlow.Mappings;
-using TestShared.SharedFixtures;
-using TestTransformations.Fixtures;
+using TestShared.src.SharedFixtures;
+using TestTransformations.src.Fixtures;
 
-namespace TestTransformations.RowTransformation
+namespace TestTransformations.src.RowTransformation
 {
     public class RowTransformationDynamicObjectTests : TransformationsTestBase
     {
@@ -17,22 +14,22 @@ namespace TestTransformations.RowTransformation
         public void ConvertIntoObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationRowTransformationDynamic"
             );
-            CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>(
+            var source = new CsvSource<ExpandoObject>(
                 "res/RowTransformation/TwoColumns.csv"
             );
 
             //Act
-            RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(csvdata =>
+            var trans = new RowTransformation<ExpandoObject>(csvdata =>
             {
                 dynamic c = csvdata;
                 c.Col1 = c.Header1;
                 c.Col2 = c.Header2;
                 return c;
             });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "DestinationRowTransformationDynamic"
             );
@@ -49,7 +46,7 @@ namespace TestTransformations.RowTransformation
         public void DestinationJsonTransformationTest()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "DestinationJsonTransformation"
             );
             var objSet = new ExpandoObject[]
@@ -59,7 +56,7 @@ namespace TestTransformations.RowTransformation
                 CreateObject(@"{ ""Data"": { ""Id"": 3, ""Name"": ""Test3"" } }"),
             };
 
-            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(objSet);
+            var source = new MemorySource<ExpandoObject>(objSet);
 
             //Act
             var trans = new JsonTransformation()
@@ -87,7 +84,7 @@ namespace TestTransformations.RowTransformation
                 ]
             };
 
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 dest2Columns.TableName
             );

@@ -1,6 +1,8 @@
-using TestShared.SharedFixtures;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestShared.src.SharedFixtures;
 
-namespace TestFlatFileConnectors.CsvSource
+namespace TestFlatFileConnectors.src.CsvSource
 {
     public class CsvSourceNoHeaderTests : FlatFileConnectorsTestBase
     {
@@ -20,14 +22,14 @@ namespace TestFlatFileConnectors.CsvSource
         public void CsvSourceNoHeader()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceNoHeader");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest2Columns = new TwoColumnsTableFixture("CsvSourceNoHeader");
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "CsvSourceNoHeader"
             );
 
             //Act
-            CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>(
+            var source = new CsvSource<MySimpleRow>(
                 "res/CsvSource/TwoColumnsNoHeader.csv"
             )
             {

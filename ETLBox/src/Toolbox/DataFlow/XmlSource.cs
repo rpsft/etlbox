@@ -1,9 +1,12 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ALE.ETLBox.src.Definitions.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using Newtonsoft.Json;
 
-namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     /// <summary>
     /// Reads data from a xml source. This can be any http resource or a file.
@@ -85,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
                 TOutput output;
                 if (TypeInfo.IsDynamic)
                 {
-                    string jsonText = JsonConvert.SerializeXNode(xmlElement);
+                    var jsonText = JsonConvert.SerializeXNode(xmlElement);
                     dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText);
                     output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
                 }

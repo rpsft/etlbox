@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.ConnectionStrings;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace TestShared.Helper
+namespace TestShared.src.Helper
 {
     public static class DatabaseHelper
     {

@@ -1,6 +1,9 @@
-using TestFlatFileConnectors.Helpers;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestFlatFileConnectors.src.Fixture;
+using TestFlatFileConnectors.src.Helpers;
 
-namespace TestFlatFileConnectors.JsonDestination
+namespace TestFlatFileConnectors.src.JsonDestination
 {
     public class JsonDestinationNullHandlingTests : FlatFileConnectorsTestBase
     {
@@ -17,7 +20,7 @@ namespace TestFlatFileConnectors.JsonDestination
         public void IgnoreWithObject()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -31,7 +34,7 @@ namespace TestFlatFileConnectors.JsonDestination
             };
 
             //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>(
+            var dest = new JsonDestination<MySimpleRow>(
                 "./IgnoreNullValues.json",
                 ResourceType.File
             );
@@ -50,7 +53,7 @@ namespace TestFlatFileConnectors.JsonDestination
         public void IgnoreWithStringArray()
         {
             //Arrange
-            MemorySource<string[]> source = new MemorySource<string[]>
+            var source = new MemorySource<string[]>
             {
                 DataAsList = new List<string[]>
                 {
@@ -64,7 +67,7 @@ namespace TestFlatFileConnectors.JsonDestination
             };
 
             //Act
-            JsonDestination<string[]> dest = new JsonDestination<string[]>(
+            var dest = new JsonDestination<string[]>(
                 "./IgnoreNullValuesStringArray.json",
                 ResourceType.File
             );

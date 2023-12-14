@@ -1,7 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.DataFlow.Type;
+using ALE.ETLBox.src.Toolbox.DataFlow;
+using TestDatabaseConnectors.src.Fixtures;
+using TestShared.src.SharedFixtures;
 
-namespace TestDatabaseConnectors.DBDestination
+namespace TestDatabaseConnectors.src.DBDestination
 {
     public class DbDestinationTests : DatabaseConnectorsTestBase
     {
@@ -29,19 +32,19 @@ namespace TestDatabaseConnectors.DBDestination
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source"
             );
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination",
                 identityColumnIndex: 2
             );
 
-            DbSource<string[]> source = new DbSource<string[]>(connection, "Source");
-            RowTransformation<string[], MyExtendedRow> trans = new RowTransformation<
+            var source = new DbSource<string[]>(connection, "Source");
+            var trans = new RowTransformation<
                 string[],
                 MyExtendedRow
             >(
@@ -56,7 +59,7 @@ namespace TestDatabaseConnectors.DBDestination
             );
 
             //Act
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(
+            var dest = new DbDestination<MyExtendedRow>(
                 connection,
                 "Destination"
             );

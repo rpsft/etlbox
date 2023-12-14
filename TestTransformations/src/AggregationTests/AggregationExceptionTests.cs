@@ -1,6 +1,6 @@
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestTransformations.AggregationTests
+namespace TestTransformations.src.AggregationTests
 {
     public class AggregationExceptionTests
     {
@@ -21,7 +21,7 @@ namespace TestTransformations.AggregationTests
         public void ExceptionInAggregationFunction()
         {
             //Arrange
-            MemorySource<MyRow> source = new MemorySource<MyRow>
+            var source = new MemorySource<MyRow>
             {
                 DataAsList = new List<MyRow>
                 {
@@ -30,11 +30,11 @@ namespace TestTransformations.AggregationTests
             };
 
             //Act
-            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
+            var agg = new Aggregation<MyRow, MyAggRow>(
                 (_, _) => throw new Exception("Test")
             );
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            var dest = new MemoryDestination<MyAggRow>();
 
             //Assert
             source.LinkTo(agg);
@@ -51,7 +51,7 @@ namespace TestTransformations.AggregationTests
         public void ExceptionInStoreKeyFunction()
         {
             //Arrange
-            MemorySource<MyRow> source = new MemorySource<MyRow>
+            var source = new MemorySource<MyRow>
             {
                 DataAsList = new List<MyRow>
                 {
@@ -65,13 +65,13 @@ namespace TestTransformations.AggregationTests
             };
 
             //Act
-            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
+            var agg = new Aggregation<MyRow, MyAggRow>(
                 (row, aggValue) => aggValue.AggValue += row.DetailValue,
                 row => row.ClassName,
                 (_, _) => throw new Exception("Test")
             );
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            var dest = new MemoryDestination<MyAggRow>();
 
             source.LinkTo(agg);
             agg.LinkTo(dest);

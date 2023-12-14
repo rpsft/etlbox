@@ -1,7 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 
-namespace ALE.ETLBox.Logging
+namespace ALE.ETLBox.src.Toolbox.Logging
 {
     /// <summary>
     /// Will set the table entry for current load process to aborted.
@@ -14,9 +16,9 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            QueryParameter cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
-            QueryParameter em = new QueryParameter("AbortMessage", "VARCHAR(100)", AbortMessage);
-            QueryParameter lpk = new QueryParameter("LoadProcessId", "BIGINT", LoadProcessId);
+            var cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
+            var em = new QueryParameter("AbortMessage", "VARCHAR(100)", AbortMessage);
+            var lpk = new QueryParameter("LoadProcessId", "BIGINT", LoadProcessId);
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,
