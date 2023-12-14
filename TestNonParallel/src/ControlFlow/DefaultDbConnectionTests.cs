@@ -2,7 +2,6 @@ using ALE.ETLBox.src.Definitions.Database;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 using ALE.ETLBox.src.Toolbox.DataFlow;
 using ALE.ETLBox.src.Toolbox.Logging;
-using ALE.ETLBoxTests.NonParallel.src;
 using ALE.ETLBoxTests.NonParallel.src.Fixtures;
 using EtlBox.Logging.Database;
 

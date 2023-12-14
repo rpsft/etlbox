@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.ClickHouse", "EtlBox
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.Database.Tests", "EtlBox.ClickHouse.Tests\EtlBox.Database.Tests.csproj", "{2EDA05B5-DE3B-46CF-9347-7DF90093E493}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.Logging.Database", "EtlBox.Configuration.NLog\EtlBox.Logging.Database.csproj", "{F6D9DC52-8C7E-433B-906C-40694E39C93A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.Logging.Database", "EtlBox.Logging.Database\EtlBox.Logging.Database.csproj", "{5289FF5A-E33D-4A49-B76D-D5AAECC5DE48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,10 +105,10 @@ Global
 		{2EDA05B5-DE3B-46CF-9347-7DF90093E493}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EDA05B5-DE3B-46CF-9347-7DF90093E493}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EDA05B5-DE3B-46CF-9347-7DF90093E493}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6D9DC52-8C7E-433B-906C-40694E39C93A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6D9DC52-8C7E-433B-906C-40694E39C93A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6D9DC52-8C7E-433B-906C-40694E39C93A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6D9DC52-8C7E-433B-906C-40694E39C93A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5289FF5A-E33D-4A49-B76D-D5AAECC5DE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5289FF5A-E33D-4A49-B76D-D5AAECC5DE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5289FF5A-E33D-4A49-B76D-D5AAECC5DE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5289FF5A-E33D-4A49-B76D-D5AAECC5DE48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
