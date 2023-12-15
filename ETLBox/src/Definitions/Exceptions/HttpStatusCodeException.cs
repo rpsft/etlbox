@@ -2,10 +2,16 @@ using System.Net;
 
 namespace ALE.ETLBox
 {
-    internal class HttpStatusCodeException(HttpStatusCode statusCode, string content) : Exception(content)
+    internal class HttpStatusCodeException: Exception
     {
-        public HttpStatusCode HttpCode { get; } = statusCode;
+        public HttpStatusCodeException(HttpStatusCode statusCode, string content) : base(content)
+        {
+            HttpCode = statusCode;
+            Content = content;
+        }
 
-        public string Content { get; } = content;
+        public HttpStatusCode HttpCode { get; }
+
+        public string Content { get; }
     }
 }
