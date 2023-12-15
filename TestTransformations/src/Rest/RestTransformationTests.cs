@@ -32,7 +32,7 @@ namespace TestTransformations.Rest
                 .Setup(x => x.InvokeAsync(
                     It.IsAny<string>(),
                     It.IsAny<HttpMethod>(),
-                    It.IsAny<(string Key, string Value)[]>(),
+                    It.IsAny<Dictionary<string,string>>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(() => @"{ ""jsonResponse"" : 100}");
 
@@ -49,8 +49,8 @@ namespace TestTransformations.Rest
                         ""OptInRelativeUrlTemplate"": ""/Optin/{0}/{1}/{2}""
                     }
                 }",
-                    Headers = new[] { ("header1", "testHeaderValue") },
-                    Method = HttpMethod.Get,
+                    Headers = new() { {"header1", "testHeaderValue"} },
+                    Method = "GET",
                     RetryCount = 2,
                     RetryInterval = 5
                 },
@@ -111,26 +111,20 @@ namespace TestTransformations.Rest
                                                         }}
                                                 }}
                                             </Body>
+                                            <Headers>
+                                                <header1>testHeaderValue</header1>
+                                                <header2>testHeaderValue2</header2>
+                                            </Headers>
+                                            <Method>
+                                                GET
+                                            </Method>
+                                            <RetryCount>
+                                                2
+                                            </RetryCount>
+                                            <RetryInterval>
+                                                5
+                                            </RetryInterval>
                                         </RestMethodInfo>
-                                        <Headers>
-                                            <Header>
-                                                <Key>header1</Key>
-                                                <Value>testHeaderValue</Value>
-                                            </Header>
-                                            <Header>
-                                                <Key>header2</Key>
-                                                <Value>testHeaderValue2</Value>
-                                            </Header>
-                                        </Headers>
-                                        <Method>
-                                            HttpMethod.Get
-                                        </Method>
-                                        <RetryCount>
-                                            2
-                                        </RetryCount>
-                                        <RetryInterval>
-                                            5
-                                        </RetryInterval>
                                         <ResultField>
                                             result
                                         </ResultField>
@@ -229,7 +223,7 @@ namespace TestTransformations.Rest
                     .Setup(x => x.InvokeAsync(
                         It.IsAny<string>(),
                         It.IsAny<HttpMethod>(),
-                        It.IsAny<(string Key, string Value)[]>(),
+                        It.IsAny<Dictionary<string,string>>(),
                         It.IsAny<string>()))
                     .ReturnsAsync(() => @"{ ""jsonResponse"" : 100}");
 

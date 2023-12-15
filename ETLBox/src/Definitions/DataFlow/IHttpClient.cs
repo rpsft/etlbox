@@ -4,6 +4,6 @@ namespace ALE.ETLBox.DataFlow
 {
     public interface IHttpClient: IDisposable 
     {
-        Task<string> InvokeAsync(string url, HttpMethod method, (string Key, string Value)[] headers, string body);
+        Task<string> InvokeAsync(string url, HttpMethod method, IDictionary<string,string> headers, string body);
     }
 }

@@ -1,5 +1,4 @@
-using System.Text;
-using System;
+using System.Net.Http;
 using System.Text.Json;
 using ALE.ETLBox.Helper;
 using DotLiquid;
@@ -45,6 +44,7 @@ namespace ALE.ETLBox.DataFlow
                 throw new ArgumentNullException(nameof(ResultField));
             }
 
+            var method = GetMethod(RestMethodInfo.Method);
             var templateUrl = Template.Parse(RestMethodInfo.Url);
             var url = templateUrl.Render(Hash.FromDictionary(input));
             var templateBody = Template.Parse(RestMethodInfo.Body);
@@ -56,7 +56,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 try
                 {
-                    var response = await httpClient.InvokeAsync(url, RestMethodInfo.Method, RestMethodInfo.Headers, body)
+                    var response = await httpClient.InvokeAsync(url, method, RestMethodInfo.Headers, body)
                         .ConfigureAwait(false);
 
                     var outputValue =
@@ -116,6 +116,21 @@ namespace ALE.ETLBox.DataFlow
             }
 
             throw new InvalidOperationException();
+        }
+
+        private static HttpMethod GetMethod(string method)
+        {
+            return method.ToUpperInvariant() switch
+            {
+                "GET" => HttpMethod.Get,
+                "PUT" => HttpMethod.Put,
+                "POST" => HttpMethod.Post,
+                "HEAD" => HttpMethod.Head,
+                "DELETE" => HttpMethod.Delete,
+                "OPTIONS" => HttpMethod.Options,
+                "TRACE" => HttpMethod.Trace,
+                _ => throw new ArgumentOutOfRangeException(nameof(method))
+            };
         }
 #nullable disable
     }

@@ -4,14 +4,14 @@ namespace ALE.ETLBox.DataFlow
 {
     public class SampleHttpClient : IHttpClient
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient = new ();
 
         public void Dispose()
         {
             _httpClient.Dispose();
         }
 
-        public async Task<string> InvokeAsync(string url, HttpMethod method, (string Key, string Value)[] headers, string body)
+        public async Task<string> InvokeAsync(string url, HttpMethod method, IDictionary<string,string> headers, string body)
         {
             using (var request = new HttpRequestMessage(method, url))
             {

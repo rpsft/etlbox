@@ -12,12 +12,12 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// массив заголовков
         /// </summary>
-        public (string Key, string Value)[] Headers { get; set; }
+        public Dictionary<string,string> Headers { get; set; }
 
         /// <summary>
         /// { GET, POST, PUT, DELETE }
         /// </summary>
-        public HttpMethod Method { get; set; }
+        public string Method { get; set; }
 
         /// <summary>
         /// шаблон тела запроса(формат Liquid)
