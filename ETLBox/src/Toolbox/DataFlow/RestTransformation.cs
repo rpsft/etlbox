@@ -25,7 +25,7 @@ namespace ALE.ETLBox.DataFlow
 
         public RestTransformation()
         {
-            TransformationFunc = (ExpandoObject source) => RestMethodAsync(source).Result;
+            TransformationFunc = source => RestMethodAsync(source).GetAwaiter().GetResult();
         }
 
         public RestTransformation(IHttpClient client) : this()
@@ -56,7 +56,8 @@ namespace ALE.ETLBox.DataFlow
             {
                 try
                 {
-                    var response = await httpClient.InvokeAsync(url, RestMethodInfo.Method, RestMethodInfo.Headers, body);
+                    var response = await httpClient.InvokeAsync(url, RestMethodInfo.Method, RestMethodInfo.Headers, body)
+                        .ConfigureAwait(false);
 
                     var outputValue =
                         (ExpandoObject?)
@@ -110,7 +111,8 @@ namespace ALE.ETLBox.DataFlow
                 }
                 retryCount++;
 
-                await Task.Delay(RestMethodInfo.RetryInterval * 1000);
+                await Task.Delay(RestMethodInfo.RetryInterval * 1000)
+                    .ConfigureAwait(false);
             }
 
             throw new InvalidOperationException();
