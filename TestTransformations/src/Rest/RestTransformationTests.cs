@@ -64,10 +64,10 @@ namespace TestTransformations.Rest
             source.Execute();
             destination.Wait();
 
-            var dest = destination.Data?.FirstOrDefault() as IDictionary<string,object>;
+            var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object>;
 
             dest.Should().NotBeNull();
-            var res = dest!["result"] as IDictionary<string,object>;
+            var res = dest!["result"] as IDictionary<string, object>;
 
             res.Should().NotBeNull();
             res!["jsonResponse"].Should().Be(100);
@@ -142,49 +142,6 @@ namespace TestTransformations.Rest
                             </CsvSource>
 		                </EtlDataFlowStep>";
 
-            //Arrange
-            /*dynamic data = new ExpandoObject();
-            data.urlRouteParameter = "Tom";
-            data.urlQueryParameter = 46;
-            data.port = 90210;*/
-
-            /*var httpClientMock = new Mock<IHttpClient>();
-            httpClientMock
-                .Setup(x => x.InvokeAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<HttpMethod>(),
-                    It.IsAny<(string Key, string Value)[]>(),
-                    It.IsAny<string>()))
-                .ReturnsAsync(() => @"{ ""jsonResponse"" : 100}");
-
-            RestTransformation trans1 = new RestTransformation(httpClientMock.Object)
-            {
-                RestMethodInfo = new RestMethodInfo
-                {
-                    Url = "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
-                    Body = @"{""PromoActionApiInternal"": {
-                        ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
-                        ""TeasersUrl"": ""/image/download/"",
-                        ""ImageDomainUrl"": ""http://localhost:{{port}}"",
-                        ""OptInCheckUrlDomainUrl"": ""http://localhost:{{port}}"",
-                        ""OptInRelativeUrlTemplate"": ""/Optin/{0}/{1}/{2}""
-                    }
-                }",
-                    Headers = new[] { ("header1", "testHeaderValue") },
-                    Method = HttpMethod.Get,
-                    RetryCount = 2,
-                    RetryInterval = 5
-                },
-                ResultField = "result"
-            };
-
-            //Act
-            source.LinkTo(trans1).LinkTo(destination);
-
-            //Assert
-            source.Execute();
-            destination.Wait();*/
-
             using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
             var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
             var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
@@ -195,10 +152,10 @@ namespace TestTransformations.Rest
 
             var destination = destinations.FirstOrDefault();
 
-            var dest = destination?.Data?.FirstOrDefault() as IDictionary<string,object>;
+            var dest = destination?.Data?.FirstOrDefault() as IDictionary<string, object>;
 
             dest.Should().NotBeNull();
-            var res = dest!["result"] as IDictionary<string,object>;
+            var res = dest!["result"] as IDictionary<string, object>;
 
             res.Should().NotBeNull();
             res!["jsonResponse"].Should().Be(100);
@@ -259,7 +216,7 @@ namespace TestTransformations.Rest
             }
         }
 
-        public class TestRestTransformation: RestTransformation
+        public class TestRestTransformation : RestTransformation
         {
             public TestRestTransformation() : base(CreateClient())
             {
