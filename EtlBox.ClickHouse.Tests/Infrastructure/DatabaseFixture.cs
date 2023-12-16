@@ -1,5 +1,5 @@
 using ALE.ETLBox.src.Definitions.ConnectionManager;
-using EtlBox.Database.Tests.Containers;
+using EtlBox.Database.Tests.Infrastructure.Containers;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
@@ -10,11 +10,19 @@ namespace EtlBox.Database.Tests.Infrastructure
     public class DatabaseFixture : IAsyncLifetime
     {
         private ClickHouseContainerManager _clickHouse = null!;
+        private SqlServerContainerManager _sqlServer = null!;
+        private PostgresContainerManager _postgres = null!;
 
         public async Task InitializeAsync()
         {
             _clickHouse = new ClickHouseContainerManager();
-            await _clickHouse.StartAsync();
+            _sqlServer = new SqlServerContainerManager();
+            _postgres = new PostgresContainerManager();
+            var t1 = _clickHouse.StartAsync();
+            var t2 = _sqlServer.StartAsync();
+            await _postgres.StartAsync().ConfigureAwait(false);
+            await t1.ConfigureAwait(false);
+            await t2.ConfigureAwait(false);
         }
 
         public IContainerManager GetContainer(ConnectionManagerType provider)
@@ -22,14 +30,23 @@ namespace EtlBox.Database.Tests.Infrastructure
             IContainerManager container = provider switch
             {
                 ConnectionManagerType.ClickHouse => _clickHouse,
+                ConnectionManagerType.SqlServer => _sqlServer,
+                ConnectionManagerType.Postgres => _postgres,
                 _ => throw new NotImplementedException($"Provider '{provider}' is not implemented"),
             };
             return container;
         }
 
+        public string QB(ConnectionManagerType provider) => GetContainer(provider).GetConnectionManager().QB;
+        public string QE(ConnectionManagerType provider) => GetContainer(provider).GetConnectionManager().QE;
+
         public async Task DisposeAsync()
         {
-            await _clickHouse.DisposeAsync();
+            var t1 = _clickHouse.DisposeAsync();
+            var t2 = _postgres.DisposeAsync();
+            await _sqlServer.DisposeAsync().ConfigureAwait(false);
+            await t1.ConfigureAwait(false);
+            await t2.ConfigureAwait(false);
         }
     }
 

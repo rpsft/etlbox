@@ -15,5 +15,9 @@ namespace EtlBox.Database.Tests.Infrastructure
             _logger = logger;
             _fixture = fixture;
         }
+
+        public string QB => _fixture.QB(_connectionType);
+
+        public string QE => _fixture.QE(_connectionType);
     }
 }

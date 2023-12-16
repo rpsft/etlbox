@@ -24,6 +24,8 @@ namespace ALE.ETLBox.src.Toolbox.Logging
 
         public void Execute()
         {
+            InitCreateTableTask();
+
             LoadProcessTable.CopyTaskProperties(this);
             LoadProcessTable.DisableLogging = true;
             LoadProcessTable.Create();
@@ -33,7 +35,6 @@ namespace ALE.ETLBox.src.Toolbox.Logging
         public CreateLoadProcessTableTask(string loadProcessTableName)
         {
             LoadProcessTableName = loadProcessTableName;
-            InitCreateTableTask();
         }
 
         public CreateLoadProcessTableTask(
@@ -49,7 +50,7 @@ namespace ALE.ETLBox.src.Toolbox.Logging
         {
             var lpColumns = new List<TableColumn>
             {
-                new("id", "BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
+                new("id", GetIdentityType(), allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("start_date", "DATETIME", allowNulls: false),
                 new("end_date", "DATETIME", allowNulls: true),
                 new("source", "NVARCHAR(20)", allowNulls: true),
@@ -63,9 +64,17 @@ namespace ALE.ETLBox.src.Toolbox.Logging
             };
             LoadProcessTable = new CreateTableTask(LoadProcessTableName, lpColumns)
             {
-                DisableLogging = true
+                DisableLogging = true,
+                Engine = "MergeTree()"
             };
         }
+
+        private string GetIdentityType()
+            => ConnectionType switch
+            {
+               ConnectionManagerType.ClickHouse => "UUID",
+                _ => "BIGINT"
+            };
 
         public static void Create(
             string loadProcessTableName = ControlFlow.ControlFlow.DefaultLoadProcessTableName

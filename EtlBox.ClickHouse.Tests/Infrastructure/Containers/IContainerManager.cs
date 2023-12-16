@@ -1,6 +1,7 @@
+using System.Data.Common;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 
-namespace EtlBox.Database.Tests.Containers
+namespace EtlBox.Database.Tests.Infrastructure.Containers
 {
     public interface IContainerManager : IAsyncDisposable
     {
@@ -38,6 +39,12 @@ namespace EtlBox.Database.Tests.Containers
         string GetConnectionString();
 
         /// <summary>
+        /// Получение билдера соединения
+        /// </summary>
+        /// <returns></returns>
+        DbConnectionStringBuilder GetConnectionBuilder();
+
+        /// <summary>
         /// Получение IConnectionManager по контейнеру
         /// </summary>
         /// <returns></returns>
@@ -47,7 +54,7 @@ namespace EtlBox.Database.Tests.Containers
         /// Установка текущей БД
         /// </summary>
         /// <param name="database"></param>
-        void SetDatabase(string database, string user = null, string password = null);
+        void SetDatabase(string database, string? user = null, string? password = null);
 
         /// <summary>
         /// Сбрасывает User и Password в исходное состояние (owner)
@@ -59,5 +66,11 @@ namespace EtlBox.Database.Tests.Containers
         /// </summary>
         /// <returns></returns>
         public Task StartAsync();
+
+        /// <summary>
+        /// Создать БД
+        /// </summary>
+        /// <param name="database"></param>
+        void CreateDatabase(string database);
     }
 }

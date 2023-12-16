@@ -47,17 +47,16 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
         public IList<string> IncludeColumns { get; set; }
         public bool IsUnique { get; set; }
         public bool IsClustered { get; set; }
-        public string Sql
+        public string Sql => ConnectionManager.ConnectionManagerType switch
         {
-            get
-            {
-                return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotedFullName} ON {TN.QuotedFullName}
-( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
-{IncludeSql}
-";
-            }
-        }
-
+            ConnectionManagerType.ClickHouse => $@"
+                ALTER TABLE {TN.QuotedFullName} 
+                    ADD INDEX {IN.QuotedFullName} GRANULARITY 1",
+            _ => $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotedFullName} 
+                    ON {TN.QuotedFullName} ( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
+                    {IncludeSql}"
+        };
+ 
         public CreateIndexTask() { }
 
         public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns)

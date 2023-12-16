@@ -60,7 +60,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
         private void LogStart()
         {
             if (!DisableLogging)
-                Logger.Info<CustomTask>(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "START",
@@ -73,7 +73,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
         private void LogFinish()
         {
             if (!DisableLogging)
-                Logger.Info<CustomTask>(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "END",

@@ -1,22 +1,28 @@
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Database;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TestControlFlowTasks.src.Fixtures;
+using EtlBox.Database.Tests.Infrastructure;
+using Xunit.Abstractions;
 
-namespace TestControlFlowTasks.src
+namespace EtlBox.Database.Tests.ControlFlow
 {
-    public class CreateIndexTaskTests : ControlFlowTestBase
+    [Collection(nameof(DatabaseCollection))]
+    public abstract class CreateIndexTaskTests : ControlFlowTestBase
     {
-        public CreateIndexTaskTests(ControlFlowDatabaseFixture fixture)
-            : base(fixture) { }
+        protected CreateIndexTaskTests(
+            DatabaseFixture fixture,
+            ConnectionManagerType connectionType,
+            ITestOutputHelper logger) : base(fixture, connectionType, logger)
+        {
+        }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
-        public void CreateIndex(IConnectionManager connection)
+        [Fact]
+        public void CreateIndex()
         {
             //Arrange
             const string indexName = "ix_IndexTest1";
             CreateTableTask.Create(
-                connection,
+                ConnectionManager,
                 "IndexCreationTable1",
                 new List<TableColumn>
                 {
@@ -27,7 +33,7 @@ namespace TestControlFlowTasks.src
 
             //Act
             CreateIndexTask.CreateOrRecreate(
-                connection,
+                ConnectionManager,
                 indexName,
                 "IndexCreationTable1",
                 new List<string> { "Key1", "Key2" }
@@ -35,17 +41,17 @@ namespace TestControlFlowTasks.src
 
             //Assert
             Assert.True(
-                IfIndexExistsTask.IsExisting(connection, "ix_IndexTest1", "IndexCreationTable1")
+                IfIndexExistsTask.IsExisting(ConnectionManager, "ix_IndexTest1", "IndexCreationTable1")
             );
         }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
-        public void ReCreateIndex(IConnectionManager connection)
+        [Fact]
+        public void ReCreateIndex()
         {
             //Arrange
             const string indexName = "ix_IndexTest2";
             CreateTableTask.Create(
-                connection,
+                 ConnectionManager,
                 "IndexCreationTable2",
                 new List<TableColumn>
                 {
@@ -54,7 +60,7 @@ namespace TestControlFlowTasks.src
                 }
             );
             CreateIndexTask.CreateOrRecreate(
-                connection,
+                ConnectionManager,
                 indexName,
                 "IndexCreationTable2",
                 new List<string> { "Key1", "Key2" }
@@ -62,7 +68,7 @@ namespace TestControlFlowTasks.src
 
             //Act
             CreateIndexTask.CreateOrRecreate(
-                connection,
+                ConnectionManager,
                 indexName,
                 "IndexCreationTable2",
                 new List<string> { "Key1", "Key2" }
@@ -70,7 +76,7 @@ namespace TestControlFlowTasks.src
 
             //Assert
             Assert.True(
-                IfIndexExistsTask.IsExisting(connection, "ix_IndexTest2", "IndexCreationTable2")
+                IfIndexExistsTask.IsExisting(ConnectionManager, "ix_IndexTest2", "IndexCreationTable2")
             );
         }
 
@@ -80,8 +86,8 @@ namespace TestControlFlowTasks.src
             //Arrange
             const string indexName = "ix_IndexTest3";
             CreateTableTask.Create(
-                SqlConnection,
-                "dbo.IndexCreation3",
+                ConnectionManager,
+                "IndexCreation3",
                 new List<TableColumn>
                 {
                     new("Key1", "INT", allowNulls: false),
@@ -92,16 +98,40 @@ namespace TestControlFlowTasks.src
             );
             //Act
             CreateIndexTask.CreateOrRecreate(
-                SqlConnection,
+                ConnectionManager,
                 indexName,
-                "dbo.IndexCreation3",
+                "IndexCreation3",
                 new List<string> { "Key1", "Key2" },
                 new List<string> { "Value1", "Value2" }
             );
             //Assert
             Assert.True(
-                IfIndexExistsTask.IsExisting(SqlConnection, "ix_IndexTest3", "dbo.IndexCreation3")
+                IfIndexExistsTask.IsExisting(ConnectionManager, "ix_IndexTest3", "IndexCreation3")
             );
+        }
+
+        public class SqlServer : CreateIndexTaskTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger)
+                : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : CreateIndexTaskTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger)
+                : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
+        }
+
+        public class ClickHouse : CreateIndexTaskTests
+        {
+            public ClickHouse(DatabaseFixture fixture, ITestOutputHelper logger)
+                : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
         }
     }
 }

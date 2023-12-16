@@ -7,7 +7,7 @@ using EtlBox.Database.Tests.Infrastructure;
 using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests
+namespace EtlBox.Database.Tests.ConnectionManager
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class ConnectionManagersTests : DatabaseTestBase
@@ -20,7 +20,7 @@ namespace EtlBox.Database.Tests
         }
 
         [Fact]
-        public void Test1()
+        public void SimpleDataFlowTest()
         {
             // Arrange
             var manager = _fixture.GetContainer(_connectionType).GetConnectionManager();
@@ -28,26 +28,39 @@ namespace EtlBox.Database.Tests
             {
                 Name = "Test",
                 Columns = new List<TableColumn>()
-                { 
+                {
                     new TableColumn()
                     {
                         Name = "Col1",
-                        DataType = "String",
+                        DataType = _connectionType switch
+                        {
+                            ConnectionManagerType.ClickHouse => "String",
+                            _ => "varchar(32)"
+                        },
+                        IsPrimaryKey = true,
                     },
                     new TableColumn()
                     {
                         Name = "Col2",
-                        DataType = "DateTime",
+                        DataType = _connectionType switch
+                        {
+                            ConnectionManagerType.Postgres => "timestamp",
+                            _ => "DateTime",
+                        }
                     }
                 },
-                Engine = "MergeTree()",
-                OrderBy = "Col1"
+                Engine = _connectionType == ConnectionManagerType.ClickHouse
+                    ? "MergeTree()"
+                    : null,
+                OrderBy = _connectionType == ConnectionManagerType.ClickHouse
+                    ? "Col1"
+                    : null,
             };
             CreateTableTask.Create(manager, table);
 
             //Act
             manager.Open();
-            var res = (ulong)manager.ExecuteScalar($"select count(*) from `{table.Name}`");
+            var res = manager.ExecuteScalar($"select count(*) from {QB}{table.Name}{QE}");
 
             //Assert
             res.Should().Be(0);
@@ -64,13 +77,27 @@ namespace EtlBox.Database.Tests
             source.Execute();
             dest.Wait();
 
-            res = (ulong)manager.ExecuteScalar($"select count(*) from `{table.Name}`");
+            res = manager.ExecuteScalar($"select count(*) from {QB}{table.Name}{QE}");
             res.Should().Be(1);
         }
 
         public class ClickHouse : ConnectionManagersTests
         {
             public ClickHouse(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.ClickHouse, logger)
+            {
+            }
+        }
+
+        public class SqlServer : ConnectionManagersTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : ConnectionManagersTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.Postgres, logger)
             {
             }
         }

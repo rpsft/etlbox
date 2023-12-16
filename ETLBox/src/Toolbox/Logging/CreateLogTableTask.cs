@@ -19,6 +19,8 @@ namespace ALE.ETLBox.src.Toolbox.Logging
 
         public void Execute()
         {
+            InitCreateTableTask();
+
             LogTable.CopyTaskProperties(this);
             LogTable.DisableLogging = true;
             LogTable.Create();
@@ -28,7 +30,6 @@ namespace ALE.ETLBox.src.Toolbox.Logging
         public CreateLogTableTask(string logTableName)
         {
             LogTableName = logTableName;
-            InitCreateTableTask();
         }
 
         public CreateLogTableTask(IConnectionManager connectionManager, string logTableName)
@@ -41,7 +42,7 @@ namespace ALE.ETLBox.src.Toolbox.Logging
         {
             var columns = new List<TableColumn>
             {
-                new("id", "BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
+                new("id", GetIdentityType(), allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("log_date", "DATETIME", allowNulls: false),
                 new("level", "VARCHAR(10)", allowNulls: true),
                 new("stage", "VARCHAR(20)", allowNulls: true),
@@ -52,8 +53,18 @@ namespace ALE.ETLBox.src.Toolbox.Logging
                 new("source", "VARCHAR(20)", allowNulls: true),
                 new("load_process_id", "BIGINT", allowNulls: true)
             };
-            LogTable = new CreateTableTask(LogTableName, columns);
+            LogTable = new CreateTableTask(LogTableName, columns)
+            { 
+                Engine = "MergeTree"
+            };
         }
+
+        private string GetIdentityType()
+          => ConnectionType switch
+          {
+              ConnectionManagerType.ClickHouse => "UUID",
+              _ => "BIGINT"
+          };
 
         public static void Create(
             string logTableName = ControlFlow.ControlFlow.DefaultLogTableName

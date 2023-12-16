@@ -242,7 +242,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
 
         private void LoggingStart(LogType logType = LogType.None)
         {
-            Logger.Info<DbTask>(
+            Logger.Info(
                 TaskName,
                 TaskType,
                 "START",
@@ -250,7 +250,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                 Toolbox.ControlFlow.ControlFlow.Stage,
                 Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
-            Logger.Debug<DbTask>(
+            Logger.Debug(
                 logType == LogType.Bulk ? "SQL Bulk Insert" : $"{Command}",
                 TaskType,
                 "RUN",
@@ -262,7 +262,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
 
         private void LoggingEnd(LogType logType = LogType.None)
         {
-            Logger.Info<DbTask>(
+            Logger.Info(
                 TaskName,
                 TaskType,
                 "END",
@@ -271,7 +271,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                 Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
-                Logger.Debug<DbTask>(
+                Logger.Debug(
                     $"Rows affected: {RowsAffected ?? 0}",
                     TaskType,
                     "RUN",

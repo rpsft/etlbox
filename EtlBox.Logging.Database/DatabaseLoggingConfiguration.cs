@@ -42,19 +42,23 @@ namespace EtlBox.Logging.Database
                 tableName = LogTable;
             }
 
-            ControlFlow.LoggerFactory = LoggerFactory.Create(builder =>
-            {
-                var newTarget = new CreateDatabaseTarget(
+            var newTarget = new CreateDatabaseTarget(
                     connectionManager,
                     tableName
                 ).GetNLogDatabaseTarget();
+            var config = new LoggingConfiguration();
+            config.AddRule(Map(minLogLevel), NLog.LogLevel.Error, newTarget);
 
-                var config = new LoggingConfiguration();
-
-                config.AddRule(Map(LogLevel.Information), NLog.LogLevel.Error, newTarget);
+            ControlFlow.LoggerFactory = LoggerFactory.Create(builder =>
+            {
                 builder
                     .ClearProviders()
-                    .AddNLog(config);
+                    .AddNLog(config, new NLogProviderOptions()
+                    {
+                        IncludeScopes = true,
+                        CaptureMessageParameters = true,
+                        ParseMessageTemplates = true,
+                    });
             });
         }
 

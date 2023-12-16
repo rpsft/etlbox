@@ -29,7 +29,7 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
             SourceBlock.LinkTo(target.TargetBlock);
             target.AddPredecessorCompletion(SourceBlock.Completion);
             if (!DisableLogging)
-                Logger.Debug<DataFlowLinker<TOutput>>(
+                Logger.Debug(
                     CallingTask.TaskName + $" was linked to: {target.TaskName}",
                     CallingTask.TaskType,
                     "LOG",
@@ -53,7 +53,7 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
             SourceBlock.LinkTo(target.TargetBlock, predicate);
             target.AddPredecessorCompletion(SourceBlock.Completion);
             if (!DisableLogging)
-                Logger.Debug<DataFlowLinker<TOutput>>(
+                Logger.Debug(
                     CallingTask.TaskName + $" was linked to (with predicate): {target.TaskName}!",
                     CallingTask.TaskType,
                     "LOG",
@@ -79,7 +79,7 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
             SourceBlock.LinkTo(target.TargetBlock, rowsToKeep);
             target.AddPredecessorCompletion(SourceBlock.Completion);
             if (!DisableLogging)
-                Logger.Debug<DataFlowLinker<TOutput>>(
+                Logger.Debug(
                     CallingTask.TaskName + $" was linked to (with predicate): {target.TaskName}!",
                     CallingTask.TaskType,
                     "LOG",
@@ -92,7 +92,7 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
             SourceBlock.LinkTo(voidTarget.TargetBlock, rowsIntoVoid);
             voidTarget.AddPredecessorCompletion(SourceBlock.Completion);
             if (!DisableLogging)
-                Logger.Debug<DataFlowLinker<TOutput>>(
+                Logger.Debug(
                     CallingTask.TaskName
                         + " was also linked to: VoidDestination to ignore certain rows!",
                     CallingTask.TaskType,

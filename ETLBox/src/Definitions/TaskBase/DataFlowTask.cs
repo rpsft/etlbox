@@ -12,8 +12,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
         {
             get
             {
-                return HasLoggingThresholdRows
-                    ? LoggingThresholdRows
+                return Toolbox.DataFlow.DataFlow.HasLoggingThresholdRows
+                    ? Toolbox.DataFlow.DataFlow.LoggingThresholdRows
                     : _loggingThresholdRows;
             }
             set { _loggingThresholdRows = value; }
@@ -27,7 +27,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
         protected void LogStart()
         {
             if (!DisableLogging)
-                Logger.Info<DataFlowTask>(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "START",
@@ -40,7 +40,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
         protected void LogFinish()
         {
             if (!DisableLogging && HasLoggingThresholdRows)
-                Logger.Info<DataFlowTask>(
+                Logger.Info(
                     TaskName + $" processed {ProgressCount} records in total.",
                     TaskType,
                     "LOG",
@@ -49,7 +49,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                     Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             if (!DisableLogging)
-                Logger.Info<DataFlowTask>(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "END",
@@ -71,7 +71,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                 return;
             }
 
-            Logger.Info<DataFlowTask>(
+            Logger.Info(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",
@@ -94,7 +94,7 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                 return;
             }
 
-            Logger.Info<DataFlowTask>(
+            Logger.Info(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",

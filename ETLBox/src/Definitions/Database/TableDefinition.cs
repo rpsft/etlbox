@@ -1,8 +1,10 @@
+using System.Linq;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Exceptions;
 using ALE.ETLBox.src.Helper;
 using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.src.Toolbox.Logging;
 
 namespace ALE.ETLBox.src.Definitions.Database
 {
@@ -103,10 +105,7 @@ namespace ALE.ETLBox.src.Definitions.Database
                 name => curCol.Name = name.ToString(),
                 type => curCol.DataType = type.ToString(),
                 primaryKey => curCol.IsPrimaryKey = Convert.ToBoolean(primaryKey),
-                defaultValue =>
-                    curCol.DefaultValue = defaultValue
-                        ?.ToString()
-                        .Substring(2, defaultValue.ToString().Length - 4)
+                defaultValue =>curCol.DefaultValue = defaultValue?.ToString()
             )
             {
                 DisableLogging = true,
@@ -141,6 +140,7 @@ SELECT  cols.name
      , defconstr.definition AS default_value
      , cols.collation_name
      , compCol.definition AS computed_column_definition
+     , comment.value AS commet
 FROM sys.columns cols
 INNER JOIN (
     SELECT name, type, object_id, schema_id FROM sys.tables 
@@ -166,6 +166,7 @@ LEFT JOIN sys.default_constraints defconstr
     AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
     ON compCol.object_id = cols.object_id
+{GetComment()}
 WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tn.UnquotedFullName}' OR  tbl.name = '{tn.UnquotedFullName}' )
     AND tbl.type IN ('U','V')
     AND tpes.name <> 'sysname'
@@ -194,7 +195,8 @@ ORDER BY cols.column_id
                 computedColumnDefinition =>
                     curCol.ComputedColumn = computedColumnDefinition
                         ?.ToString()
-                        .Substring(1, computedColumnDefinition.ToString().Length - 2)
+                        .Substring(1, computedColumnDefinition.ToString().Length - 2),
+                comment => curCol.Comment = comment?.ToString()
             )
             {
                 DisableLogging = true,
@@ -203,6 +205,9 @@ ORDER BY cols.column_id
             readMetaSql.ExecuteReader();
             return result;
         }
+
+        private static string GetComment()
+            => $"outer apply fn_listextendedproperty('ColumnDescription', 'schema', sc.name, 'table', tbl.name, 'column', cols.name) as comment";
 
         private static TableDefinition ReadTableDefinitionFromSQLite(
             IConnectionManager connection,
@@ -339,6 +344,10 @@ END AS ""datatype""
 , cols.column_default
 , cols.collation_name
 , cols.generation_expression
+, pgd.description
+, cols.is_identity
+, cols.identity_start
+, cols.identity_increment
 FROM INFORMATION_SCHEMA.COLUMNS cols
 INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -357,6 +366,12 @@ LEFT JOIN information_schema.constraint_column_usage tccu
     AND tccu.constraint_schema = tc.constraint_schema
     AND tccu.constraint_catalog = tc.constraint_catalog
     AND cols.column_name = tccu.column_name
+left join pg_catalog.pg_statio_all_tables as st
+    on st.schemaname = cols.table_schema
+    and st.relname = cols.table_name
+left join pg_catalog.pg_description pgd
+    on pgd.objoid = st.relid
+    and  pgd.objsubid = cols.ordinal_position
 WHERE(cols.table_name = '{tn.UnquotedFullName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tn.UnquotedFullName}')
     AND cols.table_catalog = CURRENT_DATABASE()
 ORDER BY cols.ordinal_position
@@ -380,7 +395,11 @@ ORDER BY cols.ordinal_position
                         ?.ToString()
                         .ReplaceIgnoreCase("::character varying", ""),
                 collationName => curCol.Collation = collationName?.ToString(),
-                generationExpression => curCol.ComputedColumn = generationExpression?.ToString()
+                generationExpression => curCol.ComputedColumn = generationExpression?.ToString(),
+                comment => curCol.Comment = comment?.ToString(),
+                is_identity => curCol.IsIdentity = ParseBoolean(is_identity),
+                identity_start => curCol.IdentitySeed = int.TryParse(identity_start?.ToString(), out int start) ? start : null,
+                identity_increment => curCol.IdentityIncrement = int.TryParse(identity_increment?.ToString(), out int inc) ? inc : null
             )
             {
                 DisableLogging = true,
@@ -388,6 +407,15 @@ ORDER BY cols.ordinal_position
             };
             readMetaSql.ExecuteReader();
             return result;
+        }
+
+        private static bool ParseBoolean(object value)
+        {
+            if (value is null)
+            {
+                return false;
+            }
+            return new[] { "yes", "true", "on", "1", "да" }.Contains(value.ToString().ToLower());
         }
 
         private static TableDefinition ReadTableDefinitionFromAccess(

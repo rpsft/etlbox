@@ -11,5 +11,4 @@ if ( $LastExitCode -ne 0 ) { exit $LastExitCode }
 
 & docker run --rm -d -p 8123:8123 --name clickhouse-container 
 	-e CLICKHOUSE_USER=clickhouse \
-    -e CLICKHOUSE_PASSWORD=Qwe123456 \
-	--privileged clickhouse-server
+    -e CLICKHOUSE_PASSWORD=Qwe123456

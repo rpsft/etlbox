@@ -106,18 +106,19 @@ namespace ALE.ETLBox.src.Toolbox.Logging
             LoadProcessKey = loadProcessKey;
         }
 
-        public static string GetJSON() => new GetLogAsJSONTask().Create().JSON;
+        public static string GetJSON() 
+            => new GetLogAsJSONTask().Create().JSON;
 
-        public static string GetJSON(long? loadProcessKey) =>
-            new GetLogAsJSONTask(loadProcessKey).Create().JSON;
+        public static string GetJSON(long? loadProcessKey) 
+            => new GetLogAsJSONTask(loadProcessKey).Create().JSON;
 
-        public static string GetJSON(IConnectionManager connectionManager) =>
-            new GetLogAsJSONTask { ConnectionManager = connectionManager }
+        public static string GetJSON(IConnectionManager connectionManager) 
+            => new GetLogAsJSONTask { ConnectionManager = connectionManager }
                 .Create()
                 .JSON;
 
-        public static string GetJSON(IConnectionManager connectionManager, int? loadProcessKey) =>
-            new GetLogAsJSONTask(loadProcessKey) { ConnectionManager = connectionManager }
+        public static string GetJSON(IConnectionManager connectionManager, int? loadProcessKey) 
+            => new GetLogAsJSONTask(loadProcessKey) { ConnectionManager = connectionManager }
                 .Create()
                 .JSON;
     }

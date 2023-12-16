@@ -1,7 +1,7 @@
 using ALE.ETLBox.src.Definitions.Exceptions;
 using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace TestConnectionManager.src.ConnectionManager
+namespace EtlBox.Database.Tests.ConnectionManager
 {
     public class NoConnectionManagerTests
     {

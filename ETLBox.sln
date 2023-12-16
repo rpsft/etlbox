@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOtherConnectors", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelper", "TestHelper\TestHelper.csproj", "{FE99A768-FC42-4533-AC94-BE2F61A17E00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "TestConnectionManager\TestConnectionManager.csproj", "{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{C43B653D-EE88-496B-999E-5053A3478ADC}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -89,10 +87,6 @@ Global
 		{FE99A768-FC42-4533-AC94-BE2F61A17E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE99A768-FC42-4533-AC94-BE2F61A17E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE99A768-FC42-4533-AC94-BE2F61A17E00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C56A4910-3056-45D3-8F71-E8D7A8975BA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C56A4910-3056-45D3-8F71-E8D7A8975BA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56A4910-3056-45D3-8F71-E8D7A8975BA2}.Release|Any CPU.ActiveCfg = Release|Any CPU

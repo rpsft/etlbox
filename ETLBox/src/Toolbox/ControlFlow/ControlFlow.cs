@@ -1,9 +1,9 @@
+using System.Collections;
 using System.Linq;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Exceptions;
 using ALE.ETLBox.src.Definitions.Logging;
 using ALE.ETLBox.src.Toolbox.ControlFlow;
-using ExcelDataReader.Log.Logger;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -88,25 +88,107 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow
             Stage = null;
         }
 
-        public static void Trace<T>(this ILogger logger, params object[] args)
-            => logger.Log<T>(LogLevel.Trace, args);
+        public static void Trace(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Trace, message, type, action, hash, stage, loadProcessKey);
 
-        public static void Debug<T>(this ILogger logger, params object[] args)
-            => logger.Log<T>(LogLevel.Debug, args);
+        public static void Debug(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Debug, message, type, action, hash, stage, loadProcessKey);
 
-        public static void Info<T>(this ILogger logger, params object[] args)
-            => logger.Log<T>(LogLevel.Information, args);
+        public static void Info(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Information, message, type, action, hash, stage, loadProcessKey);
 
-        public static void Warn<T>(this ILogger logger, params object[] args)
-            => logger.Log<T>(LogLevel.Warning, args);
+        public static void Warn(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Warning, message, type, action, hash, stage, loadProcessKey);
 
-        public static void Error<T>(this ILogger logger, params object[] args)
-            => logger.Log<T>(LogLevel.Error, args);
+        public static void Error(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Error, message, type, action, hash, stage, loadProcessKey);
 
-        private static void Log<T>(this ILogger logger, LogLevel logLevel, params object[] args)
+        private static void WriteLog(
+            this ILogger logger,
+            LogLevel logLevel,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
         {
-            var infoFormat = string.Join(" ", args.Select((a, i) => $"{i}"));
-            logger.Log(logLevel, infoFormat, args);
+            using (logger.BeginScope("ETL"))
+            {
+                logger.Log(logLevel,
+                    new EventId(0, "ETL"),
+                    new MyLogEvent(message)
+                        .WithProperty("Type", type)
+                        .WithProperty("Action", action)
+                        .WithProperty("Hash", hash)
+                        .WithProperty("Stage", stage)
+                        .WithProperty("LoadProcessKey", loadProcessKey),
+                    (Exception)null,
+                    MyLogEvent.Formatter);
+            }
         }
     }
+
+    public class MyLogEvent : IEnumerable<KeyValuePair<string, object>>
+    {
+        List<KeyValuePair<string, object>> _properties = new List<KeyValuePair<string, object>>();
+
+        public string Message { get; }
+
+        public MyLogEvent(string message)
+        {
+            Message = message;
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return _properties.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+
+        public MyLogEvent WithProperty(string name, object value)
+        {
+            _properties.Add(new KeyValuePair<string, object>(name, value));
+            return this;
+        }
+
+        public static Func<MyLogEvent, Exception, string> Formatter { get; } = (l, e) => l.Message;
+    }
 }
+

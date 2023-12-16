@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ClickHouse.Ado;
 using DotNet.Testcontainers.Containers;
@@ -6,7 +7,7 @@ using EtlBox.ClickHouse.ConnectionManager;
 using EtlBox.ClickHouse.ConnectionStrings;
 using Testcontainers.ClickHouse;
 
-namespace EtlBox.Database.Tests.Containers
+namespace EtlBox.Database.Tests.Infrastructure.Containers
 {
     public class ClickHouseContainerManager : IContainerManager
     {
@@ -55,7 +56,7 @@ namespace EtlBox.Database.Tests.Containers
 
         public string GetConnectionString() => GetConnectionBuilder().ConnectionString;
 
-        public ClickHouseConnectionStringBuilder GetConnectionBuilder()
+        public DbConnectionStringBuilder GetConnectionBuilder()
         {
             var builder = new ClickHouseConnectionStringBuilder();
             builder.Host = Container.Hostname;
@@ -94,5 +95,11 @@ namespace EtlBox.Database.Tests.Containers
 
         private IDbConnection GetConnection()
             => new ClickHouseConnection(GetConnectionString());
+
+        public void CreateDatabase(string database)
+        {
+            ExecuteCommand($"create database `{database}`");
+            _database = database;
+        }
     }
 }

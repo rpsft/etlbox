@@ -67,15 +67,15 @@ SELECT {LogDate}
             var dbTarget = new DatabaseTarget();
             AddParameter(dbTarget, "LogDate", @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff}");
             AddParameter(dbTarget, "Level", @"${level}");
-            AddParameter(dbTarget, "Stage", @"${etllog:LogType=Stage}");
-            AddParameter(dbTarget, "Message", @"${etllog}");
-            AddParameter(dbTarget, "Type", @"${etllog:LogType=Type}");
-            AddParameter(dbTarget, "Action", @"${etllog:LogType=Action}");
-            AddParameter(dbTarget, "Hash", @"${etllog:LogType=Hash}");
-            AddParameter(dbTarget, "LoadProcessKey", @"${etllog:LogType=LoadProcessKey}");
-            AddParameter(dbTarget, "Logger", @"${logger}");
+            AddParameter(dbTarget, "Stage", @"${event-properties:item=Stage}");
+            AddParameter(dbTarget, "Message", @"${message}");
+            AddParameter(dbTarget, "Type", @"${event-properties:item=Type}");
+            AddParameter(dbTarget, "Action", @"${event-properties:item=Action}");
+            AddParameter(dbTarget, "Hash", @"${event-properties:item=Hash}");
+            AddParameter(dbTarget, "LoadProcessKey", @"${event-properties:item=LoadProcessKey}");
+            AddParameter(dbTarget, "Logger", @"ETL");
 
-            dbTarget.CommandText = new SimpleLayout(CommandText);
+            dbTarget.CommandText = CommandText; // new SimpleLayout(CommandText);
             dbTarget.DBProvider = ConnectionManager.ConnectionManagerType switch
             {
                 ConnectionManagerType.Postgres => "Npgsql.NpgsqlConnection, Npgsql",
@@ -84,6 +84,8 @@ SELECT {LogDate}
                     => "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite",
                 ConnectionManagerType.SqlServer
                     => "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient",
+                ConnectionManagerType.ClickHouse
+                    => "ClickHouse.Ado.ClickHouseConnection, ClickHouse.Ado",
                 _ => throw new NotSupportedException("Only SQL fatabases are supported for logs")
             };
             dbTarget.ConnectionString = ConnectionManager.ConnectionString.Value;
