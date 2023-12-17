@@ -8,6 +8,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow;
 
 namespace TestHelper.Models
 {

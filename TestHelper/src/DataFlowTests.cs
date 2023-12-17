@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Toolbox.DataFlow;
 using FluentAssertions;
 using TestHelper.Models;
 
