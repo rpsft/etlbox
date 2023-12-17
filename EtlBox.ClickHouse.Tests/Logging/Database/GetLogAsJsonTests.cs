@@ -169,6 +169,9 @@ namespace EtlBox.Database.Tests.Logging.Database
             }
         }
 
+        /* 
+        // В ClickHouse нет автоинкремента. Можно сделать default UUID, но для этого переделывать 
+        // тип автоинкремента таблицы long => Guid. Но сделать можно.
         public class ClickHouse : GetLogAsJsonTests
         {
             public ClickHouse(DatabaseFixture fixture, ITestOutputHelper logger)
@@ -176,5 +179,6 @@ namespace EtlBox.Database.Tests.Logging.Database
             {
             }
         }
+        //*/
     }
 }

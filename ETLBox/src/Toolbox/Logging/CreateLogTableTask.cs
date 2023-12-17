@@ -53,10 +53,7 @@ namespace ALE.ETLBox.src.Toolbox.Logging
                 new("source", "VARCHAR(20)", allowNulls: true),
                 new("load_process_id", "BIGINT", allowNulls: true)
             };
-            LogTable = new CreateTableTask(LogTableName, columns)
-            { 
-                Engine = "MergeTree"
-            };
+            LogTable = new CreateTableTask(LogTableName, columns);
         }
 
         private string GetIdentityType()

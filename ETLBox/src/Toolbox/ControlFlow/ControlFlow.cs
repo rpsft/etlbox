@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Linq;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Exceptions;
 using ALE.ETLBox.src.Definitions.Logging;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

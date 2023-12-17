@@ -70,7 +70,9 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 {CreateFinallyComments(TableDefinition)}";
 
         private string AddEngine()
-            => !string.IsNullOrEmpty(TableDefinition?.Engine) ? $"ENGINE = {TableDefinition?.Engine}" : "";
+            => ConnectionType == ConnectionManagerType.ClickHouse           
+                ? $"ENGINE = {TableDefinition?.Engine ?? "MergeTree()"}" 
+                : "";
         
 
         public CreateTableTask() { }
@@ -139,6 +141,9 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 
         private string PrimaryKeySql => CreatePrimaryKeyConstraint();
 
+        /// <summary>
+        ///  Тoлько для ClickHouse
+        /// </summary>
         public string Engine
         { 
             get => TableDefinition?.Engine;
@@ -272,7 +277,7 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
         @level0type = N'SCHEMA', 
         @level0name = N'{GetSchema()}', 
         @level1type = N'TABLE', 
-        @level1name = N'{table.Name}', 
+        @level1name = N'{TN.UnquotedObjectName}', 
         @level2type = N'COLUMN', 
         @level2name = N'{c.Name}';
     ")),
@@ -284,12 +289,11 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
 
         private string GetSchema()
         {
-            var ind = TableDefinition.Name.IndexOf('.');
-            if (ind <= 0)
+            if (string.IsNullOrEmpty(TN.UnquotedSchemaName))
             {
                 return "dbo";
             }
-            return TableDefinition.Name.Remove(ind);
+            return TN.UnquotedSchemaName;
         }
 
         private static string SetQuotesIfString(string value)

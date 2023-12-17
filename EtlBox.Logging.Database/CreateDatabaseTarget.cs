@@ -39,19 +39,23 @@ SELECT {LogDate}
                     ConnectionManagerType.SqlServer
                     or ConnectionManagerType.MySql
                         => "CAST(@LogDate AS DATETIME)",
-                    ConnectionManagerType.Postgres => "CAST(@LogDate AS TIMESTAMP)",
+                    ConnectionManagerType.Postgres => "@LogDate::TIMESTAMP",
                     _ => "@LogDate"
                 };
             }
         }
-        public string Varchar =>
-            ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql
-                ? "CHAR"
-                : "VARCHAR";
-        public string Int =>
-            ConnectionManager.ConnectionManagerType == ConnectionManagerType.MySql
-                ? "UNSIGNED"
-                : "INT";
+        public string Varchar => ConnectionManager.ConnectionManagerType switch
+        {
+            ConnectionManagerType.MySql => "CHAR",
+            _ => "VARCHAR"
+        };
+
+        public string Int => ConnectionManager.ConnectionManagerType switch
+        {
+            ConnectionManagerType.MySql => "UNSIGNED",
+            ConnectionManagerType.ClickHouse => "Nullable(INT)",
+            _ => "INT"
+        };
 
         public IConnectionManager ConnectionManager { get; set; }
         public string LogTableName { get; set; }
@@ -65,7 +69,7 @@ SELECT {LogDate}
         public DatabaseTarget GetNLogDatabaseTarget()
         {
             var dbTarget = new DatabaseTarget();
-            AddParameter(dbTarget, "LogDate", @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff}");
+            AddParameter(dbTarget, "LogDate", @"${date:format=yyyy-MM-dd HH\:mm\:ss}");
             AddParameter(dbTarget, "Level", @"${level}");
             AddParameter(dbTarget, "Stage", @"${event-properties:item=Stage}");
             AddParameter(dbTarget, "Message", @"${message}");
@@ -75,7 +79,7 @@ SELECT {LogDate}
             AddParameter(dbTarget, "LoadProcessKey", @"${event-properties:item=LoadProcessKey}");
             AddParameter(dbTarget, "Logger", @"ETL");
 
-            dbTarget.CommandText = CommandText; // new SimpleLayout(CommandText);
+            dbTarget.CommandText = new SimpleLayout(CommandText);
             dbTarget.DBProvider = ConnectionManager.ConnectionManagerType switch
             {
                 ConnectionManagerType.Postgres => "Npgsql.NpgsqlConnection, Npgsql",

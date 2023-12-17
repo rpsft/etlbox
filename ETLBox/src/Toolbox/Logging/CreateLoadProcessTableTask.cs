@@ -64,8 +64,7 @@ namespace ALE.ETLBox.src.Toolbox.Logging
             };
             LoadProcessTable = new CreateTableTask(LoadProcessTableName, lpColumns)
             {
-                DisableLogging = true,
-                Engine = "MergeTree()"
+                DisableLogging = true
             };
         }
 

@@ -42,6 +42,9 @@ namespace ALE.ETLBox.src.Definitions.Database
             Columns = columns;
         }
 
+        /// <summary>
+        /// Только для ClickHouse
+        /// </summary>
         public string Engine { get; set; }
 
         public string OrderBy { get; set; }

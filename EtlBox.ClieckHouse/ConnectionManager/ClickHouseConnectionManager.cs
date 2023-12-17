@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Database;
@@ -47,7 +49,7 @@ namespace EtlBox.ClickHouse.ConnectionManager
             var csvData = new StringBuilder();
             foreach (var row in data.Rows)
             {
-                var rowData = string.Join(Configuration.Delimiter, row);
+                var rowData = string.Join(Configuration.Delimiter, row.Select(r => GetValue(r)));
                 csvData.AppendLine(rowData);
             }
 
@@ -62,6 +64,24 @@ namespace EtlBox.ClickHouse.ConnectionManager
             {csvData}";
 
             cmd.ExecuteNonQuery();
+        }
+
+        private string? GetValue(object r)
+        {
+            if (r == null)
+            {
+                return "";
+            }
+            if (r is DateTime)
+            {
+                return $"{r:yyyy-MM-dd HH:mm:ss}";
+            }
+            if (r is bool)
+            {
+                return (bool)r ? "1" : "0";
+            }
+
+            return r?.ToString();
         }
 
         public override void PrepareBulkInsert(string tableName)

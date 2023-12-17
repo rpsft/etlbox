@@ -48,13 +48,7 @@ namespace EtlBox.Database.Tests.ConnectionManager
                             _ => "DateTime",
                         }
                     }
-                },
-                Engine = _connectionType == ConnectionManagerType.ClickHouse
-                    ? "MergeTree()"
-                    : null,
-                OrderBy = _connectionType == ConnectionManagerType.ClickHouse
-                    ? "Col1"
-                    : null,
+                }
             };
             CreateTableTask.Create(manager, table);
 
