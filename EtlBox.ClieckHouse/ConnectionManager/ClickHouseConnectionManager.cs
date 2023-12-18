@@ -41,8 +41,8 @@ namespace EtlBox.ClickHouse.ConnectionManager
             Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
         }
 
-        private TableDefinition DestTableDef { get; set; }
-        private Dictionary<string, TableColumn> DestinationColumns { get; set; }
+        private TableDefinition DestTableDef { get; set; } = null!;
+        private Dictionary<string, TableColumn> DestinationColumns { get; set; } = null!;
 
         public override void BulkInsert(ITableData data, string tableName)
         {

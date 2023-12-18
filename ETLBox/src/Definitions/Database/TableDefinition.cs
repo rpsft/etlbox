@@ -49,6 +49,8 @@ namespace ALE.ETLBox.src.Definitions.Database
 
         public string OrderBy { get; set; }
 
+        private static readonly string[] sourceArray = new[] { "yes", "true", "on", "1", "да" };
+
         public void CreateTable(IConnectionManager connectionManager) =>
             CreateTableTask.Create(connectionManager, this);
 
@@ -418,7 +420,7 @@ ORDER BY cols.ordinal_position
             {
                 return false;
             }
-            return new[] { "yes", "true", "on", "1", "да" }.Contains(value.ToString().ToLower());
+            return sourceArray.Contains(value.ToString().ToLower());
         }
 
         private static TableDefinition ReadTableDefinitionFromAccess(

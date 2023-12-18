@@ -164,7 +164,7 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow
 
     public class MyLogEvent : IEnumerable<KeyValuePair<string, object>>
     {
-        List<KeyValuePair<string, object>> _properties = new List<KeyValuePair<string, object>>();
+        readonly List<KeyValuePair<string, object>> _properties = new List<KeyValuePair<string, object>>();
 
         public string Message { get; }
 

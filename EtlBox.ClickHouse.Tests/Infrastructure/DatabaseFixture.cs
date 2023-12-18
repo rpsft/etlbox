@@ -37,8 +37,12 @@ namespace EtlBox.Database.Tests.Infrastructure
             return container;
         }
 
-        public string QB(ConnectionManagerType provider) => GetContainer(provider).GetConnectionManager().QB;
-        public string QE(ConnectionManagerType provider) => GetContainer(provider).GetConnectionManager().QE;
+        public IConnectionManager GetConnectionManager(ConnectionManagerType provider)
+            => GetContainer(provider).GetConnectionManager();
+
+        public string QB(ConnectionManagerType provider) => GetConnectionManager(provider).QB;
+
+        public string QE(ConnectionManagerType provider) => GetConnectionManager(provider).QE;
 
         public async Task DisposeAsync()
         {

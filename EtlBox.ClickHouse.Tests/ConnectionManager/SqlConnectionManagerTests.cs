@@ -2,9 +2,9 @@ using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.ConnectionStrings;
 using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using EtlBox.Database.Tests.Attributes;
 using EtlBox.Database.Tests.Infrastructure;
 using Microsoft.Data.SqlClient;
-using TestShared.src.Attributes;
 using Xunit.Abstractions;
 
 namespace EtlBox.Database.Tests.ConnectionManager

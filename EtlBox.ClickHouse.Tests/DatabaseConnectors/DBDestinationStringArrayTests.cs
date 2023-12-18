@@ -1,30 +1,37 @@
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using EtlBox.Database.Tests.Infrastructure;
+using EtlBox.Database.Tests.SharedFixtures;
+using Xunit.Abstractions;
 
-namespace TestDatabaseConnectors.src.DBDestination
+namespace EtlBox.Database.Tests.DatabaseConnectors
 {
-    public class DbDestinationStringArrayTests : DatabaseConnectorsTestBase
+    [Collection(nameof(DatabaseCollection))]
+
+    public abstract class DbDestinationStringArrayTests : DatabaseTestBase
     {
-        public DbDestinationStringArrayTests(DatabaseSourceDestinationFixture fixture)
-            : base(fixture) { }
+        private readonly IConnectionManager _connection;
 
-        public static IEnumerable<object[]> Connections => AllSqlConnections;
+        protected DbDestinationStringArrayTests(
+            DatabaseFixture fixture,
+            ConnectionManagerType connectionType,
+            ITestOutputHelper logger) : base(fixture, connectionType, logger)
+        {
+            _connection = _fixture.GetConnectionManager(_connectionType);
+        }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void WithSqlNotMatchingColumns(IConnectionManager connection)
+        [Fact]
+        public void WithSqlNotMatchingColumns()
         {
             //Arrange
             var s2C = new TwoColumnsTableFixture(
-                connection,
+                _connection,
                 "SourceNotMatchingCols"
             );
             s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
-                connection,
+                _connection,
                 "Create destination table",
                 $@"CREATE TABLE destination_notmatchingcols
                 ( col3 VARCHAR(100) NULL
@@ -37,10 +44,10 @@ namespace TestDatabaseConnectors.src.DBDestination
             {
                 Sql =
                     $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceNotMatchingCols{s2C.QE}",
-                ConnectionManager = connection
+                ConnectionManager = _connection
             };
             var dest = new DbDestination<string[]>(
-                connection,
+                _connection,
                 "destination_notmatchingcols"
             );
             source.LinkTo(dest);
@@ -48,11 +55,11 @@ namespace TestDatabaseConnectors.src.DBDestination
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "destination_notmatchingcols"));
+            Assert.Equal(3, RowCountTask.Count(_connection, "destination_notmatchingcols"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    _connection,
                     "destination_notmatchingcols",
                     "col3 = '1' AND col4='Test1'"
                 )
@@ -60,7 +67,7 @@ namespace TestDatabaseConnectors.src.DBDestination
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    _connection,
                     "destination_notmatchingcols",
                     "col3 = '2' AND col4='Test2'"
                 )
@@ -68,30 +75,30 @@ namespace TestDatabaseConnectors.src.DBDestination
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    _connection,
                     "destination_notmatchingcols",
                     "col3 = '3' AND col4='Test3'"
                 )
             );
         }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void WithLessColumnsInDestination(IConnectionManager connection)
+        [Fact]
+        public void WithLessColumnsInDestination()
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
+            var s2C = new TwoColumnsTableFixture(_connection, "SourceTwoColumns");
             s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
-                connection,
+                _connection,
                 "Create destination table",
                 @"CREATE TABLE destination_onecolumn
                 (colx varchar (100) not null )"
             );
 
             //Act
-            var source = new DbSource<string[]>(connection, "SourceTwoColumns");
+            var source = new DbSource<string[]>(_connection, "SourceTwoColumns");
             var dest = new DbDestination<string[]>(
-                connection,
+                _connection,
                 "destination_onecolumn"
             );
             source.LinkTo(dest);
@@ -99,23 +106,23 @@ namespace TestDatabaseConnectors.src.DBDestination
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "destination_onecolumn"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_onecolumn", "colx = '1'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_onecolumn", "colx = '2'"));
-            Assert.Equal(1, RowCountTask.Count(connection, "destination_onecolumn", "colx = '3'"));
+            Assert.Equal(3, RowCountTask.Count(_connection, "destination_onecolumn"));
+            Assert.Equal(1, RowCountTask.Count(_connection, "destination_onecolumn", "colx = '1'"));
+            Assert.Equal(1, RowCountTask.Count(_connection, "destination_onecolumn", "colx = '2'"));
+            Assert.Equal(1, RowCountTask.Count(_connection, "destination_onecolumn", "colx = '3'"));
         }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void WithAdditionalNullableCol(IConnectionManager connection)
+        [Fact]
+        public void WithAdditionalNullableCol()
         {
             //Arrange
             var s2C = new TwoColumnsTableFixture(
-                connection,
+                _connection,
                 "source_additionalnullcol"
             );
             s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
-                connection,
+                _connection,
                 "Create destination table",
                 @"CREATE TABLE destination_additionalnullcol
                 (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NULL)"
@@ -123,11 +130,11 @@ namespace TestDatabaseConnectors.src.DBDestination
 
             //Act
             var source = new DbSource<string[]>(
-                connection,
+                _connection,
                 "source_additionalnullcol"
             );
             var dest = new DbDestination<string[]>(
-                connection,
+                _connection,
                 "destination_additionalnullcol"
             );
             source.LinkTo(dest);
@@ -138,17 +145,17 @@ namespace TestDatabaseConnectors.src.DBDestination
             s2C.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void WithAdditionalNotNullCol(IConnectionManager connection)
+        [Fact]
+        public void WithAdditionalNotNullCol()
         {
             //Arrange
             var s2C = new TwoColumnsTableFixture(
-                connection,
+                _connection,
                 "source_additionalnotnullcol"
             );
             s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
-                connection,
+                _connection,
                 "Create destination table",
                 @"CREATE TABLE destination_additionalnotnullcol
                 (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NOT NULL)"
@@ -156,11 +163,11 @@ namespace TestDatabaseConnectors.src.DBDestination
 
             //Act
             var source = new DbSource<string[]>(
-                connection,
+                _connection,
                 "source_additionalnotnullcol"
             );
             var dest = new DbDestination<string[]>(
-                connection,
+                _connection,
                 "destination_additionalnotnullcol"
             );
             source.LinkTo(dest);
@@ -169,6 +176,20 @@ namespace TestDatabaseConnectors.src.DBDestination
                 source.Execute();
                 dest.Wait();
             });
+        }
+
+        public class SqlServer : DbDestinationStringArrayTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : DbDestinationStringArrayTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
         }
     }
 }

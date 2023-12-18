@@ -30,16 +30,10 @@
     <ProjectReference Include="..\EtlBox.ClieckHouse\EtlBox.ClickHouse.csproj" />
     <ProjectReference Include="..\EtlBox.Logging.Database\EtlBox.Logging.Database.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
-    <ProjectReference Include="..\TestShared\TestShared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="res\DataFlowLogging\TwoColumns.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="res\Demo\demolog_tobe.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Update="res\**\*.*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>

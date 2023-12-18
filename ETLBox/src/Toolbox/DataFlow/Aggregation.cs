@@ -150,7 +150,7 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
                 propMap.Key.TrySetValue(outputRow, propMap.Value);
         }
 
-        private object DefineGroupingPropertyFromAttributes(TInput inputRow)
+        private Aggregation<TInput, TOutput>.GroupingKey DefineGroupingPropertyFromAttributes(TInput inputRow)
         {
             var groupingKey = new GroupingKey();
             foreach (var propMap in AggTypeInfo.GroupColumns)

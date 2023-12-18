@@ -1,26 +1,35 @@
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using EtlBox.Database.Tests.Infrastructure;
+using EtlBox.Database.Tests.SharedFixtures;
+using Xunit.Abstractions;
 
-namespace TestDatabaseConnectors.src.DBDestination
+namespace EtlBox.Database.Tests.DatabaseConnectors
 {
-    public class DbDestinationBatchChangesTests : DatabaseConnectorsTestBase
+    [Collection(nameof(DatabaseCollection))]
+    public abstract class DbDestinationBatchChangesTests : DatabaseTestBase
     {
-        public DbDestinationBatchChangesTests(DatabaseSourceDestinationFixture fixture)
-            : base(fixture) { }
+        private readonly IConnectionManager _connection;
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
-        public void WithBatchChanges(IConnectionManager connection)
+        protected DbDestinationBatchChangesTests(
+            DatabaseFixture fixture,
+            ConnectionManagerType connectionType,
+            ITestOutputHelper logger) : base(fixture, connectionType, logger)
+        {
+            _connection = _fixture.GetConnectionManager(_connectionType);
+        }
+
+        [Fact]
+        public void WithBatchChanges()
         {
             //Arrange
             var d2C = new TwoColumnsTableFixture(
-                connection,
+                _connection,
                 "DbDestinationBatchChanges"
             );
             var dest = new DbDestination<string[]>(
-                connection,
+                _connection,
                 "DbDestinationBatchChanges",
                 batchSize: 2
             )
@@ -39,11 +48,11 @@ namespace TestDatabaseConnectors.src.DBDestination
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "DbDestinationBatchChanges"));
+            Assert.Equal(3, RowCountTask.Count(_connection, "DbDestinationBatchChanges"));
             Assert.Equal(
                 2,
                 RowCountTask.Count(
-                    connection,
+                    _connection,
                     "DbDestinationBatchChanges",
                     $"{d2C.QB}Col2{d2C.QE}='NewValue'"
                 )
@@ -51,21 +60,21 @@ namespace TestDatabaseConnectors.src.DBDestination
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    _connection,
                     "DbDestinationBatchChanges",
                     $"{d2C.QB}Col1{d2C.QE} = 2 AND {d2C.QB}Col2{d2C.QE}='Test2'"
                 )
             );
         }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
-        public void AfterBatchWrite(IConnectionManager connection)
+        [Fact]
+        public void AfterBatchWrite()
         {
             //Arrange
             var wasExecuted = false;
-            var _ = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
+            var _ = new TwoColumnsTableFixture(_connection, "DbDestinationBatchChanges");
             var dest = new DbDestination<string[]>(
-                connection,
+                _connection,
                 "DbDestinationBatchChanges",
                 batchSize: 1
             )
@@ -84,8 +93,22 @@ namespace TestDatabaseConnectors.src.DBDestination
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "DbDestinationBatchChanges"));
+            Assert.Equal(3, RowCountTask.Count(_connection, "DbDestinationBatchChanges"));
             Assert.True(wasExecuted);
+        }
+
+        public class SqlServer : DbDestinationBatchChangesTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : DbDestinationBatchChangesTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
         }
     }
 }

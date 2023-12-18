@@ -1,26 +1,27 @@
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.DataFlow;
 using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using EtlBox.Database.Tests.Infrastructure;
+using EtlBox.Database.Tests.SharedFixtures;
+using Xunit.Abstractions;
 
-namespace TestDatabaseConnectors.src.DBDestination
+namespace EtlBox.Database.Tests.DatabaseConnectors
 {
-    public class DbDestinationErrorLinkingTests : DatabaseConnectorsTestBase
+    [Collection(nameof(DatabaseCollection))]
+    public abstract class DbDestinationErrorLinkingTests : DatabaseTestBase
     {
-        public DbDestinationErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
-            : base(fixture) { }
+        private readonly IConnectionManager connection;
 
-        public static IEnumerable<object[]> Connections => AllSqlConnections;
-
-        public class MySimpleRow
+        protected DbDestinationErrorLinkingTests(
+            DatabaseFixture fixture,
+            ConnectionManagerType connectionType,
+            ITestOutputHelper logger) : base(fixture, connectionType, logger)
         {
-            public string Col1 { get; set; }
-            public string Col2 { get; set; }
+            connection = _fixture.GetConnectionManager(_connectionType);
         }
 
-        [Theory, MemberData(nameof(Connections))]
-        public void RedirectBatch(IConnectionManager connection)
+        [Fact]
+        public void RedirectBatch()
         {
             //Arrange
             var d2C = new TwoColumnsTableFixture(connection, "DestLinkError");
@@ -64,6 +65,26 @@ namespace TestDatabaseConnectors.src.DBDestination
                         !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
                     )
             );
+        }
+
+        public class MySimpleRow
+        {
+            public string? Col1 { get; set; }
+            public string? Col2 { get; set; }
+        }
+
+        public class SqlServer : DbDestinationErrorLinkingTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : DbDestinationErrorLinkingTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
         }
     }
 }

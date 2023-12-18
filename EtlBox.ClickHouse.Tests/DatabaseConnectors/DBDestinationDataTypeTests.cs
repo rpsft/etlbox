@@ -1,34 +1,32 @@
+using System.Globalization;
 using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Database;
 using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
 using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src.Fixtures;
+using EtlBox.Database.Tests.Infrastructure;
+using Xunit.Abstractions;
 
-namespace TestDatabaseConnectors.src.DBDestination
+namespace EtlBox.Database.Tests.DatabaseConnectors
 {
-    public class DbDestinationDataTypeTests : DatabaseConnectorsTestBase
+    [Collection(nameof(DatabaseCollection))]
+    public abstract class DbDestinationDataTypeTests : DatabaseTestBase
     {
-        public DbDestinationDataTypeTests(DatabaseSourceDestinationFixture fixture)
-            : base(fixture) { }
+        private readonly IConnectionManager connection;
 
-        public enum EnumType
+        protected DbDestinationDataTypeTests(
+            DatabaseFixture fixture,
+            ConnectionManagerType connectionType,
+            ITestOutputHelper logger) : base(fixture, connectionType, logger)
         {
-            Value1 = 1,
-            Value2 = 2
+            connection = _fixture.GetConnectionManager(_connectionType);
         }
 
-        // Each culture for each database
-
-        public static IEnumerable<object[]> Combinations =>
-            AllSqlConnections.SelectMany(
-                _ => AllLocalCultures,
-                (conn, culture) => new[] { conn[0], culture }
-            );
-
         [Theory]
-        [MemberData(nameof(Combinations))]
-        public void MixedTypes(IConnectionManager connection, CultureInfo culture)
+        [InlineData("ru-RU")]
+        [InlineData("en-US")]
+        public void MixedTypes(string language)
         {
+            var culture = CultureInfo.GetCultureInfo(language);
             var previousCulture = CultureInfo.CurrentCulture;
             try
             {
@@ -125,9 +123,29 @@ namespace TestDatabaseConnectors.src.DBDestination
             public DateTime DateCol { get; set; }
             public string StringCol { get; set; }
             public char CharCol { get; set; }
-            public string DecimalStringCol { get; set; }
-            public string NullCol { get; set; }
+            public string? DecimalStringCol { get; set; }
+            public string? NullCol { get; set; }
             public EnumType EnumCol { get; set; }
+        }
+
+        public enum EnumType
+        {
+            Value1 = 1,
+            Value2 = 2
+        }
+
+        public class SqlServer : DbDestinationDataTypeTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : DbDestinationDataTypeTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 
 namespace ALE.ETLBox.src.Helper
@@ -19,7 +19,7 @@ namespace ALE.ETLBox.src.Helper
             return httpRequestMessage;
         }
 
-        private static HttpContent Clone(this HttpContent content)
+        private static StreamContent Clone(this HttpContent content)
         {
             if (content == null)
                 return null;

@@ -17,8 +17,6 @@ namespace ALE.ETLBox.DataFlow
 
         private readonly IHttpClient _httpClient;
 
-        public ILogger Logger { get; set; }
-
         public RestMethodInfo RestMethodInfo { get; set; }
 
         public string ResultField { get; set; }
@@ -80,11 +78,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     if ((int)ex.HttpCode / 100 == 5)
                     {
-                        if (Logger != null)
-                        {
-                            //NOTE: Для HttpCode = 5XX - выполнить переотправку запроса (Retry), затем запись в лог
-                            Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
-                        }
+                        Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
 
                         if (retryCount >= RestMethodInfo.RetryCount)
                         {
@@ -97,11 +91,7 @@ namespace ALE.ETLBox.DataFlow
                     }
                     if ((int)ex.HttpCode / 100 == 3)
                     {
-                        if (Logger != null)
-                        {
-                            //NOTE: 1.3.4.2.1.2.Для HttpCode = 3XX - запись в лог
-                            Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
-                        }
+                        Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
 
                         if (_httpClient == null)
                         {
