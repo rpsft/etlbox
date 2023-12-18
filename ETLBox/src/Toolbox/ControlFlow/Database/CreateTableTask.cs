@@ -173,7 +173,6 @@ namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
             return ConnectionType switch
             {
                 ConnectionManagerType.SqlServer when col.HasComputedColumn => string.Empty,
-                // ConnectionManagerType.Postgres when col.IsIdentity => string.Empty,
                 _ => DataTypeConverter.TryGetDBSpecificType(col.DataType, ConnectionType)
             };
         }

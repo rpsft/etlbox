@@ -1,15 +1,24 @@
+using ALE.ETLBox.src.Definitions.ConnectionManager;
 using ALE.ETLBox.src.Definitions.Database;
 using ALE.ETLBox.src.Definitions.Exceptions;
 using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src;
-using TestDatabaseConnectors.src.Fixtures;
+using EtlBox.Database.Tests.Infrastructure;
+using Xunit.Abstractions;
 
-namespace TestDatabaseConnectors.src.DBDestination
+namespace EtlBox.Database.Tests.DatabaseConnectors
 {
-    public class DbDestinationExceptionTests : DatabaseConnectorsTestBase
+    [Collection(nameof(DatabaseCollection))]
+    public abstract class DbDestinationExceptionTests : DatabaseTestBase
     {
-        public DbDestinationExceptionTests(DatabaseSourceDestinationFixture fixture)
-            : base(fixture) { }
+        private readonly IConnectionManager _connection;
+
+        protected DbDestinationExceptionTests(
+            DatabaseFixture fixture,
+            ConnectionManagerType connectionType,
+            ITestOutputHelper logger) : base(fixture, connectionType, logger)
+        {
+            _connection = _fixture.GetConnectionManager(_connectionType);
+        }
 
         [Fact]
         public void UnknownTable()
@@ -19,7 +28,7 @@ namespace TestDatabaseConnectors.src.DBDestination
             var source = new MemorySource<string[]>();
             source.DataAsList.Add(data);
             var dest = new DbDestination<string[]>(
-                SqlConnection,
+                _connection,
                 "UnknownTable"
             );
             source.LinkTo(dest);
@@ -54,13 +63,13 @@ namespace TestDatabaseConnectors.src.DBDestination
             source.DataAsList.Add(data);
             var dest = new DbDestination<string[]>
             {
-                ConnectionManager = SqlConnection,
+                ConnectionManager = _connection,
                 DestinationTableDefinition = def
             };
             source.LinkTo(dest);
 
             //Act & Assert
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<ETLBoxException>(() =>
             {
                 try
                 {
@@ -72,6 +81,20 @@ namespace TestDatabaseConnectors.src.DBDestination
                     throw e.InnerException!;
                 }
             });
+        }
+
+        public class SqlServer : DbDestinationExceptionTests
+        {
+            public SqlServer(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.SqlServer, logger)
+            {
+            }
+        }
+
+        public class PostgreSql : DbDestinationExceptionTests
+        {
+            public PostgreSql(DatabaseFixture fixture, ITestOutputHelper logger) : base(fixture, ConnectionManagerType.Postgres, logger)
+            {
+            }
         }
     }
 }
