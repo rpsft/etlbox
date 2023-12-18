@@ -17,6 +17,7 @@ namespace ALE.ETLBox.Helper.DataFlow
         {
             _dataFlow = dataFlow ?? throw new ArgumentNullException(nameof(dataFlow));
             _dataFlow.Destinations = new List<IDataFlowDestination<ExpandoObject>>();
+            _dataFlow.ErrorDestinations = new List<IDataFlowDestination<ETLBoxError>>();
 
             var types = new List<Type>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -201,6 +202,13 @@ namespace ALE.ETLBox.Helper.DataFlow
             foreach (var propXml in node.Elements())
             {
                 InitializeInstanceProperty(instance, type, propXml);
+            }
+
+            if (instance is ILinkErrorSource linkErrorSource)
+            {
+                var errorLogDestination = new ErrorLogDestination();
+                linkErrorSource.LinkErrorTo(errorLogDestination);
+                _dataFlow.ErrorDestinations.Add(errorLogDestination);
             }
 
             return instance;

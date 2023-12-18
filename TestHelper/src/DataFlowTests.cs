@@ -130,6 +130,74 @@ namespace TestHelper
             }
         }
 
+        [Fact]
+        public void DataFlow_TransformationError_ShouldBeHandled()
+        {
+            var csv = GetCsv();
+            var csvUri = CreateFile(csv, "csv");
+
+            var referenceId = Guid.NewGuid();
+            var name = Guid.NewGuid().ToString();
+            var ms = 100;
+            var xml = @$"<EtlDataFlowStep>
+			                <ReferenceId>
+                                {referenceId}
+                            </ReferenceId>
+			                <Name>
+                                {name}
+                            </Name>
+			                <TimeoutMilliseconds>{ms}</TimeoutMilliseconds>
+                            <CustomCsvSource>
+                                <Uri>{csvUri}</Uri>
+                                <Configuration>
+                                    <Delimiter>;</Delimiter>
+                                    <Escape>#</Escape>
+                                    <Quote>$</Quote>
+                                </Configuration>
+                                <LinkTo>
+                                    <BrokenTransformation>
+                                        <LinkTo>
+                                            <MemoryDestination></MemoryDestination>
+                                        </LinkTo>
+                                    </BrokenTransformation>
+                                </LinkTo>
+                            </CustomCsvSource>
+		                </EtlDataFlowStep>";
+
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
+            var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+
+            step?.Invoke();
+
+            var errors = step?.ErrorDestinations?.Select(d => d as ErrorLogDestination).ToArray();
+
+            Assert.Collection(
+                errors[0].Errors,
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
+                d =>
+            Assert.True(
+                    !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                ),
+                d =>
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    )
+            );
+
+            try
+            {
+                File.Delete(csvUri);
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
         private static string GetCsv()
         {
             var sb = new StringBuilder();

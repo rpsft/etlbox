@@ -7,5 +7,7 @@ namespace ALE.ETLBox.DataFlow
         IDataFlowSource<ExpandoObject> Source { get; set; }
 
         IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; }
+
+        IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; }
     }
 }

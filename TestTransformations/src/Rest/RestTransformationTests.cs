@@ -38,7 +38,7 @@ namespace TestTransformations.Rest
                     It.IsAny<string>()))
                 .ReturnsAsync(() => @"{ ""jsonResponse"" : 100}");
 
-            RestTransformation trans1 = new RestTransformation(httpClientMock.Object)
+            RestTransformation trans1 = new RestTransformation(() => httpClientMock.Object)
             {
                 RestMethodInfo = new RestMethodInfo
                 {
@@ -191,6 +191,7 @@ namespace TestTransformations.Rest
             public IDataFlowSource<ExpandoObject> Source { get; set; }
 
             public IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; }
+            public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; }
 
             public XmlSchema GetSchema() => null;
 
@@ -214,7 +215,7 @@ namespace TestTransformations.Rest
 
         public class TestRestTransformation : RestTransformation
         {
-            public TestRestTransformation() : base(CreateClient())
+            public TestRestTransformation() : base(() => CreateClient())
             {
             }
 

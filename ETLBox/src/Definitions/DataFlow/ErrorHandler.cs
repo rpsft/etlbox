@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace ALE.ETLBox.src.Definitions.DataFlow
 {

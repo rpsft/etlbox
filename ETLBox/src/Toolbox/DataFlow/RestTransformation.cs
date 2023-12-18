@@ -1,3 +1,4 @@
+#nullable enable
 using System.Net.Http;
 using System.Text.Json;
 using ALE.ETLBox.Helper;
@@ -10,29 +11,60 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class RestTransformation : RowTransformation<ExpandoObject>
     {
+        private static readonly Func<IHttpClient> s_defaultHttpClientFactory = () => new SampleHttpClient();
+
         private readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
             Converters = { new ExpandoObjectConverter() }
         };
 
-        private readonly IHttpClient _httpClient;
+        private readonly Func<IHttpClient> _httpClientFactory;
 
-        public RestMethodInfo RestMethodInfo { get; set; }
+        public ILogger? Logger { get; set; }
 
-        public string ResultField { get; set; }
+        public RestMethodInfo? RestMethodInfo { get; set; }
+
+        public string? ResultField { get; set; }
 
         public RestTransformation()
         {
+            _httpClientFactory = s_defaultHttpClientFactory;
+
             TransformationFunc = source => RestMethodAsync(source).GetAwaiter().GetResult();
         }
 
-        public RestTransformation(IHttpClient client) : this()
+        public RestTransformation(Func<IHttpClient>? httpClientFactory) : this()
         {
-            _httpClient = client;
+            _httpClientFactory = () => new SampleHttpClient();
+            _httpClientFactory = httpClientFactory ?? s_defaultHttpClientFactory;
         }
 
-#nullable enable
         public async Task<ExpandoObject> RestMethodAsync(ExpandoObject input)
+        {
+            IHttpClient? httpClient = null;
+            try
+            {
+                httpClient = _httpClientFactory();
+                var result = await RestMethodInternalAsync(input, httpClient)
+                    .ConfigureAwait(false);
+                LogProgress();
+                return result;
+            }
+            catch (Exception e)
+            {
+                if (!ErrorHandler.HasErrorBuffer)
+                    throw;
+                ErrorHandler.Send(e, src.Definitions.DataFlow.ErrorHandler.ConvertErrorData(input));
+            }
+            finally
+            {
+                httpClient?.Dispose();
+            }
+
+            return new ExpandoObject();
+        }
+
+        private async Task<ExpandoObject> RestMethodInternalAsync(ExpandoObject input, IHttpClient httpClient)
         {
             if (RestMethodInfo == null)
             {
@@ -49,7 +81,6 @@ namespace ALE.ETLBox.DataFlow
             var templateBody = Template.Parse(RestMethodInfo.Body);
             var body = templateBody.Render(Hash.FromDictionary(input));
 
-            var httpClient = _httpClient ?? new SampleHttpClient();
             var retryCount = 0;
             while (retryCount <= RestMethodInfo.RetryCount)
             {
@@ -67,11 +98,7 @@ namespace ALE.ETLBox.DataFlow
 
                     var res = input as IDictionary<string, object>;
                     res.Add(ResultField, outputValue);
-
-                    if (_httpClient == null)
-                    {
-                        httpClient.Dispose();
-                    }
+                    LogProgress();
                     return (ExpandoObject)res;
                 }
                 catch (HttpStatusCodeException ex)
@@ -82,10 +109,6 @@ namespace ALE.ETLBox.DataFlow
 
                         if (retryCount >= RestMethodInfo.RetryCount)
                         {
-                            if (_httpClient == null)
-                            {
-                                httpClient.Dispose();
-                            }
                             throw;
                         }
                     }
@@ -93,10 +116,6 @@ namespace ALE.ETLBox.DataFlow
                     {
                         Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
 
-                        if (_httpClient == null)
-                        {
-                            httpClient.Dispose();
-                        }
                         throw;
                     }
                 }
@@ -123,6 +142,5 @@ namespace ALE.ETLBox.DataFlow
                 _ => throw new ArgumentOutOfRangeException(nameof(method))
             };
         }
-#nullable disable
     }
 }

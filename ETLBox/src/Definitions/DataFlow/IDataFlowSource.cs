@@ -1,10 +1,10 @@
-﻿namespace ALE.ETLBox.src.Definitions.DataFlow
+using ALE.ETLBox.DataFlow;
+
+namespace ALE.ETLBox.src.Definitions.DataFlow
 {
-    public interface IDataFlowSource<TOutput> : IDataFlowLinkSource<TOutput>
+    public interface IDataFlowSource<TOutput> : IDataFlowLinkSource<TOutput>, ILinkErrorSource
     {
         Task ExecuteAsync();
         void Execute();
-
-        void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target);
     }
 }

@@ -25,6 +25,8 @@ namespace TestHelper.Models
 
         public IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; }
 
+        public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; }
+
         public XmlSchema GetSchema() => null;
 
         public virtual void ReadXml(XmlReader reader)
@@ -40,7 +42,9 @@ namespace TestHelper.Models
         public void Invoke()
         {
             Source.Execute();
-            var tasks = Destinations.Select(d => d.Completion).ToArray();
+            var tasks = Destinations.Select(d => d.Completion)
+                .Concat(ErrorDestinations.Select(ed => ed.Completion))
+                .ToArray();
             Task.WaitAll(tasks);
         }
     }

@@ -1,17 +1,23 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.src.Definitions.DataFlow;
 
 namespace ALE.ETLBox.src.Definitions.TaskBase.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowTransformation<TInput, TOutput>
-        : DataFlowTask,
-            IDataFlowTransformation<TInput, TOutput>
+        : DataFlowTask, IDataFlowTransformation<TInput, TOutput>, ILinkErrorSource
     {
         public virtual ITargetBlock<TInput> TargetBlock { get; }
         public virtual ISourceBlock<TOutput> SourceBlock { get; }
 
         protected List<Task> PredecessorCompletions { get; set; } = new();
+
+        protected TransformBlock<TInput, TOutput> TransformBlock { get; set; }
+
+        protected ErrorHandler ErrorHandler { get; set; } = new();
+
+        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
+            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
         public void AddPredecessorCompletion(Task completion)
         {
