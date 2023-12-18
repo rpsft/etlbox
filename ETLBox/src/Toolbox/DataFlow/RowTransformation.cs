@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.
@@ -52,8 +52,6 @@
 
         /* Private stuff */
         private Func<TInput, TOutput> _transformationFunc;
-        internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
-        internal ErrorHandler ErrorHandler { get; set; } = new();
 
         public RowTransformation() { }
 
@@ -91,9 +89,6 @@
         {
             CopyTaskProperties(task);
         }
-
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
-            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
         private TOutput WrapTransformation(TInput row)
         {
