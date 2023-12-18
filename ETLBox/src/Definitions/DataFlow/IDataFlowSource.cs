@@ -1,10 +1,8 @@
-﻿namespace ALE.ETLBox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
-    public interface IDataFlowSource<TOutput> : IDataFlowLinkSource<TOutput>
+    public interface IDataFlowSource<TOutput> : IDataFlowLinkSource<TOutput>, ILinkErrorSource
     {
         Task ExecuteAsync();
         void Execute();
-
-        void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target);
     }
 }
