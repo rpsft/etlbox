@@ -1,4 +1,4 @@
-﻿using System.Data.Odbc;
+using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ALE.ETLBox.Common;
@@ -159,7 +159,7 @@ namespace ALE.ETLBox.ControlFlow
                 return false;
             if (int.TryParse(result.ToString(), out var number) && number > 0)
                 return true;
-            if (result.ToString().Trim().ToLower() == "true")
+            if (result.ToString().Trim().Equals("true", StringComparison.CurrentCultureIgnoreCase))
                 return true;
             return false;
         }

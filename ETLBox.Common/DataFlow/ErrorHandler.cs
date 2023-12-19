@@ -11,8 +11,8 @@ namespace ALE.ETLBox.Common.DataFlow
     public class ErrorHandler
     {
         public ISourceBlock<ETLBoxError> ErrorSourceBlock => ErrorBuffer;
-        internal BufferBlock<ETLBoxError> ErrorBuffer { get; set; }
-        internal bool HasErrorBuffer => ErrorBuffer != null;
+        public BufferBlock<ETLBoxError> ErrorBuffer { get; set; }
+        public bool HasErrorBuffer => ErrorBuffer != null;
 
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target, Task completion)
         {

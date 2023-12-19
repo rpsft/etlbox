@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
 
@@ -21,9 +21,7 @@ namespace ALE.ETLBox.DataFlow
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
         /* Private stuff */
-        private TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
-
-        internal ErrorHandler ErrorHandler { get; set; } = new();
+        private new TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
 
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc)
             : this()
@@ -33,9 +31,7 @@ namespace ALE.ETLBox.DataFlow
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(
-                (Func<TInput, IEnumerable<TOutput>>)MultiplyRow
-            );
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplyRow);
         }
 
         private IEnumerable<TOutput> MultiplyRow(TInput row)
@@ -54,9 +50,6 @@ namespace ALE.ETLBox.DataFlow
                 return Array.Empty<TOutput>();
             }
         }
-
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
-            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
     }
 
     /// <summary>

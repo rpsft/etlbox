@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using System.Linq;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
@@ -28,7 +28,7 @@ namespace ALE.ETLBox
             );
         }
 
-        private IColumnMappingCollection GetColumnMappingFromDefinition()
+        private DataColumnMappingCollection GetColumnMappingFromDefinition()
         {
             IEnumerable<TableColumn> columns = (TypeInfo?.IsDynamic, TypeInfo?.IsArray) switch
             {

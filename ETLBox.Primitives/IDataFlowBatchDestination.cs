@@ -1,4 +1,4 @@
-﻿namespace ETLBox.Primitives
+namespace ETLBox.Primitives
 {
     public interface IDataFlowBatchDestination<in TInput> : IDataFlowDestination<TInput>
     {

@@ -43,13 +43,11 @@ namespace ALE.ETLBox.DataFlow
         {
             foreach (var attributeMappingInfo in columnList)
             {
-                if (!InputPropertiesByName.ContainsKey(attributeMappingInfo.PropNameInInput))
+                if (!InputPropertiesByName.TryGetValue(attributeMappingInfo.PropNameInInput, out PropertyInfo value))
                     throw new ETLBoxException(
                         $"Property {attributeMappingInfo.PropNameInInput} does not exists in target object!"
                     );
-                attributeMappingInfo.PropInInput = InputPropertiesByName[
-                    attributeMappingInfo.PropNameInInput
-                ];
+                attributeMappingInfo.PropInInput = value;
             }
         }
     }

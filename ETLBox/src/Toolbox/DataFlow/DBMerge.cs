@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
@@ -409,7 +409,7 @@ namespace ALE.ETLBox.DataFlow
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
             var delete = rowsToDelete as TInput[] ?? rowsToDelete.ToArray();
-            if (!delete.Any())
+            if (delete.Length == 0)
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
             string idNames = $"{QB}{IdColumnNames[0]}{QE}";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Dynamic;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
@@ -58,8 +58,6 @@ namespace ALE.ETLBox.Common.DataFlow
 
         /* Private stuff */
         private Func<TInput, TOutput> _transformationFunc;
-        internal TransformBlock<TInput, TOutput> TransformBlock { get; set; }
-        internal ErrorHandler ErrorHandler { get; set; } = new();
 
         public RowTransformation() { }
 
@@ -97,9 +95,6 @@ namespace ALE.ETLBox.Common.DataFlow
         {
             CopyTaskProperties(task);
         }
-
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
-            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
         private TOutput WrapTransformation(TInput row)
         {
