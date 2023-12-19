@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Text;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.DataFlow
 {

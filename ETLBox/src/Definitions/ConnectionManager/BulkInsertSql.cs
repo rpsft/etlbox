@@ -2,6 +2,8 @@
 using System.Data.Odbc;
 using System.Linq;
 using System.Text;
+using ALE.ETLBox.Common;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {

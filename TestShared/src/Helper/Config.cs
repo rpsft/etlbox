@@ -5,6 +5,7 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using EtlBox.ClickHouse.ConnectionManager;
 using EtlBox.ClickHouse.ConnectionStrings;
+using ETLBox.Primitives;
 using Microsoft.Extensions.Configuration;
 
 namespace TestShared.Helper;

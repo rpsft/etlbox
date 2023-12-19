@@ -1,6 +1,8 @@
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 using TestTransformations.Fixtures;
 

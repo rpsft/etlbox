@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -63,8 +65,8 @@ namespace ALE.ETLBox.ControlFlow
                     TaskType,
                     "START",
                     TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    Common.ControlFlow.ControlFlow.Stage,
+                    Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
@@ -76,8 +78,8 @@ namespace ALE.ETLBox.ControlFlow
                     TaskType,
                     "END",
                     TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    Common.ControlFlow.ControlFlow.Stage,
+                    Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
     }

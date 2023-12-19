@@ -1,4 +1,4 @@
-using ALE.ETLBox;
+using ALE.ETLBox.Common;
 
 namespace TestHelper
 {

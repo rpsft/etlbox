@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using FluentAssertions;
+using JetBrains.Annotations;
 using TestHelper.Models;
 
 namespace TestHelper
@@ -221,6 +222,8 @@ namespace TestHelper
             return obj;
         }
 
+#pragma warning disable S1144 // Unused private types or members should be removed
+        [UsedImplicitly]
         private sealed class CustomCsvSource : CsvSource
         {
             public DateTime DateTime { get; set; }
@@ -246,5 +249,6 @@ namespace TestHelper
             public ushort Ushort { get; set; }
             public ushort? NulUshort { get; set; }
         }
+#pragma warning restore S1144 // Unused private types or members should be removed
     }
 }

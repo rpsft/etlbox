@@ -18,9 +18,12 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(
+                SqlConnection,
+                ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
+            );
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private void RunProcess1()

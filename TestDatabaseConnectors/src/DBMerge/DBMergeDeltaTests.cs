@@ -1,7 +1,7 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
+using EtlBox.Database.Tests.SharedFixtures;
+using ETLBox.Primitives;
 using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {

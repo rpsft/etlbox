@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Helper.DataFlow
 {

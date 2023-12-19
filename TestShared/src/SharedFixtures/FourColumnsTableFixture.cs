@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestShared.Helper;
 
 namespace TestShared.SharedFixtures

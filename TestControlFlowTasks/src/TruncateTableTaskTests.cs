@@ -1,5 +1,5 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 

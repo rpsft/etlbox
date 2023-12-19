@@ -1,3 +1,5 @@
+using ETLBox.Primitives;
+
 namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>

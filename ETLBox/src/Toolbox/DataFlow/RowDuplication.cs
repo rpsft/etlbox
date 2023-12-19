@@ -1,3 +1,6 @@
+using ALE.ETLBox.Common.DataFlow;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
+
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>

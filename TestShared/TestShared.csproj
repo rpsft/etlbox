@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EtlBox.ClieckHouse\EtlBox.ClickHouse.csproj" />
+    <ProjectReference Include="..\EtlBox.ClickHouse\EtlBox.ClickHouse.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
   </ItemGroup>
 

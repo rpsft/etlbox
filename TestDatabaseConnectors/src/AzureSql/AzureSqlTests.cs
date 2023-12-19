@@ -1,6 +1,7 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 using TestDatabaseConnectors.Fixtures;
 using TestShared.SharedFixtures;
 

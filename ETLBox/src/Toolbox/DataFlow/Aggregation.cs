@@ -1,5 +1,8 @@
 using System.Linq;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -146,7 +149,7 @@ namespace ALE.ETLBox.DataFlow
                 propMap.Key.TrySetValue(outputRow, propMap.Value);
         }
 
-        private Aggregation<TInput, TOutput>.GroupingKey DefineGroupingPropertyFromAttributes(TInput inputRow)
+        private GroupingKey DefineGroupingPropertyFromAttributes(TInput inputRow)
         {
             var groupingKey = new GroupingKey();
             foreach (var propMap in AggTypeInfo.GroupColumns)

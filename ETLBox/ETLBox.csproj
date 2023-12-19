@@ -21,6 +21,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\Logging\**" />
+    <EmbeddedResource Remove="src\Logging\**" />
+    <None Remove="src\Logging\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="ETLBox.Kafka" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="DotLiquid" Version="2.2.692" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
@@ -43,6 +53,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
   </ItemGroup>
 
 </Project>

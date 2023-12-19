@@ -1,4 +1,7 @@
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
+
+using ETLBox.Primitives;
 
 namespace TestOtherConnectors.CustomDestination
 {

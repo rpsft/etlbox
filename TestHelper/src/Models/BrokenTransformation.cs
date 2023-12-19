@@ -1,12 +1,12 @@
 using System;
 using System.Dynamic;
-using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
 
 namespace TestHelper.Models
 {
     [PublicAPI]
-    public class BrokenTransformation : RowTransformation<ExpandoObject>, ILinkErrorSource
+    public class BrokenTransformation : RowTransformation<ExpandoObject>
     {
         public BrokenTransformation()
         {

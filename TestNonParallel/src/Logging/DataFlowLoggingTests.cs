@@ -1,5 +1,6 @@
 using System.Dynamic;
 using System.Threading.Tasks;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
@@ -19,8 +20,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 

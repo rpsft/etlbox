@@ -1,4 +1,8 @@
-﻿namespace ALE.ETLBox.DataFlow
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.
@@ -17,9 +21,7 @@
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
         /* Private stuff */
-        private TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
-
-        internal ErrorHandler ErrorHandler { get; set; } = new();
+        private new TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
 
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc)
             : this()
@@ -29,9 +31,7 @@
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(
-                MultiplyRow
-            );
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplyRow);
         }
 
         private IEnumerable<TOutput> MultiplyRow(TInput row)
@@ -50,9 +50,6 @@
                 return Array.Empty<TOutput>();
             }
         }
-
-        public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
-            ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
     }
 
     /// <summary>

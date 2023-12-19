@@ -1,3 +1,5 @@
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
+
 namespace ALE.ETLBox.DataFlow
 {
     internal sealed class DBTypeInfo : TypeInfo

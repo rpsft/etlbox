@@ -1,3 +1,4 @@
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -30,8 +31,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
 
         public void Dispose()
         {
-            DropTableTask.Drop(LoggingConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(LoggingConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 
@@ -48,7 +49,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
             );
 
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
+            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
 
             SqlTask.ExecuteNonQuery(
                 "Insert demo data",

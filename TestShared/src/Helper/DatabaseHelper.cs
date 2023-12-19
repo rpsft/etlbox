@@ -1,6 +1,5 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace TestShared.Helper
 {

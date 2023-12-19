@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -87,7 +88,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbCommand CreateCommand(
             string commandText,
-            IEnumerable<QueryParameter> parameterList
+            IEnumerable<IQueryParameter> parameterList
         )
         {
             var cmd = DbConnection.CreateCommand();
@@ -96,7 +97,7 @@ namespace ALE.ETLBox.ConnectionManager
             cmd.CommandText = commandText;
             if (parameterList != null)
             {
-                foreach (QueryParameter par in parameterList)
+                foreach (var par in parameterList)
                 {
                     var newPar = cmd.CreateParameter();
                     MapQueryParameterToCommandParameter(par, newPar);
@@ -113,7 +114,7 @@ namespace ALE.ETLBox.ConnectionManager
         /// </summary>
         /// <returns></returns>
         protected virtual void MapQueryParameterToCommandParameter(
-            QueryParameter source,
+            IQueryParameter source,
             IDbDataParameter destination
         )
         {
@@ -122,7 +123,10 @@ namespace ALE.ETLBox.ConnectionManager
             destination.Value = source.Value;
         }
 
-        public int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null)
+        public int ExecuteNonQuery(
+            string command,
+            IEnumerable<IQueryParameter> parameterList = null
+        )
         {
             IDbCommand cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteNonQuery();
@@ -130,7 +134,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public object ExecuteScalar(
             string command,
-            IEnumerable<QueryParameter> parameterList = null
+            IEnumerable<IQueryParameter> parameterList = null
         )
         {
             IDbCommand cmd = CreateCommand(command, parameterList);
@@ -139,7 +143,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDataReader ExecuteReader(
             string command,
-            IEnumerable<QueryParameter> parameterList = null
+            IEnumerable<IQueryParameter> parameterList = null
         )
         {
             IDbCommand cmd = CreateCommand(command, parameterList);

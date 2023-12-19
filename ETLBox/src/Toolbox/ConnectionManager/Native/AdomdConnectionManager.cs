@@ -1,4 +1,5 @@
-﻿using Microsoft.AnalysisServices.AdomdClient;
+﻿using ETLBox.Primitives;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {

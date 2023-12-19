@@ -1,5 +1,7 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Logging
 {
@@ -43,7 +45,7 @@ namespace ALE.ETLBox.Logging
         private long? _loadProcessId;
         public long? LoadProcessId
         {
-            get { return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
+            get { return _loadProcessId ?? Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
             set { _loadProcessId = value; }
         }
 
@@ -61,7 +63,7 @@ SELECT {QB}id{QE}, {QB}log_date{QE}, {QB}level{QE}, {QB}message{QE}, {QB}task_ty
 FROM {Tn.QuotedFullName}"
             + (LoadProcessId != null ? $@" WHERE {QB}LoadProcessKey{QE} = {LoadProcessId}" : "");
 
-        private ObjectNameDescriptor Tn => new(ControlFlow.ControlFlow.LogTable, QB, QE);
+        private ObjectNameDescriptor Tn => new(Common.ControlFlow.ControlFlow.LogTable, QB, QE);
 
         public ReadLogTableTask() { }
 

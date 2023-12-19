@@ -1,5 +1,6 @@
 using ALE.ETLBox.DataFlow;
 using CsvHelper.TypeConversion;
+using ETLBox.Primitives;
 using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 

@@ -1,3 +1,4 @@
+using ALE.ETLBox.Common.DataFlow;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
@@ -39,7 +40,7 @@ namespace ALE.ETLBox.DataFlow
 
         public Sort()
         {
-            Logger = ControlFlow.ControlFlow.GetLogger<Sort>();
+            Logger = Common.ControlFlow.ControlFlow.GetLogger<Sort>();
         }
 
         public Sort(Comparison<TInput> sortFunction)

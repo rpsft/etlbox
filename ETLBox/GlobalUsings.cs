@@ -1,5 +1,5 @@
 // Copyright (c) RapidSoft. All rights reserved.
-// 
+//
 
 global using System;
 global using System.Collections.Generic;

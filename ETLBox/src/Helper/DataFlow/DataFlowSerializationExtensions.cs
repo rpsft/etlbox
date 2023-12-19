@@ -1,5 +1,5 @@
 using System.Xml;
-using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Helper.DataFlow
 {

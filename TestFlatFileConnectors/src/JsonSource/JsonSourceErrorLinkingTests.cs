@@ -1,4 +1,5 @@
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 

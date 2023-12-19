@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>ALE.ETLBox.DataFlow</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+      <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+      <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    </ItemGroup>
+
+</Project>

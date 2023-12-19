@@ -8,8 +8,8 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using CsvHelper.Configuration;
+using ETLBox.Primitives;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 
 namespace TestSerialization
 {

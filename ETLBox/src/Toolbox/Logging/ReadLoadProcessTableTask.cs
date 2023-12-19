@@ -1,6 +1,9 @@
 using System.Text;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ALE.ETLBox.Common.Logging;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Logging
 {
@@ -53,7 +56,7 @@ namespace ALE.ETLBox.Logging
         private long? _loadProcessId;
         public long? LoadProcessId
         {
-            get { return _loadProcessId ?? ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
+            get { return _loadProcessId ?? Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id; }
             set { _loadProcessId = value; }
         }
         public LoadProcess LoadProcess { get; private set; }
@@ -131,7 +134,8 @@ FROM {Tn.QuotedFullName}"
             }
         }
 
-        private ObjectNameDescriptor Tn => new(ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
+        private ObjectNameDescriptor Tn =>
+            new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
         public ReadLoadProcessTableTask() { }
 

@@ -1,4 +1,5 @@
 using System.Xml.Serialization;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
 {

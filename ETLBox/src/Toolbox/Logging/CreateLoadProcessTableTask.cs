@@ -1,4 +1,6 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 using ALE.ETLBox.ControlFlow;
 
 namespace ALE.ETLBox.Logging
@@ -27,7 +29,7 @@ namespace ALE.ETLBox.Logging
             LoadProcessTable.CopyTaskProperties(this);
             LoadProcessTable.DisableLogging = true;
             LoadProcessTable.Create();
-            ControlFlow.ControlFlow.LoadProcessTable = LoadProcessTableName;
+            Common.ControlFlow.ControlFlow.LoadProcessTable = LoadProcessTableName;
         }
 
         public CreateLoadProcessTableTask(string loadProcessTableName)
@@ -74,12 +76,12 @@ namespace ALE.ETLBox.Logging
             };
 
         public static void Create(
-            string loadProcessTableName = ControlFlow.ControlFlow.DefaultLoadProcessTableName
+            string loadProcessTableName = Common.ControlFlow.ControlFlow.DefaultLoadProcessTableName
         ) => new CreateLoadProcessTableTask(loadProcessTableName).Execute();
 
         public static void Create(
             IConnectionManager connectionManager,
-            string loadProcessTableName = ControlFlow.ControlFlow.DefaultLoadProcessTableName
+            string loadProcessTableName = Common.ControlFlow.ControlFlow.DefaultLoadProcessTableName
         ) => new CreateLoadProcessTableTask(connectionManager, loadProcessTableName).Execute();
     }
 }

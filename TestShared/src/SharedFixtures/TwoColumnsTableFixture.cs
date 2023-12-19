@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestShared.Helper;
 
 namespace TestShared.SharedFixtures

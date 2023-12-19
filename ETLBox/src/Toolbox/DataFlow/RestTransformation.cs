@@ -1,8 +1,10 @@
 #nullable enable
 using System.Net.Http;
 using System.Text.Json;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
 using DotLiquid;
+using ETLBox.Primitives;
 using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
@@ -21,9 +23,9 @@ namespace ALE.ETLBox.DataFlow
 
         public ILogger? Logger { get; set; }
 
-        public RestMethodInfo? RestMethodInfo { get; set; }
+        public RestMethodInfo RestMethodInfo { get; set; } = null!;
 
-        public string? ResultField { get; set; }
+        public string ResultField { get; set; } = null!;
 
         public RestTransformation()
         {
@@ -67,11 +69,11 @@ namespace ALE.ETLBox.DataFlow
         {
             if (RestMethodInfo == null)
             {
-                throw new ArgumentNullException(nameof(RestMethodInfo));
+                throw new InvalidOperationException($"Property '{nameof(RestMethodInfo)}' not defined");
             }
             if (ResultField == null)
             {
-                throw new ArgumentNullException(nameof(ResultField));
+                throw new InvalidOperationException($"Property '{nameof(ResultField)}' not defined");
             }
 
             var method = GetMethod(RestMethodInfo.Method);

@@ -1,3 +1,5 @@
+using ALE.ETLBox.Common;
+
 namespace ALE.ETLBox.Helper
 {
     public static class PropertyInfoExtension

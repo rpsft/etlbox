@@ -1,4 +1,5 @@
 using System.Data.Odbc;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {

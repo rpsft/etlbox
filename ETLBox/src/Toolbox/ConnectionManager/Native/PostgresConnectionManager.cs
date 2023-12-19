@@ -1,4 +1,6 @@
 using System.Linq;
+using ALE.ETLBox.Common;
+using ETLBox.Primitives;
 using Npgsql;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -108,7 +110,7 @@ FROM STDIN (FORMAT BINARY)"
         }
 
         protected override void MapQueryParameterToCommandParameter(
-            QueryParameter source,
+            IQueryParameter source,
             IDbDataParameter destination
         )
         {

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
 using ALE.ETLBoxTests.NonParallel.Fixtures;
 using EtlBox.Logging.Database;
+using ETLBox.Primitives;
 using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
@@ -15,7 +15,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 
         public void Dispose()
         {
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Theory, MemberData(nameof(AllSqlConnections))]
@@ -47,20 +47,20 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             StartLoadProcessTask.Start(connection, "Test process 1");
 
             //Assert
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess != null);
+            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess != null);
             Assert.Equal(
                 "Test process 1",
-                ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.ProcessName
+                ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.ProcessName
             );
             Assert.True(
-                ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.StartDate
+                ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.StartDate
                     >= DateTime.Now.AddSeconds(-1)
             );
             Assert.Equal(
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LoadProcessTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable,
                     "start_message IS NULL and end_message IS NULL and abort_message IS NULL"
                 )
             );
@@ -68,7 +68,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
                 1,
                 RowCountTask.Count(
                     connection,
-                    ETLBox.ControlFlow.ControlFlow.LoadProcessTable,
+                    ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable,
                     "is_running = 1 AND was_successful=0 AND was_aborted=0"
                 )
             );
@@ -107,17 +107,17 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             CreateLoadProcessTableTask.Create(connection, "test_lp_end");
 
             StartLoadProcessTask.Start(connection, "Test process 2");
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
+            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
 
             //Act
             EndLoadProcessTask.End(connection, "End process 2");
 
             //Assert
-            Assert.False(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.WasSuccessful);
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsFinished);
+            Assert.False(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
+            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.WasSuccessful);
+            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsFinished);
             Assert.True(
-                ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.EndDate
+                ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.EndDate
                     >= DateTime.Now.AddSeconds(-1)
             );
 
@@ -149,18 +149,20 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             CreateLoadProcessTableTask.Create(SqlConnection, "test_lp_abort");
 
             StartLoadProcessTask.Start(SqlConnection, "Test process 3");
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
+            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
 
             //Act
             AbortLoadProcessTask.Abort(
                 SqlConnection,
-                ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.Id
+                ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id
             );
 
             //Assert
-            Assert.False(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.WasAborted);
-            Assert.True(ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.AbortMessage == null);
+            Assert.False(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsRunning);
+            Assert.True(ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.WasAborted);
+            Assert.True(
+                ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.AbortMessage == null
+            );
             Assert.Equal(
                 1,
                 RowCountTask.Count(
@@ -196,7 +198,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
                 2,
                 new RowCountTask(
                     "test_lpkey_log",
-                    $"message='Test Task' and load_process_id = {ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.Id}"
+                    $"message='Test Task' and load_process_id = {ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id}"
                 )
                 {
                     DisableLogging = true,
@@ -207,15 +209,15 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             );
 
             //Cleanup
-            DropTableTask.Drop(connection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(connection, ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
+            DropTableTask.Drop(connection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(connection, ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable);
         }
 
         [Fact]
         public void ReadLastSuccessfulProcess()
         {
             //Arrange
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lpkey_lastsuccess");
             StartLoadProcessTask.Start("Test process 8");
             Task.Delay(10).Wait(); //Sql Server datetime is not that exact
@@ -242,7 +244,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
         public void ReadLastAbortedProcess()
         {
             //Arrange
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lpkey_lastabort");
             StartLoadProcessTask.Start("Test process 10");
             Task.Delay(10).Wait(); //Sql Server datetime is not that exact
@@ -272,7 +274,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
         public void IsLoadProcessKeySetIfRestarted()
         {
             //Arrange
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lp_restart");
             CreateLogTableTask.Create("test_log_restart");
             DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(
@@ -283,7 +285,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 
             //Act
             StartLoadProcessTask.Start("Test process 13");
-            var processId1 = ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
+            var processId1 = ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
             SqlTask.ExecuteNonQuery("Test Task", "Select 1 as test");
             Assert.Equal(
                 2,
@@ -299,7 +301,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             );
 
             StartLoadProcessTask.Start("Test process 14");
-            var processId2 = ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
+            var processId2 = ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
 
             //Assert
             Assert.NotEqual(processId1, processId2);
@@ -318,15 +320,15 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             );
 
             //Cleanup
-            DropTableTask.Drop(ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
+            DropTableTask.Drop(ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable);
         }
 
         [Fact]
         public void IsLoadProcessKeySetForLogTask()
         {
             //Arrange
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lp_logtask");
             CreateLogTableTask.Create("test_log_logtask");
             DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(
@@ -337,7 +339,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 
             //Act
             StartLoadProcessTask.Start("Test process 15");
-            var processId1 = ETLBox.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
+            var processId1 = ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
             LogTask.Error("Test1");
             LogTask.Warn("Test2");
             LogTask.Info("Test3");
@@ -356,8 +358,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             );
 
             //Cleanup
-            DropTableTask.Drop(ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
+            DropTableTask.Drop(ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable);
         }
     }
 }

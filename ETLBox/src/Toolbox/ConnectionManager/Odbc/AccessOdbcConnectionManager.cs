@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.ConnectionManager
+﻿using ALE.ETLBox.Common;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an ODBC connection to Access databases.

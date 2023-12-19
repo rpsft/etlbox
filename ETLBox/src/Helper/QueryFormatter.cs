@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Helper
 {

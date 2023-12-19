@@ -1,7 +1,7 @@
 using System;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Logging;
+using ALE.ETLBox.Common.ControlFlow;
+using ALE.ETLBox.Common.Logging;
+using ETLBox.Primitives;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NLog.Config;
