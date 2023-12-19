@@ -7,6 +7,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper.DataFlow;
+using ETLBox.Primitives;
 using FluentAssertions;
 using Moq;
 

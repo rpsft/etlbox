@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
 using ALE.ETLBox.Logging;
 
 namespace TestShared.Helper
@@ -26,9 +26,7 @@ namespace TestShared.Helper
                     ",",
                     TableDefinition.Columns.Select(col =>
                     {
-                        int length = DataTypeConverter.GetStringLengthFromCharString(
-                            col.DataType
-                        );
+                        int length = DataTypeConverter.GetStringLengthFromCharString(col.DataType);
                         return HashHelper.RandomString(length);
                     })
                 );

@@ -1,8 +1,10 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Inherit from this class if you want to use your data object with a DBMerge,
-    /// but don't want to implement <see cref="IMergeableRow" /> yourself.
+    /// but don't want to implement <see cref="ETLBox.Primitives.IMergeableRow" /> yourself.
     /// You still needs that you have flagged the id properties with the IdColumn attribute
     /// and the properties use to identify equal object flagged with the CompareColumn attribute.
     /// </summary>

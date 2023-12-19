@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using ETLBox.Primitives;
 using TestFlatFileConnectors.Helpers;
 
 namespace TestFlatFileConnectors.JsonDestination

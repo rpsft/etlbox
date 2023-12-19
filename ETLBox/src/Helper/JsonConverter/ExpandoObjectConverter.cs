@@ -16,7 +16,7 @@ namespace ALE.ETLBox.Helper
                 throw new JsonException("Expected StartObject token");
             }
 
-            IDictionary<string, object?> expando = new ExpandoObject();
+            IDictionary<string, object> expando = new ExpandoObject();
 
             while (reader.Read())
             {
@@ -48,7 +48,7 @@ namespace ALE.ETLBox.Helper
             JsonSerializer.Serialize(writer, value, options);
         }
 
-        private object? ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        private object ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             return reader.TokenType switch
             {
@@ -63,7 +63,7 @@ namespace ALE.ETLBox.Helper
             };
         }
 
-        private object ReadArray(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        private object[] ReadArray(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             var list = new List<object>();
             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)

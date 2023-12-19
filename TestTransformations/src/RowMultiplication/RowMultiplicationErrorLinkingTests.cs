@@ -1,4 +1,5 @@
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 using TestTransformations.Fixtures;
 

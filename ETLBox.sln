@@ -35,6 +35,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solutio
 		.version.yml = .version.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Kafka", "ETLBox.Kafka\ETLBox.Kafka.csproj", "{6E101130-3324-4DCA-A970-2C3C6EA17C35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Kafka.Tests", "ETLBox.Kafka.Tests\ETLBox.Kafka.Tests.csproj", "{A52DEE49-773E-4BAA-9CD6-2ACA6C407DC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Common", "ETLBox.Common\ETLBox.Common.csproj", "{986773EF-62C1-4755-828C-FAE861225630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Primitives", "ETLBox.Primitives\ETLBox.Primitives.csproj", "{C0789F9C-4682-4E0E-85BA-454403AFC475}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Scripting", "ETLBox.Scripting\ETLBox.Scripting.csproj", "{14D9541D-CEA0-4393-82B5-FF4F2847DFED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Scripting.Tests", "ETLBox.Scripting.Tests\ETLBox.Scripting.Tests.csproj", "{B960D5A4-FBB3-41BC-B612-8811838CA2DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +97,30 @@ Global
 		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4823A6E7-A828-4F85-9C6A-1CE2FE22124C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E101130-3324-4DCA-A970-2C3C6EA17C35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E101130-3324-4DCA-A970-2C3C6EA17C35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E101130-3324-4DCA-A970-2C3C6EA17C35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E101130-3324-4DCA-A970-2C3C6EA17C35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52DEE49-773E-4BAA-9CD6-2ACA6C407DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52DEE49-773E-4BAA-9CD6-2ACA6C407DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52DEE49-773E-4BAA-9CD6-2ACA6C407DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52DEE49-773E-4BAA-9CD6-2ACA6C407DC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986773EF-62C1-4755-828C-FAE861225630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986773EF-62C1-4755-828C-FAE861225630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986773EF-62C1-4755-828C-FAE861225630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986773EF-62C1-4755-828C-FAE861225630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0789F9C-4682-4E0E-85BA-454403AFC475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D9541D-CEA0-4393-82B5-FF4F2847DFED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B960D5A4-FBB3-41BC-B612-8811838CA2DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

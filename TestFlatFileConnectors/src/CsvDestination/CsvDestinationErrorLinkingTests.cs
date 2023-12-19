@@ -1,3 +1,5 @@
+using ETLBox.Primitives;
+
 namespace TestFlatFileConnectors.CsvDestination
 {
     public class CsvDestinationErrorLinkingTests

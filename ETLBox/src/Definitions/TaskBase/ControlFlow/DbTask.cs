@@ -1,7 +1,10 @@
-﻿using System.Data.Odbc;
+using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -156,7 +159,7 @@ namespace ALE.ETLBox.ControlFlow
                 return false;
             if (int.TryParse(result.ToString(), out var number) && number > 0)
                 return true;
-            if (result.ToString().Trim().ToLower() == "true")
+            if (result.ToString().Trim().Equals("true", StringComparison.CurrentCultureIgnoreCase))
                 return true;
             return false;
         }
@@ -235,16 +238,16 @@ namespace ALE.ETLBox.ControlFlow
                 TaskType,
                 "START",
                 TaskHash,
-                ControlFlow.Stage,
-                ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             NLogger.Debug(
                 logType == LogType.Bulk ? "SQL Bulk Insert" : $"{Command}",
                 TaskType,
                 "RUN",
                 TaskHash,
-                ControlFlow.Stage,
-                ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
         }
 
@@ -255,8 +258,8 @@ namespace ALE.ETLBox.ControlFlow
                 TaskType,
                 "END",
                 TaskHash,
-                ControlFlow.Stage,
-                ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
                 NLogger.Debug(
@@ -264,8 +267,8 @@ namespace ALE.ETLBox.ControlFlow
                     TaskType,
                     "RUN",
                     TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    Common.ControlFlow.ControlFlow.Stage,
+                    Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
     }

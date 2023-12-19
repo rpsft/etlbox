@@ -1,6 +1,6 @@
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {

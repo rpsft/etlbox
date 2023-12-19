@@ -1,6 +1,7 @@
 using System.Dynamic;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {

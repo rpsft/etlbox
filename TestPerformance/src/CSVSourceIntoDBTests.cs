@@ -1,8 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using ALE.ETLBoxTests.Performance.Fixtures;
 using ALE.ETLBoxTests.Performance.Helper;
+using ETLBox.Primitives;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance

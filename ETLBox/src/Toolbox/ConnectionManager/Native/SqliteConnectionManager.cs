@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ALE.ETLBox.ConnectionManager.Helpers;
+using ETLBox.Primitives;
 using Microsoft.Data.Sqlite;
 
 namespace ALE.ETLBox.ConnectionManager

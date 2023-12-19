@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ETLBox.Primitives;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow

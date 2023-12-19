@@ -1,4 +1,5 @@
 using System.Net.Http;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -7,6 +8,12 @@ namespace ALE.ETLBox.DataFlow
         private readonly HttpClient _httpClient = new ();
 
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             _httpClient.Dispose();
         }

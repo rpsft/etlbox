@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.ConnectionManager
+﻿using ETLBox.Primitives;
+
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Sql Connection manager for an ODBC connection based on ADO.NET to Sql Server.

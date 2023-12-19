@@ -1,5 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Logging
 {
@@ -23,7 +25,7 @@ namespace ALE.ETLBox.Logging
             LogTable.CopyTaskProperties(this);
             LogTable.DisableLogging = true;
             LogTable.Create();
-            ControlFlow.ControlFlow.LogTable = LogTableName;
+            Common.ControlFlow.ControlFlow.LogTable = LogTableName;
         }
 
         public CreateLogTableTask(string logTableName)
@@ -57,12 +59,12 @@ namespace ALE.ETLBox.Logging
         }
 
         public static void Create(
-            string logTableName = ControlFlow.ControlFlow.DefaultLogTableName
+            string logTableName = Common.ControlFlow.ControlFlow.DefaultLogTableName
         ) => new CreateLogTableTask(logTableName).Execute();
 
         public static void Create(
             IConnectionManager connectionManager,
-            string logTableName = ControlFlow.ControlFlow.DefaultLogTableName
+            string logTableName = Common.ControlFlow.ControlFlow.DefaultLogTableName
         ) => new CreateLogTableTask(connectionManager, logTableName).Execute();
     }
 }

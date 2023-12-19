@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.UseCases
