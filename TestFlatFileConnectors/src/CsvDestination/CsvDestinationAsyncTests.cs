@@ -1,8 +1,7 @@
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 using Xunit.Abstractions;
 
-namespace TestFlatFileConnectors.src.CsvDestination
+namespace TestFlatFileConnectors.CsvDestination
 {
     public sealed class CsvDestinationAsyncTests
     {

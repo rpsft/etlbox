@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.src.Toolbox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Contains static information which affects all Dataflow tasks in ETLBox.

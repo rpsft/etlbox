@@ -1,10 +1,9 @@
 using System.Net.Http;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestOtherConnectors.src;
-using TestOtherConnectors.src.Fixture;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestOtherConnectors.Fixture;
 
-namespace TestOtherConnectors.src.CustomSource
+namespace TestOtherConnectors.CustomSource
 {
     public class CustomSourceWebServiceTests : OtherConnectorsTestBase
     {

@@ -1,9 +1,8 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestShared.src.SharedFixtures;
-using TestTransformations.src;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox.DataFlow;
+using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.RowDuplication
+namespace TestTransformations.RowDuplication
 {
     public class RowDuplicationDynamicObjectTests : TransformationsTestBase
     {
@@ -20,8 +19,8 @@ namespace TestTransformations.src.RowDuplication
             source2Columns.InsertTestData();
 
             var source = new DbSource(SqlConnection, "RowDuplicationSource");
-            ALE.ETLBox.src.Toolbox.DataFlow.RowDuplication duplication =
-                new ALE.ETLBox.src.Toolbox.DataFlow.RowDuplication();
+            ALE.ETLBox.DataFlow.RowDuplication duplication =
+                new ALE.ETLBox.DataFlow.RowDuplication();
             var dest = new MemoryDestination();
 
             //Act
@@ -70,8 +69,8 @@ namespace TestTransformations.src.RowDuplication
             source2Columns.InsertTestData();
 
             var source = new DbSource(SqlConnection, "RowDuplicationSource");
-            ALE.ETLBox.src.Toolbox.DataFlow.RowDuplication duplication =
-                new ALE.ETLBox.src.Toolbox.DataFlow.RowDuplication(row =>
+            ALE.ETLBox.DataFlow.RowDuplication duplication =
+                new ALE.ETLBox.DataFlow.RowDuplication(row =>
                 {
                     dynamic r = row;
                     return r.Col1 == 1 || r.Col2 == "Test3";

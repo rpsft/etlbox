@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.src.Definitions.Database
+﻿namespace ALE.ETLBox
 {
     public interface ITableData : IDataReader
     {

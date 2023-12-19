@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using ALE.ETLBoxTests.Performance.src.Fixtures;
-using TestShared.src.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBoxTests.Performance.Fixtures;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Performance.src
+namespace ALE.ETLBoxTests.Performance
 {
     [CollectionDefinition("Performance")]
     public class PerformanceCollectionClass : ICollectionFixture<PerformanceDatabaseFixture> { }

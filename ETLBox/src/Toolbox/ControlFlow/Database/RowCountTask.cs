@@ -1,8 +1,6 @@
-﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.TaskBase;
+﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables).

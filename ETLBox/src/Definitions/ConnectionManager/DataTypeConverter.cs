@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ALE.ETLBox.src.Definitions.ConnectionManager
+namespace ALE.ETLBox.ConnectionManager
 {
     [PublicAPI]
     public static class DataTypeConverter

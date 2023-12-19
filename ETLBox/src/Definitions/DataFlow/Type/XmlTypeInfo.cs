@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     internal sealed class XmlTypeInfo : TypeInfo
     {

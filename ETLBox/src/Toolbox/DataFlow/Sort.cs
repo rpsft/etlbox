@@ -1,6 +1,4 @@
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Sort the input with the given sort function.

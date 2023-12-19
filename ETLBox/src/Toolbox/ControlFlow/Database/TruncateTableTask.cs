@@ -1,8 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Truncates a table.

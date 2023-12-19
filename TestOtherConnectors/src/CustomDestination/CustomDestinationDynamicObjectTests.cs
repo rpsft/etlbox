@@ -1,11 +1,10 @@
 using System.Dynamic;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestOtherConnectors.src;
-using TestOtherConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestOtherConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestOtherConnectors.src.CustomDestination
+namespace TestOtherConnectors.CustomDestination
 {
     public class CustomDestinationDynamicObjectTests : OtherConnectorsTestBase
     {

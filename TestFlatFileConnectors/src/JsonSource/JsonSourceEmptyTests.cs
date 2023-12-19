@@ -1,14 +1,13 @@
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 
-namespace TestFlatFileConnectors.src.JsonSource
+namespace TestFlatFileConnectors.JsonSource
 {
     public class JsonSourceEmptyTests
     {
         [Fact]
         public void ReadEmptyArray()
         {
-            ALE.ETLBox.src.Toolbox.DataFlow.JsonSource source = new ALE.ETLBox.src.Toolbox.DataFlow.JsonSource(
+            ALE.ETLBox.DataFlow.JsonSource source = new ALE.ETLBox.DataFlow.JsonSource(
                 "res/JsonSource/EmptyArray.json",
                 ResourceType.File
             );
@@ -24,7 +23,7 @@ namespace TestFlatFileConnectors.src.JsonSource
         [Fact]
         public void JsonFromWebService()
         {
-            ALE.ETLBox.src.Toolbox.DataFlow.JsonSource source = new ALE.ETLBox.src.Toolbox.DataFlow.JsonSource(
+            ALE.ETLBox.DataFlow.JsonSource source = new ALE.ETLBox.DataFlow.JsonSource(
                 "res/JsonSource/EmptyObject.json",
                 ResourceType.File
             );

@@ -1,9 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.src.Toolbox.Logging
+namespace ALE.ETLBox.Logging
 {
     /// <summary>
     /// Used this task for custom log messages.

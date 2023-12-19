@@ -1,6 +1,6 @@
-﻿using TestShared.src.Helper;
+﻿using TestShared.Helper;
 
-namespace TestOtherConnectors.src.Fixture
+namespace TestOtherConnectors.Fixture
 {
     public sealed class OtherConnectorsDatabaseFixture : IDisposable
     {

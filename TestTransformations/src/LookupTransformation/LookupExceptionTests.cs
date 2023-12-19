@@ -1,8 +1,7 @@
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox;
+using ALE.ETLBox.DataFlow;
 
-namespace TestTransformations.src.LookupTransformation
+namespace TestTransformations.LookupTransformation
 {
     public class LookupExceptionTests
     {

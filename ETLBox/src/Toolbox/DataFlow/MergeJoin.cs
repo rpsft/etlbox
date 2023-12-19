@@ -1,7 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Will join data from the two inputs into one output - on a row by row base. Make sure both inputs are sorted or in the right order.

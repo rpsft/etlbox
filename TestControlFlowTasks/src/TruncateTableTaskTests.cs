@@ -1,9 +1,9 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TestControlFlowTasks.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
+using TestShared.SharedFixtures;
 
-namespace TestControlFlowTasks.src
+namespace TestControlFlowTasks
 {
     public class TruncateTableTaskTests : ControlFlowTestBase
     {

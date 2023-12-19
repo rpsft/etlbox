@@ -1,7 +1,4 @@
-using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow;
-
-namespace ALE.ETLBox.src.Definitions.TaskBase.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowTransformation<TInput, TOutput>

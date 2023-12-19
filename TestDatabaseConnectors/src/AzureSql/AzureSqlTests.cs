@@ -1,12 +1,10 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ControlFlow.SqlServer;
+using ALE.ETLBox.DataFlow;
+using TestDatabaseConnectors.Fixtures;
+using TestShared.SharedFixtures;
 
-namespace TestDatabaseConnectors.src.AzureSql
+namespace TestDatabaseConnectors.AzureSql
 {
     public sealed class IgnoreOnNonAzureEnvironmentFactAttribute : FactAttribute
     {

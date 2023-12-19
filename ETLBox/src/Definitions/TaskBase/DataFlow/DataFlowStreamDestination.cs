@@ -2,10 +2,9 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.Helper;
 
-namespace ALE.ETLBox.src.Definitions.TaskBase.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowStreamDestination<TInput> : DataFlowDestination<TInput>

@@ -1,11 +1,9 @@
 using System.Linq;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Logging;
-using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.ConnectionManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ALE.ETLBox.src.Toolbox.Logging
+namespace ALE.ETLBox.Logging
 {
     /// <summary>
     /// Returns the content of the etl.Log table as a JSON string.

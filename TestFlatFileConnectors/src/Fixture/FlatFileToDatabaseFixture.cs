@@ -1,6 +1,6 @@
-﻿using TestShared.src.Helper;
+﻿using TestShared.Helper;
 
-namespace TestFlatFileConnectors.src.Fixture
+namespace TestFlatFileConnectors.Fixture
 {
     public sealed class FlatFileToDatabaseFixture : IDisposable
     {

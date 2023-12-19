@@ -1,12 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TestControlFlowTasks.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
+using TestShared.SharedFixtures;
 
-namespace TestControlFlowTasks.src
+namespace TestControlFlowTasks
 {
     public class SqlTaskTests : ControlFlowTestBase
     {

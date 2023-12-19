@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.src.Definitions.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     public interface IDataFlowDestination<in TInput> : IDataFlowLinkTarget<TInput>
     {

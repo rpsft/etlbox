@@ -1,7 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Helper;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
 using EtlBox.Database.Tests.Infrastructure;
 using Xunit.Abstractions;
 

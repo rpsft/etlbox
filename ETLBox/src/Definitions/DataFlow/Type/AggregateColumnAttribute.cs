@@ -1,6 +1,4 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute is used to identify the aggregation property for aggregations. The passed column name

@@ -1,8 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Drops a database. Use DropIfExists to drop a database only if it exists. In MySql, this will drop a schema.

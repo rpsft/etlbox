@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
-using ALE.ETLBox.src.Definitions.Exceptions;
 
-namespace ALE.ETLBox.src.Definitions.Database
+namespace ALE.ETLBox
 {
     public sealed class ObjectNameDescriptor
     {

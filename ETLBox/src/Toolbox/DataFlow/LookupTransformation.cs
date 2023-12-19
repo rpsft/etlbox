@@ -1,10 +1,6 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.Helper;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A lookup task - data from the input can be enriched with data retrieved from the lookup source.

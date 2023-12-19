@@ -1,7 +1,7 @@
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer;
-using TestControlFlowTasks.src.Fixtures;
+using ALE.ETLBox.ControlFlow.SqlServer;
+using TestControlFlowTasks.Fixtures;
 
-namespace TestControlFlowTasks.src.SqlServer
+namespace TestControlFlowTasks.SqlServer
 {
     public class XmlaTaskTests : ControlFlowTestBase
     {

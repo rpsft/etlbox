@@ -1,10 +1,6 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
-using Microsoft.Extensions.Logging;
+using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Transforms the data row-by-row with the help of the transformation function.

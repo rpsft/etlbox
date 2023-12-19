@@ -1,8 +1,8 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestShared.src.SharedFixtures;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox.DataFlow;
+using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.Multicast
+namespace TestTransformations.Multicast
 {
     public class MulticastDynamicObjectTests : TransformationsTestBase
     {

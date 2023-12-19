@@ -1,8 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.TaskBase;
+using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer
+namespace ALE.ETLBox.ControlFlow.SqlServer
 {
     /// <summary>
     /// Tries to remove all database objects from the given schema(s).

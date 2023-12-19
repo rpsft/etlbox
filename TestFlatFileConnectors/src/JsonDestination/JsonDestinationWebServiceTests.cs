@@ -1,11 +1,10 @@
 using System.Net.Http;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 using Moq;
 using Moq.Contrib.HttpClient;
-using TestFlatFileConnectors.src.Fixture;
+using TestFlatFileConnectors.Fixture;
 
-namespace TestFlatFileConnectors.src.JsonDestination
+namespace TestFlatFileConnectors.JsonDestination
 {
     public class JsonDestinationWebServiceTests : FlatFileConnectorsTestBase
     {

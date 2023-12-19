@@ -1,10 +1,7 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a json source. This can be any http resource or a file.

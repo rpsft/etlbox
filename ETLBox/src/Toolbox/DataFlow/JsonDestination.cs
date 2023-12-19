@@ -1,9 +1,6 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A Json destination defines a json file where data from the flow is inserted.

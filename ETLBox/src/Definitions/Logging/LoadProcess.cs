@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.src.Definitions.Logging
+﻿namespace ALE.ETLBox.Logging
 {
     public class LoadProcess
     {

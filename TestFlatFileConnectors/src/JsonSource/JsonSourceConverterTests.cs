@@ -1,11 +1,10 @@
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Helper.JsonConverter;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestFlatFileConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Helper;
+using TestFlatFileConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.src.JsonSource
+namespace TestFlatFileConnectors.JsonSource
 {
     public class JsonSourceConverterTests : FlatFileConnectorsTestBase
     {

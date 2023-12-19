@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 
-namespace ALE.ETLBox.src.Helper
+namespace ALE.ETLBox.Helper
 {
     internal abstract class DelegatingStream : Stream
     {

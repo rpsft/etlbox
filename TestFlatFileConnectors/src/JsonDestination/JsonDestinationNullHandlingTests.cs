@@ -1,9 +1,8 @@
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestFlatFileConnectors.src.Fixture;
-using TestFlatFileConnectors.src.Helpers;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
+using TestFlatFileConnectors.Helpers;
 
-namespace TestFlatFileConnectors.src.JsonDestination
+namespace TestFlatFileConnectors.JsonDestination
 {
     public class JsonDestinationNullHandlingTests : FlatFileConnectorsTestBase
     {

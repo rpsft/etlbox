@@ -1,4 +1,4 @@
-namespace TestOtherConnectors.src.Helpers
+namespace TestOtherConnectors.Helpers
 {
     public static class StringExtensions
     {

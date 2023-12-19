@@ -1,14 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using CsvHelper;
 using CsvHelper.Configuration;
-using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a csv source. While reading the data from the file, data is also asynchronously posted into the targets.

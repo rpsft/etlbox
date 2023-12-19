@@ -1,6 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 
 namespace EtlBox.Database.Tests.SharedFixtures
 {

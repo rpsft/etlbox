@@ -1,7 +1,4 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase;
-
-namespace ALE.ETLBox.src.Definitions.TaskBase.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowSource<TOutput> : DataFlowTask

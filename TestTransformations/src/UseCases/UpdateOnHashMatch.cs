@@ -1,11 +1,10 @@
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Helper;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestTransformations.src;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Helper;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.UseCases
+namespace TestTransformations.UseCases
 {
     public class UpdateOnHashMatchTests : TransformationsTestBase
     {

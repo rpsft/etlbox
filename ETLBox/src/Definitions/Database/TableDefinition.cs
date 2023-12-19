@@ -1,12 +1,9 @@
 using System.Linq;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Helper;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
 
-namespace ALE.ETLBox.src.Definitions.Database
+namespace ALE.ETLBox
 {
     public class TableDefinition
     {

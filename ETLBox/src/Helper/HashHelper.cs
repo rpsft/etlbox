@@ -1,9 +1,8 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using ALE.ETLBox.src.Definitions.TaskBase;
 
-namespace ALE.ETLBox.src.Helper
+namespace ALE.ETLBox.Helper
 {
     public static class HashHelper
     {

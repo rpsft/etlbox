@@ -1,4 +1,4 @@
-namespace TestFlatFileConnectors.src.Helpers
+namespace TestFlatFileConnectors.Helpers
 {
     public static class StringExtensions
     {

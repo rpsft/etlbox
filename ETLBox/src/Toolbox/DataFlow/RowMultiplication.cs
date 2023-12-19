@@ -1,7 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This transformation allow you to transform your input data into multple output data records.

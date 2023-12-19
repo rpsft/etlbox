@@ -1,7 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Will cross join data from the two inputs into one output. The input for the first table will be loaded into memory before the actual

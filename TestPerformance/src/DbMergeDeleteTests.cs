@@ -1,13 +1,11 @@
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Helper;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using ALE.ETLBoxTests.Performance.src.Fixtures;
-using TestShared.src.Helper;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Helper;
+using ALE.ETLBoxTests.Performance.Fixtures;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Performance.src
+namespace ALE.ETLBoxTests.Performance
 {
     public class DbMergeDeleteTests : PerformanceTestBase
     {

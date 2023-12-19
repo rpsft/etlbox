@@ -1,10 +1,7 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using ALE.ETLBox.src.Helper;
+﻿using ALE.ETLBox.Helper;
 using ExcelDataReader;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a excel source. While reading the data from the file, data is also asnychronously posted into the targets.

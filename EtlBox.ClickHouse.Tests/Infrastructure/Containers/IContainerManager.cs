@@ -1,5 +1,5 @@
 using System.Data.Common;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace EtlBox.Database.Tests.Infrastructure.Containers
 {

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public class ErrorHandler

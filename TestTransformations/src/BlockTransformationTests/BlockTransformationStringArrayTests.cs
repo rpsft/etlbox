@@ -1,10 +1,9 @@
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestShared.src.SharedFixtures;
-using TestTransformations.src;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.BlockTransformationTests
+namespace TestTransformations.BlockTransformationTests
 {
     public class BlockTransformationStringArrayTests : TransformationsTestBase
     {

@@ -1,14 +1,8 @@
 using System.Linq;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A database destination represents a table where data from the flow is inserted.

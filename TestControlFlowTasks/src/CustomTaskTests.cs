@@ -1,6 +1,6 @@
-using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+using ALE.ETLBox.ControlFlow;
 
-namespace TestControlFlowTasks.src
+namespace TestControlFlowTasks
 {
     public class CustomTaskTests
     {

@@ -1,8 +1,8 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestFlatFileConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.src.CsvDestination
+namespace TestFlatFileConnectors.CsvDestination
 {
     public class CsvDestinationTests : FlatFileConnectorsTestBase
     {

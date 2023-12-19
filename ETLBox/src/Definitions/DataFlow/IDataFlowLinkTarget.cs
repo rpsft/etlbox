@@ -1,6 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.TaskBase;
-
-namespace ALE.ETLBox.src.Definitions.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     public interface IDataFlowLinkTarget<in TInput> : ITask
     {

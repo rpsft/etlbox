@@ -1,7 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.TaskBase;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This destination if used as a trash.

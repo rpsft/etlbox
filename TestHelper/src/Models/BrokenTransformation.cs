@@ -1,7 +1,6 @@
 using System;
 using System.Dynamic;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.src.Toolbox.DataFlow;
 using JetBrains.Annotations;
 
 namespace TestHelper.Models
@@ -21,7 +20,7 @@ namespace TestHelper.Models
                 {
                     if (!ErrorHandler.HasErrorBuffer)
                         throw;
-                    ErrorHandler.Send(e, ALE.ETLBox.src.Definitions.DataFlow.ErrorHandler.ConvertErrorData(source));
+                    ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(source));
                 }
 
                 return new ExpandoObject();

@@ -1,7 +1,7 @@
-﻿using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using TestShared.src.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.NonParallel.src.Fixtures
+namespace ALE.ETLBoxTests.NonParallel.Fixtures
 {
     public sealed class NoLoggingDatabaseFixture : IDisposable
     {

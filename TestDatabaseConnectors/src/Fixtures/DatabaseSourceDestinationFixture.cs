@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using TestShared.src.Helper;
+using TestShared.Helper;
 
-namespace TestDatabaseConnectors.src.Fixtures
+namespace TestDatabaseConnectors.Fixtures
 {
     public sealed class DatabaseSourceDestinationFixture : IDisposable
     {

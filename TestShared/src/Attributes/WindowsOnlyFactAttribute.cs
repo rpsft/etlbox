@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace TestShared.src.Attributes
+namespace TestShared.Attributes
 {
     public sealed class WindowsOnlyFactAttribute : FactAttribute
     {

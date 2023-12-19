@@ -1,12 +1,10 @@
 using System.Dynamic;
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestDatabaseConnectors.Fixtures;
+using TestShared.SharedFixtures;
 
-namespace TestDatabaseConnectors.src.DBMerge
+namespace TestDatabaseConnectors.DBMerge
 {
     public class DbMergeDynamicObjectTests : DatabaseConnectorsTestBase
     {

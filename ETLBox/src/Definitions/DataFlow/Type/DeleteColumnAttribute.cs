@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines if the column is used to identify if the record is supposed to be deleted.

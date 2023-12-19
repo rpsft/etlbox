@@ -1,11 +1,10 @@
 using System.Net;
 using System.Net.Http;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 using Moq;
 using Moq.Protected;
 
-namespace TestFlatFileConnectors.src.JsonSource
+namespace TestFlatFileConnectors.JsonSource
 {
     public class JsonSourceWebServiceTests
     {

@@ -1,9 +1,8 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestOtherConnectors.src;
-using TestOtherConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.DataFlow;
+using TestOtherConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestOtherConnectors.src.MemorySource
+namespace TestOtherConnectors.MemorySource
 {
     public class MemorySourceStringArrayTests : OtherConnectorsTestBase
     {

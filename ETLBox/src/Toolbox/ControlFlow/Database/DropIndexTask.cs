@@ -1,8 +1,6 @@
-﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+﻿using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Drops an index. Use DropIfExists to drop an index only if it exists.

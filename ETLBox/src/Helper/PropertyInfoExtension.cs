@@ -1,6 +1,4 @@
-using ALE.ETLBox.src.Definitions.Exceptions;
-
-namespace ALE.ETLBox.src.Helper
+namespace ALE.ETLBox.Helper
 {
     public static class PropertyInfoExtension
     {

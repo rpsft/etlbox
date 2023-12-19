@@ -1,10 +1,8 @@
 using System.Linq;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Helper;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer
+namespace ALE.ETLBox.ControlFlow.SqlServer
 {
     /// <summary>
     /// Calculates a hash value of the database. It will use only the schemas given in the property SchemaName for the calculation.

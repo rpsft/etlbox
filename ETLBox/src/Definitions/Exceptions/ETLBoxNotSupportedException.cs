@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ALE.ETLBox.src.Definitions.Exceptions
+namespace ALE.ETLBox
 {
     /// <summary>
     /// The generic ETLBox Exception. See inner exception for more details.

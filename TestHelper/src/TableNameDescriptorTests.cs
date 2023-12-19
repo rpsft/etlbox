@@ -1,7 +1,6 @@
 using ALE.ETLBox;
-using ALE.ETLBox.src.Definitions.Database;
 
-namespace TestHelper.src
+namespace TestHelper
 {
     public class TableNameDescriptorTests
     {

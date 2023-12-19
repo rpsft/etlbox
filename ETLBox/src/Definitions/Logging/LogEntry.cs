@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Newtonsoft.Json;
 
-namespace ALE.ETLBox.src.Definitions.Logging
+namespace ALE.ETLBox.Logging
 {
     [DebuggerDisplay("#{Id} {TaskType} - {TaskAction} {LogDate}")]
     public class LogEntry

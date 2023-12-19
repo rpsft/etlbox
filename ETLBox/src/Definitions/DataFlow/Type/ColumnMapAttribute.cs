@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines a column name to which the value of the property is mapped when writing or reading

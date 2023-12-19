@@ -1,8 +1,8 @@
 using System;
 using System.Reflection;
-using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.Helper;
 
-namespace TestHelper.src
+namespace TestHelper
 {
     public class PropertyInfoExtensionsTests
     {

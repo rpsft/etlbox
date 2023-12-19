@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
+using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.src.Definitions.TaskBase
+namespace ALE.ETLBox
 {
     [PublicAPI]
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
@@ -12,8 +12,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
         {
             get
             {
-                return Toolbox.DataFlow.DataFlow.HasLoggingThresholdRows
-                    ? Toolbox.DataFlow.DataFlow.LoggingThresholdRows
+                return DataFlow.DataFlow.HasLoggingThresholdRows
+                    ? DataFlow.DataFlow.LoggingThresholdRows
                     : _loggingThresholdRows;
             }
             set { _loggingThresholdRows = value; }
@@ -32,8 +32,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                     TaskType,
                     "START",
                     TaskHash,
-                    Toolbox.ControlFlow.ControlFlow.Stage,
-                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
@@ -45,8 +45,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                     TaskType,
                     "LOG",
                     TaskHash,
-                    Toolbox.ControlFlow.ControlFlow.Stage,
-                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             if (!DisableLogging)
                 Logger.Info(
@@ -54,8 +54,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                     TaskType,
                     "END",
                     TaskHash,
-                    Toolbox.ControlFlow.ControlFlow.Stage,
-                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
@@ -76,8 +76,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                 TaskType,
                 "LOG",
                 TaskHash,
-                Toolbox.ControlFlow.ControlFlow.Stage,
-                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                ControlFlow.ControlFlow.Stage,
+                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             ThresholdCount++;
         }
@@ -99,8 +99,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase
                 TaskType,
                 "LOG",
                 TaskHash,
-                Toolbox.ControlFlow.ControlFlow.Stage,
-                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                ControlFlow.ControlFlow.Stage,
+                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
         }
     }

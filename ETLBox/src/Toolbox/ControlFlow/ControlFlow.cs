@@ -1,11 +1,10 @@
 using System.Collections;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.Logging;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Contains static information which affects all ETLBox tasks.

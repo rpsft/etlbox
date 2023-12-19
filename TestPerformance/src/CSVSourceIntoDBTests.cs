@@ -1,13 +1,13 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Helper;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using ALE.ETLBoxTests.Performance.src.Fixtures;
-using ALE.ETLBoxTests.Performance.src.Helper;
-using TestShared.src.Helper;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Helper;
+using ALE.ETLBoxTests.Performance.Fixtures;
+using ALE.ETLBoxTests.Performance.Helper;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Performance.src
+namespace ALE.ETLBoxTests.Performance
 {
     public class CsvSourceIntoDBTests : PerformanceTestBase
     {

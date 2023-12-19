@@ -1,6 +1,4 @@
-using ALE.ETLBox.src.Definitions.Exceptions;
-
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     internal abstract class MappingTypeInfo
     {

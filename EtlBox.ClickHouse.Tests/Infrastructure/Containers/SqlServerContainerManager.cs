@@ -3,8 +3,7 @@
 //
 
 using System.Data.Common;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
+using ALE.ETLBox.ConnectionManager;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Microsoft.Data.SqlClient;

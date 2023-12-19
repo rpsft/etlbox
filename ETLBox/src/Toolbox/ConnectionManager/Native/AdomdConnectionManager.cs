@@ -1,9 +1,6 @@
-﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Definitions.Database;
-using Microsoft.AnalysisServices.AdomdClient;
+﻿using Microsoft.AnalysisServices.AdomdClient;
 
-namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for Adomd connection to a sql server analysis server.

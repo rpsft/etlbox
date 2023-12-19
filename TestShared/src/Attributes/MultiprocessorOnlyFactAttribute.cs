@@ -1,4 +1,4 @@
-namespace TestShared.src.Attributes
+namespace TestShared.Attributes
 {
     public sealed class MultiprocessorOnlyFactAttribute : FactAttribute
     {

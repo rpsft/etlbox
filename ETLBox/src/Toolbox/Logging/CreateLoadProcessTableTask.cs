@@ -1,9 +1,7 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.src.Toolbox.Logging
+namespace ALE.ETLBox.Logging
 {
     /// <summary>
     /// Will create the default load process table for the default database logging.

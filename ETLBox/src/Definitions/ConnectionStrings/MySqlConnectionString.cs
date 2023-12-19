@@ -1,6 +1,6 @@
 using MySql.Data.MySqlClient;
 
-namespace ALE.ETLBox.src.Definitions.ConnectionStrings
+namespace ALE.ETLBox
 {
     /// <summary>
     /// A helper class for encapsulating a connection string to a MySql server in an object.

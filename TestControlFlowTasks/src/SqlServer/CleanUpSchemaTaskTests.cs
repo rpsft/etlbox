@@ -1,10 +1,10 @@
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Helper;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer;
-using TestControlFlowTasks.src.Fixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ControlFlow.SqlServer;
+using ALE.ETLBox.Helper;
+using TestControlFlowTasks.Fixtures;
 
-namespace TestControlFlowTasks.src.SqlServer
+namespace TestControlFlowTasks.SqlServer
 {
     public class CleanUpSchemaTaskTests : ControlFlowTestBase
     {

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace ALE.ETLBox.src.Helper.JsonConverter
+namespace ALE.ETLBox.Helper
 {
     /// <summary>
     /// A JsonConverter that support json path expression in JsonProperty attributes.

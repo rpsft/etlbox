@@ -1,9 +1,8 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestShared.src.SharedFixtures;
-using TestTransformations.src;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox.DataFlow;
+using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.CrossJoinTests
+namespace TestTransformations.CrossJoinTests
 {
     public class CrossJoinDynamicObjectTests : TransformationsTestBase
     {

@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
 
-namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// A custom task allows you to run your own code (defined as an Action object), with additionally logging in place. (TaskType: CUSTOM)
@@ -65,8 +63,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                     TaskType,
                     "START",
                     TaskHash,
-                    Toolbox.ControlFlow.ControlFlow.Stage,
-                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.Stage,
+                    ControlFlow.CurrentLoadProcess?.Id
                 );
         }
 
@@ -78,8 +76,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                     TaskType,
                     "END",
                     TaskHash,
-                    Toolbox.ControlFlow.ControlFlow.Stage,
-                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.Stage,
+                    ControlFlow.CurrentLoadProcess?.Id
                 );
         }
     }

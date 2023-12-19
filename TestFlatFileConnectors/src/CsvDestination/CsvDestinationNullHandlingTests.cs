@@ -1,6 +1,6 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 
-namespace TestFlatFileConnectors.src.CsvDestination
+namespace TestFlatFileConnectors.CsvDestination
 {
     public class CsvDestinationNullHandlingTests
     {

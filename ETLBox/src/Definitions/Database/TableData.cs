@@ -1,10 +1,9 @@
 using System.Data.Common;
 using System.Linq;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using static ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
+using ALE.ETLBox.DataFlow;
+using static ALE.ETLBox.DataFlow.TypeInfo;
 
-namespace ALE.ETLBox.src.Definitions.Database
+namespace ALE.ETLBox
 {
     [PublicAPI]
     public sealed class TableData : TableData<object[]>

@@ -2,7 +2,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ALE.ETLBox.src.Helper.JsonConverter
+namespace ALE.ETLBox.Helper
 {
     [PublicAPI]
     public class JsonProperty2JsonPath

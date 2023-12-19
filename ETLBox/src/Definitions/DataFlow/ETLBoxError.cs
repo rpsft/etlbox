@@ -1,4 +1,4 @@
-﻿namespace ALE.ETLBox.src.Definitions.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// The generic ETLBox Exception. See inner exception for more details.

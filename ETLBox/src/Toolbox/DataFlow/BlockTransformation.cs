@@ -1,7 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+﻿namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation

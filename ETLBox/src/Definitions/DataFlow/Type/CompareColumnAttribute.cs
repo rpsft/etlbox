@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// This attribute defines if the column is included in the comparison to identify

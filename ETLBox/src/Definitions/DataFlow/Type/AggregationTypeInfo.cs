@@ -1,7 +1,6 @@
 using System.Linq;
-using ALE.ETLBox.src.Toolbox.DataFlow;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow.Type
+namespace ALE.ETLBox.DataFlow
 {
     internal sealed class AggregationTypeInfo : MappingTypeInfo
     {

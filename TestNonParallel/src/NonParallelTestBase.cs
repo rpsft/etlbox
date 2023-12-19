@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using ALE.ETLBoxTests.NonParallel.src.Fixtures;
-using TestShared.src.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.NonParallel.src
+namespace ALE.ETLBoxTests.NonParallel
 {
     [CollectionDefinition("Logging")]
     public class LoggingCollectionClass : ICollectionFixture<LoggingDatabaseFixture> { }

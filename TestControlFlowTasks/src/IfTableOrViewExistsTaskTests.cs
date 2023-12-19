@@ -1,10 +1,9 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TestControlFlowTasks.src.Fixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
-namespace TestControlFlowTasks.src
+namespace TestControlFlowTasks
 {
     public class IfTableOrViewExistsTaskTests : ControlFlowTestBase
     {

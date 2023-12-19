@@ -1,7 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using EtlBox.Database.Tests.Attributes;
 using EtlBox.Database.Tests.Infrastructure;
 using Microsoft.Data.SqlClient;

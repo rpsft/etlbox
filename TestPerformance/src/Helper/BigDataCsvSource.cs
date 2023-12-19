@@ -1,8 +1,8 @@
 using System.IO;
-using ALE.ETLBox.src.Definitions.Database;
-using TestShared.src.Helper;
+using ALE.ETLBox;
+using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.Performance.src.Helper
+namespace ALE.ETLBoxTests.Performance.Helper
 {
     public static class BigDataCsvSource
     {

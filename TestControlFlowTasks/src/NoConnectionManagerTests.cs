@@ -1,8 +1,7 @@
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
 
-namespace TestControlFlowTasks.src
+namespace TestControlFlowTasks
 {
     public class NoConnectionManagerTests
     {

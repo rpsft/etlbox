@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using TestControlFlowTasks.src.Fixtures;
-using TestShared.src.Helper;
+﻿using ALE.ETLBox.ConnectionManager;
+using TestControlFlowTasks.Fixtures;
+using TestShared.Helper;
 
-namespace TestControlFlowTasks.src
+namespace TestControlFlowTasks
 {
     [Collection("ControlFlow")]
     public class ControlFlowTestBase

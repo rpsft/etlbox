@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TestControlFlowTasks.src.Fixtures;
-using TestShared.src.Attributes;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
+using TestShared.Attributes;
 
-
-namespace TestControlFlowTasks.src;
+namespace TestControlFlowTasks;
 
 public class SqlTaskInParallelTests : ControlFlowTestBase
 {

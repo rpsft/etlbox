@@ -1,10 +1,10 @@
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestOtherConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestOtherConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestOtherConnectors.src.CustomSource
+namespace TestOtherConnectors.CustomSource
 {
     public class CustomSourceAsyncTests : OtherConnectorsTestBase
     {
@@ -59,12 +59,12 @@ namespace TestOtherConnectors.src.CustomSource
         public void ExceptionalAsyncFlow()
         {
             //Arrange
-            ALE.ETLBox.src.Toolbox.DataFlow.CustomSource source = new ALE.ETLBox.src.Toolbox.DataFlow.CustomSource(
+            ALE.ETLBox.DataFlow.CustomSource source = new ALE.ETLBox.DataFlow.CustomSource(
                 () => throw new ETLBoxException("Test Exception"),
                 () => false
             );
-            ALE.ETLBox.src.Toolbox.DataFlow.CustomDestination dest =
-                new ALE.ETLBox.src.Toolbox.DataFlow.CustomDestination(_ => { });
+            ALE.ETLBox.DataFlow.CustomDestination dest =
+                new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
 
             //Act
             source.LinkTo(dest);

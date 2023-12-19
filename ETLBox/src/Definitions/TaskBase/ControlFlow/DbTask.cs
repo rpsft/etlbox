@@ -1,11 +1,9 @@
 using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
+using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
+namespace ALE.ETLBox.ControlFlow
 {
     [PublicAPI]
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
@@ -247,16 +245,16 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                 TaskType,
                 "START",
                 TaskHash,
-                Toolbox.ControlFlow.ControlFlow.Stage,
-                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                ControlFlow.Stage,
+                ControlFlow.CurrentLoadProcess?.Id
             );
             Logger.Debug(
                 logType == LogType.Bulk ? "SQL Bulk Insert" : $"{Command}",
                 TaskType,
                 "RUN",
                 TaskHash,
-                Toolbox.ControlFlow.ControlFlow.Stage,
-                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                ControlFlow.Stage,
+                ControlFlow.CurrentLoadProcess?.Id
             );
         }
 
@@ -267,8 +265,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                 TaskType,
                 "END",
                 TaskHash,
-                Toolbox.ControlFlow.ControlFlow.Stage,
-                Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                ControlFlow.Stage,
+                ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
                 Logger.Debug(
@@ -276,8 +274,8 @@ namespace ALE.ETLBox.src.Definitions.TaskBase.ControlFlow
                     TaskType,
                     "RUN",
                     TaskHash,
-                    Toolbox.ControlFlow.ControlFlow.Stage,
-                    Toolbox.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.Stage,
+                    ControlFlow.CurrentLoadProcess?.Id
                 );
         }
     }

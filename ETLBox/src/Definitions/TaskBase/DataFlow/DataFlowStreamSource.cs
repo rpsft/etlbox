@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
 
-namespace ALE.ETLBox.src.Definitions.TaskBase.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowStreamSource<TOutput> : DataFlowSource<TOutput>

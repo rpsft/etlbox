@@ -1,4 +1,4 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 using Xunit.Abstractions;
 
 namespace EtlBox.Database.Tests.Infrastructure

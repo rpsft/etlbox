@@ -1,11 +1,7 @@
 using System.Linq;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using ALE.ETLBox.src.Helper;
-using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
+using ALE.ETLBox.Helper;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Aggregates data by the given aggregation method.

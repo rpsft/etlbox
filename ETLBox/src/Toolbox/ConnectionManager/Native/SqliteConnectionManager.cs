@@ -1,11 +1,8 @@
 ﻿using System.Linq;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Native.Helpers;
+using ALE.ETLBox.ConnectionManager.Helpers;
 using Microsoft.Data.Sqlite;
 
-namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an SQLite connection based on ADO.NET.

@@ -1,10 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.ControlFlow;
 using Microsoft.Extensions.Logging;
 
-namespace ALE.ETLBox.src.Definitions.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
     [PublicAPI]
@@ -12,7 +10,7 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
     {
         public ISourceBlock<TOutput> SourceBlock { get; set; }
         public bool DisableLogging => CallingTask.DisableLogging;
-        public ILogger Logger { get; set; } = ControlFlow.GetLogger<DataFlowLinker<TOutput>>();
+        public ILogger Logger { get; set; } = ControlFlow.ControlFlow.GetLogger<DataFlowLinker<TOutput>>();
         public DataFlowTask CallingTask { get; set; }
 
         public DataFlowLinker(DataFlowTask callingTask, ISourceBlock<TOutput> sourceBlock)
@@ -34,8 +32,8 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             return target as IDataFlowLinkSource<TConvert>;
         }
@@ -58,8 +56,8 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             return target as IDataFlowLinkSource<TConvert>;
         }
@@ -84,8 +82,8 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
 
             var voidTarget = new VoidDestination<TOutput>();
@@ -98,8 +96,8 @@ namespace ALE.ETLBox.src.Definitions.DataFlow
                     CallingTask.TaskType,
                     "LOG",
                     CallingTask.TaskHash,
-                    ControlFlow.Stage,
-                    ControlFlow.CurrentLoadProcess?.Id
+                    ControlFlow.ControlFlow.Stage,
+                    ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
 
             return target as IDataFlowLinkSource<TConvert>;

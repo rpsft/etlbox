@@ -1,10 +1,7 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
-using ALE.ETLBox.src.Helper;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Helper;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database
+namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Executes any sql on the database. Use ExecuteNonQuery for SQL statements returning no data, ExecuteScalar for statements with one row and one column or

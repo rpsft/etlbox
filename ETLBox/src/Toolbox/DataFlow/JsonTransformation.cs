@@ -1,7 +1,7 @@
-using ALE.ETLBox.src.Toolbox.DataFlow.Mappings;
+using ALE.ETLBox.DataFlow.Mappings;
 using Newtonsoft.Json.Linq;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     [PublicAPI]
     public class JsonTransformation : RowTransformation<ExpandoObject>

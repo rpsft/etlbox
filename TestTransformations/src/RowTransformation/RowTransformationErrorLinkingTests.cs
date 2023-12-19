@@ -1,11 +1,10 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using ALE.ETLBox.src.Toolbox.Logging;
-using TestShared.src.SharedFixtures;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Logging;
+using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.RowTransformation
+namespace TestTransformations.RowTransformation
 {
     public class RowTransformationErrorLinkingTests : TransformationsTestBase
     {

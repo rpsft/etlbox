@@ -1,9 +1,7 @@
 using System.Text.RegularExpressions;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
-using ALE.ETLBox.src.Toolbox.ControlFlow;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.Logging;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Logging;
 using EtlBox.Database.Tests.Infrastructure;
 using EtlBox.Logging.Database;
 using Xunit.Abstractions;
@@ -21,7 +19,7 @@ namespace EtlBox.Database.Tests.Logging.Database
             CreateLoadProcessTableTask.Create(_connectionManager);
             CreateLogTableTask.Create(_connectionManager);
             DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(_connectionManager);
-            ALE.ETLBox.src.Toolbox.ControlFlow.ControlFlow.DefaultDbConnection = _connectionManager;
+            ALE.ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = _connectionManager;
         }
 
         public void Dispose()
@@ -32,9 +30,9 @@ namespace EtlBox.Database.Tests.Logging.Database
 
         protected virtual void Dispose(bool disposing)
         {
-            DropTableTask.Drop(_connectionManager, ALE.ETLBox.src.Toolbox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(_connectionManager, ALE.ETLBox.src.Toolbox.ControlFlow.ControlFlow.LoadProcessTable);
-            ALE.ETLBox.src.Toolbox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(_connectionManager, ALE.ETLBox.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(_connectionManager, ALE.ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
+            ALE.ETLBox.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Fact]

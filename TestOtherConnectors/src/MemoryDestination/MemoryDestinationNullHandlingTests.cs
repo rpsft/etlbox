@@ -1,6 +1,6 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 
-namespace TestOtherConnectors.src.MemoryDestination
+namespace TestOtherConnectors.MemoryDestination
 {
     public class MemoryDestinationNullHandlingTests
     {

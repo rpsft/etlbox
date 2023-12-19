@@ -1,10 +1,9 @@
 using System.Dynamic;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestOtherConnectors.src;
-using TestOtherConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.DataFlow;
+using TestOtherConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestOtherConnectors.src.MemoryDestination
+namespace TestOtherConnectors.MemoryDestination
 {
     public class MemoryDestinationDynamicObjectTests : OtherConnectorsTestBase
     {

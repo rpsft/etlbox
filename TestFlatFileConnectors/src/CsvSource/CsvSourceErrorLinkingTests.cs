@@ -1,11 +1,9 @@
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 using CsvHelper.TypeConversion;
-using TestFlatFileConnectors.src;
-using TestFlatFileConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using TestFlatFileConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.src.CsvSource
+namespace TestFlatFileConnectors.CsvSource
 {
     public class CsvSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {

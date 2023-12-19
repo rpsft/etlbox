@@ -1,8 +1,8 @@
 using System.Dynamic;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
 using EtlBox.Database.Tests.Infrastructure;
 using EtlBox.Database.Tests.SharedFixtures;
 using Xunit.Abstractions;

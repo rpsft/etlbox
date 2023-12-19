@@ -1,8 +1,6 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Definitions.TaskBase.ControlFlow;
+using ALE.ETLBox.ConnectionManager;
 
-namespace ALE.ETLBox.src.Toolbox.ControlFlow.Database.SqlServer
+namespace ALE.ETLBox.ControlFlow.SqlServer
 {
     /// <summary>
     /// This task can execute any XMLA.

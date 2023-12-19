@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Native;
-using ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
 using EtlBox.ClickHouse.ConnectionManager;
 using EtlBox.ClickHouse.ConnectionStrings;
 using Microsoft.Extensions.Configuration;
 
-namespace TestShared.src.Helper;
+namespace TestShared.Helper;
 
 public static class Config
 {

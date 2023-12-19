@@ -1,8 +1,4 @@
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
-using TypeInfo = ALE.ETLBox.src.Definitions.DataFlow.Type.TypeInfo;
-
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Creates one or more duplicates of your incoming rows.

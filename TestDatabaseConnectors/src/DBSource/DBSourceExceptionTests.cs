@@ -1,12 +1,10 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.Exceptions;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox;
+using ALE.ETLBox.DataFlow;
 using Microsoft.Data.SqlClient;
-using TestDatabaseConnectors.src;
-using TestDatabaseConnectors.src.Fixtures;
+using TestDatabaseConnectors.Fixtures;
 
-namespace TestDatabaseConnectors.src.DBSource
+namespace TestDatabaseConnectors.DBSource
 {
     public class DbSourceExceptionTests : DatabaseConnectorsTestBase
     {

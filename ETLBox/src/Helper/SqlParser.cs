@@ -3,7 +3,7 @@ using TSQL;
 using TSQL.Statements;
 using TSQL.Tokens;
 
-namespace ALE.ETLBox.src.Helper
+namespace ALE.ETLBox.Helper
 {
     [PublicAPI]
     public static class SqlParser

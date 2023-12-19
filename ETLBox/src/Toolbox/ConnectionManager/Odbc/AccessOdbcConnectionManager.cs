@@ -1,8 +1,4 @@
-﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Definitions.Database;
-
-namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Odbc
+﻿namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager for an ODBC connection to Access databases.

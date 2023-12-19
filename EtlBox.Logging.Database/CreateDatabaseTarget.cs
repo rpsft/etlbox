@@ -1,6 +1,6 @@
 using System;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
+using ALE.ETLBox;
+using ALE.ETLBox.ConnectionManager;
 using JetBrains.Annotations;
 using NLog.Layouts;
 using NLog.Targets;

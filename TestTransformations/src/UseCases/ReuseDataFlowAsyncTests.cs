@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using ALE.ETLBox.src.Toolbox.DataFlow;
+using ALE.ETLBox.DataFlow;
 
-namespace TestTransformations.src.UseCases
+namespace TestTransformations.UseCases
 {
     public class ReuseDataFlowAsyncTests
     {

@@ -1,10 +1,9 @@
 using System.Linq;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestFlatFileConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.src.ExcelSource
+namespace TestFlatFileConnectors.ExcelSource
 {
     public class ExcelSourceBlankRowsTests : FlatFileConnectorsTestBase
     {

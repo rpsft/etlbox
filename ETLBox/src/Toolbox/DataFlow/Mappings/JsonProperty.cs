@@ -1,4 +1,4 @@
-namespace ALE.ETLBox.src.Toolbox.DataFlow.Mappings
+namespace ALE.ETLBox.DataFlow.Mappings
 {
     public class JsonProperty
     {

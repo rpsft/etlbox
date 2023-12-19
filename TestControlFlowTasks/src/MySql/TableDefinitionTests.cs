@@ -1,8 +1,8 @@
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using TestControlFlowTasks.src.Fixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using TestControlFlowTasks.Fixtures;
 
-namespace TestControlFlowTasks.src.MySql
+namespace TestControlFlowTasks.MySql
 {
     public class TableDefinitionTests : ControlFlowTestBase
     {

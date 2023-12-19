@@ -1,7 +1,7 @@
 using System.IO;
 using System.Net.Http;
 
-namespace ALE.ETLBox.src.Helper
+namespace ALE.ETLBox.Helper
 {
     internal static class HttpRequestMessageExtensions
     {

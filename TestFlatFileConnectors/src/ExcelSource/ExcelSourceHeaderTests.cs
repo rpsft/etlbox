@@ -1,9 +1,8 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestFlatFileConnectors.src;
-using TestFlatFileConnectors.src.Fixture;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
+using TestShared.SharedFixtures;
 
-namespace TestFlatFileConnectors.src.ExcelSource
+namespace TestFlatFileConnectors.ExcelSource
 {
     public class ExcelSourceHeaderTests : FlatFileConnectorsTestBase
     {

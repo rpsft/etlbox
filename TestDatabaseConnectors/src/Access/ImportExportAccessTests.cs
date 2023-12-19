@@ -1,12 +1,11 @@
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.Attributes;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestDatabaseConnectors.Fixtures;
+using TestShared.Attributes;
+using TestShared.SharedFixtures;
 
-namespace TestDatabaseConnectors.src.Access
+namespace TestDatabaseConnectors.Access
 {
     public sealed class ImportExportAccessTests : DatabaseConnectorsTestBase, IDisposable
     {

@@ -1,10 +1,7 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.Database;
-using ALE.ETLBox.src.Definitions.Logging;
-using ALE.ETLBox.src.Definitions.TaskBase;
-using ALE.ETLBox.src.Toolbox.ControlFlow.Database;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 
-namespace ALE.ETLBox.src.Toolbox.Logging
+namespace ALE.ETLBox.Logging
 {
     /// <summary>
     /// Reads data from the etl.Log table.

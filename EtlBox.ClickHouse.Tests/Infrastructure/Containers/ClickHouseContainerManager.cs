@@ -1,6 +1,6 @@
 using System.Data;
 using System.Data.Common;
-using ALE.ETLBox.src.Definitions.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 using ClickHouse.Ado;
 using DotNet.Testcontainers.Containers;
 using EtlBox.ClickHouse.ConnectionManager;

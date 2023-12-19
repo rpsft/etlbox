@@ -1,9 +1,6 @@
-﻿using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Definitions.Database;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
-namespace ALE.ETLBox.src.Toolbox.ConnectionManager.Native
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Connection manager of a classic ADO.NET connection to a (Microsoft) Sql Server.

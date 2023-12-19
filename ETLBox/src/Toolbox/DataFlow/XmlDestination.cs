@@ -1,12 +1,9 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using ALE.ETLBox.src.Definitions.DataFlow;
-using ALE.ETLBox.src.Definitions.DataFlow.Type;
-using ALE.ETLBox.src.Definitions.TaskBase.DataFlow;
 using Newtonsoft.Json;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A Xml destination defines a xml file where data from the flow is inserted.

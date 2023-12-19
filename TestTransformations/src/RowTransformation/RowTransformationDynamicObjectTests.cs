@@ -1,9 +1,9 @@
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using ALE.ETLBox.src.Toolbox.DataFlow.Mappings;
-using TestShared.src.SharedFixtures;
-using TestTransformations.src.Fixtures;
+using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.DataFlow.Mappings;
+using TestShared.SharedFixtures;
+using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.RowTransformation
+namespace TestTransformations.RowTransformation
 {
     public class RowTransformationDynamicObjectTests : TransformationsTestBase
     {
@@ -14,12 +14,8 @@ namespace TestTransformations.src.RowTransformation
         public void ConvertIntoObject()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
-                "DestinationRowTransformationDynamic"
-            );
-            var source = new CsvSource<ExpandoObject>(
-                "res/RowTransformation/TwoColumns.csv"
-            );
+            var dest2Columns = new TwoColumnsTableFixture("DestinationRowTransformationDynamic");
+            var source = new CsvSource<ExpandoObject>("res/RowTransformation/TwoColumns.csv");
 
             //Act
             var trans = new RowTransformation<ExpandoObject>(csvdata =>
@@ -46,9 +42,7 @@ namespace TestTransformations.src.RowTransformation
         public void DestinationJsonTransformationTest()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
-                "DestinationJsonTransformation"
-            );
+            var dest2Columns = new TwoColumnsTableFixture("DestinationJsonTransformation");
             var objSet = new ExpandoObject[]
             {
                 CreateObject(@"{ ""Data"": { ""Id"": 1, ""Name"": ""Test1"" } }"),
@@ -61,33 +55,22 @@ namespace TestTransformations.src.RowTransformation
             //Act
             var trans = new JsonTransformation()
             {
-                Mappings =
-                [
+                Mappings = new JsonMapping[]
+                {
                     new JsonMapping
                     {
-                        Source = new JsonProperty
-                        {
-                            Name = "data",
-                            Path = "$.Data.Id"
-                        },
+                        Source = new JsonProperty { Name = "data", Path = "$.Data.Id" },
                         Destination = "Col1"
                     },
                     new JsonMapping
                     {
-                        Source = new JsonProperty
-                        {
-                            Name = "data",
-                            Path = "$.Data.Name"
-                        },
+                        Source = new JsonProperty { Name = "data", Path = "$.Data.Name" },
                         Destination = "Col2"
                     },
-                ]
+                }
             };
 
-            var dest = new DbDestination<ExpandoObject>(
-                SqlConnection,
-                dest2Columns.TableName
-            );
+            var dest = new DbDestination<ExpandoObject>(SqlConnection, dest2Columns.TableName);
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

@@ -1,10 +1,9 @@
-using ALE.ETLBox.src.Definitions.ConnectionManager;
-using ALE.ETLBox.src.Toolbox.DataFlow;
-using TestDatabaseConnectors.src;
-using TestDatabaseConnectors.src.Fixtures;
-using TestShared.src.SharedFixtures;
+using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
+using TestDatabaseConnectors.Fixtures;
+using TestShared.SharedFixtures;
 
-namespace TestDatabaseConnectors.src.DBDestination
+namespace TestDatabaseConnectors.DBDestination
 {
     public class DbDestinationMultipleSourcesTests : DatabaseConnectorsTestBase
     {

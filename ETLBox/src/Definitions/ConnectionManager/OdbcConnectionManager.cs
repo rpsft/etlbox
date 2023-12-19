@@ -1,8 +1,6 @@
 using System.Data.Odbc;
-using ALE.ETLBox.src.Definitions.ConnectionStrings;
-using ALE.ETLBox.src.Definitions.Database;
 
-namespace ALE.ETLBox.src.Definitions.ConnectionManager
+namespace ALE.ETLBox.ConnectionManager
 {
     public abstract class OdbcConnectionManager : DbConnectionManager<OdbcConnection>
     {
