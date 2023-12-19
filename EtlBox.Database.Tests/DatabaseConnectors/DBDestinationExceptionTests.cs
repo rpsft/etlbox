@@ -34,7 +34,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             source.LinkTo(dest);
 
             //Act & Assert
-            Assert.Throws<ETLBoxException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
             {
                 try
                 {
