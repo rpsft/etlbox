@@ -20,10 +20,6 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
 
         public ConnectionManagerType ConnectionType => ConnectionManagerType.ClickHouse;
 
-        public string User { get; set; } = null!;
-
-        public string Password { get; set; } = null!;
-
         public PostgresContainerManager()
         {
             Container = new PostgreSqlBuilder().Build();
@@ -64,11 +60,9 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
             return new PostgresConnectionManager(cs);
         }
 
-        public void SetDatabase(string database, string user = null!, string password = null!)
+        public void SetDatabase(string database)
         {
             _database = database;
-            User = user;
-            Password = password;
         }
 
         public void DropDatabase(string database)
@@ -80,8 +74,6 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
         public void UseDefaults()
         {
             _database = "postgres";
-            User = null!;
-            Password = null!;
         }
 
         private IDbConnection GetConnection()

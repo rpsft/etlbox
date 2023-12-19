@@ -27,7 +27,7 @@ namespace ALE.ETLBox
             );
         }
 
-        private IColumnMappingCollection GetColumnMappingFromDefinition()
+        private DataColumnMappingCollection GetColumnMappingFromDefinition()
         {
             IEnumerable<TableColumn> columns = (TypeInfo?.IsDynamic, TypeInfo?.IsArray) switch
             {

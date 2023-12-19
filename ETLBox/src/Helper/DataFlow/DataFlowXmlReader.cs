@@ -288,7 +288,7 @@ namespace ALE.ETLBox.Helper.DataFlow
             prop.SetValue(instance, value);
         }
 
-        private object CreateArray(Type type, XContainer node)
+        private Array? CreateArray(Type type, XContainer node)
         {
             var elementType = type.GetElementType();
 
@@ -360,12 +360,12 @@ namespace ALE.ETLBox.Helper.DataFlow
             var elements = node.Elements().ToArray();
             var add = type.GetMethod("Add", new[] { keyType, valueType });
 
-            foreach (var el in elements)
+            foreach (var element in elements)
             {
-                var item = CreateObject(valueType, el);
+                var item = CreateObject(valueType, element);
                 if (item != null)
                 {
-                    add?.Invoke(dict, new[] { el.Name.LocalName, item });
+                    add?.Invoke(dict, new[] { element.Name.LocalName, item });
                 }
             }
 

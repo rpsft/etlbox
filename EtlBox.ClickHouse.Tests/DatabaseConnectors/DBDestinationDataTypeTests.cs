@@ -121,7 +121,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             public double DoubleCol { get; set; }
             public DateTime DateTimeCol { get; set; }
             public DateTime DateCol { get; set; }
-            public string StringCol { get; set; }
+            public string? StringCol { get; set; }
             public char CharCol { get; set; }
             public string? DecimalStringCol { get; set; }
             public string? NullCol { get; set; }

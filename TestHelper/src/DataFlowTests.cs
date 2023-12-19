@@ -199,12 +199,12 @@ namespace TestHelper
 
         private static string GetCsv()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("data");
-            sb.AppendLine(@"{""Data"": {""Id"": 1, ""Name"": ""Test1""}}");
-            sb.AppendLine(@"{""Data"": {""Id"": 2, ""Name"": ""Test2""}}");
-            sb.AppendLine(@"{""Data"": {""Id"": 3, ""Name"": ""Test3""}}");
-            return sb.ToString();
+            var builder = new StringBuilder();
+            builder.AppendLine("data");
+            builder.AppendLine(@"{""Data"": {""Id"": 1, ""Name"": ""Test1""}}");
+            builder.AppendLine(@"{""Data"": {""Id"": 2, ""Name"": ""Test2""}}");
+            builder.AppendLine(@"{""Data"": {""Id"": 3, ""Name"": ""Test3""}}");
+            return builder.ToString();
         }
 
         private static string CreateFile(string content, string ext)

@@ -72,7 +72,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
         {
             //Arrange
             var wasExecuted = false;
-            var _ = new TwoColumnsTableFixture(_connection, "DbDestinationBatchChanges");
+            new TwoColumnsTableFixture(_connection, "DbDestinationBatchChanges");
             var dest = new DbDestination<string[]>(
                 _connection,
                 "DbDestinationBatchChanges",

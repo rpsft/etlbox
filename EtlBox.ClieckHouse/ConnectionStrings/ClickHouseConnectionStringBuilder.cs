@@ -36,8 +36,10 @@ namespace EtlBox.ClickHouse.ConnectionStrings
             set => this["Database"] = value;
         }
 
-        public override ICollection Keys 
+        public override ICollection Keys
+#pragma warning disable S2365 // Нет сеттера у свойства Keys, не получается установить корректные ключи
             => base.Keys.Cast<string>().Select(k => $"{k.ToUpper()[0]}{k[1..]}").ToArray();
+#pragma warning restore S2365 // Properties should not make collection or array copies
 
         // Helper method to get a value from the connection string
         private T GetValueOrDefault<T>(string key, T defaultValue)
@@ -49,20 +51,6 @@ namespace EtlBox.ClickHouse.ConnectionStrings
 
             return defaultValue;
         }
-
-        //// Вся эта магия нужна, чтобы в this[] записались ключи не в lowercase, а как есть
-        //public string ConnectionString
-        //{
-        //    get => ToString();
-        //    set
-        //    {
-        //        foreach (var parameter in value.Split(";").Where(s => !string.IsNullOrEmpty(s)))
-        //        {
-        //            var keyValue = parameter.Split("=");
-        //            this[keyValue[0]] = keyValue[1];
-        //        }
-        //    }
-        //}
 
         public override string ToString()
         {

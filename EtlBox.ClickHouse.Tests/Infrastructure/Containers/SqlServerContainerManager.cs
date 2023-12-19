@@ -41,18 +41,14 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
 
         public ConnectionManagerType ConnectionType => ConnectionManagerType.SqlServer;
 
-        public string User { get; set; } = null!;
-
-        public string Password { get; set; } = null!;
-
         public string GetConnectionString() => GetConnectionBuilder().ConnectionString;
 
         public DbConnectionStringBuilder GetConnectionBuilder()
         {
             var sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
             sqlConnectionStringBuilder.DataSource = $"{Container.Hostname},{Container.GetMappedPublicPort(1433)}";
-            sqlConnectionStringBuilder.UserID = User ?? _user;
-            sqlConnectionStringBuilder.Password = Password ?? _password;
+            sqlConnectionStringBuilder.UserID = _user;
+            sqlConnectionStringBuilder.Password = _password;
             sqlConnectionStringBuilder.InitialCatalog = _database;
             sqlConnectionStringBuilder.IntegratedSecurity = false;
             sqlConnectionStringBuilder.TrustServerCertificate = true;
@@ -113,18 +109,9 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
             return new SqlConnectionManager(cs);
         }
 
-        public void SetDatabase(string database, string user = null, string password = null)
-        {
-            _database = database;
-            User = user;
-            Password = password;
-        }
-
         public void UseDefaults()
         {
             _database = "master";
-            User = null!;
-            Password = null!;
         }
 
         public void CreateDatabase(string database)

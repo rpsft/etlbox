@@ -167,16 +167,19 @@ namespace EtlBox.Database.Tests.Logging.Database
             }
         }
 
+
+#pragma warning disable S125 // Sections of code should not be commented out
         /* 
-        // В ClickHouse нет автоинкремента. Можно сделать default UUID, но для этого переделывать 
-        // тип автоинкремента таблицы long => Guid. Но сделать можно.
-        public class ClickHouse : GetLogAsJsonTests
-        {
-            public ClickHouse(DatabaseFixture fixture, ITestOutputHelper logger)
-                : base(fixture, ConnectionManagerType.ClickHouse, logger)
-            {
-            }
-        }
-        //*/
+                // В ClickHouse нет автоинкремента. Можно сделать default UUID, но для этого переделывать 
+                // тип автоинкремента таблицы long => Guid. Но сделать можно.
+                public class ClickHouse : GetLogAsJsonTests
+                {
+                    public ClickHouse(DatabaseFixture fixture, ITestOutputHelper logger)
+                        : base(fixture, ConnectionManagerType.ClickHouse, logger)
+                    {
+                    }
+                }
+                //*/
     }
+#pragma warning restore S125 // Sections of code should not be commented out
 }

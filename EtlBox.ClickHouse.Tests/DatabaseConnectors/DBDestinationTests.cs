@@ -75,7 +75,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             public decimal Percentage { get; set; }
 
             [ColumnMap("Col2")]
-            public string Text { get; set; }
+            public string? Text { get; set; }
         }
 
         public class SqlServer : DbDestinationTests

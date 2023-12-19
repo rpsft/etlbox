@@ -19,10 +19,6 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
 
         public ConnectionManagerType ConnectionType => ConnectionManagerType.ClickHouse;
 
-        public string User { get; set; } = null!;
-
-        public string Password { get; set; } = null!;
-
         public ClickHouseContainerManager()
         {
             Container = new ClickHouseBuilder()
@@ -61,8 +57,8 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
             var builder = new ClickHouseConnectionStringBuilder();
             builder.Host = Container.Hostname;
             builder.Port = Container.GetMappedPublicPort(9000);
-            builder.User = User ?? _user;
-            builder.Password = Password ?? _password;
+            builder.User = _user;
+            builder.Password = _password;
             builder.Database = _database;
             return builder;
         }
@@ -73,11 +69,9 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
             return new ClickHouseConnectionManager(cs);
         }
 
-        public void SetDatabase(string database, string user = null!, string password = null!)
+        public void SetDatabase(string database)
         {
             _database = database;
-            User = user;
-            Password = password;
         }
 
         public void DropDatabase(string database)
@@ -89,8 +83,6 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
         public void UseDefaults()
         {
             _database = "default";
-            User = null!;
-            Password = null!;
         }
 
         private IDbConnection GetConnection()

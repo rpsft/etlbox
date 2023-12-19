@@ -64,7 +64,6 @@ namespace EtlBox.Database.Tests.Infrastructure
         }
 
         public IDisposable BeginScope<TState>(TState state)
-            where TState : notnull
         {
             throw new NotImplementedException();
         }
@@ -78,8 +77,8 @@ namespace EtlBox.Database.Tests.Infrastructure
             LogLevel logLevel,
             EventId eventId,
             TState state,
-            Exception exception,
-            Func<TState, Exception, string> formatter
+            Exception? exception,
+            Func<TState, Exception?, string> formatter
         )
         {
             _logger.WriteLine($"{logLevel}, {eventId}, {state}: {formatter(state, exception)}");

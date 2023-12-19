@@ -11,16 +11,6 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
         ConnectionManagerType ConnectionType { get; }
 
         /// <summary>
-        /// Текущий пользователь
-        /// </summary>
-        string User { get; set; }
-
-        /// <summary>
-        /// Текущий пароль
-        /// </summary>
-        string Password { get; set; }
-
-        /// <summary>
         /// Удалить БД
         /// </summary>
         /// <param name="database">БД</param>
@@ -54,7 +44,7 @@ namespace EtlBox.Database.Tests.Infrastructure.Containers
         /// Установка текущей БД
         /// </summary>
         /// <param name="database"></param>
-        void SetDatabase(string database, string? user = null, string? password = null);
+        void SetDatabase(string database);
 
         /// <summary>
         /// Сбрасывает User и Password в исходное состояние (owner)
