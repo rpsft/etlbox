@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
@@ -24,9 +25,10 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
 
-        public async Task ExecuteAsync() => await OutputSource.ExecuteAsync();
+        public async Task ExecuteAsync() 
+            => await OutputSource.ExecuteAsync(CancellationToken.None);
 
-        public void Execute() => OutputSource.Execute();
+        public void Execute() => OutputSource.Execute(CancellationToken.None);
 
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
@@ -306,7 +308,7 @@ namespace ALE.ETLBox.DataFlow
             DestinationTable.OnCompletion = () =>
             {
                 IdentifyAndDeleteMissingEntries();
-                OutputSource.Execute();
+                OutputSource.Execute(CancellationToken.None);
             };
         }
 

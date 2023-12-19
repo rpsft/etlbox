@@ -35,7 +35,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             var dest = new DbDestination<ExpandoObject>(_connection, "DestinationDynamic2Cols");
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -65,7 +65,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             var dest = new DbDestination<ExpandoObject>(_connection, "DestinationDynamicDiffCols");
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -121,7 +121,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             var dest = new DbDestination<ExpandoObject>(_connection, "DestinationDynamicIdCol");
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert

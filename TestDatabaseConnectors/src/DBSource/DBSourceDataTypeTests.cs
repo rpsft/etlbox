@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -68,7 +69,7 @@ namespace TestDatabaseConnectors.DBSource
                 var dest = new MemoryDestination<MyDataTypeRow>();
 
                 source.LinkTo(dest);
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
 
                 //Assert

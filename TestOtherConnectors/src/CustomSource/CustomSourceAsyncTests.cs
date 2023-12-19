@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -45,7 +46,7 @@ namespace TestOtherConnectors.CustomSource
                 "Destination4CustomSource"
             );
             source.LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
+            Task sourceT = source.ExecuteAsync(CancellationToken.None);
             Task destT = dest.Completion;
 
             //Assert
@@ -72,7 +73,7 @@ namespace TestOtherConnectors.CustomSource
             //Assert
             Assert.Throws<ETLBoxException>(() =>
             {
-                Task sourceT = source.ExecuteAsync();
+                Task sourceT = source.ExecuteAsync(CancellationToken.None);
                 Task destT = dest.Completion;
                 try
                 {

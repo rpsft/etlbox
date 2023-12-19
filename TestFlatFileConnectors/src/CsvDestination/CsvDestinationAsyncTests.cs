@@ -15,7 +15,7 @@ namespace TestFlatFileConnectors.CsvDestination
 
         private class MockDelaySource : DataFlowSource<string[]>
         {
-            public override void Execute()
+            public override void Execute(CancellationToken cancellationToken)
             {
                 Buffer.SendAsync(new[] { "1", "2" }).Wait();
                 Thread.Sleep(100);
@@ -47,7 +47,7 @@ namespace TestFlatFileConnectors.CsvDestination
 
             //Act
             source.LinkTo(dest);
-            source.ExecuteAsync();
+            source.ExecuteAsync(CancellationToken.None);
             var dt = dest.Completion;
             while (!File.Exists(filename))
                 Task.Delay(10).Wait();

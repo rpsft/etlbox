@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
@@ -35,7 +36,7 @@ namespace ALE.ETLBox.DataFlow
             TaskName = name;
         }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
             LogStart();
             while (!ReadCompletedFunc.Invoke())

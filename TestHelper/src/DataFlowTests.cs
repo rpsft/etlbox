@@ -2,6 +2,7 @@ using System;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using FluentAssertions;
@@ -86,7 +87,7 @@ namespace TestHelper
             var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
             var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
 
-            step?.Invoke();
+            step?.Invoke(CancellationToken.None);
 
             var destinations = step?.Destinations?.Select(d => d as MemoryDestination<ExpandoObject>).ToArray();
 
@@ -168,7 +169,7 @@ namespace TestHelper
             var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
             var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
 
-            step?.Invoke();
+            step?.Invoke(CancellationToken.None);
 
             var errors = step?.ErrorDestinations?.Select(d => d as ErrorLogDestination).ToArray();
 

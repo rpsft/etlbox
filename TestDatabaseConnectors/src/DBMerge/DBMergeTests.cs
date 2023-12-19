@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
@@ -130,7 +131,7 @@ namespace TestDatabaseConnectors.DBMerge
                 UseTruncateMethod = true
             };
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -187,7 +188,7 @@ namespace TestDatabaseConnectors.DBMerge
                 "DBMergeEmptyDestination"
             );
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -215,7 +216,7 @@ namespace TestDatabaseConnectors.DBMerge
                 "DBMergeEmptyDestination"
             );
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert

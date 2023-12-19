@@ -16,7 +16,7 @@ namespace EtlBox.Database.Tests.ConnectionManager
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
             {
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
         }
@@ -36,7 +36,7 @@ namespace EtlBox.Database.Tests.ConnectionManager
             {
                 try
                 {
-                    source.Execute();
+                    source.Execute(CancellationToken.None);
                     dest.Wait();
                 }
                 catch (AggregateException e)

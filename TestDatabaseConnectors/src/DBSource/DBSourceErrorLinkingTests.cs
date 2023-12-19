@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
@@ -51,7 +52,7 @@ namespace TestDatabaseConnectors.DBSource
             var errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
             errorDest.Wait();
 
@@ -96,7 +97,7 @@ namespace TestDatabaseConnectors.DBSource
             //Assert
             Assert.Throws<FormatException>(() =>
             {
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
         }

@@ -47,7 +47,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             //Act
             source.LinkTo(dest);
             dest.LinkErrorTo(errorDest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
             errorDest.Wait();
 

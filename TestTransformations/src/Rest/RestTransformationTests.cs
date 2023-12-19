@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
@@ -206,7 +207,7 @@ namespace TestTransformations.Rest
 
             public void Invoke()
             {
-                Source.Execute();
+                Source.Execute(CancellationToken.None);
                 var tasks = Destinations.Select(d => d.Completion).ToArray();
                 Task.WaitAll(tasks);
             }

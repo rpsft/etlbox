@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
@@ -37,7 +38,7 @@ namespace TestDatabaseConnectors.DBSource
             var dest = new CustomDestination<ColumnMapRow>(AssertInput);
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             void AssertInput(ColumnMapRow input)
@@ -92,7 +93,7 @@ namespace TestDatabaseConnectors.DBSource
                 Assert.InRange(input.Percentage, 1, 2);
             });
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
         }
     }

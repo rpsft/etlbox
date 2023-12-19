@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.Common.DataFlow;
 using Confluent.Kafka;
@@ -41,7 +42,7 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
     // Private stuff
     private TypeInfo TypeInfo { get; set; } = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
 
-    public override void Execute()
+    public override void Execute(CancellationToken cancellationToken)
     {
         LogStart();
 
@@ -51,12 +52,9 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
 
         consumer.Subscribe(Topic);
 
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            if (!ConsumeAndSendSingleMessage(consumer))
-            {
-                break;
-            }
+            ConsumeAndSendSingleMessage(consumer);
         }
 
         LogFinish();

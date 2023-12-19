@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
@@ -135,7 +136,7 @@ namespace ALE.ETLBox.DataFlow
         private void LoadLookupData()
         {
             CheckLookupObjects();
-            Source.Execute();
+            Source.Execute(CancellationToken.None);
             LookupBuffer.Wait();
         }
 

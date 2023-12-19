@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
@@ -14,11 +15,14 @@ namespace ALE.ETLBox.Common.DataFlow
 
         protected ErrorHandler ErrorHandler { get; set; } = new();
 
-        public abstract void Execute();
+        public abstract void Execute(CancellationToken cancellationToken);
 
-        public Task ExecuteAsync()
+        public void Execute()
+            => Execute(CancellationToken.None);
+
+        public Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(Execute);
+            return Task.Factory.StartNew(() => Execute(cancellationToken));
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target) =>

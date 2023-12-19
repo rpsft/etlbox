@@ -4,6 +4,7 @@ using ALE.ETLBox.Helper;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using System.Threading;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -109,7 +110,7 @@ namespace ALE.ETLBox.DataFlow
             return result;
         }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
             LogStart();
             try

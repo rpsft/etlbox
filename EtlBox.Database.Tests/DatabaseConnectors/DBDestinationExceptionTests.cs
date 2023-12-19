@@ -38,7 +38,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             {
                 try
                 {
-                    source.Execute();
+                    source.Execute(CancellationToken.None);
                     dest.Wait();
                 }
                 catch (AggregateException e)
@@ -73,7 +73,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             {
                 try
                 {
-                    source.Execute();
+                    source.Execute(CancellationToken.None);
                     dest.Wait();
                 }
                 catch (AggregateException e)

@@ -42,7 +42,7 @@ public class KafkaSourceJsonDynamicObjectTests : IClassFixture<KafkaContainerFix
     }
 
     [Fact]
-    public void ShouldConsumeJsonWithKafkaSource()
+    public async Task ShouldBrakeProcessOnCancel()
     {
         // Arrange
         const string jsonString = "{\"name\":\"test\"}";
@@ -50,14 +50,39 @@ public class KafkaSourceJsonDynamicObjectTests : IClassFixture<KafkaContainerFix
         var block = new Mock<ITargetBlock<ExpandoObject>>();
         var target = new Mock<IDataFlowDestination<ExpandoObject>>();
         target.Setup(t => t.TargetBlock).Returns(block.Object);
+        
         // Act
+        ConsumerConfig.EnablePartitionEof = false;
         var kafkaSource = new KafkaJsonSource<ExpandoObject>()
         {
             ConsumerConfig = ConsumerConfig,
             Topic = TopicName,
         };
-        kafkaSource.LinkTo(target.Object);
-        kafkaSource.Execute();
+
+        var tokenSource = new CancellationTokenSource();
+
+        bool taskFinished = false;
+
+        var task = Task.Run(() =>
+        {
+            kafkaSource.LinkTo(target.Object);
+            kafkaSource.Execute(tokenSource.Token);
+            taskFinished = true;
+        });
+
+        await Task.Delay(TimeSpan.FromSeconds(1));
+
+        Assert.False(task.IsCompleted, "task should not by completed");
+        Assert.False(task.IsCanceled, "cancellation should by requested");
+
+        tokenSource.Cancel();
+
+        /// Ждем паузу до завершения работы Кафки
+        Task.WaitAny(Task.Delay(TimeSpan.FromSeconds(1)), task);
+
+        Assert.True(task.IsCompleted, "task is not completed");
+        Assert.True(taskFinished, "work is not finishwd");
+
         // Assert
         block.Verify(
             b =>

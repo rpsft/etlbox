@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
@@ -40,7 +41,7 @@ namespace TestTransformations.UseCases
                 Source.DataAsList.Add(x);
                 Destination = new CustomDestination<MyData>(data => Data.Add(data.Key, data));
                 Source.LinkTo(Destination);
-                Source.ExecuteAsync();
+                Source.ExecuteAsync(CancellationToken.None);
             }
 
             public IDictionary<long, MyData> Data { get; } = new Dictionary<long, MyData>();

@@ -76,7 +76,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
                 //Act
                 var dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
                 source.LinkTo(dest);
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
 
                 //Assert

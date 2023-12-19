@@ -20,7 +20,7 @@ public class ScriptedRowTransformationTests
         memorySource.LinkTo(script);
         script.LinkTo(memoryDestination);
         // Act
-        memorySource.Execute();
+        memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
         // Assert
         Assert.Collection(
@@ -46,7 +46,7 @@ public class ScriptedRowTransformationTests
         memorySource.LinkTo(script);
         script.LinkTo(memoryDestination);
         // Act
-        memorySource.Execute();
+        memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
         // Assert
         Assert.Collection(

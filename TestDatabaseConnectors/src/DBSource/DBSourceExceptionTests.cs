@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
@@ -23,7 +24,7 @@ namespace TestDatabaseConnectors.DBSource
             Assert.Throws<ETLBoxException>(() =>
             {
                 source.LinkTo(dest);
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
         }
@@ -47,7 +48,7 @@ namespace TestDatabaseConnectors.DBSource
             Assert.Throws<SqlException>(() =>
             {
                 source.LinkTo(dest);
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
         }
@@ -64,7 +65,7 @@ namespace TestDatabaseConnectors.DBSource
             {
                 try
                 {
-                    Task s = source.ExecuteAsync();
+                    Task s = source.ExecuteAsync(CancellationToken.None);
                     Task c = dest.Completion;
                     Task.WaitAll(c, s);
                 }

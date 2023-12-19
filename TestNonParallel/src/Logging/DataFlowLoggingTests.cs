@@ -1,4 +1,5 @@
 using System.Dynamic;
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
@@ -232,7 +233,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             var source = new CustomSource(ReadData, EndOfData);
             var dest = new DbDestination(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
+            Task sourceT = source.ExecuteAsync(CancellationToken.None);
             Task destT = dest.Completion;
 
             //Assert

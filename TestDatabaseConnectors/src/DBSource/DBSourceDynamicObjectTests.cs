@@ -1,4 +1,5 @@
 using System.Dynamic;
+using System.Threading;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
 using TestDatabaseConnectors.Fixtures;
@@ -38,7 +39,7 @@ namespace TestDatabaseConnectors.DBSource
             );
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert

@@ -51,7 +51,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
                 "destination_notmatchingcols"
             );
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -102,7 +102,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
                 "destination_onecolumn"
             );
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -138,7 +138,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
                 "destination_additionalnullcol"
             );
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -173,7 +173,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             source.LinkTo(dest);
             Assert.Throws<AggregateException>(() =>
             {
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
         }

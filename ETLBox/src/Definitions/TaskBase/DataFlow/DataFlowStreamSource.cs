@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 
@@ -41,7 +42,7 @@ namespace ALE.ETLBox.DataFlow
 
         private string _uri;
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
             LogStart();
             try

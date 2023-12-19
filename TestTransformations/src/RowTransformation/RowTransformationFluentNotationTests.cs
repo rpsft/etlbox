@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
@@ -43,7 +44,7 @@ namespace TestTransformations.RowTransformation
 
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
+            Task sourceT = source.ExecuteAsync(CancellationToken.None);
             Task destT = dest.Completion;
 
             //Assert
@@ -77,7 +78,7 @@ namespace TestTransformations.RowTransformation
 
             //Act
             source.LinkTo(trans1, row => row.Col1 < 4, row => row.Col1 >= 4).LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
+            Task sourceT = source.ExecuteAsync(CancellationToken.None);
             Task destT = dest.Completion;
 
             //Assert

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
@@ -38,9 +39,9 @@ namespace TestHelper.Models
             throw new NotImplementedException();
         }
 
-        public void Invoke()
+        public void Invoke(CancellationToken cancellationToken)
         {
-            Source.Execute();
+            Source.Execute(cancellationToken);
             var tasks = Destinations.Select(d => d.Completion)
                 .Concat(ErrorDestinations.Select(ed => ed.Completion))
                 .ToArray();
