@@ -92,7 +92,6 @@ function Show-Menu {
 
 $configFiles = @(
     "./TestDatabaseConnectors/default.config.json",
-    "./TestConnectionManager/default.config.json",
     "./TestFlatFileConnectors/default.config.json",
     "./TestNonParallel/default.config.json",
     "./TestNonParallel/docker.config.json",
