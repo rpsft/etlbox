@@ -189,7 +189,7 @@ namespace ALE.ETLBox.ControlFlow
                         }
                         else
                         {
-                            // Бага ClickHouseDataReader, по-умолчанию не переходит на Result
+                            // That bug on ClickHouseDataReader, by default does not proceed to correct Result
                             // https://github.com/killwort/clickhouse-net/issues/68
                             if (conn.ConnectionManagerType == ConnectionManagerType.ClickHouse)
                             {

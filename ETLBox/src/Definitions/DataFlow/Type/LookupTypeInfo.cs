@@ -5,7 +5,7 @@ namespace ALE.ETLBox.DataFlow
         internal List<AttributeMappingInfo> MatchColumns { get; set; } = new();
         internal List<AttributeMappingInfo> RetrieveColumns { get; set; } = new();
 
-        internal LookupTypeInfo(System.Type inputType, System.Type sourceType)
+        internal LookupTypeInfo(Type inputType, Type sourceType)
             : base(inputType, sourceType)
         {
             InitMappings(inputType, sourceType);

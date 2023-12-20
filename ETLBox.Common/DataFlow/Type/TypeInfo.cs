@@ -14,9 +14,9 @@ namespace ALE.ETLBox.Common.DataFlow
         internal bool IsDynamic { get; private set; }
         internal int ArrayLength { get; set; }
 
-        private System.Type InternalType { get; set; }
+        private Type InternalType { get; set; }
 
-        internal TypeInfo(System.Type type)
+        internal TypeInfo(Type type)
         {
             InternalType = type;
         }
@@ -49,7 +49,7 @@ namespace ALE.ETLBox.Common.DataFlow
             return this;
         }
 
-        internal static System.Type TryGetUnderlyingType(PropertyInfo propInfo)
+        internal static Type TryGetUnderlyingType(PropertyInfo propInfo)
         {
             return Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
         }

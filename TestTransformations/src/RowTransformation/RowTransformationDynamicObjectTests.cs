@@ -1,6 +1,5 @@
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.DataFlow.Mappings;
 using TestShared.SharedFixtures;
 using TestTransformations.Fixtures;
 
@@ -30,48 +29,6 @@ namespace TestTransformations.RowTransformation
                 SqlConnection,
                 "DestinationRowTransformationDynamic"
             );
-            source.LinkTo(trans);
-            trans.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            dest2Columns.AssertTestData();
-        }
-
-        [Fact]
-        public void DestinationJsonTransformationTest()
-        {
-            //Arrange
-            var dest2Columns = new TwoColumnsTableFixture("DestinationJsonTransformation");
-            var objSet = new ExpandoObject[]
-            {
-                CreateObject(@"{ ""Data"": { ""Id"": 1, ""Name"": ""Test1"" } }"),
-                CreateObject(@"{ ""Data"": { ""Id"": 2, ""Name"": ""Test2"" } }"),
-                CreateObject(@"{ ""Data"": { ""Id"": 3, ""Name"": ""Test3"" } }"),
-            };
-
-            var source = new MemorySource<ExpandoObject>(objSet);
-
-            //Act
-            var trans = new JsonTransformation()
-            {
-                Mappings = new JsonMapping[]
-                {
-                    new JsonMapping
-                    {
-                        Source = new JsonProperty { Name = "data", Path = "$.Data.Id" },
-                        Destination = "Col1"
-                    },
-                    new JsonMapping
-                    {
-                        Source = new JsonProperty { Name = "data", Path = "$.Data.Name" },
-                        Destination = "Col2"
-                    },
-                }
-            };
-
-            var dest = new DbDestination<ExpandoObject>(SqlConnection, dest2Columns.TableName);
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

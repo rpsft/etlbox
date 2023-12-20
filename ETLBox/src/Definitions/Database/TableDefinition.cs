@@ -42,11 +42,9 @@ namespace ALE.ETLBox
         }
 
         /// <summary>
-        /// Только для ClickHouse
+        /// Only for ClickHouse
         /// </summary>
         public string Engine { get; set; }
-
-        public string OrderBy { get; set; }
 
         private static readonly string[] sourceArray = new[] { "yes", "true", "on", "1", "да" };
 
@@ -144,7 +142,7 @@ SELECT  cols.name
      , defconstr.definition AS default_value
      , cols.collation_name
      , compCol.definition AS computed_column_definition
-     , comment.value AS commet
+     , comment.value AS comment
 FROM sys.columns cols
 INNER JOIN (
     SELECT name, type, object_id, schema_id FROM sys.tables 

@@ -12,7 +12,7 @@ namespace ALE.ETLBox.DataFlow
         internal PropertyInfo ChangeActionProperty { get; private set; }
         private MergeProperties MergeProps { get; }
 
-        internal DBMergeTypeInfo(System.Type type, MergeProperties mergeProps)
+        internal DBMergeTypeInfo(Type type, MergeProperties mergeProps)
             : base(type)
         {
             MergeProps = mergeProps;

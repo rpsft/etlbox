@@ -7,7 +7,7 @@ namespace ALE.ETLBox.DataFlow
         internal List<AggregateAttributeMapping> AggregateColumns { get; } = new();
         internal List<AttributeMappingInfo> GroupColumns { get; } = new();
 
-        internal AggregationTypeInfo(System.Type inputType, System.Type aggType)
+        internal AggregationTypeInfo(Type inputType, Type aggType)
             : base(inputType, aggType)
         {
             InitMappings(inputType, aggType);

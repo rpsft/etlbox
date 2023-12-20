@@ -7,7 +7,7 @@ namespace ALE.ETLBox.DataFlow
     {
         internal string ElementName { get; }
 
-        internal XmlTypeInfo(System.Type type)
+        internal XmlTypeInfo(Type type)
             : base(type)
         {
             GatherTypeInfo();

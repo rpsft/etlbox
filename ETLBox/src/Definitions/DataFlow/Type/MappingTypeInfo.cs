@@ -10,7 +10,7 @@ namespace ALE.ETLBox.DataFlow
         internal bool IsArrayOutput { get; }
         private bool IsDynamic { get; }
 
-        private protected MappingTypeInfo(System.Type inputType, System.Type outputType)
+        private protected MappingTypeInfo(Type inputType, Type outputType)
         {
             IsArrayInput = inputType.IsArray;
             IsArrayOutput = outputType.IsArray;
@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
                 || typeof(IDynamicMetaObjectProvider).IsAssignableFrom(outputType);
         }
 
-        protected void InitMappings(System.Type inputType, System.Type outputType)
+        protected void InitMappings(Type inputType, Type outputType)
         {
             if (IsArray || IsDynamic)
             {
