@@ -37,7 +37,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbTransformations
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -72,7 +72,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbTransformations
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -133,7 +133,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbTransformations
 
             source.LinkTo(trans);
             trans.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert

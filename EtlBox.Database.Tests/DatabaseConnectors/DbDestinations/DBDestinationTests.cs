@@ -57,7 +57,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             );
             source.LinkTo(trans);
             trans.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
