@@ -43,7 +43,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 
             Assert.ThrowsAny<Exception>(() =>
             {
-                source.Execute(CancellationToken.None);
+                source.Execute();
                 dest.Wait();
             });
 
@@ -68,7 +68,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             //Act & Assert
             destinationConnection.BeginTransaction();
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
             Assert.Equal(3, RowCountTask.Count(destinationConnection, "TransactionDest"));
             destinationConnection.Close();
@@ -94,7 +94,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             _connection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
 
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -132,7 +132,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             destinationConnection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
 
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
             Assert.Equal(3, RowCountTask.Count(destinationConnection, "TransactionDest"));
             destinationConnection.RollbackTransaction();
@@ -158,7 +158,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             _connection.LeaveOpen = true;
             _connection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
             _connection.CommitTransaction();
 
