@@ -35,7 +35,7 @@ namespace ALE.ETLBox.Helper
     /// <remarks>
     /// https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Converters/ExpandoObjectConverter.cs
     /// </remarks>
-    public class ExpandoJsonPathConverter : Newtonsoft.Json.JsonConverter
+    public class ExpandoJsonPathConverter : JsonConverter
     {
         private IEnumerable<JsonProperty2JsonPath> PathLookups { get; set; }
 
