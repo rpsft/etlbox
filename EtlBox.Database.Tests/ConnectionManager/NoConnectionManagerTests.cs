@@ -16,7 +16,7 @@ namespace EtlBox.Database.Tests.ConnectionManager
             //Act & Assert
             Assert.Throws<ETLBoxException>(() =>
             {
-                source.Execute(CancellationToken.None);
+                source.Execute();
                 dest.Wait();
             });
         }

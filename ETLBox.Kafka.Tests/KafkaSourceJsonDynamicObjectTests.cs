@@ -77,7 +77,7 @@ public class KafkaSourceJsonDynamicObjectTests : IClassFixture<KafkaContainerFix
 
         tokenSource.Cancel();
 
-        /// Ждем паузу до завершения работы Кафки
+        /// Wait some time to make task finishing work
         Task.WaitAny(Task.Delay(TimeSpan.FromSeconds(1)), task);
 
         Assert.True(task.IsCompleted, "task is not completed");

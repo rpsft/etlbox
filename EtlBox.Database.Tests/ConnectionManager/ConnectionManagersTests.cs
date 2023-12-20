@@ -68,7 +68,7 @@ namespace EtlBox.Database.Tests.ConnectionManager
             var dest = new DbDestination<ExpandoObject>(manager, table.Name);
 
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             res = manager.ExecuteScalar($"select count(*) from {QB}{table.Name}{QE}");
