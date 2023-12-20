@@ -38,7 +38,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             {
                 try
                 {
-                    source.Execute();
+                    source.Execute(CancellationToken.None);
                     dest.Wait();
                 }
                 catch (AggregateException e)

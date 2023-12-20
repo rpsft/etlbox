@@ -35,7 +35,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             var dest = new DbDestination<ExpandoObject>(_connection, "DestinationDynamic2Cols");
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert

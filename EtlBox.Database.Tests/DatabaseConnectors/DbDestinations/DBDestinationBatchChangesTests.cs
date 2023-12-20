@@ -44,7 +44,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             //Act
             var source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert

@@ -158,7 +158,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
             _connection.LeaveOpen = true;
             _connection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
             _connection.CommitTransaction();
 
