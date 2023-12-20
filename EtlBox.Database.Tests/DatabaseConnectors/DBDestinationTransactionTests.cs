@@ -7,7 +7,7 @@ using EtlBox.Database.Tests.SharedFixtures;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class DbDestinationTransactionTests : DatabaseTestBase
@@ -43,7 +43,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
 
             Assert.ThrowsAny<Exception>(() =>
             {
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
 
@@ -68,7 +68,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             //Act & Assert
             destinationConnection.BeginTransaction();
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
             Assert.Equal(3, RowCountTask.Count(destinationConnection, "TransactionDest"));
             destinationConnection.Close();
@@ -94,7 +94,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             _connection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
 
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -132,7 +132,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             destinationConnection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
 
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
             Assert.Equal(3, RowCountTask.Count(destinationConnection, "TransactionDest"));
             destinationConnection.RollbackTransaction();
@@ -158,7 +158,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             _connection.LeaveOpen = true;
             _connection.BeginTransaction(IsolationLevel.ReadCommitted);
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
             _connection.CommitTransaction();
 

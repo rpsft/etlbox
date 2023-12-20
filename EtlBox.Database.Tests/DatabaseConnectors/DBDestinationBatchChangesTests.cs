@@ -5,7 +5,7 @@ using EtlBox.Database.Tests.SharedFixtures;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class DbDestinationBatchChangesTests : DatabaseTestBase
@@ -30,7 +30,7 @@ namespace EtlBox.Database.Tests.DatabaseConnectors
             );
             var dest = new DbDestination<string[]>(
                 _connection,
-                "DbDestinationBatchChanges",
+                d2C.TableName,
                 batchSize: 2
             )
             {
