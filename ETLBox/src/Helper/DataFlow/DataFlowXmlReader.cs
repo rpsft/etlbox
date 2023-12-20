@@ -273,7 +273,7 @@ namespace ALE.ETLBox.Helper.DataFlow
                 throw new InvalidDataException($"Не задан атрибут типа для свойства '{typeName}.{prop.Name}'");
             }
 
-            var propType = GetType(propTypeName!);
+            var propType = GetType(propTypeName!, prop.PropertyType);
 
             if (propType is null)
             {
@@ -454,7 +454,7 @@ namespace ALE.ETLBox.Helper.DataFlow
             return Activator.CreateInstance(constructedType);
         }
 
-        private static Type? GetType(string typeName)
+        private static Type? GetType(string typeName, Type? baseType = null)
         {
             var isArray = false;
             if (typeName.EndsWith("[]"))
@@ -463,9 +463,16 @@ namespace ALE.ETLBox.Helper.DataFlow
                 typeName = typeName.Remove(typeName.Length - 2, 2);
             }
 
-            var type = AppDomain.CurrentDomain
+            var types = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .SelectMany(x => x.GetTypes())
+                .SelectMany(x => x.GetTypes());
+
+            if (baseType != null && baseType.IsInterface)
+            {
+                types = types
+                    .Where(t => t.GetInterfaces().Any(i => i == baseType));
+            }
+            var type = types
                 .FirstOrDefault(t => t.Name == typeName);
 
             return isArray ? type?.MakeArrayType() : type;
