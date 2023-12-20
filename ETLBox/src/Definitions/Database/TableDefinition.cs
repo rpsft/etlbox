@@ -42,11 +42,9 @@ namespace ALE.ETLBox
         }
 
         /// <summary>
-        /// Только для ClickHouse
+        /// Only for ClickHouse
         /// </summary>
         public string Engine { get; set; }
-
-        public string OrderBy { get; set; }
 
         private static readonly string[] sourceArray = new[] { "yes", "true", "on", "1", "да" };
 
