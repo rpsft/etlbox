@@ -5,7 +5,7 @@ using EtlBox.Database.Tests.SharedFixtures;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class DbDestinationBatchChangesTests : DatabaseTestBase
@@ -30,7 +30,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
             );
             var dest = new DbDestination<string[]>(
                 _connection,
-                "DbDestinationBatchChanges",
+                d2C.TableName,
                 batchSize: 2
             )
             {
@@ -44,7 +44,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
             //Act
             var source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -89,7 +89,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
             //Act
             var source = new CsvSource<string[]>("res/BatchChanges/TwoColumns.csv");
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert

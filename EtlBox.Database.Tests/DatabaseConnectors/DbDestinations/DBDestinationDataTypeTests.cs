@@ -6,7 +6,7 @@ using EtlBox.Database.Tests.Infrastructure;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class DbDestinationDataTypeTests : DatabaseTestBase
@@ -76,7 +76,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
                 //Act
                 var dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
                 source.LinkTo(dest);
-                source.Execute(CancellationToken.None);
+                source.Execute();
                 dest.Wait();
 
                 //Assert

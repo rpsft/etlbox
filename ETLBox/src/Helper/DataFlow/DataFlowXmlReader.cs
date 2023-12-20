@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Helper.DataFlow
 {
@@ -411,7 +412,6 @@ namespace ALE.ETLBox.Helper.DataFlow
 
             if (obj is not IDataFlowLinkTarget<ExpandoObject>)
             {
-                // logging
                 return;
             }
 
@@ -531,12 +531,24 @@ namespace ALE.ETLBox.Helper.DataFlow
 
         private static IEnumerable<Type> GetDataFlowTypes(Assembly assembly)
         {
-            return assembly.GetTypes().Where(t => t.IsClass && Array.Exists(t.GetInterfaces(),
-                i => i.IsGenericType && (
-                    i.GetGenericTypeDefinition().FullName == typeof(IDataFlowLinkSource<>).FullName
-                    || i.GetGenericTypeDefinition().FullName == typeof(IDataFlowLinkTarget<>).FullName
-                    || i.GetGenericTypeDefinition().FullName == typeof(IDataFlowTransformation<,>).FullName
-                )));
+            try
+            {
+                return assembly.GetTypes()
+                    .Where(t => t.IsClass
+                              && Array.Exists(t.GetInterfaces(), i => i.IsGenericType
+                                    && (
+                                           i.GetGenericTypeDefinition().FullName == typeof(IDataFlowLinkSource<>).FullName
+                                        || i.GetGenericTypeDefinition().FullName == typeof(IDataFlowLinkTarget<>).FullName
+                                        || i.GetGenericTypeDefinition().FullName == typeof(IDataFlowTransformation<,>).FullName
+                                    )
+                              )
+                     );
+            }
+            catch 
+            {
+                // если не получилось прочитать типы - идем дальше
+                return Enumerable.Empty<Type>();
+            }
         }
     }
 }

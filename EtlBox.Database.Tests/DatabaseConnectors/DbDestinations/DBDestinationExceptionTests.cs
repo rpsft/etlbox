@@ -1,10 +1,11 @@
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
 using EtlBox.Database.Tests.Infrastructure;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class DbDestinationExceptionTests : DatabaseTestBase
@@ -33,11 +34,11 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
             source.LinkTo(dest);
 
             //Act & Assert
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<ETLBoxException>(() =>
             {
                 try
                 {
-                    source.Execute(CancellationToken.None);
+                    source.Execute();
                     dest.Wait();
                 }
                 catch (AggregateException e)
@@ -72,7 +73,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
             {
                 try
                 {
-                    source.Execute(CancellationToken.None);
+                    source.Execute();
                     dest.Wait();
                 }
                 catch (AggregateException e)

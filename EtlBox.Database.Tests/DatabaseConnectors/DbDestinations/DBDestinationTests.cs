@@ -5,7 +5,7 @@ using EtlBox.Database.Tests.SharedFixtures;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
     public abstract class DbDestinationTests : DatabaseTestBase

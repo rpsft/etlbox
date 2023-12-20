@@ -5,7 +5,7 @@ using EtlBox.Database.Tests.SharedFixtures;
 using ETLBox.Primitives;
 using Xunit.Abstractions;
 
-namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
+namespace EtlBox.Database.Tests.DatabaseConnectors.DbDestinations
 {
     [Collection(nameof(DatabaseCollection))]
 
@@ -51,7 +51,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
                 "destination_notmatchingcols"
             );
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -102,7 +102,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
                 "destination_onecolumn"
             );
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -138,7 +138,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
                 "destination_additionalnullcol"
             );
             source.LinkTo(dest);
-            source.Execute(CancellationToken.None);
+            source.Execute();
             dest.Wait();
 
             //Assert
@@ -173,7 +173,7 @@ namespace EtlBox.Database.Tests.DbDestinations.DatabaseConnectors
             source.LinkTo(dest);
             Assert.Throws<AggregateException>(() =>
             {
-                source.Execute(CancellationToken.None);
+                source.Execute();
                 dest.Wait();
             });
         }
