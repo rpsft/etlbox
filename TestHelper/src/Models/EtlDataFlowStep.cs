@@ -9,12 +9,20 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using ALE.ETLBox.Helper.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace TestHelper.Models
 {
     [Serializable]
     public class EtlDataFlowStep : IDataFlow, IXmlSerializable
     {
+        private readonly ILogger _logger;
+
+        public EtlDataFlowStep(ILogger logger) 
+        {
+            _logger = logger;
+        }
+
         public Guid? ReferenceId { get; set; }
 
         public string Name { get; set; }
@@ -31,7 +39,7 @@ namespace TestHelper.Models
 
         public virtual void ReadXml(XmlReader reader)
         {
-            this.ReadFromXml(reader);
+            this.ReadFromXml(reader, _logger);
         }
 
         public void WriteXml(XmlWriter writer)
