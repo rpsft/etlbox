@@ -13,10 +13,12 @@ namespace ALE.ETLBox.Helper.DataFlow
     {
         private readonly Type[] _types;
         private readonly IDataFlow _dataFlow;
+        private readonly ILogger _logger;
 
-        public DataFlowXmlReader(IDataFlow dataFlow)
+        public DataFlowXmlReader(IDataFlow dataFlow, ILogger logger)
         {
             _dataFlow = dataFlow ?? throw new ArgumentNullException(nameof(dataFlow));
+            _logger = logger;
             _dataFlow.Destinations = new List<IDataFlowDestination<ExpandoObject>>();
             _dataFlow.ErrorDestinations = new List<IDataFlowDestination<ETLBoxError>>();
 
@@ -404,7 +406,7 @@ namespace ALE.ETLBox.Helper.DataFlow
 
             if (type is null)
             {
-                // logging
+                _logger.LogError($"Type '{element.Name.LocalName}' not found");
                 return;
             }
 

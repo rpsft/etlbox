@@ -1,5 +1,6 @@
 using System.Xml;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Helper.DataFlow
 {
@@ -7,10 +8,10 @@ namespace ALE.ETLBox.Helper.DataFlow
     {
         public static void ReadFromXml(
             this IDataFlow dataFlow,
-            XmlReader reader
-        )
+            XmlReader reader,
+            ILogger logger)
         {
-            var xmlReader = new DataFlowXmlReader(dataFlow);
+            var xmlReader = new DataFlowXmlReader(dataFlow, logger);
             xmlReader.Read(reader);
         }
     }
