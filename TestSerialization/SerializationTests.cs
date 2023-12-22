@@ -55,8 +55,8 @@ namespace TestSerialization
             var step = (Step)serializer.Deserialize(stream)!;
 
             step.Should().NotBeNull();
-            step!.Source.Should().BeOfType<CsvSource<ExpandoObject>>();
-            ((CsvSource<ExpandoObject>)step.Source).Uri.Should().Be("C:/Temp/1.json");
+            step!.Source.Should().BeOfType<JsonSource<ExpandoObject>>();
+            ((JsonSource<ExpandoObject>)step.Source).Uri.Should().Be("C:/Temp/1.json");
         }
     }
 

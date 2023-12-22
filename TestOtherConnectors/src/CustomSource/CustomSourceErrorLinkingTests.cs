@@ -1,10 +1,9 @@
-using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestOtherConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceErrorLinkingTests : OtherConnectorsTestBase
     {
         public CustomSourceErrorLinkingTests(OtherConnectorsDatabaseFixture fixture)
@@ -21,11 +20,11 @@ namespace TestOtherConnectors.CustomSource
         public void SimpleFlow()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "ErrorLinkingCustomSource"
             );
-            var data = new List<string> { "Test1", "Test2", "Test3", "Test4" };
-            var readIndex = 0;
+            List<string> data = new List<string> { "Test1", "Test2", "Test3", "Test4" };
+            int readIndex = 0;
 
             MySimpleRow ReadData()
             {
@@ -38,12 +37,12 @@ namespace TestOtherConnectors.CustomSource
 
             bool EndOfData() => readIndex >= data.Count;
 
-            var source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            var dest = new DbDestination<MySimpleRow>(
+            CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ErrorLinkingCustomSource"
             );
-            var errorDest = new MemoryDestination<ETLBoxError>();
+            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
             source.LinkTo(dest);

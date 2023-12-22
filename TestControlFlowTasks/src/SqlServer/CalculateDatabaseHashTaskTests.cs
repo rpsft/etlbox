@@ -5,6 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
+    [Collection("ControlFlow")]
     public class CalculateDatabaseHashTaskTests : ControlFlowTestBase
     {
         public CalculateDatabaseHashTaskTests(ControlFlowDatabaseFixture fixture)
@@ -15,15 +16,15 @@ namespace TestControlFlowTasks.SqlServer
         {
             //Arrange
             CreateSchemaTask.Create(SqlConnection, "hash");
-            var columns = new List<TableColumn> { new("value", "int") };
+            List<TableColumn> columns = new List<TableColumn> { new("value", "int") };
             CreateTableTask.Create(SqlConnection, "DatabaseHash", columns);
 
             //Act
-            var hash = CalculateDatabaseHashTask.Calculate(
+            string hash = CalculateDatabaseHashTask.Calculate(
                 SqlConnection,
                 new List<string> { "hash" }
             );
-            var hashAgain = CalculateDatabaseHashTask.Calculate(
+            string hashAgain = CalculateDatabaseHashTask.Calculate(
                 SqlConnection,
                 new List<string> { "hash" }
             );

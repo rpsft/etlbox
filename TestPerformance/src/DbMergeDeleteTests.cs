@@ -7,6 +7,7 @@ using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance
 {
+    [Collection("Performance")]
     public class DbMergeDeleteTests : PerformanceTestBase
     {
         public DbMergeDeleteTests(PerformanceDatabaseFixture fixture)

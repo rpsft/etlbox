@@ -6,6 +6,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
+    [Collection("Transformations")]
     public class RowTransformationFluentNotationTests : TransformationsTestBase
     {
         public RowTransformationFluentNotationTests(TransformationsDatabaseFixture fixture)

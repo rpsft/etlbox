@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
+    [Collection("Transformations")]
     public class MulticastStringArrayTests : TransformationsTestBase
     {
         public MulticastStringArrayTests(TransformationsDatabaseFixture fixture)

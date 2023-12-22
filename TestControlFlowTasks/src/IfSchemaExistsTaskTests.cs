@@ -5,12 +5,13 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class IfSchemaExistsTaskTests : ControlFlowTestBase
     {
         public IfSchemaExistsTaskTests(ControlFlowDatabaseFixture fixture)
             : base(fixture) { }
 
-        public static IEnumerable<object[]> Connections => AllConnectionsWithoutSQLite;
+        public static IEnumerable<object[]> Connections => AllConnectionsWithoutSQLiteAndClickHouse;
 
         [Theory, MemberData(nameof(Connections))]
         public void IfSchemaExists(IConnectionManager connection)

@@ -4,6 +4,7 @@ using TestFlatFileConnectors.Helpers;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonDestinationNullHandlingTests : FlatFileConnectorsTestBase
     {
         public JsonDestinationNullHandlingTests(FlatFileToDatabaseFixture fixture)

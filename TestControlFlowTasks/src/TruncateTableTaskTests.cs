@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class TruncateTableTaskTests : ControlFlowTestBase
     {
         public TruncateTableTaskTests(ControlFlowDatabaseFixture fixture)
@@ -18,7 +19,7 @@ namespace TestControlFlowTasks
         public void Truncate(IConnectionManager connection)
         {
             //Arrange
-            var tableDef = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(
                 connection,
                 "TruncateTableTest"
             );

@@ -5,11 +5,10 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceErrorLinkingTests : DatabaseConnectorsTestBase
     {
         public DbSourceErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
@@ -34,21 +33,21 @@ namespace TestDatabaseConnectors.DBSource
 
             //Arrange
             CreateSourceTable(connection, "DbSourceErrorLinking");
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "DbDestinationErrorLinking"
             );
 
             //Act
-            var source = new DbSource<MySimpleRow>(
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
                 connection,
                 "DbSourceErrorLinking"
             );
-            var dest = new DbDestination<MySimpleRow>(
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DbDestinationErrorLinking"
             );
-            var errorDest = new MemoryDestination<ETLBoxError>();
+            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
             source.Execute();
@@ -83,11 +82,11 @@ namespace TestDatabaseConnectors.DBSource
             var _ = new TwoColumnsTableFixture(connection, "DbDestinationNoErrorLinking");
 
             //Act
-            var source = new DbSource<MySimpleRow>(
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
                 connection,
                 "DbSourceNoErrorLinking"
             );
-            var dest = new DbDestination<MySimpleRow>(
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DbDestinationNoErrorLinking"
             );
@@ -109,13 +108,14 @@ namespace TestDatabaseConnectors.DBSource
                 tableName,
                 new List<TableColumn>
                 {
+                    new("Id", "INT", allowNulls: false, true),
                     new("Col1", "VARCHAR(100)", allowNulls: true),
                     new("Col2", "VARCHAR(100)", allowNulls: true),
                     new("Col3", "VARCHAR(100)", allowNulls: true)
                 }
             );
             tableDefinition.CreateTable(connection);
-            var tn = new ObjectNameDescriptor(
+            ObjectNameDescriptor tn = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE
@@ -123,32 +123,32 @@ namespace TestDatabaseConnectors.DBSource
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('1','Test1','1')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1, '1','Test1','1')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('1.35','TestX','X')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(2, '1.35','TestX','X')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('2','Test2', NULL)"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(3, '2','Test2', NULL)"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('X',NULL, NULL)"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(4, 'X',NULL, NULL)"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('3','Test3', '3')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(5, '3','Test3', '3')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('4','Test4', 'X')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(6, '4','Test4', 'X')"
             );
         }
     }

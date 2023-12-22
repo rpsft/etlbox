@@ -9,6 +9,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.UseCases
 {
+    [Collection("Transformations")]
     public class DuplicateCheckTests : TransformationsTestBase
     {
         public DuplicateCheckTests(TransformationsDatabaseFixture fixture)

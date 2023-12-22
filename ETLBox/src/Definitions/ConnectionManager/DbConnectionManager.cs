@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -11,7 +12,7 @@ namespace ALE.ETLBox.ConnectionManager
         public abstract ConnectionManagerType ConnectionManagerType { get; }
 
         public int MaxLoginAttempts { get; set; } = 3;
-        public bool LeaveOpen
+        public virtual bool LeaveOpen
         {
             get => _leaveOpen || IsInBulkInsert || Transaction != null;
             set => _leaveOpen = value;
@@ -227,6 +228,11 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
         public abstract IConnectionManager Clone();
+
+        public virtual bool IndexExists(ITask callingTask, string sql)
+        {
+            return new SqlTask(callingTask, sql).ExecuteScalarAsBool();
+        }
         #endregion
     }
 }

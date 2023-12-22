@@ -3,10 +3,10 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeCompositeKeysTests : DatabaseConnectorsTestBase
     {
         public DbMergeCompositeKeysTests(DatabaseSourceDestinationFixture fixture)
@@ -91,12 +91,12 @@ namespace TestDatabaseConnectors.DBMerge
         public void MergeWithCompositeKey(IConnectionManager connection)
         {
             //Arrange
-            var sourceTn = new ObjectNameDescriptor(
+            ObjectNameDescriptor sourceTn = new ObjectNameDescriptor(
                 "DBMergeSource",
                 connection.QB,
                 connection.QE
             );
-            var destinationTn = new ObjectNameDescriptor(
+            ObjectNameDescriptor destinationTn = new ObjectNameDescriptor(
                 "DBMergeDestination",
                 connection.QB,
                 connection.QE
@@ -106,8 +106,8 @@ namespace TestDatabaseConnectors.DBMerge
             InsertSourceData(connection, sourceTn);
             InsertDestinationData(connection, destinationTn);
             //Act
-            var source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
-            var dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
@@ -24,14 +24,17 @@ namespace TestShared.SharedFixtures
             RecreateTable();
         }
 
-        public TwoColumnsTableFixture(IConnectionManager connection, string tableName)
+        public TwoColumnsTableFixture(
+            IConnectionManager connection,
+            string tableName,
+            bool withPk = false)
         {
             Connection = connection;
             TableName = tableName;
-            RecreateTable();
+            RecreateTable(withPk);
         }
 
-        public void RecreateTable()
+        public void RecreateTable(bool withPk = false)
         {
             DropTableTask.DropIfExists(Connection, TableName);
 
@@ -39,7 +42,7 @@ namespace TestShared.SharedFixtures
                 TableName,
                 new List<TableColumn>
                 {
-                    new("Col1", "INT", allowNulls: false),
+                    new("Col1", "INT", allowNulls: false, isPrimaryKey: withPk),
                     new("Col2", "NVARCHAR(100)", allowNulls: true)
                 }
             );

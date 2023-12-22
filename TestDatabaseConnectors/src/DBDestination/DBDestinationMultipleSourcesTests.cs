@@ -1,10 +1,9 @@
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationMultipleSourcesTests : DatabaseConnectorsTestBase
     {
         public DbDestinationMultipleSourcesTests(DatabaseSourceDestinationFixture fixture)
@@ -22,8 +21,8 @@ namespace TestDatabaseConnectors.DBDestination
         public void TwoMemSourcesIntoDB(IConnectionManager connection)
         {
             //Arrange
-            var source1 = new MemorySource<MySimpleRow>();
-            var source2 = new MemorySource<MySimpleRow>();
+            MemorySource<MySimpleRow> source1 = new MemorySource<MySimpleRow>();
+            MemorySource<MySimpleRow> source2 = new MemorySource<MySimpleRow>();
             //Act
             source1.DataAsList = new List<MySimpleRow>
             {
@@ -34,13 +33,13 @@ namespace TestDatabaseConnectors.DBDestination
             {
                 new() { Col1 = 3, Col2 = "Test3" }
             };
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "DBMultipleDestination"
             );
 
             //Act
-            var dest = new DbDestination<MySimpleRow>(
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 connection,
                 "DBMultipleDestination"
             );

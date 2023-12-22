@@ -50,7 +50,7 @@ namespace ALE.ETLBox.Logging
         {
             var lpColumns = new List<TableColumn>
             {
-                new("id", GetIdentityType(), allowNulls: false, isPrimaryKey: true, isIdentity: true),
+                new("id", "BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("start_date", "DATETIME", allowNulls: false),
                 new("end_date", "DATETIME", allowNulls: true),
                 new("source", "NVARCHAR(20)", allowNulls: true),
@@ -67,13 +67,6 @@ namespace ALE.ETLBox.Logging
                 DisableLogging = true
             };
         }
-
-        private string GetIdentityType()
-            => ConnectionType switch
-            {
-               ConnectionManagerType.ClickHouse => "UUID",
-                _ => "BIGINT"
-            };
 
         public static void Create(
             string loadProcessTableName = Common.ControlFlow.ControlFlow.DefaultLoadProcessTableName

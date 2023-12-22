@@ -39,8 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.ClickHouse", "EtlBox
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Common", "ETLBox.Common\ETLBox.Common.csproj", "{2B4A4D49-8CA7-4286-A833-832BB5863D0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.Database.Tests", "EtlBox.Database.Tests\EtlBox.Database.Tests.csproj", "{05EE2CED-A257-40A4-88BA-F33D16B51D98}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Kafka", "ETLBox.Kafka\ETLBox.Kafka.csproj", "{B5B1BCB3-0687-4EEA-9DF2-344B154E1069}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Kafka.Tests", "ETLBox.Kafka.Tests\ETLBox.Kafka.Tests.csproj", "{F92817FF-7CA4-4815-B7DD-525F68B152C0}"
@@ -52,6 +50,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Scripting", "ETLBox.Scripting\ETLBox.Scripting.csproj", "{8CB6533F-F56A-445D-91A2-E13509D468C6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Scripting.Tests", "ETLBox.Scripting.Tests\ETLBox.Scripting.Tests.csproj", "{6C56E640-69E7-4F0C-9B20-42F5B43D3E39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "TestConnectionManager\TestConnectionManager.csproj", "{AFA1FAFF-A99E-4862-B396-E64193E360B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,10 +111,6 @@ Global
 		{2B4A4D49-8CA7-4286-A833-832BB5863D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B4A4D49-8CA7-4286-A833-832BB5863D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B4A4D49-8CA7-4286-A833-832BB5863D0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05EE2CED-A257-40A4-88BA-F33D16B51D98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05EE2CED-A257-40A4-88BA-F33D16B51D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05EE2CED-A257-40A4-88BA-F33D16B51D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05EE2CED-A257-40A4-88BA-F33D16B51D98}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5B1BCB3-0687-4EEA-9DF2-344B154E1069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5B1BCB3-0687-4EEA-9DF2-344B154E1069}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5B1BCB3-0687-4EEA-9DF2-344B154E1069}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -139,6 +135,10 @@ Global
 		{6C56E640-69E7-4F0C-9B20-42F5B43D3E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C56E640-69E7-4F0C-9B20-42F5B43D3E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C56E640-69E7-4F0C-9B20-42F5B43D3E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

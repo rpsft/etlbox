@@ -1,10 +1,10 @@
+using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationErrorLinkingTests : DatabaseConnectorsTestBase
     {
         public DbDestinationErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
@@ -22,7 +22,8 @@ namespace TestDatabaseConnectors.DBDestination
         public void RedirectBatch(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestLinkError");
+            DropTableTask.DropIfExists(connection, "DestLinkError");
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestLinkError", true);
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>

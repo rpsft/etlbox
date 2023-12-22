@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
+    [Collection("Transformations")]
     public class BlockTransformationDynamicObjectTests : TransformationsTestBase
     {
         public BlockTransformationDynamicObjectTests(TransformationsDatabaseFixture fixture)

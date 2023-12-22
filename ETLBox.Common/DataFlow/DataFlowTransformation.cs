@@ -16,7 +16,7 @@ namespace ALE.ETLBox.Common.DataFlow
 
         protected List<Task> PredecessorCompletions { get; set; } = new();
 
-        protected TransformBlock<TInput, TOutput> TransformBlock { get; set; }
+        protected IPropagatorBlock<TInput, TOutput> TransformBlock { get; set; }
 
         protected ErrorHandler ErrorHandler { get; set; } = new();
 

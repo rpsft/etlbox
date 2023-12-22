@@ -26,7 +26,7 @@ namespace ALE.ETLBox.ControlFlow
             TaskName = name;
         }
 
-        internal SqlTask(ITask callingTask, string sql)
+        public SqlTask(ITask callingTask, string sql)
             : base(callingTask, sql) { }
 
         public SqlTask(string name, string sql)

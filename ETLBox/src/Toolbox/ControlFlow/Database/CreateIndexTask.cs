@@ -49,14 +49,26 @@ namespace ALE.ETLBox.ControlFlow
         public bool IsClustered { get; set; }
         public string Sql => ConnectionManager.ConnectionManagerType switch
         {
-            ConnectionManagerType.ClickHouse => $@"
-                ALTER TABLE {TN.QuotedFullName} 
-                    ADD INDEX {IN.QuotedFullName} GRANULARITY 1",
-            _ => $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotedFullName} 
+            _ => $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IfNotExists()} {IN.QuotedFullName} 
                     ON {TN.QuotedFullName} ( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
-                    {IncludeSql}"
+                    {IncludeSql} {GetIndexType()}"
         };
- 
+
+        private string IfNotExists()
+            => ConnectionType switch
+            {
+                ConnectionManagerType.Postgres or ConnectionManagerType.ClickHouse 
+                    => "IF NOT EXISTS",
+                _ => ""
+            };
+
+        private string GetIndexType()
+            => ConnectionType switch
+            {
+                ConnectionManagerType.ClickHouse => $"TYPE {IndexType ?? "bloom_filter"}",
+                _ => ""
+            };
+
         public CreateIndexTask() { }
 
         public CreateIndexTask(string indexName, string tableName, IList<string> indexColumns)
@@ -135,5 +147,10 @@ namespace ALE.ETLBox.ControlFlow
                     ? string.Empty
                     : $"INCLUDE ({string.Join("  ,", IncludeColumns!.Select(col => QB + col + QE))})";
         }
+
+        /// <summary>
+        /// for clickhouse only
+        /// </summary>
+        public object IndexType { get; set; }
     }
 }

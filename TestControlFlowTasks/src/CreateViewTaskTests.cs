@@ -5,6 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class CreateViewTaskTests : ControlFlowTestBase
     {
         public CreateViewTaskTests(ControlFlowDatabaseFixture fixture)

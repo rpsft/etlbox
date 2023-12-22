@@ -1,9 +1,8 @@
-using ALE.ETLBox.DataFlow;
-using TestOtherConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceTests : OtherConnectorsTestBase
     {
         public CustomSourceTests(OtherConnectorsDatabaseFixture fixture)
@@ -20,11 +19,11 @@ namespace TestOtherConnectors.CustomSource
         public void SimpleFlow()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSource"
             );
-            var data = new List<string> { "Test1", "Test2", "Test3" };
-            var readIndex = 0;
+            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
+            int readIndex = 0;
 
             MySimpleRow ReadData()
             {
@@ -36,8 +35,8 @@ namespace TestOtherConnectors.CustomSource
             bool EndOfData() => readIndex >= data.Count;
 
             //Act
-            var source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            var dest = new DbDestination<MySimpleRow>(
+            CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination4CustomSource"
             );

@@ -17,18 +17,16 @@ namespace TestShared.Helper
         public void CreateBigDataCSV()
         {
             using FileStream stream = File.Open(FileName, FileMode.Create);
-            using var writer = new StreamWriter(stream);
-            var header = string.Join(",", TableDefinition.Columns.Select(col => col.Name));
+            using StreamWriter writer = new StreamWriter(stream);
+            string header = string.Join(",", TableDefinition.Columns.Select(col => col.Name));
             writer.WriteLine(header);
-            for (var i = 0; i < NumberOfRows; i++)
+            for (int i = 0; i < NumberOfRows; i++)
             {
-                var line = string.Join(
+                string line = string.Join(
                     ",",
                     TableDefinition.Columns.Select(col =>
                     {
-                        var length = DataTypeConverter.GetStringLengthFromCharString(
-                            col.DataType
-                        );
+                        int length = DataTypeConverter.GetStringLengthFromCharString(col.DataType);
                         return HashHelper.RandomString(length);
                     })
                 );
@@ -38,7 +36,7 @@ namespace TestShared.Helper
 
         public static TimeSpan LogExecutionTime(string name, Action action)
         {
-            var watch = new Stopwatch();
+            Stopwatch watch = new Stopwatch();
             LogTask.Warn($"Starting: {name}");
             watch.Start();
             action.Invoke();

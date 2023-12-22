@@ -8,6 +8,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
+    [Collection("Transformations")]
     public class RowTransformationErrorLinkingTests : TransformationsTestBase
     {
         public RowTransformationErrorLinkingTests(TransformationsDatabaseFixture fixture)

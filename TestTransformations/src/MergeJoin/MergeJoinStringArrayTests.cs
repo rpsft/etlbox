@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.MergeJoin
 {
+    [Collection("Transformations")]
     public class MergeJoinStringArrayTests : TransformationsTestBase
     {
         public MergeJoinStringArrayTests(TransformationsDatabaseFixture fixture)

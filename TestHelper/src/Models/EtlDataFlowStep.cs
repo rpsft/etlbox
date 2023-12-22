@@ -15,13 +15,6 @@ namespace TestHelper.Models
     [Serializable]
     public class EtlDataFlowStep : IDataFlow, IXmlSerializable
     {
-        private readonly ILogger _logger;
-
-        public EtlDataFlowStep(ILogger logger) 
-        {
-            _logger = logger;
-        }
-
         public Guid? ReferenceId { get; set; }
 
         public string Name { get; set; }
@@ -38,7 +31,7 @@ namespace TestHelper.Models
 
         public virtual void ReadXml(XmlReader reader)
         {
-            this.ReadFromXml(reader, _logger);
+            this.ReadFromXml(reader);
         }
 
         public void WriteXml(XmlWriter writer)

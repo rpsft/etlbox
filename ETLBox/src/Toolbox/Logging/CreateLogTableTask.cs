@@ -42,7 +42,6 @@ namespace ALE.ETLBox.Logging
         {
             var columns = new List<TableColumn>
             {
-                new("id", GetIdentityType(), allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("log_date", "DATETIME", allowNulls: false),
                 new("level", "VARCHAR(10)", allowNulls: true),
                 new("stage", "VARCHAR(20)", allowNulls: true),
@@ -55,13 +54,6 @@ namespace ALE.ETLBox.Logging
             };
             LogTable = new CreateTableTask(LogTableName, columns);
         }
-
-        private string GetIdentityType()
-          => ConnectionType switch
-          {
-              ConnectionManagerType.ClickHouse => "UUID",
-              _ => "BIGINT"
-          };
 
         public static void Create(
             string logTableName = Common.ControlFlow.ControlFlow.DefaultLogTableName

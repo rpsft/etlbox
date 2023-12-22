@@ -1,10 +1,9 @@
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceIdentityColumnTests : DatabaseConnectorsTestBase
     {
         public DbSourceIdentityColumnTests(DatabaseSourceDestinationFixture fixture)
@@ -20,8 +19,8 @@ namespace TestDatabaseConnectors.DBSource
 
         private static void DataFlowForIdentityColumn(IConnectionManager connection)
         {
-            var source = new DbSource<MyPartialRow>(connection, "Source4Cols");
-            var dest = new DbDestination<MyPartialRow>(
+            DbSource<MyPartialRow> source = new DbSource<MyPartialRow>(connection, "Source4Cols");
+            DbDestination<MyPartialRow> dest = new DbDestination<MyPartialRow>(
                 connection,
                 "Destination4Cols"
             );
@@ -34,13 +33,13 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnsAtTheBeginning(IConnectionManager connection)
         {
             //Arrange
-            var source4Columns = new FourColumnsTableFixture(
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
                 identityColumnIndex: 0
             );
             source4Columns.InsertTestData();
-            var dest4Columns = new FourColumnsTableFixture(
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
                 identityColumnIndex: 0
@@ -53,17 +52,17 @@ namespace TestDatabaseConnectors.DBSource
             dest4Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         private void IdentityColumnInTheMiddle(IConnectionManager connection)
         {
             //Arrange
-            var source4Columns = new FourColumnsTableFixture(
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
                 identityColumnIndex: 1
             );
             source4Columns.InsertTestData();
-            var dest4Columns = new FourColumnsTableFixture(
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
                 identityColumnIndex: 2
@@ -76,17 +75,17 @@ namespace TestDatabaseConnectors.DBSource
             dest4Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         private void IdentityColumnAtTheEnd(IConnectionManager connection)
         {
             //Arrange
-            var source4Columns = new FourColumnsTableFixture(
+            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
                 identityColumnIndex: 3
             );
             source4Columns.InsertTestData();
-            var dest4Columns = new FourColumnsTableFixture(
+            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
                 identityColumnIndex: 3

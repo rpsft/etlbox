@@ -40,7 +40,7 @@ namespace ALE.ETLBox.Logging
                     entry =>
                         entry.TaskAction == "END"
                         && entry.TaskHash == startEntry.TaskHash
-                        && entry.Id > startEntry.Id
+                        && entry.LogDate > startEntry.LogDate
                 );
                 startEntry.EndDate = endEntry?.LogDate;
             }

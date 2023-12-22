@@ -6,7 +6,6 @@ namespace ALE.ETLBox.Logging
     [DebuggerDisplay("#{Id} {TaskType} - {TaskAction} {LogDate}")]
     public class LogEntry
     {
-        public long Id { get; set; }
         public DateTime LogDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Level { get; set; }
@@ -36,7 +35,6 @@ namespace ALE.ETLBox.Logging
         public LogHierarchyEntry(LogEntry entry)
             : this()
         {
-            Id = entry.Id;
             LogDate = entry.LogDate;
             EndDate = entry.EndDate;
             Level = entry.Level;

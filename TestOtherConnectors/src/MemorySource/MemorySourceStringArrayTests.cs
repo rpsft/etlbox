@@ -1,9 +1,8 @@
-using ALE.ETLBox.DataFlow;
-using TestOtherConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.MemorySource
 {
+    [Collection("OtherConnectors")]
     public class MemorySourceStringArrayTests : OtherConnectorsTestBase
     {
         public MemorySourceStringArrayTests(OtherConnectorsDatabaseFixture fixture)
@@ -13,11 +12,11 @@ namespace TestOtherConnectors.MemorySource
         public void DataIsFromList()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "MemoryDestinationNonGeneric"
             );
-            var source = new MemorySource<string[]>();
-            var dest = new DbDestination<string[]>(
+            MemorySource<string[]> source = new MemorySource<string[]>();
+            DbDestination<string[]> dest = new DbDestination<string[]>(
                 SqlConnection,
                 "MemoryDestinationNonGeneric"
             );

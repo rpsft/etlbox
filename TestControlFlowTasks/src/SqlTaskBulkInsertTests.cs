@@ -7,6 +7,7 @@ using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks;
 
+[Collection("ControlFlow")]
 public class SqlTaskBulkInsertTests : ControlFlowTestBase
 {
     public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture fixture)

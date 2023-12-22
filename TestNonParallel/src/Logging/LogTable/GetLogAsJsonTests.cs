@@ -2,11 +2,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
 using EtlBox.Logging.Database;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
+namespace TestNonParallel.Logging.LogTable
 {
+    [Collection("Logging")]
     public sealed class GetLogAsJsonTests : NonParallelTestBase, IDisposable
     {
         public GetLogAsJsonTests(LoggingDatabaseFixture fixture)
@@ -15,17 +16,17 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             CreateLoadProcessTableTask.Create(SqlConnection);
             CreateLogTableTask.Create(SqlConnection);
             DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
-            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
             DropTableTask.Drop(
                 SqlConnection,
-                ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
+                ALE.ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
             );
-            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private static string RemoveHashes(string jsonresult) =>
@@ -119,13 +120,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             //Arrange
             RunDemoProcess();
-            var jsonresult = GetLogAsJSONTask.GetJSON();
+            string jsonresult = GetLogAsJSONTask.GetJSON();
 
             //Act
             jsonresult = NormalizeJsonResult(jsonresult);
 
             //Assert
-            var expectedresult = NormalizeJsonResult(
+            string expectedresult = NormalizeJsonResult(
                 File.ReadAllText("res/Demo/demolog_tobe.json")
             );
             Assert.Equal(expectedresult, jsonresult);

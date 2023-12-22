@@ -35,23 +35,23 @@ namespace TestHelper
                                 <Byte>1</Byte>
                                 <DateTime>11.07.1976</DateTime>
                                 <Guid>{referenceId}</Guid>
-                                <NulBool>True</NulBool>
-                                <NulChar>#</NulChar>
-                                <NulByte>1</NulByte>
-                                <NulDateTime>11.07.1976</NulDateTime>
-                                <NulGuid>{referenceId}</NulGuid>
+                                <NullBool>True</NullBool>
+                                <NullChar>#</NullChar>
+                                <NullByte>1</NullByte>
+                                <NullDateTime>11.07.1976</NullDateTime>
+                                <NullGuid>{referenceId}</NullGuid>
                                 <Int>-1</Int>
                                 <Uint>1</Uint>
                                 <Long>-1</Long>
                                 <Ulong>1</Ulong>
                                 <Short>-1</Short>
                                 <Ushort>1</Ushort>
-                                <NulInt>-1</NulInt>
-                                <NulUint>1</NulUint>
-                                <NulLong>-1</NulLong>
-                                <NulUlong>1</NulUlong>
-                                <NulShort>-1</NulShort>
-                                <NulUshort>1</NulUshort>
+                                <NullInt>-1</NullInt>
+                                <NullUint>1</NullUint>
+                                <NullLong>-1</NullLong>
+                                <NullUlong>1</NullUlong>
+                                <NullShort>-1</NullShort>
+                                <NullUshort>1</NullUshort>
                                 <Uri>{csvUri}</Uri>
                                 <Configuration>
                                     <Delimiter>;</Delimiter>
@@ -101,7 +101,7 @@ namespace TestHelper
             step.Source.Should().BeOfType<CustomCsvSource>();
             ((CustomCsvSource)step.Source).Uri.Should().Be(csvUri);
             ((CustomCsvSource)step.Source).Guid.Should().Be(referenceId);
-            ((CustomCsvSource)step.Source).NulGuid.Should().Be(referenceId);
+            ((CustomCsvSource)step.Source).NullGuid.Should().Be(referenceId);
             ((CustomCsvSource)step.Source).Configuration.Delimiter.Should().Be(";");
             ((CustomCsvSource)step.Source).Configuration.Escape.Should().Be('#');
 
@@ -227,27 +227,27 @@ namespace TestHelper
         private sealed class CustomCsvSource : CsvSource
         {
             public DateTime DateTime { get; set; }
-            public DateTime? NulDateTime { get; set; }
+            public DateTime? NullDateTime { get; set; }
             public Guid Guid { get; set; }
-            public Guid? NulGuid { get; set; }
+            public Guid? NullGuid { get; set; }
             public char Char { get; set; }
-            public char? NulChar { get; set; }
+            public char? NullChar { get; set; }
             public byte Byte { get; set; }
-            public byte? NulByte { get; set; }
+            public byte? NullByte { get; set; }
             public bool Bool { get; set; }
-            public bool? NulBool { get; set; }
+            public bool? NullBool { get; set; }
             public int Int { get; set; }
-            public int? NulInt { get; set; }
+            public int? NullInt { get; set; }
             public uint Uint { get; set; }
-            public uint? NulUint { get; set; }
+            public uint? NullUint { get; set; }
             public long Long { get; set; }
             public long? NulLong { get; set; }
             public ulong Ulong { get; set; }
-            public ulong? NulUlong { get; set; }
+            public ulong? NullUlong { get; set; }
             public short Short { get; set; }
-            public short? NulShort { get; set; }
+            public short? NullShort { get; set; }
             public ushort Ushort { get; set; }
-            public ushort? NulUshort { get; set; }
+            public ushort? NullUshort { get; set; }
         }
 #pragma warning restore S1144 // Unused private types or members should be removed
     }

@@ -69,7 +69,7 @@ SELECT {LogDate}
         public DatabaseTarget GetNLogDatabaseTarget()
         {
             var dbTarget = new DatabaseTarget();
-            AddParameter(dbTarget, "LogDate", @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff}");
+            AddParameter(dbTarget, "LogDate", @"${date:format=yyyy-MM-dd HH\:mm\:ss}");
             AddParameter(dbTarget, "Level", @"${level}");
             AddParameter(dbTarget, "Stage", @"${event-properties:item=Stage}");
             AddParameter(dbTarget, "Message", @"${message}");

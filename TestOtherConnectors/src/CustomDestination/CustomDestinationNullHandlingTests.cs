@@ -1,6 +1,5 @@
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
-using ALE.ETLBox.DataFlow;
-
 
 namespace TestOtherConnectors.CustomDestination
 {
@@ -16,7 +15,7 @@ namespace TestOtherConnectors.CustomDestination
         public void IgnoreWithObject()
         {
             //Arrange
-            var source = new MemorySource<MySimpleRow>
+            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -30,8 +29,8 @@ namespace TestOtherConnectors.CustomDestination
             };
 
             //Act
-            var result = new List<MySimpleRow>();
-            var dest = new CustomDestination<MySimpleRow>(
+            List<MySimpleRow> result = new List<MySimpleRow>();
+            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
                 row => result.Add(row)
             );
             source.LinkTo(dest);

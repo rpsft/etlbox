@@ -1,9 +1,8 @@
 using ALE.ETLBox.DataFlow;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationNullHandlingTests : DatabaseConnectorsTestBase
     {
         public DbDestinationNullHandlingTests(DatabaseSourceDestinationFixture fixture)
@@ -19,11 +18,11 @@ namespace TestDatabaseConnectors.DBDestination
         public void IgnoreWithObject()
         {
             //Arrange
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DestIgnoreNullValues"
             );
-            var source = new MemorySource<MySimpleRow>
+            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -35,7 +34,7 @@ namespace TestDatabaseConnectors.DBDestination
                     null
                 }
             };
-            var dest = new DbDestination<MySimpleRow>(
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "DestIgnoreNullValues"
             );
@@ -53,11 +52,11 @@ namespace TestDatabaseConnectors.DBDestination
         public void IgnoreWithStringArray()
         {
             //Arrange
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DestIgnoreNullValuesStringArray"
             );
-            var source = new MemorySource<string[]>
+            MemorySource<string[]> source = new MemorySource<string[]>
             {
                 DataAsList = new List<string[]>
                 {
@@ -69,7 +68,7 @@ namespace TestDatabaseConnectors.DBDestination
                     null
                 }
             };
-            var dest = new DbDestination<string[]>(
+            DbDestination<string[]> dest = new DbDestination<string[]>(
                 SqlConnection,
                 "DestIgnoreNullValuesStringArray"
             );

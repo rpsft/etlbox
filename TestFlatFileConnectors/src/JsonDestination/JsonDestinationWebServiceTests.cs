@@ -6,6 +6,7 @@ using TestFlatFileConnectors.Fixture;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonDestinationWebServiceTests : FlatFileConnectorsTestBase
     {
         public JsonDestinationWebServiceTests(FlatFileToDatabaseFixture fixture)

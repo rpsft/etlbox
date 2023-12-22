@@ -3,7 +3,11 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using DotLiquid.Tags;
 using ETLBox.Primitives;
+using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient.X.XDevAPI.Common;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace ALE.ETLBox
 {
@@ -12,6 +16,10 @@ namespace ALE.ETLBox
         public string Name { get; set; }
         public List<TableColumn> Columns { get; set; }
         public string PrimaryKeyConstraintName { get; set; }
+
+        // Only for ClickHouse
+        public string OrderBy { get; set; }
+
 
         public int? IDColumnIndex
         {
@@ -46,7 +54,7 @@ namespace ALE.ETLBox
         /// </summary>
         public string Engine { get; set; }
 
-        private static readonly string[] sourceArray = new[] { "yes", "true", "on", "1", "да" };
+        private static readonly string[] trueArray = new[] { "yes", "true", "on", "1", "да" };
 
         public void CreateTable(IConnectionManager connectionManager) =>
             CreateTableTask.Create(connectionManager, this);
@@ -89,12 +97,17 @@ namespace ALE.ETLBox
                 $"Read column meta data for table {tn.ObjectName}",
                 $@"
                 SELECT 
-                     name
-                    ,type as type
-                    ,is_in_primary_key as primary_key
-                    ,default_expression as default_value
-                FROM system.columns
-                WHERE database = currentDatabase()
+                     c.name
+                    ,c.type as type
+                    ,c.is_in_primary_key as primary_key
+                    ,c.default_expression as default_value
+                    ,ic.is_nullable
+                    ,c.comment
+                FROM system.columns c
+                LEFT JOIN information_schema.columns as ic
+                    ON ic.table_name = c.table
+                    AND ic.column_name = c.name
+                WHERE c.database = currentDatabase()
                   AND table = '{tn.ObjectName}'",
                 () =>
                 {
@@ -106,8 +119,10 @@ namespace ALE.ETLBox
                 },
                 name => curCol.Name = name.ToString(),
                 type => curCol.DataType = type.ToString(),
-                primaryKey => curCol.IsPrimaryKey = Convert.ToBoolean(primaryKey),
-                defaultValue =>curCol.DefaultValue = defaultValue?.ToString()
+                primaryKey => curCol.IsPrimaryKey = ParseBoolean(primaryKey),
+                defaultValue => curCol.DefaultValue = defaultValue?.ToString(),
+                is_nullable => curCol.AllowNulls = ParseBoolean(is_nullable),
+                comment => curCol.Comment = comment?.ToString()
             )
             {
                 DisableLogging = true,
@@ -220,7 +235,23 @@ ORDER BY cols.column_id
             TableColumn curCol = null;
             var readMetaSql = new SqlTask(
                 $"Read column meta data for table {tn.ObjectName}",
-                $@"PRAGMA table_info(""{tn.UnquotedFullName}"")",
+                $@"
+                SELECT
+                  c.name AS column_name,
+                  c.type AS column_type,
+                  CASE WHEN pk.name IS NOT NULL THEN 1 ELSE 0 END AS is_primary_key,
+                  c.dflt_value as default_value,
+                  CASE WHEN c.""notnull"" = 0 THEN 1 ELSE 0 END AS is_nullable
+                FROM
+                      sqlite_master AS m
+                    JOIN
+                      pragma_table_info(m.name) AS c ON true
+                    LEFT JOIN
+                      pragma_index_info AS pk ON c.cid = pk.cid
+                WHERE m.type = 'table'
+                  AND m.name = '{tn.UnquotedFullName}'
+                ORDER BY
+                  c.cid;",
                 () =>
                 {
                     curCol = new TableColumn();
@@ -229,12 +260,11 @@ ORDER BY cols.column_id
                 {
                     result.Columns.Add(curCol);
                 },
-                _ => { },
                 name => curCol.Name = name.ToString(),
                 type => curCol.DataType = type.ToString(),
-                notNull => curCol.AllowNulls = (long)notNull == 1,
+                pk => curCol.IsPrimaryKey = (long.TryParse(pk?.ToString(), out long res) ? res : 0) >= 1,
                 defaultValue => curCol.DefaultValue = defaultValue?.ToString(),
-                pk => curCol.IsPrimaryKey = (long)pk >= 1
+                is_nullable => curCol.AllowNulls = ParseBoolean(is_nullable)
             )
             {
                 DisableLogging = true,
@@ -417,7 +447,7 @@ ORDER BY cols.ordinal_position
             {
                 return false;
             }
-            return sourceArray.Contains(value.ToString().ToLower());
+            return trueArray.Contains(value.ToString().ToLower());
         }
 
         private static TableDefinition ReadTableDefinitionFromAccess(

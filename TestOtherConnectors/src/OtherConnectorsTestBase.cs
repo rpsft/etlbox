@@ -1,13 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using TestOtherConnectors.Fixture;
-using TestShared.Helper;
-
-namespace TestOtherConnectors
+﻿namespace TestOtherConnectors
 {
     [CollectionDefinition("OtherConnectors")]
     public class OtherConnectorsCollectionClass
-        : ICollectionFixture<OtherConnectorsDatabaseFixture>
-    { }
+        : ICollectionFixture<OtherConnectorsDatabaseFixture> { }
 
     [Collection("OtherConnectors")]
     public class OtherConnectorsTestBase
