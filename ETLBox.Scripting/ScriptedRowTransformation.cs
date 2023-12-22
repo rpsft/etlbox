@@ -7,10 +7,12 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace ALE.ETLBox.Scripting;
 
+public class ScriptedTransformation<TInput> : ScriptedRowTransformation<TInput, TInput> { }
+
 [PublicAPI]
 public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput>
 {
-    public IDictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
+    public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
 
     public ScriptedRowTransformation()
     {

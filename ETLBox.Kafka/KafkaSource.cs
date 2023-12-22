@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Dynamic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
@@ -15,6 +16,11 @@ namespace ALE.ETLBox.DataFlow;
 /// </summary>
 /// <typeparam name="TOutput"></typeparam>
 public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string> { }
+
+
+public class KafkaSource<TOutput> : KafkaSource<TOutput, ExpandoObject>
+{
+}
 
 /// <summary>
 /// Kafka generic source
