@@ -67,11 +67,15 @@ namespace ALE.ETLBox.DataFlow
 
         private async Task<ExpandoObject> RestMethodInternalAsync(ExpandoObject input, IHttpClient httpClient)
         {
-            if (RestMethodInfo == null)
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            if (RestMethodInfo is null)
             {
                 throw new InvalidOperationException($"Property '{nameof(RestMethodInfo)}' not defined");
             }
-            if (ResultField == null)
+            if (ResultField is null)
             {
                 throw new InvalidOperationException($"Property '{nameof(ResultField)}' not defined");
             }

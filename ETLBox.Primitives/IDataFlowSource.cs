@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace ETLBox.Primitives
 {
-    public interface IDataFlowSource<out TOutput> : IDataFlowLinkSource<TOutput>
+    public interface IDataFlowSource<out TOutput> : IDataFlowLinkSource<TOutput>, ILinkErrorSource
     {
         Task ExecuteAsync();
         void Execute();
-
-        void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target);
     }
 }
