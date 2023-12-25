@@ -1,10 +1,15 @@
 #nullable enable
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
 using DotLiquid;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
@@ -14,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     {
         private static readonly Func<IHttpClient> s_defaultHttpClientFactory = () => new SampleHttpClient();
 
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
         {
             Converters = { new ExpandoObjectConverter() }
         };

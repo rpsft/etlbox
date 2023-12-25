@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EtlBox.ClickHouse\EtlBox.ClickHouse.csproj" />
+    <ProjectReference Include="..\ETLBox.Rest\ETLBox.Rest.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
     <ProjectReference Include="..\TestHelper\TestHelper.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />

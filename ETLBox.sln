@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Scripting.Tests", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "TestConnectionManager\TestConnectionManager.csproj", "{AFA1FAFF-A99E-4862-B396-E64193E360B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Rest", "ETLBox.Rest\ETLBox.Rest.csproj", "{09FF0E54-4AF6-4736-9610-24F15B8F0F60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,10 @@ Global
 		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFA1FAFF-A99E-4862-B396-E64193E360B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09FF0E54-4AF6-4736-9610-24F15B8F0F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09FF0E54-4AF6-4736-9610-24F15B8F0F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09FF0E54-4AF6-4736-9610-24F15B8F0F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09FF0E54-4AF6-4736-9610-24F15B8F0F60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

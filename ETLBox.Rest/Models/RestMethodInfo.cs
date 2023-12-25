@@ -1,4 +1,4 @@
-using System.Net.Http;
+using System.Collections.Generic;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -7,22 +7,22 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// шаблон url (формат Liquid)
         /// </summary>
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// массив заголовков
         /// </summary>
-        public Dictionary<string,string> Headers { get; set; }
+        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// { GET, POST, PUT, DELETE }
         /// </summary>
-        public string Method { get; set; }
+        public string? Method { get; set; }
 
         /// <summary>
         /// шаблон тела запроса(формат Liquid)
         /// </summary>
-        public string Body { get; set; }
+        public string? Body { get; set; }
 
         /// <summary>
         /// количество повторений запроса
