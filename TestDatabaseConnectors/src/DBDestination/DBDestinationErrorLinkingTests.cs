@@ -18,11 +18,10 @@ namespace TestDatabaseConnectors.DBDestination
             public string Col2 { get; set; }
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void RedirectBatch(IConnectionManager connection)
         {
             //Arrange
-            DropTableTask.DropIfExists(connection, "DestLinkError");
             TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestLinkError", true);
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {

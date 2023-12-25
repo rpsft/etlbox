@@ -41,7 +41,7 @@ namespace TestDatabaseConnectors.DBSource
                     "different_type_table",
                     new List<TableColumn>
                     {
-                        new("int_col", "INT", true),
+                        new("int_col", "INT", false),
                         new("long_col", "BIGINT", true),
                         new("decimal_col", "FLOAT", true),
                         new("double_col", "FLOAT", true),

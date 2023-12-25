@@ -4,7 +4,6 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.Primitives;
-using TSQL.Clauses;
 
 namespace ALE.ETLBox.ControlFlow
 {

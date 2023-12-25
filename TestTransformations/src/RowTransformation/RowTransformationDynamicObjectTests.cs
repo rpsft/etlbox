@@ -55,22 +55,9 @@ namespace TestTransformations.RowTransformation
             var source = new MemorySource<ExpandoObject>(objSet);
 
             //Act
-            var trans = new JsonTransformation()
-            {
-                Mappings = new JsonMapping[]
-                {
-                    new JsonMapping
-                    {
-                        Source = new JsonProperty { Name = "data", Path = "$.Data.Id" },
-                        Destination = "Col1"
-                    },
-                    new JsonMapping
-                    {
-                        Source = new JsonProperty { Name = "data", Path = "$.Data.Name" },
-                        Destination = "Col2"
-                    },
-                }
-            };
+            var trans = new JsonTransformation();
+            trans.Mappings["Col1"] = new JsonProperty { Name = "data", Path = "$.Data.Id" };
+            trans.Mappings["Col2"] = new JsonProperty { Name = "data", Path = "$.Data.Name" };
 
             var dest = new DbDestination<ExpandoObject>(SqlConnection, dest2Columns.TableName);
             source.LinkTo(trans);

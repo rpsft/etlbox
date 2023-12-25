@@ -39,7 +39,7 @@ namespace TestDatabaseConnectors.DBDestination
                     "datatypedestination",
                     new List<TableColumn>
                     {
-                        new("IntCol", "INT", allowNulls: true),
+                        new("IntCol", "INT", allowNulls: false),
                         new("LongCol", "BIGINT", allowNulls: true),
                         new("DecimalCol", "FLOAT", allowNulls: true),
                         new("DoubleCol", "FLOAT", allowNulls: true),
