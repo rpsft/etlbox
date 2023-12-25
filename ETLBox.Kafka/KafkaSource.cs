@@ -72,7 +72,7 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
         try
         {
             var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
-            if (consumeResult?.IsPartitionEOF == true)
+            if (consumeResult?.IsPartitionEOF ?? true)
             {
                 return false;
             }
