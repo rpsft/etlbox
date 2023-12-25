@@ -1,4 +1,4 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -17,7 +17,7 @@ namespace ALE.ETLBox.Logging
         public void Execute()
         {
             LogEntries = new List<LogEntry>();
-            var current = new LogEntry();
+            LogEntry current = new LogEntry();
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,
@@ -26,6 +26,7 @@ namespace ALE.ETLBox.Logging
                 AfterRowReadAction = () => LogEntries.Add(current),
                 Actions = new List<Action<object>>
                 {
+                    col => current.Id = Convert.ToInt64(col),
                     col =>
                         current.LogDate = col is string str ? DateTime.Parse(str) : (DateTime)col,
                     col => current.Level = (string)col,
@@ -58,7 +59,7 @@ namespace ALE.ETLBox.Logging
 
         public string Sql =>
             $@"
-SELECT {QB}log_date{QE}, {QB}level{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}stage{QE}, {QB}source{QE}, {QB}load_process_id{QE}
+SELECT {QB}id{QE}, {QB}log_date{QE}, {QB}level{QE}, {QB}message{QE}, {QB}task_type{QE}, {QB}task_action{QE}, {QB}task_hash{QE}, {QB}stage{QE}, {QB}source{QE}, {QB}load_process_id{QE}
 FROM {Tn.QuotedFullName}"
             + (LoadProcessId != null ? $@" WHERE {QB}LoadProcessKey{QE} = {LoadProcessId}" : "");
 

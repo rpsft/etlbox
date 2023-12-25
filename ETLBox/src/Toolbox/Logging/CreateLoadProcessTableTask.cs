@@ -1,4 +1,4 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ETLBox.Primitives;
 using ALE.ETLBox.ControlFlow;
@@ -24,8 +24,6 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            InitCreateTableTask();
-
             LoadProcessTable.CopyTaskProperties(this);
             LoadProcessTable.DisableLogging = true;
             LoadProcessTable.Create();
@@ -35,6 +33,7 @@ namespace ALE.ETLBox.Logging
         public CreateLoadProcessTableTask(string loadProcessTableName)
         {
             LoadProcessTableName = loadProcessTableName;
+            InitCreateTableTask();
         }
 
         public CreateLoadProcessTableTask(
@@ -48,7 +47,7 @@ namespace ALE.ETLBox.Logging
 
         private void InitCreateTableTask()
         {
-            var lpColumns = new List<TableColumn>
+            List<TableColumn> lpColumns = new List<TableColumn>
             {
                 new("id", "BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("start_date", "DATETIME", allowNulls: false),

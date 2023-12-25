@@ -1,4 +1,4 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -7,6 +7,9 @@ namespace ALE.ETLBox.Logging
 {
     /// <summary>
     /// Will create the default log table for the default database logging
+    /// You can use `ControlFlow.SetLoggingDatabase(IConnectionManager connectionManager, string logTableName) to let ETLBox
+    /// update your nlog.config add add this table as database target automatically.
+    /// Or you can update your nlog.config manually.
     /// </summary>
     [PublicAPI]
     public sealed class CreateLogTableTask : GenericTask
@@ -19,8 +22,6 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            InitCreateTableTask();
-
             LogTable.CopyTaskProperties(this);
             LogTable.DisableLogging = true;
             LogTable.Create();
@@ -30,6 +31,7 @@ namespace ALE.ETLBox.Logging
         public CreateLogTableTask(string logTableName)
         {
             LogTableName = logTableName;
+            InitCreateTableTask();
         }
 
         public CreateLogTableTask(IConnectionManager connectionManager, string logTableName)
@@ -40,8 +42,9 @@ namespace ALE.ETLBox.Logging
 
         private void InitCreateTableTask()
         {
-            var columns = new List<TableColumn>
+            List<TableColumn> columns = new List<TableColumn>
             {
+                new("id", "BIGINT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                 new("log_date", "DATETIME", allowNulls: false),
                 new("level", "VARCHAR(10)", allowNulls: true),
                 new("stage", "VARCHAR(20)", allowNulls: true),

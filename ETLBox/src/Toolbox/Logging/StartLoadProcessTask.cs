@@ -1,4 +1,4 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -16,7 +16,7 @@ namespace ALE.ETLBox.Logging
 
         private void Execute()
         {
-            new SqlTask(this, insertSql)
+            LoadProcessId = new SqlTask(this, Sql)
             {
                 Parameter = new List<QueryParameter>
                 {
@@ -26,8 +26,7 @@ namespace ALE.ETLBox.Logging
                     new("Source", "VARCHAR(20)", Source)
                 },
                 DisableLogging = true
-            }.ExecuteNonQuery();
-            LoadProcessId = new SqlTask(this, LastIdSql).ExecuteScalar<long>();
+            }.ExecuteScalar<long>();
             var tableTask = new ReadLoadProcessTableTask(this, LoadProcessId)
             {
                 DisableLogging = true
@@ -48,16 +47,26 @@ namespace ALE.ETLBox.Logging
             set { _loadProcessId = value; }
         }
 
-        private string insertSql =>
+        public string Sql =>
             $@"
  INSERT INTO {TN.QuotedFullName} 
 ( {QB}start_date{QE}, {QB}process_name{QE}, {QB}start_message{QE}, {QB}source{QE}, {QB}is_running{QE})
- VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 )";
+ VALUES (@CurrentDate,@ProcessName, @StartMessage,@Source, 1 ) 
+{LastIdSql}";
 
         private ObjectNameDescriptor TN =>
             new(Common.ControlFlow.ControlFlow.LoadProcessTable, QB, QE);
 
-        private string LastIdSql => $"SELECT MAX({QB}id{QE}) FROM {TN.QuotedFullName}";
+        private string LastIdSql
+        {
+            get =>
+                ConnectionType switch
+                {
+                    ConnectionManagerType.Postgres => "RETURNING id",
+                    ConnectionManagerType.SqlServer => "SELECT CAST ( SCOPE_IDENTITY() AS BIGINT)",
+                    _ => $"; SELECT MAX({QB}id{QE}) FROM {TN.QuotedFullName}"
+                };
+        }
 
         public StartLoadProcessTask() { }
 

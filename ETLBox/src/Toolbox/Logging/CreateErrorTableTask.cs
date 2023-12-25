@@ -1,8 +1,7 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
-using TSQL.Clauses;
 
 namespace ALE.ETLBox.Logging
 {

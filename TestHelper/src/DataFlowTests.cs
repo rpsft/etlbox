@@ -60,20 +60,16 @@ namespace TestHelper
                                 </Configuration>
                                 <LinkTo>
                                     <JsonTransformation>
-                                        <JsonMappings>
+                                        <Mappings>
                                             <Col1>
-                                                <Source>
-                                                    <Name>data</Name>
-                                                    <Path>$.Data.Id</Path>
-                                                </Source>
+                                                <Name>data</Name>
+                                                <Path>$.Data.Id</Path>
                                             </Col1>
                                             <Col2>
-                                                <Source>
-                                                    <Name>data</Name>
-                                                    <Path>$.Data.Name</Path>
-                                                </Source>
+                                                <Name>data</Name>
+                                                <Path>$.Data.Name</Path>
                                             </Col2>
-                                        </JsonMappings>
+                                        </Mappings>
                                         <LinkTo>
                                             <MemoryDestination></MemoryDestination>
                                         </LinkTo>

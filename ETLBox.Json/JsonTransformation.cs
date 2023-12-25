@@ -26,9 +26,9 @@ namespace TestHelper.Models
             };
         }
 
-        public Dictionary<string, JsonProperty> Mappings { get; set; } = new Dictionary<string, JsonProperty>();
+        public Dictionary<string, JsonSource> Mappings { get; set; } = new Dictionary<string, JsonSource>();
 
-        private static string GetValue(ExpandoObject source, JsonProperty mapping)
+        private static string GetValue(ExpandoObject source, JsonSource mapping)
         {
             var values = source as IDictionary<string, object>;
             // Parse the JSON string

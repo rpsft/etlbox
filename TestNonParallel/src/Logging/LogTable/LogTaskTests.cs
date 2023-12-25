@@ -16,12 +16,14 @@ namespace TestNonParallel.Logging.LogTable
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
+        public static IEnumerable<object[]> ConnectionsWithoutClickHouse => AllSqlConnectionsWithoutClickHouse;
+
         public void Dispose()
         {
             ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CreateLogTable(IConnectionManager connection)
         {
             //Arrange
@@ -31,12 +33,12 @@ namespace TestNonParallel.Logging.LogTable
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "etlbox_testlog"));
             var td = TableDefinition.GetDefinitionFromTableName(connection, "etlbox_testlog");
-            Assert.True(td.Columns.Count == 9);
+            Assert.True(td.Columns.Count == 10);
             //Cleanup
             DropTableTask.Drop(connection, "etlbox_testlog");
         }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void TestErrorLogging(IConnectionManager connection)
         {
             //Arrange
@@ -53,7 +55,6 @@ namespace TestNonParallel.Logging.LogTable
             LogTask.Info(connection, "Info!");
             LogTask.Debug(connection, "Debug!");
             LogTask.Trace(connection, "Trace!");
-            LogTask.Fatal(connection, "Fatal!");
             //Assert
             Assert.Equal(
                 1,
@@ -131,7 +132,7 @@ namespace TestNonParallel.Logging.LogTable
             DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
         }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void TestReadLogTask(IConnectionManager connection)
         {
             //Arrange

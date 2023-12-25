@@ -56,8 +56,8 @@ namespace TestTransformations.RowTransformation
 
             //Act
             var trans = new JsonTransformation();
-            trans.Mappings["Col1"] = new JsonProperty { Name = "data", Path = "$.Data.Id" };
-            trans.Mappings["Col2"] = new JsonProperty { Name = "data", Path = "$.Data.Name" };
+            trans.Mappings["Col1"] = new TestHelper.Models.JsonSource { Name = "data", Path = "$.Data.Id" };
+            trans.Mappings["Col2"] = new TestHelper.Models.JsonSource { Name = "data", Path = "$.Data.Name" };
 
             var dest = new DbDestination<ExpandoObject>(SqlConnection, dest2Columns.TableName);
             source.LinkTo(trans);

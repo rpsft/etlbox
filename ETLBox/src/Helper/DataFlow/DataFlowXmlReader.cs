@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Helper.DataFlow
 {

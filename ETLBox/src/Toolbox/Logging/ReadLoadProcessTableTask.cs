@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.Logging;
