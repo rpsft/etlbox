@@ -17,10 +17,7 @@ namespace ALE.ETLBox.DataFlow;
 /// <typeparam name="TOutput"></typeparam>
 public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string> { }
 
-
-public class KafkaSource<TOutput> : KafkaSource<TOutput, ExpandoObject>
-{
-}
+public class KafkaSource<TOutput> : KafkaSource<TOutput, ExpandoObject> { }
 
 /// <summary>
 /// Kafka generic source
@@ -60,7 +57,10 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            ConsumeAndSendSingleMessage(consumer);
+            if (ConsumeAndSendSingleMessage(consumer))
+            {
+                break;
+            }
         }
 
         LogFinish();
@@ -71,8 +71,8 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
         TKafkaValue? kafkaValue = default;
         try
         {
-            var consumeResult = consumer.Consume();
-            if (consumeResult.IsPartitionEOF)
+            var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
+            if (consumeResult?.IsPartitionEOF == true)
             {
                 return false;
             }
@@ -96,6 +96,8 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
                         jsonSerializerOptions
                     ) ?? throw new InvalidOperationException();
             Buffer.SendAsync(outputValue).Wait();
+
+            Buffer.Complete();
         }
         catch (Exception e)
         {
