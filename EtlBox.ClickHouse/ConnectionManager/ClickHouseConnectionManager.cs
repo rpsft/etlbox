@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using ClickHouse.Ado;
 using CsvHelper.Configuration;
 using EtlBox.ClickHouse.ConnectionStrings;
@@ -45,10 +46,32 @@ namespace EtlBox.ClickHouse.ConnectionManager
         public override void BulkInsert(ITableData data, string tableName)
         {
             var csvData = new StringBuilder();
-            foreach (var row in data.Rows)
+            var destColumnNames = data.GetColumnMapping()
+                .Cast<IColumnMapping>()
+                .Select(cm => cm.DataSetColumn)
+                .ToList();
+
+            while (data.Read())
             {
-                var rowData = string.Join(Configuration.Delimiter, row.Select(r => GetValue(r)));
-                csvData.AppendLine(rowData);
+                var valSeparator = "";
+                foreach (var destColumn in DestinationColumns.Keys)
+                {
+                    csvData.Append(valSeparator);
+                    valSeparator = ",";
+                    TableColumn colDef = DestinationColumns[destColumn];
+                    object? val;
+                    if (destColumnNames.Contains(colDef.Name))
+                    {
+                        var ordinal = data.GetOrdinal(destColumn);
+                        val = data.GetValue(ordinal);
+                    }
+                    else
+                    {
+                        val = null;
+                    }
+                    csvData.Append(GetValue(val, colDef));
+                }
+                csvData.AppendLine();
             }
 
             if (DbConnection.State != ConnectionState.Open)
@@ -57,29 +80,70 @@ namespace EtlBox.ClickHouse.ConnectionManager
             }
             using var cmd = DbConnection.CreateCommand();
             cmd.CommandText = $@"
-            INSERT INTO {QB}{tableName}{QE}
-            FORMAT CSV
-            {csvData}";
+INSERT INTO {QB}{tableName}{QE}
+FORMAT CSV
+{csvData}";
 
             cmd.ExecuteNonQuery();
         }
 
-        private string? GetValue(object r)
+        private string? GetValue(object? r, TableColumn col)
         {
             if (r == null)
             {
                 return "";
             }
+            if (r is DateTime && new[] { "DATE", "NULLABLE(DATE)" }.Contains(col.DataType.ToUpper()))
+            {
+                return $"{r:yyyy-MM-dd}";
+            }
             if (r is DateTime)
             {
                 return $"{r:yyyy-MM-dd HH:mm:ss}";
+            }
+            if (r is decimal or int or long or double or float)
+            {
+                return Convert.ToString(r, CultureInfo.InvariantCulture);
+            }
+            if (!DataTypeConverter.IsCharTypeDefinition(col.DataType) 
+                && !col.DataType.ToUpper().Contains("STR"))
+            {
+                return ConvertToType(r, col.DataType);
             }
             if (r is bool)
             {
                 return (bool)r ? "1" : "0";
             }
+            var value = r?.ToString()!.Replace(@"""", @"""""");
+            return $@"""{value}""";
+        }
 
-            return r?.ToString();
+        private string? ConvertToType(object r, string dataType)
+        {
+            if (dataType.ToUpper().Contains("DECIMAL"))
+            {
+                return Convert.ToDecimal(r).ToString(CultureInfo.InvariantCulture);
+            }
+            if (dataType.ToUpper().Contains("INT"))
+            {
+                return Convert.ToInt64(r, CultureInfo.InvariantCulture).ToString();
+            }
+            if (dataType.ToUpper().Contains("DATETIME"))
+            {
+                return Convert.ToDateTime(r).ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            if (dataType.ToUpper().Contains("DATE"))
+            {
+                return Convert.ToDateTime(r).ToString("yyyy-MM-dd");
+            }
+            if (dataType.ToUpper().Contains("BOOL") || dataType.ToUpper().Contains("BIT"))
+            {
+                return Convert.ToBoolean(r, CultureInfo.InvariantCulture).ToString();
+            }
+            else
+            { 
+                return r?.ToString();
+            }
         }
 
         public override void PrepareBulkInsert(string tableName)
@@ -116,6 +180,12 @@ namespace EtlBox.ClickHouse.ConnectionManager
                 MaxLoginAttempts = MaxLoginAttempts
             };
             return clone;
+        }
+
+        public override bool IndexExists(ITask callingTask, string sql)
+        {
+            var res = new SqlTask(callingTask, sql).ExecuteScalar();
+            return (!string.IsNullOrEmpty(res?.ToString()));
         }
     }
 }

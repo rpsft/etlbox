@@ -1,9 +1,10 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Linq;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using EtlBox.ClickHouse.ConnectionManager;
 using ETLBox.Primitives;
 using TestShared.Helper;
 
@@ -14,6 +15,8 @@ namespace TestShared.SharedFixtures
         public IConnectionManager Connection { get; set; } =
             Config.SqlConnection.ConnectionManager("DataFlow");
         public bool IsSQLiteConnection => Connection.GetType() == typeof(SQLiteConnectionManager);
+        public bool IsClickHouseConnection => Connection.GetType() == typeof(ClickHouseConnectionManager);
+
         public TableDefinition TableDefinition { get; set; }
         public string TableName { get; set; }
         public ObjectNameDescriptor TN => new(TableName, Connection.QB, Connection.QE);
@@ -36,7 +39,7 @@ namespace TestShared.SharedFixtures
         {
             TableName = tableName;
             Connection = connection;
-            RecreateTable(0);
+            RecreateTable(IsClickHouseConnection ? -1 : 0);
         }
 
         public FourColumnsTableFixture(
@@ -53,7 +56,7 @@ namespace TestShared.SharedFixtures
         public void RecreateTable(int identityColumnIndex)
         {
             DropTableTask.DropIfExists(Connection, TableName);
-            var hasIdentityCol = identityColumnIndex >= 0;
+            bool hasIdentityCol = identityColumnIndex >= 0;
             var columns = new ObservableCollection<TableColumn>
             {
                 new(
@@ -94,23 +97,42 @@ namespace TestShared.SharedFixtures
                 );
             }
             else
-            {
-                SqlTask.ExecuteNonQuery(
-                    Connection,
-                    "Insert demo data",
-                    $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test1', NULL, '1.2')"
-                );
-                SqlTask.ExecuteNonQuery(
-                    Connection,
-                    "Insert demo data",
-                    $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test2', 4711, '1.23')"
-                );
-                SqlTask.ExecuteNonQuery(
-                    Connection,
-                    "Insert demo data",
-                    $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE},{QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test3', 185, '1.234')"
-                );
-            }
+                if (IsClickHouseConnection)
+                {
+                    SqlTask.ExecuteNonQuery(
+                        Connection,
+                        "Insert demo data",
+                        $@"INSERT INTO {TN.QuotedFullName} VALUES(1, 'Test1', NULL, '1.2')"
+                    );
+                    SqlTask.ExecuteNonQuery(
+                        Connection,
+                        "Insert demo data",
+                        $@"INSERT INTO {TN.QuotedFullName} VALUES(2, 'Test2', 4711, '1.23')"
+                    );
+                    SqlTask.ExecuteNonQuery(
+                        Connection,
+                        "Insert demo data",
+                        $@"INSERT INTO {TN.QuotedFullName}  VALUES(3, 'Test3', 185, '1.234')"
+                    );
+                }
+                else
+                {
+                    SqlTask.ExecuteNonQuery(
+                        Connection,
+                        "Insert demo data",
+                        $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test1', NULL, '1.2')"
+                    );
+                    SqlTask.ExecuteNonQuery(
+                        Connection,
+                        "Insert demo data",
+                        $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE}, {QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test2', 4711, '1.23')"
+                    );
+                    SqlTask.ExecuteNonQuery(
+                        Connection,
+                        "Insert demo data",
+                        $@"INSERT INTO {TN.QuotedFullName} ({QB}Col2{QE},{QB}Col3{QE}, {QB}Col4{QE}) VALUES('Test3', 185, '1.234')"
+                    );
+                }
         }
 
         public void AssertTestData()

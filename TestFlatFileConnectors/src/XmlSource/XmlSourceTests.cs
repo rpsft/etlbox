@@ -4,6 +4,7 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.XmlSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class XmlSourceTests : FlatFileConnectorsTestBase
     {
         public XmlSourceTests(FlatFileToDatabaseFixture fixture)

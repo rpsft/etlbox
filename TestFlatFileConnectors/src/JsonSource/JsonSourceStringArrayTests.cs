@@ -4,6 +4,7 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonSourceStringArrayTests : FlatFileConnectorsTestBase
     {
         public JsonSourceStringArrayTests(FlatFileToDatabaseFixture fixture)

@@ -9,19 +9,23 @@
 
   <ItemGroup>
     <PackageReference Include="DotLiquid" Version="2.2.692" />
-    <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
-    <PackageReference Include="Moq" Version="4.18.4" />
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="xunit" Version="2.6.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EtlBox.ClickHouse\EtlBox.ClickHouse.csproj" />
+    <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
+    <ProjectReference Include="..\ETLBox.Rest\ETLBox.Rest.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+    <ProjectReference Include="..\TestHelper\TestHelper.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />
   </ItemGroup>
 
@@ -56,7 +60,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="JunitXml.TestLogger" Version="3.0.124" />
+    <PackageReference Update="JunitXml.TestLogger" Version="3.0.134" />
+    <PackageReference Update="WeCantSpell.Roslyn" Version="2.0.8-beta">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

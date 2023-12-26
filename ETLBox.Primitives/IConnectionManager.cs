@@ -36,6 +36,8 @@ namespace ETLBox.Primitives
         void CommitTransaction();
         void RollbackTransaction();
         void CloseTransaction();
+        bool IndexExists(ITask callingTask, string sql);
+
         string QB { get; }
         string QE { get; }
         bool SupportDatabases { get; }

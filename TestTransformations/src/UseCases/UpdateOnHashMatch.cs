@@ -7,6 +7,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.UseCases
 {
+    [Collection("Transformations")]
     public class UpdateOnHashMatchTests : TransformationsTestBase
     {
         public UpdateOnHashMatchTests(TransformationsDatabaseFixture fixture)

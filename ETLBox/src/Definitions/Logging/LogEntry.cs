@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.Logging

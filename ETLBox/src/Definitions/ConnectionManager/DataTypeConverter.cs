@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -99,11 +99,11 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
         public static string TryGetDBSpecificType(
-            string dbSpecificTypeName,
+            ITableColumn col,
             ConnectionManagerType connectionType
         )
         {
-            var typeName = dbSpecificTypeName.Trim().ToUpper();
+            var typeName = col.DataType.Trim().ToUpper();
             switch (connectionType)
             {
                 case ConnectionManagerType.SqlServer when typeName.Replace(" ", "") == "TEXT":
@@ -117,11 +117,11 @@ namespace ALE.ETLBox.ConnectionManager
                         return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
                     }
                 case ConnectionManagerType.Access:
-                    return dbSpecificTypeName;
+                    return col.DataType;
                 case ConnectionManagerType.SQLite when typeName is "INT" or "BIGINT":
                     return "INTEGER";
                 case ConnectionManagerType.SQLite:
-                    return dbSpecificTypeName;
+                    return col.DataType;
                 case ConnectionManagerType.Postgres:
                     {
                         if (IsCharTypeDefinition(typeName))
@@ -131,13 +131,26 @@ namespace ALE.ETLBox.ConnectionManager
                         }
                         else if (typeName == "DATETIME")
                             return "TIMESTAMP";
-                        return dbSpecificTypeName;
+                        return col.DataType;
+                    }
+                case ConnectionManagerType.ClickHouse:
+                    {
+                        string type = col.DataType;
+                        if (IsCharTypeDefinition(typeName))
+                        {
+                            type = "String";
+                        }
+                        if (col.AllowNulls && !type.StartsWith("Nullable"))
+                        {
+                            return $"Nullable({type})";
+                        }
+                        return type;
                     }
                 case ConnectionManagerType.Unknown:
                 case ConnectionManagerType.Adomd:
                 case ConnectionManagerType.MySql:
                 default:
-                    return dbSpecificTypeName;
+                    return col.DataType;
             }
         }
 

@@ -48,7 +48,7 @@ namespace ALE.ETLBox.Logging
 
         private static LogHierarchyEntry CreateHierarchyStructure(List<LogEntry> entries)
         {
-            var root = new LogHierarchyEntry(new LogEntry { TaskType = "ROOT" });
+            LogHierarchyEntry root = new LogHierarchyEntry(new LogEntry { TaskType = "ROOT" });
             var currentParent = root;
             var currentList = root.Children;
             foreach (LogEntry entry in entries)
@@ -106,19 +106,18 @@ namespace ALE.ETLBox.Logging
             LoadProcessKey = loadProcessKey;
         }
 
-        public static string GetJSON() 
-            => new GetLogAsJSONTask().Create().JSON;
+        public static string GetJSON() => new GetLogAsJSONTask().Create().JSON;
 
-        public static string GetJSON(long? loadProcessKey) 
-            => new GetLogAsJSONTask(loadProcessKey).Create().JSON;
+        public static string GetJSON(long? loadProcessKey) =>
+            new GetLogAsJSONTask(loadProcessKey).Create().JSON;
 
-        public static string GetJSON(IConnectionManager connectionManager) 
-            => new GetLogAsJSONTask { ConnectionManager = connectionManager }
+        public static string GetJSON(IConnectionManager connectionManager) =>
+            new GetLogAsJSONTask { ConnectionManager = connectionManager }
                 .Create()
                 .JSON;
 
-        public static string GetJSON(IConnectionManager connectionManager, int? loadProcessKey) 
-            => new GetLogAsJSONTask(loadProcessKey) { ConnectionManager = connectionManager }
+        public static string GetJSON(IConnectionManager connectionManager, int? loadProcessKey) =>
+            new GetLogAsJSONTask(loadProcessKey) { ConnectionManager = connectionManager }
                 .Create()
                 .JSON;
     }

@@ -1,10 +1,9 @@
 using ALE.ETLBox.DataFlow;
-using EtlBox.Database.Tests.SharedFixtures;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeDeltaTests : DatabaseConnectorsTestBase
     {
         public DbMergeDeltaTests(DatabaseSourceDestinationFixture fixture)
@@ -30,19 +29,19 @@ namespace TestDatabaseConnectors.DBMerge
         public void DeltaLoadWithDeletion(IConnectionManager connection)
         {
             //Arrange
-            var source = new MemorySource<MyMergeRow>();
+            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
             source.DataAsList.Add(new MyMergeRow { Key = 2, Value = "Test2" });
             source.DataAsList.Add(new MyMergeRow { Key = 3, Value = "Test3" });
             source.DataAsList.Add(new MyMergeRow { Key = 4, DeleteThisRow = true });
             source.DataAsList.Add(new MyMergeRow { Key = 10, DeleteThisRow = true });
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDeltaDestination"
             );
             d2C.InsertTestDataSet3();
 
             //Act
-            var dest = new DbMerge<MyMergeRow>(
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(
                 connection,
                 "DBMergeDeltaDestination"
             )

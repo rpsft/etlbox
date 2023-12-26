@@ -6,6 +6,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class IfDatabaseExistsTaskTests : ControlFlowTestBase
     {
         public IfDatabaseExistsTaskTests(ControlFlowDatabaseFixture fixture)
@@ -17,7 +18,7 @@ namespace TestControlFlowTasks
         public void IfDatabaseExists(IConnectionManager connection)
         {
             //Arrange
-            var dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
+            string dbName = ("ETLBox_" + HashHelper.RandomString(10)).ToLower();
             var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
             //Act

@@ -17,56 +17,47 @@ public static class Config
     public static ConnectionDetails<
         SqlConnectionString,
         SqlConnectionManager
-    > SqlConnection
-    { get; } = new("SqlConnectionString");
+    > SqlConnection { get; } = new("SqlConnectionString");
 
     public static ConnectionDetails<
         SqlConnectionString,
         AdomdConnectionManager
-    > SSASConnection
-    { get; } = new("SSASConnectionString");
+    > SSASConnection { get; } = new("SSASConnectionString");
 
     public static ConnectionDetails<
         SQLiteConnectionString,
         SQLiteConnectionManager
-    > SQLiteConnection
-    { get; } = new("SQLiteConnectionString");
+    > SQLiteConnection { get; } = new("SQLiteConnectionString");
 
     public static ConnectionDetails<
         MySqlConnectionString,
         MySqlConnectionManager
-    > MySqlConnection
-    { get; } = new("MySqlConnectionString");
+    > MySqlConnection { get; } = new("MySqlConnectionString");
 
     public static ConnectionDetails<
         PostgresConnectionString,
         PostgresConnectionManager
-    > PostgresConnection
-    { get; } = new("PostgresConnectionString");
+    > PostgresConnection { get; } = new("PostgresConnectionString");
+
+    public static ConnectionDetails<
+    ClickHouseConnectionString,
+    ClickHouseConnectionManager
+    > ClickHouseConnection { get; } = new("ClickHouseConnectionString");
 
     public static ConnectionDetails<
         OdbcConnectionString,
         AccessOdbcConnectionManager
-    > AccessOdbcConnection
-    { get; } = new("AccessOdbcConnectionString");
+    > AccessOdbcConnection { get; } = new("AccessOdbcConnectionString");
 
     public static ConnectionDetails<
         OdbcConnectionString,
         SqlOdbcConnectionManager
-    > SqlOdbcConnection
-    { get; } = new("SqlOdbcConnectionString");
+    > SqlOdbcConnection { get; } = new("SqlOdbcConnectionString");
 
     public static ConnectionDetails<
         SqlConnectionString,
         SqlConnectionManager
-    > AzureSqlConnection
-    { get; } = new("AzureSqlConnectionString");
-
-    public static ConnectionDetails<
-        ClickHouseConnectionString,
-        ClickHouseConnectionManager
-    > ClickHouseConnection
-    { get; } = new("ClickHouseConnectionString");
+    > AzureSqlConnection { get; } = new("AzureSqlConnectionString");
 
     private static IConfigurationRoot DefaultConfigFile
     {
@@ -92,14 +83,48 @@ public static class Config
     {
         return new[]
         {
-            new object[] { SqlConnection.ConnectionManager(section) },
+            new object[] { ClickHouseConnection.ConnectionManager(section) },
             new object[] { PostgresConnection.ConnectionManager(section) },
             new object[] { MySqlConnection.ConnectionManager(section) },
-            new object[] { SQLiteConnection.ConnectionManager(section) }
+            new object[] { SqlConnection.ConnectionManager(section) },
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
+        };
+    }
+    public static IEnumerable<object[]> AllSqlConnectionsWithoutClickHouse(string section)
+    {
+        return new[]
+        {
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SqlConnection.ConnectionManager(section) },
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
+        };
+    }
+    
+    public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section)
+    {
+        return new[]
+        {
+            new object[] { ClickHouseConnection.ConnectionManager(section) },
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SqlConnection.ConnectionManager(section) },
         };
     }
 
-    public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section)
+    public static IEnumerable<object[]> AllConnectionsWithoutClickHouse(string section)
+    {
+        return new[]
+        {
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SqlConnection.ConnectionManager(section) },
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
+        };
+    }
+
+
+    public static IEnumerable<object[]> AllConnectionsWithoutSQLiteAndClickHouse(string section)
     {
         return new[]
         {

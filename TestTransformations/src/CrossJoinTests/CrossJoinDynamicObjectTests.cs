@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.CrossJoinTests
 {
+    [Collection("Transformations")]
     public class CrossJoinDynamicObjectTests : TransformationsTestBase
     {
         public CrossJoinDynamicObjectTests(TransformationsDatabaseFixture fixture)

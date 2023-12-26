@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvSourceStringArrayTests : FlatFileConnectorsTestBase
     {
         public CsvSourceStringArrayTests(FlatFileToDatabaseFixture fixture)

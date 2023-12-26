@@ -6,6 +6,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
+    [Collection("Transformations")]
     public class MulticastSplitDataTests : TransformationsTestBase
     {
         public MulticastSplitDataTests(TransformationsDatabaseFixture fixture)

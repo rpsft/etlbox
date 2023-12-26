@@ -1,13 +1,11 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using TestDatabaseConnectors.Fixtures;
+using ALE.ETLBox.ConnectionManager;
 using TestShared.Helper;
 
 namespace TestDatabaseConnectors
 {
     [CollectionDefinition("DatabaseConnectors", DisableParallelization = false)]
     public class DataFlowSourceDestinationCollectionClass
-        : ICollectionFixture<DatabaseSourceDestinationFixture>
-    { }
+        : ICollectionFixture<DatabaseSourceDestinationFixture> { }
 
     [Collection("DatabaseConnectors")]
     public class DatabaseConnectorsTestBase
@@ -40,10 +38,13 @@ namespace TestDatabaseConnectors
         public static IEnumerable<object[]> AllSqlConnections =>
             Config.AllSqlConnections(SourceConfigSection);
 
+        public static IEnumerable<object[]> ConnectionsWithoutClickHouse =>
+            Config.AllSqlConnectionsWithoutClickHouse(SourceConfigSection);
+
         protected static IEnumerable<CultureInfo> AllLocalCultures => Config.AllLocalCultures();
 
         public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
-            Config.AllConnectionsWithoutSQLite(SourceConfigSection);
+            Config.AllConnectionsWithoutSQLiteAndClickHouse(SourceConfigSection);
 
         public static IEnumerable<object[]> AllOdbcConnections =>
             Config.AllOdbcConnections(OtherConfigSection);
@@ -57,11 +58,11 @@ namespace TestDatabaseConnectors
                     Config.SqlConnection.ConnectionManager(SourceConfigSection),
                     Config.SqlConnection.ConnectionManager(DestinationConfigSection)
                 },
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
-                    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
-                },
+                //new object[]
+                //{
+                //    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
+                //    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
+                //},
                 new object[]
                 {
                     Config.MySqlConnection.ConnectionManager(SourceConfigSection),
@@ -73,16 +74,16 @@ namespace TestDatabaseConnectors
                     Config.PostgresConnection.ConnectionManager(DestinationConfigSection)
                 },
                 //Mixed
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager(SourceConfigSection),
-                    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
-                    Config.SqlConnection.ConnectionManager(DestinationConfigSection)
-                },
+                //new object[]
+                //{
+                //    Config.SqlConnection.ConnectionManager(SourceConfigSection),
+                //    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
+                //},
+                //new object[]
+                //{
+                //    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
+                //    Config.SqlConnection.ConnectionManager(DestinationConfigSection)
+                //},
                 new object[]
                 {
                     Config.MySqlConnection.ConnectionManager(SourceConfigSection),

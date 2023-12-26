@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonDestinationStringArrayTests : FlatFileConnectorsTestBase
     {
         public JsonDestinationStringArrayTests(FlatFileToDatabaseFixture fixture)

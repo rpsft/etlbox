@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.XmlSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class XmlSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
         public XmlSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)

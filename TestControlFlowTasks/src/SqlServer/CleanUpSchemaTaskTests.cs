@@ -6,6 +6,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
+    [Collection("ControlFlow")]
     public class CleanUpSchemaTaskTests : ControlFlowTestBase
     {
         public CleanUpSchemaTaskTests(ControlFlowDatabaseFixture fixture)
@@ -15,7 +16,7 @@ namespace TestControlFlowTasks.SqlServer
         public void CleanUpSchema()
         {
             //Arrange
-            var schemaName = "s" + HashHelper.RandomString(9);
+            string schemaName = "s" + HashHelper.RandomString(9);
             SqlTask.ExecuteNonQuery(SqlConnection, "Create schema", $"CREATE SCHEMA {schemaName}");
             SqlTask.ExecuteNonQuery(
                 SqlConnection,

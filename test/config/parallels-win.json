@@ -2,5 +2,6 @@
   "CFG_MSSQL_IP" : "10.211.55.2",
   "CFG_MYSQL_IP" : "10.211.55.2",
   "CFG_POSTGRES_IP" : "10.211.55.2",
+  "CFG_CLICKHOUSE_IP" : "10.211.55.2",
   "CFG_PD" : "\\"
 }

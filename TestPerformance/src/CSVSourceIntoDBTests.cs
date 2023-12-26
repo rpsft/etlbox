@@ -10,6 +10,7 @@ using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance
 {
+    [Collection("Performance")]
     public class CsvSourceIntoDBTests : PerformanceTestBase
     {
         private readonly ITestOutputHelper _output;

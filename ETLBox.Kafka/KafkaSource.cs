@@ -54,7 +54,10 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            ConsumeAndSendSingleMessage(consumer);
+            if (!ConsumeAndSendSingleMessage(consumer))
+            {
+                break;
+            }
         }
 
         LogFinish();
@@ -65,7 +68,7 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
         TKafkaValue? kafkaValue = default;
         try
         {
-            var consumeResult = consumer.Consume();
+            var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
             if (consumeResult.IsPartitionEOF)
             {
                 return false;

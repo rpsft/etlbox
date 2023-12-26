@@ -1,11 +1,12 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
 using EtlBox.Logging.Database;
 using Newtonsoft.Json.Linq;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
+namespace TestNonParallel.Logging.LoadProcessTable
 {
+    [Collection("Logging")]
     public sealed class GetLoadProcessAsJSONTaskTests : NonParallelTestBase, IDisposable
     {
         public GetLoadProcessAsJSONTaskTests(LoggingDatabaseFixture fixture)
@@ -18,12 +19,12 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
             DropTableTask.Drop(
                 SqlConnection,
-                ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
+                ALE.ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
             );
-            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private void RunProcess1()
@@ -40,8 +41,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             RunProcess1();
 
             //Act
-            var response = GetLoadProcessAsJSONTask.GetJSON(SqlConnection);
-            var json = JArray.Parse(response);
+            string response = GetLoadProcessAsJSONTask.GetJSON(SqlConnection);
+            JArray json = JArray.Parse(response);
 
             //Assert
             Assert.Equal("Process 1", (string)json[0]["processName"]);

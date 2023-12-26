@@ -2,11 +2,10 @@ using System.Threading;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeTests : DatabaseConnectorsTestBase
     {
         public DbMergeTests(DatabaseSourceDestinationFixture fixture)
@@ -30,18 +29,18 @@ namespace TestDatabaseConnectors.DBMerge
         public void SimpleMerge(IConnectionManager connection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
             s2C.InsertTestData();
             s2C.InsertTestDataSet2();
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDestination"
             );
             d2C.InsertTestDataSet3();
-            var source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
 
             //Act
-            var dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -74,17 +73,17 @@ namespace TestDatabaseConnectors.DBMerge
         public void DisablingDeletion(IConnectionManager connection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
             s2C.InsertTestData();
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDestination"
             );
             d2C.InsertTestDataSet3();
-            var source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
 
             //Act
-            var dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination")
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination")
             {
                 DeltaMode = DeltaMode.NoDeletions
             };
@@ -116,17 +115,17 @@ namespace TestDatabaseConnectors.DBMerge
         public void EnforcingTruncate(IConnectionManager connection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "DBMergeSource");
             s2C.InsertTestData();
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DBMergeDestination"
             );
             d2C.InsertTestDataSet3();
-            var source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
 
             //Act
-            var dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination")
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination")
             {
                 UseTruncateMethod = true
             };
@@ -168,22 +167,22 @@ namespace TestDatabaseConnectors.DBMerge
         public void MergeIntoEmptyDestination()
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeEmptySource"
             );
             s2C.InsertTestData();
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeEmptyDestination"
             );
-            var source = new DbSource<MyMergeRow>(
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(
                 SqlConnection,
                 "DBMergeEmptySource"
             );
 
             //Act
-            var dest = new DbMerge<MyMergeRow>(
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(
                 SqlConnection,
                 "DBMergeEmptyDestination"
             );
@@ -200,18 +199,18 @@ namespace TestDatabaseConnectors.DBMerge
         {
             //Arrange
             var _ = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptySource");
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeEmptyDestination"
             );
             d2C.InsertTestData();
-            var source = new DbSource<MyMergeRow>(
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(
                 SqlConnection,
                 "DBMergeEmptySource"
             );
 
             //Act
-            var dest = new DbMerge<MyMergeRow>(
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(
                 SqlConnection,
                 "DBMergeEmptyDestination"
             );

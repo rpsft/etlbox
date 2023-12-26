@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowTransformation
 {
+    [Collection("Transformations")]
     public class RowTransformationTests : TransformationsTestBase
     {
         public RowTransformationTests(TransformationsDatabaseFixture fixture)
