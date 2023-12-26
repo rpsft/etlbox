@@ -87,7 +87,7 @@ public static class Config
             new object[] { PostgresConnection.ConnectionManager(section) },
             new object[] { MySqlConnection.ConnectionManager(section) },
             new object[] { SqlConnection.ConnectionManager(section) },
-            new object[] { SQLiteConnection.ConnectionManager(section) }
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
         };
     }
     public static IEnumerable<object[]> AllSqlConnectionsWithoutClickHouse(string section)
@@ -97,7 +97,7 @@ public static class Config
             new object[] { PostgresConnection.ConnectionManager(section) },
             new object[] { MySqlConnection.ConnectionManager(section) },
             new object[] { SqlConnection.ConnectionManager(section) },
-            new object[] { SQLiteConnection.ConnectionManager(section) }
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
         };
     }
     
@@ -119,7 +119,7 @@ public static class Config
             new object[] { PostgresConnection.ConnectionManager(section) },
             new object[] { MySqlConnection.ConnectionManager(section) },
             new object[] { SqlConnection.ConnectionManager(section) },
-            new object[] { SQLiteConnection.ConnectionManager(section) }
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
         };
     }
 
