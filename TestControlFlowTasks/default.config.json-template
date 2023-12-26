@@ -7,6 +7,6 @@
         "SqlOdbcConnectionString": "Driver={SQL Server};Server=${CFG_MSSQL_IP};Database=ETLBox_ControlFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
         "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_ControlFlow;Uid=root;Pwd=etlboxpassword;",
         "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_ControlFlow;User Id=postgres;Password=etlboxpassword;",
-        "ClickHouseConnectionString": "Host=localhost;Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
+        "ClickHouseConnectionString": "Host=${CFG_CLICKHOUSE_IP};Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
     }
 }

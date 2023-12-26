@@ -66,6 +66,8 @@ test_job:
       alias: localpostgres
     - name: mcr.microsoft.com/azure-sql-edge
       alias: localmssql
+    - name: clickhouse/clickhouse-server
+      alias: localclickhouse
   variables:
     # MySQL image customization
     MYSQL_ROOT_HOST: '%'

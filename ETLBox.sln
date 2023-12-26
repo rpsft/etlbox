@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOtherConnectors", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPerformance", "TestPerformance\TestPerformance.csproj", "{DBD5BE4F-A892-4CB2-8C5E-F95866B86CEB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSerialization", "TestSerialization\TestSerialization.csproj", "{0265ACC3-444D-4115-90E9-15D154BA7923}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestShared", "TestShared\TestShared.csproj", "{7A94584F-DE2B-4A66-91FB-D5E8F3885792}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTransformations", "TestTransformations\TestTransformations.csproj", "{B1F19CC5-F003-4763-BDA9-111AE9927679}"
@@ -53,9 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Scripting.Tests", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnectionManager", "TestConnectionManager\TestConnectionManager.csproj", "{AFA1FAFF-A99E-4862-B396-E64193E360B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Rest", "ETLBox.Rest\ETLBox.Rest.csproj", "{09FF0E54-4AF6-4736-9610-24F15B8F0F60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Rest", "ETLBox.Rest\ETLBox.Rest.csproj", "{09FF0E54-4AF6-4736-9610-24F15B8F0F60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Json", "ETLBox.Json\ETLBox.Json.csproj", "{7D8CBF39-A5B7-44FA-AF40-15DFD32DD544}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Json", "ETLBox.Json\ETLBox.Json.csproj", "{7D8CBF39-A5B7-44FA-AF40-15DFD32DD544}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,10 +93,6 @@ Global
 		{DBD5BE4F-A892-4CB2-8C5E-F95866B86CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD5BE4F-A892-4CB2-8C5E-F95866B86CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBD5BE4F-A892-4CB2-8C5E-F95866B86CEB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0265ACC3-444D-4115-90E9-15D154BA7923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0265ACC3-444D-4115-90E9-15D154BA7923}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0265ACC3-444D-4115-90E9-15D154BA7923}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0265ACC3-444D-4115-90E9-15D154BA7923}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A94584F-DE2B-4A66-91FB-D5E8F3885792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A94584F-DE2B-4A66-91FB-D5E8F3885792}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A94584F-DE2B-4A66-91FB-D5E8F3885792}.Release|Any CPU.ActiveCfg = Release|Any CPU

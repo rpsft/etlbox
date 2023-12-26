@@ -237,7 +237,7 @@ namespace TestHelper
             public uint Uint { get; set; }
             public uint? NullUint { get; set; }
             public long Long { get; set; }
-            public long? NulLong { get; set; }
+            public long? NullLong { get; set; }
             public ulong Ulong { get; set; }
             public ulong? NullUlong { get; set; }
             public short Short { get; set; }

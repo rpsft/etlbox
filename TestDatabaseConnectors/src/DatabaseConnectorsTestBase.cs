@@ -58,11 +58,11 @@ namespace TestDatabaseConnectors
                     Config.SqlConnection.ConnectionManager(SourceConfigSection),
                     Config.SqlConnection.ConnectionManager(DestinationConfigSection)
                 },
-                //new object[]
-                //{
-                //    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
-                //    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
-                //},
+                new object[]
+                {
+                    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
+                    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
+                },
                 new object[]
                 {
                     Config.MySqlConnection.ConnectionManager(SourceConfigSection),
@@ -74,16 +74,16 @@ namespace TestDatabaseConnectors
                     Config.PostgresConnection.ConnectionManager(DestinationConfigSection)
                 },
                 //Mixed
-                //new object[]
-                //{
-                //    Config.SqlConnection.ConnectionManager(SourceConfigSection),
-                //    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
-                //},
-                //new object[]
-                //{
-                //    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
-                //    Config.SqlConnection.ConnectionManager(DestinationConfigSection)
-                //},
+                new object[]
+                {
+                    Config.SqlConnection.ConnectionManager(SourceConfigSection),
+                    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
+                },
+                new object[]
+                {
+                    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
+                    Config.SqlConnection.ConnectionManager(DestinationConfigSection)
+                },
                 new object[]
                 {
                     Config.MySqlConnection.ConnectionManager(SourceConfigSection),
