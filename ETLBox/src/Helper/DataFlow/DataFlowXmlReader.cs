@@ -234,6 +234,12 @@ namespace ALE.ETLBox.Helper.DataFlow
                 return;
             }
 
+            if (IsNullableEnum(prop.PropertyType))
+            {
+                SetNullableEnumProperty(instance, prop, propXml);
+                return;
+            }
+
             if (prop.PropertyType.IsValueType || prop.PropertyType == typeof(string))
             {
                 SetValueTypeProperty(instance, prop, propXml);
@@ -252,6 +258,12 @@ namespace ALE.ETLBox.Helper.DataFlow
             }
         }
 
+        private static bool IsNullableEnum(Type t)
+        {
+            var underlyingType = Nullable.GetUnderlyingType(t);
+            return (underlyingType != null) && underlyingType.IsEnum;
+        }
+
         private static void SetEnumProperty(object instance, PropertyInfo prop, XElement? element)
         {
             if (element is null)
@@ -262,6 +274,20 @@ namespace ALE.ETLBox.Helper.DataFlow
             }
 
             var eval = Enum.Parse(prop.PropertyType, element.Value);
+            prop.SetValue(instance, eval);
+        }
+
+        private static void SetNullableEnumProperty(object instance, PropertyInfo prop, XElement? element)
+        {
+            if (element is null)
+            {
+                prop.SetValue(instance, null);
+
+                return;
+            }
+
+            var underlyingType = Nullable.GetUnderlyingType(prop.PropertyType);
+            var eval = Enum.Parse(underlyingType, element.Value);
             prop.SetValue(instance, eval);
         }
 
@@ -543,7 +569,7 @@ namespace ALE.ETLBox.Helper.DataFlow
                               )
                      );
             }
-            catch 
+            catch
             {
                 // если не получилось прочитать типы - идем дальше
                 return Enumerable.Empty<Type>();
