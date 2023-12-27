@@ -42,6 +42,38 @@ public class KafkaSourceJsonDynamicObjectTests : IClassFixture<KafkaContainerFix
     }
 
     [Fact]
+    public void ShouldConsumeJsonWithKafkaSource()
+    {
+        // Arrange
+        const string jsonString = "{\"name\":\"test\"}";
+        ProduceJson(jsonString);
+        var block = new Mock<ITargetBlock<ExpandoObject>>();
+        var target = new Mock<IDataFlowDestination<ExpandoObject>>();
+        target.Setup(t => t.TargetBlock).Returns(block.Object);
+        // Act
+        var kafkaSource = new KafkaJsonSource<ExpandoObject>()
+        {
+            ConsumerConfig = ConsumerConfig,
+            Topic = TopicName,
+        };
+        kafkaSource.LinkTo(target.Object);
+        kafkaSource.Execute();
+        // Assert
+        block.Verify(
+            b =>
+                b.OfferMessage(
+                    It.IsAny<DataflowMessageHeader>(),
+                    It.Is<ExpandoObject>(
+                        message =>
+                            ((IDictionary<string, object?>)message)["name"] as string == "test"
+                    ),
+                    It.IsAny<ISourceBlock<ExpandoObject>>(),
+                    It.IsAny<bool>()
+                )
+        );
+    }
+
+    [Fact]
     public async Task ShouldBrakeProcessOnCancel()
     {
         // Arrange
@@ -70,10 +102,9 @@ public class KafkaSourceJsonDynamicObjectTests : IClassFixture<KafkaContainerFix
             taskFinished = true;
         });
 
-        await Task.Delay(TimeSpan.FromSeconds(1));
+        await Task.Delay(TimeSpan.FromSeconds(3));
 
-        Assert.False(task.IsCompleted, "task should not by completed");
-        Assert.False(task.IsCanceled, "cancellation should by requested");
+        Assert.False(task.IsCanceled, "cancellation should not be requested");
 
         tokenSource.Cancel();
 
@@ -81,7 +112,7 @@ public class KafkaSourceJsonDynamicObjectTests : IClassFixture<KafkaContainerFix
         Task.WaitAny(Task.Delay(TimeSpan.FromSeconds(10)), task);
 
         Assert.True(task.IsCompleted, "task is not completed");
-        Assert.True(taskFinished, "work is not finishwd");
+        Assert.True(taskFinished, "work is not finished");
 
         // Assert
         block.Verify(

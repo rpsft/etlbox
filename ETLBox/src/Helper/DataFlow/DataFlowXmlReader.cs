@@ -498,7 +498,7 @@ namespace ALE.ETLBox.Helper.DataFlow
                     .Where(t => t.GetInterfaces().Any(i => i == baseType));
             }
             var type = types
-                .FirstOrDefault(t => t.Name == typeName);
+                .LastOrDefault(t => t.Name == typeName);
 
             return isArray ? type?.MakeArrayType() : type;
         }
