@@ -57,7 +57,7 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            if (ConsumeAndSendSingleMessage(consumer))
+            if (!ConsumeAndSendSingleMessage(consumer))
             {
                 break;
             }
