@@ -2,7 +2,7 @@ using System.Collections;
 using System.Data.Common;
 using System.Linq;
 
-namespace EtlBox.ClickHouse.ConnectionStrings
+namespace ETLBox.ClickHouse.ConnectionStrings
 {
     public class ClickHouseConnectionStringBuilder: DbConnectionStringBuilder
     {

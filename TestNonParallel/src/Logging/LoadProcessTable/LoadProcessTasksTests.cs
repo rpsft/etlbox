@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using EtlBox.Logging.Database;
+using ETLBox.Logging.Database;
 using ETLBox.Primitives;
 using Microsoft.Extensions.Logging;
 using TestNonParallel.Fixtures;

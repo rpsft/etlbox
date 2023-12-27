@@ -1,6 +1,6 @@
 using ALE.ETLBox;
 
-namespace EtlBox.ClickHouse.ConnectionStrings
+namespace ETLBox.ClickHouse.ConnectionStrings
 {
     public class ClickHouseConnectionString : DbConnectionString<ClickHouseConnectionString, ClickHouseConnectionStringBuilder>
     {

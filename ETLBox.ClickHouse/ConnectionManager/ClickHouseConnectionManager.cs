@@ -9,10 +9,10 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ClickHouse.Ado;
 using CsvHelper.Configuration;
-using EtlBox.ClickHouse.ConnectionStrings;
+using ETLBox.ClickHouse.ConnectionStrings;
 using ETLBox.Primitives;
 
-namespace EtlBox.ClickHouse.ConnectionManager
+namespace ETLBox.ClickHouse.ConnectionManager
 {
     public class ClickHouseConnectionManager : DbConnectionManager<ClickHouseConnection>
     {

@@ -10,17 +10,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="NLog.Database" Version="5.2.7" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.7" />
+    <PackageReference Remove="WeCantSpell.Roslyn" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="WeCantSpell.Roslyn" Version="2.0.8-beta">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 using ALE.ETLBox.ConnectionManager;
 using ClickHouse.Ado;
-using EtlBox.ClickHouse.ConnectionManager;
+using ETLBox.ClickHouse.ConnectionManager;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks

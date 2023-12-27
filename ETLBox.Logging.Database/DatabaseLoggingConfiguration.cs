@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Config;
 using NLog.Extensions.Logging;
 
-namespace EtlBox.Logging.Database
+namespace ETLBox.Logging.Database
 {
     [PublicAPI]
     public static class DatabaseLoggingConfiguration

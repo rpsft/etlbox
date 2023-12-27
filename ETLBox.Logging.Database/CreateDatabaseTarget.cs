@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using NLog.Layouts;
 using NLog.Targets;
 
-namespace EtlBox.Logging.Database
+namespace ETLBox.Logging.Database
 {
     [PublicAPI]
     public class CreateDatabaseTarget
