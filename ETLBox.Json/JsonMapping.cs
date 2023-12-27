@@ -1,6 +1,6 @@
 namespace ETLBox.Json
 {
-    public sealed class JsonSource
+    public sealed class JsonMapping
     {
         public string? Name { get; set; }
 
