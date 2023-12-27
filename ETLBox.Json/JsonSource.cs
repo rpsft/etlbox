@@ -1,4 +1,4 @@
-namespace TestHelper.Models
+namespace ETLBox.Json
 {
     public sealed class JsonSource
     {
