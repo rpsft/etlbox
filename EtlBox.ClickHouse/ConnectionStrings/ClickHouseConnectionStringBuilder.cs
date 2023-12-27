@@ -38,7 +38,7 @@ namespace EtlBox.ClickHouse.ConnectionStrings
 
         public override ICollection Keys
 #pragma warning disable S2365 // Нет сеттера у свойства Keys, не получается установить корректные ключи
-            => base.Keys.Cast<string>().Select(k => $"{k.ToUpper()[0]}{k[1..]}").ToArray();
+            => base.Keys.Cast<string>().Select(k => $"{k.ToUpper()[0]}{k.Substring(1)}").ToArray();
 #pragma warning restore S2365 // Properties should not make collection or array copies
 
         // Helper method to get a value from the connection string
