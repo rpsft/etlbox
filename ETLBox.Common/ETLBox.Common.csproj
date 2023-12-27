@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ALE.ETLBox.Common</RootNamespace>
     <LangVersion>default</LangVersion>
+    <PackageId>EtlBox.Classic.Common</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="ETLBox;ETLBox.Kafka" />
