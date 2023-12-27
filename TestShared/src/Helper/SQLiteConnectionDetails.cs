@@ -1,49 +1,48 @@
 ﻿using System.IO;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace TestShared.Helper;
 
 /// <summary>
 /// Generates new database name for each connection.
 /// </summary>
-public class SQLiteConnectionDetails : ConnectionDetails<
-    SQLiteConnectionString,
-    SQLiteConnectionManager
->
+public class SQLiteConnectionDetails
+    : ConnectionDetails<SQLiteConnectionString, SQLiteConnectionManager>
 {
-    public SQLiteConnectionDetails(string connectionStringName) : base(connectionStringName)
-    {
-    }
-    
-    public SQLiteConnectionString ConnectionStringToTemplate(string section) =>
-        new()
-        {
-            Value = RawConnectionString(section)
-        };
+    public SQLiteConnectionDetails(string connectionStringName)
+        : base(connectionStringName) { }
 
-    public new SQLiteConnectionString ConnectionString(string section, string dbNameSuffix = null)
+    public SQLiteConnectionString ConnectionStringToTemplate(string section) =>
+        new() { Value = RawConnectionString(section) };
+
+    public new SQLiteConnectionString ConnectionString(string section) =>
+        ConnectionString(section, null);
+
+    public SQLiteConnectionString ConnectionString(string section, string dbNameSuffix)
     {
-        var connectionString = new SQLiteConnectionString()
+        var connectionString = new SQLiteConnectionString { Value = RawConnectionString(section) };
+        if (dbNameSuffix != null)
         {
-            Value = RawConnectionString(section)
-        };
-        connectionString.DbName = SqliteFileName(section, dbNameSuffix);
+            connectionString.DbName = SqliteFileName(connectionString.DbName, dbNameSuffix);
+        }
         return connectionString;
     }
-        
-    public new SQLiteConnectionManager ConnectionManager(string section)
+
+    public new SQLiteConnectionManager ConnectionManager(string section, string dbNameSuffix = null)
     {
         return new SQLiteConnectionManager
         {
-            ConnectionString = ConnectionString(section)
+            ConnectionString = ConnectionString(section, dbNameSuffix)
         };
     }
-    
-    public static void CopyFromTemplate(string section, string dbNameSuffix)
+
+    public void CopyFromTemplate(string section, string dbNameSuffix)
     {
-        var sqliteTemplateFilePath = Config.SQLiteConnection.ConnectionStringToTemplate(section).DbName;
-        var sqliteFileName = SqliteFileName(section, dbNameSuffix);
+        var sqliteTemplateFilePath = ConnectionStringToTemplate(section).DbName;
+        IDbConnectionString connectionString = ConnectionString(section);
+        var sqliteFileName = SqliteFileName(connectionString.DbName, dbNameSuffix);
         if (File.Exists(sqliteFileName))
         {
             return;
@@ -61,10 +60,11 @@ public class SQLiteConnectionDetails : ConnectionDetails<
 
         File.Copy(sqliteTemplateFilePath, sqliteFileName!);
     }
-    
-    public static void DeleteDatabase(string section, string dbNameSuffix)
+
+    public void DeleteDatabase(string section, string dbNameSuffix)
     {
-        var sqliteFileName = SqliteFileName(section, dbNameSuffix);
+        IDbConnectionString connectionString = ConnectionString(section);
+        var sqliteFileName = SqliteFileName(connectionString.DbName, dbNameSuffix);
         if (!File.Exists(sqliteFileName))
         {
             return;
@@ -72,11 +72,8 @@ public class SQLiteConnectionDetails : ConnectionDetails<
         File.Delete(sqliteFileName);
     }
 
-    private static string SqliteFileName(string section, string dbNameSuffix)
+    private static string SqliteFileName(string baseName, string dbNameSuffix)
     {
-        var baseName = Config.SQLiteConnection.ConnectionString(section).DbName;
-        return dbNameSuffix != null
-            ? Path.Join(baseName, $"{dbNameSuffix}.db")
-            : Path.Join(baseName, "TestRun.db");
+        return dbNameSuffix != null ? $"{baseName}.{dbNameSuffix}.db" : $"{baseName}.TestRun.db";
     }
 }

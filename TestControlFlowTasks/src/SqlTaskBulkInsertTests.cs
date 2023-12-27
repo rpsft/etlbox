@@ -25,7 +25,7 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
             new object[] { SqlConnection, value },
             new object[] { PostgresConnection, value },
             new object[] { MySqlConnection, value },
-            new object[] { SqliteConnection, value }
+            new object[] { ClickHouseConnection, value }
         };
     }
 
@@ -64,12 +64,6 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
     [MemberData(nameof(ConnectionsWithValue), 3)]
     public void WithIdentityShift(IConnectionManager connection, int identityIndex)
     {
-        //SQLite does not support Batch Insert on Non Nullable Identity Columns
-        if (connection.GetType() == typeof(SQLiteConnectionManager))
-        {
-            return;
-        }
-
         //Arrange
         var destTable = new FourColumnsTableFixture(
             connection,

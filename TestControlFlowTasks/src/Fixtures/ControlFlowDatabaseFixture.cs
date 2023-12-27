@@ -11,12 +11,16 @@ namespace TestControlFlowTasks.Fixtures
     {
         public const string ConfigSection = "ControlFlow";
 
+        private static int s_counter = 0;
+
+        internal string SQLiteDbSuffix { get; } = $"{ConfigSection}_{s_counter++}";
+
         public ControlFlowDatabaseFixture()
         {
             DatabaseHelper.RecreateDatabase(Config.SqlConnection, ConfigSection);
             DatabaseHelper.RecreateDatabase(Config.MySqlConnection, ConfigSection);
             DatabaseHelper.RecreateDatabase(Config.PostgresConnection, ConfigSection);
-            // DatabaseHelper.RecreateDatabase(Config.SQLiteConnection, ConfigSection);
+            DatabaseHelper.RecreateDatabase(Config.SQLiteConnection, ConfigSection, SQLiteDbSuffix);
         }
 
         public void Dispose()
@@ -24,7 +28,7 @@ namespace TestControlFlowTasks.Fixtures
             DatabaseHelper.DropDatabase(Config.SqlConnection, ConfigSection);
             DatabaseHelper.DropDatabase(Config.MySqlConnection, ConfigSection);
             DatabaseHelper.DropDatabase(Config.PostgresConnection, ConfigSection);
-            // DatabaseHelper.DropDatabase(Config.SQLiteConnection, ConfigSection);
+            DatabaseHelper.DropDatabase(Config.SQLiteConnection, ConfigSection, SQLiteDbSuffix);
         }
     }
 }

@@ -87,21 +87,23 @@ namespace TestShared.Helper
             where TConnectionManager : IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, DropAndCreate);
-        
-        public static void RecreateDatabase(SQLiteConnectionDetails connectionDetails,
+
+        public static void RecreateDatabase(
+            SQLiteConnectionDetails connectionDetails,
             string section,
             string dbNameSuffix = null
         )
         {
-            SQLiteConnectionDetails.CopyFromTemplate(section, dbNameSuffix);
+            connectionDetails.CopyFromTemplate(section, dbNameSuffix);
         }
-        
-        public static void DropDatabase(SQLiteConnectionDetails connectionDetails,
+
+        public static void DropDatabase(
+            SQLiteConnectionDetails connectionDetails,
             string section,
             string dbNameSuffix = null
         )
         {
-            SQLiteConnectionDetails.DeleteDatabase(section, dbNameSuffix);
+            connectionDetails.DeleteDatabase(section, dbNameSuffix);
         }
     }
 }
