@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EtlBox.ClickHouse\EtlBox.ClickHouse.csproj" />
+    <ProjectReference Include="..\ETLBox.ClickHouse1\ETLBox.ClickHouse1.csproj" />
     <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
     <ProjectReference Include="..\ETLBox.Rest\ETLBox.Rest.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />

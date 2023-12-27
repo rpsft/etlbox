@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestShared", "TestShared\Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTransformations", "TestTransformations\TestTransformations.csproj", "{B1F19CC5-F003-4763-BDA9-111AE9927679}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.ClickHouse", "EtlBox.ClickHouse\EtlBox.ClickHouse.csproj", "{48302509-74A9-439D-905F-A6A476ED9785}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.ClickHouse1", "ETLBox.ClickHouse1\ETLBox.ClickHouse1.csproj", "{48302509-74A9-439D-905F-A6A476ED9785}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Common", "ETLBox.Common\ETLBox.Common.csproj", "{2B4A4D49-8CA7-4286-A833-832BB5863D0F}"
 EndProject
@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Kafka", "ETLBox.Kafk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Kafka.Tests", "ETLBox.Kafka.Tests\ETLBox.Kafka.Tests.csproj", "{F92817FF-7CA4-4815-B7DD-525F68B152C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtlBox.Logging.Database", "EtlBox.Logging.Database\EtlBox.Logging.Database.csproj", "{C8F11164-14B0-4BB5-8466-738772FBAB34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Logging.Database1", "ETLBox.Logging.Database1\ETLBox.Logging.Database1.csproj", "{C8F11164-14B0-4BB5-8466-738772FBAB34}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETLBox.Primitives", "ETLBox.Primitives\ETLBox.Primitives.csproj", "{2ECB5AB7-5770-4291-B0D5-C99D65667F73}"
 EndProject

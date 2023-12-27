@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EtlBox.Logging.Database\EtlBox.Logging.Database.csproj" />
+    <ProjectReference Include="..\ETLBox.Logging.Database1\ETLBox.Logging.Database1.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />
   </ItemGroup>
