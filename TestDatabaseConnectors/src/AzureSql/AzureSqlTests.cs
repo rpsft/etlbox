@@ -2,8 +2,6 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.AzureSql
 {
@@ -53,22 +51,22 @@ namespace TestDatabaseConnectors.AzureSql
             if (envvar != "true")
                 return;
             //Arrange
-            var source2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
                 AzureSqlConnection,
                 "[source].[AzureSource]"
             );
             source2Columns.InsertTestData();
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 AzureSqlConnection,
                 "[dest].[AzureDestination]"
             );
 
             //Act
-            var source = new DbSource<MySimpleRow>(
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
                 AzureSqlConnection,
                 "[source].[AzureSource]"
             );
-            var dest = new DbDestination<MySimpleRow>(
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 AzureSqlConnection,
                 "[dest].[AzureDestination]"
             );
@@ -87,21 +85,21 @@ namespace TestDatabaseConnectors.AzureSql
             if (envvar != "true")
                 return;
             //Arrange
-            var s2C = new TwoColumnsTableFixture(SqlConnection, "DBMergeSource");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(SqlConnection, "DBMergeSource");
             s2C.InsertTestData();
             s2C.InsertTestDataSet2();
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 AzureSqlConnection,
                 "[dest].[AzureMergeDestination]"
             );
             d2C.InsertTestDataSet3();
-            var source = new DbSource<MySimpleRow>(
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "DBMergeSource"
             );
 
             //Act
-            var dest = new DbMerge<MySimpleRow>(
+            DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>(
                 AzureSqlConnection,
                 "[dest].[AzureMergeDestination]"
             );

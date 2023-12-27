@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowDuplication
 {
+    [Collection("Transformations")]
     public class RowDuplicationTests : TransformationsTestBase
     {
         public RowDuplicationTests(TransformationsDatabaseFixture fixture)

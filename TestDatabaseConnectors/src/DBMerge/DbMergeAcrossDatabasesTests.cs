@@ -4,10 +4,10 @@ using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeAcrossDatabasesTests : DatabaseConnectorsTestBase
     {
         public DbMergeAcrossDatabasesTests(DatabaseSourceDestinationFixture fixture)
@@ -62,8 +62,8 @@ namespace TestDatabaseConnectors.DBMerge
             personMerge.Wait();
 
             //Assert
-            var qb = destConnection.QB;
-            var qe = destConnection.QE;
+            string qb = destConnection.QB;
+            string qe = destConnection.QE;
             Assert.Equal(
                 1,
                 RowCountTask.Count(

@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.MergeJoin
 {
+    [Collection("Transformations")]
     public class MergeJoinDynamicObjectTests : TransformationsTestBase
     {
         public MergeJoinDynamicObjectTests(TransformationsDatabaseFixture fixture)

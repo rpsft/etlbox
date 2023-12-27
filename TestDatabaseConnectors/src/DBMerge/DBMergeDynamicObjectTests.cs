@@ -2,11 +2,10 @@ using System.Dynamic;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbMergeDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
@@ -16,18 +15,18 @@ namespace TestDatabaseConnectors.DBMerge
         public void SimpleMergeWithDynamic()
         {
             //Arrange
-            var source = new MemorySource();
+            MemorySource source = new MemorySource();
             source.DataAsList.Add(CreateDynamicRow(1, "Test1"));
             source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeDynamicDestination"
             );
             d2C.InsertTestDataSet3();
 
             //Act
-            var dest = new DbMerge(SqlConnection, "DBMergeDynamicDestination");
+            DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDestination");
             dest.MergeProperties.IdPropertyNames.Add("Col1");
             dest.MergeProperties.ComparePropertyNames.Add("Col2");
             source.LinkTo(dest);
@@ -99,19 +98,19 @@ namespace TestDatabaseConnectors.DBMerge
         public void DeltaLoadWithDeletion()
         {
             //Arrange
-            var source = new MemorySource();
+            MemorySource source = new MemorySource();
             source.DataAsList.Add(CreateDynamicRow(2, "Test2"));
             source.DataAsList.Add(CreateDynamicRow(3, "Test3"));
             source.DataAsList.Add(CreateDynamicRow(4, delete: true));
             source.DataAsList.Add(CreateDynamicRow(10, delete: true));
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "DBMergeDynamicDeltaDestination"
             );
             d2C.InsertTestDataSet3();
 
             //Act
-            var dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
+            DbMerge dest = new DbMerge(SqlConnection, "DBMergeDynamicDeltaDestination")
             {
                 DeltaMode = DeltaMode.Delta
             };

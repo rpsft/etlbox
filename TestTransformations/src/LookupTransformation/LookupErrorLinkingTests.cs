@@ -8,6 +8,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
+    [Collection("Transformations")]
     public class LookupErrorLinkingTests : TransformationsTestBase
     {
         public LookupErrorLinkingTests(TransformationsDatabaseFixture fixture)

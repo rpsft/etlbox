@@ -1,10 +1,9 @@
 using System.Dynamic;
-using ALE.ETLBox.DataFlow;
-using TestOtherConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.MemorySource
 {
+    [Collection("OtherConnectors")]
     public class MemorySourceDynamicObjectTests : OtherConnectorsTestBase
     {
         public MemorySourceDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)
@@ -14,9 +13,9 @@ namespace TestOtherConnectors.MemorySource
         public void DataIsFromList()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
-            var source = new MemorySource<ExpandoObject>();
-            var dest = new DbDestination<ExpandoObject>(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
+            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>();
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "MemoryDestination"
             );

@@ -21,8 +21,6 @@ namespace ALE.ETLBox.DataFlow
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
         /* Private stuff */
-        private new TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
-
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc)
             : this()
         {

@@ -8,10 +8,9 @@ namespace ALE.ETLBox.Helper.DataFlow
     {
         public static void ReadFromXml(
             this IDataFlow dataFlow,
-            XmlReader reader,
-            ILogger logger)
+            XmlReader reader)
         {
-            var xmlReader = new DataFlowXmlReader(dataFlow, logger);
+            var xmlReader = new DataFlowXmlReader(dataFlow);
             xmlReader.Read(reader);
         }
     }

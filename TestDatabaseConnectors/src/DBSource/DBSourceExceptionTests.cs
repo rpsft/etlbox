@@ -1,13 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox;
-using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
 using Microsoft.Data.SqlClient;
-using TestDatabaseConnectors.Fixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceExceptionTests : DatabaseConnectorsTestBase
     {
         public DbSourceExceptionTests(DatabaseSourceDestinationFixture fixture)
@@ -17,11 +16,11 @@ namespace TestDatabaseConnectors.DBSource
         public void UnknownTable()
         {
             //Arrange
-            var source = new DbSource<string[]>(SqlConnection, "UnknownTable");
-            var dest = new MemoryDestination<string[]>();
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "UnknownTable");
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
             //Act & Assert
-            Assert.Throws<ETLBoxException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
             {
                 source.LinkTo(dest);
                 source.Execute(CancellationToken.None);
@@ -33,16 +32,16 @@ namespace TestDatabaseConnectors.DBSource
         public void UnknownTableViaTableDefinition()
         {
             //Arrange
-            var def = new TableDefinition(
+            TableDefinition def = new TableDefinition(
                 "UnknownTable",
                 new List<TableColumn> { new("id", "INT") }
             );
-            var source = new DbSource<string[]>
+            DbSource<string[]> source = new DbSource<string[]>
             {
                 ConnectionManager = SqlConnection,
                 SourceTableDefinition = def
             };
-            var dest = new MemoryDestination<string[]>();
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
             //Act & Assert
             Assert.Throws<SqlException>(() =>
@@ -57,8 +56,8 @@ namespace TestDatabaseConnectors.DBSource
         public void ErrorInSql()
         {
             //Arrange
-            var source = new DbSource(SqlConnection) { Sql = "SELECT XYZ FROM ABC" };
-            var dest = new MemoryDestination();
+            DbSource source = new DbSource(SqlConnection) { Sql = "SELECT XYZ FROM ABC" };
+            MemoryDestination dest = new MemoryDestination();
             source.LinkTo(dest);
             //Act & Assert
             Assert.Throws<SqlException>(() =>

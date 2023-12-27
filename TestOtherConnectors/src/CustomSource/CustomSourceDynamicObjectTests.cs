@@ -1,10 +1,9 @@
 using System.Dynamic;
-using ALE.ETLBox.DataFlow;
-using TestOtherConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceDynamicObjectTests : OtherConnectorsTestBase
     {
         public CustomSourceDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)
@@ -14,11 +13,11 @@ namespace TestOtherConnectors.CustomSource
         public void SimpleFlow()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSourceDynamic"
             );
-            var data = new List<string> { "Test1", "Test2", "Test3" };
-            var readIndex = 0;
+            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
+            int readIndex = 0;
 
             ExpandoObject ReadData()
             {
@@ -32,11 +31,11 @@ namespace TestOtherConnectors.CustomSource
             bool EndOfData() => readIndex >= data.Count;
 
             //Act
-            var source = new CustomSource<ExpandoObject>(
+            CustomSource<ExpandoObject> source = new CustomSource<ExpandoObject>(
                 ReadData,
                 EndOfData
             );
-            var dest = new DbDestination<ExpandoObject>(
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "Destination4CustomSourceDynamic"
             );

@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class ExcelSourceStringArrayTests : FlatFileConnectorsTestBase
     {
         public ExcelSourceStringArrayTests(FlatFileToDatabaseFixture fixture)

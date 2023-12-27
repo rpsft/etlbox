@@ -1,13 +1,12 @@
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.DataFlow;
-using TestOtherConnectors.Fixture;
 using TestOtherConnectors.Helpers;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomDestination
 {
+    [Collection("OtherConnectors")]
     public class CustomDestinationTests : OtherConnectorsTestBase
     {
         public CustomDestinationTests(OtherConnectorsDatabaseFixture fixture)

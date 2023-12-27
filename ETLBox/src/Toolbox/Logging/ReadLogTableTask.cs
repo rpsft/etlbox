@@ -1,4 +1,4 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -17,7 +17,7 @@ namespace ALE.ETLBox.Logging
         public void Execute()
         {
             LogEntries = new List<LogEntry>();
-            var current = new LogEntry();
+            LogEntry current = new LogEntry();
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,

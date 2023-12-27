@@ -6,6 +6,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.Sort
 {
+    [Collection("Transformations")]
     public class SortTests : TransformationsTestBase
     {
         public SortTests(TransformationsDatabaseFixture fixture)

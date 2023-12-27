@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
+    [Collection("Transformations")]
     public class RowMultiplicationStringArrayTests : TransformationsTestBase
     {
         public RowMultiplicationStringArrayTests(TransformationsDatabaseFixture fixture)

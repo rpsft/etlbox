@@ -1,6 +1,7 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
+using ClickHouse.Ado;
+using EtlBox.ClickHouse.ConnectionManager;
 using TestControlFlowTasks.Fixtures;
-using TestShared.Helper;
 
 namespace TestControlFlowTasks
 {
@@ -20,6 +21,9 @@ namespace TestControlFlowTasks
         public static SqlConnectionManager SqlConnection =>
             Config.SqlConnection.ConnectionManager(ConfigSection);
 
+        public static ClickHouseConnectionManager ClickHouseConnection =>
+            Config.ClickHouseConnection.ConnectionManager(ConfigSection);
+
         public static AdomdConnectionManager AdomdConnection =>
             new(Config.SSASConnection.ConnectionString(ConfigSection).CloneWithoutDbName());
 
@@ -35,9 +39,23 @@ namespace TestControlFlowTasks
         public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
             Config.AllConnectionsWithoutSQLite(ConfigSection);
 
+        public static IEnumerable<object[]> AllConnectionsWithoutClickHouse =>
+            Config.AllConnectionsWithoutClickHouse(ConfigSection);
+
+        public static IEnumerable<object[]> AllConnectionsWithoutSQLiteAndClickHouse =>
+            Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection);
+
         public static IEnumerable<object[]> DbConnectionsWithMaster() =>
             new[]
             {
+                new object[]
+                {
+                    new ClickHouseConnectionManager(
+                        Config.ClickHouseConnection
+                            .ConnectionString(ConfigSection)
+                            .CloneWithMasterDbName()
+                    )
+                },
                 new object[]
                 {
                     new SqlConnectionManager(
@@ -59,7 +77,7 @@ namespace TestControlFlowTasks
                             .ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
-                }
+                },
             };
     }
 }

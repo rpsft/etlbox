@@ -1,25 +1,26 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
 using EtlBox.Logging.Database;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.ControlFlow
+namespace TestNonParallel.ControlFlow
 {
+    [Collection("Logging")]
     public sealed class DefaultDbConnectionTests : NonParallelTestBase, IDisposable
     {
         public DefaultDbConnectionTests(LoggingDatabaseFixture fixture)
             : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
-            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         [Fact]
@@ -63,8 +64,8 @@ namespace ALE.ETLBoxTests.NonParallel.ControlFlow
                 "TestDestinationTable",
                 new List<TableColumn> { new("Col1", "VARCHAR(100)") }
             );
-            var source = new DbSource<MySimpleRow>("TestSourceTable");
-            var dest = new DbDestination<MySimpleRow>(
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("TestSourceTable");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
                 "TestDestinationTable"
             );
 

@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
+    [Collection("Transformations")]
     public sealed class LookupStringArrayTests : TransformationsTestBase, IDisposable
     {
         private readonly CultureInfo _culture;

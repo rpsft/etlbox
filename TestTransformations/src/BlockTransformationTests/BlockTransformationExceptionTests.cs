@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
+    [Collection("Transformations")]
     public class BlockTransformationExceptionTests : TransformationsTestBase
     {
         public BlockTransformationExceptionTests(TransformationsDatabaseFixture fixture)

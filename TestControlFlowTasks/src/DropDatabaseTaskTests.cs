@@ -6,6 +6,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class DropDatabaseTaskTests : ControlFlowTestBase
     {
         public DropDatabaseTaskTests(ControlFlowDatabaseFixture fixture)
@@ -15,15 +16,15 @@ namespace TestControlFlowTasks
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            var dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + HashHelper.RandomString(10);
             CreateDatabaseTask.Create(connection, dbName);
-            var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
             //Act
             DropDatabaseTask.Drop(connection, dbName);
 
             //Assert
-            var existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            bool existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
             Assert.True(existsBefore);
             Assert.False(existsAfter);
         }
@@ -32,16 +33,16 @@ namespace TestControlFlowTasks
         public void DropIfExists(IConnectionManager connection)
         {
             //Arrange
-            var dbName = "ETLBox_" + HashHelper.RandomString(10);
+            string dbName = "ETLBox_" + HashHelper.RandomString(10);
             DropDatabaseTask.DropIfExists(connection, dbName);
             CreateDatabaseTask.Create(connection, dbName);
-            var existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
 
             //Act
             DropDatabaseTask.DropIfExists(connection, dbName);
 
             //Assert
-            var existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
+            bool existsAfter = IfDatabaseExistsTask.IsExisting(connection, dbName);
             Assert.True(existsBefore);
             Assert.False(existsAfter);
         }

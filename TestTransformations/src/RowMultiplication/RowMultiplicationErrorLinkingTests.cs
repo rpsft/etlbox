@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
+    [Collection("Transformations")]
     public class RowMultiplicationErrorLinkingTests : TransformationsTestBase
     {
         public RowMultiplicationErrorLinkingTests(TransformationsDatabaseFixture fixture)

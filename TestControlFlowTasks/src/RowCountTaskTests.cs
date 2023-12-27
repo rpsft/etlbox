@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class RowCountTaskTests : ControlFlowTestBase
     {
         public RowCountTaskTests(ControlFlowDatabaseFixture fixture)
@@ -14,13 +15,13 @@ namespace TestControlFlowTasks
         public void NormalCount(IConnectionManager connection)
         {
             //Arrange
-            var tableDef = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(
                 connection,
                 "RowCountTest"
             );
             tableDef.InsertTestData();
             //Act
-            var actual = RowCountTask.Count(connection, "RowCountTest");
+            int? actual = RowCountTask.Count(connection, "RowCountTest");
             //Assert
             Assert.Equal(3, actual);
         }
@@ -30,10 +31,10 @@ namespace TestControlFlowTasks
         public void CountWithCondition(IConnectionManager connection)
         {
             //Arrange
-            var tc = new TwoColumnsTableFixture(connection, "RowCountTest");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "RowCountTest");
             tc.InsertTestData();
             //Act
-            var actual = RowCountTask.Count(connection, "RowCountTest", $"{tc.QB}Col1{tc.QE} = 2");
+            int? actual = RowCountTask.Count(connection, "RowCountTest", $"{tc.QB}Col1{tc.QE} = 2");
             //Assert
             Assert.Equal(1, actual);
         }
@@ -42,13 +43,13 @@ namespace TestControlFlowTasks
         public void SqlServerQuickQueryMode()
         {
             //Arrange
-            var tableDef = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture tableDef = new TwoColumnsTableFixture(
                 SqlConnection,
                 "RowCountTest"
             );
             tableDef.InsertTestData();
             //Act
-            var actual = RowCountTask.Count(
+            int? actual = RowCountTask.Count(
                 SqlConnection,
                 "RowCountTest",
                 RowCountOptions.QuickQueryMode

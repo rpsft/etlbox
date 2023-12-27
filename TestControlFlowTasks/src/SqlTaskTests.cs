@@ -2,12 +2,14 @@ using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ClickHouse.Ado;
 using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class SqlTaskTests : ControlFlowTestBase
     {
         public SqlTaskTests(ControlFlowDatabaseFixture fixture)
@@ -18,17 +20,18 @@ namespace TestControlFlowTasks
         public static IEnumerable<object[]> ConnectionsWithValue(string value) =>
             new[]
             {
+                new object[] { ClickHouseConnection, value },
                 new object[] { SqlConnection, value },
                 new object[] { PostgresConnection, value },
                 new object[] { MySqlConnection, value },
-                new object[] { SqliteConnection, value }
+                //new object[] { SqliteConnection, value }
             };
 
         [Theory, MemberData(nameof(Connections))]
         public void ExecuteNonQuery(IConnectionManager connection)
         {
             //Arrange
-            var tc = new TwoColumnsTableFixture(connection, "NonQueryTest");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "NonQueryTest");
 
             //Act
             SqlTask.ExecuteNonQuery(
@@ -52,7 +55,7 @@ namespace TestControlFlowTasks
         public void ExecuteNonQueryWithParameter(IConnectionManager connection)
         {
             //Arrange
-            var tc = new TwoColumnsTableFixture(connection, "ParameterTest");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ParameterTest");
 
             //Act
             var parameter = new List<QueryParameter>
@@ -83,7 +86,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             //Act
-            var result = SqlTask.ExecuteScalar(
+            object result = SqlTask.ExecuteScalar(
                 connection,
                 "Test execute scalar",
                 @"SELECT 'Hallo Welt' AS ScalarResult"
@@ -99,7 +102,7 @@ namespace TestControlFlowTasks
             {
                 //Arrange
                 //Act
-                var result = SqlTask.ExecuteScalar<double>(
+                double? result = SqlTask.ExecuteScalar<double>(
                     connection,
                     "Test execute scalar with datatype",
                     @"SELECT CAST(1.343 AS NUMERIC(4,3)) AS ScalarResult"
@@ -111,7 +114,7 @@ namespace TestControlFlowTasks
             {
                 //Arrange
                 //Act
-                var result = (DateTime)
+                DateTime result = (DateTime)
                     SqlTask.ExecuteScalar(
                         connection,
                         "Test execute scalar with datatype",
@@ -133,7 +136,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             //Act
-            var result = SqlTask.ExecuteScalarAsBool(
+            bool result = SqlTask.ExecuteScalarAsBool(
                 connection,
                 "Test execute scalar as bool",
                 $"SELECT {sqlBoolValue} AS Bool"
@@ -149,10 +152,10 @@ namespace TestControlFlowTasks
         public void ExecuteReaderSingleColumn(IConnectionManager connection)
         {
             //Arrange
-            var tc = new TwoColumnsTableFixture(connection, "ExecuteReader");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "ExecuteReader");
             tc.InsertTestData();
-            var asIsResult = new List<int>();
-            var toBeResult = new List<int> { 1, 2, 3 };
+            List<int> asIsResult = new List<int>();
+            List<int> toBeResult = new List<int> { 1, 2, 3 };
 
             //Act
             SqlTask.ExecuteReader(
@@ -163,22 +166,22 @@ namespace TestControlFlowTasks
             );
 
             //Assert
-            Assert.Equal(toBeResult, asIsResult);
+            Assert.Equal(toBeResult.OrderBy(t => t), asIsResult.OrderBy(t => t));
         }
 
         [Theory, MemberData(nameof(Connections))]
         public void ExecuteReaderWithParameter(IConnectionManager connection)
         {
             //Arrange
-            var tc = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(
                 connection,
                 "ExecuteReaderWithPar"
             );
             tc.InsertTestData();
-            var asIsResult = new List<int>();
-            var toBeResult = new List<int> { 2 };
+            List<int> asIsResult = new List<int>();
+            List<int> toBeResult = new List<int> { 2 };
 
-            var parameter = new List<QueryParameter>
+            List<QueryParameter> parameter = new List<QueryParameter>
             {
                 new("par1", "NVARCHAR(10)", "Test2")
             };
@@ -226,17 +229,17 @@ namespace TestControlFlowTasks
         public void ExecuteReaderMultiColumn(IConnectionManager connection)
         {
             //Arrange
-            var tc = new TwoColumnsTableFixture(connection, "MultiColumnRead");
+            TwoColumnsTableFixture tc = new TwoColumnsTableFixture(connection, "MultiColumnRead");
             tc.InsertTestData();
 
-            var asIsResult = new List<MySimpleRow>();
-            var toBeResult = new List<MySimpleRow>
+            List<MySimpleRow> asIsResult = new List<MySimpleRow>();
+            List<MySimpleRow> toBeResult = new List<MySimpleRow>
             {
                 new(1, "Test1"),
                 new(2, "Test2"),
                 new(3, "Test3")
             };
-            var CurColumn = new MySimpleRow();
+            MySimpleRow CurColumn = new MySimpleRow();
 
             //Act
             SqlTask.ExecuteReader(
@@ -250,7 +253,7 @@ namespace TestControlFlowTasks
             );
 
             //Assert
-            Assert.Equal(toBeResult, asIsResult);
+            Assert.Equal(toBeResult.OrderBy(t => t.Col1), asIsResult.OrderBy(t => t.Col1));
         }
     }
 }

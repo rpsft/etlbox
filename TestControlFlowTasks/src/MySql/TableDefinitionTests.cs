@@ -4,6 +4,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.MySql
 {
+    [Collection("ControlFlow")]
     public class TableDefinitionTests : ControlFlowTestBase
     {
         public TableDefinitionTests(ControlFlowDatabaseFixture fixture)

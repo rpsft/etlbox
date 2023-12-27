@@ -1,4 +1,4 @@
-using ALE.ETLBox.Common;
+﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -16,9 +16,9 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            var cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
-            var em = new QueryParameter("AbortMessage", "VARCHAR(100)", AbortMessage);
-            var lpk = new QueryParameter("LoadProcessId", "BIGINT", LoadProcessId);
+            QueryParameter cd = new QueryParameter("CurrentDate", "DATETIME", DateTime.Now);
+            QueryParameter em = new QueryParameter("AbortMessage", "VARCHAR(100)", AbortMessage);
+            QueryParameter lpk = new QueryParameter("LoadProcessId", "BIGINT", LoadProcessId);
             new SqlTask(this, Sql)
             {
                 DisableLogging = true,

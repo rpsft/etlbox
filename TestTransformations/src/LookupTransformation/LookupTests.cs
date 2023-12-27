@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
+    [Collection("Transformations")]
     public class LookupTests : TransformationsTestBase
     {
         public LookupTests(TransformationsDatabaseFixture fixture)

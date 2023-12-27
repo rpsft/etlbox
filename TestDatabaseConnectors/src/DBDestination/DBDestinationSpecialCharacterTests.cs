@@ -2,11 +2,10 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationSpecialCharacterTests : DatabaseConnectorsTestBase
     {
         public DbDestinationSpecialCharacterTests(DatabaseSourceDestinationFixture fixture)
@@ -44,24 +43,24 @@ namespace TestDatabaseConnectors.DBDestination
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 connection,
                 "SpecialCharacterSource"
             );
             InsertTestData(connection, "SpecialCharacterSource");
 
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "SpecialCharacterDestination"
             );
 
             //Act
-            var source = new DbSource<string[]>
+            DbSource<string[]> source = new DbSource<string[]>
             {
                 ConnectionManager = connection,
                 SourceTableDefinition = s2C.TableDefinition
             };
-            var dest = new DbDestination<string[]>
+            DbDestination<string[]> dest = new DbDestination<string[]>
             {
                 ConnectionManager = connection,
                 DestinationTableDefinition = d2C.TableDefinition

@@ -2,11 +2,10 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.Fixtures;
-using TestShared.SharedFixtures;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceStringArrayTests : DatabaseConnectorsTestBase
     {
         public DbSourceStringArrayTests(DatabaseSourceDestinationFixture fixture)
@@ -18,23 +17,23 @@ namespace TestDatabaseConnectors.DBSource
         public void UsingTableDefinitions(IConnectionManager connection)
         {
             //Arrange
-            var source2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
                 connection,
                 "SourceTableDef"
             );
             source2Columns.InsertTestData();
-            var dest2Columns = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
                 connection,
                 "DestinationTableDef"
             );
 
             //Act
-            var source = new DbSource<string[]>
+            DbSource<string[]> source = new DbSource<string[]>
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
                 ConnectionManager = connection
             };
-            var dest = new DbDestination<string[]>
+            DbDestination<string[]> dest = new DbDestination<string[]>
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
                 ConnectionManager = connection
@@ -51,21 +50,21 @@ namespace TestDatabaseConnectors.DBSource
         public void WithSql(IConnectionManager connection)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(connection, "SourceWithSql");
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceWithSql");
             s2C.InsertTestData();
-            var d2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
                 connection,
                 "DestinationWithSql"
             );
 
             //Act
-            var source = new DbSource<string[]>
+            DbSource<string[]> source = new DbSource<string[]>
             {
                 Sql =
                     $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceWithSql{s2C.QE}",
                 ConnectionManager = connection
             };
-            var dest = new DbDestination<string[]>(
+            DbDestination<string[]> dest = new DbDestination<string[]>(
                 connection,
                 "DestinationWithSql"
             );
@@ -81,18 +80,18 @@ namespace TestDatabaseConnectors.DBSource
         public void WithSelectStar()
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(
+            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 SqlConnection,
                 "SourceWithSelectStar"
             );
             s2C.InsertTestData();
 
             //Act
-            var source = new DbSource<string[]>(SqlConnection)
+            DbSource<string[]> source = new DbSource<string[]>(SqlConnection)
             {
                 Sql = $"SELECT * FROM {s2C.QB}SourceWithSelectStar{s2C.QE}"
             };
-            var dest = new DbDestination<string[]>(SqlConnection, "SomeTable");
+            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "SomeTable");
 
             //Assert
             Assert.Throws<ETLBoxException>(() =>
@@ -103,7 +102,7 @@ namespace TestDatabaseConnectors.DBSource
             });
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void OnlyNullValue(IConnectionManager connection)
         {
             //Arrange
@@ -119,8 +118,8 @@ namespace TestDatabaseConnectors.DBSource
                 @"INSERT INTO source_onlynulls VALUES(NULL, NULL)"
             );
             //Act
-            var source = new DbSource<string[]>(connection, "source_onlynulls");
-            var dest = new MemoryDestination<string[]>();
+            DbSource<string[]> source = new DbSource<string[]>(connection, "source_onlynulls");
+            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
