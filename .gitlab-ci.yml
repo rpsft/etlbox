@@ -82,9 +82,9 @@ test_job:
     SA_PASSWORD: 'YourStrong@Passw0rd'
     MSSQL_PID: 'Developer'
     # CLICKHOUSE image customization
-    CLICKHOUSE_USER: clickhouse
-    CLICKHOUSE_PASSWORD: Qwe123456
-    CLICKHOUSE_MAX_CONNECTIONS: 100
+    CLICKHOUSE_USER: 'clickhouse'
+    CLICKHOUSE_PASSWORD: 'Qwe123456'
+    CLICKHOUSE_MAX_CONNECTIONS: '100'
   before_script:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
