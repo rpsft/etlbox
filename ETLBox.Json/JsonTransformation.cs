@@ -26,9 +26,9 @@ namespace ETLBox.Json
             };
         }
 
-        public Dictionary<string, JsonSource> Mappings { get; set; } = new Dictionary<string, JsonSource>();
+        public Dictionary<string, JsonMapping> Mappings { get; set; } = new Dictionary<string, JsonMapping>();
 
-        private static string GetValue(ExpandoObject source, JsonSource mapping)
+        private static string GetValue(ExpandoObject source, JsonMapping mapping)
         {
             var values = source as IDictionary<string, object>;
             // Parse the JSON string
