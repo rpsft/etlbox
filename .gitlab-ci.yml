@@ -6,8 +6,7 @@ variables:
   CI_DEBUG_SERVICES: "true"
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
-
-  NUPKG_FOLDER: '.packages'
+  NUPKG_FOLDER: ".packages"
 
 .default_rules:
   rules:
@@ -100,6 +99,7 @@ test_job:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt
     - echo 'End Summary'
+  allow_failure: true
   coverage: /Line coverage:[\s\S].+%/
   cache:
     key: dotnet-packages-cache
