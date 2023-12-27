@@ -8,6 +8,8 @@ using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper.DataFlow;
 using ETLBox.Primitives;
+using ETLBox.Rest;
+using ETLBox.Rest.Models;
 using FluentAssertions;
 using Moq;
 

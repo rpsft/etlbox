@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ALE.ETLBox.Helper
+namespace ETLBox.Rest
 {
     internal class ExpandoObjectConverter : JsonConverter<ExpandoObject>
     {
@@ -58,7 +58,7 @@ namespace ALE.ETLBox.Helper
                 JsonTokenType.StartObject => Read(ref reader, typeof(ExpandoObject), options),
                 JsonTokenType.StartArray => ReadArray(ref reader, options),
                 JsonTokenType.String => reader.GetString(),
-                JsonTokenType.Number => reader.TryGetInt64(out long l) ? l : reader.GetDouble(),
+                JsonTokenType.Number => reader.TryGetInt64(out var l) ? l : reader.GetDouble(),
                 JsonTokenType.True => reader.GetBoolean(),
                 JsonTokenType.False => reader.GetBoolean(),
                 JsonTokenType.Null => null,

@@ -5,14 +5,16 @@ using System.Dynamic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ALE.ETLBox;
 using ALE.ETLBox.Common.DataFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.DataFlow;
 using DotLiquid;
 using ETLBox.Primitives;
+using ETLBox.Rest.Models;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.Rest
 {
     [PublicAPI]
     public class RestTransformation : RowTransformation<ExpandoObject>
