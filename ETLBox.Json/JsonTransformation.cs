@@ -4,7 +4,7 @@ using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 
-namespace TestHelper.Models
+namespace ETLBox.Json
 {
     [PublicAPI]
     public class JsonTransformation : RowTransformation<ExpandoObject>
