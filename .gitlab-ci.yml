@@ -41,7 +41,7 @@ build_job:
   script:
     - echo "Building version $PACKAGE_VERSION"
     - dotnet build ETLBox/ --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
-    - dotnet pack ETLBox/ --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   cache:
     key: dotnet-packages-cache
     paths:

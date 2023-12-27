@@ -5,6 +5,7 @@
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
         <RootNamespace>ALE.ETLBox.Scripting</RootNamespace>
+        <PackageId>EtlBox.Classic.Scripting</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
