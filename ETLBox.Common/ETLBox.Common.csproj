@@ -18,11 +18,5 @@
   <ItemGroup>
     <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="WeCantSpell.Roslyn" Version="2.0.8-beta">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
 </Project>

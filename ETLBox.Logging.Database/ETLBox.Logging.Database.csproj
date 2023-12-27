@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>10</LangVersion>
+    <LangVersion>default</LangVersion>
     <RootNamespace>EtlBox.Logging.Database</RootNamespace>
+    <Authors>RapidSoft</Authors>
+    <Description>ETLBox database logging support using NLog</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
   </ItemGroup>
 
 </Project>

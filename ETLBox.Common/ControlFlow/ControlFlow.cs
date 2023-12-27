@@ -158,7 +158,7 @@ namespace ALE.ETLBox.Common.ControlFlow
                         .WithProperty("Hash", hash)
                         .WithProperty("Stage", stage)
                         .WithProperty("LoadProcessKey", loadProcessKey),
-                    (Exception)null,
+                    null,
                     MyLogEvent.Formatter);
             }
         }
@@ -166,7 +166,7 @@ namespace ALE.ETLBox.Common.ControlFlow
 
     public class MyLogEvent : IEnumerable<KeyValuePair<string, object>>
     {
-        readonly List<KeyValuePair<string, object>> _properties = new List<KeyValuePair<string, object>>();
+        readonly List<KeyValuePair<string, object>> _properties = new();
 
         public string Message { get; }
 
@@ -188,7 +188,7 @@ namespace ALE.ETLBox.Common.ControlFlow
             return this;
         }
 
-        public static Func<MyLogEvent, Exception, string> Formatter { get; } = (l, e) => l.Message;
+        public static Func<MyLogEvent, Exception, string> Formatter { get; } = (l, _) => l.Message;
     }
 }
 

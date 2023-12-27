@@ -13,6 +13,7 @@ namespace TestTransformations.RowTransformation
         public RowTransformationFluentNotationTests(TransformationsDatabaseFixture fixture)
             : base(fixture) { }
 
+        [PublicAPI]
         public class MySimpleRow
         {
             public int Col1 { get; set; }
@@ -20,7 +21,7 @@ namespace TestTransformations.RowTransformation
         }
 
         [Fact]
-        public void Linking3Transformations()
+        public async Task Linking3Transformations()
         {
             //Arrange
             var source2Columns = new TwoColumnsTableFixture(
@@ -45,12 +46,10 @@ namespace TestTransformations.RowTransformation
 
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
-            Task sourceT = source.ExecuteAsync(CancellationToken.None);
-            Task destT = dest.Completion;
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
-            sourceT.Wait();
-            destT.Wait();
             dest2Columns.AssertTestData();
         }
 

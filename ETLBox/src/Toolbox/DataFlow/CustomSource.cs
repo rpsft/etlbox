@@ -43,7 +43,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 try
                 {
-                    Buffer.SendAsync(ReadFunc.Invoke()).Wait();
+                    Buffer.SendAsync(ReadFunc.Invoke(), cancellationToken).Wait(cancellationToken);
                 }
                 catch (Exception e)
                 {

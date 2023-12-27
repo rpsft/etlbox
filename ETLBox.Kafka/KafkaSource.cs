@@ -1,6 +1,4 @@
-#nullable enable
 using System;
-using System.Dynamic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
@@ -12,20 +10,12 @@ using JetBrains.Annotations;
 namespace ALE.ETLBox.DataFlow;
 
 /// <summary>
-/// Kafka source for JSON value types
-/// </summary>
-/// <typeparam name="TOutput"></typeparam>
-public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string> { }
-
-public class KafkaSource<TOutput> : KafkaSource<TOutput, ExpandoObject> { }
-
-/// <summary>
 /// Kafka generic source
 /// </summary>
-/// <typeparam name="TOutput"></typeparam>
+/// <typeparam name="TOutput">Result type</typeparam>
 /// <typeparam name="TKafkaValue"></typeparam>
 [PublicAPI]
-public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataFlowSource<TOutput>
+public abstract class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataFlowSource<TOutput>
 {
     /// <summary>
     /// Kafka consumer configuration
@@ -42,9 +32,17 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
     /// </summary>
     public Action<ConsumerBuilder<Ignore, TKafkaValue>>? ConfigureConsumerBuilder { get; set; }
 
-    // Private stuff
-    private TypeInfo TypeInfo { get; set; } = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
+    /// <summary>
+    /// Override this method to convert the Kafka value to the output value
+    /// </summary>
+    /// <param name="kafkaValue">value as read from Kafka consumer</param>
+    /// <returns>Output value to put to destination</returns>
+    protected abstract TOutput ConvertToOutputValue(TKafkaValue kafkaValue);
 
+    /// <summary>
+    /// Main execution method
+    /// </summary>
+    /// <param name="cancellationToken"></param>
     public override void Execute(CancellationToken cancellationToken)
     {
         LogStart();
@@ -57,24 +55,30 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            if (!ConsumeAndSendSingleMessage(consumer))
+            if (!ConsumeAndSendSingleMessage(consumer, cancellationToken))
             {
                 break;
             }
         }
-
+        Buffer.Complete();
         LogFinish();
     }
 
-    private bool ConsumeAndSendSingleMessage(IConsumer<Ignore, TKafkaValue> consumer)
+    /// <summary>
+    /// Consume, convert and send a single message
+    /// </summary>
+    /// <param name="consumer"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>false to exit reading cycle, true to continue</returns>
+    private bool ConsumeAndSendSingleMessage(IConsumer<Ignore, TKafkaValue> consumer, CancellationToken cancellationToken)
     {
         TKafkaValue? kafkaValue = default;
         try
         {
-            var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
+            var consumeResult = consumer.Consume(cancellationToken);
             if (consumeResult == null)
             {
-                return ConsumerConfig.EnablePartitionEof ?? false;
+                return !cancellationToken.IsCancellationRequested;
             }
 
             if (consumeResult.IsPartitionEOF)
@@ -85,24 +89,12 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
             kafkaValue = consumeResult.Message.Value;
             if (kafkaValue is null)
             {
+                // Nulls do not propagate through the pipeline
                 return true;
             }
 
-            var jsonSerializerOptions = new JsonSerializerOptions
-            {
-                Converters = { new ExpandoObjectConverter() }
-            };
-
-            var outputValue =
-                (TOutput?)
-                    JsonSerializer.Deserialize(
-                        kafkaValue.ToString(),
-                        typeof(TOutput),
-                        jsonSerializerOptions
-                    ) ?? throw new InvalidOperationException();
-            Buffer.SendAsync(outputValue).Wait();
-
-            Buffer.Complete();
+            var outputValue = ConvertToOutputValue(kafkaValue);
+            Buffer.SendAsync(outputValue, cancellationToken).Wait(cancellationToken);
         }
         catch (Exception e)
         {

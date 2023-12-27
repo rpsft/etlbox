@@ -107,13 +107,13 @@ namespace TestHelper
             dest.Data.Should().HaveCount(3);
 
             dynamic col = new ExpandoObject();
-            col.Col1 = "1";
+            col.Col1 = 1;
             col.Col2 = "Test1";
             dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
-            col.Col1 = "2";
+            col.Col1 = 2;
             col.Col2 = "Test2";
             dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
-            col.Col1 = "3";
+            col.Col1 = 3;
             col.Col2 = "Test3";
             dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
 

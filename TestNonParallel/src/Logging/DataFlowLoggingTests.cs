@@ -212,7 +212,7 @@ namespace TestNonParallel.Logging
         }
 
         [Fact]
-        public void LoggingInAsyncTask()
+        public async Task LoggingInAsyncTask()
         {
             //Arrange
             CreateTestTable("Destination4CustomSource");
@@ -234,12 +234,8 @@ namespace TestNonParallel.Logging
             CustomSource source = new CustomSource(ReadData, EndOfData);
             DbDestination dest = new DbDestination(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
-            Task sourceT = source.ExecuteAsync(CancellationToken.None);
-            Task destT = dest.Completion;
-
-            //Assert
-            sourceT.Wait();
-            destT.Wait();
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
             Assert.Equal(

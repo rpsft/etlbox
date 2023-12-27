@@ -20,9 +20,9 @@ namespace ALE.ETLBox.Common.DataFlow
         public void Execute()
             => Execute(CancellationToken.None);
 
-        public Task ExecuteAsync(CancellationToken cancellationToken)
+        public Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            return Task.Factory.StartNew(() => Execute(cancellationToken));
+            return Task.Factory.StartNew(() => Execute(cancellationToken), cancellationToken);
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target) =>

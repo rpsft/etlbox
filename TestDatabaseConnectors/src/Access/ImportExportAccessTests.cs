@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -98,10 +99,10 @@ namespace TestDatabaseConnectors.Access
         }
 
         [WindowsOnlyFact]
-        public void AccessIntoDBWithTableDefinition()
+        public async Task AccessIntoDBWithTableDefinition()
         {
             //Arrange
-            InsertTestData(_sourceTable);
+            await InsertTestData(_sourceTable);
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTableWTD"
@@ -124,7 +125,7 @@ namespace TestDatabaseConnectors.Access
             destTable.AssertTestData();
         }
 
-        private void InsertTestData(TableDefinition table)
+        private async Task InsertTestData(TableDefinition table)
         {
             SqlTask.ExecuteNonQueryFormatted(
                 AccessOdbcConnection,
@@ -141,14 +142,18 @@ namespace TestDatabaseConnectors.Access
                 "Insert test data",
                 $"INSERT INTO {table.Name:q} (Field1, Field2) VALUES (3,'Test3');"
             );
+            // Below is a workaround for a bug in the Access ODBC driver to allow data to be read
+            AccessOdbcConnection.Close();
+            await Task.Delay(500);
+            Assert.Equal(3, RowCountTask.Count(AccessOdbcConnection, table.Name));
         }
 
         [WindowsOnlyFact]
-        public void AccessIntoDB()
+        public async Task AccessIntoDB()
         {
             //Arrange
             var sourceTable = RecreateAccessTestTable(nameof(AccessIntoDB));
-            InsertTestData(sourceTable);
+            await InsertTestData(sourceTable);
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTable"

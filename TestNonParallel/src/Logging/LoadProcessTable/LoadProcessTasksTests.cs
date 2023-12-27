@@ -214,17 +214,17 @@ namespace TestNonParallel.Logging.LoadProcessTable
         }
 
         [Fact]
-        public void ReadLastSuccessfulProcess()
+        public async Task ReadLastSuccessfulProcess()
         {
             //Arrange
             ALE.ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lpkey_lastsuccess");
             StartLoadProcessTask.Start("Test process 8");
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
+            await Task.Delay(10); //Sql Server datetime is not that exact
             EndLoadProcessTask.End();
-            Task.Delay(10).Wait();
+            await Task.Delay(10);
             StartLoadProcessTask.Start("Test process 9");
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
+            await Task.Delay(10); //Sql Server datetime is not that exact
             EndLoadProcessTask.End();
 
             //Act
@@ -241,20 +241,20 @@ namespace TestNonParallel.Logging.LoadProcessTable
         }
 
         [Fact]
-        public void ReadLastAbortedProcess()
+        public async Task ReadLastAbortedProcess()
         {
             //Arrange
             ALE.ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
             CreateLoadProcessTableTask.Create("test_lpkey_lastabort");
             StartLoadProcessTask.Start("Test process 10");
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
+            await Task.Delay(10); //Sql Server datetime is not that exact
             EndLoadProcessTask.End();
-            Task.Delay(10).Wait();
+            await Task.Delay(10);
             StartLoadProcessTask.Start("Test process 11");
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
+            await Task.Delay(10); //Sql Server datetime is not that exact
             AbortLoadProcessTask.Abort();
             StartLoadProcessTask.Start("Test process 12");
-            Task.Delay(10).Wait(); //Sql Server datetime is not that exact
+            await Task.Delay(10); //Sql Server datetime is not that exact
             EndLoadProcessTask.End();
 
             //Act
