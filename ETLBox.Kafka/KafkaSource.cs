@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Dynamic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
@@ -15,6 +16,8 @@ namespace ALE.ETLBox.DataFlow;
 /// </summary>
 /// <typeparam name="TOutput"></typeparam>
 public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string> { }
+
+public class KafkaSource<TOutput> : KafkaSource<TOutput, ExpandoObject> { }
 
 /// <summary>
 /// Kafka generic source
@@ -69,6 +72,11 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
         try
         {
             var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
+            if (consumeResult == null)
+            {
+                return ConsumerConfig.EnablePartitionEof ?? false;
+            }
+
             if (consumeResult.IsPartitionEOF)
             {
                 return false;
@@ -93,6 +101,8 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
                         jsonSerializerOptions
                     ) ?? throw new InvalidOperationException();
             Buffer.SendAsync(outputValue).Wait();
+
+            Buffer.Complete();
         }
         catch (Exception e)
         {
@@ -109,6 +119,6 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
                 ErrorHandler.Send(e, "N/A");
         }
 
-        return false;
+        return true;
     }
 }
