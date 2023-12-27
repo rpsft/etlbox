@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.Rest.Models
 {
     public sealed class RestMethodInfo
     {
