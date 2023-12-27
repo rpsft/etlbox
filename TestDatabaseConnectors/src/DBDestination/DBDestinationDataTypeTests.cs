@@ -65,8 +65,8 @@ namespace TestDatabaseConnectors.DBDestination
                             LongCol = -1,
                             DecimalCol = 2.3M,
                             DoubleCol = 5.4,
-                            DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10),
-                            DateCol = new DateTime(2020, 1, 1),
+                            DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10, DateTimeKind.Utc),
+                            DateCol = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                             StringCol = "Test",
                             CharCol = 'T',
                             DecimalStringCol = 13.4566m.ToString(connectionCulture),
@@ -95,9 +95,14 @@ namespace TestDatabaseConnectors.DBDestination
                     col => Assert.True(Convert.ToDecimal(col) == 5.4M),
                     col =>
                         Assert.True(
-                            Convert.ToDateTime(col) == new DateTime(2010, 1, 1, 10, 10, 10)
+                            Convert.ToDateTime(col)
+                                == new DateTime(2010, 1, 1, 10, 10, 10, DateTimeKind.Utc)
                         ),
-                    col => Assert.True(Convert.ToDateTime(col) == new DateTime(2020, 1, 1)),
+                    col =>
+                        Assert.True(
+                            Convert.ToDateTime(col)
+                                == new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                        ),
                     col => Assert.True(Convert.ToString(col) == "Test"),
                     col =>
                         Assert.True(Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),

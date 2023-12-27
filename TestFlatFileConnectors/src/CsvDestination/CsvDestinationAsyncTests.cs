@@ -17,9 +17,9 @@ namespace TestFlatFileConnectors.CsvDestination
         {
             public override void Execute(CancellationToken cancellationToken)
             {
-                Buffer.SendAsync(new[] { "1", "2" }).Wait();
+                Buffer.SendAsync(new[] { "1", "2" }, cancellationToken).Wait(cancellationToken);
                 Thread.Sleep(100);
-                Buffer.SendAsync(new[] { "3", "4" }).Wait();
+                Buffer.SendAsync(new[] { "3", "4" }, cancellationToken).Wait(cancellationToken);
                 Buffer.Complete();
             }
         }
