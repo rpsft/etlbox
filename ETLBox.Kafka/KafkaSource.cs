@@ -72,7 +72,12 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
         try
         {
             var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
-            if (consumeResult?.IsPartitionEOF ?? true)
+            if (consumeResult == null)
+            {
+                return ConsumerConfig.EnablePartitionEof ?? false;
+            }
+
+            if (consumeResult.IsPartitionEOF)
             {
                 return false;
             }
@@ -114,6 +119,6 @@ public class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataF
                 ErrorHandler.Send(e, "N/A");
         }
 
-        return false;
+        return true;
     }
 }
