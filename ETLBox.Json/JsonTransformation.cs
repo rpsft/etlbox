@@ -13,7 +13,7 @@ namespace ETLBox.Json
         {
             TransformationFunc = source =>
             {
-                var res = source as IDictionary<string, object>;
+                var res = new ExpandoObject() as IDictionary<string, object>;
                 if (Mappings != null)
                 {
                     foreach (var key in Mappings.Keys)
