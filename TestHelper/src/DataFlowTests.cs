@@ -22,7 +22,8 @@ namespace TestHelper
             var referenceId = Guid.NewGuid();
             var name = Guid.NewGuid().ToString();
             var ms = 100;
-            var xml = @$"<EtlDataFlowStep>
+            var xml =
+                @$"<EtlDataFlowStep>
 			                <ReferenceId>
                                 {referenceId}
                             </ReferenceId>
@@ -85,7 +86,10 @@ namespace TestHelper
 
             step?.Invoke(CancellationToken.None);
 
-            var destinations = step?.Destinations?.Select(d => d as MemoryDestination<ExpandoObject>).ToArray();
+            var destinations = step?.Destinations?.Select(
+                d => d as MemoryDestination<ExpandoObject>
+            )
+                .ToArray();
 
             var dest = destinations?.FirstOrDefault();
 
@@ -136,7 +140,8 @@ namespace TestHelper
             var referenceId = Guid.NewGuid();
             var name = Guid.NewGuid().ToString();
             var ms = 100;
-            var xml = @$"<EtlDataFlowStep>
+            var xml =
+                @$"<EtlDataFlowStep>
 			                <ReferenceId>
                                 {referenceId}
                             </ReferenceId>
@@ -176,9 +181,9 @@ namespace TestHelper
                         !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
                     ),
                 d =>
-            Assert.True(
-                    !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
-                ),
+                    Assert.True(
+                        !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
+                    ),
                 d =>
                     Assert.True(
                         !string.IsNullOrEmpty(d.RecordAsJson) && !string.IsNullOrEmpty(d.ErrorText)
@@ -220,7 +225,7 @@ namespace TestHelper
         }
 
 #pragma warning disable S1144 // Unused private types or members should be removed
-        [UsedImplicitly]
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         private sealed class CustomCsvSource : CsvSource
         {
             public DateTime DateTime { get; set; }

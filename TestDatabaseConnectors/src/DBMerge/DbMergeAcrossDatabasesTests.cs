@@ -36,9 +36,17 @@ namespace TestDatabaseConnectors.DBMerge
         }
 
         [Theory, MemberData(nameof(MixedSourceDestinations))]
-        public void Test(IConnectionManager sourceConnection, IConnectionManager destConnection)
+        public void Test(Type sourceConnectionType, Type destConnectionType)
         {
             //Arrange
+            IConnectionManager sourceConnection = GetConnectionManager(
+                sourceConnectionType,
+                DatabaseSourceDestinationFixture.SourceConfigSection
+            );
+            IConnectionManager destConnection = GetConnectionManager(
+                destConnectionType,
+                DatabaseSourceDestinationFixture.DestinationConfigSection
+            );
             CreateSourceAndDestinationTables(sourceConnection, destConnection);
 
             //Act
@@ -62,8 +70,8 @@ namespace TestDatabaseConnectors.DBMerge
             personMerge.Wait();
 
             //Assert
-            string qb = destConnection.QB;
-            string qe = destConnection.QE;
+            var qb = destConnection.QB;
+            var qe = destConnection.QE;
             Assert.Equal(
                 1,
                 RowCountTask.Count(

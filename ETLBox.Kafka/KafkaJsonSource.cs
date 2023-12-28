@@ -18,29 +18,26 @@ public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string>
 
     public KafkaJsonSource()
     {
-        JsonSerializerOptions = new JsonSerializerOptions()
-        {
-            Converters =
-            {
-                _converter
-            }
-        };
+        JsonSerializerOptions = new JsonSerializerOptions() { Converters = { _converter } };
     }
 
-    protected override TOutput ConvertToOutputValue(string kafkaValue)
+    protected override TOutput? ConvertToOutputValue(
+        string kafkaValue,
+        Action<Exception, string>? logRowOnError = null
+    )
     {
         var jsonSerializerOptions = JsonSerializerOptions ?? new JsonSerializerOptions();
         if (!jsonSerializerOptions.Converters.Contains(_converter))
             jsonSerializerOptions.Converters.Add(_converter);
 
-        var outputValue =
-            (TOutput?)
-            JsonSerializer.Deserialize(
-                kafkaValue.ToString(),
-                typeof(TOutput),
-                jsonSerializerOptions
-            ) ?? throw new InvalidOperationException();
-        return outputValue;
+        try
+        {
+            return JsonSerializer.Deserialize<TOutput>(kafkaValue, jsonSerializerOptions);
+        }
+        catch (Exception e)
+        {
+            logRowOnError?.Invoke(e, kafkaValue);
+            return default;
+        }
     }
-
 }

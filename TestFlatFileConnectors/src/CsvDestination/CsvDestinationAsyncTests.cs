@@ -26,7 +26,7 @@ namespace TestFlatFileConnectors.CsvDestination
 
         [Theory]
         [InlineData("AsyncTestFile.csv")]
-        public void WriteAsyncAndCheckLock(string filename)
+        public async Task WriteAsyncAndCheckLock(string filename)
         {
             //Arrange
             if (File.Exists(filename))
@@ -47,11 +47,10 @@ namespace TestFlatFileConnectors.CsvDestination
 
             //Act
             source.LinkTo(dest);
-            source.ExecuteAsync(CancellationToken.None);
-            var dt = dest.Completion;
+            await source.ExecuteAsync(CancellationToken.None);
             while (!File.Exists(filename))
-                Task.Delay(10).Wait();
-            dt.Wait();
+                await Task.Delay(10);
+            await dest.Completion;
 
             //Assert
             Assert.Multiple(

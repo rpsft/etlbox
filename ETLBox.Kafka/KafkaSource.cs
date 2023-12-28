@@ -15,7 +15,9 @@ namespace ALE.ETLBox.DataFlow;
 /// <typeparam name="TOutput">Result type</typeparam>
 /// <typeparam name="TKafkaValue"></typeparam>
 [PublicAPI]
-public abstract class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput>, IDataFlowSource<TOutput>
+public abstract class KafkaSource<TOutput, TKafkaValue>
+    : DataFlowSource<TOutput>,
+        IDataFlowSource<TOutput>
 {
     /// <summary>
     /// Kafka consumer configuration
@@ -36,8 +38,12 @@ public abstract class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput
     /// Override this method to convert the Kafka value to the output value
     /// </summary>
     /// <param name="kafkaValue">value as read from Kafka consumer</param>
-    /// <returns>Output value to put to destination</returns>
-    protected abstract TOutput ConvertToOutputValue(TKafkaValue kafkaValue);
+    /// <param name="logRowOnError">conversion error handler, should accept Exception and Json representation of input data</param>
+    /// <returns>Output value to put to destination or null in case of error</returns>
+    protected abstract TOutput? ConvertToOutputValue(
+        TKafkaValue kafkaValue,
+        Action<Exception, string>? logRowOnError = null
+    );
 
     /// <summary>
     /// Main execution method
@@ -70,45 +76,49 @@ public abstract class KafkaSource<TOutput, TKafkaValue> : DataFlowSource<TOutput
     /// <param name="consumer"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>false to exit reading cycle, true to continue</returns>
-    private bool ConsumeAndSendSingleMessage(IConsumer<Ignore, TKafkaValue> consumer, CancellationToken cancellationToken)
+    private bool ConsumeAndSendSingleMessage(
+        IConsumer<Ignore, TKafkaValue> consumer,
+        CancellationToken cancellationToken
+    )
     {
-        TKafkaValue? kafkaValue = default;
         try
         {
             var consumeResult = consumer.Consume(cancellationToken);
-            if (consumeResult == null)
-            {
-                return !cancellationToken.IsCancellationRequested;
-            }
-
             if (consumeResult.IsPartitionEOF)
             {
+                // Return false if we reached end of partition
                 return false;
             }
 
-            kafkaValue = consumeResult.Message.Value;
+            var kafkaValue = consumeResult.Message.Value;
             if (kafkaValue is null)
             {
-                // Nulls do not propagate through the pipeline
+                // Nulls do not propagate through the pipeline, just skip them
                 return true;
             }
 
-            var outputValue = ConvertToOutputValue(kafkaValue);
-            Buffer.SendAsync(outputValue, cancellationToken).Wait(cancellationToken);
+            var outputValue = ConvertToOutputValue(
+                kafkaValue,
+                (exception, row) => ErrorHandler.Send(exception, row)
+            );
+            if (outputValue == null)
+            {
+                return true;
+            }
+
+            // We do not pass cancellation token to SendAsync because we want write operation to complete before cancelling
+            Buffer.SendAsync(outputValue, CancellationToken.None).Wait(cancellationToken);
         }
         catch (Exception e)
         {
-            if (!ErrorHandler.HasErrorBuffer)
+            if (!ErrorHandler.HasErrorBuffer || e is OperationCanceledException)
                 throw;
             if (e is ConsumeException ex)
                 ErrorHandler.Send(
                     e,
                     $"Offset: {ex.ConsumerRecord.Offset} -- Key(base64): {Convert.ToBase64String(ex.ConsumerRecord.Message.Key)} -- Value(base64): {Convert.ToBase64String(ex.ConsumerRecord.Message.Value)}"
                 );
-            if (e is JsonException jex)
-                ErrorHandler.Send(jex, kafkaValue?.ToString() ?? "N/A");
-            else
-                ErrorHandler.Send(e, "N/A");
+            ErrorHandler.Send(e, "N/A");
         }
 
         return true;

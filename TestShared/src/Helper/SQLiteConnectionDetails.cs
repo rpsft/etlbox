@@ -69,6 +69,8 @@ public class SQLiteConnectionDetails
         {
             return;
         }
+        // This is solution to https://stackoverflow.com/questions/8511901/system-data-sqlite-close-not-releasing-database-file
+        Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
         File.Delete(sqliteFileName);
     }
 

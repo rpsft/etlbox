@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using Newtonsoft.Json;
 
 namespace TestDatabaseConnectors.Access
 {

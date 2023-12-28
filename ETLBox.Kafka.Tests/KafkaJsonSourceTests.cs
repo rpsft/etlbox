@@ -8,6 +8,7 @@ using ETLBox.Primitives;
 using JetBrains.Annotations;
 using Moq;
 using Xunit.Abstractions;
+using CancellationTokenSource = System.Threading.CancellationTokenSource;
 
 namespace ETLBox.Kafka.Tests;
 
@@ -82,7 +83,13 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
     }
 
     [UsedImplicitly]
-    public record TestRecord(string Name, int IntValue, bool BoolValue, DateTime DateValue, string CamelCase);
+    public record TestRecord(
+        string Name,
+        int IntValue,
+        bool BoolValue,
+        DateTime DateValue,
+        string CamelCase
+    );
 
     [Fact]
     public void ShouldReadTypedObject()
@@ -118,7 +125,13 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
                 b.OfferMessage(
                     It.IsAny<DataflowMessageHeader>(),
                     It.Is(
-                        new TestRecord("test", 1, true, new DateTime(2021, 1, 1), "test"),
+                        new TestRecord(
+                            "test",
+                            1,
+                            true,
+                            new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                            "test"
+                        ),
                         EqualityComparer<TestRecord>.Default
                     ),
                     It.IsAny<ISourceBlock<TestRecord>>(),
@@ -126,7 +139,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
                 )
         );
     }
-   
+
     [Fact]
     public void ShouldReadMultipleObjects()
     {
@@ -162,24 +175,16 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
     public async Task ShouldReadContinuously()
     {
         // Arrange
-        var timeoutSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(15000));
-        var generatorCompletionSource = new CancellationTokenSource();
         ProduceJson("{\"name\":\"test0\"}"); // Add first message synchronously to create topic
-        var generator = Task.Run(
-            async () =>
+        var generator = Task.Run(async () =>
+        {
+            for (var i = 1; i < 10; i++)
             {
-                for (var i = 1; i < 10; i++)
-                {
-                    await Task.Delay(100, timeoutSource.Token);
-                    ProduceJson($"{{\"name\":\"test{i}\"}}");
-                    _output.WriteLine($"Produced test{i}");
-                }
-
-                await Task.Delay(100, timeoutSource.Token);
-                _output.WriteLine("Signaling cancel to main thread");
-                generatorCompletionSource.Cancel();
-            }, timeoutSource.Token
-        );
+                await Task.Delay(100, CancellationToken.None);
+                ProduceJson($"{{\"name\":\"test{i}\"}}");
+                _output.WriteLine($"Produced test{i}");
+            }
+        });
         var (block, target) = SetupMockTarget();
         var kafkaSource = new KafkaJsonSource<ExpandoObject>
         {
@@ -189,20 +194,18 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         kafkaSource.LinkTo(target.Object);
 
         // Act
+        using var timeoutSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(2000));
         var timer = Stopwatch.StartNew();
-        var executeTask = kafkaSource.ExecuteAsync(generatorCompletionSource.Token);
+        var executeTask = kafkaSource.ExecuteAsync(timeoutSource.Token);
         var destinationTask = target.Object.Completion;
 
         // Assert
+        _output.WriteLine("Waiting for completion...");
         await Assert.ThrowsAsync<OperationCanceledException>(
-            async () =>
-            {
-                _output.WriteLine("Waiting for completion...");
-                await Task.WhenAll(executeTask, generator, destinationTask);
-            }
+            () => Task.WhenAll(executeTask, generator, destinationTask)
         );
         timer.Stop();
-        // Should take more than timeout (which is more than generation time)
+        // Should take longer than timeout (which is more than generation time)
         Assert.InRange(timer.ElapsedMilliseconds, 1500, 300000);
         block.Verify(
             b =>
@@ -215,17 +218,29 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
             Times.Exactly(10)
         );
     }
-    
-    private (Mock<ITargetBlock<ExpandoObject>> block, Mock<IDataFlowDestination<ExpandoObject>> target) SetupMockTarget()
+
+    private (
+        Mock<ITargetBlock<ExpandoObject>> block,
+        Mock<IDataFlowDestination<ExpandoObject>> target
+    ) SetupMockTarget()
     {
         var block = new Mock<ITargetBlock<ExpandoObject>>();
-        block.Setup(b =>
-                b.OfferMessage(It.IsAny<DataflowMessageHeader>(), It.IsAny<ExpandoObject>(),
-                    It.IsAny<ISourceBlock<ExpandoObject>>(), It.IsAny<bool>()
-                )
+        block
+            .Setup(
+                b =>
+                    b.OfferMessage(
+                        It.IsAny<DataflowMessageHeader>(),
+                        It.IsAny<ExpandoObject>(),
+                        It.IsAny<ISourceBlock<ExpandoObject>>(),
+                        It.IsAny<bool>()
+                    )
             )
-            .Returns((DataflowMessageHeader _, ExpandoObject messageValue,
-                    ISourceBlock<ExpandoObject> _, bool _
+            .Returns(
+                (
+                    DataflowMessageHeader _,
+                    ExpandoObject messageValue,
+                    ISourceBlock<ExpandoObject> _,
+                    bool _
                 ) =>
                 {
                     _output.WriteLine($"Received message {messageValue}");
@@ -255,15 +270,9 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
 
     private void ProduceJson(string jsonString)
     {
-        var config = new ProducerConfig
-        {
-            BootstrapServers = BootstrapAddress
-        };
+        var config = new ProducerConfig { BootstrapServers = BootstrapAddress };
         using var producer = new ProducerBuilder<Null, string>(config).Build();
-        var message = new Message<Null, string>
-        {
-            Value = jsonString
-        };
+        var message = new Message<Null, string> { Value = jsonString };
         producer.Produce(TopicName, message);
         producer.Flush();
     }
