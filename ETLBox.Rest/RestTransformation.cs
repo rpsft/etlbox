@@ -86,8 +86,10 @@ namespace ETLBox.Rest
             var method = GetMethod(RestMethodInfo.Method);
             var templateUrl = Template.Parse(RestMethodInfo.Url);
             var url = templateUrl.Render(Hash.FromDictionary(input));
+            Logger.LogTrace($"Url: {url}");
             var templateBody = Template.Parse(RestMethodInfo.Body);
             var body = templateBody.Render(Hash.FromDictionary(input));
+            Logger.LogTrace($"Body: {body}");
 
             var retryCount = 0;
             while (retryCount <= RestMethodInfo.RetryCount)
