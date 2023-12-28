@@ -64,9 +64,6 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
                         $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => {Mappings[key]}.",
                         diagnostics.First().GetMessage());
                 }
-                Logger.LogWarning(
-                    $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => '{Mappings[key]}', Message: {diagnostics.First().GetMessage()}"
-                );
                 value = null!;
             }
             else
