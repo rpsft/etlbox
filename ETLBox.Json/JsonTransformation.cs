@@ -37,7 +37,7 @@ namespace ETLBox.Json
                 return values[mapping.Name!];
 
              // Parse the JSON string
-            var jsonObj = JObject.Parse(values[mapping.Name].ToString());
+            var jsonObj = JObject.Parse(values[mapping.Name!].ToString());
 
             // Use JSONPath to retrieve the value
             JToken value = jsonObj.SelectToken(mapping.Path)!;
