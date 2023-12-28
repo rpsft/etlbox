@@ -34,7 +34,7 @@ namespace ETLBox.Json
 
             // If no path is specified, use the whole field
             if (mapping.Path == null)
-                return ((IDictionary<string, object>)source)[mapping.Name!];
+                return values[mapping.Name!];
 
              // Parse the JSON string
             var jsonObj = JObject.Parse(values[mapping.Name].ToString());
