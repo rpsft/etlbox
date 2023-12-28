@@ -28,10 +28,15 @@ namespace ETLBox.Json
 
         public Dictionary<string, JsonMapping> Mappings { get; set; } = new Dictionary<string, JsonMapping>();
 
-        private static string GetValue(ExpandoObject source, JsonMapping mapping)
+        private static object GetValue(ExpandoObject source, JsonMapping mapping)
         {
             var values = source as IDictionary<string, object>;
-            // Parse the JSON string
+
+            // If no path is specified, use the whole field
+            if (mapping.Path == null)
+                return ((IDictionary<string, object>)source)[mapping.Name!];
+
+             // Parse the JSON string
             var jsonObj = JObject.Parse(values[mapping.Name].ToString());
 
             // Use JSONPath to retrieve the value
