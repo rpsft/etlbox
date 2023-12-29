@@ -506,9 +506,10 @@ namespace ALE.ETLBox.Helper.DataFlow
                         break;
                     }
                 }
-                catch (Exception ex)
-                { 
-                    // Ignore
+                catch (ReflectionTypeLoadException)
+                {
+                    // NOTE: Error during GetTypes() from some libraries:
+                    // System.Reflection.ReflectionTypeLoadException: 'Unable to load one or more of the requested types. Could not load type 'Microsoft.AspNetCore.Authentication.Internal.RequestPathBaseCookieBuilder' from assembly 'Microsoft.AspNetCore.Authentication, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'.'
                 }
             }
 
