@@ -72,9 +72,6 @@ namespace ALE.ETLBox.Common.ControlFlow
         /// </summary>
         public static ILoggerFactory LoggerFactory { get; set; } = NullLoggerFactory.Instance;
 
-        public static ILogger GetLogger<T>()
-            => LoggerFactory.CreateLogger<T>();
-
         /// <summary>
         /// Set all settings back to default (which is null or false)
         /// </summary>
