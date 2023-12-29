@@ -28,8 +28,6 @@ namespace ETLBox.Rest
 
         private readonly Func<IHttpClient> _httpClientFactory;
 
-        public ILogger? Logger { get; set; }
-
         public RestMethodInfo RestMethodInfo { get; set; } = null!;
 
         public string ResultField { get; set; } = null!;
