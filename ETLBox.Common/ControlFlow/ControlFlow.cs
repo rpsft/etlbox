@@ -148,19 +148,16 @@ namespace ALE.ETLBox.Common.ControlFlow
             string stage,
             long? loadProcessKey)
         {
-            using (logger.BeginScope("ETL"))
-            {
-                logger.Log(logLevel,
-                    new EventId(0, "ETL"),
-                    new MyLogEvent(message)
-                        .WithProperty("Type", type)
-                        .WithProperty("Action", action)
-                        .WithProperty("Hash", hash)
-                        .WithProperty("Stage", stage)
-                        .WithProperty("LoadProcessKey", loadProcessKey),
-                    (Exception)null,
-                    MyLogEvent.Formatter);
-            }
+            logger.Log(logLevel,
+                new EventId(0, "ETL"),
+                new MyLogEvent(message)
+                    .WithProperty("Type", type)
+                    .WithProperty("Action", action)
+                    .WithProperty("Hash", hash)
+                    .WithProperty("Stage", stage)
+                    .WithProperty("LoadProcessKey", loadProcessKey),
+                (Exception)null,
+                MyLogEvent.Formatter);
         }
     }
 
