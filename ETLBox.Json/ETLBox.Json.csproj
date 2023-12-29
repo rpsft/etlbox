@@ -3,8 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
+    <PackageId>EtlBox.Classic.Json</PackageId>
     <RootNamespace>ALE.ETLBox.Common.DataFlow</RootNamespace>
-    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

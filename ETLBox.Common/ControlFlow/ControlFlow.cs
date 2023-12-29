@@ -72,9 +72,6 @@ namespace ALE.ETLBox.Common.ControlFlow
         /// </summary>
         public static ILoggerFactory LoggerFactory { get; set; } = NullLoggerFactory.Instance;
 
-        public static ILogger GetLogger<T>()
-            => LoggerFactory.CreateLogger<T>();
-
         /// <summary>
         /// Set all settings back to default (which is null or false)
         /// </summary>
@@ -148,19 +145,16 @@ namespace ALE.ETLBox.Common.ControlFlow
             string stage,
             long? loadProcessKey)
         {
-            using (logger.BeginScope("ETL"))
-            {
-                logger.Log(logLevel,
-                    new EventId(0, "ETL"),
-                    new MyLogEvent(message)
-                        .WithProperty("Type", type)
-                        .WithProperty("Action", action)
-                        .WithProperty("Hash", hash)
-                        .WithProperty("Stage", stage)
-                        .WithProperty("LoadProcessKey", loadProcessKey),
-                    null,
-                    MyLogEvent.Formatter);
-            }
+            logger.Log(logLevel,
+                new EventId(0, "ETL"),
+                new MyLogEvent(message)
+                    .WithProperty("Type", type)
+                    .WithProperty("Action", action)
+                    .WithProperty("Hash", hash)
+                    .WithProperty("Stage", stage)
+                    .WithProperty("LoadProcessKey", loadProcessKey),
+                (Exception)null,
+                MyLogEvent.Formatter);
         }
     }
 

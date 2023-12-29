@@ -488,17 +488,22 @@ namespace ALE.ETLBox.Helper.DataFlow
                 typeName = typeName.Remove(typeName.Length - 2, 2);
             }
 
-            var types = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .SelectMany(x => x.GetTypes());
-
-            if (baseType != null && baseType.IsInterface)
+            Type type = null!;
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                types = types
-                    .Where(t => t.GetInterfaces().Any(i => i == baseType));
+                var types = assembly.GetTypes().Where(t => t.Name == typeName);
+                if (baseType != null && baseType.IsInterface)
+                {
+                    types = types
+                        .Where(t => t.GetInterfaces().Any(i => i == baseType));
+                }
+                type = types
+                    .LastOrDefault(t => t.Name == typeName);
+                if (type != null)
+                {
+                    break;
+                }
             }
-            var type = types
-                .FirstOrDefault(t => t.Name == typeName);
 
             return isArray ? type?.MakeArrayType() : type;
         }

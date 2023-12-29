@@ -1,4 +1,5 @@
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
@@ -40,7 +41,7 @@ namespace ALE.ETLBox.DataFlow
 
         public Sort()
         {
-            Logger = Common.ControlFlow.ControlFlow.GetLogger<Sort>();
+            Logger = Common.ControlFlow.ControlFlow.LoggerFactory.CreateLogger<Sort<TInput>>();
         }
 
         public Sort(Comparison<TInput> sortFunction)

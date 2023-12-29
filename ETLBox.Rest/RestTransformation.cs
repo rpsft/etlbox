@@ -5,14 +5,16 @@ using System.Dynamic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ALE.ETLBox;
 using ALE.ETLBox.Common.DataFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.DataFlow;
 using DotLiquid;
 using ETLBox.Primitives;
+using ETLBox.Rest.Models;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
-namespace ALE.ETLBox.DataFlow
+namespace ETLBox.Rest
 {
     [PublicAPI]
     public class RestTransformation : RowTransformation<ExpandoObject>
@@ -25,8 +27,6 @@ namespace ALE.ETLBox.DataFlow
         };
 
         private readonly Func<IHttpClient> _httpClientFactory;
-
-        public ILogger? Logger { get; set; }
 
         public RestMethodInfo RestMethodInfo { get; set; } = null!;
 
@@ -84,8 +84,10 @@ namespace ALE.ETLBox.DataFlow
             var method = GetMethod(RestMethodInfo.Method);
             var templateUrl = Template.Parse(RestMethodInfo.Url);
             var url = templateUrl.Render(Hash.FromDictionary(input));
+            Logger.LogTrace($"Url: {url}");
             var templateBody = Template.Parse(RestMethodInfo.Body);
             var body = templateBody.Render(Hash.FromDictionary(input));
+            Logger.LogTrace($"Body: {body}");
 
             var retryCount = 0;
             while (retryCount <= RestMethodInfo.RetryCount)

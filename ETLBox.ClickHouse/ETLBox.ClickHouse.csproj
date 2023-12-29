@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <LangVersion>default</LangVersion>
-    <RootNamespace>ETLBox.ClickHouse</RootNamespace>
+    <LangVersion>10</LangVersion>
+    <PackageId>EtlBox.Classic.ClickHouse</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +15,12 @@
   <ItemGroup>
     <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="WeCantSpell.Roslyn" Version="2.0.8-beta">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
