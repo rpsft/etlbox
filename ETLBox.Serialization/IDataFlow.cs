@@ -1,10 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
+using ETLBox.Primitives;
 
-namespace ETLBox.Primitives
+namespace ALE.ETLBox.Serialization
 {
     /// <summary>
-    /// Dataflow graph that can be executed. 
+    /// Dataflow graph that can be executed.
     /// </summary>
     /// <remarks>
     /// This abstraction can be used when graph is not created programmatically, but rather

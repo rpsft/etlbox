@@ -109,7 +109,7 @@ namespace TestDatabaseConnectors.DBMerge
                 "Name",
                 new List<TableColumn>
                 {
-                    new(nameof(Name.ID), "INT", false, true, true),
+                    new(nameof(Name.ID), "INT", false, true),
                     new(nameof(Name.FIRST_NAME), "NVARCHAR(100)", true),
                     new(nameof(Name.LAST_NAME), "NVARCHAR(100)", true)
                 }
@@ -129,22 +129,11 @@ namespace TestDatabaseConnectors.DBMerge
             SqlTask.ExecuteNonQueryFormatted(
                 sourceConnection,
                 "Test data",
-                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
-                VALUES ('Bugs', NULL)"
+                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.ID):q)}, {nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
+                VALUES (1, 'Bugs', NULL),
+                       (2, NULL, 'Pig'),
+                       (3, 'Franky', NULL)"
             );
-            SqlTask.ExecuteNonQueryFormatted(
-                sourceConnection,
-                "Test data",
-                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
-                VALUES (NULL, 'Pig')"
-            );
-            SqlTask.ExecuteNonQueryFormatted(
-                sourceConnection,
-                "Test data",
-                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
-                VALUES ('Franky', NULL)"
-            );
-
             SqlTask.ExecuteNonQueryFormatted(
                 destConnection,
                 "Test data",

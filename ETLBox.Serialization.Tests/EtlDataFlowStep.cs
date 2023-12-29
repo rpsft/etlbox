@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using ALE.ETLBox.Helper.DataFlow;
+using ALE.ETLBox.Serialization;
+using ALE.ETLBox.Serialization.DataFlow;
 using ETLBox.Primitives;
-using Microsoft.Extensions.Logging;
 
-namespace TestHelper.Models
+namespace ETLBox.Serialization.Tests
 {
     [Serializable]
     public class EtlDataFlowStep : IDataFlow, IXmlSerializable
@@ -28,7 +23,7 @@ namespace TestHelper.Models
 
         public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; }
 
-        public XmlSchema GetSchema() => null;
+        public XmlSchema? GetSchema() => null;
 
         public virtual void ReadXml(XmlReader reader)
         {
@@ -43,10 +38,11 @@ namespace TestHelper.Models
         public void Invoke(CancellationToken cancellationToken)
         {
             Source.Execute(cancellationToken);
-            var tasks = Destinations.Select(d => d.Completion)
+            var tasks = Destinations
+                .Select(d => d.Completion)
                 .Concat(ErrorDestinations.Select(ed => ed.Completion))
                 .ToArray();
-            Task.WaitAll(tasks);
+            Task.WaitAll(tasks, CancellationToken.None);
         }
     }
 }

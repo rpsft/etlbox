@@ -26,12 +26,8 @@ public class JsonTransformationTests
         {
             Mappings =
             {
-                ["Col1"] = new JsonTransformation.Mapping("data",
-                    "$.Data.Id"
-                ),
-                ["Col2"] = new JsonTransformation.Mapping("data",
-                    "$.Data.Name"
-                )
+                ["Col1"] = new JsonTransformation.Mapping("data", "$.Data.Id"),
+                ["Col2"] = new JsonTransformation.Mapping("data", "$.Data.Name")
             }
         };
 
@@ -43,7 +39,8 @@ public class JsonTransformationTests
 
         //Assert
         Assert.Equal(3, dest.Data.Count);
-        Assert.Collection(dest.Data,
+        Assert.Collection(
+            dest.Data,
             (dynamic d) =>
             {
                 Assert.Equal(1, d.Col1);

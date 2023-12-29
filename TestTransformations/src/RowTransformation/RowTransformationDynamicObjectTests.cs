@@ -9,9 +9,7 @@ namespace TestTransformations.RowTransformation
     public class RowTransformationDynamicObjectTests : TransformationsTestBase
     {
         public RowTransformationDynamicObjectTests(TransformationsDatabaseFixture fixture)
-            : base(fixture)
-        {
-        }
+            : base(fixture) { }
 
         [Fact]
         public void ConvertIntoObject()
@@ -22,13 +20,12 @@ namespace TestTransformations.RowTransformation
 
             //Act
             var trans = new RowTransformation<ExpandoObject>(csvdata =>
-                {
-                    dynamic c = csvdata;
-                    c.Col1 = c.Header1;
-                    c.Col2 = c.Header2;
-                    return c;
-                }
-            );
+            {
+                dynamic c = csvdata;
+                c.Col1 = c.Header1;
+                c.Col2 = c.Header2;
+                return c;
+            });
             var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "DestinationRowTransformationDynamic"
@@ -40,42 +37,6 @@ namespace TestTransformations.RowTransformation
 
             //Assert
             dest2Columns.AssertTestData();
-        }
-
-        [Fact]
-        public void DestinationJsonTransformationTest()
-        {
-            //Arrange
-            var dest2Columns = new TwoColumnsTableFixture("DestinationJsonTransformation");
-            var objSet = new ExpandoObject[]
-            {
-                CreateObject(@"{ ""Data"": { ""Id"": 1, ""Name"": ""Test1"" } }"),
-                CreateObject(@"{ ""Data"": { ""Id"": 2, ""Name"": ""Test2"" } }"),
-                CreateObject(@"{ ""Data"": { ""Id"": 3, ""Name"": ""Test3"" } }"),
-            };
-
-            var source = new MemorySource<ExpandoObject>(objSet);
-
-            //Act
-            var trans = new JsonTransformation();
-            trans.Mappings["Col1"] = new JsonMapping { Name = "data", Path = "$.Data.Id" };
-            trans.Mappings["Col2"] = new JsonMapping { Name = "data", Path = "$.Data.Name" };
-
-            var dest = new DbDestination<ExpandoObject>(SqlConnection, dest2Columns.TableName);
-            source.LinkTo(trans);
-            trans.LinkTo(dest);
-            source.Execute();
-            dest.Wait();
-
-            //Assert
-            dest2Columns.AssertTestData();
-        }
-
-                private ExpandoObject CreateObject(string v)
-        {
-            dynamic obj = new ExpandoObject();
-            obj.data = v;
-            return obj as ExpandoObject;
         }
     }
 }

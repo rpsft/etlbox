@@ -33,4 +33,8 @@
     <PackageReference Update="JunitXml.TestLogger" Version="3.0.134" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="src\Models\" />
+  </ItemGroup>
+
 </Project>

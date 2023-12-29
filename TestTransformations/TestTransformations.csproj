@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ETLBox.ClickHouse\ETLBox.ClickHouse.csproj" />
-    <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
     <ProjectReference Include="..\ETLBox.Rest\ETLBox.Rest.csproj" />
+    <ProjectReference Include="..\ETLBox.Serialization\ETLBox.Serialization.csproj" />
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
     <ProjectReference Include="..\TestHelper\TestHelper.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />

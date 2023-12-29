@@ -1,10 +1,13 @@
+using System;
+using System.Globalization;
 using System.Linq;
 
-namespace ALE.ETLBox.Helper.DataFlow
+namespace ALE.ETLBox.Serialization.DataFlow
 {
     internal static class TypeExtensions
     {
-        private static readonly Type[] s_nullableTypes = {
+        private static readonly Type[] s_nullableTypes =
+        {
             typeof(string),
             typeof(DateTime?),
             typeof(Guid?),
@@ -84,7 +87,7 @@ namespace ALE.ETLBox.Helper.DataFlow
 
             if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
-                objValue = DateTime.Parse(value);
+                objValue = DateTime.Parse(value, CultureInfo.CurrentCulture);
                 return true;
             }
 

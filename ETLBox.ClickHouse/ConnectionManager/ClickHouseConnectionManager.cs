@@ -17,7 +17,7 @@ namespace ETLBox.ClickHouse.ConnectionManager
     public class ClickHouseConnectionManager : DbConnectionManager<ClickHouseConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =
-                    ConnectionManagerType.ClickHouse;
+            ConnectionManagerType.ClickHouse;
         public override string QB { get; } = @"`";
         public override string QE { get; } = @"`";
         public override CultureInfo ConnectionCulture => CultureInfo.CurrentCulture;
@@ -79,7 +79,8 @@ namespace ETLBox.ClickHouse.ConnectionManager
                 DbConnection.Open();
             }
             using var cmd = DbConnection.CreateCommand();
-            cmd.CommandText = $@"
+            cmd.CommandText =
+                $@"
 INSERT INTO {QB}{tableName}{QE}
 FORMAT CSV
 {csvData}";
@@ -89,32 +90,35 @@ FORMAT CSV
 
         private string? GetValue(object? r, TableColumn col)
         {
-            if (r == null)
+            switch (r)
             {
-                return "";
+                case null:
+                    return "";
+                case DateTime
+                    when new[] { "DATE", "NULLABLE(DATE)" }.Contains(col.DataType.ToUpper()):
+                    return $"{r:yyyy-MM-dd}";
+                case DateTime:
+                    return $"{r:yyyy-MM-dd HH:mm:ss}";
+                case decimal
+                or int
+                or long
+                or double
+                or float:
+                    return Convert.ToString(r, CultureInfo.InvariantCulture);
             }
-            if (r is DateTime && new[] { "DATE", "NULLABLE(DATE)" }.Contains(col.DataType.ToUpper()))
-            {
-                return $"{r:yyyy-MM-dd}";
-            }
-            if (r is DateTime)
-            {
-                return $"{r:yyyy-MM-dd HH:mm:ss}";
-            }
-            if (r is decimal or int or long or double or float)
-            {
-                return Convert.ToString(r, CultureInfo.InvariantCulture);
-            }
-            if (!DataTypeConverter.IsCharTypeDefinition(col.DataType) 
-                && !col.DataType.ToUpper().Contains("STR"))
+
+            if (
+                !DataTypeConverter.IsCharTypeDefinition(col.DataType)
+                && !col.DataType.ToUpper().Contains("STR")
+            )
             {
                 return ConvertToType(r, col.DataType);
             }
-            if (r is bool)
+            if (r is bool b)
             {
-                return (bool)r ? "1" : "0";
+                return b ? "1" : "0";
             }
-            var value = r?.ToString()!.Replace(@"""", @"""""");
+            var value = r.ToString()!.Replace(@"""", @"""""");
             return $@"""{value}""";
         }
 
@@ -141,7 +145,7 @@ FORMAT CSV
                 return Convert.ToBoolean(r, CultureInfo.InvariantCulture).ToString();
             }
             else
-            { 
+            {
                 return r?.ToString();
             }
         }

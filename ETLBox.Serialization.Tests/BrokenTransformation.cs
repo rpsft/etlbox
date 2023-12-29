@@ -1,12 +1,11 @@
-using System;
-using System.Dynamic;
+﻿using System.Dynamic;
 using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
 
-namespace TestHelper.Models
+namespace ETLBox.Serialization.Tests
 {
     [PublicAPI]
-    public class BrokenTransformation : RowTransformation<ExpandoObject>
+    public sealed class BrokenTransformation : RowTransformation<ExpandoObject>
     {
         public BrokenTransformation()
         {

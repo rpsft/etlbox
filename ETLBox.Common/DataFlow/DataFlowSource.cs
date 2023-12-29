@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace ALE.ETLBox.Common.DataFlow
 {
     [PublicAPI]
-    public abstract class DataFlowSource<TOutput> : DataFlowTask
+    public abstract class DataFlowSource<TOutput> : DataFlowTask, ILinkErrorSource
     {
         public ISourceBlock<TOutput> SourceBlock => Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new();
@@ -17,8 +17,7 @@ namespace ALE.ETLBox.Common.DataFlow
 
         public abstract void Execute(CancellationToken cancellationToken);
 
-        public void Execute()
-            => Execute(CancellationToken.None);
+        public void Execute() => Execute(CancellationToken.None);
 
         public Task ExecuteAsync(CancellationToken cancellationToken = default)
         {

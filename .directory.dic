@@ -296,3 +296,5 @@ startup
 Uint
 Ulong
 Ushort
+deserialization
+namespace
