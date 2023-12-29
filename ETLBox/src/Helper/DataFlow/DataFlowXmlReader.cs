@@ -491,25 +491,17 @@ namespace ALE.ETLBox.Helper.DataFlow
             Type type = null!;
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                try
+                var types = assembly.GetTypes().Where(t => t.Name == typeName);
+                if (baseType != null && baseType.IsInterface)
                 {
-                    var types = assembly.GetTypes().Where(t => t.Name == typeName);
-                    if (baseType != null && baseType.IsInterface)
-                    {
-                        types = types
-                            .Where(t => t.GetInterfaces().Any(i => i == baseType));
-                    }
-                    type = types
-                        .LastOrDefault(t => t.Name == typeName);
-                    if (type != null)
-                    {
-                        break;
-                    }
+                    types = types
+                        .Where(t => t.GetInterfaces().Any(i => i == baseType));
                 }
-                catch (ReflectionTypeLoadException)
+                type = types
+                    .LastOrDefault(t => t.Name == typeName);
+                if (type != null)
                 {
-                    // NOTE: Error during GetTypes() from some libraries:
-                    // System.Reflection.ReflectionTypeLoadException: 'Unable to load one or more of the requested types. Could not load type 'Microsoft.AspNetCore.Authentication.Internal.RequestPathBaseCookieBuilder' from assembly 'Microsoft.AspNetCore.Authentication, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'.'
+                    break;
                 }
             }
 
