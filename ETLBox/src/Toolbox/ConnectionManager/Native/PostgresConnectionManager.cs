@@ -58,10 +58,18 @@ FROM STDIN (FORMAT BINARY)"
                     var val = data.GetValue(ordinal);
                     if (val != null)
                     {
-                        var convertedVal = Convert.ChangeType(
-                            data.GetValue(ordinal),
-                            colDef.NETDataType
-                        );
+                        object convertedVal;
+                        if (colDef.NETDataType == typeof(System.Guid) && (val is string))
+                        {
+                            convertedVal = Guid.Parse((string)val);
+                        }
+                        else
+                        {
+                            convertedVal = Convert.ChangeType(
+                                val,
+                                colDef.NETDataType
+                                );
+                        }
                         writer.Write(convertedVal, colDef.InternalDataType.ToLower());
                     }
                     else
