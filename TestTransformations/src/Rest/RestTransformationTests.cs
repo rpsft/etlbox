@@ -159,6 +159,68 @@ namespace TestTransformations.Rest
             res!["jsonResponse"].Should().Be(100);
         }
 
+        [Fact]
+        public void RestTransformation_ShouldReturnErrorField()
+        {
+            //Arrange
+            dynamic data = new ExpandoObject();
+            data.urlRouteParameter = "Tom";
+            data.urlQueryParameter = 46;
+            data.port = 90210;
+
+            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
+
+            MemoryDestination<ExpandoObject> destination = new MemoryDestination<ExpandoObject>();
+
+            var httpClientMock = new Mock<IHttpClient>();
+            httpClientMock
+                .Setup(x => x.InvokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<HttpMethod>(),
+                    It.IsAny<Dictionary<string, string>>(),
+                    It.IsAny<string>()))
+                .Throws(() => new InvalidOperationException("Some error occured"));
+
+            RestTransformation trans1 = new RestTransformation(() => httpClientMock.Object)
+            {
+                RestMethodInfo = new RestMethodInfo
+                {
+                    Url = "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
+                    Body = @"{""PromoActionApiInternal"": {
+                        ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
+                        ""TeasersUrl"": ""/image/download/"",
+                        ""ImageDomainUrl"": ""http://localhost:{{port}}"",
+                        ""OptInCheckUrlDomainUrl"": ""http://localhost:{{port}}"",
+                        ""OptInRelativeUrlTemplate"": ""/Optin/{0}/{1}/{2}""
+                    }
+                }",
+                    Headers = new() { { "header1", "testHeaderValue" } },
+                    Method = "GET",
+                    RetryCount = 2,
+                    RetryInterval = 5
+                },
+                ResultField = "result",
+                ExceptionField = "error",
+                FailOnError = false
+            };
+
+            //Act
+            source.LinkTo(trans1).LinkTo(destination);
+
+            //Assert
+            source.Execute();
+            destination.Wait();
+
+            var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object>;
+
+            dest.Should().NotBeNull();
+            var res = dest!["result"] as IDictionary<string, object>;
+
+            res.Should().NotBeNull();
+
+            res!["error"].Should().Be("Exception: Some error occured");
+        }
+
         private static string GetCsv()
         {
             var sb = new StringBuilder();
