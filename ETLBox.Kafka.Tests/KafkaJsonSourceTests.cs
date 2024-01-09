@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks.Dataflow;
 using ALE.ETLBox.DataFlow;
 using Confluent.Kafka;
+using DotNet.Testcontainers.Configurations;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
 using Moq;
@@ -21,12 +22,12 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
 
     private string TopicName { get; } = $"test-{Guid.NewGuid()}";
 
-    private ConsumerConfig GetConsumerConfig(bool enablePartitionEof)
+    private ConsumerConfig GetConsumerConfig(bool enablePartitionEof, string? topicName = null)
     {
         return new ConsumerConfig
         {
             BootstrapServers = BootstrapAddress,
-            GroupId = "test-group",
+            GroupId = $"{topicName ?? TopicName}-group",
             AutoOffsetReset = AutoOffsetReset.Earliest,
             EnablePartitionEof = enablePartitionEof
         };
@@ -45,10 +46,36 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         const string jsonString = "{\"name\":\"test\"}";
         // Act
         ProduceJson(jsonString);
-        var result = ConsumeJson().ToArray();
+        var result = ConsumeJson(true, CancellationToken.None).ToArray();
         // Assert
         Assert.Single(result);
         Assert.Equal(jsonString, result[0]);
+    }
+
+    [Fact]
+    public void ShouldProduceAndConsumeDirectlyToKafkaWithMultipleTopics()
+    {
+        // Arrange
+        var preTopic = $"{TopicName}-pre";
+        ProduceJson("{\"name\":\"direct-test-pre\"}", preTopic); // Add first message synchronously to create topic
+        ProduceJson("{\"name\":\"direct-test-0\"}"); // Add first message synchronously to create topic
+        ProduceJson("{\"name\":\"direct-test-1\"}");
+        var timeout = TimeSpan.FromSeconds(1.0);
+
+        // Act
+        var preResults = ConsumeJson(true, CancellationToken.None, preTopic).ToList();
+
+        var sw = new Stopwatch();
+        sw.Start();
+        var cancellationToken = new CancellationTokenSource(timeout).Token;
+        var results = ConsumeJson(false, cancellationToken).ToList();
+
+        sw.Stop();
+
+        // Assert
+        Assert.InRange(sw.ElapsedMilliseconds, timeout.TotalMilliseconds, 300000);
+        Assert.Single(preResults);
+        Assert.Equal(2, results.Count);
     }
 
     [Fact]
@@ -182,11 +209,11 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
             {
                 await Task.Delay(100, CancellationToken.None);
                 ProduceJson($"{{\"name\":\"test{i}\"}}");
-                _output.WriteLine($"Produced test{i}");
+                _output.WriteLine($"Produced test {i} to topic {TopicName}");
             }
         });
         var (block, target) = SetupMockTarget();
-        var kafkaSource = new KafkaJsonSource<ExpandoObject>
+        var kafkaSource = new TestKafkaJsonSource(_output)
         {
             ConsumerConfig = GetConsumerConfig(false),
             Topic = TopicName
@@ -252,14 +279,32 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         return (block, target);
     }
 
-    private IEnumerable<string> ConsumeJson()
+    private IEnumerable<string> ConsumeJson(
+        bool enablePartitionEof,
+        CancellationToken cancellationToken,
+        string? topicName = null
+    )
     {
-        using var consumer = new ConsumerBuilder<Ignore, string>(GetConsumerConfig(true)).Build();
-        consumer.Subscribe(TopicName);
+        using var consumer = new ConsumerBuilder<Ignore, string>(
+            GetConsumerConfig(enablePartitionEof, topicName)
+        ).Build();
+        _output.WriteLine($"Subscribing to topic {topicName ?? TopicName}...");
+        consumer.Subscribe(topicName ?? TopicName);
         while (true)
         {
-            var consumeResult = consumer.Consume();
-            if (consumeResult.IsPartitionEOF)
+            ConsumeResult<Ignore, string> consumeResult;
+            try
+            {
+                consumeResult = consumer.Consume(cancellationToken);
+                _output.WriteLine(
+                    $"Consumed direct message {consumeResult.Message?.Value ?? "null"}"
+                );
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            if (consumeResult.IsPartitionEOF || consumeResult.Message is null)
             {
                 break;
             }
@@ -268,12 +313,74 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         }
     }
 
-    private void ProduceJson(string jsonString)
+    private IEnumerable<string> ConsumeJsonStub(
+        bool enablePartitionEof,
+        CancellationToken cancellationToken,
+        string? topicName = null
+    )
+    {
+        using var consumer = new ConsumerBuilder<Ignore, string>(
+            new ConsumerConfig
+            {
+                BootstrapServers = BootstrapAddress,
+                GroupId = "test-group-pre",
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                EnablePartitionEof = enablePartitionEof
+            }
+        ).Build();
+        _output.WriteLine($"Subscribing to topic {topicName ?? TopicName}...");
+        consumer.Subscribe(topicName ?? TopicName);
+        while (true)
+        {
+            ConsumeResult<Ignore, string>? consumeResult;
+            try
+            {
+                consumeResult = consumer.Consume(cancellationToken);
+                _output.WriteLine(
+                    $"Consumed direct message {consumeResult?.Message?.Value ?? "null"}"
+                );
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            if (consumeResult?.IsPartitionEOF == true || consumeResult?.Message is null)
+            {
+                break;
+            }
+
+            yield return consumeResult.Message.Value;
+        }
+    }
+
+    private void ProduceJson(string jsonString, string? topicName = null)
     {
         var config = new ProducerConfig { BootstrapServers = BootstrapAddress };
         using var producer = new ProducerBuilder<Null, string>(config).Build();
         var message = new Message<Null, string> { Value = jsonString };
-        producer.Produce(TopicName, message);
+        _output.WriteLine(
+            $"Producing message {message.Value} to topic {topicName ?? TopicName}..."
+        );
+        producer.Produce(topicName ?? TopicName, message);
         producer.Flush();
+    }
+}
+
+public class TestKafkaJsonSource : KafkaJsonSource<ExpandoObject>
+{
+    private readonly ITestOutputHelper _output;
+
+    public TestKafkaJsonSource(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
+    protected override ExpandoObject? ConvertToOutputValue(
+        string kafkaValue,
+        Action<Exception, string>? logRowOnError = null
+    )
+    {
+        _output.WriteLine($"Converting message {kafkaValue}");
+        return base.ConvertToOutputValue(kafkaValue, logRowOnError);
     }
 }
