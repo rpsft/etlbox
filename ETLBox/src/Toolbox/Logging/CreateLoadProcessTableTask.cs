@@ -1,7 +1,6 @@
-﻿using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
-using ETLBox.Primitives;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Logging
 {
@@ -24,6 +23,10 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
+            if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+            {
+                throw new NotSupportedException($"'{ConnectionManager.ConnectionManagerType}' is not supported");
+            }
             LoadProcessTable.CopyTaskProperties(this);
             LoadProcessTable.DisableLogging = true;
             LoadProcessTable.Create();
