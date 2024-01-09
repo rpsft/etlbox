@@ -76,7 +76,9 @@ namespace TestDatabaseConnectors.DBSource
             FourColumnsTableFixture d4C = new FourColumnsTableFixture(
                 connection,
                 "DbDestinationExtended",
-                1
+                IsIdentitySupported(connection)
+                    ? 1
+                    : -1
             );
 
             //Act

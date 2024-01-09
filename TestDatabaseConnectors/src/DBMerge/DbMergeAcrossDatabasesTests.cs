@@ -129,7 +129,7 @@ namespace TestDatabaseConnectors.DBMerge
             SqlTask.ExecuteNonQueryFormatted(
                 sourceConnection,
                 "Test data",
-                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.ID):q)}, {nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
+                $@"INSERT INTO {nameof(Name):q} ({nameof(Name.ID):q}, {nameof(Name.FIRST_NAME):q}, {nameof(Name.LAST_NAME):q})
                 VALUES (1, 'Bugs', NULL),
                        (2, NULL, 'Pig'),
                        (3, 'Franky', NULL)"

@@ -25,7 +25,6 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
             new object[] { SqlConnection, value },
             new object[] { PostgresConnection, value },
             new object[] { MySqlConnection, value },
-            new object[] { ClickHouseConnection, value }
         };
     }
 

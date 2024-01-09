@@ -33,16 +33,19 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnsAtTheBeginning(IConnectionManager connection)
         {
             //Arrange
+            var identityIndex = IsIdentitySupported(connection)
+                ? 0
+                : -1;
             FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
-                identityColumnIndex: 0
+                identityColumnIndex: identityIndex
             );
             source4Columns.InsertTestData();
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
-                identityColumnIndex: 0
+                identityColumnIndex: identityIndex
             );
 
             //Act

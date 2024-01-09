@@ -326,7 +326,7 @@ namespace TestControlFlowTasks
             );
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CopyTableUsingTableDefinition(IConnectionManager connection)
         {
             //Arrange
@@ -349,6 +349,31 @@ namespace TestControlFlowTasks
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable10_copy"));
         }
+
+        [Fact]
+        public void CopyTableUsingTableDefinitionClickhouse()
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>
+            {
+                new("Id", "INT", allowNulls: false, isPrimaryKey: true),
+                new("value1", "NVARCHAR(10)", allowNulls: true),
+                new("value2", "DECIMAL(10,2)", allowNulls: false) { DefaultValue = "3.12" }
+            };
+            CreateTableTask.Create(ClickHouseConnection, "CreateTable10", columns);
+
+            //Act
+            var definition = TableDefinition.GetDefinitionFromTableName(
+                ClickHouseConnection,
+                "CreateTable10"
+            );
+            definition.Name = "CreateTable10_copy";
+            CreateTableTask.Create(ClickHouseConnection, definition);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(ClickHouseConnection, "CreateTable10_copy"));
+        }
+
 
         [Theory, MemberData(nameof(Connections))]
         public void CreateTableWithPKConstraintName(IConnectionManager connection)

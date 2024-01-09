@@ -4,8 +4,10 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
@@ -84,6 +86,20 @@ public sealed class DataFlowXmlReader
             }
             InitializeRootPropertiesFromXml(reader);
         }
+    }
+
+    public static T Deserialize<T>(
+        string xml,
+        ErrorLogDestination errorLogDestination) where T : IDataFlow, new()
+    {
+        MemoryStream stream;
+        XmlReader xmlReader;
+        stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+        xmlReader = XmlReader.Create(stream);
+        var step = Activator.CreateInstance<T>();
+        var reader = new DataFlowXmlReader(step, errorLogDestination);
+        reader.Read(xmlReader);
+        return step;
     }
 
     private void InitializeRootPropertiesFromXml(XmlReader reader)
@@ -446,26 +462,19 @@ public sealed class DataFlowXmlReader
             return;
         }
 
-        if (instance is not IDataFlowLinkSource<ExpandoObject> source)
-        {
-            throw new InvalidDataException(
-                $"Configuration error, Type '{instance.GetType().Name}' is not implemented {nameof(IDataFlowLinkSource<ExpandoObject>)}"
-            );
-        }
-
         using var reader = propXml.CreateReader();
         reader.MoveToContent();
         var root = (XElement)XNode.ReadFrom(reader);
         foreach (var element in root.Elements())
         {
-            AddDestinationAndInvokeMethod(element, method, source);
+            AddDestinationAndInvokeMethod(element, method, instance);
         }
     }
 
     private void AddDestinationAndInvokeMethod(
         XElement element,
         MethodBase method,
-        IDataFlowLinkSource<ExpandoObject> source
+        object source
     )
     {
         // This should be LinkTo, LinkErrorTo, or similar linking method with single IDataFlowLinkTarget<> parameter
@@ -494,6 +503,11 @@ public sealed class DataFlowXmlReader
         {
             _dataFlow.Destinations.Add(dest);
         }
+        if (obj is IDataFlowDestination<ETLBoxError> err)
+        {
+            _dataFlow.ErrorDestinations.Add(err);
+        }
+
         // Call LinkTo or LinkErrorTo method
         method.Invoke(source, new[] { obj });
     }
