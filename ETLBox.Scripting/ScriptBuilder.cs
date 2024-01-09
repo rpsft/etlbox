@@ -297,7 +297,6 @@ SOURCE CODE:
         HashSet<Assembly> assemblies = new HashSet<Assembly>
         {
             typeof(Attribute).Assembly,
-            typeof(ExpandoObject).Assembly
         };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;

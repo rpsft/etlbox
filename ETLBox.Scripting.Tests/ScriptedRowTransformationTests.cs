@@ -112,6 +112,28 @@ public class ScriptedRowTransformationTests
         );
     }
 
+    [Fact]
+    public void ShouldNotFailTransformExpandoObjectWithEmptySource()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(new ExpandoObject());
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+        script.FailOnMissingField = false;
+        script.Mappings.Add("NewId", "Id + 1");
+        script.Mappings.Add("NewName", "$\"New{Name}\"");
+        script.Mappings.Add("NewMissingField", "$\"New{MissingField}\"");
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        // Assert
+        Assert.Single(memoryDestination.Data);
+    }
+
     private static ExpandoObject CreateTestDataItem(int id, string name)
     {
         var result = new ExpandoObject();
