@@ -19,7 +19,7 @@ namespace TestNonParallel.Logging.LoadProcessTable
             ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
-        [Theory, MemberData(nameof(AllSqlConnections))]
+        [Theory, MemberData(nameof(AllSqlConnectionsWithoutClickHouse))]
         public void CreateLoadProcessTable(IConnectionManager connection)
         {
             //Arrange

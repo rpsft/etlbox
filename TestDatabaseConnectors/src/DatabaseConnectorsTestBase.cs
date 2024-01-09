@@ -96,6 +96,11 @@ namespace TestDatabaseConnectors
             };
         }
 
+        protected bool IsIdentitySupported(IConnectionManager connection)
+        {
+            return connection.ConnectionManagerType != ConnectionManagerType.ClickHouse;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)

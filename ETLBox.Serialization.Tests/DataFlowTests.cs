@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Serialization;
 using ALE.ETLBox.Serialization.DataFlow;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -151,13 +152,14 @@ namespace ETLBox.Serialization.Tests
                         <LinkTo>
                             <BrokenTransformation>
                                 <LinkTo>
-                                    <MemoryDestination></MemoryDestination>
+                                    <MemoryDestination>
+                                    </MemoryDestination>
                                 </LinkTo>
+                                <LinkErrorTo>
+                                    <ErrorLogDestination/>
+                                </LinkErrorTo>
                             </BrokenTransformation>
                         </LinkTo>
-                        <LinkErrorTo>
-                            <ErrorLogDestination/>
-                        </LinkErrorTo>
                     </CustomCsvSource>
 		        </EtlDataFlowStep>";
 
@@ -192,6 +194,38 @@ namespace ETLBox.Serialization.Tests
             );
         }
 
+        [Theory]
+        [InlineData("MemoryDestination")]
+        [InlineData("DbDestination")]
+        [InlineData("CsvDestination")]
+        public void DataFlow_Deserialize_ShouldReturnErrorDestinations_NotEmpty(string dest)
+        {
+            // Arrange
+            var xml =
+                @$"<EtlDataFlowStep>
+                    <CustomCsvSource>
+                        <LinkTo>
+                            <{dest}>
+                                <LinkErrorTo>
+                                    <ErrorLogDestination/>
+                                </LinkErrorTo>
+                            </{dest}>
+                        </LinkTo>
+                    </CustomCsvSource>
+		        </EtlDataFlowStep>";
+
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
+
+            // Act
+            var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+
+            // Assert
+            step.ErrorDestinations.Should().NotBeNull();
+            step.ErrorDestinations.Should().HaveCount(1);
+            step.ErrorDestinations.Should().AllBeAssignableTo<ErrorLogDestination>();
+        }
+
         [Fact]
         public void Should_LinkAllErrors()
         {
@@ -204,11 +238,7 @@ namespace ETLBox.Serialization.Tests
             var errorLogDestination = new ErrorLogDestination();
 
             // Act
-            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
-            using var xmlReader = XmlReader.Create(stream);
-            var step = Activator.CreateInstance<EtlDataFlowStep>();
-            var reader = new DataFlowXmlReader(step, errorLogDestination);
-            reader.Read(xmlReader);
+            EtlDataFlowStep step = DataFlowXmlReader.Deserialize<EtlDataFlowStep>(xml, errorLogDestination);
 
             // Assert
             step.ErrorDestinations.Should().NotBeNull();

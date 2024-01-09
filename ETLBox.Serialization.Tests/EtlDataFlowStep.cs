@@ -13,21 +13,22 @@ namespace ETLBox.Serialization.Tests
     {
         public Guid? ReferenceId { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public int? TimeoutMilliseconds { get; set; }
 
-        public IDataFlowSource<ExpandoObject> Source { get; set; }
+        public IDataFlowSource<ExpandoObject> Source { get; set; } = null!;
 
-        public IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; }
+        public IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; } = null!;
 
-        public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; }
+        public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; } = null!;
 
         public XmlSchema? GetSchema() => null;
 
         public virtual void ReadXml(XmlReader reader)
         {
-            this.ReadFromXml(reader);
+            var xmlReader = new DataFlowXmlReader(this);
+            xmlReader.Read(reader);
         }
 
         public void WriteXml(XmlWriter writer)
