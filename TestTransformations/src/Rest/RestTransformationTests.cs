@@ -19,7 +19,7 @@ namespace TestTransformations.Rest
     public class RestTransformationTests
     {
         [Fact]
-        public void RestTransformationRestMethodAsyncTest()
+        public void RestTransformation_RestMethodAsyncTest()
         {
             //Arrange
             dynamic data = new ExpandoObject();
