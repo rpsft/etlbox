@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Text;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.DataFlow
@@ -24,7 +25,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (method == HttpMethod.Post || method == HttpMethod.Put)
                 {
-                    request.Content = new StringContent(body);
+                    request.Content = new StringContent(body, Encoding.UTF8, "application/json");
                 }
 
                 foreach (var header in headers)

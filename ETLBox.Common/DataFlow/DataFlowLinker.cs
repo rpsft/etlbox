@@ -14,7 +14,7 @@ namespace ALE.ETLBox.Common.DataFlow
     {
         public ISourceBlock<TOutput> SourceBlock { get; set; }
         public bool DisableLogging => CallingTask.DisableLogging;
-        public ILogger Logger { get; set; } = ControlFlow.ControlFlow.LoggerFactory.CreateLogger<DataFlowLinker<TOutput>>();
+        public ILogger Logger => ControlFlow.ControlFlow.LoggerFactory.CreateLogger<DataFlowLinker<TOutput>>();
         public DataFlowTask CallingTask { get; set; }
 
         public DataFlowLinker(DataFlowTask callingTask, ISourceBlock<TOutput> sourceBlock)

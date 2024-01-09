@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -293,7 +294,11 @@ SOURCE CODE:
         IDictionary<string, object?> expando
     )
     {
-        HashSet<Assembly> assemblies = new HashSet<Assembly>();
+        HashSet<Assembly> assemblies = new HashSet<Assembly>
+        {
+            typeof(Attribute).Assembly,
+            typeof(ExpandoObject).Assembly
+        };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;
     }

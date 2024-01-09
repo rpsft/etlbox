@@ -8,7 +8,7 @@ using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Helper.DataFlow
 {
-    internal sealed class DataFlowXmlReader
+    public sealed class DataFlowXmlReader
     {
         private readonly Type[] _types;
         private readonly IDataFlow _dataFlow;
