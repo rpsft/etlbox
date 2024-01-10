@@ -60,7 +60,7 @@ public class JsonTransformationTests
     }
 
     [Fact]
-    public async Task JsonTransformation_ShouldParseGUIDString()
+    public async Task JsonTransformation_ShouldGetAnObjectFromSourceField()
     {
         //Arrange
         dynamic obj = new ExpandoObject();
