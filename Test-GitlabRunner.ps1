@@ -1,1 +1,0 @@
-& gitlab-runner exec docker build_job

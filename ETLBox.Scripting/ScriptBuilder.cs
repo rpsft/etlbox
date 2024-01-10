@@ -241,9 +241,10 @@ SOURCE CODE:
         var startLinePosition = diagnostic.Location.GetLineSpan().StartLinePosition;
         var line = text?.Lines[startLinePosition.Line];
         var pointer = new string(' ', startLinePosition.Character) + "^";
+        var sourceSpan = text?.ToString(diagnostic.Location.SourceSpan);
         return line == null
-            ? $"{diagnostic.ToString()} near '{text?.ToString(diagnostic.Location.SourceSpan)}'"
-            : $"{line}\n{pointer}\n{diagnostic.ToString()} near '{text?.ToString(diagnostic.Location.SourceSpan)}'";
+            ? $"{diagnostic} near '{sourceSpan}'"
+            : $"{line}\n{pointer}\n{diagnostic} near '{sourceSpan}'";
     }
 
     private static int GetExpandoObjectTypeHash(IDictionary<string, object?> expando)

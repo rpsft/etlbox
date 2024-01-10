@@ -27,10 +27,12 @@ namespace TestDatabaseConnectors.DBSource
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void RedirectErrorWithObject(IConnectionManager connection)
+        public async Task RedirectErrorWithObject(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(SQLiteConnectionManager))
-                Task.Delay(100).Wait(); //Database was locked and needs to recover after exception
+            {
+                await Task.Delay(100); //Database was locked and needs to recover after exception
+            }
 
             //Arrange
             CreateSourceTable(connection, "DbSourceErrorLinking");
@@ -51,9 +53,9 @@ namespace TestDatabaseConnectors.DBSource
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
-            source.Execute(CancellationToken.None);
-            dest.Wait();
-            errorDest.Wait();
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
+            await errorDest.Completion;
 
             //Assert
             dest2Columns.AssertTestData();

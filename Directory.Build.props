@@ -9,17 +9,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="JunitXml.TestLogger" Version="3.0.124"/>
+    <PackageReference Include="JunitXml.TestLogger" Version="3.0.134"/>
   </ItemGroup>
   <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WeCantSpell.Roslyn" Version="2.0.7-beta">
+    <PackageReference Include="WeCantSpell.Roslyn" Version="2.0.8-beta">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.1.0.70676">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

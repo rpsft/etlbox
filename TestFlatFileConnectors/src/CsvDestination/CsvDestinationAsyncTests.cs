@@ -17,16 +17,16 @@ namespace TestFlatFileConnectors.CsvDestination
         {
             public override void Execute(CancellationToken cancellationToken)
             {
-                Buffer.SendAsync(new[] { "1", "2" }).Wait();
+                Buffer.SendAsync(new[] { "1", "2" }, cancellationToken).Wait(cancellationToken);
                 Thread.Sleep(100);
-                Buffer.SendAsync(new[] { "3", "4" }).Wait();
+                Buffer.SendAsync(new[] { "3", "4" }, cancellationToken).Wait(cancellationToken);
                 Buffer.Complete();
             }
         }
 
         [Theory]
         [InlineData("AsyncTestFile.csv")]
-        public void WriteAsyncAndCheckLock(string filename)
+        public async Task WriteAsyncAndCheckLock(string filename)
         {
             //Arrange
             if (File.Exists(filename))
@@ -47,11 +47,10 @@ namespace TestFlatFileConnectors.CsvDestination
 
             //Act
             source.LinkTo(dest);
-            source.ExecuteAsync(CancellationToken.None);
-            var dt = dest.Completion;
+            await source.ExecuteAsync(CancellationToken.None);
             while (!File.Exists(filename))
-                Task.Delay(10).Wait();
-            dt.Wait();
+                await Task.Delay(10);
+            await dest.Completion;
 
             //Assert
             Assert.Multiple(

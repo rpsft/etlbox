@@ -5,6 +5,7 @@
         <RootNamespace>ALE.ETLBox.DataFlow</RootNamespace>
         <LangVersion>default</LangVersion>
         <PackageId>EtlBox.Classic.Kafka</PackageId>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,13 +17,6 @@
       <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
       <PackageReference Include="System.Text.Json" Version="7.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="WeCantSpell.Roslyn" Version="2.0.8-beta">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
     </ItemGroup>
 
 </Project>

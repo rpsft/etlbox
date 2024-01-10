@@ -5,10 +5,14 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.Json</PackageId>
+    <RootNamespace>ALE.ETLBox.Common.DataFlow</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+  </ItemGroup>
 </Project>
