@@ -13,6 +13,7 @@ namespace TestTransformations.RowTransformation
         public RowTransformationFluentNotationTests(TransformationsDatabaseFixture fixture)
             : base(fixture) { }
 
+        [PublicAPI]
         public class MySimpleRow
         {
             public int Col1 { get; set; }
@@ -20,71 +21,48 @@ namespace TestTransformations.RowTransformation
         }
 
         [Fact]
-        public void Linking3Transformations()
+        public async Task Linking3Transformations()
         {
             //Arrange
-            var source2Columns = new TwoColumnsTableFixture(
-                "SourceMultipleLinks"
-            );
+            var source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
             source2Columns.InsertTestData();
-            var dest2Columns = new TwoColumnsTableFixture(
-                "DestinationMultipleLinks"
-            );
+            var dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            var source = new DbSource<string[]>(
-                SqlConnection,
-                "SourceMultipleLinks"
-            );
-            var dest = new DbDestination<string[]>(
-                SqlConnection,
-                "DestinationMultipleLinks"
-            );
+            var source = new DbSource<string[]>(SqlConnection, "SourceMultipleLinks");
+            var dest = new DbDestination<string[]>(SqlConnection, "DestinationMultipleLinks");
             var trans1 = new RowTransformation<string[]>(row => row);
             var trans2 = new RowTransformation<string[]>(row => row);
             var trans3 = new RowTransformation<string[]>(row => row);
 
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
-            Task sourceT = source.ExecuteAsync(CancellationToken.None);
-            Task destT = dest.Completion;
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
-            sourceT.Wait();
-            destT.Wait();
             dest2Columns.AssertTestData();
         }
 
         [Fact]
-        public void UsingFluentVoidPredicate()
+        public async Task UsingFluentVoidPredicate()
         {
             //Arrange
-            var source2Columns = new TwoColumnsTableFixture(
-                "SourceMultipleLinks"
-            );
+            var source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
             source2Columns.InsertTestData();
             source2Columns.InsertTestDataSet2();
-            var dest2Columns = new TwoColumnsTableFixture(
-                "DestinationMultipleLinks"
-            );
+            var dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            var source = new DbSource<MySimpleRow>(
-                SqlConnection,
-                "SourceMultipleLinks"
-            );
-            var dest = new DbDestination<MySimpleRow>(
-                SqlConnection,
-                "DestinationMultipleLinks"
-            );
+            var source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
+            var dest = new DbDestination<MySimpleRow>(SqlConnection, "DestinationMultipleLinks");
             var trans1 = new RowTransformation<MySimpleRow>(row => row);
 
             //Act
             source.LinkTo(trans1, row => row.Col1 < 4, row => row.Col1 >= 4).LinkTo(dest);
-            Task sourceT = source.ExecuteAsync(CancellationToken.None);
-            Task destT = dest.Completion;
+
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
-            sourceT.Wait();
-            destT.Wait();
             dest2Columns.AssertTestData();
         }
 
@@ -101,26 +79,15 @@ namespace TestTransformations.RowTransformation
         public void UsingDifferentObjectTypes()
         {
             //Arrange
-            var source2Columns = new TwoColumnsTableFixture(
-                "SourceMultipleLinks"
-            );
+            var source2Columns = new TwoColumnsTableFixture("SourceMultipleLinks");
             source2Columns.InsertTestData();
-            var dest2Columns = new TwoColumnsTableFixture(
-                "DestinationMultipleLinks"
-            );
+            var dest2Columns = new TwoColumnsTableFixture("DestinationMultipleLinks");
 
-            var source = new DbSource<MySimpleRow>(
-                SqlConnection,
-                "SourceMultipleLinks"
+            var source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
+            var dest = new DbDestination<MyOtherRow>(SqlConnection, "DestinationMultipleLinks");
+            var trans1 = new RowTransformation<MySimpleRow, MyOtherRow>(
+                row => new MyOtherRow { ColA = row.Col1, ColB = row.Col2 }
             );
-            var dest = new DbDestination<MyOtherRow>(
-                SqlConnection,
-                "DestinationMultipleLinks"
-            );
-            var trans1 = new RowTransformation<
-                MySimpleRow,
-                MyOtherRow
-            >(row => new MyOtherRow { ColA = row.Col1, ColB = row.Col2 });
 
             //Act
             source.LinkTo<MyOtherRow>(trans1).LinkTo(dest);

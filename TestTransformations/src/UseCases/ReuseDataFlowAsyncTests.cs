@@ -9,14 +9,14 @@ namespace TestTransformations.UseCases
     public class ReuseDataFlowAsyncTests
     {
         [Fact]
-        public void RunReusableFlow()
+        public async Task RunReusableFlow()
         {
             //Arrange
             var r1 = new ReferenceDataFlow(1, "Flow1");
             var r2 = new ReferenceDataFlow(1, "Flow2");
 
             //Act
-            Task.WaitAll(r1.Initialized, r2.Initialized);
+            await Task.WhenAll(r1.Initialized, r2.Initialized);
 
             //Assert
             Assert.Equal("Flow1", r1.Data[1].Value);

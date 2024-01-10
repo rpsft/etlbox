@@ -3,7 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using EtlBox.Logging.Database;
+using ETLBox.Logging.Database;
 using TestNonParallel.Fixtures;
 
 namespace TestNonParallel.Logging

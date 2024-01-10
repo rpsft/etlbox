@@ -4,7 +4,7 @@ using ALE.ETLBox;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using EtlBox.ClickHouse.ConnectionManager;
+using ETLBox.ClickHouse.ConnectionManager;
 using ETLBox.Primitives;
 using TestShared.Helper;
 
