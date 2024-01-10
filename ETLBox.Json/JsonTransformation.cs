@@ -77,6 +77,7 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
     }
 
     private IReadOnlyDictionary<string, JObject> ParseJsonFields(IDictionary<string, object?> source) => Mappings.Values
+        .Where(m => m.Path is not null)
         .Select(x => x.Name)
         .Distinct()
         .Where(key => key != null && source.ContainsKey(key))

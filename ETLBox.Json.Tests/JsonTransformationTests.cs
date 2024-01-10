@@ -1,4 +1,4 @@
-﻿using System.Dynamic;
+using System.Dynamic;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using Xunit;
@@ -57,6 +57,36 @@ public class JsonTransformationTests
                 Assert.Equal("Test3", d.Col2);
             }
         );
+    }
+
+    [Fact]
+    public async Task JsonTransformation_ShouldParseGUIDString()
+    {
+        //Arrange
+        dynamic obj = new ExpandoObject();
+        obj.EventId = Guid.NewGuid();
+
+        var source = new MemorySource<ExpandoObject>(new[] { (ExpandoObject)obj });
+
+        //Act
+        var trans = new JsonTransformation
+        {
+            Mappings =
+            {
+                ["Col1"] = new JsonTransformation.Mapping("EventId", null!)
+            }
+        };
+
+        var dest = new MemoryDestination<ExpandoObject>();
+        source.LinkTo(trans);
+        trans.LinkTo(dest);
+        await source.ExecuteAsync(CancellationToken.None);
+        await dest.Completion;
+
+        //Assert
+        Assert.Single(dest.Data);
+        var res = dest.Data.First() as IDictionary<string, object?>;
+        Assert.Equal(obj.EventId, res["Col1"]);
     }
 
     private static ExpandoObject CreateObject(string v)
