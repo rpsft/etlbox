@@ -25,7 +25,11 @@ namespace ALE.ETLBox.DataFlow
                 return;
             Errors.Add(error);
 
-            if (DisableLogging)
+            if (
+                DisableLogging
+                || !HasLoggingThresholdRows
+                || ProgressCount % LoggingThresholdRows != 0
+            )
             {
                 return;
             }
