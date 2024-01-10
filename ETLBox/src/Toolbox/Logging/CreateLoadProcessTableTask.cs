@@ -23,7 +23,7 @@ namespace ALE.ETLBox.Logging
 
         public void Execute()
         {
-            if (ConnectionManager.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+            if (DbConnectionManager.ConnectionManagerType == ConnectionManagerType.ClickHouse)
             {
                 throw new NotSupportedException($"'{ConnectionManager.ConnectionManagerType}' is not supported");
             }
