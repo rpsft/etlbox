@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -35,6 +34,8 @@ namespace ALE.ETLBox.DataFlow
                 }
 
                 var propertyName = reader.GetString()!;
+                if (options.PropertyNamingPolicy != null)
+                    propertyName = options.PropertyNamingPolicy.ConvertName(propertyName);
                 reader.Read();
                 var value = ReadValue(ref reader, options);
                 expando[propertyName] = value;

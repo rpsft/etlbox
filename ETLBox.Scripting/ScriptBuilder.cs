@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -240,9 +241,10 @@ SOURCE CODE:
         var startLinePosition = diagnostic.Location.GetLineSpan().StartLinePosition;
         var line = text?.Lines[startLinePosition.Line];
         var pointer = new string(' ', startLinePosition.Character) + "^";
+        var sourceSpan = text?.ToString(diagnostic.Location.SourceSpan);
         return line == null
-            ? $"{diagnostic.ToString()} near '{text?.ToString(diagnostic.Location.SourceSpan)}'"
-            : $"{line}\n{pointer}\n{diagnostic.ToString()} near '{text?.ToString(diagnostic.Location.SourceSpan)}'";
+            ? $"{diagnostic} near '{sourceSpan}'"
+            : $"{line}\n{pointer}\n{diagnostic} near '{sourceSpan}'";
     }
 
     private static int GetExpandoObjectTypeHash(IDictionary<string, object?> expando)
@@ -293,7 +295,10 @@ SOURCE CODE:
         IDictionary<string, object?> expando
     )
     {
-        HashSet<Assembly> assemblies = new HashSet<Assembly>();
+        HashSet<Assembly> assemblies = new HashSet<Assembly>
+        {
+            typeof(Attribute).Assembly,
+        };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;
     }

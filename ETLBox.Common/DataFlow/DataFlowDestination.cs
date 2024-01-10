@@ -8,7 +8,10 @@ using JetBrains.Annotations;
 namespace ALE.ETLBox.Common.DataFlow
 {
     [PublicAPI]
-    public abstract class DataFlowDestination<TInput> : DataFlowTask, IDataFlowDestination<TInput>
+    public abstract class DataFlowDestination<TInput>
+        : DataFlowTask,
+            IDataFlowDestination<TInput>,
+            ILinkErrorSource
     {
         public Action OnCompletion { get; set; }
         public Task Completion { get; protected set; }

@@ -39,10 +39,7 @@ namespace ALE.ETLBox.DataFlow
         private Comparison<TInput> _sortFunction;
         private BlockTransformation<TInput, TInput> BlockTransformation { get; set; }
 
-        public Sort()
-        {
-            Logger = Common.ControlFlow.ControlFlow.LoggerFactory.CreateLogger<Sort<TInput>>();
-        }
+        public Sort() { }
 
         public Sort(Comparison<TInput> sortFunction)
             : this()

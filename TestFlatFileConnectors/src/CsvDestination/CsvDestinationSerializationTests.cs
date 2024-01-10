@@ -22,14 +22,17 @@ namespace TestFlatFileConnectors.CsvDestination
             var rowCount = 0;
             //Arrange
             var source = new CustomSource<MySeriRow>(
-                () => new MySeriRow { Col1 = 1, Col2 = new DateTime(2010, 02, 05) },
+                () =>
+                    new MySeriRow
+                    {
+                        Col1 = 1,
+                        Col2 = new DateTime(2010, 02, 05, 0, 0, 0, DateTimeKind.Local)
+                    },
                 () => rowCount++ == 1
             );
 
             //Act
-            var dest = new CsvDestination<MySeriRow>(
-                "./DateTimeSerialization.csv"
-            );
+            var dest = new CsvDestination<MySeriRow>("./DateTimeSerialization.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

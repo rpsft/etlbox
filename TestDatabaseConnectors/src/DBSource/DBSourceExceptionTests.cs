@@ -53,25 +53,17 @@ namespace TestDatabaseConnectors.DBSource
         }
 
         [Fact]
-        public void ErrorInSql()
+        public async Task ErrorInSql()
         {
             //Arrange
             DbSource source = new DbSource(SqlConnection) { Sql = "SELECT XYZ FROM ABC" };
             MemoryDestination dest = new MemoryDestination();
             source.LinkTo(dest);
             //Act & Assert
-            Assert.Throws<SqlException>(() =>
+            await Assert.ThrowsAsync<SqlException>(async () =>
             {
-                try
-                {
-                    Task s = source.ExecuteAsync(CancellationToken.None);
-                    Task c = dest.Completion;
-                    Task.WaitAll(c, s);
-                }
-                catch (AggregateException e)
-                {
-                    throw e.InnerException!;
-                }
+                    await source.ExecuteAsync(CancellationToken.None);
+                    await dest.Completion;
             });
         }
     }

@@ -20,7 +20,6 @@ namespace ALE.ETLBox.DataFlow
         public override ITargetBlock<TInput> TargetBlock => TransformBlock;
 
         /* Private stuff */
-        private TransformManyBlock<TInput, TInput> TransformBlock { get; set; }
         private ObjectCopy<TInput> ObjectCopy { get; set; }
         private TypeInfo TypeInfo { get; set; }
 
@@ -29,7 +28,7 @@ namespace ALE.ETLBox.DataFlow
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
             TransformBlock = new TransformManyBlock<TInput, TInput>(
-                DuplicateRow
+                (Func<TInput, IEnumerable<TInput>>)DuplicateRow
             );
         }
 
