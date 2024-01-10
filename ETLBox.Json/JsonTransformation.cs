@@ -77,6 +77,7 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
     }
 
     private IReadOnlyDictionary<string, JObject> ParseJsonFields(IDictionary<string, object?> source) => Mappings.Values
+        .Where(m => !string.IsNullOrEmpty(m.Path))
         .Select(x => x.Name)
         .Distinct()
         .Where(key => key != null && source.ContainsKey(key))
@@ -88,7 +89,7 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
     )
     {
         // If no path is specified, use the whole field
-        if (mapping.Path == null) return sourceObject[mapping.Name];
+        if (string.IsNullOrEmpty(mapping.Path)) return sourceObject[mapping.Name];
 
         // If the field is not a JSON object, return empty string
         if (!parsedJsonFields.TryGetValue(mapping.Name, out JObject? jsonObj)) return string.Empty;
