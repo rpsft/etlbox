@@ -8,7 +8,7 @@ namespace ALE.ETLBox.DataFlow
     public class ErrorLogDestination : DataFlowDestination<ETLBoxError>
     {
         /* ITask Interface */
-        public override string TaskName => "Write error into memory";
+        public override string TaskName => "Write error";
 
         public BlockingCollection<ETLBoxError> Errors { get; set; } = new();
 

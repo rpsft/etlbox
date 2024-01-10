@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -31,6 +32,10 @@ namespace ETLBox.Rest
         public RestMethodInfo RestMethodInfo { get; set; } = null!;
 
         public string ResultField { get; set; } = null!;
+
+        public string ExceptionField { get; set; } = null!;
+
+        public bool FailOnError { get; set; } = true;
 
         public RestTransformation()
         {
@@ -84,6 +89,7 @@ namespace ETLBox.Rest
             var method = GetMethod(RestMethodInfo.Method);
             var templateUrl = Template.Parse(RestMethodInfo.Url);
             var url = templateUrl.Render(Hash.FromDictionary(input));
+            Logger.LogTrace($"Headers: {string.Join(", ", RestMethodInfo.Headers.Select(k => $"{k.Key}: {k.Value}"))}");
             Logger.LogTrace($"Url: {url}");
             var templateBody = Template.Parse(RestMethodInfo.Body);
             var body = templateBody.Render(Hash.FromDictionary(input));
@@ -117,15 +123,19 @@ namespace ETLBox.Rest
 
                         if (retryCount >= RestMethodInfo.RetryCount)
                         {
-                            throw;
+                            return HandleError(input, ex);
                         }
                     }
                     if ((int)ex.HttpCode / 100 == 3)
                     {
                         Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
 
-                        throw;
+                        return HandleError(input, ex);
                     }
+                }
+                catch (Exception ex)
+                {
+                    return HandleError(input, ex);
                 }
                 retryCount++;
 
@@ -149,6 +159,20 @@ namespace ETLBox.Rest
                 "TRACE" => HttpMethod.Trace,
                 _ => throw new ArgumentOutOfRangeException(nameof(method))
             };
+        }
+
+        private ExpandoObject HandleError(ExpandoObject input, Exception ex)
+        {
+            if (FailOnError)
+            {
+                throw ex;
+            }
+            Logger.LogError(ex, ex.Message);
+            var res = input as IDictionary<string, object>;
+            var exObj = new ExpandoObject() as IDictionary<string, object?>;
+            exObj.Add(ExceptionField, $"Exception: {ex.Message}");
+            res.Add(ResultField, (ExpandoObject)exObj);
+            return (ExpandoObject)res;
         }
     }
 }

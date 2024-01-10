@@ -607,7 +607,7 @@ public sealed class DataFlowXmlReader
             t =>
                 t.Name.StartsWith($"{name}`")
                 && t.IsGenericTypeDefinition
-                && t.GenericTypeArguments.Length == 1
+                && t.GetGenericArguments().Length == 1
         );
         if (type is null)
         {

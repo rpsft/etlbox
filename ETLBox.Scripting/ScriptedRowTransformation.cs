@@ -4,7 +4,6 @@ using System.Linq;
 using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Scripting;
 

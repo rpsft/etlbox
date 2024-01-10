@@ -16,7 +16,7 @@ public static class DataFlowActivator
         }
 
         var constructedType = type;
-        if (type.IsGenericType)
+        if (type.IsGenericType && type.IsGenericTypeDefinition)
         {
             constructedType = type.MakeGenericType(typeof(ExpandoObject));
         }
