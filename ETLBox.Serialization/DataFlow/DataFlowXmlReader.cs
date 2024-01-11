@@ -45,14 +45,21 @@ public sealed class DataFlowXmlReader
 
         foreach (var file in files)
         {
-            var name = AssemblyName.GetAssemblyName(file);
-            if (assemblies.Find(a => a.FullName == name.FullName) is not null)
+            try
             {
-                continue;
-            }
+                var name = AssemblyName.GetAssemblyName(file);
+                if (assemblies.Find(a => a.FullName == name.FullName) is not null)
+                {
+                    continue;
+                }
 
-            var assembly = Assembly.Load(name);
-            assemblies.Add(assembly);
+                var assembly = Assembly.Load(name);
+                assemblies.Add(assembly);
+            }
+            catch (System.BadImageFormatException)
+            { 
+                // Ignore
+            }
         }
 
         foreach (var currentTypes in assemblies.Select(GetDataFlowTypes))
