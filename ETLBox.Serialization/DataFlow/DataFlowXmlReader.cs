@@ -227,7 +227,40 @@ public sealed class DataFlowXmlReader
             return CreateArray(type, node);
         }
 
-        return IsDictionary(type) ? CreateDictionary(type, node) : CreateInstance(type, node);
+        if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)))
+        {
+            return CreateList(type, node);
+        }
+
+        return IsDictionary(type) 
+            ? CreateDictionary(type, node) 
+            : CreateInstance(type, node);
+    }
+
+    private object? CreateList(Type type, XContainer node)
+    {
+        var elementType = type.GenericTypeArguments[0];
+
+        if (elementType is null)
+        {
+            throw new InvalidDataException(
+                $"Invalid configuration. Implementation for element type of array '{type}' not found"
+            );
+        }
+
+        var elements = node.Elements().ToArray();
+        var list = DataFlowActivator.CreateInstance(type);
+        var set = type.GetMethod("Add");
+        for (var i = 0; i < elements.Length; i++)
+        {
+            var item = CreateObject(elementType, elements[i]);
+            if (item != null)
+            {
+                set?.Invoke(list, new[] { item });
+            }
+        }
+
+        return list;
     }
 
     private object? CreateInstance(Type type, XContainer node)
