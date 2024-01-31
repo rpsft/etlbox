@@ -42,7 +42,6 @@ build_job:
     - echo "Building version $PACKAGE_VERSION"
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
-  allow_failure: true
   cache:
     key: dotnet-packages-cache
     paths:
@@ -100,7 +99,6 @@ test_job:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt
     - echo 'End Summary'
-  allow_failure: true
   coverage: /Line coverage:[\s\S].+%/
   cache:
     key: dotnet-packages-cache
