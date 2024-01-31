@@ -2,11 +2,12 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Text.Json;
 using System.Threading.Tasks.Dataflow;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using Confluent.Kafka;
-using DotNet.Testcontainers.Configurations;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit.Abstractions;
 using CancellationTokenSource = System.Threading.CancellationTokenSource;
@@ -199,8 +200,10 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
     }
 
     [Fact]
-    public async Task ShouldReadContinuously()
+    public void ShouldReadContinuously()
     {
+        ControlFlow.LoggerFactory = new LoggerFactory(new[] { new TestOutputLoggerProvider(_output) });
+
         // Arrange
         ProduceJson("{\"name\":\"test0\"}"); // Add first message synchronously to create topic
         var generator = Task.Run(async () =>
@@ -221,16 +224,23 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         kafkaSource.LinkTo(target.Object);
 
         // Act
-        using var timeoutSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(2000));
+        using var timeoutSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(3000));
         var timer = Stopwatch.StartNew();
         var executeTask = kafkaSource.ExecuteAsync(timeoutSource.Token);
         var destinationTask = target.Object.Completion;
 
         // Assert
         _output.WriteLine("Waiting for completion...");
-        await Assert.ThrowsAsync<OperationCanceledException>(
-            () => Task.WhenAll(executeTask, generator, destinationTask)
+
+        var e = Record.Exception(() => Task.WaitAll(executeTask, generator, destinationTask));
+
+        Assert.Multiple(
+            () => Assert.IsType<OperationCanceledException>(e),
+            () => Assert.Equal(TaskStatus.Canceled, executeTask.Status),
+            () => Assert.Null(generator.Exception),
+            () => Assert.Null(destinationTask.Exception)
         );
+
         timer.Stop();
         // Should take longer than timeout (which is more than generation time)
         Assert.InRange(timer.ElapsedMilliseconds, 1500, 300000);

@@ -410,8 +410,8 @@ namespace ALE.ETLBox.DataFlow
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
-            var delete = rowsToDelete as TInput[] ?? rowsToDelete.ToArray();
-            if (delete?.Length == 0)
+            var delete = rowsToDelete as TInput[] ?? rowsToDelete?.ToArray();
+            if (delete is null or { Length : 0 })
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
             var idNames = $"{QB}{IdColumnNames[0]}{QE}";

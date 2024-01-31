@@ -94,7 +94,7 @@ test_job:
     - >
       dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
       --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
-      --collect="XPlat Code Coverage"
+      --collect="XPlat Code Coverage" && echo "Successfuly passed tests"
   after_script:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt

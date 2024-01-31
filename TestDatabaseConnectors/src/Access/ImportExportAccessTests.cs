@@ -17,11 +17,15 @@ namespace TestDatabaseConnectors.Access
             _destinationTable = RecreateAccessTestTable("DestinationTable");
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            DropTableTask.DropIfExists(AccessOdbcConnection, _sourceTable.Name);
-            DropTableTask.DropIfExists(AccessOdbcConnection, _destinationTable.Name);
-            AccessOdbcConnection.Close();
+            if (disposing)
+            {
+                DropTableTask.DropIfExists(AccessOdbcConnection, _sourceTable.Name);
+                DropTableTask.DropIfExists(AccessOdbcConnection, _destinationTable.Name);
+                AccessOdbcConnection.Close();
+            }
+            base.Dispose(disposing);
         }
 
         private TableDefinition RecreateAccessTestTable(string tableName)

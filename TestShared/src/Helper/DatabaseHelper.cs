@@ -61,6 +61,15 @@ namespace TestShared.Helper
             databaseAction(connManagerMaster, dbName);
         }
 
+        public static void DropDatabase(
+            SQLiteConnectionDetails connectionDetails,
+            string section,
+            string dbNameSuffix = null
+        )
+        {
+            connectionDetails.DeleteDatabase(section, dbNameSuffix);
+        }
+
         public static void DropDatabase<TConnectionManager, TConnectionString>(
             ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
             string section,
@@ -95,15 +104,6 @@ namespace TestShared.Helper
         )
         {
             connectionDetails.CopyFromTemplate(section, dbNameSuffix);
-        }
-
-        public static void DropDatabase(
-            SQLiteConnectionDetails connectionDetails,
-            string section,
-            string dbNameSuffix = null
-        )
-        {
-            connectionDetails.DeleteDatabase(section, dbNameSuffix);
         }
     }
 }

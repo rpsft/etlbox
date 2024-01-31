@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.DataFlow;
 using Confluent.Kafka;
 using ETLBox.Primitives;
@@ -59,15 +60,22 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
 
         consumer.Subscribe(Topic);
 
-        while (!cancellationToken.IsCancellationRequested)
+        try
         {
-            if (!ConsumeAndSendSingleMessage(consumer, cancellationToken))
+            while (!cancellationToken.IsCancellationRequested)
             {
-                break;
+                if (!ConsumeAndSendSingleMessage(consumer, cancellationToken))
+                {
+                    break;
+                }
             }
         }
-        Buffer.Complete();
-        LogFinish();
+        finally
+        {
+            Buffer.Complete();
+            LogFinish();
+        }
+        cancellationToken.ThrowIfCancellationRequested();
     }
 
     /// <summary>
@@ -107,7 +115,7 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
             }
 
             // We do not pass cancellation token to SendAsync because we want write operation to complete before cancelling
-            Buffer.SendAsync(outputValue, CancellationToken.None).Wait(cancellationToken);
+            Buffer.SendAsync(outputValue, CancellationToken.None).Wait();
         }
         catch (Exception e)
         {

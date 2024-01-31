@@ -76,9 +76,9 @@ namespace ALE.ETLBox.ControlFlow
                 ? $"ENGINE = {TableDefinition?.Engine ?? "MergeTree()"}"
                 : "";
 
-        private object OrderBy() =>
-            ConnectionType == ConnectionManagerType.ClickHouse && !Columns.Any(c => c.IsPrimaryKey)
-                ? $"ORDER BY {TableDefinition?.OrderBy ?? Columns.First().Name}"
+        private string OrderBy() =>
+            ConnectionType == ConnectionManagerType.ClickHouse && !Columns.Exists(c => c.IsPrimaryKey)
+                ? $"ORDER BY {TableDefinition?.OrderBy ?? Columns[0].Name}"
                 : "";
 
         public CreateTableTask() { }

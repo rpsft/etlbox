@@ -227,7 +227,7 @@ public sealed class DataFlowXmlReader
             return CreateArray(type, node);
         }
 
-        if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)))
+        if (Array.Exists(type.GetInterfaces(), i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)))
         {
             return CreateList(type, node);
         }

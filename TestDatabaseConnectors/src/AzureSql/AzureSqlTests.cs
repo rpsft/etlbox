@@ -28,10 +28,14 @@ namespace TestDatabaseConnectors.AzureSql
             CreateSchemaTask.Create(AzureSqlConnection, "[dest]");
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[source]");
-            CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[dest]");
+            if (disposing)
+            {
+                CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[source]");
+                CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[dest]");
+            }
+            base.Dispose(disposing);
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.ClickHouse</PackageId>
@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="ClickHouse.Ado" Version="2.0.2.2" />
-    <PackageReference Include="ClickHouse.Net" Version="0.5.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,10 +16,4 @@
     <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="WeCantSpell.Roslyn" Version="2.0.8-beta">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>

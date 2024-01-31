@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.Primitives;
@@ -30,7 +30,7 @@ public class SQLiteConnectionDetails
         return connectionString;
     }
 
-    public new SQLiteConnectionManager ConnectionManager(string section, string dbNameSuffix = null)
+    public SQLiteConnectionManager ConnectionManager(string section, string dbNameSuffix = null)
     {
         return new SQLiteConnectionManager
         {
