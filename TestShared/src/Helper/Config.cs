@@ -158,4 +158,7 @@ public static class Config
     {
         return new[] { CultureInfo.GetCultureInfo("ru-RU"), CultureInfo.GetCultureInfo("en-US") };
     }
+
+    public static string KafkaBootstrapAddress 
+        => DefaultConfigFile.GetSection("Kafka")["BootstrapAddress"];
 }

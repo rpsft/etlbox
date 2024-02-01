@@ -14,12 +14,10 @@ using CancellationTokenSource = System.Threading.CancellationTokenSource;
 
 namespace ETLBox.Kafka.Tests;
 
-public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
+public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
 {
-    private readonly KafkaContainerFixture _fixture;
+    private readonly KafkaFixture _fixture;
     private readonly ITestOutputHelper _output;
-
-    private string BootstrapAddress => _fixture.BootstrapAddress;
 
     private string TopicName { get; } = $"test-{Guid.NewGuid()}";
 
@@ -27,17 +25,18 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
     {
         return new ConsumerConfig
         {
-            BootstrapServers = BootstrapAddress,
+            BootstrapServers = _fixture.BootstrapAddress,
             GroupId = $"{topicName ?? TopicName}-group",
             AutoOffsetReset = AutoOffsetReset.Earliest,
             EnablePartitionEof = enablePartitionEof
         };
     }
 
-    public KafkaJsonSourceTests(KafkaContainerFixture fixture, ITestOutputHelper output)
+    public KafkaJsonSourceTests(KafkaFixture fixture, ITestOutputHelper output)
     {
         _fixture = fixture;
         _output = output;
+        ControlFlow.LoggerFactory = new LoggerFactory(new[] { new TestOutputLoggerProvider(_output) });
     }
 
     [Fact]
@@ -202,8 +201,6 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
     [Fact]
     public void ShouldReadContinuously()
     {
-        ControlFlow.LoggerFactory = new LoggerFactory(new[] { new TestOutputLoggerProvider(_output) });
-
         // Arrange
         ProduceJson("{\"name\":\"test0\"}"); // Add first message synchronously to create topic
         var generator = Task.Run(async () =>
@@ -235,7 +232,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         var e = Record.Exception(() => Task.WaitAll(executeTask, generator, destinationTask));
 
         Assert.Multiple(
-            () => Assert.IsType<OperationCanceledException>(e),
+            () => Assert.IsType<TaskCanceledException>((e as AggregateException)?.InnerException),
             () => Assert.Equal(TaskStatus.Canceled, executeTask.Status),
             () => Assert.Null(generator.Exception),
             () => Assert.Null(destinationTask.Exception)
@@ -332,7 +329,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
         using var consumer = new ConsumerBuilder<Ignore, string>(
             new ConsumerConfig
             {
-                BootstrapServers = BootstrapAddress,
+                BootstrapServers = _fixture.BootstrapAddress,
                 GroupId = "test-group-pre",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
                 EnablePartitionEof = enablePartitionEof
@@ -365,7 +362,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaContainerFixture>
 
     private void ProduceJson(string jsonString, string? topicName = null)
     {
-        var config = new ProducerConfig { BootstrapServers = BootstrapAddress };
+        var config = new ProducerConfig { BootstrapServers = _fixture.BootstrapAddress };
         using var producer = new ProducerBuilder<Null, string>(config).Build();
         var message = new Message<Null, string> { Value = jsonString };
         _output.WriteLine(
