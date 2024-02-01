@@ -101,16 +101,8 @@ test_job:
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
   script:
     - >
-      dotnet test ./TestOtherConnectors --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
-      --logger="junit;LogFilePath={assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
-      --collect="XPlat Code Coverage"
-    - >
-      dotnet test ./ETLBox.Json.Tests --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
-      --logger="junit;LogFilePath={assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
-      --collect="XPlat Code Coverage"
-    - >
-      dotnet test ./ETLBox.Kafka.Tests --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
-      --logger="junit;LogFilePath={assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
+      dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
+      --logger="junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
       --collect="XPlat Code Coverage"
   after_script:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
