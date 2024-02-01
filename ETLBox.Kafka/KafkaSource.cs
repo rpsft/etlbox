@@ -116,7 +116,7 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
 
             // We do not pass cancellation token to SendAsync because we want write operation to complete before cancelling
             Buffer.SendAsync(outputValue, CancellationToken.None).Wait();
-            LogProgressBatch(1);
+            LogProgress();
         }
         catch (Exception e)
         {

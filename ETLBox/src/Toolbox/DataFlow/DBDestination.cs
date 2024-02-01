@@ -116,6 +116,7 @@ namespace ALE.ETLBox.DataFlow
                     ConnectionManager = BulkInsertConnectionManager
                 };
                 sql.BulkInsert(TableData, DestinationTableDefinition.Name);
+                LogProgressBatch(data.Length);
             }
             catch (Exception e)
             {
