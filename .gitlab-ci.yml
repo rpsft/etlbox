@@ -67,6 +67,8 @@ test_job:
       alias: localmssql
     - name: clickhouse/clickhouse-server
       alias: localclickhouse
+    - name: krisgeus/docker-kafka
+      alias: kafka      
   variables:
     # MySQL image customization
     MYSQL_ROOT_HOST: '%'
@@ -84,6 +86,13 @@ test_job:
     CLICKHOUSE_USER: clickhouse
     CLICKHOUSE_PASSWORD: Qwe123456
     CLICKHOUSE_MAX_CONNECTIONS: 100
+    # KAFKA customization
+    ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,INTERNAL://localhost:9093'
+    LISTENERS: 'PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:9093'
+    SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT'
+    INTER_BROKER: 'INTERNAL'
+    KAFKA_CREATE_TOPICS: 'cc-event:36:1'
+
   before_script:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
