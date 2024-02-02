@@ -65,15 +65,15 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         // Act
         var preResults = ConsumeJson(true, CancellationToken.None, preTopic).ToList();
 
-        var sw = new Stopwatch();
-        sw.Start();
+        var watch = new Stopwatch();
+        watch.Start();
         var cancellationToken = new CancellationTokenSource(timeout).Token;
         var results = ConsumeJson(false, cancellationToken).ToList();
 
-        sw.Stop();
+        watch.Stop();
 
         // Assert
-        Assert.InRange(sw.ElapsedMilliseconds, timeout.TotalMilliseconds, 300000);
+        Assert.InRange(watch.ElapsedMilliseconds, timeout.TotalMilliseconds, 300000);
         Assert.Single(preResults);
         Assert.Equal(2, results.Count);
     }
@@ -312,46 +312,6 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
                 break;
             }
             if (consumeResult.IsPartitionEOF || consumeResult.Message is null)
-            {
-                break;
-            }
-
-            yield return consumeResult.Message.Value;
-        }
-    }
-
-    private IEnumerable<string> ConsumeJsonStub(
-        bool enablePartitionEof,
-        CancellationToken cancellationToken,
-        string? topicName = null
-    )
-    {
-        using var consumer = new ConsumerBuilder<Ignore, string>(
-            new ConsumerConfig
-            {
-                BootstrapServers = _fixture.BootstrapAddress,
-                GroupId = "test-group-pre",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnablePartitionEof = enablePartitionEof
-            }
-        ).Build();
-        _output.WriteLine($"Subscribing to topic {topicName ?? TopicName}...");
-        consumer.Subscribe(topicName ?? TopicName);
-        while (true)
-        {
-            ConsumeResult<Ignore, string>? consumeResult;
-            try
-            {
-                consumeResult = consumer.Consume(cancellationToken);
-                _output.WriteLine(
-                    $"Consumed direct message {consumeResult?.Message?.Value ?? "null"}"
-                );
-            }
-            catch (OperationCanceledException)
-            {
-                break;
-            }
-            if (consumeResult?.IsPartitionEOF == true || consumeResult?.Message is null)
             {
                 break;
             }

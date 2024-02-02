@@ -111,11 +111,11 @@ namespace ALE.ETLBox.ConnectionManager
                 case ConnectionManagerType.Access when typeName == "INT":
                     return "INTEGER";
                 case ConnectionManagerType.Access when IsCharTypeDefinition(typeName):
-                {
-                    if (typeName.StartsWith("N"))
-                        typeName = typeName.Substring(1);
-                    return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
-                }
+                    {
+                        if (typeName.StartsWith("N"))
+                            typeName = typeName.Substring(1);
+                        return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
+                    }
                 case ConnectionManagerType.Access:
                     return col.DataType;
                 case ConnectionManagerType.SQLite when typeName is "INT" or "BIGINT":
@@ -123,29 +123,13 @@ namespace ALE.ETLBox.ConnectionManager
                 case ConnectionManagerType.SQLite:
                     return col.DataType;
                 case ConnectionManagerType.Postgres:
-                {
-                    if (IsCharTypeDefinition(typeName))
                     {
-                        if (typeName.StartsWith("N"))
-                            return typeName.Substring(1);
+                        return GetPostgreSqlType(typeName, col);
                     }
-                    else if (typeName == "DATETIME")
-                        return "TIMESTAMP";
-                    return col.DataType;
-                }
                 case ConnectionManagerType.ClickHouse:
-                {
-                    var type = col.DataType;
-                    if (IsCharTypeDefinition(typeName))
                     {
-                        type = "String";
+                        return GetClickHouseType(typeName, col);
                     }
-                    if (col.AllowNulls && !type.StartsWith("Nullable"))
-                    {
-                        return $"Nullable({type})";
-                    }
-                    return type;
-                }
                 case ConnectionManagerType.Unknown:
                 case ConnectionManagerType.Adomd:
                 case ConnectionManagerType.MySql:
@@ -168,6 +152,32 @@ namespace ALE.ETLBox.ConnectionManager
                 "timestamptz" => DateTimeKind.Utc,
                 _ => null
             };
+        }
+
+        private static string GetPostgreSqlType(string typeName, ITableColumn col)
+        {
+            if (IsCharTypeDefinition(typeName))
+            {
+                if (typeName.StartsWith("N"))
+                    return typeName.Substring(1);
+            }
+            else if (typeName == "DATETIME")
+                return "TIMESTAMP";
+            return col.DataType;
+        }
+
+        private static string GetClickHouseType(string typeName, ITableColumn col)
+        {
+            var type = col.DataType;
+            if (IsCharTypeDefinition(typeName))
+            {
+                type = "String";
+            }
+            if (col.AllowNulls && !type.StartsWith("Nullable"))
+            {
+                return $"Nullable({type})";
+            }
+            return type;
         }
     }
 }

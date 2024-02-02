@@ -90,17 +90,17 @@ namespace ETLBox.Rest
                 throw new InvalidOperationException($"Property '{nameof(ResultField)}' not defined");
             }
 
-            var method = GetMethod(RestMethodInfo.Method);
-            var templateUrl = Template.Parse(RestMethodInfo.Url);
+            var method = GetMethod(RestMethodInfo?.Method!);
+            var templateUrl = Template.Parse(RestMethodInfo?.Url!);
             var url = templateUrl.Render(Hash.FromDictionary(input));
-            Logger.LogTrace($"Headers: {string.Join(", ", RestMethodInfo.Headers.Select(k => $"{k.Key}: {k.Value}"))}");
+            Logger.LogTrace($"Headers: {string.Join(", ", RestMethodInfo?.Headers.Select(k => $"{k.Key}: {k.Value}"))}");
             Logger.LogTrace($"Url: {url}");
-            var templateBody = Template.Parse(RestMethodInfo.Body);
+            var templateBody = Template.Parse(RestMethodInfo?.Body);
             var body = templateBody.Render(Hash.FromDictionary(input));
             Logger.LogTrace($"Body: {body}");
 
             var retryCount = 0;
-            while (retryCount <= RestMethodInfo.RetryCount)
+            while (retryCount <= RestMethodInfo?.RetryCount)
             {
                 try
                 {
@@ -121,19 +121,8 @@ namespace ETLBox.Rest
                 }
                 catch (HttpStatusCodeException ex)
                 {
-                    if ((int)ex.HttpCode / 100 == 5)
+                    if (HandleHttpStatusCodeException(retryCount, ex))
                     {
-                        Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
-
-                        if (retryCount >= RestMethodInfo.RetryCount)
-                        {
-                            return HandleError(input, ex);
-                        }
-                    }
-                    if ((int)ex.HttpCode / 100 == 3)
-                    {
-                        Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
-
                         return HandleError(input, ex);
                     }
                 }
@@ -148,6 +137,26 @@ namespace ETLBox.Rest
             }
 
             throw new InvalidOperationException();
+        }
+
+        private bool HandleHttpStatusCodeException(int retryCount, HttpStatusCodeException ex)
+        {
+            if ((int)ex.HttpCode / 100 == 5)
+            {
+                Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
+
+                if (retryCount >= RestMethodInfo.RetryCount)
+                {
+                    return true;
+                }
+            }
+            if ((int)ex.HttpCode / 100 == 3)
+            {
+                Logger.LogInformation($"Request for RestMethodInfo: \n{RestMethodInfo}\n get exception HttpCode = {ex.HttpCode}");
+
+                return true;
+            }
+            return false;
         }
 
         private static HttpMethod GetMethod(string method)

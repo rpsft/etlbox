@@ -351,7 +351,7 @@ namespace TestControlFlowTasks
         }
 
         [Fact]
-        public void CopyTableUsingTableDefinitionClickhouse()
+        public void CopyTableUsingTableDefinitionClickHouse()
         {
             //Arrange
             List<TableColumn> columns = new List<TableColumn>

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.Logging;
@@ -28,11 +28,11 @@ namespace ALE.ETLBox.Logging
                     col => LoadProcess.Id = Convert.ToInt64(col),
                     col =>
                         LoadProcess.StartDate = col is string str
-                            ? DateTime.Parse(str, null, DateTimeStyles.RoundtripKind)
+                            ? DateTime.Parse(str, CultureInfo.CurrentCulture, DateTimeStyles.RoundtripKind)
                             : (DateTime)col,
                     col =>
                         LoadProcess.EndDate = col is string str
-                            ? DateTime.Parse(str, null, DateTimeStyles.RoundtripKind)
+                            ? DateTime.Parse(str, CultureInfo.CurrentCulture, DateTimeStyles.RoundtripKind)
                             : (DateTime?)col,
                     col => LoadProcess.Source = (string)col,
                     col => LoadProcess.ProcessName = (string)col,

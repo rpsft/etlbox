@@ -273,15 +273,13 @@ namespace ALE.ETLBox.ControlFlow
 
         private string CreateCommentSql(ITableColumn col)
         {
-            if (!string.IsNullOrWhiteSpace(col.Comment))
-            {
-                if (
-                    ConnectionType == ConnectionManagerType.MySql
-                    || ConnectionType == ConnectionManagerType.ClickHouse
-                )
-                {
-                    return $"COMMENT '{col.Comment}'";
-                }
+            if (!string.IsNullOrWhiteSpace(col.Comment)
+            && (
+                   ConnectionType == ConnectionManagerType.MySql
+                || ConnectionType == ConnectionManagerType.ClickHouse
+            ))
+            { 
+                return $"COMMENT '{col.Comment}'";
             }
             return string.Empty;
         }

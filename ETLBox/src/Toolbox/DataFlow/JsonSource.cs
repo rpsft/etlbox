@@ -58,7 +58,12 @@ namespace ALE.ETLBox.DataFlow
 
             if (ErrorHandler.HasErrorBuffer)
             {
-                JsonSerializer.Error += JsonSerializerOnError;
+                JsonSerializer.Error += (object _, ErrorEventArgs args) => 
+                {
+                    ErrorHandler.Send(args.ErrorContext.Error, args.ErrorContext.Error.Message);
+                    args.ErrorContext.Handled = true;
+                    skipRecord = true;
+                };
             }
 
             while (JsonTextReader.Read())
@@ -74,13 +79,6 @@ namespace ALE.ETLBox.DataFlow
                 }
                 Buffer.SendAsync(record).Wait();
                 LogProgress();
-            }
-
-            void JsonSerializerOnError(object _, ErrorEventArgs args)
-            {
-                ErrorHandler.Send(args.ErrorContext.Error, args.ErrorContext.Error.Message);
-                args.ErrorContext.Handled = true;
-                skipRecord = true;
             }
         }
 

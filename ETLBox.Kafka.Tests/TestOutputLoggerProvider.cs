@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 
 namespace ETLBox.Kafka.Tests
 {
-    public class TestOutputLoggerProvider : ILoggerProvider
+    public sealed class TestOutputLoggerProvider : ILoggerProvider
     {
         private readonly ITestOutputHelper _logger;
 

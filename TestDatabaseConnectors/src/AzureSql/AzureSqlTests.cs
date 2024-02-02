@@ -17,7 +17,7 @@ namespace TestDatabaseConnectors.AzureSql
             Environment.GetEnvironmentVariable("ETLBoxAzure") != null;
     }
 
-    public sealed class AzureSqlTests : DatabaseConnectorsTestBase, IDisposable
+    public sealed class AzureSqlTests : DatabaseConnectorsTestBase
     {
         public AzureSqlTests(DatabaseSourceDestinationFixture fixture)
             : base(fixture)

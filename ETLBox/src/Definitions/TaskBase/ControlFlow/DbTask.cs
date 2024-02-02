@@ -4,6 +4,7 @@ using System.Linq;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ConnectionManager;
+using CsvHelper;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
@@ -178,26 +179,15 @@ namespace ALE.ETLBox.ControlFlow
                     {
                         if (reader.Read())
                         {
-                            BeforeRowReadAction?.Invoke();
-                            for (var i = 0; i < Actions?.Count; i++)
-                            {
-                                Actions?[i]?.Invoke(
-                                    !reader.IsDBNull(i) ? reader.GetValue(i) : null
-                                );
-                            }
-                            AfterRowReadAction?.Invoke();
+                            ProcessCurrentRow(reader);
                         }
                         else
                         {
                             // That bug on ClickHouseDataReader, by default does not proceed to correct Result
                             // https://github.com/killwort/clickhouse-net/issues/68
-                            if (conn.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+                            if (HandleClickHouseError(conn, reader))
                             {
-                                var hasNextResult = reader.NextResult();
-                                if (hasNextResult)
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
                             break;
                         }
@@ -280,6 +270,31 @@ namespace ALE.ETLBox.ControlFlow
                     Common.ControlFlow.ControlFlow.Stage,
                     Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
+        }
+
+        private void ProcessCurrentRow(IDataReader reader)
+        {
+            BeforeRowReadAction?.Invoke();
+            for (var i = 0; i < Actions?.Count; i++)
+            {
+                Actions?[i]?.Invoke(
+                    !reader.IsDBNull(i) ? reader.GetValue(i) : null
+                );
+            }
+            AfterRowReadAction?.Invoke();
+        }
+
+        private static bool HandleClickHouseError(IConnectionManager conn, IDataReader reader)
+        {
+            if (conn.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+            {
+                var hasNextResult = reader.NextResult();
+                if (hasNextResult)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

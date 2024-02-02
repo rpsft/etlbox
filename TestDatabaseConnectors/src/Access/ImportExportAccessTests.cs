@@ -5,7 +5,7 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestDatabaseConnectors.Access
 {
-    public sealed class ImportExportAccessTests : DatabaseConnectorsTestBase, IDisposable
+    public sealed class ImportExportAccessTests : DatabaseConnectorsTestBase
     {
         private readonly TableDefinition _sourceTable;
         private readonly TableDefinition _destinationTable;

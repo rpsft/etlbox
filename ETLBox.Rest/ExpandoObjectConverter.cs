@@ -36,7 +36,7 @@ namespace ETLBox.Rest
                 var propertyName = reader.GetString()!;
                 reader.Read();
                 var value = ReadValue(ref reader, options);
-                expando[propertyName] = value;
+                expando[propertyName] = value!;
             }
 
             throw new JsonException("Expected EndObject token");
@@ -51,7 +51,7 @@ namespace ETLBox.Rest
             JsonSerializer.Serialize(writer, value, options);
         }
 
-        private object ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        private object? ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             return reader.TokenType switch
             {

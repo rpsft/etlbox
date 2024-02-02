@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
@@ -121,7 +122,7 @@ namespace TestControlFlowTasks
                         @"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"
                     );
                 //Assert
-                Assert.Equal(DateTime.Parse("2020-02-29"), result);
+                Assert.Equal(DateTime.Parse("2020-02-29", CultureInfo.InvariantCulture), result);
             }
         }
 

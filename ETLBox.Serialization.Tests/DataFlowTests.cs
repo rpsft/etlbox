@@ -1,9 +1,7 @@
 using System.Dynamic;
 using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Serialization;
 using ALE.ETLBox.Serialization.DataFlow;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -12,7 +10,7 @@ namespace ETLBox.Serialization.Tests
 {
     public sealed class DataFlowTests : IDisposable
     {
-        private string _csvUri;
+        private readonly string _csvUri;
 
         public DataFlowTests()
         {
@@ -269,8 +267,8 @@ namespace ETLBox.Serialization.Tests
         {
             public DateTime DateTime { get; set; }
             public DateTime? NullDateTime { get; set; }
-            public Guid Guid { get; set; }
-            public Guid? NullGuid { get; set; }
+            public Guid Guid { get; set; } = Guid.Empty;
+            public Guid? NullGuid { get; set; } = null;
             public char Char { get; set; }
             public char? NullChar { get; set; }
             public byte Byte { get; set; }

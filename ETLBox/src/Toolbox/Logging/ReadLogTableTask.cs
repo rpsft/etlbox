@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -28,7 +28,7 @@ namespace ALE.ETLBox.Logging
                 {
                     col => current.Id = Convert.ToInt64(col),
                     col =>
-                        current.LogDate = col is string str ? DateTime.Parse(str) : (DateTime)col,
+                        current.LogDate = col is string str ? DateTime.Parse(str, CultureInfo.CurrentCulture) : (DateTime)col,
                     col => current.Level = (string)col,
                     col => current.Message = (string)col,
                     col => current.TaskType = (string)col,
