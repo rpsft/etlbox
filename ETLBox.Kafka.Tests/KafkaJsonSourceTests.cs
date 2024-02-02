@@ -265,7 +265,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
     private (
         Mock<ITargetBlock<ExpandoObject>> block,
         Mock<IDataFlowDestination<ExpandoObject>> target
-    ) SetupMockTarget(Action doOnInvokeOfferMessage = null)
+    ) SetupMockTarget(Action? doOnInvokeOfferMessage = null)
     {
         var block = new Mock<ITargetBlock<ExpandoObject>>();
         block
