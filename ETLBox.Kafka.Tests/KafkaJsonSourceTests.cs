@@ -212,7 +212,17 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
                 _output.WriteLine($"Produced test {i} to topic {TopicName}");
             }
         });
-        var (block, target) = SetupMockTarget();
+
+        using var tokenSource = new CancellationTokenSource();
+        var offerMessageInvokeCounter = 0;
+        var (block, target) = SetupMockTarget(() =>
+        {
+            offerMessageInvokeCounter++;
+            if (offerMessageInvokeCounter >= 10)
+            {
+                tokenSource.Cancel();
+            }
+        });
         var kafkaSource = new TestKafkaJsonSource(_output)
         {
             ConsumerConfig = GetConsumerConfig(false),
@@ -221,9 +231,8 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         kafkaSource.LinkTo(target.Object);
 
         // Act
-        using var timeoutSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(3000));
         var timer = Stopwatch.StartNew();
-        var executeTask = kafkaSource.ExecuteAsync(timeoutSource.Token);
+        var executeTask = kafkaSource.ExecuteAsync(tokenSource.Token);
         var destinationTask = target.Object.Completion;
 
         // Assert
@@ -256,7 +265,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
     private (
         Mock<ITargetBlock<ExpandoObject>> block,
         Mock<IDataFlowDestination<ExpandoObject>> target
-    ) SetupMockTarget()
+    ) SetupMockTarget(Action doOnInvokeOfferMessage = null)
     {
         var block = new Mock<ITargetBlock<ExpandoObject>>();
         block
@@ -278,6 +287,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
                 ) =>
                 {
                     _output.WriteLine($"Received message {messageValue}");
+                    doOnInvokeOfferMessage?.Invoke();
                     return DataflowMessageStatus.Accepted;
                 }
             );
