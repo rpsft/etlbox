@@ -3,6 +3,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceIdentityColumnTests : DatabaseConnectorsTestBase
     {
         public DbSourceIdentityColumnTests(DatabaseSourceDestinationFixture fixture)
@@ -32,16 +33,19 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnsAtTheBeginning(IConnectionManager connection)
         {
             //Arrange
+            var identityIndex = IsIdentitySupported(connection)
+                ? 0
+                : -1;
             FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",
-                identityColumnIndex: 0
+                identityColumnIndex: identityIndex
             );
             source4Columns.InsertTestData();
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination4Cols",
-                identityColumnIndex: 0
+                identityColumnIndex: identityIndex
             );
 
             //Act
@@ -51,7 +55,7 @@ namespace TestDatabaseConnectors.DBSource
             dest4Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         private void IdentityColumnInTheMiddle(IConnectionManager connection)
         {
             //Arrange
@@ -74,7 +78,7 @@ namespace TestDatabaseConnectors.DBSource
             dest4Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         private void IdentityColumnAtTheEnd(IConnectionManager connection)
         {
             //Arrange

@@ -4,6 +4,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationTests : DatabaseConnectorsTestBase
     {
         public DbDestinationTests(DatabaseSourceDestinationFixture fixture)
@@ -26,7 +27,7 @@ namespace TestDatabaseConnectors.DBDestination
             public string Text { get; set; }
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllSqlConnections))]
         public void ColumnMapping(IConnectionManager connection)
         {
             //Arrange
@@ -38,7 +39,9 @@ namespace TestDatabaseConnectors.DBDestination
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination",
-                identityColumnIndex: 2
+                identityColumnIndex: IsIdentitySupported(connection)
+                    ? 2
+                    : -1
             );
 
             DbSource<string[]> source = new DbSource<string[]>(connection, "Source");

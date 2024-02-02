@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
@@ -8,6 +9,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceErrorLinkingTests : DatabaseConnectorsTestBase
     {
         public DbSourceErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
@@ -25,10 +27,12 @@ namespace TestDatabaseConnectors.DBSource
         }
 
         [Theory, MemberData(nameof(Connections))]
-        public void RedirectErrorWithObject(IConnectionManager connection)
+        public async Task RedirectErrorWithObject(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(SQLiteConnectionManager))
-                Task.Delay(100).Wait(); //Database was locked and needs to recover after exception
+            {
+                await Task.Delay(100); //Database was locked and needs to recover after exception
+            }
 
             //Arrange
             CreateSourceTable(connection, "DbSourceErrorLinking");
@@ -49,9 +53,9 @@ namespace TestDatabaseConnectors.DBSource
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
-            source.Execute();
-            dest.Wait();
-            errorDest.Wait();
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
+            await errorDest.Completion;
 
             //Assert
             dest2Columns.AssertTestData();
@@ -94,7 +98,7 @@ namespace TestDatabaseConnectors.DBSource
             //Assert
             Assert.Throws<FormatException>(() =>
             {
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
             });
         }
@@ -107,6 +111,7 @@ namespace TestDatabaseConnectors.DBSource
                 tableName,
                 new List<TableColumn>
                 {
+                    new("Id", "INT", allowNulls: false, true),
                     new("Col1", "VARCHAR(100)", allowNulls: true),
                     new("Col2", "VARCHAR(100)", allowNulls: true),
                     new("Col3", "VARCHAR(100)", allowNulls: true)
@@ -121,32 +126,32 @@ namespace TestDatabaseConnectors.DBSource
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('1','Test1','1')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(1, '1','Test1','1')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('1.35','TestX','X')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(2, '1.35','TestX','X')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('2','Test2', NULL)"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(3, '2','Test2', NULL)"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('X',NULL, NULL)"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(4, 'X',NULL, NULL)"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('3','Test3', '3')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(5, '3','Test3', '3')"
             );
             SqlTask.ExecuteNonQuery(
                 connection,
                 "Insert demo data",
-                $@"INSERT INTO {tn.QuotedFullName} VALUES('4','Test4', 'X')"
+                $@"INSERT INTO {tn.QuotedFullName} VALUES(6, '4','Test4', 'X')"
             );
         }
     }

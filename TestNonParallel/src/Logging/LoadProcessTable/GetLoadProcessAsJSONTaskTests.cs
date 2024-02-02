@@ -1,10 +1,12 @@
-﻿using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Logging.Database;
 using Newtonsoft.Json.Linq;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
+namespace TestNonParallel.Logging.LoadProcessTable
 {
+    [Collection("Logging")]
     public sealed class GetLoadProcessAsJSONTaskTests : NonParallelTestBase, IDisposable
     {
         public GetLoadProcessAsJSONTaskTests(LoggingDatabaseFixture fixture)
@@ -12,17 +14,17 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
         {
             CreateLogTableTask.Create(SqlConnection);
             CreateLoadProcessTableTask.Create(SqlConnection);
-            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
             DropTableTask.Drop(
                 SqlConnection,
-                ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
+                ALE.ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
             );
-            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private void RunProcess1()

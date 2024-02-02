@@ -22,7 +22,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateSimple()
         {
             //Arrange
-            MemorySource<MyRow> source = new MemorySource<MyRow>
+            var source = new MemorySource<MyRow>
             {
                 DataAsList = new List<MyRow>
                 {
@@ -32,11 +32,11 @@ namespace TestTransformations.AggregationTests
                 }
             };
 
-            Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
+            var agg = new Aggregation<MyRow, MyAggRow>(
                 (row, aggRow) => aggRow.AggValue += row.DetailValue
             );
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            var dest = new MemoryDestination<MyAggRow>();
 
             //Act
             source.LinkTo(agg);
@@ -65,7 +65,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateWithNull()
         {
             //Arrange
-            MemorySource<MyRowNullable> source = new MemorySource<MyRowNullable>
+            var source = new MemorySource<MyRowNullable>
             {
                 DataAsList = new List<MyRowNullable>
                 {
@@ -77,12 +77,12 @@ namespace TestTransformations.AggregationTests
                 }
             };
 
-            Aggregation<MyRowNullable, MyAggRowNullable> agg = new Aggregation<
+            var agg = new Aggregation<
                 MyRowNullable,
                 MyAggRowNullable
             >((row, aggRow) => aggRow.AggValue += row.DetailValue ?? 0);
 
-            MemoryDestination<MyAggRowNullable> dest = new MemoryDestination<MyAggRowNullable>();
+            var dest = new MemoryDestination<MyAggRowNullable>();
 
             //Act
             source.LinkTo(agg);

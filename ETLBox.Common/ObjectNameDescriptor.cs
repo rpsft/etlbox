@@ -115,13 +115,13 @@ namespace ALE.ETLBox.Common
         {
             get
             {
-                string beginningQuote = QB switch
+                var beginningQuote = QB switch
                 {
                     "[" => @"\[",
                     "" => @"""",
                     _ => QB
                 };
-                string endingQuote = QE switch
+                var endingQuote = QE switch
                 {
                     "]" => @"\]",
                     "" => @"""",

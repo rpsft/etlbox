@@ -6,6 +6,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.Sort
 {
+    [Collection("Transformations")]
     public class SortTests : TransformationsTestBase
     {
         public SortTests(TransformationsDatabaseFixture fixture)
@@ -22,24 +23,24 @@ namespace TestTransformations.Sort
         public void SortSimpleDataDescending()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SortSource");
+            var source2Columns = new TwoColumnsTableFixture("SortSource");
             source2Columns.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "SortSource");
+            var source = new DbSource<MySimpleRow>(SqlConnection, "SortSource");
 
             //Act
-            List<MySimpleRow> actual = new List<MySimpleRow>();
-            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
+            var actual = new List<MySimpleRow>();
+            var dest = new CustomDestination<MySimpleRow>(
                 row => actual.Add(row)
             );
             int Comp(MySimpleRow x, MySimpleRow y) => y.Col1 - x.Col1;
-            Sort<MySimpleRow> block = new Sort<MySimpleRow>(Comp);
+            var block = new Sort<MySimpleRow>(Comp);
             source.LinkTo(block);
             block.LinkTo(dest);
             source.Execute();
             dest.Wait();
 
             //Assert
-            List<int> expected = new List<int> { 3, 2, 1 };
+            var expected = new List<int> { 3, 2, 1 };
             Assert.Equal(expected, actual.Select(row => row.Col1).ToList());
         }
     }

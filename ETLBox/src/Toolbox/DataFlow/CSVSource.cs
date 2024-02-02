@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using CsvHelper;
@@ -92,7 +92,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (TypeInfo.IsArray)
                 {
-                    string[] line = CsvReader.Parser.Record;
+                    var line = CsvReader.Parser.Record;
                     Buffer.SendAsync((TOutput)(object)line).Wait();
                 }
                 else if (TypeInfo.IsDynamic)

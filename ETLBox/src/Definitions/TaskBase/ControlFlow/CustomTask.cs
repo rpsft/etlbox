@@ -26,23 +26,23 @@ namespace ALE.ETLBox.ControlFlow
 
         public void Execute(Action task)
         {
-            NLogStart();
+            LogStart();
             task.Invoke();
-            NLogFinish();
+            LogFinish();
         }
 
         public void Execute<T1>(Action<T1> task, T1 param1)
         {
-            NLogStart();
+            LogStart();
             task.Invoke(param1);
-            NLogFinish();
+            LogFinish();
         }
 
         public void Execute<T1, T2>(Action<T1, T2> task, T1 param1, T2 param2)
         {
-            NLogStart();
+            LogStart();
             task.Invoke(param1, param2);
-            NLogFinish();
+            LogFinish();
         }
 
         public static void Execute(string name, Action task) => new CustomTask(name).Execute(task);
@@ -57,10 +57,10 @@ namespace ALE.ETLBox.ControlFlow
             T2 param2
         ) => new CustomTask(name).Execute(task, param1, param2);
 
-        private void NLogStart()
+        private void LogStart()
         {
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "START",
@@ -70,10 +70,10 @@ namespace ALE.ETLBox.ControlFlow
                 );
         }
 
-        private void NLogFinish()
+        private void LogFinish()
         {
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "END",

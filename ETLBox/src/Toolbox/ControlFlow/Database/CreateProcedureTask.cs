@@ -142,7 +142,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                string result = "";
+                var result = "";
                 if (ConnectionType is ConnectionManagerType.Postgres or ConnectionManagerType.MySql)
                     result += "(";
                 result +=
@@ -157,7 +157,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public string ParameterSql(ProcedureParameter par)
         {
-            string sql = Environment.NewLine + "";
+            var sql = Environment.NewLine + "";
             if (ConnectionType == ConnectionManagerType.SqlServer)
                 sql += "@";
             if (ConnectionType == ConnectionManagerType.MySql)

@@ -1,4 +1,4 @@
-﻿using ETLBox.Primitives;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -13,7 +13,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            string sql = $@"DROP SCHEMA {ON.QuotedFullName}";
+            var sql = $@"DROP SCHEMA {ON.QuotedFullName}";
             return sql;
         }
 

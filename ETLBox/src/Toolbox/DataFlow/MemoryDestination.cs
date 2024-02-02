@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using ALE.ETLBox.Common;
+using System.Collections.Concurrent;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
 
@@ -43,7 +42,7 @@ namespace ALE.ETLBox.DataFlow
         {
             Data?.CompleteAdding();
             OnCompletion?.Invoke();
-            NLogFinish();
+            LogFinish();
         }
     }
 

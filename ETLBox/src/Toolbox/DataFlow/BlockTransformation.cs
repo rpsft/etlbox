@@ -91,14 +91,14 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteIntoOutput()
         {
-            NLogStart();
+            LogStart();
             OutputData = BlockTransformationFunc(InputData);
             foreach (TOutput row in OutputData)
             {
                 OutputBuffer.SendAsync(row).Wait();
                 LogProgress();
             }
-            NLogFinish();
+            LogFinish();
         }
     }
 

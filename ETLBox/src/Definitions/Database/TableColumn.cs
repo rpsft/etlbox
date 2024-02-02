@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
 
 namespace ALE.ETLBox
 {

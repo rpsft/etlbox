@@ -5,6 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
+    [Collection("ControlFlow")]
     public class CalculateDatabaseHashTaskTests : ControlFlowTestBase
     {
         public CalculateDatabaseHashTaskTests(ControlFlowDatabaseFixture fixture)

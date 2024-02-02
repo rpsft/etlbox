@@ -6,8 +6,6 @@ global using System.Collections.Generic;
 global using System.Diagnostics;
 global using System.Dynamic;
 global using System.Linq;
-global using ALE.ETLBox;
-global using ALE.ETLBox.DataFlow;
 global using JetBrains.Annotations;
 global using Xunit;
 global using Xunit.Abstractions;

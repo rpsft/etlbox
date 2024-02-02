@@ -5,12 +5,13 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class CreateProcedureTaskTests : ControlFlowTestBase
     {
         public CreateProcedureTaskTests(ControlFlowDatabaseFixture fixture)
             : base(fixture) { }
 
-        [Theory, MemberData(nameof(AllConnectionsWithoutSQLite))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutSQLiteAndClickHouse))]
         public void CreateProcedure(IConnectionManager connection)
         {
             //Arrange
@@ -20,7 +21,7 @@ namespace TestControlFlowTasks
             Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc1"));
         }
 
-        [Theory, MemberData(nameof(AllConnectionsWithoutSQLite))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutSQLiteAndClickHouse))]
         public void AlterProcedure(IConnectionManager connection)
         {
             //Arrange
@@ -34,7 +35,7 @@ namespace TestControlFlowTasks
             Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc2"));
         }
 
-        [Theory, MemberData(nameof(AllConnectionsWithoutSQLite))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutSQLiteAndClickHouse))]
         public void CreateProcedureWithParameter(IConnectionManager connection)
         {
             //Arrange
@@ -49,7 +50,7 @@ namespace TestControlFlowTasks
             Assert.True(IfProcedureExistsTask.IsExisting(connection, "Proc3"));
         }
 
-        [Theory, MemberData(nameof(AllConnectionsWithoutSQLite))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutSQLiteAndClickHouse))]
         public void CreateProcedureWithProcedureObject(IConnectionManager connection)
         {
             //Arrange

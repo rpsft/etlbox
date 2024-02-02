@@ -6,6 +6,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeCompositeKeysTests : DatabaseConnectorsTestBase
     {
         public DbMergeCompositeKeysTests(DatabaseSourceDestinationFixture fixture)

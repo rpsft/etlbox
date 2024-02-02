@@ -1,9 +1,10 @@
-﻿using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
 using System.Linq;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using System.Threading;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -109,9 +110,9 @@ namespace ALE.ETLBox.DataFlow
             return result;
         }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
-            NLogStart();
+            LogStart();
             try
             {
                 ReadAll();
@@ -123,7 +124,7 @@ namespace ALE.ETLBox.DataFlow
                 throw;
             }
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
 
         private void ReadAll()
@@ -163,7 +164,7 @@ namespace ALE.ETLBox.DataFlow
                 // Set up copy action for each column
                 for (var i = 0; i < columnNames.Count; i++)
                 {
-                    int currentIndexAvoidingClosure = i;
+                    var currentIndexAvoidingClosure = i;
                     sqlT.Actions!.Add(col =>
                     {
                         CopyColumnToArray(col, currentIndexAvoidingClosure);
@@ -198,12 +199,14 @@ namespace ALE.ETLBox.DataFlow
                     => colValue =>
                     {
                         CopyColumnToObjectWithReflection(colName, colValue);
-                    },
+                    }
+                ,
                 (true, false)
                     => colValue =>
                     {
                         CopyColumnToDynamicObject(colName, colValue);
-                    },
+                    }
+                ,
                 (_, _) => _ => { }
             };
 

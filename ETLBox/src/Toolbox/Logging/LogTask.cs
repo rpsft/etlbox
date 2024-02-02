@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ETLBox.Primitives;
@@ -37,7 +37,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Trace();
 
         public void Trace() =>
-            NLogger?.Trace(
+            Logger?.Trace(
                 Message,
                 TaskType,
                 "LOG",
@@ -52,7 +52,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Debug();
 
         public void Debug() =>
-            NLogger?.Debug(
+            Logger?.Debug(
                 Message,
                 TaskType,
                 "LOG",
@@ -67,7 +67,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Info();
 
         public void Info() =>
-            NLogger?.Info(
+            Logger?.Info(
                 Message,
                 TaskType,
                 "LOG",
@@ -82,7 +82,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Warn();
 
         public void Warn() =>
-            NLogger?.Warn(
+            Logger?.Warn(
                 Message,
                 TaskType,
                 "LOG",
@@ -97,22 +97,7 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Error();
 
         public void Error() =>
-            NLogger?.Error(
-                Message,
-                TaskType,
-                "LOG",
-                TaskHash,
-                Common.ControlFlow.ControlFlow.Stage,
-                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
-            );
-
-        public static void Fatal(string message) => new LogTask(message).Fatal();
-
-        public static void Fatal(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
-
-        public void Fatal() =>
-            NLogger?.Fatal(
+            Logger?.Error(
                 Message,
                 TaskType,
                 "LOG",

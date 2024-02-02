@@ -71,7 +71,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (TypeInfo.IsDynamic)
                 {
-                    string json = JsonConvert.SerializeObject(data);
+                    var json = JsonConvert.SerializeObject(data);
                     XDocument doc = JsonConvert.DeserializeXNode(
                         json,
                         DynamicElementName ?? "Dynamic"

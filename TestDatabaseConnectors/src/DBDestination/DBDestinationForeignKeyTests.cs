@@ -6,6 +6,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationForeignKeyTests : DatabaseConnectorsTestBase
     {
         public DbDestinationForeignKeyTests(DatabaseSourceDestinationFixture fixture)

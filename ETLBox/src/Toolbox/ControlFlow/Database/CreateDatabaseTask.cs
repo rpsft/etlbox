@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ETLBox.Primitives;
 
@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            bool doesExist = new IfDatabaseExistsTask(DatabaseName)
+            var doesExist = new IfDatabaseExistsTask(DatabaseName)
             {
                 DisableLogging = true,
                 ConnectionManager = ConnectionManager
@@ -57,6 +57,11 @@ BEGIN
 SELECT @dbReady = CASE WHEN DATABASEPROPERTYEX('{DatabaseName}', 'Collation') IS NULL THEN 0 ELSE 1 END                    
 END
 ";
+                }
+
+                if (ConnectionType == ConnectionManagerType.ClickHouse)
+                {
+                    return $@"CREATE DATABASE {QB}{DatabaseName}{QE}";
                 }
 
                 return $@"CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString}";

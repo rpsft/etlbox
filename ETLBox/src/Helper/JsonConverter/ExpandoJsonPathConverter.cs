@@ -86,7 +86,7 @@ namespace ALE.ETLBox.Helper
                 switch (reader.TokenType)
                 {
                     case JsonToken.PropertyName:
-                        string propertyName = reader.Value?.ToString();
+                        var propertyName = reader.Value?.ToString();
                         ReadProperty(reader, expandoObject, propertyName);
                         break;
                     case JsonToken.Comment:
@@ -132,20 +132,20 @@ namespace ALE.ETLBox.Helper
         private static object GetValueFromJsonPath(JToken jsonObject, string path)
         {
             object val = null;
-            List<JToken> tokens = jsonObject.SelectTokens(path).ToList();
+            var tokens = jsonObject.SelectTokens(path).ToList();
             switch (tokens.Count)
             {
                 case 1:
-                {
-                    JToken t = tokens[0];
-                    val = ParseToken(t);
-                    break;
-                }
+                    {
+                        JToken t = tokens[0];
+                        val = ParseToken(t);
+                        break;
+                    }
                 case > 1:
-                {
-                    val = tokens.Select(ParseToken).ToList();
-                    break;
-                }
+                    {
+                        val = tokens.Select(ParseToken).ToList();
+                        break;
+                    }
             }
             return val;
         }

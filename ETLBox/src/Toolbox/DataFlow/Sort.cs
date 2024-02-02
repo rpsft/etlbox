@@ -1,6 +1,5 @@
-﻿using ALE.ETLBox.Common.DataFlow;
-using NLog;
-
+using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
@@ -40,10 +39,7 @@ namespace ALE.ETLBox.DataFlow
         private Comparison<TInput> _sortFunction;
         private BlockTransformation<TInput, TInput> BlockTransformation { get; set; }
 
-        public Sort()
-        {
-            NLogger = LogManager.GetLogger("ETL");
-        }
+        public Sort() { }
 
         public Sort(Comparison<TInput> sortFunction)
             : this()

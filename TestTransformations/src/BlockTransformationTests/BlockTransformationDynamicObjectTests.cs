@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
+    [Collection("Transformations")]
     public class BlockTransformationDynamicObjectTests : TransformationsTestBase
     {
         public BlockTransformationDynamicObjectTests(TransformationsDatabaseFixture fixture)
@@ -14,23 +15,23 @@ namespace TestTransformations.BlockTransformationTests
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "BlockTransSourceDynamic"
             );
             source2Columns.InsertTestData();
             var _ = new TwoColumnsTableFixture("BlockTransDestDynamic");
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "BlockTransSourceDynamic"
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "BlockTransDestDynamic"
             );
 
             //Act
-            BlockTransformation<ExpandoObject> block =
+            var block =
                 new BlockTransformation<ExpandoObject>(inputData =>
                 {
                     inputData.RemoveRange(1, 2);

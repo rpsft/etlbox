@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.Common;
 using ETLBox.Primitives;
 using Npgsql;
@@ -31,6 +31,7 @@ namespace ALE.ETLBox.ConnectionManager
             : base(new PostgresConnectionString(connectionString)) { }
 
         private TableDefinition DestTableDef { get; set; }
+
         private Dictionary<string, TableColumn> DestinationColumns { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName)
@@ -53,14 +54,22 @@ FROM STDIN (FORMAT BINARY)"
                 foreach (var destCol in destColumnNames)
                 {
                     TableColumn colDef = DestinationColumns[destCol];
-                    int ordinal = data.GetOrdinal(destCol);
-                    object val = data.GetValue(ordinal);
+                    var ordinal = data.GetOrdinal(destCol);
+                    var val = data.GetValue(ordinal);
                     if (val != null)
                     {
-                        object convertedVal = Convert.ChangeType(
-                            data.GetValue(ordinal),
-                            colDef.NETDataType
-                        );
+                        object convertedVal;
+                        if (colDef.NETDataType == typeof(System.Guid) && (val is string))
+                        {
+                            convertedVal = Guid.Parse((string)val);
+                        }
+                        else
+                        {
+                            convertedVal = Convert.ChangeType(
+                                val,
+                                colDef.NETDataType
+                                );
+                        }
                         writer.Write(convertedVal, colDef.InternalDataType.ToLower());
                     }
                     else
@@ -99,7 +108,7 @@ FROM STDIN (FORMAT BINARY)"
 
         public override IConnectionManager Clone()
         {
-            PostgresConnectionManager clone = new PostgresConnectionManager(
+            var clone = new PostgresConnectionManager(
                 (PostgresConnectionString)ConnectionString
             )
             {

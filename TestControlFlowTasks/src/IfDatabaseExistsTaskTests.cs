@@ -6,6 +6,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class IfDatabaseExistsTaskTests : ControlFlowTestBase
     {
         public IfDatabaseExistsTaskTests(ControlFlowDatabaseFixture fixture)

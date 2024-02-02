@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
+    [Collection("Transformations")]
     public class BlockTransformationExceptionTests : TransformationsTestBase
     {
         public BlockTransformationExceptionTests(TransformationsDatabaseFixture fixture)
@@ -19,21 +20,21 @@ namespace TestTransformations.BlockTransformationTests
         public void ThrowExceptionWithoutHandling()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("BlockTransSource");
+            var source2Columns = new TwoColumnsTableFixture("BlockTransSource");
             source2Columns.InsertTestData();
             var _ = new TwoColumnsTableFixture("BlockTransDest");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "BlockTransSource"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "BlockTransDest"
             );
 
             //Act
-            BlockTransformation<MySimpleRow> block = new BlockTransformation<MySimpleRow>(
+            var block = new BlockTransformation<MySimpleRow>(
                 _ => throw new Exception("Test")
             );
             source.LinkTo(block);

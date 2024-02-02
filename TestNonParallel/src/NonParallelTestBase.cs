@@ -1,8 +1,8 @@
-﻿using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ALE.ETLBox.ConnectionManager;
+using TestNonParallel.Fixtures;
 using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.NonParallel
+namespace TestNonParallel
 {
     [CollectionDefinition("Logging")]
     public class LoggingCollectionClass : ICollectionFixture<LoggingDatabaseFixture> { }
@@ -22,5 +22,8 @@ namespace ALE.ETLBoxTests.NonParallel
 
         public static IEnumerable<object[]> AllSqlConnections =>
             Config.AllSqlConnections("Logging");
+
+        public static IEnumerable<object[]> AllSqlConnectionsWithoutClickHouse =>
+            Config.AllSqlConnectionsWithoutClickHouse("Logging");
     }
 }

@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.Common;
+using System.Threading;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.Helper;
 using ETLBox.Primitives;
@@ -110,7 +111,7 @@ namespace ALE.ETLBox.DataFlow
         {
             var lookupHit = LookupData.Find(e =>
             {
-                bool same = true;
+                var same = true;
                 foreach (var mc in TypeInfo.MatchColumns)
                 {
                     same &= mc.PropInInput.GetValue(row).Equals(mc.PropInOutput.GetValue(e));
@@ -135,7 +136,7 @@ namespace ALE.ETLBox.DataFlow
         private void LoadLookupData()
         {
             CheckLookupObjects();
-            Source.Execute();
+            Source.Execute(CancellationToken.None);
             LookupBuffer.Wait();
         }
 

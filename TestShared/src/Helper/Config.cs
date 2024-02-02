@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
-using ETLBox.Primitives;
+using ETLBox.ClickHouse.ConnectionManager;
+using ETLBox.ClickHouse.ConnectionStrings;
 using Microsoft.Extensions.Configuration;
 
 namespace TestShared.Helper;
@@ -22,10 +23,7 @@ public static class Config
         AdomdConnectionManager
     > SSASConnection { get; } = new("SSASConnectionString");
 
-    public static ConnectionDetails<
-        SQLiteConnectionString,
-        SQLiteConnectionManager
-    > SQLiteConnection { get; } = new("SQLiteConnectionString");
+    public static SQLiteConnectionDetails SQLiteConnection { get; } = new("SQLiteConnectionString");
 
     public static ConnectionDetails<
         MySqlConnectionString,
@@ -36,6 +34,11 @@ public static class Config
         PostgresConnectionString,
         PostgresConnectionManager
     > PostgresConnection { get; } = new("PostgresConnectionString");
+
+    public static ConnectionDetails<
+        ClickHouseConnectionString,
+        ClickHouseConnectionManager
+    > ClickHouseConnection { get; } = new("ClickHouseConnectionString");
 
     public static ConnectionDetails<
         OdbcConnectionString,
@@ -52,7 +55,7 @@ public static class Config
         SqlConnectionManager
     > AzureSqlConnection { get; } = new("AzureSqlConnectionString");
 
-    private static IConfigurationRoot DefaultConfigFile
+    internal static IConfigurationRoot DefaultConfigFile
     {
         get
         {
@@ -76,14 +79,49 @@ public static class Config
     {
         return new[]
         {
-            new object[] { SqlConnection.ConnectionManager(section) },
+            new object[] { ClickHouseConnection.ConnectionManager(section) },
             new object[] { PostgresConnection.ConnectionManager(section) },
             new object[] { MySqlConnection.ConnectionManager(section) },
-            new object[] { SQLiteConnection.ConnectionManager(section) }
+            new object[] { SqlConnection.ConnectionManager(section) },
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
+        };
+    }
+
+    public static IEnumerable<object[]> AllSqlConnectionsWithoutClickHouse(string section)
+    {
+        return new[]
+        {
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SqlConnection.ConnectionManager(section) },
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
         };
     }
 
     public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section)
+    {
+        return new[]
+        {
+            new object[] { ClickHouseConnection.ConnectionManager(section) },
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SqlConnection.ConnectionManager(section) },
+        };
+    }
+
+    public static IEnumerable<object[]> AllConnectionsWithoutClickHouse(string section)
+    {
+        return new[]
+        {
+            new object[] { PostgresConnection.ConnectionManager(section) },
+            new object[] { MySqlConnection.ConnectionManager(section) },
+            new object[] { SqlConnection.ConnectionManager(section) },
+            // new object[] { SQLiteConnection.ConnectionManager(section) }
+        };
+    }
+
+
+    public static IEnumerable<object[]> AllConnectionsWithoutSQLiteAndClickHouse(string section)
     {
         return new[]
         {
@@ -121,30 +159,6 @@ public static class Config
         return new[] { CultureInfo.GetCultureInfo("ru-RU"), CultureInfo.GetCultureInfo("en-US") };
     }
 
-    public class ConnectionDetails<TConnectionString, TConnectionManager>
-        where TConnectionString : IDbConnectionString, new()
-        where TConnectionManager : IConnectionManager, new()
-    {
-        public ConnectionDetails(string connectionStringName)
-        {
-            ConnectionStringName = connectionStringName;
-        }
-
-        public string ConnectionStringName { get; set; }
-
-        public string RawConnectionString(string section)
-        {
-            return DefaultConfigFile.GetSection(section)[ConnectionStringName];
-        }
-
-        public TConnectionString ConnectionString(string section)
-        {
-            return new TConnectionString { Value = RawConnectionString(section) };
-        }
-
-        public TConnectionManager ConnectionManager(string section)
-        {
-            return new TConnectionManager { ConnectionString = ConnectionString(section) };
-        }
-    }
+    public static string KafkaBootstrapAddress 
+        => DefaultConfigFile.GetSection("Kafka")["BootstrapAddress"];
 }

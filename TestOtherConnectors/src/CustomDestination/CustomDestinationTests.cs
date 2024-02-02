@@ -6,6 +6,7 @@ using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomDestination
 {
+    [Collection("OtherConnectors")]
     public class CustomDestinationTests : OtherConnectorsTestBase
     {
         public CustomDestinationTests(OtherConnectorsDatabaseFixture fixture)

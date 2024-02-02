@@ -1,13 +1,14 @@
 using System.Collections.Concurrent;
-using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 using ETLBox.Primitives;
+using ALE.ETLBox.Common.DataFlow;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public class ErrorLogDestination: DataFlowDestination<ETLBoxError>
+    public class ErrorLogDestination : DataFlowDestination<ETLBoxError>
     {
         /* ITask Interface */
-        public override string TaskName => "Write error into memory";
+        public override string TaskName => "Write error";
 
         public BlockingCollection<ETLBoxError> Errors { get; set; } = new();
 
@@ -17,13 +18,7 @@ namespace ALE.ETLBox.DataFlow
             SetCompletionTask();
         }
 
-        internal ErrorLogDestination(ITask callingTask)
-            : this()
-        {
-            CopyTaskProperties(callingTask);
-        }
-
-        public void WriteRecord(ETLBoxError error)
+        private void WriteRecord(ETLBoxError error)
         {
             Errors ??= new BlockingCollection<ETLBoxError>();
             if (error is null)
@@ -38,15 +33,19 @@ namespace ALE.ETLBox.DataFlow
             {
                 return;
             }
-
-            NLogger.Error(error);
+            var logException = LoggerMessage.Define<string, string>(
+                LogLevel.Error,
+                0,
+                "{ErrorText}: {RecordAsJson}"
+            );
+            logException.Invoke(Logger, error.ErrorText, error.RecordAsJson, error.Exception);
         }
 
         protected override void CleanUp()
         {
             Errors?.CompleteAdding();
             OnCompletion?.Invoke();
-            NLogFinish();
+            LogFinish();
         }
     }
 }

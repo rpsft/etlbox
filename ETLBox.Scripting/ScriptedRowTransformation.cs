@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ALE.ETLBox.Common.DataFlow;
@@ -8,10 +7,17 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace ALE.ETLBox.Scripting;
 
+public class ScriptedTransformation<TInput> : ScriptedRowTransformation<TInput, TInput> { }
+
 [PublicAPI]
 public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput>
 {
-    public IDictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
+    public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
+
+    /// <summary>
+    /// Indicates if transformation should fail when missing mapping field on source
+    /// </summary>
+    public bool FailOnMissingField { get; set; } = false;
 
     public ScriptedRowTransformation()
     {
@@ -42,19 +48,27 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
                 $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
             );
         var type = ScriptBuilder.Default.ForType(arg);
+
         foreach (var key in Mappings.Keys)
         {
             var runner = type.CreateRunner<object>(Mappings[key]);
             var diagnostics = runner.Script.Compile();
+
+            dynamic value;
             if (diagnostics.Any())
             {
-                throw new ArgumentException(
-                    $"Could not compile script for property {key} on type {typeof(TOutput).FullName}.",
-                    diagnostics.First().GetMessage()
-                );
+                if (FailOnMissingField)
+                {
+                    throw new ArgumentException(
+                        $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => {Mappings[key]}.",
+                        diagnostics.First().GetMessage());
+                }
+                value = null!;
             }
-
-            dynamic value = runner.RunAsync(arg).Result.ReturnValue;
+            else
+            {
+                value = runner.RunAsync(arg).Result.ReturnValue;
+            }
             try
             {
                 ((IDictionary<string, object?>)output)[key] = value;

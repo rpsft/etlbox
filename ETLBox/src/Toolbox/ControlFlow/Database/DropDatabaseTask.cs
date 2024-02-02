@@ -1,4 +1,4 @@
-﻿using ETLBox.Primitives;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {

@@ -7,6 +7,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class CreateTableTaskTests : ControlFlowTestBase
     {
         public CreateTableTaskTests(ControlFlowDatabaseFixture fixture)
@@ -14,13 +15,19 @@ namespace TestControlFlowTasks
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
+        public static IEnumerable<object[]> ConnectionsWithoutClickHouse => AllConnectionsWithoutClickHouse;
+
         public static IEnumerable<object[]> Access => AccessConnection;
 
         [Theory, MemberData(nameof(Connections)), MemberData(nameof(Access))]
         public void CreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> { new("Col1", "INT") };
+            List<TableColumn> columns = new List<TableColumn> 
+            {
+                new("Id", "INT", false, true),
+                new("Col1", "INT")
+            };
 
             //Act
             CreateTableTask.Create(connection, "CreateTable1", columns);
@@ -33,7 +40,11 @@ namespace TestControlFlowTasks
         public void ReCreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> { new("value", "INT") };
+            List<TableColumn> columns = new List<TableColumn> 
+            {
+                new("Id", "INT", false, true),
+                new("value", "INT") 
+            };
             CreateTableTask.Create(connection, "CreateTable2", columns);
             //Act
             CreateTableTask.Create(connection, "CreateTable2", columns);
@@ -47,7 +58,7 @@ namespace TestControlFlowTasks
             //Arrange
             List<TableColumn> columns = new List<TableColumn>
             {
-                new("value", "INT"),
+                new("value", "INT", false, true),
                 new("value2", "DATE", true)
             };
             //Act
@@ -55,7 +66,7 @@ namespace TestControlFlowTasks
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable3"));
             var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable3");
-            Assert.Contains(td.Columns, col => col.AllowNulls);
+            Assert.True(td.Columns[1].AllowNulls);
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -132,7 +143,7 @@ namespace TestControlFlowTasks
             //Arrange
             List<TableColumn> columns = new List<TableColumn>
             {
-                new("value1", "INT", allowNulls: false),
+                new("value1", "INT", allowNulls: false, true),
                 new("value2", "DATE", allowNulls: true)
             };
             CreateTableTask.Create(connection, "CreateTable5", columns);
@@ -149,7 +160,7 @@ namespace TestControlFlowTasks
             });
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CreateTableWithIdentity(IConnectionManager connection)
         {
             //Arrange
@@ -198,7 +209,7 @@ namespace TestControlFlowTasks
             );
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void CreateTableWithDefault(IConnectionManager connection)
         {
             //Arrange
@@ -218,7 +229,7 @@ namespace TestControlFlowTasks
             Assert.Contains(td.Columns, col => col.DefaultValue == "3.12");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CreateTableWithComputedColumn(IConnectionManager connection)
         {
             if (
@@ -232,7 +243,7 @@ namespace TestControlFlowTasks
             //Arrange
             List<TableColumn> columns = new List<TableColumn>
             {
-                new("value1", "INT", allowNulls: false),
+                new("value1", "INT", allowNulls: false, true),
                 new("value2", "INT", allowNulls: false),
                 new("compValue", "BIGINT", allowNulls: true)
                 {
@@ -252,7 +263,7 @@ namespace TestControlFlowTasks
                 Assert.Contains(td.Columns, col => col.ComputedColumn == "(`value1` * `value2`)");
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void SpecialCharsInTableName(IConnectionManager connection)
         {
             //Arrange
@@ -315,7 +326,7 @@ namespace TestControlFlowTasks
             );
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CopyTableUsingTableDefinition(IConnectionManager connection)
         {
             //Arrange
@@ -338,6 +349,31 @@ namespace TestControlFlowTasks
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable10_copy"));
         }
+
+        [Fact]
+        public void CopyTableUsingTableDefinitionClickHouse()
+        {
+            //Arrange
+            List<TableColumn> columns = new List<TableColumn>
+            {
+                new("Id", "INT", allowNulls: false, isPrimaryKey: true),
+                new("value1", "NVARCHAR(10)", allowNulls: true),
+                new("value2", "DECIMAL(10,2)", allowNulls: false) { DefaultValue = "3.12" }
+            };
+            CreateTableTask.Create(ClickHouseConnection, "CreateTable10", columns);
+
+            //Act
+            var definition = TableDefinition.GetDefinitionFromTableName(
+                ClickHouseConnection,
+                "CreateTable10"
+            );
+            definition.Name = "CreateTable10_copy";
+            CreateTableTask.Create(ClickHouseConnection, definition);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(ClickHouseConnection, "CreateTable10_copy"));
+        }
+
 
         [Theory, MemberData(nameof(Connections))]
         public void CreateTableWithPKConstraintName(IConnectionManager connection)

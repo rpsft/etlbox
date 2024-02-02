@@ -9,7 +9,7 @@ namespace ETLBox.Scripting.Tests;
 public class ScriptBuilderTests
 {
     [Fact]
-    public void ShouldCompileScriptDirectly()
+    public async Task ShouldCompileScriptDirectly()
     {
         // Arrange
         var options = ScriptOptions.Default.WithImports("System.Math");
@@ -18,7 +18,7 @@ public class ScriptBuilderTests
             .ContinueWith("X + Y", options);
         // Act
         var diagnostics = script.Compile();
-        var result = script.RunAsync().Result.ReturnValue;
+        var result = (await script.RunAsync()).ReturnValue;
         // Assert
         Assert.Empty(diagnostics);
         Assert.Equal(3, result);

@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.Common;
+using System.Threading;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
 
@@ -34,13 +35,13 @@ namespace ALE.ETLBox.DataFlow
             Data = data;
         }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
-            NLogStart();
+            LogStart();
             ReadRecordAndSendIntoBuffer();
             LogProgress();
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
 
         private void ReadRecordAndSendIntoBuffer()

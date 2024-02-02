@@ -25,10 +25,10 @@ namespace ALE.ETLBox.Common.DataFlow
         protected bool HasLoggingThresholdRows => LoggingThresholdRows is > 0;
         protected int ThresholdCount { get; set; } = 1;
 
-        protected void NLogStart()
+        protected void LogStart()
         {
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "START",
@@ -38,10 +38,10 @@ namespace ALE.ETLBox.Common.DataFlow
                 );
         }
 
-        protected void NLogFinish()
+        protected void LogFinish()
         {
             if (!DisableLogging && HasLoggingThresholdRows)
-                NLogger.Info(
+                Logger.Info(
                     TaskName + $" processed {ProgressCount} records in total.",
                     TaskType,
                     "LOG",
@@ -50,7 +50,7 @@ namespace ALE.ETLBox.Common.DataFlow
                     ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
             if (!DisableLogging)
-                NLogger.Info(
+                Logger.Info(
                     TaskName,
                     TaskType,
                     "END",
@@ -72,7 +72,7 @@ namespace ALE.ETLBox.Common.DataFlow
                 return;
             }
 
-            NLogger.Info(
+            Logger.Info(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",
@@ -95,7 +95,7 @@ namespace ALE.ETLBox.Common.DataFlow
                 return;
             }
 
-            NLogger.Info(
+            Logger.Info(
                 TaskName + $" processed {ProgressCount} records.",
                 TaskType,
                 "LOG",

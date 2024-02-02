@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.CrossJoinTests
 {
+    [Collection("Transformations")]
     public class CrossJoinDynamicObjectTests : TransformationsTestBase
     {
         public CrossJoinDynamicObjectTests(TransformationsDatabaseFixture fixture)
@@ -13,27 +14,27 @@ namespace TestTransformations.CrossJoinTests
         public void DynamicObjectJoin()
         {
             //Arrange
-            TwoColumnsTableFixture table1 = new TwoColumnsTableFixture(
+            var table1 = new TwoColumnsTableFixture(
                 SqlConnection,
                 "CrossJoinSource1"
             );
             table1.InsertTestData();
-            TwoColumnsTableFixture table2 = new TwoColumnsTableFixture(
+            var table2 = new TwoColumnsTableFixture(
                 SqlConnection,
                 "CrossJoinSource2"
             );
             table2.InsertTestData();
-            DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>(
+            var source1 = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "CrossJoinSource1"
             );
-            DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>(
+            var source2 = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "CrossJoinSource2"
             );
-            MemoryDestination dest = new MemoryDestination();
+            var dest = new MemoryDestination();
 
-            CrossJoin crossJoin = new CrossJoin(
+            var crossJoin = new CrossJoin(
                 (data1, _) =>
                 {
                     dynamic d1 = data1;

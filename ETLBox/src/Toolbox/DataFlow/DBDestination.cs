@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
@@ -152,7 +152,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 foreach (var key in dynamicObject.Select(c => c.Key))
                 {
-                    int newPropIndex = TableData.DynamicColumnNames.Count;
+                    var newPropIndex = TableData.DynamicColumnNames.Count;
                     if (!TableData.DynamicColumnNames.ContainsKey(key))
                         TableData.DynamicColumnNames.Add(key, newPropIndex);
                 }
@@ -181,7 +181,7 @@ namespace ALE.ETLBox.DataFlow
         private object[] ConvertObjectRow(TInput currentRow)
         {
             var rowResult = new object[TypeInfo.PropertyLength];
-            int index = 0;
+            var index = 0;
             foreach (PropertyInfo propInfo in TypeInfo.Properties)
             {
                 rowResult[index] = propInfo.GetValue(currentRow);
@@ -196,7 +196,7 @@ namespace ALE.ETLBox.DataFlow
             var rowResult = new object[TableData.DynamicColumnNames.Count];
             foreach (var prop in propertyValues)
             {
-                int columnIndex = TableData.DynamicColumnNames[prop.Key];
+                var columnIndex = TableData.DynamicColumnNames[prop.Key];
                 rowResult[columnIndex] = prop.Value;
             }
 

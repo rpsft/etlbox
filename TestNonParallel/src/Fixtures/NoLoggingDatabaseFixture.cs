@@ -1,8 +1,10 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using JetBrains.Annotations;
 using TestShared.Helper;
 
-namespace ALE.ETLBoxTests.NonParallel.Fixtures
+namespace TestNonParallel.Fixtures
 {
+    [UsedImplicitly]
     public sealed class NoLoggingDatabaseFixture : IDisposable
     {
         public NoLoggingDatabaseFixture()

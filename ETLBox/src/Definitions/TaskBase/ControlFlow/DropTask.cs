@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 
 namespace ALE.ETLBox.ControlFlow
@@ -11,7 +11,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public void Execute()
         {
-            bool objectExists = new T
+            var objectExists = new T
             {
                 ObjectName = ObjectName,
                 OnObjectName = OnObjectName,

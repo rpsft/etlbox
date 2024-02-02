@@ -6,6 +6,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
+    [Collection("ControlFlow")]
     public class CleanUpSchemaTaskTests : ControlFlowTestBase
     {
         public CleanUpSchemaTaskTests(ControlFlowDatabaseFixture fixture)

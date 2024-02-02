@@ -5,6 +5,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationSpecialCharacterTests : DatabaseConnectorsTestBase
     {
         public DbDestinationSpecialCharacterTests(DatabaseSourceDestinationFixture fixture)

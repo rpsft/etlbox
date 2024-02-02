@@ -1,9 +1,11 @@
-﻿using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Logging.Database;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging
+namespace TestNonParallel.Logging
 {
+    [Collection("Logging")]
     public sealed class DatabaseTasksLoggingTests : NonParallelTestBase, IDisposable
     {
         public DatabaseTasksLoggingTests(LoggingDatabaseFixture fixture)
@@ -11,13 +13,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             CreateSchemaTask.Create(SqlConnection, "etl");
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
-            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private int? CountLogEntries(string taskName)

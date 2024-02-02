@@ -1,7 +1,10 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvSourceWithClassMapsTests : FlatFileConnectorsTestBase
     {
         public CsvSourceWithClassMapsTests(FlatFileToDatabaseFixture fixture)
@@ -28,10 +31,10 @@ namespace TestFlatFileConnectors.CsvSource
         public void SimpleFlowUsingClassMap()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CsvDestination2ColumnsClassMap"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "CsvDestination2ColumnsClassMap"
             );
@@ -71,16 +74,16 @@ namespace TestFlatFileConnectors.CsvSource
         public void UsingClassMapAndNoHeader()
         {
             //Arrange
-            FourColumnsTableFixture fourColumnsTableFixture = new FourColumnsTableFixture(
+            var fourColumnsTableFixture = new FourColumnsTableFixture(
                 "CsvDestination4ColumnsClassMap"
             );
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(
+            var dest = new DbDestination<MyExtendedRow>(
                 SqlConnection,
                 "CsvDestination4ColumnsClassMap"
             );
 
             //Act
-            CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>(
+            var source = new CsvSource<MyExtendedRow>(
                 "res/CsvSource/FourColumnsInvalidHeader.csv"
             )
             {

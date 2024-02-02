@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -34,7 +34,7 @@ namespace TestShared.SharedFixtures
                 TableName,
                 new List<TableColumn>
                 {
-                    new("Col1", "INT", allowNulls: false),
+                    new("Col1", "INT", allowNulls: false, true),
                     new("Col2", "NVARCHAR(100)", allowNulls: true),
                     new("ChangeDate", "DATETIME", allowNulls: false),
                     new("ChangeAction", "INT", allowNulls: false)

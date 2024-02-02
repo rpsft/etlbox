@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System.IO;
+using ALE.ETLBox;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance.Helper
@@ -26,7 +27,7 @@ namespace ALE.ETLBoxTests.Performance.Helper
                 return;
             }
 
-            BigDataHelper bigData = new BigDataHelper
+            var bigData = new BigDataHelper
             {
                 FileName = GetCompleteFilePath(numberOfRows),
                 NumberOfRows = numberOfRows,

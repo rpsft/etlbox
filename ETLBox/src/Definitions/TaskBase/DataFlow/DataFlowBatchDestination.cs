@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
 
@@ -88,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
         protected void WriteBatch(TInput[] data)
         {
             if (ProgressCount == 0)
-                NLogStart();
+                LogStart();
             if (BeforeBatchWrite != null)
                 data = BeforeBatchWrite.Invoke(data);
             if (!WasInitialized)

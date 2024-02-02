@@ -4,6 +4,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeIMergeableTests : DatabaseConnectorsTestBase
     {
         public DbMergeIMergeableTests(DatabaseSourceDestinationFixture fixture)

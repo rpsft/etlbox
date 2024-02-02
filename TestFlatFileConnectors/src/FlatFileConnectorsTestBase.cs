@@ -1,4 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using TestFlatFileConnectors.Fixture;
 using TestShared.Helper;
 
 namespace TestFlatFileConnectors

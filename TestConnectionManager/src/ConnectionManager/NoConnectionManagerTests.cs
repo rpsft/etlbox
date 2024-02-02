@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
 
@@ -36,7 +37,7 @@ namespace TestConnectionManager.ConnectionManager
             {
                 try
                 {
-                    source.Execute();
+                    source.Execute(CancellationToken.None);
                     dest.Wait();
                 }
                 catch (AggregateException e)

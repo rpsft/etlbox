@@ -1,4 +1,5 @@
-﻿using ALE.ETLBoxTests.Performance.Helper;
+﻿using ALE.ETLBox.DataFlow;
+using ALE.ETLBoxTests.Performance.Helper;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance

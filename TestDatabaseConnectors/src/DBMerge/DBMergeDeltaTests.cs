@@ -3,6 +3,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection("DatabaseConnectors")]
     public class DbMergeDeltaTests : DatabaseConnectorsTestBase
     {
         public DbMergeDeltaTests(DatabaseSourceDestinationFixture fixture)

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -11,7 +12,7 @@ namespace ALE.ETLBox.ConnectionManager
         public abstract ConnectionManagerType ConnectionManagerType { get; }
 
         public int MaxLoginAttempts { get; set; } = 3;
-        public bool LeaveOpen
+        public virtual bool LeaveOpen
         {
             get => _leaveOpen || IsInBulkInsert || Transaction != null;
             set => _leaveOpen = value;
@@ -19,7 +20,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbConnectionString ConnectionString { get; set; }
 
-        internal TConnection DbConnection { get; private set; }
+        protected TConnection DbConnection { get; private set; }
         public ConnectionState? State => DbConnection?.State;
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
@@ -60,9 +61,9 @@ namespace ALE.ETLBox.ConnectionManager
 
         private void TryOpenConnectionXTimes()
         {
-            bool successfullyConnected = false;
+            var successfullyConnected = false;
             Exception lastException = null;
-            for (int i = 1; i <= MaxLoginAttempts; i++)
+            for (var i = 1; i <= MaxLoginAttempts; i++)
             {
                 try
                 {
@@ -93,6 +94,7 @@ namespace ALE.ETLBox.ConnectionManager
         {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
+            cmd.CommandType = CommandType.Text;
             cmd.CommandText = commandText;
             if (parameterList != null)
             {
@@ -226,6 +228,11 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
         public abstract IConnectionManager Clone();
+
+        public virtual bool IndexExists(ITask callingTask, string sql)
+        {
+            return new SqlTask(callingTask, sql).ExecuteScalarAsBool();
+        }
         #endregion
     }
 }

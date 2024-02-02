@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.MergeJoin
 {
+    [Collection("Transformations")]
     public class MergeJoinStringArrayTests : TransformationsTestBase
     {
         public MergeJoinStringArrayTests(TransformationsDatabaseFixture fixture)
@@ -14,31 +15,31 @@ namespace TestTransformations.MergeJoin
         public void MergeJoinUsingOneObject()
         {
             //Arrange
-            TwoColumnsTableFixture source1Table = new TwoColumnsTableFixture(
+            var source1Table = new TwoColumnsTableFixture(
                 "MergeJoinNonGenericSource1"
             );
             source1Table.InsertTestData();
-            TwoColumnsTableFixture source2Table = new TwoColumnsTableFixture(
+            var source2Table = new TwoColumnsTableFixture(
                 "MergeJoinNonGenericSource2"
             );
             source2Table.InsertTestDataSet2();
             var _ = new TwoColumnsTableFixture("MergeJoinNonGenericDestination");
 
-            DbSource<string[]> source1 = new DbSource<string[]>(
+            var source1 = new DbSource<string[]>(
                 SqlConnection,
                 "MergeJoinNonGenericSource1"
             );
-            DbSource<string[]> source2 = new DbSource<string[]>(
+            var source2 = new DbSource<string[]>(
                 SqlConnection,
                 "MergeJoinNonGenericSource2"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "MergeJoinNonGenericDestination"
             );
 
             //Act
-            MergeJoin<string[]> join = new MergeJoin<string[]>(
+            var join = new MergeJoin<string[]>(
                 (inputRow1, inputRow2) =>
                 {
                     inputRow1[0] = (int.Parse(inputRow1[0]) + int.Parse(inputRow2[0])).ToString();

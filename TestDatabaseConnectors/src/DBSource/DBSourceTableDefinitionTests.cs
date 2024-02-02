@@ -3,6 +3,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceTableDefinitionTests : DatabaseConnectorsTestBase
     {
         public DbSourceTableDefinitionTests(DatabaseSourceDestinationFixture fixture)

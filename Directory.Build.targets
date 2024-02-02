@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <PackageVersion>$(Version)</PackageVersion>
-    <Copyright>© 2018 Andreas Lennartz, © 2021-2023 RapidSoft</Copyright>
+    <Copyright>© 2018 Andreas Lennartz, © 2021-2024 RapidSoft</Copyright>
     <PackageAuthors>RapidSoft</PackageAuthors>
     <PackageOwners>RapidSoft</PackageOwners>
     <PackageProjectUrl>https://rapidsoft.ru/</PackageProjectUrl>
@@ -45,7 +45,7 @@
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Version)' == '1.0.0' ">
       <VersionSuffix>development</VersionSuffix>
-      <VersionPrefix>1.9.0</VersionPrefix>
+      <VersionPrefix>1.10.0</VersionPrefix>
       <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
       <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
     </PropertyGroup>

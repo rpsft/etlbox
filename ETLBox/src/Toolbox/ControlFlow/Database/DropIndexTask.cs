@@ -14,7 +14,7 @@ namespace ALE.ETLBox.ControlFlow
 
         internal override string GetSql()
         {
-            string sql = $@"DROP INDEX {ON.QuotedFullName}";
+            var sql = $@"DROP INDEX {ON.QuotedFullName}";
             if (
                 ConnectionType != ConnectionManagerType.SQLite
                 && ConnectionType != ConnectionManagerType.Postgres

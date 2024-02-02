@@ -5,6 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class CreateIndexTaskTests : ControlFlowTestBase
     {
         public CreateIndexTaskTests(ControlFlowDatabaseFixture fixture)
@@ -20,7 +21,7 @@ namespace TestControlFlowTasks
                 "IndexCreationTable1",
                 new List<TableColumn>
                 {
-                    new("Key1", "INT", allowNulls: false),
+                    new("Key1", "INT", allowNulls: false, true),
                     new("Key2", "INT", allowNulls: true)
                 }
             );
@@ -49,7 +50,7 @@ namespace TestControlFlowTasks
                 "IndexCreationTable2",
                 new List<TableColumn>
                 {
-                    new("Key1", "INT", allowNulls: false),
+                    new("Key1", "INT", allowNulls: false, true),
                     new("Key2", "INT", allowNulls: true)
                 }
             );

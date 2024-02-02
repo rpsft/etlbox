@@ -7,6 +7,7 @@ using TestShared.Attributes;
 
 namespace TestConnectionManager.ConnectionManager
 {
+    [Collection("Connection Manager")]
     public sealed class SqlConnectionManagerTests : ConnectionManagerTestBase
     {
         public SqlConnectionManagerTests(ConnectionManagerFixture fixture)

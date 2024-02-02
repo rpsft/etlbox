@@ -1,8 +1,11 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestFlatFileConnectors.Helpers;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.XmlDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class XmlDestinationDynamicObjectTests : FlatFileConnectorsTestBase
     {
         public XmlDestinationDynamicObjectTests(FlatFileToDatabaseFixture fixture)

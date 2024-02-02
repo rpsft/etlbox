@@ -8,6 +8,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
+    [Collection("Transformations")]
     public class LookupErrorLinkingTests : TransformationsTestBase
     {
         public LookupErrorLinkingTests(TransformationsDatabaseFixture fixture)
@@ -36,12 +37,12 @@ namespace TestTransformations.LookupTransformation
             //Arrange
             var _ = new TwoColumnsTableFixture(SqlConnection, "LookupErrorLinkingDest");
             CreateSourceTable(SqlConnection, "LookupErrorLinkingSource");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(
+            var lookupSource = new DbSource<MyLookupRow>(
                 SqlConnection,
                 "LookupErrorLinkingSource"
             );
 
-            MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>
+            var source = new MemorySource<MyInputDataRow>
             {
                 DataAsList = new List<MyInputDataRow>
                 {
@@ -54,8 +55,8 @@ namespace TestTransformations.LookupTransformation
             //Act & Assert
             Assert.ThrowsAny<Exception>(() =>
             {
-                List<MyLookupRow> lookupTableData = new List<MyLookupRow>();
-                LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<
+                var lookupTableData = new List<MyLookupRow>();
+                var lookup = new LookupTransformation<
                     MyInputDataRow,
                     MyLookupRow
                 >(
@@ -70,7 +71,7 @@ namespace TestTransformations.LookupTransformation
                     },
                     lookupTableData
                 );
-                DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(
+                var dest = new DbDestination<MyInputDataRow>(
                     SqlConnection,
                     "LookupErrorLinkingDest"
                 );
@@ -85,17 +86,17 @@ namespace TestTransformations.LookupTransformation
         public void WithObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 SqlConnection,
                 "LookupErrorLinkingDest"
             );
             CreateSourceTable(SqlConnection, "LookupErrorLinkingSource");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(
+            var lookupSource = new DbSource<MyLookupRow>(
                 SqlConnection,
                 "LookupErrorLinkingSource"
             );
 
-            MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>
+            var source = new MemorySource<MyInputDataRow>
             {
                 DataAsList = new List<MyInputDataRow>
                 {
@@ -105,11 +106,11 @@ namespace TestTransformations.LookupTransformation
                     new() { Col1 = 4 }
                 }
             };
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            List<MyLookupRow> lookupTableData = new List<MyLookupRow>();
-            LookupTransformation<MyInputDataRow, MyLookupRow> lookup = new LookupTransformation<
+            var lookupTableData = new List<MyLookupRow>();
+            var lookup = new LookupTransformation<
                 MyInputDataRow,
                 MyLookupRow
             >(
@@ -126,7 +127,7 @@ namespace TestTransformations.LookupTransformation
                 },
                 lookupTableData
             );
-            DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(
+            var dest = new DbDestination<MyInputDataRow>(
                 SqlConnection,
                 "LookupErrorLinkingDest"
             );
@@ -166,7 +167,7 @@ namespace TestTransformations.LookupTransformation
                 }
             );
             tableDefinition.CreateTable(connection);
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(
+            var TN = new ObjectNameDescriptor(
                 tableName,
                 connection.QB,
                 connection.QE

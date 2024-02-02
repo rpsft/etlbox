@@ -1,5 +1,5 @@
+using System.Threading;
 using System.Threading.Tasks;
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 
@@ -8,14 +8,14 @@ namespace TestTransformations.UseCases
     public class ReuseDataFlowAsyncTests
     {
         [Fact]
-        public void RunReusableFlow()
+        public async Task RunReusableFlow()
         {
             //Arrange
-            ReferenceDataFlow r1 = new ReferenceDataFlow(1, "Flow1");
-            ReferenceDataFlow r2 = new ReferenceDataFlow(1, "Flow2");
+            var r1 = new ReferenceDataFlow(1, "Flow1");
+            var r2 = new ReferenceDataFlow(1, "Flow2");
 
             //Act
-            Task.WaitAll(r1.Initialized, r2.Initialized);
+            await Task.WhenAll(r1.Initialized, r2.Initialized);
 
             //Assert
             Assert.Equal("Flow1", r1.Data[1].Value);
@@ -40,7 +40,7 @@ namespace TestTransformations.UseCases
                 Source.DataAsList.Add(x);
                 Destination = new CustomDestination<MyData>(data => Data.Add(data.Key, data));
                 Source.LinkTo(Destination);
-                Source.ExecuteAsync();
+                Source.ExecuteAsync(CancellationToken.None);
             }
 
             public IDictionary<long, MyData> Data { get; } = new Dictionary<long, MyData>();

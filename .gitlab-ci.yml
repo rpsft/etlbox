@@ -6,11 +6,14 @@ variables:
   CI_DEBUG_SERVICES: "true"
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
+  NUPKG_FOLDER: ".packages"
 
-  NUPKG_FOLDER: '.packages'
-
-.default_rules:
+workflow:
   rules:
+    # Avoid duplicate jobs in merge requests
+    # See https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
       variables:
         PACKAGE_VERSION: $CI_COMMIT_TAG
@@ -20,10 +23,10 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
       variables:
         PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $PACKAGE_VERSION == ""
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $PACKAGE_VERSION == null
       variables: 
         PACKAGE_VERSION: "${PACKAGE_RELEASE}-merge.${CI_PIPELINE_IID}"
-    - if: $CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == ""
+    - if: $CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == null
       variables: 
         # Package version "by default", from .version.yml and added current pipeline no
         # (when pipeline is started on a tag, the tag name provides version number)
@@ -41,8 +44,8 @@ build_job:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - echo "Building version $PACKAGE_VERSION"
-    - dotnet build ETLBox/ --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
-    - dotnet pack ETLBox/ --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   cache:
     key: dotnet-packages-cache
     paths:
@@ -53,8 +56,6 @@ build_job:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - "$NUPKG_FOLDER/"
-  rules:
-    - !reference [.default_rules, rules]
 
 test_job:
   stage: test
@@ -66,6 +67,10 @@ test_job:
       alias: localpostgres
     - name: mcr.microsoft.com/azure-sql-edge
       alias: localmssql
+    - name: clickhouse/clickhouse-server
+      alias: localclickhouse
+    - name: krisgeus/docker-kafka
+      alias: kafka      
   variables:
     # MySQL image customization
     MYSQL_ROOT_HOST: '%'
@@ -79,6 +84,17 @@ test_job:
     ACCEPT_EULA: 'Y'
     SA_PASSWORD: 'YourStrong@Passw0rd'
     MSSQL_PID: 'Developer'
+    # CLICKHOUSE image customization
+    CLICKHOUSE_USER: clickhouse
+    CLICKHOUSE_PASSWORD: Qwe123456
+    CLICKHOUSE_MAX_CONNECTIONS: 100
+    # KAFKA customization
+    ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,INTERNAL://localhost:9093'
+    LISTENERS: 'PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:9093'
+    SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT'
+    INTER_BROKER: 'INTERNAL'
+    KAFKA_CREATE_TOPICS: 'cc-event:36:1'
+
   before_script:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
@@ -101,8 +117,6 @@ test_job:
       - .nuget/packages/
       - tools/
     unprotect: true
-  rules:
-    - !reference [.default_rules, rules]
   artifacts:
     when: always
     paths:
@@ -120,8 +134,6 @@ publish:internal:
   script:
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
-  rules:
-    - !reference [.default_rules, rules]
   needs:
     - build_job
     - test_job

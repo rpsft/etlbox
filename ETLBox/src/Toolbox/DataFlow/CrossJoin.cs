@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.Common;
+using System.Threading;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
 
@@ -26,7 +27,7 @@ namespace ALE.ETLBox.DataFlow
 
         private bool WasInMemoryTableLoaded { get; set; }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
             throw new InvalidOperationException(
                 "Execute is not supported on CrossJoins! A crossjoin will continue execution"

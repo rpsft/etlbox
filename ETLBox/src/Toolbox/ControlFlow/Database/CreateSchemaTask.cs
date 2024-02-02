@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ETLBox.Primitives;
 
@@ -23,7 +23,7 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            bool schemaExists = new IfSchemaExistsTask(SchemaName)
+            var schemaExists = new IfSchemaExistsTask(SchemaName)
             {
                 ConnectionManager = ConnectionManager,
                 DisableLogging = true

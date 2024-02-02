@@ -43,7 +43,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            AdomdConnectionManager clone = new AdomdConnectionManager(
+            var clone = new AdomdConnectionManager(
                 (SqlConnectionString)ConnectionString
             )
             {

@@ -67,7 +67,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            BulkInsertSql bulkInsert = new BulkInsertSql
+            var bulkInsert = new BulkInsertSql
             {
                 ConnectionType = ConnectionManagerType.Access,
                 QB = QB,
@@ -99,7 +99,7 @@ namespace ALE.ETLBox.ConnectionManager
         private DataTable GetSchemaDataTable(string unquotedFullName, string schemaInfo)
         {
             Open();
-            string[] restrictions = new string[3];
+            var restrictions = new string[3];
             restrictions[2] = unquotedFullName;
             DataTable schemaTable = DbConnection.GetSchema(schemaInfo, restrictions);
             return schemaTable;
@@ -107,13 +107,13 @@ namespace ALE.ETLBox.ConnectionManager
 
         internal TableDefinition ReadTableDefinition(ObjectNameDescriptor tn)
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             DataTable schemaTable = GetSchemaDataTable(tn.UnquotedFullName, "Columns");
 
             foreach (var row in schemaTable.Rows)
             {
-                DataRow dataRow = row as DataRow;
-                TableColumn col = new TableColumn
+                var dataRow = row as DataRow;
+                var col = new TableColumn
                 {
                     Name = dataRow![schemaTable.Columns["COLUMN_NAME"]].ToString(),
                     DataType = dataRow[schemaTable.Columns["TYPE_NAME"]].ToString(),
@@ -174,7 +174,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            AccessOdbcConnectionManager clone = new AccessOdbcConnectionManager(
+            var clone = new AccessOdbcConnectionManager(
                 (OdbcConnectionString)ConnectionString
             )
             {

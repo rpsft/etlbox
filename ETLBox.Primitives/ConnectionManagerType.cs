@@ -8,6 +8,7 @@ namespace ETLBox.Primitives
         SQLite,
         MySql,
         Postgres,
-        Access
+        Access,
+        ClickHouse
     }
 }

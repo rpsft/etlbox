@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using ALE.ETLBox.Common.Logging;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
-using NLog;
-using NLog.Config;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ALE.ETLBox.Common.ControlFlow
 {
@@ -64,62 +67,10 @@ namespace ALE.ETLBox.Common.ControlFlow
         /// </summary>
         public static string LogTable { get; set; } = DefaultLogTableName;
 
-        public static void AddLoggingDatabaseToConfig(IConnectionManager connection) =>
-            AddLoggingDatabaseToConfig(connection, LogLevel.Info);
-
         /// <summary>
-        /// You can also set the logging database in the nlog.config file.
-        /// If you want to programmatically change the logging database,  use this method.
+        /// Фабрика для создания логгера
         /// </summary>
-        /// <param name="connection">The new logging database connection manager</param>
-        /// <param name="minLogLevel">Logging level</param>
-        /// <param name="logTableName">Table to hold logs</param>
-        public static void AddLoggingDatabaseToConfig(
-            IConnectionManager connection,
-            LogLevel minLogLevel,
-            string logTableName = DefaultLogTableName
-        )
-        {
-            try
-            {
-                if (
-                    LogTable != null
-                    && LogTable != DefaultLoadProcessTableName
-                    && logTableName == DefaultLoadProcessTableName
-                )
-                    logTableName = LogTable;
-                var newTarget = new CreateDatabaseTarget(
-                    connection,
-                    logTableName
-                ).GetNLogDatabaseTarget();
-                LoggingConfiguration config = new LoggingConfiguration();
-                config.AddRule(minLogLevel, LogLevel.Fatal, newTarget);
-                LogManager.Setup().LoadConfiguration(config);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
-        private static bool s_isLayoutRendererRegistered;
-
-        public static Logger GetLogger()
-        {
-            if (s_isLayoutRendererRegistered)
-            {
-                return LogManager.GetLogger("ETL");
-            }
-
-            LogManager
-                .Setup()
-                .SetupExtensions(builder =>
-                {
-                    builder.RegisterLayoutRenderer<ETLLogLayoutRenderer>("etllog");
-                });
-            s_isLayoutRendererRegistered = true;
-            return LogManager.GetLogger("ETL");
-        }
+        public static ILoggerFactory LoggerFactory { get; set; } = NullLoggerFactory.Instance;
 
         /// <summary>
         /// Set all settings back to default (which is null or false)
@@ -133,5 +84,105 @@ namespace ALE.ETLBox.Common.ControlFlow
             LogTable = DefaultLogTableName;
             Stage = null;
         }
+
+        public static void Trace(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Trace, message, type, action, hash, stage, loadProcessKey);
+
+        public static void Debug(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Debug, message, type, action, hash, stage, loadProcessKey);
+
+        public static void Info(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Information, message, type, action, hash, stage, loadProcessKey);
+
+        public static void Warn(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Warning, message, type, action, hash, stage, loadProcessKey);
+
+        public static void Error(
+            this ILogger logger,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+            => logger.WriteLog(LogLevel.Error, message, type, action, hash, stage, loadProcessKey);
+
+        private static void WriteLog(
+            this ILogger logger,
+            LogLevel logLevel,
+            string message,
+            string type,
+            string action,
+            string hash,
+            string stage,
+            long? loadProcessKey)
+        {
+            logger.Log(logLevel,
+                new EventId(0, "ETL"),
+                new MyLogEvent(message)
+                    .WithProperty("Type", type)
+                    .WithProperty("Action", action)
+                    .WithProperty("Hash", hash)
+                    .WithProperty("Stage", stage)
+                    .WithProperty("LoadProcessKey", loadProcessKey),
+                (Exception)null,
+                MyLogEvent.Formatter);
+        }
+    }
+
+    public class MyLogEvent : IEnumerable<KeyValuePair<string, object>>
+    {
+        readonly List<KeyValuePair<string, object>> _properties = new();
+
+        public string Message { get; }
+
+        public MyLogEvent(string message)
+        {
+            Message = message;
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return _properties.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+
+        public MyLogEvent WithProperty(string name, object value)
+        {
+            _properties.Add(new KeyValuePair<string, object>(name, value));
+            return this;
+        }
+
+        public static Func<MyLogEvent, Exception, string> Formatter { get; } = (l, _) => l.Message;
     }
 }
+

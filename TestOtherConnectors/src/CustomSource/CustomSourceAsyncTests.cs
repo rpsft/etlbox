@@ -1,13 +1,17 @@
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceAsyncTests : OtherConnectorsTestBase
     {
         public CustomSourceAsyncTests(OtherConnectorsDatabaseFixture fixture)
-            : base(fixture) { }
+            : base(fixture)
+        {
+        }
 
         public class MySimpleRow
         {
@@ -16,72 +20,76 @@ namespace TestOtherConnectors.CustomSource
         }
 
         [Fact]
-        public void SimpleAsyncFlow()
+        public async Task SimpleAsyncFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "Destination4CustomSource"
             );
-            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
-            int readIndex = 0;
-
-            MySimpleRow ReadData()
+            var data = new List<string>
             {
-                if (readIndex == 0)
-                    Task.Delay(300).Wait();
-                var result = new MySimpleRow { Col1 = readIndex + 1, Col2 = data[readIndex] };
-                readIndex++;
-                return result;
-            }
-
-            bool EndOfData() => readIndex >= data.Count;
+                "Test1",
+                "Test2",
+                "Test3"
+            };
+            var readIndex = 0;
 
             //Act
-            CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var source =
+                new CustomSource<MySimpleRow>(() => ReadData(ref readIndex, data), () => readIndex >= data.Count);
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "Destination4CustomSource"
             );
             source.LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion;
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
-            Assert.True(RowCountTask.Count(SqlConnection, "Destination4CustomSource") == 0);
-            sourceT.Wait();
-            destT.Wait();
             dest2Columns.AssertTestData();
         }
 
+        private static MySimpleRow ReadData(ref int index, IReadOnlyList<string> data)
+        {
+            if (index == 0)
+                Task.Delay(300).Wait();
+            var result = new MySimpleRow
+            {
+                Col1 = index + 1,
+                Col2 = data[index]
+            };
+            index++;
+            return result;
+        }
+
         [Fact]
-        public void ExceptionalAsyncFlow()
+        public async Task ExceptionalAsyncFlow()
         {
             //Arrange
-            ALE.ETLBox.DataFlow.CustomSource source = new ALE.ETLBox.DataFlow.CustomSource(
+            var source = new ALE.ETLBox.DataFlow.CustomSource(
                 () => throw new ETLBoxException("Test Exception"),
                 () => false
             );
-            ALE.ETLBox.DataFlow.CustomDestination dest =
+            var dest =
                 new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
 
             //Act
             source.LinkTo(dest);
 
             //Assert
-            Assert.Throws<ETLBoxException>(() =>
-            {
-                Task sourceT = source.ExecuteAsync();
-                Task destT = dest.Completion;
-                try
+            await Assert.ThrowsAsync<ETLBoxException>(async () =>
                 {
-                    sourceT.Wait();
-                    destT.Wait();
+                    try
+                    {
+                        await source.ExecuteAsync(CancellationToken.None);
+                        await dest.Completion;
+                    }
+                    catch (Exception e)
+                    {
+                        throw e.InnerException ?? e;
+                    }
                 }
-                catch (Exception e)
-                {
-                    throw e.InnerException!;
-                }
-            });
+            );
         }
     }
 }

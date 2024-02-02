@@ -27,7 +27,7 @@ whole [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)
 or [ELT](https://en.wikipedia.org/wiki/Extract,_load,_transform). You can use it to create your own dataflow pipelines
 programmatically in .NET, e.g. with C#. Besides a big set of dataflow components it comes which some control flow task
 that let you easily manage your database or simple execute Sql code without any boilerplate code. It also offers
-extended logging capabilites based on NLog to monitor and anlayze your ETL job runs.
+extended logging capabilites based on ILogger to monitor and anlayze your ETL job runs.
 
 ETLBox is a fully functional alternative to other ETL tools like Sql Server Integrations Services (SSIS). Creating your
 ETL processes programatically has some advantages:
@@ -204,9 +204,9 @@ CreateTableTask.Create(conn, "Table1", new List<TableColumn>() {
 
 ### Logging
 
-By default, ETLBox uses and extends [NLog](https://nlog-project.org). ETLBox already comes with NLog as dependency - so
+By default, ETLBox uses ILogger. ETLBox already comes with ILogger as dependency - so
 you don't need to include additional packages from nuget. In order to have the logging activating, you just have to set
-up a nlog configuration called `nlog.config`, and create a target and a logger rule. After adding this, you will already
+up a ILogger configuration called `ILogger.config`, and create a target and a logger rule. After adding this, you will already
 get logging output for all tasks and components in
 ETLBox. [Read more about logging here](https://etlbox.net/articles/overview_logging.html).
 

@@ -5,6 +5,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceStringArrayTests : DatabaseConnectorsTestBase
     {
         public DbSourceStringArrayTests(DatabaseSourceDestinationFixture fixture)
@@ -101,7 +102,7 @@ namespace TestDatabaseConnectors.DBSource
             });
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void OnlyNullValue(IConnectionManager connection)
         {
             //Arrange

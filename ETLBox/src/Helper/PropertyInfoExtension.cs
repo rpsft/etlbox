@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 
 namespace ALE.ETLBox.Helper
 {

@@ -1,7 +1,10 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvSourceIdentityColumnTests : FlatFileConnectorsTestBase
     {
         public CsvSourceIdentityColumnTests(FlatFileToDatabaseFixture fixture)

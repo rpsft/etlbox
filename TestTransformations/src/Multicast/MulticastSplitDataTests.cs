@@ -6,6 +6,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
+    [Collection("Transformations")]
     public class MulticastSplitDataTests : TransformationsTestBase
     {
         public MulticastSplitDataTests(TransformationsDatabaseFixture fixture)
@@ -40,8 +41,8 @@ namespace TestTransformations.Multicast
         public void SplitCsvSourceIn2Tables()
         {
             //Arrange
-            TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
-            FourColumnsTableFixture dest2Table = new FourColumnsTableFixture(
+            var dest1Table = new TwoColumnsTableFixture("SplitDataDestination1");
+            var dest2Table = new FourColumnsTableFixture(
                 "SplitDataDestination2"
             );
 

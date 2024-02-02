@@ -102,7 +102,7 @@ namespace ALE.ETLBox
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            string value = Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
+            var value = Convert.ToString(CurrentRow[ShiftIndexAroundIDColumn(i)]);
             buffer = value.Substring(bufferoffset, length).ToCharArray();
             return buffer.Length;
         }

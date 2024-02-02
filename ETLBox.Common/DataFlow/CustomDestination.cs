@@ -60,7 +60,7 @@ namespace ALE.ETLBox.Common.DataFlow
             return input =>
             {
                 if (ProgressCount == 0)
-                    NLogStart();
+                    LogStart();
                 try
                 {
                     if (input != null)

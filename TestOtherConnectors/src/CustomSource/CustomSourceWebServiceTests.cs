@@ -3,6 +3,7 @@ using ALE.ETLBox.ControlFlow;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceWebServiceTests : OtherConnectorsTestBase
     {
         public CustomSourceWebServiceTests(OtherConnectorsDatabaseFixture fixture)

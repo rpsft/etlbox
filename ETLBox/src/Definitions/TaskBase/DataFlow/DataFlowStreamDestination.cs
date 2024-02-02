@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -120,7 +120,7 @@ namespace ALE.ETLBox.DataFlow
 
             OnCompletion?.Invoke();
 
-            NLogFinish();
+            LogFinish();
         }
 
         protected abstract void InitStream();

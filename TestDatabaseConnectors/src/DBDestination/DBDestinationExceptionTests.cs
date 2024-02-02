@@ -1,9 +1,10 @@
+using System.Threading;
 using ALE.ETLBox;
-using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationExceptionTests : DatabaseConnectorsTestBase
     {
         public DbDestinationExceptionTests(DatabaseSourceDestinationFixture fixture)
@@ -23,11 +24,11 @@ namespace TestDatabaseConnectors.DBDestination
             source.LinkTo(dest);
 
             //Act & Assert
-            Assert.Throws<ETLBoxException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
             {
                 try
                 {
-                    source.Execute();
+                    source.Execute(CancellationToken.None);
                     dest.Wait();
                 }
                 catch (AggregateException e)

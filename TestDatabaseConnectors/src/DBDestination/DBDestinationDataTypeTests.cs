@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -5,6 +6,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationDataTypeTests : DatabaseConnectorsTestBase
     {
         public DbDestinationDataTypeTests(DatabaseSourceDestinationFixture fixture)
@@ -38,7 +40,7 @@ namespace TestDatabaseConnectors.DBDestination
                     "datatypedestination",
                     new List<TableColumn>
                     {
-                        new("IntCol", "INT", allowNulls: true),
+                        new("IntCol", "INT", allowNulls: false),
                         new("LongCol", "BIGINT", allowNulls: true),
                         new("DecimalCol", "FLOAT", allowNulls: true),
                         new("DoubleCol", "FLOAT", allowNulls: true),
@@ -63,8 +65,8 @@ namespace TestDatabaseConnectors.DBDestination
                             LongCol = -1,
                             DecimalCol = 2.3M,
                             DoubleCol = 5.4,
-                            DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10),
-                            DateCol = new DateTime(2020, 1, 1),
+                            DateTimeCol = new DateTime(2010, 1, 1, 10, 10, 10, DateTimeKind.Local),
+                            DateCol = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local),
                             StringCol = "Test",
                             CharCol = 'T',
                             DecimalStringCol = 13.4566m.ToString(connectionCulture),
@@ -77,7 +79,7 @@ namespace TestDatabaseConnectors.DBDestination
                 //Act
                 var dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
                 source.LinkTo(dest);
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
 
                 //Assert
@@ -93,9 +95,14 @@ namespace TestDatabaseConnectors.DBDestination
                     col => Assert.True(Convert.ToDecimal(col) == 5.4M),
                     col =>
                         Assert.True(
-                            Convert.ToDateTime(col) == new DateTime(2010, 1, 1, 10, 10, 10)
+                            Convert.ToDateTime(col)
+                                == new DateTime(2010, 1, 1, 10, 10, 10, DateTimeKind.Utc)
                         ),
-                    col => Assert.True(Convert.ToDateTime(col) == new DateTime(2020, 1, 1)),
+                    col =>
+                        Assert.True(
+                            Convert.ToDateTime(col)
+                                == new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                        ),
                     col => Assert.True(Convert.ToString(col) == "Test"),
                     col =>
                         Assert.True(Convert.ToString(col) == "T" || Convert.ToString(col) == "84"),
@@ -116,6 +123,7 @@ namespace TestDatabaseConnectors.DBDestination
 
         public class MyDataTypeRow
         {
+            public int Id { get; set; }
             public int IntCol { get; set; }
             public long LongCol { get; set; }
             public decimal DecimalCol { get; set; }

@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
@@ -24,9 +25,10 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
 
-        public async Task ExecuteAsync() => await OutputSource.ExecuteAsync();
+        public async Task ExecuteAsync() 
+            => await OutputSource.ExecuteAsync(CancellationToken.None);
 
-        public void Execute() => OutputSource.Execute();
+        public void Execute() => OutputSource.Execute(CancellationToken.None);
 
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
@@ -143,7 +145,7 @@ namespace ALE.ETLBox.DataFlow
             if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
             {
                 var r = row as IDictionary<string, object>;
-                foreach (string idColumn in MergeProperties.IdPropertyNames)
+                foreach (var idColumn in MergeProperties.IdPropertyNames)
                 {
                     if (!r!.ContainsKey(idColumn))
                         r.Add(idColumn, null);
@@ -184,7 +186,7 @@ namespace ALE.ETLBox.DataFlow
 
         private bool FindDeletionDynamicProperty(IDictionary<string, object> r)
         {
-            bool result = true;
+            var result = true;
             foreach (var deleteColumn in MergeProperties.DeletionProperties)
             {
                 if (r!.TryGetValue(deleteColumn.Key, out var property))
@@ -297,7 +299,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitOutputFlow()
         {
-            int x = 0;
+            var x = 0;
             OutputSource = new CustomSource<TInput>(
                 () => DeltaTable[x++],
                 () => x >= DeltaTable.Count
@@ -306,7 +308,7 @@ namespace ALE.ETLBox.DataFlow
             DestinationTable.OnCompletion = () =>
             {
                 IdentifyAndDeleteMissingEntries();
-                OutputSource.Execute();
+                OutputSource.Execute(CancellationToken.None);
             };
         }
 
@@ -408,11 +410,11 @@ namespace ALE.ETLBox.DataFlow
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
-            var delete = rowsToDelete as TInput[] ?? rowsToDelete.ToArray();
-            if (delete.Length == 0)
+            var delete = rowsToDelete as TInput[] ?? rowsToDelete?.ToArray();
+            if (delete is null or { Length : 0 })
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
-            string idNames = $"{QB}{IdColumnNames[0]}{QE}";
+            var idNames = $"{QB}{IdColumnNames[0]}{QE}";
             if (IdColumnNames.Count > 1)
                 idNames = CreateConcatSqlForNames();
             new SqlTask(
@@ -430,7 +432,7 @@ namespace ALE.ETLBox.DataFlow
 
         private string CreateConcatSqlForNames()
         {
-            string result =
+            var result =
                 $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
             if (ConnectionType == ConnectionManagerType.SQLite)
                 result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";

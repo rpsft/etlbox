@@ -1,10 +1,10 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceColumnMappingTests : DatabaseConnectorsTestBase
     {
         public DbSourceColumnMappingTests(DatabaseSourceDestinationFixture fixture)
@@ -63,7 +63,7 @@ namespace TestDatabaseConnectors.DBSource
             public string Text { get; set; }
         }
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void ColumnMappingExtended(IConnectionManager connection)
         {
             //Arrange

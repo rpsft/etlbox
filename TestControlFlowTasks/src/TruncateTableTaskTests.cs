@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class TruncateTableTaskTests : ControlFlowTestBase
     {
         public TruncateTableTaskTests(ControlFlowDatabaseFixture fixture)

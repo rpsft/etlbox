@@ -4,6 +4,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationBatchChangesTests : DatabaseConnectorsTestBase
     {
         public DbDestinationBatchChangesTests(DatabaseSourceDestinationFixture fixture)

@@ -13,10 +13,10 @@ namespace ALE.ETLBox.Common
             if (text == null)
                 return string.Empty;
 
-            StringBuilder hexBuilder = new StringBuilder();
-            byte[] hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
+            var hexBuilder = new StringBuilder();
+            var hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
 
-            foreach (byte hashByte in hashValue)
+            foreach (var hashByte in hashValue)
                 hexBuilder.Append(hashByte.ToString("x2"));
 
             return hexBuilder.ToString().ToUpper();

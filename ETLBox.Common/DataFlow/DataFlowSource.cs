@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
@@ -7,18 +8,20 @@ using JetBrains.Annotations;
 namespace ALE.ETLBox.Common.DataFlow
 {
     [PublicAPI]
-    public abstract class DataFlowSource<TOutput> : DataFlowTask
+    public abstract class DataFlowSource<TOutput> : DataFlowTask, ILinkErrorSource
     {
         public ISourceBlock<TOutput> SourceBlock => Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new();
 
         protected ErrorHandler ErrorHandler { get; set; } = new();
 
-        public abstract void Execute();
+        public abstract void Execute(CancellationToken cancellationToken);
 
-        public Task ExecuteAsync()
+        public void Execute() => Execute(CancellationToken.None);
+
+        public Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            return Task.Factory.StartNew(Execute);
+            return Task.Factory.StartNew(() => Execute(cancellationToken), cancellationToken);
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target) =>

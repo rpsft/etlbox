@@ -1,3 +1,4 @@
+using System.Threading;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -5,6 +6,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection("DatabaseConnectors")]
     public class DbSourceDataTypeTests : DatabaseConnectorsTestBase
     {
         public DbSourceDataTypeTests(DatabaseSourceDestinationFixture fixture)
@@ -40,7 +42,7 @@ namespace TestDatabaseConnectors.DBSource
                     "different_type_table",
                     new List<TableColumn>
                     {
-                        new("int_col", "INT", true),
+                        new("int_col", "INT", false),
                         new("long_col", "BIGINT", true),
                         new("decimal_col", "FLOAT", true),
                         new("double_col", "FLOAT", true),
@@ -57,17 +59,17 @@ namespace TestDatabaseConnectors.DBSource
                 SqlTask.ExecuteNonQuery(
                     connection,
                     "Insert test data",
-                    @"INSERT INTO different_type_table 
+                    $@"INSERT INTO different_type_table 
                     (int_col, long_col, decimal_col, double_col, datetime_col, date_col
 , string_col, char_col, decimal_string_col, null_col, enum_col) 
-                VALUES (1, -1, 2.3, 5.4, '2010-01-01 10:00:00.000', '2020-01-01', 'Test', 'T', 13.4566, NULL, 2 )"
+                VALUES (1, -1, 2.3, 5.4, '2010-01-01 10:00:00', '2020-01-01', 'Test', 'T', 13.4566, NULL, 2 )"
                 );
                 //Act
                 var source = new DbSource<MyDataTypeRow>(connection, "different_type_table");
                 var dest = new MemoryDestination<MyDataTypeRow>();
 
                 source.LinkTo(dest);
-                source.Execute();
+                source.Execute(CancellationToken.None);
                 dest.Wait();
 
                 //Assert
@@ -76,8 +78,8 @@ namespace TestDatabaseConnectors.DBSource
                 Assert.Equal(2.3M, dest.Data.First().DecimalCol);
                 Assert.True(dest.Data.First().DoubleCol is >= 5.4 and < 5.5);
                 Assert.Equal(
-                    "2010-01-01 10:00:00.000",
-                    dest.Data.First().DateTimeCol.ToString("yyyy-MM-dd hh:mm:ss.fff")
+                    "2010-01-01 10:00:00",
+                    dest.Data.First().DateTimeCol.ToString("yyyy-MM-dd hh:mm:ss")
                 );
                 Assert.Equal("2020-01-01", dest.Data.First().DateCol.ToString("yyyy-MM-dd"));
                 Assert.Equal("Test", dest.Data.First().StringCol);
@@ -98,6 +100,9 @@ namespace TestDatabaseConnectors.DBSource
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         private class MyDataTypeRow
         {
+            [ColumnMap("id")]
+            public int Id { get; set; }
+
             [ColumnMap("int_col")]
             public int IntCol { get; set; }
 

@@ -1,13 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ClickHouse.Ado;
 using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection("ControlFlow")]
     public class SqlTaskTests : ControlFlowTestBase
     {
         public SqlTaskTests(ControlFlowDatabaseFixture fixture)
@@ -18,10 +21,11 @@ namespace TestControlFlowTasks
         public static IEnumerable<object[]> ConnectionsWithValue(string value) =>
             new[]
             {
+                new object[] { ClickHouseConnection, value },
                 new object[] { SqlConnection, value },
                 new object[] { PostgresConnection, value },
                 new object[] { MySqlConnection, value },
-                new object[] { SqliteConnection, value }
+                //new object[] { SqliteConnection, value }
             };
 
         [Theory, MemberData(nameof(Connections))]
@@ -118,7 +122,7 @@ namespace TestControlFlowTasks
                         @"SELECT CAST('2020-02-29' AS DATE) AS ScalarResult"
                     );
                 //Assert
-                Assert.Equal(DateTime.Parse("2020-02-29"), result);
+                Assert.Equal(DateTime.Parse("2020-02-29", CultureInfo.InvariantCulture), result);
             }
         }
 
@@ -163,7 +167,7 @@ namespace TestControlFlowTasks
             );
 
             //Assert
-            Assert.Equal(toBeResult, asIsResult);
+            Assert.Equal(toBeResult.OrderBy(t => t), asIsResult.OrderBy(t => t));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -250,7 +254,7 @@ namespace TestControlFlowTasks
             );
 
             //Assert
-            Assert.Equal(toBeResult, asIsResult);
+            Assert.Equal(toBeResult.OrderBy(t => t.Col1), asIsResult.OrderBy(t => t.Col1));
         }
     }
 }

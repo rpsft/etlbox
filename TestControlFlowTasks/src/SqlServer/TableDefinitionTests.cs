@@ -4,6 +4,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
+    [Collection("ControlFlow")]
     public class TableDefinitionTests : ControlFlowTestBase
     {
         public TableDefinitionTests(ControlFlowDatabaseFixture fixture)

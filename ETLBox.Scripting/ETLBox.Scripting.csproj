@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
         <RootNamespace>ALE.ETLBox.Scripting</RootNamespace>
+        <PackageId>EtlBox.Classic.Scripting</PackageId>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
-    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+    </ItemGroup>
 </Project>

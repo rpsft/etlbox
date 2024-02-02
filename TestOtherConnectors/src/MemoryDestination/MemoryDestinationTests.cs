@@ -2,6 +2,7 @@ using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.MemoryDestination
 {
+    [Collection("OtherConnectors")]
     public class MemoryDestinationTests : OtherConnectorsTestBase
     {
         public MemoryDestinationTests(OtherConnectorsDatabaseFixture fixture)

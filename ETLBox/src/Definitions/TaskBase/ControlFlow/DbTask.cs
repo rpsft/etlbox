@@ -4,6 +4,7 @@ using System.Linq;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ConnectionManager;
+using CsvHelper;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
@@ -141,7 +142,7 @@ namespace ALE.ETLBox.ControlFlow
         public T? ExecuteScalar<T>()
             where T : struct
         {
-            object result = ExecuteScalar();
+            var result = ExecuteScalar();
             if (result == null || result == DBNull.Value)
                 return null;
             return (T)Convert.ChangeType(result, typeof(T));
@@ -149,7 +150,7 @@ namespace ALE.ETLBox.ControlFlow
 
         public bool ExecuteScalarAsBool()
         {
-            object result = ExecuteScalar();
+            var result = ExecuteScalar();
             return ObjectToBool(result);
         }
 
@@ -174,21 +175,20 @@ namespace ALE.ETLBox.ControlFlow
                     LoggingStart();
                 using (IDataReader reader = conn.ExecuteReader(Command, Parameter))
                 {
-                    for (int rowNr = 0; rowNr < Limit; rowNr++)
+                    for (var rowNr = 0; rowNr < Limit; rowNr++)
                     {
                         if (reader.Read())
                         {
-                            BeforeRowReadAction?.Invoke();
-                            for (int i = 0; i < Actions?.Count; i++)
-                            {
-                                Actions?[i]?.Invoke(
-                                    !reader.IsDBNull(i) ? reader.GetValue(i) : null
-                                );
-                            }
-                            AfterRowReadAction?.Invoke();
+                            ProcessCurrentRow(reader);
                         }
                         else
                         {
+                            // That bug on ClickHouseDataReader, by default does not proceed to correct Result
+                            // https://github.com/killwort/clickhouse-net/issues/68
+                            if (HandleClickHouseError(conn, reader))
+                            {
+                                continue;
+                            }
                             break;
                         }
                     }
@@ -233,7 +233,7 @@ namespace ALE.ETLBox.ControlFlow
 
         private void LoggingStart(LogType logType = LogType.None)
         {
-            NLogger.Info(
+            Logger.Info(
                 TaskName,
                 TaskType,
                 "START",
@@ -241,7 +241,7 @@ namespace ALE.ETLBox.ControlFlow
                 Common.ControlFlow.ControlFlow.Stage,
                 Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
-            NLogger.Debug(
+            Logger.Debug(
                 logType == LogType.Bulk ? "SQL Bulk Insert" : $"{Command}",
                 TaskType,
                 "RUN",
@@ -253,7 +253,7 @@ namespace ALE.ETLBox.ControlFlow
 
         private void LoggingEnd(LogType logType = LogType.None)
         {
-            NLogger.Info(
+            Logger.Info(
                 TaskName,
                 TaskType,
                 "END",
@@ -262,7 +262,7 @@ namespace ALE.ETLBox.ControlFlow
                 Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
             if (logType == LogType.Rows)
-                NLogger.Debug(
+                Logger.Debug(
                     $"Rows affected: {RowsAffected ?? 0}",
                     TaskType,
                     "RUN",
@@ -270,6 +270,31 @@ namespace ALE.ETLBox.ControlFlow
                     Common.ControlFlow.ControlFlow.Stage,
                     Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
                 );
+        }
+
+        private void ProcessCurrentRow(IDataReader reader)
+        {
+            BeforeRowReadAction?.Invoke();
+            for (var i = 0; i < Actions?.Count; i++)
+            {
+                Actions?[i]?.Invoke(
+                    !reader.IsDBNull(i) ? reader.GetValue(i) : null
+                );
+            }
+            AfterRowReadAction?.Invoke();
+        }
+
+        private static bool HandleClickHouseError(IConnectionManager conn, IDataReader reader)
+        {
+            if (conn.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+            {
+                var hasNextResult = reader.NextResult();
+                if (hasNextResult)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

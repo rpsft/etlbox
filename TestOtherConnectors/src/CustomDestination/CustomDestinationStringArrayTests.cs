@@ -5,6 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomDestination
 {
+    [Collection("OtherConnectors")]
     public class CustomDestinationStringArrayTests : OtherConnectorsTestBase
     {
         public CustomDestinationStringArrayTests(OtherConnectorsDatabaseFixture fixture)

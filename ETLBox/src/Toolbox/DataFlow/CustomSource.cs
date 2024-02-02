@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.Common;
+using System.Threading;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
 
@@ -35,14 +36,14 @@ namespace ALE.ETLBox.DataFlow
             TaskName = name;
         }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
-            NLogStart();
+            LogStart();
             while (!ReadCompletedFunc.Invoke())
             {
                 try
                 {
-                    Buffer.SendAsync(ReadFunc.Invoke()).Wait();
+                    Buffer.SendAsync(ReadFunc.Invoke(), cancellationToken).Wait(cancellationToken);
                 }
                 catch (Exception e)
                 {
@@ -53,7 +54,7 @@ namespace ALE.ETLBox.DataFlow
                 LogProgress();
             }
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
     }
 

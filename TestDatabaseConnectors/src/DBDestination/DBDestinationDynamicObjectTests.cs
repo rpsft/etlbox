@@ -1,18 +1,21 @@
 using System.Dynamic;
+using System.Threading;
 using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using TestDatabaseConnectors.DBSource;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbDestinationDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
             : base(fixture) { }
 
         [Theory]
-        [MemberData(nameof(AllSqlConnections))]
+        [MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void SourceMoreColumnsThanDestination(IConnectionManager connection)
         {
             //Arrange
@@ -25,7 +28,7 @@ namespace TestDatabaseConnectors.DBDestination
             var dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamic2Cols");
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert
@@ -37,6 +40,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void DestinationMoreColumnsThanSource(IConnectionManager connection)
         {
             //Arrange
+            DropTableTask.DropIfExists(connection, "DestinationDynamicDiffCols");
             var source2Columns = new TwoColumnsTableFixture(connection, "SourceDynamicDiffCols");
             source2Columns.InsertTestData();
             CreateTableTask.Create(
@@ -44,6 +48,10 @@ namespace TestDatabaseConnectors.DBDestination
                 "DestinationDynamicDiffCols",
                 new List<TableColumn>
                 {
+                    new("Id", "int")
+                    { 
+                        DefaultValue = "0"
+                    },
                     new("Col5", "VARCHAR(100)", true),
                     new("Col2", "VARCHAR(100)", true),
                     new("Col1", "INT", true),
@@ -85,6 +93,65 @@ namespace TestDatabaseConnectors.DBDestination
                     connection,
                     "DestinationDynamicDiffCols",
                     $"{qb}Col1{qe} = 3 AND {qb}Col2{qe}='Test3' AND {qb}Col5{qe} IS NULL AND {qb}ColX{qe} IS NULL"
+                )
+            );
+        }
+
+        [Theory]
+        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        public void DestinationMoreColumnsThanSource_WithIdentity(IConnectionManager connection)
+        {
+            //Arrange
+            var sourceTable = "SourceDynamicDiffCols2";
+            var destTable = "DestinationDynamicDiffCols2";
+            DropTableTask.DropIfExists(connection, destTable);
+            var source2Columns = new TwoColumnsTableFixture(connection, sourceTable);
+            source2Columns.InsertTestData();
+            CreateTableTask.Create(
+                connection,
+                destTable,
+                new List<TableColumn>
+                {
+                    new("Id", "int", false, true, true),
+                    new("Col2", "VARCHAR(100)", true),
+                    new("Col1", "INT", true)
+                }
+            );
+
+            //Act
+            var source = new DbSource<ExpandoObject>(connection, sourceTable);
+            var dest = new DbDestination<ExpandoObject>(connection, destTable);
+
+            source.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            //Assert
+            var qb = connection.QB;
+            var qe = connection.QE;
+            Assert.Equal(3, RowCountTask.Count(connection, destTable));
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    destTable,
+                    $"{qb}Col1{qe} = 1 AND {qb}Col2{qe} = 'Test1' AND {qb}Id{qe} = 1"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    destTable,
+                    $"{qb}Col1{qe} = 2 AND {qb}Col2{qe}='Test2' AND {qb}Id{qe} = 2"
+                )
+            );
+            Assert.Equal(
+                1,
+                RowCountTask.Count(
+                    connection,
+                    destTable,
+                    $"{qb}Col1{qe} = 3 AND {qb}Col2{qe}='Test3' AND {qb}Id{qe} = 3"
                 )
             );
         }

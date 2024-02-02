@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.Common;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ETLBox.Primitives;
 
@@ -54,6 +54,7 @@ namespace ALE.ETLBox.ControlFlow
                 ConnectionManagerType.MySql => "SHOW DATABASES",
                 ConnectionManagerType.Postgres
                     => "SELECT datname FROM pg_database WHERE datistemplate=false",
+                ConnectionManagerType.ClickHouse => "SHOW DATABASES",
                 _ => throw new ETLBoxNotSupportedException("This database is not supported!")
             };
         }

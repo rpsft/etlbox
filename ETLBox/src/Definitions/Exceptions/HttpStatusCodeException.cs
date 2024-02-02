@@ -6,13 +6,13 @@ namespace ALE.ETLBox
     [Serializable]
     public class HttpStatusCodeException : Exception
     {
-        public HttpStatusCodeException()
-        {
-        }
-
         protected HttpStatusCodeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
+        }
+
+        public HttpStatusCodeException() 
+        { 
         }
 
         public HttpStatusCodeException(HttpStatusCode statusCode, string content) : base(content)

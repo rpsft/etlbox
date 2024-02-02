@@ -6,6 +6,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection("DatabaseConnectors")]
     public class DbDestinationTransactionTests : DatabaseConnectorsTestBase
     {
         public DbDestinationTransactionTests(DatabaseSourceDestinationFixture fixture)
@@ -18,7 +19,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void ErrorInBatch(IConnectionManager connection)
         {
             //Arrange
-            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
+            var _ = new TwoColumnsTableFixture(connection, "TransactionDest", true);
             var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
@@ -33,20 +34,31 @@ namespace TestDatabaseConnectors.DBDestination
             //Act & Assert
             source.LinkTo(dest);
 
-            Assert.ThrowsAny<Exception>(() =>
+            // ClickHouse writes a default values in not-null columns
+            if (connection.ConnectionManagerType == ConnectionManagerType.ClickHouse)
             {
                 source.Execute();
                 dest.Wait();
-            });
+                Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+            }
+            else
+            {
+                Assert.ThrowsAny<Exception>(() =>
+                {
+                    source.Execute();
+                    dest.Wait();
+                });
+
+                Assert.Equal(2, RowCountTask.Count(connection, "TransactionDest"));
+            }
 
             //Assert
-            Assert.Equal(2, RowCountTask.Count(connection, "TransactionDest"));
             Assert.True(dest.BulkInsertConnectionManager.State == null);
             Assert.True(connection.State == null);
         }
 
         [Theory]
-        [MemberData(nameof(Connections))]
+        [MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CloseConnectionDuringTransaction(IConnectionManager sourceConnection)
         {
             //Arrange
@@ -74,7 +86,7 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(Connections))]
+        [MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void CommitTransaction(IConnectionManager connection)
         {
             //Arrange
@@ -111,7 +123,7 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(Connections))]
+        [MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void RollbackTransaction(IConnectionManager sourceConnection)
         {
             //Arrange
@@ -140,7 +152,7 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(Connections))]
+        [MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void LeaveOpen(IConnectionManager connection)
         {
             //Arrange

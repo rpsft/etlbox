@@ -1,26 +1,29 @@
 using System.Dynamic;
+using System.Threading;
 using System.Threading.Tasks;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Logging.Database;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging
+namespace TestNonParallel.Logging
 {
+    [Collection("Logging")]
     public sealed class DataFlowLoggingTests : NonParallelTestBase, IDisposable
     {
         public DataFlowLoggingTests(LoggingDatabaseFixture fixture)
             : base(fixture)
         {
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.Common.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.Common.ControlFlow.ControlFlow.LogTable);
-            ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 
@@ -209,7 +212,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         }
 
         [Fact]
-        public void LoggingInAsyncTask()
+        public async Task LoggingInAsyncTask()
         {
             //Arrange
             CreateTestTable("Destination4CustomSource");
@@ -231,12 +234,8 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             CustomSource source = new CustomSource(ReadData, EndOfData);
             DbDestination dest = new DbDestination(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion;
-
-            //Assert
-            sourceT.Wait();
-            destT.Wait();
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
             Assert.Equal(

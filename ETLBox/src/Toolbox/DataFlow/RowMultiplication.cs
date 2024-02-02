@@ -1,6 +1,4 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
-using ETLBox.Primitives;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -21,8 +19,6 @@ namespace ALE.ETLBox.DataFlow
         public Func<TInput, IEnumerable<TOutput>> MultiplicationFunc { get; set; }
 
         /* Private stuff */
-        private new TransformManyBlock<TInput, TOutput> TransformBlock { get; set; }
-
         public RowMultiplication(Func<TInput, IEnumerable<TOutput>> multiplicationFunc)
             : this()
         {
@@ -31,7 +27,7 @@ namespace ALE.ETLBox.DataFlow
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(MultiplyRow);
+            TransformBlock = new TransformManyBlock<TInput, TOutput>((Func<TInput, IEnumerable<TOutput>>)MultiplyRow);
         }
 
         private IEnumerable<TOutput> MultiplyRow(TInput row)
@@ -62,7 +58,9 @@ namespace ALE.ETLBox.DataFlow
         public RowMultiplication() { }
 
         public RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>> multiplicationFunc)
-            : base(multiplicationFunc) { }
+            : base(multiplicationFunc)
+        {
+        }
     }
 
     /// <inheritdoc/>
@@ -72,6 +70,8 @@ namespace ALE.ETLBox.DataFlow
         public RowMultiplication() { }
 
         public RowMultiplication(Func<TInput, IEnumerable<TInput>> multiplicationFunc)
-            : base(multiplicationFunc) { }
+            : base(multiplicationFunc)
+        {
+        }
     }
 }

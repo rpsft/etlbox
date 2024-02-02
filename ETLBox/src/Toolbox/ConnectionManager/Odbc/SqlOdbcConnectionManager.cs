@@ -1,4 +1,4 @@
-﻿using ETLBox.Primitives;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -39,7 +39,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            BulkInsertSql bulkInsert = new BulkInsertSql
+            var bulkInsert = new BulkInsertSql
             {
                 UseParameterQuery = true,
                 QB = QB,
@@ -51,7 +51,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            SqlOdbcConnectionManager clone = new SqlOdbcConnectionManager(
+            var clone = new SqlOdbcConnectionManager(
                 (OdbcConnectionString)ConnectionString
             )
             {
