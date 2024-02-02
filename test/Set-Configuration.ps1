@@ -99,7 +99,8 @@ $configFiles = @(
     "../TestTransformations/default.config.json",
     "../TestOtherConnectors/default.config.json",
     "../TestControlFlowTasks/default.config.json",
-    "../TestPerformance/default.config.json"
+    "../TestPerformance/default.config.json",
+    "../ETLBox.Kafka.Tests/default.config.json"
 )
 
 if ($PSBoundParameters.ContainsKey('configEnvironment') -eq $false) {
