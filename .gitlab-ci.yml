@@ -10,6 +10,10 @@ variables:
 
 .default_rules:
   rules:
+    # Avoid duplicate jobs in merge requests
+    # See https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
       variables:
         PACKAGE_VERSION: $CI_COMMIT_TAG
