@@ -134,8 +134,6 @@ publish:internal:
   script:
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
-  rules:
-    - !reference [.default_rules, rules]
   needs:
     - build_job
     - test_job
