@@ -80,7 +80,7 @@ function ConvertTo-Hashtable
 }
 
 function Show-Menu {
-    $files = Get-ChildItem ./config/*.json
+    $files = Get-ChildItem (Join-Path $PSScriptRoot ./config/*.json)
     $choiceIndex = 1
     $options = $files | ForEach-Object {
         New-Object System.Management.Automation.Host.ChoiceDescription "&$($choiceIndex) - $($_.Name)"
@@ -91,16 +91,16 @@ function Show-Menu {
 }
 
 $configFiles = @(
-    "./TestDatabaseConnectors/default.config.json",
-    "./TestConnectionManager/default.config.json",
-    "./TestFlatFileConnectors/default.config.json",
-    "./TestNonParallel/default.config.json",
-    "./TestNonParallel/docker.config.json",
-    "./TestTransformations/default.config.json",
-    "./TestOtherConnectors/default.config.json",
-    "./TestControlFlowTasks/default.config.json",
-    "./TestPerformance/default.config.json"
-    "./ETLBox.Kafka.Tests/default.config.json"
+    "../TestDatabaseConnectors/default.config.json",
+    "../TestConnectionManager/default.config.json",
+    "../TestFlatFileConnectors/default.config.json",
+    "../TestNonParallel/default.config.json",
+    "../TestNonParallel/docker.config.json",
+    "../TestTransformations/default.config.json",
+    "../TestOtherConnectors/default.config.json",
+    "../TestControlFlowTasks/default.config.json",
+    "../TestPerformance/default.config.json",
+    "../ETLBox.Kafka.Tests/default.config.json"
 )
 
 if ($PSBoundParameters.ContainsKey('configEnvironment') -eq $false) {
@@ -115,8 +115,9 @@ $config = (Get-Content $configPath | Out-String | ConvertFrom-Json | ConvertTo-H
 pushd ..
 foreach ($file in $configFiles)
 {
-    echo "Applying to $file ..."
-    Get-Content "$file-template" | Merge-Tokens -tokens $config | Out-File $file
+    $fileName = Join-Path $PSScriptRoot $file
+    echo "Applying to $fileName ..."
+    Get-Content "$fileName-template" | Merge-Tokens -tokens $config | Out-File $fileName
 }
 popd
 echo "Done!"

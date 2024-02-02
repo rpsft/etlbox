@@ -12,5 +12,6 @@ if ( $LastExitCode -ne 0 ) { exit $LastExitCode }
 & docker run --rm -d --name localclickhouse -p 8123:8123 -p 9000:9000 -e "CLICKHOUSE_USER=clickhouse" -e "CLICKHOUSE_PASSWORD=Qwe123456" -e "CLICKHOUSE_MAX_CONNECTIONS=100" clickhouse/clickhouse-server 
 if ( $LastExitCode -ne 0 ) { exit $LastExitCode }
 
-& docker-compose -f .\docker\kafka.yml up
+$kafkaPath = Join-Path $PSScriptRoot "docker" "kafka.yml"
+& docker-compose -f $kafkaPath up -d
 if ( $LastExitCode -ne 0 ) { exit $LastExitCode }

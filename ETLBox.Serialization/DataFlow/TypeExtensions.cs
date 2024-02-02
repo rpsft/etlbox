@@ -1,103 +1,70 @@
 using System;
 using System.Globalization;
-using System.Linq;
 
-namespace ALE.ETLBox.Serialization.DataFlow
+namespace ALE.ETLBox.Serialization.DataFlow;
+
+internal static class TypeExtensions
 {
-    internal static class TypeExtensions
-    {
-        private static readonly Type[] s_nullableTypes =
+    public static bool IsNullable(this Type type) =>
+        Nullable.GetUnderlyingType(type) != null || !type.IsValueType;
+
+    public static bool TryParse(this string value, Type type, out object? objValue) =>
+        type switch
         {
-            typeof(string),
-            typeof(DateTime?),
-            typeof(Guid?),
-            typeof(int?),
-            typeof(long?),
-            typeof(bool?),
-            typeof(char?),
-            typeof(byte?),
-            typeof(short?),
-            typeof(ushort?),
-            typeof(ulong?),
-            typeof(uint?)
+            not null when IsOfType<char>(type)
+                => TryParse<char>(value, out objValue, char.TryParse),
+            not null when IsOfType<byte>(type)
+                => TryParse<byte>(value, out objValue, byte.TryParse),
+            not null when IsOfType<short>(type)
+                => TryParse<short>(value, out objValue, short.TryParse),
+            not null when IsOfType<ushort>(type)
+                => TryParse<ushort>(value, out objValue, ushort.TryParse),
+            not null when IsOfType<int>(type) => TryParse<int>(value, out objValue, int.TryParse),
+            not null when IsOfType<uint>(type)
+                => TryParse<uint>(value, out objValue, uint.TryParse),
+            not null when IsOfType<long>(type)
+                => TryParse<long>(value, out objValue, long.TryParse),
+            not null when IsOfType<ulong>(type)
+                => TryParse<ulong>(value, out objValue, ulong.TryParse),
+            not null when IsOfType<bool>(type)
+                => TryParse<bool>(value, out objValue, bool.TryParse),
+            not null when IsOfType<DateTime>(type) => TryParseDateTime(value, out objValue),
+            not null when IsOfType<Guid>(type)
+                => TryParse<Guid>(value, out objValue, Guid.TryParse),
+            _ => FalseAndNull(out objValue)
         };
 
-        public static bool IsNullable(this Type type)
-        {
-            return s_nullableTypes.Contains(type);
-        }
+    private delegate bool TryParseDelegate<T>(string value, out T result);
 
-        public static bool TryParse(this string value, Type type, out object objValue)
-        {
-            objValue = value;
+    private static bool IsOfType<T>(Type type) =>
+        type == typeof(T) || Nullable.GetUnderlyingType(type) == typeof(T);
 
-            if (type == typeof(char) || type == typeof(char?))
-            {
-                objValue = char.Parse(value);
-                return true;
-            }
+    private static bool TryParse<T>(
+        string value,
+        out object? objValue,
+        TryParseDelegate<T> tryParse
+    )
+    {
+        var result = tryParse(value, out T? parsedValue);
+        objValue = result ? parsedValue : default;
+        return result;
+    }
 
-            if (type == typeof(byte) || type == typeof(byte?))
-            {
-                objValue = byte.Parse(value);
-                return true;
-            }
+    private static bool TryParseDateTime(string value, out object? objValue)
+    {
+        var result = DateTime.TryParse(
+            value,
+            CultureInfo.CurrentCulture,
+            DateTimeStyles.None,
+            out var parsedValue
+        );
+        objValue = result ? parsedValue : default;
+        return result;
+    }
 
-            if (type == typeof(short) || type == typeof(short?))
-            {
-                objValue = short.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(ushort) || type == typeof(ushort?))
-            {
-                objValue = ushort.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(int) || type == typeof(int?))
-            {
-                objValue = int.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(uint) || type == typeof(uint?))
-            {
-                objValue = uint.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(long) || type == typeof(long?))
-            {
-                objValue = long.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(ulong) || type == typeof(ulong?))
-            {
-                objValue = ulong.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(bool) || type == typeof(bool?))
-            {
-                objValue = bool.Parse(value);
-                return true;
-            }
-
-            if (type == typeof(DateTime) || type == typeof(DateTime?))
-            {
-                objValue = DateTime.Parse(value, CultureInfo.CurrentCulture);
-                return true;
-            }
-
-            if (type == typeof(Guid) || type == typeof(Guid?))
-            {
-                objValue = Guid.Parse(value);
-                return true;
-            }
-
-            return false;
-        }
+    private static bool FalseAndNull(out object? objValue)
+    {
+        objValue = default;
+        return false;
     }
 }
