@@ -11,6 +11,9 @@
     </PackageReference>
     <PackageReference Include="JunitXml.TestLogger" Version="3.0.134"/>
   </ItemGroup>
+  <PropertyGroup Condition=" '$(IsCI)' == 'true' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
