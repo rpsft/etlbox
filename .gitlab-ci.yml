@@ -8,7 +8,7 @@ variables:
   FF_NETWORK_PER_BUILD: "true"
   NUPKG_FOLDER: ".packages"
 
-.default_rules:
+workflow:
   rules:
     # Avoid duplicate jobs in merge requests
     # See https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines
@@ -56,8 +56,6 @@ build_job:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - "$NUPKG_FOLDER/"
-  rules:
-    - !reference [.default_rules, rules]
 
 test_job:
   stage: test
@@ -119,8 +117,6 @@ test_job:
       - .nuget/packages/
       - tools/
     unprotect: true
-  rules:
-    - !reference [.default_rules, rules]
   artifacts:
     when: always
     paths:
