@@ -1,21 +1,19 @@
-using System.IO;
-using System.Net.Http;
+using System.Dynamic;
+using System.Globalization;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Serialization;
 using ALE.ETLBox.Serialization.DataFlow;
+using CsvHelper.Configuration;
 using ETLBox.Primitives;
-using ETLBox.Rest;
 using ETLBox.Rest.Models;
 using FluentAssertions;
 using Moq;
 
-namespace TestTransformations.Rest
+namespace ETLBox.Rest.Tests
 {
     public class RestTransformationTests
     {
@@ -28,25 +26,33 @@ namespace TestTransformations.Rest
             data.urlQueryParameter = 46;
             data.port = 90210;
 
-            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
+            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(
+                new ExpandoObject[] { data }
+            );
 
             MemoryDestination<ExpandoObject> destination = new MemoryDestination<ExpandoObject>();
 
             var httpClientMock = new Mock<IHttpClient>();
             httpClientMock
-                .Setup(x => x.InvokeAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<HttpMethod>(),
-                    It.IsAny<Dictionary<string,string>>(),
-                    It.IsAny<string>()))
+                .Setup(
+                    x =>
+                        x.InvokeAsync(
+                            It.IsAny<string>(),
+                            It.IsAny<HttpMethod>(),
+                            It.IsAny<Dictionary<string, string>>(),
+                            It.IsAny<string>()
+                        )
+                )
                 .ReturnsAsync(() => @"{ ""jsonResponse"" : 100}");
 
             RestTransformation trans1 = new RestTransformation(() => httpClientMock.Object)
             {
                 RestMethodInfo = new RestMethodInfo
                 {
-                    Url = "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
-                    Body = @"{""PromoActionApiInternal"": {
+                    Url =
+                        "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
+                    Body =
+                        @"{""PromoActionApiInternal"": {
                         ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
                         ""TeasersUrl"": ""/image/download/"",
                         ""ImageDomainUrl"": ""http://localhost:{{port}}"",
@@ -54,7 +60,7 @@ namespace TestTransformations.Rest
                         ""OptInRelativeUrlTemplate"": ""/Optin/{0}/{1}/{2}""
                     }
                 }",
-                    Headers = new() { {"header1", "testHeaderValue"} },
+                    Headers = new() { { "header1", "testHeaderValue" } },
                     Method = "GET",
                     RetryCount = 2,
                     RetryInterval = 5
@@ -84,77 +90,55 @@ namespace TestTransformations.Rest
             var csv = GetCsv();
             var csvUri = CreateFile(csv, "csv");
 
-            var referenceId = Guid.NewGuid();
-            var name = Guid.NewGuid().ToString();
-            var ms = 100;
-            var xml = @$"<EtlDataFlowStep>
-			                <ReferenceId>
-                                {referenceId}
-                            </ReferenceId>
-			                <Name>
-                                {name}
-                            </Name>
-			                <TimeoutMilliseconds>{ms}</TimeoutMilliseconds>
-                            <CsvSource>
-                                <Uri>{csvUri}</Uri>
-                                <Configuration>
-                                    <Delimiter>;</Delimiter>
-                                    <Escape>#</Escape>
-                                    <Quote>$</Quote>
-                                </Configuration>
-                                <LinkTo>
-                                    <TestRestTransformation>
-                                        <RestMethodInfo>
-                                            <Url>http://test/{{{{urlRouteParameter}}}}?urlQueryParameter={{{{urlQueryParameter}}}}</Url>
-                                            <Body>
-                                                {{ ""PromoActionApiInternal"": {{
-                                                            ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
-                                                            ""TeasersUrl"": ""/image/download/"",
-                                                            ""ImageDomainUrl"": ""http://localhost:{{{{port}}}}"",
-                                                            ""OptInCheckUrlDomainUrl"": ""http://localhost:{{{{port}}}}"",
-                                                            ""OptInRelativeUrlTemplate"": ""/Optin/{{0}}/{{1}}/{{2}}""
-                                                        }}
-                                                }}
-                                            </Body>
-                                            <Headers>
-                                                <header1>testHeaderValue</header1>
-                                                <header2>testHeaderValue2</header2>
-                                            </Headers>
-                                            <Method>
-                                                GET
-                                            </Method>
-                                            <RetryCount>
-                                                2
-                                            </RetryCount>
-                                            <RetryInterval>
-                                                5
-                                            </RetryInterval>
-                                        </RestMethodInfo>
-                                        <ResultField>
-                                            result
-                                        </ResultField>
-                                        <LinkTo>
-                                            <MemoryDestination></MemoryDestination>
-                                        </LinkTo>
-                                    </TestRestTransformation>
-                                </LinkTo>
-                            </CsvSource>
-		                </EtlDataFlowStep>";
+            var source = new CsvSource()
+            {
+                Uri = csvUri,
+                Configuration = new CsvConfiguration(CultureInfo.CurrentCulture)
+                {
+                    Delimiter = ";",
+                    Escape = '#',
+                    Quote = '$'
+                }
+            };
+            var transformation = new TestRestTransformation()
+            {
+                RestMethodInfo = new RestMethodInfo
+                {
+                    Url =
+                        "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
+                    Body =
+                        @"{ ""PromoActionApiInternal"":
+                            {
+                                ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
+                                ""TeasersUrl"": ""/image/download/"",
+                                ""ImageDomainUrl"": ""http://localhost:{{port}}"",
+                                ""OptInCheckUrlDomainUrl"": ""http://localhost:{{port}}"",
+                                ""OptInRelativeUrlTemplate"": ""/Optin/{0}/{1}/{2}""
+                            }
+                        }",
+                    Headers = new Dictionary<string, string>()
+                    {
+                        ["header1"] = "testHeaderValue",
+                        ["header2"] = "testHeaderValue2"
+                    },
+                    Method = "GET",
+                    RetryCount = 2,
+                    RetryInterval = 5
+                },
+                ResultField = "result",
+            };
 
-            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
-            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
-            var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+            var destination = new MemoryDestination<ExpandoObject>();
 
-            step?.Invoke();
+            source.LinkTo(transformation);
+            transformation.LinkTo(destination);
+            source.Execute();
+            destination.Wait();
 
-            var destinations = step?.Destinations?.Select(d => d as MemoryDestination<ExpandoObject>).ToArray();
+            var resultingData = destination.Data?.FirstOrDefault() as IDictionary<string, object>;
 
-            var destination = destinations.FirstOrDefault();
-
-            var dest = destination?.Data?.FirstOrDefault() as IDictionary<string, object>;
-
-            dest.Should().NotBeNull();
-            var res = dest!["result"] as IDictionary<string, object>;
+            resultingData.Should().NotBeNull();
+            var res = resultingData!["result"] as IDictionary<string, object>;
 
             res.Should().NotBeNull();
             res!["jsonResponse"].Should().Be(100);
@@ -169,25 +153,33 @@ namespace TestTransformations.Rest
             data.urlQueryParameter = 46;
             data.port = 90210;
 
-            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
+            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(
+                new ExpandoObject[] { data }
+            );
 
             MemoryDestination<ExpandoObject> destination = new MemoryDestination<ExpandoObject>();
 
             var httpClientMock = new Mock<IHttpClient>();
             httpClientMock
-                .Setup(x => x.InvokeAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<HttpMethod>(),
-                    It.IsAny<Dictionary<string, string>>(),
-                    It.IsAny<string>()))
+                .Setup(
+                    x =>
+                        x.InvokeAsync(
+                            It.IsAny<string>(),
+                            It.IsAny<HttpMethod>(),
+                            It.IsAny<Dictionary<string, string>>(),
+                            It.IsAny<string>()
+                        )
+                )
                 .Throws(() => new InvalidOperationException("Some error occured"));
 
             RestTransformation trans1 = new RestTransformation(() => httpClientMock.Object)
             {
                 RestMethodInfo = new RestMethodInfo
                 {
-                    Url = "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
-                    Body = @"{""PromoActionApiInternal"": {
+                    Url =
+                        "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
+                    Body =
+                        @"{""PromoActionApiInternal"": {
                         ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
                         ""TeasersUrl"": ""/image/download/"",
                         ""ImageDomainUrl"": ""http://localhost:{{port}}"",
@@ -231,25 +223,33 @@ namespace TestTransformations.Rest
             data.urlQueryParameter = 46;
             data.port = 90210;
 
-            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
+            MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>(
+                new ExpandoObject[] { data }
+            );
 
             MemoryDestination<ExpandoObject> destination = new MemoryDestination<ExpandoObject>();
 
             var httpClientMock = new Mock<IHttpClient>();
             httpClientMock
-                .Setup(x => x.InvokeAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<HttpMethod>(),
-                    It.IsAny<Dictionary<string, string>>(),
-                    It.IsAny<string>()))
+                .Setup(
+                    x =>
+                        x.InvokeAsync(
+                            It.IsAny<string>(),
+                            It.IsAny<HttpMethod>(),
+                            It.IsAny<Dictionary<string, string>>(),
+                            It.IsAny<string>()
+                        )
+                )
                 .ReturnsAsync(() => @"{ ""errorCode"": 404, ""errorMessage"": ""NotFound"" }");
 
             RestTransformation trans1 = new RestTransformation(() => httpClientMock.Object)
             {
                 RestMethodInfo = new RestMethodInfo
                 {
-                    Url = "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
-                    Body = @"{""PromoActionApiInternal"": {
+                    Url =
+                        "http://test/{{urlRouteParameter}}?urlQueryParameter={{urlQueryParameter}}",
+                    Body =
+                        @"{""PromoActionApiInternal"": {
                         ""TeasersPath"": ""C:/Loyalty/images/teasers/"",
                         ""TeasersUrl"": ""/image/download/"",
                         ""ImageDomainUrl"": ""http://localhost:{{port}}"",
@@ -286,10 +286,10 @@ namespace TestTransformations.Rest
 
         private static string GetCsv()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("urlRouteParameter;urlQueryParameter;port");
-            sb.AppendLine("Tom;46;90210");
-            return sb.ToString();
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("urlRouteParameter;urlQueryParameter;port");
+            stringBuilder.AppendLine("Tom;46;90210");
+            return stringBuilder.ToString();
         }
 
         private static string CreateFile(string content, string ext)
@@ -297,13 +297,6 @@ namespace TestTransformations.Rest
             var path = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.{ext}");
             File.WriteAllText(path, content);
             return path;
-        }
-
-        private static ExpandoObject CreateObject(string v)
-        {
-            dynamic obj = new ExpandoObject();
-            obj.data = v;
-            return obj;
         }
 
         [Serializable]
@@ -330,32 +323,35 @@ namespace TestTransformations.Rest
 
             public void WriteXml(XmlWriter writer)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             public void Invoke()
             {
                 Source.Execute(CancellationToken.None);
-                var tasks = Destinations.Select(d => d.Completion).ToArray();
+                var tasks = Destinations.Select(d => d.Completion).ToArray<Task>();
                 Task.WaitAll(tasks);
             }
         }
 
         public class TestRestTransformation : RestTransformation
         {
-            public TestRestTransformation() : base(() => CreateClient())
-            {
-            }
+            public TestRestTransformation()
+                : base(() => CreateClient()) { }
 
             private static IHttpClient CreateClient()
             {
                 var httpClientMock = new Mock<IHttpClient>();
                 httpClientMock
-                    .Setup(x => x.InvokeAsync(
-                        It.IsAny<string>(),
-                        It.IsAny<HttpMethod>(),
-                        It.IsAny<Dictionary<string,string>>(),
-                        It.IsAny<string>()))
+                    .Setup(
+                        x =>
+                            x.InvokeAsync(
+                                It.IsAny<string>(),
+                                It.IsAny<HttpMethod>(),
+                                It.IsAny<Dictionary<string, string>>(),
+                                It.IsAny<string>()
+                            )
+                    )
                     .ReturnsAsync(() => @"{ ""jsonResponse"" : 100}");
 
                 return httpClientMock.Object;
