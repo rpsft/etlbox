@@ -79,5 +79,98 @@ namespace TestTransformations.AggregationTests
                 }
             );
         }
+
+        [Fact]
+        public void AggregationIntUsingMappings()
+        { 
+            // Arrange
+            var source = new MemorySource<ExpandoObject>();
+            dynamic row1 = new ExpandoObject();
+            row1.Id = 1;
+            row1.Name = "a1";
+            dynamic row2 = new ExpandoObject();
+            row2.Id = 2;
+            row2.Name = "a2";
+            dynamic row3 = new ExpandoObject();
+            row3.Id = 3;
+            row3.Name = "a3";
+            source.DataAsList.Add(row1);
+            source.DataAsList.Add(row2);
+            source.DataAsList.Add(row3);
+
+            var agg = new Aggregation()
+            { 
+                Mappings = new Dictionary<string, InputAggregationField>
+                { 
+                    { "MaxId", new InputAggregationField{ Name = "Id", AggregationMethod = AggregationMethod.Max } },
+                    { "MinId", new InputAggregationField{ Name = "Id", AggregationMethod = AggregationMethod.Min } },
+                    { "Sum", new InputAggregationField{ Name = "Id", AggregationMethod = AggregationMethod.Sum } },
+                    { "Count", new InputAggregationField{ Name = "Id", AggregationMethod = AggregationMethod.Count } }
+                }
+            };
+
+            var dest = new MemoryDestination<ExpandoObject>();
+
+            // Act
+            source.LinkTo(agg);
+            agg.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            // Assert
+            Assert.Single(dest.Data);
+            var aggObj = dest.Data.First() as IDictionary<string, object>;
+            Assert.Equal(3, aggObj["MaxId"]);
+            Assert.Equal(1, aggObj["MinId"]);
+            Assert.Equal(1 + 2 + 3, aggObj["Sum"]);
+            Assert.Equal(3, aggObj["Count"]);
+        }
+
+        [Fact]
+        public void AggregationGuidUsingMappings()
+        { 
+            // Arrange
+            var source = new MemorySource<ExpandoObject>();
+            dynamic row1 = new ExpandoObject();
+            row1.Id = Guid.NewGuid();
+            row1.Name = "a1";
+            dynamic row2 = new ExpandoObject();
+            row2.Id = Guid.NewGuid();
+            row2.Name = "a2";
+            dynamic row3 = new ExpandoObject();
+            row3.Id = Guid.NewGuid();
+            row3.Name = "a3";
+            source.DataAsList.Add(row1);
+            source.DataAsList.Add(row2);
+            source.DataAsList.Add(row3);
+
+            var agg = new Aggregation()
+            { 
+                Mappings = new Dictionary<string, InputAggregationField>
+                { 
+                    { "MaxId", new InputAggregationField{ Name = "Id", AggregationMethod = AggregationMethod.Max } },
+                    { "MinId", new InputAggregationField{ Name = "Id", AggregationMethod = AggregationMethod.Min } },
+                }
+            };
+
+            var dest = new MemoryDestination<ExpandoObject>();
+
+            // Act
+            source.LinkTo(agg);
+            agg.LinkTo(dest);
+            source.Execute();
+            dest.Wait();
+
+            // Assert
+            Assert.Single(dest.Data);
+
+            var ids = source.Data
+                .Select(d => d as IDictionary<string, object>)
+                .Select(d => d["Id"])
+                .ToArray();
+            var aggObj = dest.Data.First() as IDictionary<string, object>;
+            Assert.Equal(ids.Max(), aggObj["MaxId"]);
+            Assert.Equal(ids.Min(), aggObj["MinId"]);
+        }
     }
 }

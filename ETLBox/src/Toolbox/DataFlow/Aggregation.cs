@@ -109,20 +109,17 @@ namespace ALE.ETLBox.DataFlow
         {
             foreach (var attributeMapping in AggTypeInfo.AggregateColumns)
             {
-                var inputVal = ConvertToDecimal(
-                    attributeMapping.PropInInput.GetValue(inputRow)
-                );
-                var aggVal = ConvertToDecimal(
-                    attributeMapping.PropInOutput.GetValue(aggOutput)
-                );
+                object inputVal = attributeMapping.PropInInput.GetValue(inputRow);
+                object aggVal = attributeMapping.PropInOutput.GetValue(aggOutput);
+
                 var res = (aggVal, attributeMapping.AggregationMethod) switch
                 {
                     (null, AggregationMethod.Count) => 1,
                     (null, _) => inputVal,
-                    (_, AggregationMethod.Sum) => (inputVal ?? 0) + aggVal,
-                    (_, AggregationMethod.Max) => (inputVal ?? 0) > aggVal ? inputVal : aggVal,
-                    (_, AggregationMethod.Min) => (inputVal ?? 0) < aggVal ? inputVal : aggVal,
-                    (_, AggregationMethod.Count) => aggVal + 1,
+                    (_, AggregationMethod.Sum) when aggVal is int or uint or decimal or long or double or float => Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
+                    (_, AggregationMethod.Max) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) > 0 ? inputVal : aggVal,
+                    (_, AggregationMethod.Min) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) < 0 ? inputVal : aggVal,
+                    (_, AggregationMethod.Count) when aggVal is int or uint or decimal or long or double or float => Convert.ToInt64(aggVal) + 1,
                     (_, _) => null
                 };
 
@@ -132,13 +129,6 @@ namespace ALE.ETLBox.DataFlow
                 );
                 attributeMapping.PropInOutput.SetValueOrThrow(aggOutput, output);
             }
-        }
-
-        private static decimal? ConvertToDecimal(object input)
-        {
-            if (input == null)
-                return null;
-            return Convert.ToDecimal(input);
         }
 
         private void DefineStoreKeyActionFromAttributes(object key, TOutput outputRow)
@@ -172,7 +162,7 @@ namespace ALE.ETLBox.DataFlow
             LogFinish();
         }
 
-        private void WrapAggregationAction(TInput row)
+        protected virtual void WrapAggregationAction(TInput row)
         {
             var key = GroupingFunc?.Invoke(row) ?? string.Empty;
 
@@ -228,6 +218,13 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class Aggregation : Aggregation<ExpandoObject, ExpandoObject>
     {
+        public Aggregation()
+            : base()
+        {
+            AggregationAction = DefineAggregationAction;
+            GroupingFunc = DefineGroupingFunc;
+        }
+
         public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction)
             : base(aggregationAction) { }
 
@@ -243,5 +240,66 @@ namespace ALE.ETLBox.DataFlow
             Action<object, ExpandoObject> storeKeyAction
         )
             : base(aggregationAction, groupingFunc, storeKeyAction) { }
+
+
+        public Dictionary<string, InputAggregationField> Mappings { get; set; }
+
+        private void DefineAggregationAction(ExpandoObject inputRow, ExpandoObject aggOutput)
+        {
+            var input = inputRow as IDictionary<string, object>;
+            var agg = aggOutput as IDictionary<string, object>;
+            foreach (var attributeMapping in Mappings)
+            {
+                object inputVal = input.TryGetValue(attributeMapping.Value.Name, out object inpVal) ? inpVal : null;
+                object aggregateVal = agg.TryGetValue(attributeMapping.Key, out object aggVal) ? aggVal : null;
+
+                var res = (aggregateVal, attributeMapping.Value.AggregationMethod) switch
+                {
+                    (null, AggregationMethod.Count) => 1,
+                    (null, _) => inputVal,
+                    (_, AggregationMethod.Sum) when aggVal is int or uint or decimal or long or double or float => Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
+                    (_, AggregationMethod.Max) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) > 0 ? inputVal : aggVal,
+                    (_, AggregationMethod.Min) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) < 0 ? inputVal : aggVal,
+                    (_, AggregationMethod.Count) when aggVal is int or uint or decimal or long or double or float => Convert.ToInt64(aggVal) + 1,
+                    (_, _) => null
+                };
+
+                var output = Convert.ChangeType(
+                    res,
+                    input[attributeMapping.Value.Name]?.GetType()
+                );
+                agg[attributeMapping.Key] = output;
+            }
+        }
+
+        private GroupingKey DefineGroupingFunc(ExpandoObject inputRow)
+        {
+            return new GroupingKey(Mappings.Keys.ToArray());
+        }
+
+        private sealed class GroupingKey
+        {
+            public GroupingKey(string[] keys)
+            {
+                Keys = keys;
+            }
+
+            public string[] Keys { get; set; }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hash = 29;
+                    foreach (var map in Keys)
+                        hash = hash * 486187739 + map.GetHashCode();
+                    return hash;
+                }
+            }
+
+            public override bool Equals(object obj) =>
+                obj is GroupingKey comp
+                && Array.TrueForAll(Keys, map => comp.Keys.Contains(map));
+        }
     }
 }
