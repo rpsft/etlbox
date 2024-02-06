@@ -1,9 +1,27 @@
-namespace ALE.ETLBox.DataFlow
-{
-    public class InputAggregationField
-    {
-        public string Name { get; set; }
+namespace ALE.ETLBox.DataFlow;
 
-        public AggregationMethod AggregationMethod { get; set; }
+/// <summary>
+/// Mapping configuration for a single <see cref="ExpandoObject"/> field.
+/// This configuration is to be serialized.
+/// </summary>
+public class InputAggregationField
+{
+    /// <summary>
+    /// Input row property name.
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Aggregation method to use for this property.
+    /// </summary>
+    public InputAggregationMethod AggregationMethod { get; set; }
+
+    public enum InputAggregationMethod
+    {
+        Sum,
+        Min,
+        Max,
+        Count,
+        GroupBy
     }
 }

@@ -2,15 +2,17 @@ using System.Linq;
 
 namespace ALE.ETLBox.DataFlow
 {
-    internal sealed class AggregationTypeInfo : MappingTypeInfo
+    internal sealed class AggregationTypeInfo<TInput, TOutput>
+        : MappingTypeInfo<TInput, TOutput>,
+            IAggregationTypeInfo<TInput, TOutput>
     {
-        internal List<AggregateAttributeMapping> AggregateColumns { get; } = new();
-        internal List<AttributeMappingInfo> GroupColumns { get; } = new();
+        public IList<AggregateAttributeMapping> AggregateColumns { get; } =
+            new List<AggregateAttributeMapping>();
+        public IList<AttributeMappingInfo> GroupColumns { get; } = new List<AttributeMappingInfo>();
 
-        internal AggregationTypeInfo(Type inputType, Type aggType)
-            : base(inputType, aggType)
+        internal AggregationTypeInfo()
         {
-            InitMappings(inputType, aggType);
+            InitMappings(typeof(TInput), typeof(TOutput));
         }
 
         protected override void AddAttributeInfoMapping(PropertyInfo propInfo)
@@ -59,10 +61,14 @@ namespace ALE.ETLBox.DataFlow
             AssignInputProperty(GroupColumns);
             AssignInputProperty(AggregateColumns.Cast<AttributeMappingInfo>().ToList());
         }
-    }
 
-    internal sealed class AggregateAttributeMapping : AttributeMappingInfo
-    {
-        internal AggregationMethod AggregationMethod { get; set; }
+        public object GetOutputValueOrNull(
+            TOutput outputRow,
+            AggregateAttributeMapping attributeMapping
+        )
+        {
+            var aggVal = attributeMapping.PropInOutput.GetValue(outputRow);
+            return aggVal;
+        }
     }
 }
