@@ -36,7 +36,9 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
     {
         _fixture = fixture;
         _output = output;
-        ControlFlow.LoggerFactory = new LoggerFactory(new[] { new TestOutputLoggerProvider(_output) });
+        ControlFlow.LoggerFactory = new LoggerFactory(
+            new[] { new TestOutputLoggerProvider(_output) }
+        );
     }
 
     [Fact]
@@ -52,7 +54,7 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         Assert.Equal(jsonString, result[0]);
     }
 
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void ShouldProduceAndConsumeDirectlyToKafkaWithMultipleTopics()
     {
         // Arrange

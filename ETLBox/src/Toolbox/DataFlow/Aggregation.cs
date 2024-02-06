@@ -1,14 +1,19 @@
 using System.Linq;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
-using ALE.ETLBox.Helper;
-using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Aggregates data by the given aggregation method.
     /// </summary>
+    /// <remarks>
+    /// There are three ways to initialize the aggregation:
+    /// 1. Use the <see cref="AggregationAction"/> and <see cref="GroupingFunc"/> to define the aggregation logic.
+    /// 2. Use the <see cref="Aggregation.Mappings"/> to define the aggregation logic.
+    /// 3. Use the <see cref="GroupColumnAttribute"/> and <see cref="AggregateColumnAttribute"/> in the output to define
+    ///    the aggregation logic.
+    /// </remarks>
     /// <typeparam name="TInput">Type of data input</typeparam>
     /// <typeparam name="TOutput">Type of data output</typeparam>
     [PublicAPI]
@@ -18,6 +23,9 @@ namespace ALE.ETLBox.DataFlow
         public override string TaskName { get; set; } = "Execute aggregation block.";
 
         /* Public Properties */
+        /// <summary>
+        /// Aggregation function (optional)
+        /// </summary>
         public Action<TInput, TOutput> AggregationAction
         {
             get { return _aggregationAction; }
@@ -42,18 +50,35 @@ namespace ALE.ETLBox.DataFlow
                 });
             }
         }
+
+        /// <summary>
+        /// Grouping function (optional)
+        /// </summary>
         public Func<TInput, object> GroupingFunc { get; set; }
+
+        /// <summary>
+        /// Store key action (optional).
+        /// Finalizes the output row before writing it into the output buffer.
+        /// Rewrites values in the grouping columns of output row object by
+        /// their respecitve keys as defined by the <see cref="GroupingFunc"/>.
+        /// </summary>
         public Action<object, TOutput> StoreKeyAction { get; set; }
+
         public override ISourceBlock<TOutput> SourceBlock => OutputBuffer;
+
         public override ITargetBlock<TInput> TargetBlock => InputBuffer;
 
         /* Private stuff */
+
         private BufferBlock<TOutput> OutputBuffer { get; set; }
+
         private ActionBlock<TInput> InputBuffer { get; set; }
 
         private Action<TInput, TOutput> _aggregationAction;
+
         private Dictionary<object, TOutput> AggregationData { get; set; } = new();
-        private AggregationTypeInfo AggTypeInfo { get; set; }
+
+        protected IAggregationTypeInfo<TInput, TOutput> AggTypeInfo { get; set; }
 
         private void CheckTypeInfo()
         {
@@ -66,18 +91,11 @@ namespace ALE.ETLBox.DataFlow
         public Aggregation()
         {
             OutputBuffer = new BufferBlock<TOutput>();
-            AggTypeInfo = new AggregationTypeInfo(typeof(TInput), typeof(TOutput));
+            AggTypeInfo = new AggregationTypeInfo<TInput, TOutput>();
 
             CheckTypeInfo();
 
-            if (AggregationAction == null && AggTypeInfo.AggregateColumns.Count > 0)
-                AggregationAction = DefineAggregationAction;
-
-            if (GroupingFunc == null && AggTypeInfo.GroupColumns.Count > 0)
-                GroupingFunc = DefineGroupingPropertyFromAttributes;
-
-            if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
-                StoreKeyAction = DefineStoreKeyActionFromAttributes;
+            InitAggregationAction();
         }
 
         public Aggregation(Action<TInput, TOutput> aggregationAction)
@@ -105,47 +123,77 @@ namespace ALE.ETLBox.DataFlow
             StoreKeyAction = storeKeyAction;
         }
 
+        protected void InitAggregationAction()
+        {
+            if (AggregationAction == null && AggTypeInfo.AggregateColumns.Count > 0)
+                AggregationAction = DefineAggregationAction;
+
+            if (GroupingFunc == null && AggTypeInfo.GroupColumns.Count > 0)
+                GroupingFunc = DefineGroupingFunc;
+
+            if (StoreKeyAction == null && AggTypeInfo.GroupColumns.Count > 0)
+                StoreKeyAction = DefineStoreKeyAction;
+        }
+
         private void DefineAggregationAction(TInput inputRow, TOutput aggOutput)
         {
             foreach (var attributeMapping in AggTypeInfo.AggregateColumns)
             {
-                object inputVal = attributeMapping.PropInInput.GetValue(inputRow);
-                object aggVal = attributeMapping.PropInOutput.GetValue(aggOutput);
+                var inputVal = AggTypeInfo.GetInputValue(inputRow, attributeMapping);
+                var aggVal = AggTypeInfo.GetOutputValueOrNull(aggOutput, attributeMapping);
 
                 var res = (aggVal, attributeMapping.AggregationMethod) switch
                 {
                     (null, AggregationMethod.Count) => 1,
                     (null, _) => inputVal,
-                    (_, AggregationMethod.Sum) when aggVal is int or uint or decimal or long or double or float => Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
-                    (_, AggregationMethod.Max) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) > 0 ? inputVal : aggVal,
-                    (_, AggregationMethod.Min) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) < 0 ? inputVal : aggVal,
-                    (_, AggregationMethod.Count) when aggVal is int or uint or decimal or long or double or float => Convert.ToInt64(aggVal) + 1,
+                    (_, AggregationMethod.Sum)
+                        when aggVal is int or uint or decimal or long or double or float
+                        => Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
+                    (_, AggregationMethod.Max) when aggVal is IComparable
+                        => (
+                            Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable
+                        )?.CompareTo(aggVal) > 0
+                            ? inputVal
+                            : aggVal,
+                    (_, AggregationMethod.Min) when aggVal is IComparable
+                        => (
+                            Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable
+                        )?.CompareTo(aggVal) < 0
+                            ? inputVal
+                            : aggVal,
+                    (_, AggregationMethod.Count)
+                        when aggVal is int or uint or decimal or long or double or float
+                        => Convert.ToInt64(aggVal) + 1,
                     (_, _) => null
                 };
 
-                var output = Convert.ChangeType(
-                    res,
-                    TypeInfo.TryGetUnderlyingType(attributeMapping.PropInOutput)
-                );
-                attributeMapping.PropInOutput.SetValueOrThrow(aggOutput, output);
+                AggTypeInfo.SetOutputValueOrThrow(aggOutput, res, attributeMapping, true);
             }
         }
 
-        private void DefineStoreKeyActionFromAttributes(object key, TOutput outputRow)
+        private void DefineStoreKeyAction(object key, TOutput outputRow)
         {
             if (key is not GroupingKey gk)
                 return;
-            foreach (var propMap in gk.GroupingObjectsByProperty)
-                propMap.Key.TrySetValue(outputRow, propMap.Value);
+            foreach (var groupingProperty in gk.GroupingObjectsByProperty)
+            {
+                AttributeMappingInfo attributeMapping = groupingProperty.Key;
+                AggTypeInfo.SetOutputValueOrThrow(
+                    outputRow,
+                    groupingProperty.Value,
+                    attributeMapping,
+                    false
+                );
+            }
         }
 
-        private GroupingKey DefineGroupingPropertyFromAttributes(TInput inputRow)
+        private GroupingKey DefineGroupingFunc(TInput inputRow)
         {
             var groupingKey = new GroupingKey();
             foreach (var propMap in AggTypeInfo.GroupColumns)
                 groupingKey.GroupingObjectsByProperty.Add(
-                    propMap.PropInOutput,
-                    propMap.PropInInput.GetValue(inputRow)
+                    propMap,
+                    AggTypeInfo.GetInputValue(inputRow, propMap)
                 );
             return groupingKey;
         }
@@ -181,6 +229,9 @@ namespace ALE.ETLBox.DataFlow
 
         private sealed class GroupingKey
         {
+            public Dictionary<AttributeMappingInfo, object> GroupingObjectsByProperty { get; } =
+                new();
+
             public override int GetHashCode()
             {
                 unchecked
@@ -197,8 +248,6 @@ namespace ALE.ETLBox.DataFlow
                 && GroupingObjectsByProperty.All(
                     map => map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true
                 );
-
-            public Dictionary<PropertyInfo, object> GroupingObjectsByProperty { get; } = new();
         }
     }
 
@@ -218,12 +267,25 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class Aggregation : Aggregation<ExpandoObject, ExpandoObject>
     {
-        public Aggregation()
-            : base()
+        /// <summary>
+        /// Mappings in the form of a dictionary for use with serialization.
+        /// The key is the name of the property in the output object,
+        /// the value is the reference to the property in the input object and the aggregation function to use.
+        /// </summary>
+        public Dictionary<string, InputAggregationField> Mappings
         {
-            AggregationAction = DefineAggregationAction;
-            GroupingFunc = DefineGroupingFunc;
+            get => _mappings;
+            set
+            {
+                _mappings = value;
+                AggTypeInfo = new DynamicAggregationTypeInfo(_mappings);
+                InitAggregationAction();
+            }
         }
+
+        private Dictionary<string, InputAggregationField> _mappings;
+
+        public Aggregation() { }
 
         public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction)
             : base(aggregationAction) { }
@@ -240,66 +302,5 @@ namespace ALE.ETLBox.DataFlow
             Action<object, ExpandoObject> storeKeyAction
         )
             : base(aggregationAction, groupingFunc, storeKeyAction) { }
-
-
-        public Dictionary<string, InputAggregationField> Mappings { get; set; }
-
-        private void DefineAggregationAction(ExpandoObject inputRow, ExpandoObject aggOutput)
-        {
-            var input = inputRow as IDictionary<string, object>;
-            var agg = aggOutput as IDictionary<string, object>;
-            foreach (var attributeMapping in Mappings)
-            {
-                object inputVal = input.TryGetValue(attributeMapping.Value.Name, out object inpVal) ? inpVal : null;
-                object aggregateVal = agg.TryGetValue(attributeMapping.Key, out object aggVal) ? aggVal : null;
-
-                var res = (aggregateVal, attributeMapping.Value.AggregationMethod) switch
-                {
-                    (null, AggregationMethod.Count) => 1,
-                    (null, _) => inputVal,
-                    (_, AggregationMethod.Sum) when aggVal is int or uint or decimal or long or double or float => Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
-                    (_, AggregationMethod.Max) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) > 0 ? inputVal : aggVal,
-                    (_, AggregationMethod.Min) when aggVal is IComparable => (Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable)?.CompareTo(aggVal) < 0 ? inputVal : aggVal,
-                    (_, AggregationMethod.Count) when aggVal is int or uint or decimal or long or double or float => Convert.ToInt64(aggVal) + 1,
-                    (_, _) => null
-                };
-
-                var output = Convert.ChangeType(
-                    res,
-                    input[attributeMapping.Value.Name]?.GetType()
-                );
-                agg[attributeMapping.Key] = output;
-            }
-        }
-
-        private GroupingKey DefineGroupingFunc(ExpandoObject inputRow)
-        {
-            return new GroupingKey(Mappings.Keys.ToArray());
-        }
-
-        private sealed class GroupingKey
-        {
-            public GroupingKey(string[] keys)
-            {
-                Keys = keys;
-            }
-
-            public string[] Keys { get; set; }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    var hash = 29;
-                    foreach (var map in Keys)
-                        hash = hash * 486187739 + map.GetHashCode();
-                    return hash;
-                }
-            }
-
-            public override bool Equals(object obj) =>
-                obj is GroupingKey comp
-                && Array.TrueForAll(Keys, map => comp.Keys.Contains(map));
-        }
     }
 }

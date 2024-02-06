@@ -29,7 +29,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void AddUnderlyingType(PropertyInfo propInfo)
         {
-            Type t = TryGetUnderlyingType(propInfo);
+            Type t = TryGetUnderlyingType(propInfo.PropertyType);
             UnderlyingPropType.Add(propInfo, t);
         }
 
