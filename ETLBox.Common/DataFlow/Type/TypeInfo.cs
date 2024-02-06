@@ -29,19 +29,19 @@ namespace ALE.ETLBox.Common.DataFlow
             switch (IsArray, IsDynamic)
             {
                 case (false, false):
+                {
+                    Properties = InternalType.GetProperties();
+                    PropertyLength = Properties.Length;
+                    var index = 0;
+                    foreach (var propInfo in Properties)
                     {
-                        Properties = InternalType.GetProperties();
-                        PropertyLength = Properties.Length;
-                        var index = 0;
-                        foreach (var propInfo in Properties)
-                        {
-                            PropertyIndex.Add(propInfo.Name, index);
-                            RetrieveAdditionalTypeInfo(propInfo, index);
-                            index++;
-                        }
-
-                        break;
+                        PropertyIndex.Add(propInfo.Name, index);
+                        RetrieveAdditionalTypeInfo(propInfo, index);
+                        index++;
                     }
+
+                    break;
+                }
                 case (true, _):
                     ArrayLength = InternalType.GetArrayRank();
                     break;
@@ -49,16 +49,15 @@ namespace ALE.ETLBox.Common.DataFlow
             return this;
         }
 
-        internal static Type TryGetUnderlyingType(PropertyInfo propInfo)
+        internal static Type TryGetUnderlyingType(Type propertyType)
         {
-            return Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
+            return Nullable.GetUnderlyingType(propertyType) ?? propertyType;
         }
 
         protected virtual void RetrieveAdditionalTypeInfo(
             PropertyInfo propInfo,
             int currentIndex
-        )
-        { }
+        ) { }
 
         internal enum TypeInfoGroup
         {
