@@ -464,6 +464,10 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class DbMerge : DbMerge<ExpandoObject>
     {
+        // for deserialization purposes
+        public DbMerge()
+            : base(null) { }
+
         public DbMerge(string tableName)
             : base(tableName) { }
 
