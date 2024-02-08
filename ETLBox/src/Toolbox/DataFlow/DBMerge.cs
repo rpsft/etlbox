@@ -89,11 +89,11 @@ namespace ALE.ETLBox.DataFlow
             int batchSize = DbDestination.DefaultBatchSize
         )
         {
+            BatchSize = batchSize;
             if (connectionManager != null)
                 ConnectionManager = connectionManager;
             if (!string.IsNullOrEmpty(tableName))
                 TableName = tableName;
-            BatchSize = batchSize;
         }
 
         protected sealed override void OnConnectionManagerChanged(IConnectionManager value)
