@@ -80,6 +80,9 @@ namespace ALE.ETLBox.DataFlow
         private bool WasTruncationExecuted { get; set; }
         private DBMergeTypeInfo TypeInfo { get; set; }
 
+        public DbMerge()
+            : this(null, null) { }
+
         public DbMerge(string tableName)
             : this(null, tableName) { }
 
@@ -471,8 +474,7 @@ namespace ALE.ETLBox.DataFlow
     public class DbMerge : DbMerge<ExpandoObject>
     {
         // for deserialization purposes
-        public DbMerge()
-            : base(null) { }
+        public DbMerge() { }
 
         public DbMerge(string tableName)
             : base(tableName) { }
