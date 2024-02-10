@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +10,6 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.CodeAnalysis.Text;
 
 namespace ALE.ETLBox.Scripting;
 
@@ -298,6 +296,7 @@ SOURCE CODE:
         HashSet<Assembly> assemblies = new HashSet<Assembly>
         {
             typeof(Attribute).Assembly,
+            typeof(ValueType).Assembly,
         };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;

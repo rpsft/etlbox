@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
+using MassTransit;
 using Microsoft.CSharp.RuntimeBinder;
 
 namespace ALE.ETLBox.Scripting;
@@ -51,24 +52,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
 
         foreach (var key in Mappings.Keys)
         {
-            var runner = type.CreateRunner<object>(Mappings[key]);
-            var diagnostics = runner.Script.Compile();
-
-            dynamic value;
-            if (diagnostics.Any())
-            {
-                if (FailOnMissingField)
-                {
-                    throw new ArgumentException(
-                        $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => {Mappings[key]}.",
-                        diagnostics.First().GetMessage());
-                }
-                value = null!;
-            }
-            else
-            {
-                value = runner.RunAsync(arg).Result.ReturnValue;
-            }
+            dynamic? value = ProcessValue(arg, key, type);
             try
             {
                 ((IDictionary<string, object?>)output)[key] = value;
@@ -92,10 +76,53 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         return output;
     }
 
+    protected virtual dynamic? ProcessValue(IDictionary<string, object?> arg, string key, TypedScriptBuilder type)
+    {
+        if (IsUtils(arg, Mappings[key], out dynamic? value))
+        {
+            return value;
+        }
+        var runner = type.CreateRunner<object>(Mappings[key]);
+        var diagnostics = runner.Script.Compile();
+
+        if (diagnostics.Any())
+        {
+            if (FailOnMissingField)
+            {
+                throw new ArgumentException(
+                    $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => {Mappings[key]}.",
+                    diagnostics.First().GetMessage());
+            }
+            value = null!;
+        }
+        else
+        {
+            value = runner.RunAsync(arg).Result.ReturnValue;
+        }
+
+        return value;
+    }
+
+    private bool IsUtils(IDictionary<string, object?> source, string? expression, out dynamic? value)
+    {
+        switch (expression)
+        {
+            case not null when expression == $"{nameof(Utils.NewId)}":
+                value = NewId.NextSequentialGuid();
+                return true;
+            case not null when expression == $"{nameof(Utils.JsonSerialize)}":
+                value = System.Text.Json.JsonSerializer.Serialize(source);
+                return true;
+            default:
+                value = null;
+                return false;
+        }
+    }
+
     private TOutput TransformWithScriptTyped(TInput arg)
     {
         TOutput output =
-            (TOutput)Activator.CreateInstance(typeof(TOutput))
+            (TOutput)Activator.CreateInstance(typeof(TOutput))!
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
             );

@@ -82,6 +82,7 @@ public class ScriptedRowTransformationTests
         // Act
         memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
+        errorDestination.Wait();
         // Assert
         Assert.Single(errorDestination.Data);
     }
@@ -132,6 +133,57 @@ public class ScriptedRowTransformationTests
         memoryDestination.Wait();
         // Assert
         Assert.Single(memoryDestination.Data);
+    }
+
+    [Fact]
+    public void ShouldGetNewId()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+        script.FailOnMissingField = false;
+
+        script.Mappings.Add("Id", "Id + 1");
+        script.Mappings.Add("NewId", $"{nameof(Utils.NewId)}");
+       
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var obj = memoryDestination.Data.First() as IDictionary<string, object?>;
+        Assert.True(obj["NewId"] is Guid);
+    }
+
+    [Fact]
+    public void ShouldGetJsonSerializationFromSource()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+        script.FailOnMissingField = false;
+
+        script.Mappings.Add("Id", "Id + 1");
+        script.Mappings.Add("Content", $"{nameof(Utils.JsonSerialize)}");
+       
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var obj = memoryDestination.Data.First() as IDictionary<string, object?>;
+        var expectedContent = System.Text.Json.JsonSerializer.Serialize(memorySource.Data.First());
+        Assert.Equal(expectedContent, obj["Content"]);
     }
 
     private static ExpandoObject CreateTestDataItem(int id, string name)

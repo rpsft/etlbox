@@ -9,6 +9,8 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
+      <PackageReference Include="NewId" Version="4.0.1" />
+      <PackageReference Include="System.Text.Json" Version="6.0.9" />
     </ItemGroup>
 
     <ItemGroup>
