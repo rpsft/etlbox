@@ -31,6 +31,7 @@ namespace ALE.ETLBox.DataFlow
 
         public DbTransformation()
         {
+            InitObjects();
             TransformationFunc = source =>
             {
                 PrepareWrite();
