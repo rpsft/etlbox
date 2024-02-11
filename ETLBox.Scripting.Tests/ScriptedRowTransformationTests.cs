@@ -136,7 +136,7 @@ public class ScriptedRowTransformationTests
         script.Mappings.Add("NewId", "MassTransit.NewId.NextSequentialGuid()");
         script.Mappings.Add("Id", "Id + 1");
 
-        var assemblyFileName = $"{typeof(MassTransit.NewId).Assembly.GetName().Name!}.dll";
+        var assemblyFileName = typeof(MassTransit.NewId).Assembly.GetName().Name!;
         script.AdditionalAssemblyLocations = new[] { assemblyFileName };
 
         var memoryDestination = new MemoryDestination<ExpandoObject>();
@@ -173,7 +173,7 @@ public class ScriptedRowTransformationTests
         script.Mappings.Add("Id", "Data.Id + 1");
         script.Mappings.Add("Json", "Newtonsoft.Json.JsonConvert.SerializeObject(Data)");
 
-        var assemblyFileName = $"{typeof(Newtonsoft.Json.JsonConvert).Assembly.GetName().Name!}.dll";
+        var assemblyFileName = typeof(Newtonsoft.Json.JsonConvert).Assembly.GetName().Name!;
         script.AdditionalAssemblyLocations = new[] { assemblyFileName };
 
         var memoryDestination = new MemoryDestination<ExpandoObject>();
