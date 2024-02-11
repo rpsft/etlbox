@@ -151,7 +151,7 @@ public class ScriptedRowTransformationTests
     }
 
     [Fact]
-    public void ShouldJsonSerializationFromProperty()
+    public void ShouldSerializeToJsonFromProperty()
     {
         // Arrange
         var data = new ExpandoObject() as IDictionary<string, object?>;
