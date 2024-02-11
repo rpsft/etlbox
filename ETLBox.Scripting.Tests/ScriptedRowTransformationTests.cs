@@ -173,8 +173,7 @@ public class ScriptedRowTransformationTests
         script.Mappings.Add("Id", "Data.Id + 1");
         script.Mappings.Add("Json", "Newtonsoft.Json.JsonConvert.SerializeObject(Data)");
 
-        var assemblyFileName = typeof(Newtonsoft.Json.JsonConvert).Assembly.GetName().Name!;
-        script.AdditionalAssemblyLocations = new[] { assemblyFileName };
+        script.AdditionalAssemblyLocations = new[] { "Newtonsoft.Json.dll" };
 
         var memoryDestination = new MemoryDestination<ExpandoObject>();
         memorySource.LinkTo(script);
