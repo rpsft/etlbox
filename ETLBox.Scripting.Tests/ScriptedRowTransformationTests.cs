@@ -150,6 +150,42 @@ public class ScriptedRowTransformationTests
         Assert.True(obj["NewId"] is Guid);
     }
 
+    [Fact]
+    public void ShouldSerializeToJsonFromProperty()
+    {
+        // Arrange
+        var data = new ExpandoObject() as IDictionary<string, object?>;
+        data["Id"] = 1;
+        data["Name"] = "test";
+
+        var obj = new ExpandoObject() as IDictionary<string, object?>;
+        obj["Data"] = data as ExpandoObject;
+
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add((ExpandoObject)obj);
+
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = true
+        };
+        script.Mappings.Add("Id", "Data.Id + 1");
+        script.Mappings.Add("Json", "Newtonsoft.Json.JsonConvert.SerializeObject(Data)");
+        script.AdditionalAssemblyLocations = new[] { typeof(Newtonsoft.Json.JsonConvert).Assembly.Location };
+
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var res = memoryDestination.Data.First() as IDictionary<string, object?>;
+        Assert.Equal(2, res["Id"]);
+        Assert.Equal("{\"Id\":1,\"Name\":\"test\"}", res["Json"]);
+    }
+
     private static ExpandoObject CreateTestDataItem(int id, string name)
     {
         var result = new ExpandoObject();
