@@ -36,8 +36,8 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     {
         get => _additionalAssemblies.Select(x => x.Location);
         set => _additionalAssemblies = value
-            .Select(ProcessFilePath)
-            .Select(Assembly.LoadFile);
+            .Select(Path.GetFileNameWithoutExtension)
+            .Select(Assembly.Load);
     }
 
     /// <summary>
@@ -167,10 +167,4 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
                 return null;
             }
         );
-
-    private string ProcessFilePath(string p)
-    {
-        var name = Path.GetFileName(p);
-        return Path.Combine(Directory.GetCurrentDirectory(), name);
-    }
 }
