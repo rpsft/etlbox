@@ -1,23 +1,51 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
 using Microsoft.CSharp.RuntimeBinder;
 
 namespace ALE.ETLBox.Scripting;
 
-public class ScriptedTransformation<TInput> : ScriptedRowTransformation<TInput, TInput> { }
+/// <inheritdoc />
+[PublicAPI]
+public class ScriptedTransformation : ScriptedRowTransformation<ExpandoObject, ExpandoObject> { }
 
+/// <summary>
+/// Transforms a row with a C# script expressions for each field.
+/// </summary>
+/// <typeparam name="TInput"></typeparam>
+/// <typeparam name="TOutput"></typeparam>
 [PublicAPI]
 public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput>
 {
-    public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
+    /// <summary>
+    /// Mapping of input fields to output fields, where
+    /// each key is the output field name, each value is the script to transform the input field to the output field
+    /// </summary>
+    public Dictionary<string, string> Mappings { get; set; } = new();
 
     /// <summary>
-    /// Indicates if transformation should fail when missing mapping field on source
+    /// Additional assembly .dll locations to load for the script
     /// </summary>
-    public bool FailOnMissingField { get; set; } = false;
+    public IEnumerable<string> AdditionalAssemblyLocations
+    {
+        get => _additionalAssemblies.Select(x => x.Location);
+        set => _additionalAssemblies = value.Select(Assembly.LoadFile);
+    }
+
+    /// <summary>
+    /// Indicates if transformation should fail when missing mapping field on source.
+    /// * True: Transformation will fail when a field is missing in the source or script fails to compile.
+    /// * False: Transformation will return null when a field is missing in the source, or script is failed to compile.
+    /// </summary>
+    public bool FailOnMissingField { get; set; } = true;
+
+    private IEnumerable<Assembly> _additionalAssemblies = Array.Empty<Assembly>();
+    private readonly ConcurrentDictionary<string, ScriptRunner<object>?> _runnersCache = new();
 
     public ScriptedRowTransformation()
     {
@@ -28,16 +56,18 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         TransformationFunc = ScriptedTransformation;
     }
 
+    public sealed override Func<TInput, TOutput> TransformationFunc
+    {
+        // This property needs to get sealed as it is called from constructor
+        get => base.TransformationFunc;
+        set => base.TransformationFunc = value;
+    }
+
     private TOutput ScriptedTransformation(TInput arg)
     {
-        if (typeof(IDictionary<string, object?>).IsAssignableFrom(typeof(TInput)))
-        {
-            return TransformWithScriptDynamic((IDictionary<string, object?>)arg!);
-        }
-        else
-        {
-            return TransformWithScriptTyped(arg);
-        }
+        return typeof(IDictionary<string, object?>).IsAssignableFrom(typeof(TInput))
+            ? (TOutput)TransformWithScriptDynamic((IDictionary<string, object?>)arg!)
+            : TransformWithScriptTyped(arg);
     }
 
     private dynamic TransformWithScriptDynamic(IDictionary<string, object?> arg)
@@ -47,28 +77,12 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
             );
-        var type = ScriptBuilder.Default.ForType(arg);
+        var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
 
         foreach (var key in Mappings.Keys)
         {
-            var runner = type.CreateRunner<object>(Mappings[key]);
-            var diagnostics = runner.Script.Compile();
-
-            dynamic value;
-            if (diagnostics.Any())
-            {
-                if (FailOnMissingField)
-                {
-                    throw new ArgumentException(
-                        $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => {Mappings[key]}.",
-                        diagnostics.First().GetMessage());
-                }
-                value = null!;
-            }
-            else
-            {
-                value = runner.RunAsync(arg).Result.ReturnValue;
-            }
+            var runner = GetScriptRunner(key, type);
+            dynamic? value = runner?.RunAsync(arg).Result.ReturnValue;
             try
             {
                 ((IDictionary<string, object?>)output)[key] = value;
@@ -95,24 +109,16 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     private TOutput TransformWithScriptTyped(TInput arg)
     {
         TOutput output =
-            (TOutput)Activator.CreateInstance(typeof(TOutput))
+            (TOutput)Activator.CreateInstance(typeof(TOutput))!
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
             );
         var builder = ScriptBuilder.Default.ForType<TInput>();
         foreach (var key in Mappings.Keys)
         {
-            var runner = builder.CreateRunner(Mappings[key]);
-            var diagnostics = runner.Script.Compile();
-            if (diagnostics.Any())
-            {
-                throw new ArgumentException(
-                    $"Could not compile script for property {key} on type {typeof(TOutput).FullName}.",
-                    diagnostics.First().GetMessage()
-                );
-            }
+            var runner = GetScriptRunner(key, builder);
 
-            object value = runner.RunAsync(arg).Result.ReturnValue;
+            var value = runner?.RunAsync(arg).Result.ReturnValue;
             try
             {
                 var property = typeof(TOutput).GetProperty(key);
@@ -133,4 +139,29 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
 
         return output;
     }
+
+    private ScriptRunner<object>? GetScriptRunner(string key, TypedScriptBuilder builder) =>
+        _runnersCache.GetOrAdd(
+            Mappings[key],
+            script =>
+            {
+                var runner = builder.CreateRunner<object>(Mappings[key]);
+                var diagnostics = runner.Script.Compile();
+
+                if (!diagnostics.Any())
+                {
+                    return runner;
+                }
+
+                if (FailOnMissingField)
+                {
+                    throw new ArgumentException(
+                        $"Could not compile script for '{typeof(TOutput).FullName}.{key}' => {Mappings[key]}.",
+                        diagnostics.First().GetMessage()
+                    );
+                }
+
+                return null;
+            }
+        );
 }

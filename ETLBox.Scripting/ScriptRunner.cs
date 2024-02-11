@@ -35,7 +35,7 @@ public class ScriptRunner<TOutput>
     {
         if (globals is IDictionary<string, object?> expando)
         {
-            dynamic args = Activator.CreateInstance(GlobalsTypeInfo.Type, expando);
+            dynamic args = Activator.CreateInstance(GlobalsTypeInfo.Type, expando)!;
             return await Script.RunAsync(args, cancellationToken);
         }
         else

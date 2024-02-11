@@ -24,13 +24,9 @@ public class ScriptedRowTransformationTests
         memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
         // Assert
-        Assert.Collection(
+        Assert.Single(
             memoryDestination.Data,
-            (dynamic row) =>
-            {
-                Assert.Equal(2, row.NewId);
-                Assert.Equal("NewTest", row.NewName);
-            }
+            (dynamic row) => row.NewId == 2 && row.NewName == "NewTest"
         );
     }
 
@@ -40,7 +36,10 @@ public class ScriptedRowTransformationTests
         // Arrange
         var memorySource = new MemorySource();
         memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
-        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = false
+        };
         script.Mappings.Add("NewId", "Id + 1");
         script.Mappings.Add("NewName", "$\"New{Name}\"");
         script.Mappings.Add("NewMissingField", "$\"New{MissingField}\"");
@@ -51,14 +50,10 @@ public class ScriptedRowTransformationTests
         memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
         // Assert
-        Assert.Collection(
+        Assert.Single(
             memoryDestination.Data,
             (dynamic row) =>
-            {
-                Assert.Equal(2, row.NewId);
-                Assert.Equal("NewTest", row.NewName);
-                Assert.Null(row.NewMissingField);
-            }
+                row.NewId == 2 && row.NewName == "NewTest" && row.NewMissingField == null
         );
     }
 
@@ -82,6 +77,7 @@ public class ScriptedRowTransformationTests
         // Act
         memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
+        errorDestination.Wait();
         // Assert
         Assert.Single(errorDestination.Data);
     }
@@ -102,14 +98,7 @@ public class ScriptedRowTransformationTests
         memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
         // Assert
-        Assert.Collection(
-            memoryDestination.Data,
-            row =>
-            {
-                Assert.Equal(2, row.Id);
-                Assert.Equal("NewTest", row.Name);
-            }
-        );
+        Assert.Single(memoryDestination.Data, row => row.Id == 2 && row.Name == "NewTest");
     }
 
     [Fact]
@@ -132,6 +121,69 @@ public class ScriptedRowTransformationTests
         memoryDestination.Wait();
         // Assert
         Assert.Single(memoryDestination.Data);
+    }
+
+    [Fact]
+    public void ShouldGetNewId()
+    {
+        // Arrange
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = true
+        };
+        script.Mappings.Add("NewId", "MassTransit.NewId.NextSequentialGuid()");
+        script.Mappings.Add("Id", "Id + 1");
+        script.AdditionalAssemblyLocations = new[] { typeof(MassTransit.NewId).Assembly.Location };
+
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var obj = memoryDestination.Data.First() as IDictionary<string, object?>;
+        Assert.True(obj["NewId"] is Guid);
+    }
+
+    [Fact]
+    public void ShouldSerializeToJsonFromProperty()
+    {
+        // Arrange
+        var data = new ExpandoObject() as IDictionary<string, object?>;
+        data["Id"] = 1;
+        data["Name"] = "test";
+
+        var obj = new ExpandoObject() as IDictionary<string, object?>;
+        obj["Data"] = data as ExpandoObject;
+
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add((ExpandoObject)obj);
+
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = true
+        };
+        script.Mappings.Add("Id", "Data.Id + 1");
+        script.Mappings.Add("Json", "Newtonsoft.Json.JsonConvert.SerializeObject(Data)");
+        script.AdditionalAssemblyLocations = new[] { typeof(Newtonsoft.Json.JsonConvert).Assembly.Location };
+
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        var res = memoryDestination.Data.First() as IDictionary<string, object?>;
+        Assert.Equal(2, res["Id"]);
+        Assert.Equal("{\"Id\":1,\"Name\":\"test\"}", res["Json"]);
     }
 
     private static ExpandoObject CreateTestDataItem(int id, string name)
