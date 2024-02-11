@@ -150,7 +150,7 @@ public class ScriptedRowTransformationTests
         Assert.True(obj["NewId"] is Guid);
     }
 
-        [Fact]
+    [Fact]
     public void ShouldJsonSerializationFromProperty()
     {
         // Arrange
