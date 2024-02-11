@@ -49,8 +49,10 @@ public class ScriptBuilderTests
             "(Global1.Number+WhatEverNameIWant.Number+Global2.Number).ToString() + Global1.Text + WhatEverNameIWant.Text";
 
         dynamic globals = new ExpandoObject();
-        globals.Global1 = new MyCoolClass() { Number = 100, Text = "Something" };
-        globals.WhatEverNameIWant = new MyCoolClass() { Number = 500, Text = "Longer Text Value" };
+        globals.Global1 = new MyCoolClass
+            { Number = 100, Text = "Something" };
+        globals.WhatEverNameIWant = new MyCoolClass
+            { Number = 500, Text = "Longer Text Value" };
         globals.Global2 = new ExpandoObject();
         globals.Global2.Number = 600;
 

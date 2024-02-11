@@ -17,7 +17,7 @@ namespace ALE.ETLBox.Scripting
             Assembly assembly,
             MetadataReference reference,
             Type type,
-            IList<Assembly> referencedAssemblies
+            IEnumerable<Assembly> referencedAssemblies
         )
         {
             Assembly = assembly;
@@ -44,6 +44,6 @@ namespace ALE.ETLBox.Scripting
         /// <summary>
         /// List of assemblies, referenced by the generated type.
         /// </summary>
-        public IList<Assembly> ReferencedAssemblies { get; }
+        public IEnumerable<Assembly> ReferencedAssemblies { get; }
     }
 }

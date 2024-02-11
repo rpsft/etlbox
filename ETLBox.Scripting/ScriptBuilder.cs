@@ -33,10 +33,19 @@ public class ScriptBuilder
     /// </summary>
     public static ScriptBuilder Default { get; } = new();
 
+    /// <summary>
+    /// Global usings for the script.
+    /// </summary>
     private const string Usings = "using System; using System.Collections.Generic;";
 
+    /// <summary>
+    /// Unique number for each instance of the script builder.
+    /// </summary>
     private int _unique; // = 0
 
+    /// <summary>
+    /// Type cache for dynamically generated types.
+    /// </summary>
     private readonly ConcurrentDictionary<int, GlobalsTypeInfo> _cache = new();
 
     /// <summary>
@@ -81,7 +90,7 @@ public class ScriptBuilder
     private GlobalsTypeInfo CreateCore(IDictionary<string, object?> dynamicObject)
     {
         var code =
-            $"{Usings}{Environment.NewLine}{BuildClassCode(out string typeName, dynamicObject)}";
+            $"{Usings}{Environment.NewLine}{BuildClassCode(out var typeName, dynamicObject)}";
 
         // Using ReflectionEmit with Microsoft.CodeAnalysis.CSharp.Scripting is not supported.
         // The workaround is to use CSharpCompilation instead.
@@ -140,7 +149,7 @@ public class ScriptBuilder
         var nestedTypeDeclarations = new Dictionary<string, (string type, string code)>();
         foreach (var member in dynamicMembers)
         {
-            var code = BuildClassCode(out string innerType, member.Value);
+            var code = BuildClassCode(out var innerType, member.Value);
             nestedTypeDeclarations.Add(member.Key, (innerType, code));
         }
 
@@ -193,10 +202,10 @@ public class {typeName}
     {
         if (type == null)
             return false;
-        bool hasCompilerGeneratedAttribute =
+        var hasCompilerGeneratedAttribute =
             type.GetCustomAttribute<CompilerGeneratedAttribute>() != null;
-        bool nameContainsAnonymousType = type.FullName?.Contains("AnonymousType") ?? false;
-        bool nameStartsWithLessThan = type.Name.StartsWith("<>");
+        var nameContainsAnonymousType = type.FullName?.Contains("AnonymousType") ?? false;
+        var nameStartsWithLessThan = type.Name.StartsWith("<>");
 
         return hasCompilerGeneratedAttribute && nameContainsAnonymousType && nameStartsWithLessThan;
     }
@@ -250,11 +259,11 @@ SOURCE CODE:
         var orderedKeys = expando.Keys.OrderBy(k => k);
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             foreach (var key in orderedKeys)
             {
                 hash = hash * 23 + key.GetHashCode();
-                object? value = expando[key];
+                var value = expando[key];
 
                 if (value == null)
                     continue;
@@ -293,11 +302,7 @@ SOURCE CODE:
         IDictionary<string, object?> expando
     )
     {
-        HashSet<Assembly> assemblies = new HashSet<Assembly>
-        {
-            typeof(Attribute).Assembly,
-            typeof(ValueType).Assembly,
-        };
+        var assemblies = new HashSet<Assembly> { typeof(Attribute).Assembly };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;
     }
@@ -320,7 +325,7 @@ SOURCE CODE:
         }
     }
 
-    private static void CollectMemberAssemblies(MemberInfo member, HashSet<Assembly> assemblies)
+    private static void CollectMemberAssemblies(MemberInfo member, ISet<Assembly> assemblies)
     {
         switch (member.MemberType)
         {
@@ -348,12 +353,10 @@ SOURCE CODE:
         }
     }
 
-    private static void CollectTypeAssemblies(Type? t, HashSet<Assembly> assemblies)
+    private static void CollectTypeAssemblies(Type? t, ISet<Assembly> assemblies)
     {
-        if (t == null || t == typeof(object) || assemblies.Contains(t.Assembly))
+        if (t == null || t == typeof(object) || !assemblies.Add(t.Assembly))
             return;
-
-        assemblies.Add(t.Assembly);
 
         // Base type
         CollectTypeAssemblies(t.BaseType, assemblies);
