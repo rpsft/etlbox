@@ -568,6 +568,10 @@ public sealed class DataFlowXmlReader
         if (typeName.EndsWith("[]"))
         {
             isArray = true;
+            if ((baseType?.IsGenericType ?? false) && baseType?.GenericTypeArguments.Length > 0)
+            { 
+                return baseType.GenericTypeArguments[0].MakeArrayType();
+            }
             typeName = typeName.Remove(typeName.Length - 2, 2);
         }
 

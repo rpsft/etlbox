@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
@@ -34,7 +35,9 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     public IEnumerable<string> AdditionalAssemblyLocations
     {
         get => _additionalAssemblies.Select(x => x.Location);
-        set => _additionalAssemblies = value.Select(Assembly.LoadFile);
+        set => _additionalAssemblies = value
+            .Select(ProcessFilePath)
+            .Select(Assembly.LoadFile);
     }
 
     /// <summary>
@@ -164,4 +167,10 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
                 return null;
             }
         );
+
+    private string ProcessFilePath(string p)
+    {
+        var name = Path.GetFileName(p);
+        return Path.Combine(Directory.GetCurrentDirectory(), name);
+    }
 }
