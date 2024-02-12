@@ -57,6 +57,9 @@ namespace ETLBox.Serialization.Tests
                         <NullShort>-1</NullShort>
                         <NullUshort>1</NullUshort>
                         <Uri>{_csvUri}</Uri>
+                        <Strings>
+                            <string>test</string>
+                        </Strings>
                         <Configuration>
                             <Delimiter>;</Delimiter>
                             <Escape>#</Escape>
@@ -101,6 +104,9 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.NullGuid.Should().Be(referenceId);
             customCsvSource.Configuration.Delimiter.Should().Be(";");
             customCsvSource.Configuration.Escape.Should().Be('#');
+            customCsvSource.Strings.Should().NotBeNullOrEmpty();
+            customCsvSource.Strings.Should().HaveCount(1);
+            customCsvSource.Strings!.First().Should().Be("test");
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
@@ -287,6 +293,7 @@ namespace ETLBox.Serialization.Tests
             public short? NullShort { get; set; }
             public ushort Ushort { get; set; }
             public ushort? NullUshort { get; set; }
+            public IEnumerable<string> Strings { get; set; } = null!;
         }
 #pragma warning restore S1144 // Unused private types or members should be removed
 

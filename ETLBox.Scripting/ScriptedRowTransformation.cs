@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
@@ -29,12 +30,13 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     public Dictionary<string, string> Mappings { get; set; } = new();
 
     /// <summary>
-    /// Additional assembly .dll locations to load for the script
+    /// Additional assembly FullName string to load for the script
     /// </summary>
-    public IEnumerable<string> AdditionalAssemblyLocations
+    public IEnumerable<string> AdditionalAssemblyNames
     {
-        get => _additionalAssemblies.Select(x => x.Location);
-        set => _additionalAssemblies = value.Select(Assembly.LoadFile);
+        get => _additionalAssemblies.Select(x => x.GetName().FullName);
+        set => _additionalAssemblies = value
+            .Select(Assembly.Load);
     }
 
     /// <summary>
@@ -75,7 +77,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         dynamic output =
             Activator.CreateInstance(typeof(TOutput))
             ?? throw new InvalidOperationException(
-                $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
+                $"Could not create instance of output type '{typeof(TOutput).FullName}'. This may be caused by a missing parameterless constructor."
             );
         var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
 
