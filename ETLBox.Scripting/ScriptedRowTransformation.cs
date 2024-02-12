@@ -78,7 +78,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         dynamic output =
             Activator.CreateInstance(typeof(TOutput))
             ?? throw new InvalidOperationException(
-                $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
+                $"Could not create instance of output type '{typeof(TOutput).FullName}'. This may be caused by a missing parameterless constructor."
             );
         var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
 

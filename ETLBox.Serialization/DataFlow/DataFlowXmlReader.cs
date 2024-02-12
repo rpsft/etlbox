@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
@@ -568,7 +569,8 @@ public sealed class DataFlowXmlReader
         if (typeName.EndsWith("[]"))
         {
             isArray = true;
-            if ((baseType?.IsGenericType ?? false) && baseType?.GenericTypeArguments.Length > 0)
+            if ((baseType?.IsGenericType ?? false) && baseType?.GenericTypeArguments.Length > 0 
+                && Array.Exists(baseType.GetInterfaces(), i => i == typeof(IEnumerable)))
             { 
                 return baseType.GenericTypeArguments[0].MakeArrayType();
             }
