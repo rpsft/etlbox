@@ -58,7 +58,7 @@ public sealed class DataFlowXmlReader
                 assemblies.Add(assembly);
             }
             catch (System.BadImageFormatException)
-            { 
+            {
                 // Ignore
             }
         }
@@ -233,8 +233,8 @@ public sealed class DataFlowXmlReader
             return CreateList(type, node);
         }
 
-        return IsDictionary(type) 
-            ? CreateDictionary(type, node) 
+        return IsDictionary(type)
+            ? CreateDictionary(type, node)
             : CreateInstance(type, node);
     }
 
@@ -299,7 +299,7 @@ public sealed class DataFlowXmlReader
     {
         if (propXml is null)
         {
-            throw new InvalidDataException($"Не удалось получить свойство для типа '{type}'");
+            throw new InvalidDataException($"Cant get a property for type '{type}'");
         }
 
         var prop = instance.GetType().GetProperty(propXml.Name.LocalName);
@@ -384,21 +384,30 @@ public sealed class DataFlowXmlReader
         PropertyInfo prop
     )
     {
-        var propTypeName = propXml.Attribute("type")?.Value;
-        if (string.IsNullOrEmpty(propTypeName))
+        Type? propType;
+        // If Type is IEnumerable, assign array
+        if (prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
         {
-            throw new InvalidDataException(
-                $"Не задан атрибут типа для свойства '{typeName}.{prop.Name}'"
-            );
+            propType = prop.PropertyType.GenericTypeArguments[0].MakeArrayType();
         }
-
-        var propType = GetType(propTypeName!, prop.PropertyType);
-
-        if (propType is null)
+        else
         {
-            throw new InvalidDataException(
-                $"Не удалось получить тип для свойства '{typeName}.{prop.Name}'"
-            );
+            var propTypeName = propXml.Attribute("type")?.Value;
+            if (string.IsNullOrEmpty(propTypeName))
+            {
+                throw new InvalidDataException(
+                    $"Type attribute is required to assign '{typeName}.{prop.Name}' value"
+                );
+            }
+
+            propType = GetType(propTypeName!, prop.PropertyType);
+
+            if (propType is null)
+            {
+                throw new InvalidDataException(
+                    $"Type '{propType}' is not found for '{typeName}.{prop.Name}'"
+                );
+            }
         }
 
         var value = CreateObject(propType, propXml);
@@ -569,11 +578,6 @@ public sealed class DataFlowXmlReader
         if (typeName.EndsWith("[]"))
         {
             isArray = true;
-            if ((baseType?.IsGenericType ?? false) && baseType?.GenericTypeArguments.Length > 0 
-                && Array.Exists(baseType.GetInterfaces(), i => i == typeof(IEnumerable)))
-            { 
-                return baseType.GenericTypeArguments[0].MakeArrayType();
-            }
             typeName = typeName.Remove(typeName.Length - 2, 2);
         }
 

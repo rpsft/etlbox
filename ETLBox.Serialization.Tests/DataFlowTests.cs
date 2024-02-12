@@ -57,7 +57,7 @@ namespace ETLBox.Serialization.Tests
                         <NullShort>-1</NullShort>
                         <NullUshort>1</NullUshort>
                         <Uri>{_csvUri}</Uri>
-                        <Strings type=""[]"">
+                        <Strings>
                             <string>test</string>
                         </Strings>
                         <Configuration>

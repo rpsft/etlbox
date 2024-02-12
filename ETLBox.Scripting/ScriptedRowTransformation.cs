@@ -30,13 +30,12 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     public Dictionary<string, string> Mappings { get; set; } = new();
 
     /// <summary>
-    /// Additional assembly .dll locations to load for the script
+    /// Additional assembly FullName string to load for the script
     /// </summary>
-    public IEnumerable<string> AdditionalAssemblyLocations
+    public IEnumerable<string> AdditionalAssemblyNames
     {
-        get => _additionalAssemblies.Select(x => x.Location);
+        get => _additionalAssemblies.Select(x => x.GetName().FullName);
         set => _additionalAssemblies = value
-            .Select(Path.GetFileNameWithoutExtension)
             .Select(Assembly.Load);
     }
 
