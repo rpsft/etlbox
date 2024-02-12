@@ -60,6 +60,7 @@ namespace ETLBox.Serialization.Tests
                         <Strings>
                             <string>test</string>
                         </Strings>
+                        <Stream type=""MemoryStream"" />
                         <Configuration>
                             <Delimiter>;</Delimiter>
                             <Escape>#</Escape>
@@ -107,6 +108,8 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.Strings.Should().NotBeNullOrEmpty();
             customCsvSource.Strings.Should().HaveCount(1);
             customCsvSource.Strings!.First().Should().Be("test");
+            customCsvSource.Stream.Should().NotBeNull();
+            customCsvSource.Stream.Should().BeOfType<MemoryStream>();
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
@@ -294,6 +297,7 @@ namespace ETLBox.Serialization.Tests
             public ushort Ushort { get; set; }
             public ushort? NullUshort { get; set; }
             public IEnumerable<string> Strings { get; set; } = null!;
+            public Stream Stream { get;set; } = null!;
         }
 #pragma warning restore S1144 // Unused private types or members should be removed
 

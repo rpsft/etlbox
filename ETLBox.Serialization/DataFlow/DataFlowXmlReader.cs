@@ -386,7 +386,7 @@ public sealed class DataFlowXmlReader
     {
         Type? propType;
         // If Type is IEnumerable, assign array
-        if (prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+        if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
         {
             propType = prop.PropertyType.GenericTypeArguments[0].MakeArrayType();
         }
