@@ -72,7 +72,7 @@ public static class Config
 
             return s_defaultConfigFile;
         }
-        set => s_defaultConfigFile = value;
+        private set => s_defaultConfigFile = value;
     }
 
     public static IEnumerable<object[]> AllSqlConnections(string section)
@@ -149,7 +149,7 @@ public static class Config
             : Array.Empty<object[]>();
     }
 
-    public static void Load(string configFile)
+    private static void Load(string configFile)
     {
         DefaultConfigFile = new ConfigurationBuilder().AddJsonFile(configFile).Build();
     }

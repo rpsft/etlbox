@@ -1,13 +1,16 @@
-using System.Net.Http;
+using System.Text.Json.Nodes;
 using ALE.ETLBox.ControlFlow;
 
 namespace TestOtherConnectors.CustomSource
 {
     [Collection("OtherConnectors")]
-    public class CustomSourceWebServiceTests : OtherConnectorsTestBase
+    public class CustomSourceJsonTests : OtherConnectorsTestBase
     {
-        public CustomSourceWebServiceTests(OtherConnectorsDatabaseFixture fixture)
-            : base(fixture) { }
+
+        public CustomSourceJsonTests(OtherConnectorsDatabaseFixture fixture)
+            : base(fixture)
+        {
+        }
 
         /// <summary>
         /// See https://jsonplaceholder.typicode.com/ for details of the rest api
@@ -27,7 +30,7 @@ namespace TestOtherConnectors.CustomSource
                 SqlConnection,
                 "dbo.WebServiceDestination"
             );
-            WebserviceReader wsreader = new WebserviceReader();
+            WebserviceFakeReader wsreader = new WebserviceFakeReader();
 
             //Act
             CustomSource<Todo> source = new CustomSource<Todo>(
@@ -52,18 +55,26 @@ namespace TestOtherConnectors.CustomSource
         }
 
         [Serializable]
-        public class WebserviceReader
+        public class WebserviceFakeReader
         {
+            private readonly JsonArray _todosJsonArray;
+
+            public WebserviceFakeReader()
+            {
+                var fileContent = File.ReadAllText(Path.Join(Directory.GetCurrentDirectory(), "res", "CustomSource",
+                    "typicode.com.todos.json"
+                ));
+                _todosJsonArray = JsonNode.Parse(fileContent) as JsonArray;
+            }
+
             public string Json { get; set; }
             public int TodoCounter { get; set; } = 1;
 
             public Todo ReadTodo()
             {
                 var todo = new Todo();
-                using var httpClient = new HttpClient();
-                var uri = new Uri("https://jsonplaceholder.typicode.com/todos/" + TodoCounter);
                 TodoCounter++;
-                var response = httpClient.GetStringAsync(uri).Result;
+                var response = _todosJsonArray[TodoCounter]!.ToString();
                 JsonConvert.PopulateObject(response, todo);
                 return todo;
             }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
@@ -58,6 +58,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         TransformationFunc = ScriptedTransformation;
     }
 
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields")]
     public sealed override Func<TInput, TOutput> TransformationFunc
     {
         // This property needs to get sealed as it is called from constructor
@@ -147,7 +148,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             Mappings[key],
             script =>
             {
-                var runner = builder.CreateRunner<object>(Mappings[key]);
+                var runner = builder.CreateRunner<object>(script);
                 var diagnostics = runner.Script.Compile();
 
                 if (!diagnostics.Any())

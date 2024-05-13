@@ -132,8 +132,8 @@ namespace TestControlFlowTasks
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable41"));
             var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable41");
-            Assert.True(
-                td.Columns.Count(col => col.IsPrimaryKey && col.Name.StartsWith("Id")) == 2
+            Assert.Equal(2
+                , td.Columns.Count(col => col.IsPrimaryKey && col.Name.StartsWith("Id"))
             );
         }
 
