@@ -86,9 +86,12 @@ FROM STDIN (FORMAT BINARY)"
             ReadTableDefinition(tableName);
         }
 
-        private void ReadTableDefinition(string tablename)
+        private void ReadTableDefinition(string tableName)
         {
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tablename);
+            // Clone the connection manager for the case, when original manager already has connection with open cursor
+            using var metadataConnectionManager = Clone();
+            
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(metadataConnectionManager, tableName);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {
