@@ -60,26 +60,28 @@ namespace ALE.ETLBox
             CreateTableTask.Create(connectionManager, this);
 
         public static TableDefinition GetDefinitionFromTableName(
-            IConnectionManager connection,
+            IConnectionManager connectionManager,
             string tableName
         )
         {
-            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
-            ConnectionManagerType connectionType = connection.ConnectionManagerType;
+            // Clone the connection manager for the case, when original manager already has connection with open cursor
+            using var metadataConnection = connectionManager.Clone();
+            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(metadataConnection, tableName);
+            ConnectionManagerType connectionType = metadataConnection.ConnectionManagerType;
             var tn = new ObjectNameDescriptor(
                 tableName,
-                connection.QB,
-                connection.QE
+                metadataConnection.QB,
+                metadataConnection.QE
             );
 
             return connectionType switch
             {
-                ConnectionManagerType.SqlServer => ReadTableDefinitionFromSqlServer(connection, tn),
-                ConnectionManagerType.SQLite => ReadTableDefinitionFromSQLite(connection, tn),
-                ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(connection, tn),
-                ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(connection, tn),
-                ConnectionManagerType.Access => ReadTableDefinitionFromAccess(connection, tn),
-                ConnectionManagerType.ClickHouse => ReadTableDefinitionFromClickHouse(connection, tn),
+                ConnectionManagerType.SqlServer => ReadTableDefinitionFromSqlServer(metadataConnection, tn),
+                ConnectionManagerType.SQLite => ReadTableDefinitionFromSQLite(metadataConnection, tn),
+                ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(metadataConnection, tn),
+                ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(metadataConnection, tn),
+                ConnectionManagerType.Access => ReadTableDefinitionFromAccess(metadataConnection, tn),
+                ConnectionManagerType.ClickHouse => ReadTableDefinitionFromClickHouse(metadataConnection, tn),
                 _
                     => throw new ETLBoxException(
                         "Unknown connection type - please pass a valid TableDefinition!"

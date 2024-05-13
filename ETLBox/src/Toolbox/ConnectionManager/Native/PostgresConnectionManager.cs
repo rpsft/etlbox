@@ -88,10 +88,7 @@ FROM STDIN (FORMAT BINARY)"
 
         private void ReadTableDefinition(string tableName)
         {
-            // Clone the connection manager for the case, when original manager already has connection with open cursor
-            using var metadataConnectionManager = Clone();
-            
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(metadataConnectionManager, tableName);
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tableName);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {

@@ -155,9 +155,9 @@ FORMAT CSV
             ReadTableDefinition(tableName);
         }
 
-        private void ReadTableDefinition(string tablename)
+        private void ReadTableDefinition(string tableName)
         {
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tablename);
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tableName);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {

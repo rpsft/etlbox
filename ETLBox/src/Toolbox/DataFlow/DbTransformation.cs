@@ -61,14 +61,10 @@ namespace ALE.ETLBox.DataFlow
         private void LoadTableDefinitionFromTableName()
         {
             if (HasTableName)
-            {
-                // Clone the connection manager for the case, when original manager already has connection with open cursor
-                using var metadataConnectionManager = DbConnectionManager.Clone();
                 DestinationTableDefinition = TableDefinition.GetDefinitionFromTableName(
-                    metadataConnectionManager,
+                    DbConnectionManager,
                     TableName
                 );
-            }
             else if (!HasDestinationTableDefinition && !HasTableName)
                 throw new ETLBoxException(
                     "No Table definition or table name found! You must provide a table name or a table definition."
