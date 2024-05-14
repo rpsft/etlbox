@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbSourceExceptionTests : DatabaseConnectorsTestBase
     {
         public DbSourceExceptionTests(DatabaseSourceDestinationFixture fixture)
@@ -62,8 +62,8 @@ namespace TestDatabaseConnectors.DBSource
             //Act & Assert
             await Assert.ThrowsAsync<SqlException>(async () =>
             {
-                    await source.ExecuteAsync(CancellationToken.None);
-                    await dest.Completion;
+                await source.ExecuteAsync(CancellationToken.None);
+                await dest.Completion;
             });
         }
     }

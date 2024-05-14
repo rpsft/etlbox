@@ -5,6 +5,7 @@ using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.ClickHouse.ConnectionManager;
 using ETLBox.ClickHouse.ConnectionStrings;
+using ETLBox.Primitives;
 using Microsoft.Extensions.Configuration;
 
 namespace TestShared.Helper;
@@ -75,78 +76,69 @@ public static class Config
         private set => s_defaultConfigFile = value;
     }
 
-    public static IEnumerable<object[]> AllSqlConnections(string section)
+    public static IEnumerable<IConnectionManager> AllSqlConnections(string section)
     {
-        return new[]
+        yield return ClickHouseConnection.ConnectionManager(section);
+        yield return PostgresConnection.ConnectionManager(section);
+        yield return MySqlConnection.ConnectionManager(section);
+        yield return SqlConnection.ConnectionManager(section);
+        // SQLiteConnection
+    }
+
+    public static IEnumerable<IConnectionManager> AllSqlConnectionsWithoutClickHouse(string section)
+    {
+        yield return PostgresConnection.ConnectionManager(section);
+        yield return MySqlConnection.ConnectionManager(section);
+        yield return SqlConnection.ConnectionManager(section);
+        // new object[] { SQLiteConnection.ConnectionManager(section) }
+    }
+
+#pragma warning disable S4144
+    public static IEnumerable<IConnectionManager> AllConnectionsWithoutSQLite(string section)
+#pragma warning restore S4144
+    {
+        yield return ClickHouseConnection.ConnectionManager(section);
+        yield return PostgresConnection.ConnectionManager(section);
+        yield return MySqlConnection.ConnectionManager(section);
+        yield return SqlConnection.ConnectionManager(section);
+    }
+
+#pragma warning disable S4144
+    public static IEnumerable<IConnectionManager> AllConnectionsWithoutClickHouse(string section)
+#pragma warning restore S4144
+    {
+        yield return PostgresConnection.ConnectionManager(section);
+        yield return MySqlConnection.ConnectionManager(section);
+        yield return SqlConnection.ConnectionManager(section);
+        // new object[] { SQLiteConnection.ConnectionManager(section) }
+    }
+
+    public static IEnumerable<IConnectionManager> AllConnectionsWithoutSQLiteAndClickHouse(
+        string section
+    )
+    {
+        yield return SqlConnection.ConnectionManager(section);
+        yield return PostgresConnection.ConnectionManager(section);
+        yield return MySqlConnection.ConnectionManager(section);
+    }
+
+    public static IEnumerable<IConnectionManager> AllOdbcConnections(string section)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            new object[] { ClickHouseConnection.ConnectionManager(section) },
-            new object[] { PostgresConnection.ConnectionManager(section) },
-            new object[] { MySqlConnection.ConnectionManager(section) },
-            new object[] { SqlConnection.ConnectionManager(section) },
-            // new object[] { SQLiteConnection.ConnectionManager(section) }
-        };
+            yield break;
+        }
+
+        yield return SqlOdbcConnection.ConnectionManager(section);
+        yield return AccessOdbcConnection.ConnectionManager(section);
     }
 
-    public static IEnumerable<object[]> AllSqlConnectionsWithoutClickHouse(string section)
+    public static IEnumerable<IConnectionManager> AccessConnection(string section)
     {
-        return new[]
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            new object[] { PostgresConnection.ConnectionManager(section) },
-            new object[] { MySqlConnection.ConnectionManager(section) },
-            new object[] { SqlConnection.ConnectionManager(section) },
-            // new object[] { SQLiteConnection.ConnectionManager(section) }
-        };
-    }
-
-    public static IEnumerable<object[]> AllConnectionsWithoutSQLite(string section)
-    {
-        return new[]
-        {
-            new object[] { ClickHouseConnection.ConnectionManager(section) },
-            new object[] { PostgresConnection.ConnectionManager(section) },
-            new object[] { MySqlConnection.ConnectionManager(section) },
-            new object[] { SqlConnection.ConnectionManager(section) },
-        };
-    }
-
-    public static IEnumerable<object[]> AllConnectionsWithoutClickHouse(string section)
-    {
-        return new[]
-        {
-            new object[] { PostgresConnection.ConnectionManager(section) },
-            new object[] { MySqlConnection.ConnectionManager(section) },
-            new object[] { SqlConnection.ConnectionManager(section) },
-            // new object[] { SQLiteConnection.ConnectionManager(section) }
-        };
-    }
-
-
-    public static IEnumerable<object[]> AllConnectionsWithoutSQLiteAndClickHouse(string section)
-    {
-        return new[]
-        {
-            new object[] { SqlConnection.ConnectionManager(section) },
-            new object[] { PostgresConnection.ConnectionManager(section) },
-            new object[] { MySqlConnection.ConnectionManager(section) }
-        };
-    }
-
-    public static IEnumerable<object[]> AllOdbcConnections(string section)
-    {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? new[]
-            {
-                new object[] { SqlOdbcConnection.ConnectionManager(section) },
-                new object[] { AccessOdbcConnection.ConnectionManager(section) }
-            }
-            : Array.Empty<object[]>();
-    }
-
-    public static IEnumerable<object[]> AccessConnection(string section)
-    {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? new[] { new object[] { AccessOdbcConnection.ConnectionManager(section) } }
-            : Array.Empty<object[]>();
+            yield return AccessOdbcConnection.ConnectionManager(section);
+        }
     }
 
     private static void Load(string configFile)
@@ -159,6 +151,6 @@ public static class Config
         return new[] { CultureInfo.GetCultureInfo("ru-RU"), CultureInfo.GetCultureInfo("en-US") };
     }
 
-    public static string KafkaBootstrapAddress 
-        => DefaultConfigFile.GetSection("Kafka")["BootstrapAddress"];
+    public static string KafkaBootstrapAddress =>
+        DefaultConfigFile.GetSection("Kafka")["BootstrapAddress"];
 }

@@ -4,7 +4,7 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationExceptionTests : DatabaseConnectorsTestBase
     {
         public DbDestinationExceptionTests(DatabaseSourceDestinationFixture fixture)

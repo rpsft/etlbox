@@ -1,4 +1,3 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ETLBox.Primitives;
 
@@ -31,15 +30,14 @@ namespace ALE.ETLBox.ControlFlow
             }.ExecuteReader();
 
             if (ConnectionType == ConnectionManagerType.MySql)
-                DatabaseNames.RemoveAll(
-                    m =>
-                        new List<string>
-                        {
-                            "information_schema",
-                            "mysql",
-                            "performance_schema",
-                            "sys"
-                        }.Contains(m)
+                DatabaseNames.RemoveAll(m =>
+                    new List<string>
+                    {
+                        "information_schema",
+                        "mysql",
+                        "performance_schema",
+                        "sys"
+                    }.Contains(m)
                 );
         }
 

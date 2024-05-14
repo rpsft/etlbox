@@ -1,5 +1,6 @@
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.ClickHouse.ConnectionManager;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
@@ -33,20 +34,20 @@ namespace TestControlFlowTasks
         protected SQLiteConnectionManager SqliteConnection =>
             Config.SQLiteConnection.ConnectionManager(ConfigSection, _fixture.SQLiteDbSuffix);
 
-        public static IEnumerable<object[]> AccessConnection =>
-            Config.AccessConnection(ConfigSection);
+        public static TheoryData<IConnectionManager> AccessConnection =>
+            new(Config.AccessConnection(ConfigSection));
 
-        public static IEnumerable<object[]> AllSqlConnections =>
-            Config.AllSqlConnections(ConfigSection);
+        public static TheoryData<IConnectionManager> AllSqlConnections =>
+            new(Config.AllSqlConnections(ConfigSection));
 
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
-            Config.AllConnectionsWithoutSQLite(ConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLite =>
+            new(Config.AllConnectionsWithoutSQLite(ConfigSection));
 
-        public static IEnumerable<object[]> AllConnectionsWithoutClickHouse =>
-            Config.AllConnectionsWithoutClickHouse(ConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutClickHouse =>
+            new(Config.AllConnectionsWithoutClickHouse(ConfigSection));
 
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLiteAndClickHouse =>
-            Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLiteAndClickHouse =>
+            new(Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection));
 
         public static IEnumerable<object[]> DbConnectionsWithMaster() =>
             new[]

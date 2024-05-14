@@ -1,4 +1,3 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using TestShared.SharedFixtures;
@@ -16,20 +15,13 @@ namespace TestTransformations.Sort
         public void SortSimpleDataDescending()
         {
             //Arrange
-            var source2Columns = new TwoColumnsTableFixture(
-                "SortSourceNonGeneric"
-            );
+            var source2Columns = new TwoColumnsTableFixture("SortSourceNonGeneric");
             source2Columns.InsertTestData();
-            var source = new DbSource<string[]>(
-                SqlConnection,
-                "SortSourceNonGeneric"
-            );
+            var source = new DbSource<string[]>(SqlConnection, "SortSourceNonGeneric");
 
             //Act
             var actual = new List<string[]>();
-            var dest = new CustomDestination<string[]>(
-                row => actual.Add(row)
-            );
+            var dest = new CustomDestination<string[]>(row => actual.Add(row));
             int Comp(string[] x, string[] y) => int.Parse(y[0]) - int.Parse(x[0]);
             var block = new Sort<string[]>(Comp);
             source.LinkTo(block);

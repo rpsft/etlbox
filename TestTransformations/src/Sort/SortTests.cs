@@ -1,4 +1,3 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using TestShared.SharedFixtures;
@@ -29,9 +28,7 @@ namespace TestTransformations.Sort
 
             //Act
             var actual = new List<MySimpleRow>();
-            var dest = new CustomDestination<MySimpleRow>(
-                row => actual.Add(row)
-            );
+            var dest = new CustomDestination<MySimpleRow>(row => actual.Add(row));
             int Comp(MySimpleRow x, MySimpleRow y) => y.Col1 - x.Col1;
             var block = new Sort<MySimpleRow>(Comp);
             source.LinkTo(block);

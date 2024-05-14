@@ -5,7 +5,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbSourceDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbSourceDynamicObjectTests(DatabaseSourceDestinationFixture fixture)

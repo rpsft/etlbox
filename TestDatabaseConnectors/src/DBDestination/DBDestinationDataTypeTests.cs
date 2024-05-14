@@ -6,7 +6,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationDataTypeTests : DatabaseConnectorsTestBase
     {
         private readonly CultureInfo _previousCulture;

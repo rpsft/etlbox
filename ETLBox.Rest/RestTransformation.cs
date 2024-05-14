@@ -168,7 +168,7 @@ namespace ETLBox.Rest
                             ) ?? throw new InvalidOperationException();
 
                     var res = input as IDictionary<string, object>;
-                    res.Add(ResultField, outputValue);
+                    res[ResultField] = outputValue;
                     LogProgress();
                     return (ExpandoObject)res;
                 }

@@ -63,6 +63,11 @@ namespace ETLBox.Serialization.Tests
                         <Stream type=""MemoryStream"" />
                         <Enum>Value2</Enum>
                         <NullEnum>Value1</NullEnum>
+                        <IntegerList>
+                            <int>1</int>
+                            <int>2</int>
+                            <int>3</int>
+                        </IntegerList>
                         <Configuration>
                             <Delimiter>;</Delimiter>
                             <Escape>#</Escape>
@@ -114,6 +119,8 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.Stream.Should().BeOfType<MemoryStream>();
             customCsvSource.Enum.Should().Be(CustomCsvSource.EnumType.Value2);
             customCsvSource.NullEnum.Should().Be(CustomCsvSource.EnumType.Value1);
+            customCsvSource.IntegerList.Should().NotBeNullOrEmpty();
+            customCsvSource.IntegerList.Should().BeEquivalentTo(new[] { 1, 2, 3 });
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
@@ -206,9 +213,10 @@ namespace ETLBox.Serialization.Tests
         }
 
         [Theory]
-        [InlineData("MemoryDestination")]
-        [InlineData("DbDestination")]
-        [InlineData("CsvDestination")]
+        [InlineData(nameof(MemoryDestination))]
+        [InlineData(nameof(DbDestination))]
+        [InlineData(nameof(CsvDestination))]
+        [InlineData(nameof(CustomCsvDestination<string>))]
         public void DataFlow_Deserialize_ShouldReturnErrorDestinations_NotEmpty(string dest)
         {
             // Arrange
@@ -307,6 +315,7 @@ namespace ETLBox.Serialization.Tests
             public Stream Stream { get; set; } = null!;
             public EnumType Enum { get; set; } = EnumType.Value1;
             public EnumType? NullEnum { get; set; } = null;
+            public List<int> IntegerList { get; set; } = null!;
 
             public enum EnumType
             {
@@ -314,6 +323,9 @@ namespace ETLBox.Serialization.Tests
                 Value2 = 2
             }
         }
+
+        private sealed class CustomCsvDestination<T> : CsvDestination<T> { }
+
 #pragma warning restore S1144 // Unused private types or members should be removed
 
         public void Dispose()

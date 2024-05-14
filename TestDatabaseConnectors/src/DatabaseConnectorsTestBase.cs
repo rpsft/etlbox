@@ -5,11 +5,14 @@ using TestShared.Helper;
 
 namespace TestDatabaseConnectors
 {
-    [CollectionDefinition("DatabaseConnectors", DisableParallelization = false)]
-    public class DataFlowSourceDestinationCollectionClass
+    [CollectionDefinition(
+        nameof(DataFlowSourceDestinationCollection),
+        DisableParallelization = false
+    )]
+    public class DataFlowSourceDestinationCollection
         : ICollectionFixture<DatabaseSourceDestinationFixture> { }
 
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public abstract class DatabaseConnectorsTestBase : IDisposable
     {
         private const string SourceConfigSection =
@@ -36,19 +39,19 @@ namespace TestDatabaseConnectors
         protected static SqlConnectionManager AzureSqlConnection =>
             Config.AzureSqlConnection.ConnectionManager(OtherConfigSection);
 
-        public static IEnumerable<object[]> AllSqlConnections =>
-            Config.AllSqlConnections(SourceConfigSection);
+        public static TheoryData<IConnectionManager> AllSqlConnections =>
+            new(Config.AllSqlConnections(SourceConfigSection));
 
-        public static IEnumerable<object[]> ConnectionsWithoutClickHouse =>
-            Config.AllSqlConnectionsWithoutClickHouse(SourceConfigSection);
+        public static TheoryData<IConnectionManager> ConnectionsWithoutClickHouse =>
+            new(Config.AllSqlConnectionsWithoutClickHouse(SourceConfigSection));
 
         protected static IEnumerable<CultureInfo> AllLocalCultures => Config.AllLocalCultures();
 
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
-            Config.AllConnectionsWithoutSQLiteAndClickHouse(SourceConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLite =>
+            new(Config.AllConnectionsWithoutSQLiteAndClickHouse(SourceConfigSection));
 
-        public static IEnumerable<object[]> AllOdbcConnections =>
-            Config.AllOdbcConnections(OtherConfigSection);
+        public static TheoryData<IConnectionManager> AllOdbcConnections =>
+            new(Config.AllOdbcConnections(OtherConfigSection));
 
         public static TheoryData<Type, Type> MixedSourceDestinations()
         {

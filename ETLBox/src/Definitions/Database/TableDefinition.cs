@@ -3,11 +3,7 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
-using DotLiquid.Tags;
 using ETLBox.Primitives;
-using Google.Protobuf.WellKnownTypes;
-using MySql.Data.MySqlClient.X.XDevAPI.Common;
-using Org.BouncyCastle.Asn1.X509;
 
 namespace ALE.ETLBox
 {
@@ -19,7 +15,6 @@ namespace ALE.ETLBox
 
         // Only for ClickHouse
         public string OrderBy { get; set; }
-
 
         public int? IDColumnIndex
         {
@@ -76,12 +71,18 @@ namespace ALE.ETLBox
 
             return connectionType switch
             {
-                ConnectionManagerType.SqlServer => ReadTableDefinitionFromSqlServer(metadataConnection, tn),
-                ConnectionManagerType.SQLite => ReadTableDefinitionFromSQLite(metadataConnection, tn),
-                ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(metadataConnection, tn),
-                ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(metadataConnection, tn),
-                ConnectionManagerType.Access => ReadTableDefinitionFromAccess(metadataConnection, tn),
-                ConnectionManagerType.ClickHouse => ReadTableDefinitionFromClickHouse(metadataConnection, tn),
+                ConnectionManagerType.SqlServer
+                    => ReadTableDefinitionFromSqlServer(metadataConnection, tn),
+                ConnectionManagerType.SQLite
+                    => ReadTableDefinitionFromSQLite(metadataConnection, tn),
+                ConnectionManagerType.MySql
+                    => ReadTableDefinitionFromMySqlServer(metadataConnection, tn),
+                ConnectionManagerType.Postgres
+                    => ReadTableDefinitionFromPostgres(metadataConnection, tn),
+                ConnectionManagerType.Access
+                    => ReadTableDefinitionFromAccess(metadataConnection, tn),
+                ConnectionManagerType.ClickHouse
+                    => ReadTableDefinitionFromClickHouse(metadataConnection, tn),
                 _
                     => throw new ETLBoxException(
                         "Unknown connection type - please pass a valid TableDefinition!"
@@ -90,7 +91,9 @@ namespace ALE.ETLBox
         }
 
         private static TableDefinition ReadTableDefinitionFromClickHouse(
-            IConnectionManager connection, ObjectNameDescriptor tn)
+            IConnectionManager connection,
+            ObjectNameDescriptor tn
+        )
         {
             var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
@@ -225,8 +228,8 @@ ORDER BY cols.column_id
             return result;
         }
 
-        private static string GetComment()
-            => $"outer apply fn_listextendedproperty('ColumnDescription', 'schema', sc.name, 'table', tbl.name, 'column', cols.name) as comment";
+        private static string GetComment() =>
+            $"outer apply fn_listextendedproperty('ColumnDescription', 'schema', sc.name, 'table', tbl.name, 'column', cols.name) as comment";
 
         private static TableDefinition ReadTableDefinitionFromSQLite(
             IConnectionManager connection,
@@ -264,7 +267,9 @@ ORDER BY cols.column_id
                 },
                 name => curCol.Name = name.ToString(),
                 type => curCol.DataType = type.ToString(),
-                pk => curCol.IsPrimaryKey = (long.TryParse(pk?.ToString(), out long res) ? res : 0) >= 1,
+                pk =>
+                    curCol.IsPrimaryKey =
+                        (long.TryParse(pk?.ToString(), out long res) ? res : 0) >= 1,
                 defaultValue => curCol.DefaultValue = defaultValue?.ToString(),
                 is_nullable => curCol.AllowNulls = ParseBoolean(is_nullable)
             )
@@ -432,8 +437,17 @@ ORDER BY cols.ordinal_position
                 generationExpression => curCol.ComputedColumn = generationExpression?.ToString(),
                 comment => curCol.Comment = comment?.ToString(),
                 is_identity => curCol.IsIdentity = ParseBoolean(is_identity),
-                identity_start => curCol.IdentitySeed = int.TryParse(identity_start?.ToString(), out int start) ? start : null,
-                identity_increment => curCol.IdentityIncrement = int.TryParse(identity_increment?.ToString(), out int inc) ? inc : null
+                identity_start =>
+                    curCol.IdentitySeed = int.TryParse(identity_start?.ToString(), out int start)
+                        ? start
+                        : null,
+                identity_increment =>
+                    curCol.IdentityIncrement = int.TryParse(
+                        identity_increment?.ToString(),
+                        out int inc
+                    )
+                        ? inc
+                        : null
             )
             {
                 DisableLogging = true,

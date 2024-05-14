@@ -4,7 +4,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationStringArrayTests : DatabaseConnectorsTestBase
     {
         public DbDestinationStringArrayTests(DatabaseSourceDestinationFixture fixture)
@@ -87,7 +87,8 @@ namespace TestDatabaseConnectors.DBDestination
                 new List<ALE.ETLBox.TableColumn>()
                 {
                     new ALE.ETLBox.TableColumn("colx", "VARCHAR(100)", false, true)
-                });
+                }
+            );
 
             //Act
             DbSource<string[]> source = new DbSource<string[]>(connection, "SourceTwoColumns");
@@ -126,7 +127,8 @@ namespace TestDatabaseConnectors.DBDestination
                     new ALE.ETLBox.TableColumn("col1", "VARCHAR(100)", true),
                     new ALE.ETLBox.TableColumn("col2", "VARCHAR(100)", true),
                     new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", true)
-                });
+                }
+            );
 
             //Act
             DbSource<string[]> source = new DbSource<string[]>(
@@ -164,7 +166,8 @@ namespace TestDatabaseConnectors.DBDestination
                     new ALE.ETLBox.TableColumn("col1", "VARCHAR(100)", true),
                     new ALE.ETLBox.TableColumn("col2", "VARCHAR(100)", true),
                     new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", false)
-                });
+                }
+            );
 
             //Act
             DbSource<string[]> source = new DbSource<string[]>(
@@ -177,8 +180,10 @@ namespace TestDatabaseConnectors.DBDestination
             );
             source.LinkTo(dest);
 
-            if (connection.ConnectionManagerType == ConnectionManagerType.ClickHouse 
-                || connection.ConnectionManagerType == ConnectionManagerType.MySql)
+            if (
+                connection.ConnectionManagerType == ConnectionManagerType.ClickHouse
+                || connection.ConnectionManagerType == ConnectionManagerType.MySql
+            )
             {
                 source.Execute();
                 dest.Wait();

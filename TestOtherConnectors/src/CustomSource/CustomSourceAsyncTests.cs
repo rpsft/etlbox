@@ -1,6 +1,5 @@
 using System.Threading;
 using ALE.ETLBox.Common;
-using ALE.ETLBox.ControlFlow;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
@@ -9,9 +8,7 @@ namespace TestOtherConnectors.CustomSource
     public class CustomSourceAsyncTests : OtherConnectorsTestBase
     {
         public CustomSourceAsyncTests(OtherConnectorsDatabaseFixture fixture)
-            : base(fixture)
-        {
-        }
+            : base(fixture) { }
 
         public class MySimpleRow
         {
@@ -23,24 +20,16 @@ namespace TestOtherConnectors.CustomSource
         public async Task SimpleAsyncFlow()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
-                "Destination4CustomSource"
-            );
-            var data = new List<string>
-            {
-                "Test1",
-                "Test2",
-                "Test3"
-            };
+            var dest2Columns = new TwoColumnsTableFixture("Destination4CustomSource");
+            var data = new List<string> { "Test1", "Test2", "Test3" };
             var readIndex = 0;
 
             //Act
-            var source =
-                new CustomSource<MySimpleRow>(() => ReadData(ref readIndex, data), () => readIndex >= data.Count);
-            var dest = new DbDestination<MySimpleRow>(
-                SqlConnection,
-                "Destination4CustomSource"
+            var source = new CustomSource<MySimpleRow>(
+                () => ReadData(ref readIndex, data),
+                () => readIndex >= data.Count
             );
+            var dest = new DbDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             await source.ExecuteAsync(CancellationToken.None);
             await dest.Completion;
@@ -53,11 +42,7 @@ namespace TestOtherConnectors.CustomSource
         {
             if (index == 0)
                 Task.Delay(300).Wait();
-            var result = new MySimpleRow
-            {
-                Col1 = index + 1,
-                Col2 = data[index]
-            };
+            var result = new MySimpleRow { Col1 = index + 1, Col2 = data[index] };
             index++;
             return result;
         }
@@ -70,26 +55,24 @@ namespace TestOtherConnectors.CustomSource
                 () => throw new ETLBoxException("Test Exception"),
                 () => false
             );
-            var dest =
-                new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
+            var dest = new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
 
             //Act
             source.LinkTo(dest);
 
             //Assert
             await Assert.ThrowsAsync<ETLBoxException>(async () =>
+            {
+                try
                 {
-                    try
-                    {
-                        await source.ExecuteAsync(CancellationToken.None);
-                        await dest.Completion;
-                    }
-                    catch (Exception e)
-                    {
-                        throw e.InnerException ?? e;
-                    }
+                    await source.ExecuteAsync(CancellationToken.None);
+                    await dest.Completion;
                 }
-            );
+                catch (Exception e)
+                {
+                    throw e.InnerException ?? e;
+                }
+            });
         }
     }
 }

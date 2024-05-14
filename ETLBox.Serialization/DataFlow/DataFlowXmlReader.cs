@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
@@ -99,10 +98,8 @@ public sealed class DataFlowXmlReader
     public static T Deserialize<T>(string xml, ErrorLogDestination errorLogDestination)
         where T : IDataFlow, new()
     {
-        MemoryStream stream;
-        XmlReader xmlReader;
-        stream = new MemoryStream(Encoding.Default.GetBytes(xml));
-        xmlReader = XmlReader.Create(stream);
+        using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+        using var xmlReader = XmlReader.Create(stream);
         var step = Activator.CreateInstance<T>();
         var reader = new DataFlowXmlReader(step, errorLogDestination);
         reader.Read(xmlReader);
@@ -251,18 +248,18 @@ public sealed class DataFlowXmlReader
             );
         }
 
-        var elements = node.Elements().ToArray();
         var list = DataFlowActivator.CreateInstance(type);
         var set = type.GetMethod("Add");
-        for (var i = 0; i < elements.Length; i++)
+        if (set == null)
+            return list;
+        foreach (var t in node.Elements())
         {
-            var item = CreateObject(elementType, elements[i]);
+            var item = CreateObject(elementType, t);
             if (item != null)
             {
-                set?.Invoke(list, new[] { item });
+                set.Invoke(list, new[] { item });
             }
         }
-
         return list;
     }
 
