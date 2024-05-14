@@ -23,7 +23,7 @@ namespace ALE.ETLBox.DataFlow
             using var request = new HttpRequestMessage(method, url);
             if (method == HttpMethod.Post || method == HttpMethod.Put)
             {
-                    request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+                request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             }
 
             foreach (var header in headers)
@@ -37,13 +37,11 @@ namespace ALE.ETLBox.DataFlow
             {
                 return await response.Content.ReadAsStringAsync();
             }
-            else
-            {
-                throw new HttpStatusCodeException(
-                    response.StatusCode,
-                    await response.Content.ReadAsStringAsync()
-                );
-            }
+
+            throw new HttpStatusCodeException(
+                response.StatusCode,
+                await response.Content.ReadAsStringAsync()
+            );
         }
     }
 }

@@ -3,7 +3,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class XmlaTaskTests : ControlFlowTestBase
     {
         public XmlaTaskTests(ControlFlowDatabaseFixture fixture)

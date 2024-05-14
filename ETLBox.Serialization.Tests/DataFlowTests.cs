@@ -61,6 +61,8 @@ namespace ETLBox.Serialization.Tests
                             <string>test</string>
                         </Strings>
                         <Stream type=""MemoryStream"" />
+                        <Enum>Value2</Enum>
+                        <NullEnum>Value1</NullEnum>
                         <Configuration>
                             <Delimiter>;</Delimiter>
                             <Escape>#</Escape>
@@ -110,6 +112,8 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.Strings!.First().Should().Be("test");
             customCsvSource.Stream.Should().NotBeNull();
             customCsvSource.Stream.Should().BeOfType<MemoryStream>();
+            customCsvSource.Enum.Should().Be(CustomCsvSource.EnumType.Value2);
+            customCsvSource.NullEnum.Should().Be(CustomCsvSource.EnumType.Value1);
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
@@ -245,7 +249,10 @@ namespace ETLBox.Serialization.Tests
             var errorLogDestination = new ErrorLogDestination();
 
             // Act
-            EtlDataFlowStep step = DataFlowXmlReader.Deserialize<EtlDataFlowStep>(xml, errorLogDestination);
+            EtlDataFlowStep step = DataFlowXmlReader.Deserialize<EtlDataFlowStep>(
+                xml,
+                errorLogDestination
+            );
 
             // Assert
             step.ErrorDestinations.Should().NotBeNull();
@@ -297,7 +304,15 @@ namespace ETLBox.Serialization.Tests
             public ushort Ushort { get; set; }
             public ushort? NullUshort { get; set; }
             public IEnumerable<string> Strings { get; set; } = null!;
-            public Stream Stream { get;set; } = null!;
+            public Stream Stream { get; set; } = null!;
+            public EnumType Enum { get; set; } = EnumType.Value1;
+            public EnumType? NullEnum { get; set; } = null;
+
+            public enum EnumType
+            {
+                Value1 = 1,
+                Value2 = 2
+            }
         }
 #pragma warning restore S1144 // Unused private types or members should be removed
 

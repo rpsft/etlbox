@@ -4,7 +4,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class ControlFlowTestBase
     {
         private readonly ControlFlowDatabaseFixture _fixture;
@@ -54,8 +54,8 @@ namespace TestControlFlowTasks
                 new object[]
                 {
                     new ClickHouseConnectionManager(
-                        Config.ClickHouseConnection
-                            .ConnectionString(ConfigSection)
+                        Config
+                            .ClickHouseConnection.ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
                 },
@@ -68,16 +68,16 @@ namespace TestControlFlowTasks
                 new object[]
                 {
                     new PostgresConnectionManager(
-                        Config.PostgresConnection
-                            .ConnectionString(ConfigSection)
+                        Config
+                            .PostgresConnection.ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
                 },
                 new object[]
                 {
                     new MySqlConnectionManager(
-                        Config.MySqlConnection
-                            .ConnectionString(ConfigSection)
+                        Config
+                            .MySqlConnection.ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
                 },

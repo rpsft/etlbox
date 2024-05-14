@@ -96,9 +96,8 @@ public sealed class DataFlowXmlReader
         }
     }
 
-    public static T Deserialize<T>(
-        string xml,
-        ErrorLogDestination errorLogDestination) where T : IDataFlow, new()
+    public static T Deserialize<T>(string xml, ErrorLogDestination errorLogDestination)
+        where T : IDataFlow, new()
     {
         MemoryStream stream;
         XmlReader xmlReader;
@@ -228,14 +227,17 @@ public sealed class DataFlowXmlReader
             return CreateArray(type, node);
         }
 
-        if (Array.Exists(type.GetInterfaces(), i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)))
+        if (
+            Array.Exists(
+                type.GetInterfaces(),
+                i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>)
+            )
+        )
         {
             return CreateList(type, node);
         }
 
-        return IsDictionary(type)
-            ? CreateDictionary(type, node)
-            : CreateInstance(type, node);
+        return IsDictionary(type) ? CreateDictionary(type, node) : CreateInstance(type, node);
     }
 
     private object? CreateList(Type type, XContainer node)
@@ -386,7 +388,10 @@ public sealed class DataFlowXmlReader
     {
         Type? propType;
         // If Type is IEnumerable, assign array
-        if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+        if (
+            prop.PropertyType.IsGenericType
+            && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+        )
         {
             propType = prop.PropertyType.GenericTypeArguments[0].MakeArrayType();
         }
@@ -521,11 +526,7 @@ public sealed class DataFlowXmlReader
         }
     }
 
-    private void AddDestinationAndInvokeMethod(
-        XElement element,
-        MethodBase method,
-        object source
-    )
+    private void AddDestinationAndInvokeMethod(XElement element, MethodBase method, object source)
     {
         // This should be LinkTo, LinkErrorTo, or similar linking method with single IDataFlowLinkTarget<> parameter
         if (
@@ -672,27 +673,26 @@ public sealed class DataFlowXmlReader
         {
             return assembly
                 .GetTypes()
-                .Where(
-                    t =>
-                        t.IsClass
-                        && Array.Exists(
-                            t.GetInterfaces(),
-                            i =>
-                                i.IsGenericType
-                                && (
-                                    i.GetGenericTypeDefinition().FullName
-                                        == typeof(IDataFlowLinkSource<>).FullName
-                                    || i.GetGenericTypeDefinition().FullName
-                                        == typeof(IDataFlowLinkTarget<>).FullName
-                                    || i.GetGenericTypeDefinition().FullName
-                                        == typeof(IDataFlowTransformation<,>).FullName
-                                )
-                        )
+                .Where(t =>
+                    t.IsClass
+                    && Array.Exists(
+                        t.GetInterfaces(),
+                        i =>
+                            i.IsGenericType
+                            && (
+                                i.GetGenericTypeDefinition().FullName
+                                    == typeof(IDataFlowLinkSource<>).FullName
+                                || i.GetGenericTypeDefinition().FullName
+                                    == typeof(IDataFlowLinkTarget<>).FullName
+                                || i.GetGenericTypeDefinition().FullName
+                                    == typeof(IDataFlowTransformation<,>).FullName
+                            )
+                    )
                 );
         }
         catch
         {
-            // если не получилось прочитать типы - идем дальше
+            // Could not read types - continue with next assembly
             return Enumerable.Empty<Type>();
         }
     }

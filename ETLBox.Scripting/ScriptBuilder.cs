@@ -153,7 +153,7 @@ public class ScriptBuilder
             nestedTypeDeclarations.Add(member.Key, (innerType, code));
         }
 
-        // Member declarations for both typed and untyped members
+        // Member declarations for both typed and non-typed members
         var memberDeclarations = typedMembers
             .Select(pair => $"public {FullTypeName(pair.Value)} {pair.Key} {{ get; }}")
             .Concat(
@@ -162,7 +162,7 @@ public class ScriptBuilder
                 )
             );
 
-        // Generate assignments in constructor for both typed and untyped members
+        // Generate assignments in constructor for both typed and non-typed members
         var typedArgumentAssignments = typedMembers
             .Where(pair => pair.Value != null)
             .Select(pair =>

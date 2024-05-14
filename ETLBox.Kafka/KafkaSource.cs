@@ -118,7 +118,7 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
                 return true;
             }
 
-            // We do not pass cancellation token to SendAsync because we want write operation to complete before cancelling
+            // We do not pass cancellation token to SendAsync because we want write operation to complete before canceling
             // ReSharper disable once MethodSupportsCancellation
 #pragma warning disable CA2016
             Buffer.SendAsync(outputValue, CancellationToken.None).Wait();

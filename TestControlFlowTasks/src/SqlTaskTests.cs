@@ -10,7 +10,7 @@ using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class SqlTaskTests : ControlFlowTestBase
     {
         public SqlTaskTests(ControlFlowDatabaseFixture fixture)

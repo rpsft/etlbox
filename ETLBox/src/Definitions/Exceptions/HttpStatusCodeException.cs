@@ -1,28 +1,37 @@
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 
 namespace ALE.ETLBox
 {
+    /// <summary>
+    /// HTTP status code exception.
+    /// </summary>
     [Serializable]
     public class HttpStatusCodeException : Exception
     {
-        protected HttpStatusCodeException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+        /// <summary>
+        /// HTTP result code returned by the server.
+        /// </summary>
+        public HttpStatusCode HttpCode { get; }
 
-        public HttpStatusCodeException() 
-        { 
-        }
+        /// <summary>
+        /// Full literal content of the response (as returned by <see cref="HttpContent.ReadAsStringAsync"/>).
+        /// </summary>
+        public string Content { get; }
 
-        public HttpStatusCodeException(HttpStatusCode statusCode, string content) : base(content)
+        public HttpStatusCodeException(HttpStatusCode statusCode, string content)
+            : base(content)
         {
             HttpCode = statusCode;
             Content = content;
         }
 
-        public HttpStatusCode HttpCode { get; }
-
-        public string Content { get; }
+        protected HttpStatusCodeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            HttpCode = (HttpStatusCode)info.GetValue(nameof(HttpCode), typeof(HttpStatusCode));
+            Content = info.GetString(nameof(Content))!;
+        }
     }
 }

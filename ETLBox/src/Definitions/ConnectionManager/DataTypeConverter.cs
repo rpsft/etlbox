@@ -15,16 +15,16 @@ namespace ALE.ETLBox.ConnectionManager
         public const int DefaultDecimalLength = 41;
         public const int DefaultStringLength = 255;
 
-        private const string Regex = @"(.*?)char\((\d*)\)(.*?)";
+        private const string CharTypeDefinitionRegex = @"(.*?)char\((\d*)\)(.*?)";
 
         public static bool IsCharTypeDefinition(string value) =>
-            new Regex(Regex, RegexOptions.IgnoreCase).IsMatch(value);
+            new Regex(CharTypeDefinitionRegex, RegexOptions.IgnoreCase).IsMatch(value);
 
         public static int GetStringLengthFromCharString(string value)
         {
-            var possibleResult = System.Text.RegularExpressions.Regex.Replace(
+            var possibleResult = Regex.Replace(
                 value,
-                Regex,
+                CharTypeDefinitionRegex,
                 "${2}",
                 RegexOptions.IgnoreCase
             );
@@ -111,11 +111,11 @@ namespace ALE.ETLBox.ConnectionManager
                 case ConnectionManagerType.Access when typeName == "INT":
                     return "INTEGER";
                 case ConnectionManagerType.Access when IsCharTypeDefinition(typeName):
-                    {
-                        if (typeName.StartsWith("N"))
-                            typeName = typeName.Substring(1);
-                        return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
-                    }
+                {
+                    if (typeName.StartsWith("N"))
+                        typeName = typeName.Substring(1);
+                    return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
+                }
                 case ConnectionManagerType.Access:
                     return col.DataType;
                 case ConnectionManagerType.SQLite when typeName is "INT" or "BIGINT":
@@ -123,13 +123,13 @@ namespace ALE.ETLBox.ConnectionManager
                 case ConnectionManagerType.SQLite:
                     return col.DataType;
                 case ConnectionManagerType.Postgres:
-                    {
-                        return GetPostgreSqlType(typeName, col);
-                    }
+                {
+                    return GetPostgreSqlType(typeName, col);
+                }
                 case ConnectionManagerType.ClickHouse:
-                    {
-                        return GetClickHouseType(typeName, col);
-                    }
+                {
+                    return GetClickHouseType(typeName, col);
+                }
                 case ConnectionManagerType.Unknown:
                 case ConnectionManagerType.Adomd:
                 case ConnectionManagerType.MySql:
