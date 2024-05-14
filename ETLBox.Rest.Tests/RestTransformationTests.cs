@@ -20,20 +20,20 @@ namespace ETLBox.Rest.Tests
 {
     public class RestTransformationTests
     {
-        private static readonly dynamic s_fakeSourceData = new ExpandoObject();
+        private readonly dynamic _fakeSourceData = new ExpandoObject();
 
-        static RestTransformationTests()
+        public RestTransformationTests()
         {
-            s_fakeSourceData.urlRouteParameter = "Tom";
-            s_fakeSourceData.urlQueryParameter = 46;
-            s_fakeSourceData.port = 90210;
+            _fakeSourceData.urlRouteParameter = "Tom";
+            _fakeSourceData.urlQueryParameter = 46;
+            _fakeSourceData.port = 90210;
         }
 
         [Fact]
         public void RestTransformation_WithValidData_ShouldReturnExpectedJsonResponse()
         {
             //Arrange
-            var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { s_fakeSourceData });
+            var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { _fakeSourceData });
             var destination = new MemoryDestination<ExpandoObject>();
             var httpClientMock = CreateMockHttpClient(@"{ ""jsonResponse"" : 100}");
             var trans1 = SetupRestTransformation(httpClientMock.Object);
@@ -47,6 +47,9 @@ namespace ETLBox.Rest.Tests
             var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object?>;
             dest.Should().NotBeNull();
             dest.Should().BeOfType<ExpandoObject>();
+            var hasException = dest!.TryGetValue("exception", out var exception);
+            exception.Should().BeNull();
+            hasException.Should().BeFalse();
             dest.Should()
                 .BeEquivalentTo(
                     new Dictionary<string, object?>
@@ -118,7 +121,7 @@ namespace ETLBox.Rest.Tests
         )
         {
             //Arrange
-            var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { s_fakeSourceData });
+            var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { _fakeSourceData });
             var destination = new MemoryDestination<ExpandoObject>();
             var httpClientMock = CreateMockHttpClient(errorContent, httpStatusCode);
             var trans1 = SetupRestTransformation(httpClientMock.Object, false);
