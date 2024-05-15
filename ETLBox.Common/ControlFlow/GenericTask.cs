@@ -16,7 +16,9 @@ namespace ALE.ETLBox.Common.ControlFlow
         }
         public virtual string TaskName { get; set; } = "N/A";
 
-        public ILogger Logger { get; } = ControlFlow.LoggerFactory.CreateLogger<GenericTask>();
+        private ILogger _logger;
+        public ILogger Logger => _logger ??= ControlFlow.LoggerFactory.CreateLogger<GenericTask>();
+
 
         public IConnectionManager ConnectionManager
         {
