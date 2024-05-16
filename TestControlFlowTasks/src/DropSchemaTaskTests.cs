@@ -1,16 +1,18 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class DropSchemaTaskTests : ControlFlowTestBase
     {
         public DropSchemaTaskTests(ControlFlowDatabaseFixture fixture)
             : base(fixture) { }
 
-        public static IEnumerable<object[]> Connections => AllConnectionsWithoutSQLite;
+        public static IEnumerable<object[]> Connections => AllConnectionsWithoutSQLiteAndClickHouse;
 
         [Theory, MemberData(nameof(Connections))]
         public void Drop(IConnectionManager connection)

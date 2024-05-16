@@ -1,6 +1,9 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -25,7 +28,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             CheckTableDefinition();
 
-            bool tableExists = new IfTableOrViewExistsTask(TableName)
+            var tableExists = new IfTableOrViewExistsTask(TableName)
             {
                 ConnectionManager = ConnectionManager,
                 DisableLogging = true
@@ -59,17 +62,24 @@ namespace ALE.ETLBox.ControlFlow
 
         public bool ThrowErrorIfTableExists { get; set; }
 
-        public string Sql
-        {
-            get
-            {
-                return $@"CREATE TABLE {TN.QuotedFullName} (
+        public string Sql =>
+            $@"
+        CREATE TABLE {TN.QuotedFullName} (
 {ColumnsDefinitionSql}
 {PrimaryKeySql}
-)
-";
-            }
-        }
+) {AddEngine()}
+{OrderBy()}
+{CreateFinallyComments(TableDefinition)}";
+
+        private string AddEngine() =>
+            ConnectionType == ConnectionManagerType.ClickHouse
+                ? $"ENGINE = {TableDefinition?.Engine ?? "MergeTree()"}"
+                : "";
+
+        private string OrderBy() =>
+            ConnectionType == ConnectionManagerType.ClickHouse && !Columns.Exists(c => c.IsPrimaryKey)
+                ? $"ORDER BY {TableDefinition?.OrderBy ?? Columns[0].Name}"
+                : "";
 
         public CreateTableTask() { }
 
@@ -133,49 +143,63 @@ namespace ALE.ETLBox.ControlFlow
                 throw new ETLBoxException(
                     "One of the provided columns has a datatype that is either null or empty - can't create table."
                 );
+            if (
+                ConnectionType == ConnectionManagerType.ClickHouse
+                && Columns.Exists(col => col.IsIdentity)
+            )
+                throw new ETLBoxNotSupportedException(
+                    "ClickHouse does not support identity columns."
+                );
         }
 
         private string PrimaryKeySql => CreatePrimaryKeyConstraint();
 
+        /// <summary>
+        ///  Тoлько для ClickHouse
+        /// </summary>
+        public string Engine
+        {
+            get => TableDefinition?.Engine;
+            set
+            {
+                TableDefinition = TableDefinition ?? new TableDefinition();
+                TableDefinition.Engine = value;
+            }
+        }
+
         private string CreateTableDefinition(ITableColumn col)
         {
-            var dataType = CreateDataTypeSql(col);
-            string identitySql = CreateIdentitySql(col);
-            string collationSql = !string.IsNullOrWhiteSpace(col.Collation)
+            var (dataType, identitySql) = CreateTypeAndIdentitySql(col);
+            var collationSql = !string.IsNullOrWhiteSpace(col.Collation)
                 ? $"COLLATE {col.Collation}"
                 : string.Empty;
-            string nullSql = CreateNotNullSql(col);
-            string defaultSql = CreateDefaultSql(col);
-            string computedColumnSql = CreateComputedColumnSql(col);
-            string comment = CreateCommentSql(col);
-            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql} {comment}";
+            var nullSql = CreateNotNullSql(col);
+            var defaultSql = CreateDefaultSql(col);
+            var computedColumnSql = CreateComputedColumnSql(col);
+            var comment = CreateCommentSql(col);
+            return $"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql} {comment}";
         }
 
-        private string CreateDataTypeSql(ITableColumn col)
+        private (string type, string identitySql) CreateTypeAndIdentitySql(ITableColumn col)
         {
-            return ConnectionType switch
+            var type = ConnectionType switch
             {
                 ConnectionManagerType.SqlServer when col.HasComputedColumn => string.Empty,
-                ConnectionManagerType.Postgres when col.IsIdentity => string.Empty,
-                _ => DataTypeConverter.TryGetDBSpecificType(col.DataType, ConnectionType)
+                _ => DataTypeConverter.TryGetDBSpecificType(col, ConnectionType)
             };
-        }
-
-        private string CreateIdentitySql(ITableColumn col)
-        {
-            if (ConnectionType == ConnectionManagerType.SQLite || !col.IsIdentity)
+            if (!col.IsIdentity)
             {
-                return string.Empty;
+                return (type, string.Empty);
             }
-
-            return ConnectionType switch
+            var identitySql = ConnectionType switch
             {
+                ConnectionManagerType.ClickHouse or ConnectionManagerType.SQLite => string.Empty,
                 ConnectionManagerType.MySql => "AUTO_INCREMENT",
-                ConnectionManagerType.Postgres => col.DataType.ToUpperInvariant() == "BIGINT"
-                    ? "BIGINT GENERATED BY DEFAULT AS IDENTITY"
-                    : "SERIAL",
+                ConnectionManagerType.Postgres => 
+                    $"GENERATED BY DEFAULT AS IDENTITY (MINVALUE {col.IdentitySeed ?? 1} INCREMENT BY {col.IdentityIncrement ?? 1})",
                 _ => $"IDENTITY({col.IdentitySeed ?? 1},{col.IdentityIncrement ?? 1})"
             };
+            return (type, identitySql);
         }
 
         private string CreateNotNullSql(ITableColumn col)
@@ -184,6 +208,11 @@ namespace ALE.ETLBox.ControlFlow
             {
                 case ConnectionManagerType.Postgres when col.IsIdentity:
                 case ConnectionManagerType.Access:
+                case ConnectionManagerType.MySql:
+                    return string.Empty;
+                case ConnectionManagerType.SQLite when col.AllowNulls:
+                    return string.Empty;
+                case ConnectionManagerType.ClickHouse when col.AllowNulls:
                     return string.Empty;
                 default:
                     if (string.IsNullOrWhiteSpace(col.ComputedColumn))
@@ -194,27 +223,30 @@ namespace ALE.ETLBox.ControlFlow
 
         private string CreatePrimaryKeyConstraint()
         {
-            string result = string.Empty;
+            var result = string.Empty;
             if (!(Columns?.Exists(col => col.IsPrimaryKey) ?? false))
             {
                 return result;
             }
 
             var pkCols = Columns.Where(col => col.IsPrimaryKey).ToArray();
-            string pkConstName =
+            var pkConstName =
                 TableDefinition.PrimaryKeyConstraintName
                 ?? $"pk_{TN.UnquotedFullName}_{string.Join("_", pkCols.Select(col => col.Name))}";
-            string constraint = $"CONSTRAINT {QB}{pkConstName}{QE}";
-            if (ConnectionType == ConnectionManagerType.SQLite)
-                constraint = "";
-            string pkConst =
+
+            var constraint = ConnectionType switch
+            {
+                ConnectionManagerType.ClickHouse or ConnectionManagerType.SQLite => "",
+                _ => $"CONSTRAINT {QB}{pkConstName}{QE}"
+            };
+            var pkConst =
                 $", {constraint} PRIMARY KEY ({string.Join(",", pkCols.Select(col => $"{QB}{col.Name}{QE}"))})";
             return pkConst;
         }
 
         private static string CreateDefaultSql(ITableColumn col)
         {
-            string defaultSql = string.Empty;
+            var defaultSql = string.Empty;
             if (!col.IsPrimaryKey)
                 defaultSql =
                     col.DefaultValue != null
@@ -229,19 +261,61 @@ namespace ALE.ETLBox.ControlFlow
             {
                 true when !DbConnectionManager.SupportComputedColumns
                     => throw new ETLBoxNotSupportedException("Computed columns are not supported."),
-                true => $"AS {col.ComputedColumn}",
+                true => $"AS ({col.ComputedColumn})",
                 _ => string.Empty
             };
         }
 
         private string CreateCommentSql(ITableColumn col)
         {
-            if (
-                ConnectionType == ConnectionManagerType.MySql
-                && !string.IsNullOrWhiteSpace(col.Comment)
-            )
+            if (!string.IsNullOrWhiteSpace(col.Comment)
+            && (
+                   ConnectionType == ConnectionManagerType.MySql
+                || ConnectionType == ConnectionManagerType.ClickHouse
+            ))
+            { 
                 return $"COMMENT '{col.Comment}'";
+            }
             return string.Empty;
+        }
+
+        private string CreateFinallyComments(TableDefinition table) =>
+            string.Join(
+                ";\n",
+                table.Columns.Where(c => !string.IsNullOrWhiteSpace(c.Comment)).Select(GetComments)
+            );
+
+        private string GetComments(TableColumn c)
+        {
+            return ConnectionManager.ConnectionManagerType switch
+            {
+                ConnectionManagerType.SqlServer
+                    => $@"
+    --ColumnDescription
+    exec sp_addextendedproperty
+        @name = 'ColumnDescription', 
+        @value = '{c.Comment}', 
+        @level0type = N'SCHEMA', 
+        @level0name = N'{GetSchema()}', 
+        @level1type = N'TABLE', 
+        @level1name = N'{TN.UnquotedObjectName}', 
+        @level2type = N'COLUMN', 
+        @level2name = N'{c.Name}';
+    ",
+                ConnectionManagerType.Postgres
+                or ConnectionManagerType.SQLite
+                    => $"comment on column {TN.QuotedFullName}.{QB}{c.Name}{QE} is '{c.Comment}'",
+                _ => null
+            };
+        }
+
+        private string GetSchema()
+        {
+            if (string.IsNullOrEmpty(TN.UnquotedSchemaName))
+            {
+                return "dbo";
+            }
+            return TN.UnquotedSchemaName;
         }
 
         private static string SetQuotesIfString(string value)

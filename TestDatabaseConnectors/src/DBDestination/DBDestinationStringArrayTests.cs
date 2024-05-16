@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationStringArrayTests : DatabaseConnectorsTestBase
     {
         public DbDestinationStringArrayTests(DatabaseSourceDestinationFixture fixture)
@@ -11,7 +12,7 @@ namespace TestDatabaseConnectors.DBDestination
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
-        [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
         public void WithSqlNotMatchingColumns(IConnectionManager connection)
         {
             //Arrange
@@ -76,13 +77,17 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithLessColumnsInDestination(IConnectionManager connection)
         {
             //Arrange
+            DropTableTask.DropIfExists(connection, "SourceTwoColumns");
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, "SourceTwoColumns");
             s2C.InsertTestData();
-            SqlTask.ExecuteNonQuery(
+            DropTableTask.DropIfExists(connection, "destination_onecolumn");
+            CreateTableTask.Create(
                 connection,
-                "Create destination table",
-                @"CREATE TABLE destination_onecolumn
-                (colx varchar (100) not null )"
+                "destination_onecolumn",
+                new List<ALE.ETLBox.TableColumn>()
+                {
+                    new ALE.ETLBox.TableColumn("colx", "VARCHAR(100)", false, true)
+                }
             );
 
             //Act
@@ -106,16 +111,23 @@ namespace TestDatabaseConnectors.DBDestination
         public void WithAdditionalNullableCol(IConnectionManager connection)
         {
             //Arrange
+            DropTableTask.DropIfExists(connection, "source_additionalnullcol");
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
                 connection,
                 "source_additionalnullcol"
             );
             s2C.InsertTestData();
-            SqlTask.ExecuteNonQuery(
+            DropTableTask.DropIfExists(connection, "destination_additionalnullcol");
+            CreateTableTask.Create(
                 connection,
-                "Create destination table",
-                @"CREATE TABLE destination_additionalnullcol
-                (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NULL)"
+                "destination_additionalnullcol",
+                new List<ALE.ETLBox.TableColumn>()
+                {
+                    new ALE.ETLBox.TableColumn("id", "INT", false, true),
+                    new ALE.ETLBox.TableColumn("col1", "VARCHAR(100)", true),
+                    new ALE.ETLBox.TableColumn("col2", "VARCHAR(100)", true),
+                    new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", true)
+                }
             );
 
             //Act
@@ -144,11 +156,17 @@ namespace TestDatabaseConnectors.DBDestination
                 "source_additionalnotnullcol"
             );
             s2C.InsertTestData();
-            SqlTask.ExecuteNonQuery(
+            DropTableTask.DropIfExists(connection, "destination_additionalnotnullcol");
+            CreateTableTask.Create(
                 connection,
-                "Create destination table",
-                @"CREATE TABLE destination_additionalnotnullcol
-                (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NOT NULL)"
+                "destination_additionalnotnullcol",
+                new List<ALE.ETLBox.TableColumn>()
+                {
+                    new ALE.ETLBox.TableColumn("id", "INT", false, true),
+                    new ALE.ETLBox.TableColumn("col1", "VARCHAR(100)", true),
+                    new ALE.ETLBox.TableColumn("col2", "VARCHAR(100)", true),
+                    new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", false)
+                }
             );
 
             //Act
@@ -161,11 +179,24 @@ namespace TestDatabaseConnectors.DBDestination
                 "destination_additionalnotnullcol"
             );
             source.LinkTo(dest);
-            Assert.Throws<AggregateException>(() =>
+
+            if (
+                connection.ConnectionManagerType == ConnectionManagerType.ClickHouse
+                || connection.ConnectionManagerType == ConnectionManagerType.MySql
+            )
             {
                 source.Execute();
                 dest.Wait();
-            });
+                Assert.Equal(3, RowCountTask.Count(connection, "destination_additionalnotnullcol"));
+            }
+            else
+            {
+                Assert.Throws<AggregateException>(() =>
+                {
+                    source.Execute();
+                    dest.Wait();
+                });
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ALE.ETLBox.ConnectionManager;
+using System.Diagnostics.CodeAnalysis;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.Logging
 {
@@ -35,13 +36,13 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Trace();
 
         public void Trace() =>
-            NLogger?.Trace(
+            Logger?.Trace(
                 Message,
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
 
         public static void Debug(string message) => new LogTask(message).Debug();
@@ -50,13 +51,13 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Debug();
 
         public void Debug() =>
-            NLogger?.Debug(
+            Logger?.Debug(
                 Message,
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
 
         public static void Info(string message) => new LogTask(message).Info();
@@ -65,13 +66,13 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Info();
 
         public void Info() =>
-            NLogger?.Info(
+            Logger?.Info(
                 Message,
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
 
         public static void Warn(string message) => new LogTask(message).Warn();
@@ -80,13 +81,13 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Warn();
 
         public void Warn() =>
-            NLogger?.Warn(
+            Logger?.Warn(
                 Message,
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
 
         public static void Error(string message) => new LogTask(message).Error();
@@ -95,28 +96,13 @@ namespace ALE.ETLBox.Logging
             new LogTask(message) { ConnectionManager = connectionManager }.Error();
 
         public void Error() =>
-            NLogger?.Error(
+            Logger?.Error(
                 Message,
                 TaskType,
                 "LOG",
                 TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
-            );
-
-        public static void Fatal(string message) => new LogTask(message).Fatal();
-
-        public static void Fatal(IConnectionManager connectionManager, string message) =>
-            new LogTask(message) { ConnectionManager = connectionManager }.Fatal();
-
-        public void Fatal() =>
-            NLogger?.Fatal(
-                Message,
-                TaskType,
-                "LOG",
-                TaskHash,
-                ControlFlow.ControlFlow.Stage,
-                ControlFlow.ControlFlow.CurrentLoadProcess?.Id
+                Common.ControlFlow.ControlFlow.Stage,
+                Common.ControlFlow.ControlFlow.CurrentLoadProcess?.Id
             );
     }
 }

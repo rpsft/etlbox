@@ -11,14 +11,14 @@
         /// <returns></returns>
         public static string ReplaceIgnoreCase(this string toSearch, string find, string replace)
         {
-            int index = toSearch.IndexOf(find, StringComparison.InvariantCultureIgnoreCase);
+            var index = toSearch.IndexOf(find, StringComparison.InvariantCultureIgnoreCase);
 
             if (index < 0)
             {
                 return toSearch;
             }
 
-            string replacement = toSearch.Substring(0, index) + replace;
+            var replacement = toSearch.Substring(0, index) + replace;
 
             if (toSearch.Length > index + find.Length)
             {

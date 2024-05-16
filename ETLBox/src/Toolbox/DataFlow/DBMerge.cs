@@ -1,8 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text;
-using ALE.ETLBox.ConnectionManager;
+using System.Threading;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -22,16 +25,26 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
 
-        public async Task ExecuteAsync() => await OutputSource.ExecuteAsync();
-
-        public void Execute() => OutputSource.Execute();
+        public async Task ExecuteAsync() 
+            => await OutputSource.ExecuteAsync(CancellationToken.None);
+        public void Execute() => OutputSource.Execute(CancellationToken.None);
 
         /* Public Properties */
         public override ISourceBlock<TInput> SourceBlock => OutputSource.SourceBlock;
         public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
         public DeltaMode DeltaMode { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
-        public string TableName { get; set; }
+        public string TableName { 
+            get => _tableName;
+            set
+            { 
+                _tableName = value;
+                DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
+                DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName, BatchSize);
+                InitInternalFlow();
+                InitOutputFlow();
+            }
+        }
 
         public List<TInput> DeltaTable { get; set; } = new();
         public bool UseTruncateMethod
@@ -47,11 +60,7 @@ namespace ALE.ETLBox.DataFlow
 
         private bool _useTruncateMethod;
 
-        public int BatchSize
-        {
-            get => DestinationTable.BatchSize;
-            set => DestinationTable.BatchSize = value;
-        }
+        public int BatchSize { get;set; }
 
         public MergeProperties MergeProperties { get; set; } = new();
 
@@ -71,6 +80,9 @@ namespace ALE.ETLBox.DataFlow
         private bool WasTruncationExecuted { get; set; }
         private DBMergeTypeInfo TypeInfo { get; set; }
 
+        public DbMerge()
+            : this(null, null) { }
+
         public DbMerge(string tableName)
             : this(null, tableName) { }
 
@@ -80,19 +92,19 @@ namespace ALE.ETLBox.DataFlow
             int batchSize = DbDestination.DefaultBatchSize
         )
         {
-            TableName = tableName;
-            DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
-            DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName, batchSize);
-            InitInternalFlow();
-            InitOutputFlow();
+            BatchSize = batchSize;
             if (connectionManager != null)
                 ConnectionManager = connectionManager;
+            if (!string.IsNullOrEmpty(tableName))
+                TableName = tableName;
         }
 
         protected sealed override void OnConnectionManagerChanged(IConnectionManager value)
         {
-            DestinationTableAsSource.ConnectionManager = value;
-            DestinationTable.ConnectionManager = value;
+            if (DestinationTableAsSource is not null)
+                DestinationTableAsSource.ConnectionManager = value;
+            if (DestinationTable is not null)
+                DestinationTable.ConnectionManager = value;
             base.OnConnectionManagerChanged(value);
         }
 
@@ -141,7 +153,7 @@ namespace ALE.ETLBox.DataFlow
             if (TypeInfo.IsDynamic && MergeProperties.IdPropertyNames.Count > 0)
             {
                 var r = row as IDictionary<string, object>;
-                foreach (string idColumn in MergeProperties.IdPropertyNames)
+                foreach (var idColumn in MergeProperties.IdPropertyNames)
                 {
                     if (!r!.ContainsKey(idColumn))
                         r.Add(idColumn, null);
@@ -182,7 +194,7 @@ namespace ALE.ETLBox.DataFlow
 
         private bool FindDeletionDynamicProperty(IDictionary<string, object> r)
         {
-            bool result = true;
+            var result = true;
             foreach (var deleteColumn in MergeProperties.DeletionProperties)
             {
                 if (r!.TryGetValue(deleteColumn.Key, out var property))
@@ -295,7 +307,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void InitOutputFlow()
         {
-            int x = 0;
+            var x = 0;
             OutputSource = new CustomSource<TInput>(
                 () => DeltaTable[x++],
                 () => x >= DeltaTable.Count
@@ -304,7 +316,7 @@ namespace ALE.ETLBox.DataFlow
             DestinationTable.OnCompletion = () =>
             {
                 IdentifyAndDeleteMissingEntries();
-                OutputSource.Execute();
+                OutputSource.Execute(CancellationToken.None);
             };
         }
 
@@ -366,6 +378,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         private bool _wasTypeInfoInitialized;
+        private string _tableName;
 
         private void InitTypeInfo()
         {
@@ -406,11 +419,11 @@ namespace ALE.ETLBox.DataFlow
 
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
-            var delete = rowsToDelete as TInput[] ?? rowsToDelete.ToArray();
-            if (!delete.Any())
+            var delete = rowsToDelete as TInput[] ?? rowsToDelete?.ToArray();
+            if (delete is null or { Length : 0 })
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
-            string idNames = $"{QB}{IdColumnNames[0]}{QE}";
+            var idNames = $"{QB}{IdColumnNames[0]}{QE}";
             if (IdColumnNames.Count > 1)
                 idNames = CreateConcatSqlForNames();
             new SqlTask(
@@ -428,7 +441,7 @@ namespace ALE.ETLBox.DataFlow
 
         private string CreateConcatSqlForNames()
         {
-            string result =
+            var result =
                 $"CONCAT( {string.Join(",", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} )";
             if (ConnectionType == ConnectionManagerType.SQLite)
                 result = $" {string.Join("||", IdColumnNames.Select(cn => $"{QB}{cn}{QE}"))} ";
@@ -460,6 +473,9 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class DbMerge : DbMerge<ExpandoObject>
     {
+        // for deserialization purposes
+        public DbMerge() { }
+
         public DbMerge(string tableName)
             : base(tableName) { }
 

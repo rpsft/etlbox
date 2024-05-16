@@ -1,7 +1,11 @@
+using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
         public JsonSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
@@ -11,23 +15,23 @@ namespace TestFlatFileConnectors.JsonSource
         public void SourceWithDifferentNames()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "JsonSource2ColsDynamic"
             );
-            RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(row =>
+            var trans = new RowTransformation<ExpandoObject>(row =>
             {
                 dynamic r = row;
                 r.Col1 = r.Column1;
                 r.Col2 = r.Column2;
                 return r;
             });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "JsonSource2ColsDynamic"
             );
 
             //Act
-            JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>(
+            var source = new JsonSource<ExpandoObject>(
                 "res/JsonSource/TwoColumnsDifferentNames.json",
                 ResourceType.File
             );

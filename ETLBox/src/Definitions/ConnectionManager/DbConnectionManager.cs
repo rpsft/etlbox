@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -10,7 +12,7 @@ namespace ALE.ETLBox.ConnectionManager
         public abstract ConnectionManagerType ConnectionManagerType { get; }
 
         public int MaxLoginAttempts { get; set; } = 3;
-        public bool LeaveOpen
+        public virtual bool LeaveOpen
         {
             get => _leaveOpen || IsInBulkInsert || Transaction != null;
             set => _leaveOpen = value;
@@ -18,7 +20,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbConnectionString ConnectionString { get; set; }
 
-        internal TConnection DbConnection { get; private set; }
+        protected TConnection DbConnection { get; private set; }
         public ConnectionState? State => DbConnection?.State;
         public IDbTransaction Transaction { get; set; }
         public bool IsInBulkInsert { get; set; }
@@ -59,9 +61,9 @@ namespace ALE.ETLBox.ConnectionManager
 
         private void TryOpenConnectionXTimes()
         {
-            bool successfullyConnected = false;
+            var successfullyConnected = false;
             Exception lastException = null;
-            for (int i = 1; i <= MaxLoginAttempts; i++)
+            for (var i = 1; i <= MaxLoginAttempts; i++)
             {
                 try
                 {
@@ -87,15 +89,16 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDbCommand CreateCommand(
             string commandText,
-            IEnumerable<QueryParameter> parameterList
+            IEnumerable<IQueryParameter> parameterList
         )
         {
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
+            cmd.CommandType = CommandType.Text;
             cmd.CommandText = commandText;
             if (parameterList != null)
             {
-                foreach (QueryParameter par in parameterList)
+                foreach (var par in parameterList)
                 {
                     var newPar = cmd.CreateParameter();
                     MapQueryParameterToCommandParameter(par, newPar);
@@ -112,7 +115,7 @@ namespace ALE.ETLBox.ConnectionManager
         /// </summary>
         /// <returns></returns>
         protected virtual void MapQueryParameterToCommandParameter(
-            QueryParameter source,
+            IQueryParameter source,
             IDbDataParameter destination
         )
         {
@@ -121,7 +124,10 @@ namespace ALE.ETLBox.ConnectionManager
             destination.Value = source.Value;
         }
 
-        public int ExecuteNonQuery(string command, IEnumerable<QueryParameter> parameterList = null)
+        public int ExecuteNonQuery(
+            string command,
+            IEnumerable<IQueryParameter> parameterList = null
+        )
         {
             IDbCommand cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteNonQuery();
@@ -129,7 +135,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public object ExecuteScalar(
             string command,
-            IEnumerable<QueryParameter> parameterList = null
+            IEnumerable<IQueryParameter> parameterList = null
         )
         {
             IDbCommand cmd = CreateCommand(command, parameterList);
@@ -138,7 +144,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public IDataReader ExecuteReader(
             string command,
-            IEnumerable<QueryParameter> parameterList = null
+            IEnumerable<IQueryParameter> parameterList = null
         )
         {
             IDbCommand cmd = CreateCommand(command, parameterList);
@@ -222,6 +228,11 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
         public abstract IConnectionManager Clone();
+
+        public virtual bool IndexExists(ITask callingTask, string sql)
+        {
+            return new SqlTask(callingTask, sql).ExecuteScalarAsBool();
+        }
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace TestTransformations.RowDuplication
         public void IgnoreWithObject()
         {
             //Arrange
-            MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
+            var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
@@ -28,8 +28,8 @@ namespace TestTransformations.RowDuplication
             };
 
             //Act
-            RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>();
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var duplication = new RowDuplication<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
             source.LinkTo(duplication);
             duplication.LinkTo(dest);
             source.Execute();

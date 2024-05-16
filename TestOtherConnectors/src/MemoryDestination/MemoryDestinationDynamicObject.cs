@@ -3,6 +3,7 @@ using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.MemoryDestination
 {
+    [Collection("OtherConnectors")]
     public class MemoryDestinationDynamicObjectTests : OtherConnectorsTestBase
     {
         public MemoryDestinationDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)

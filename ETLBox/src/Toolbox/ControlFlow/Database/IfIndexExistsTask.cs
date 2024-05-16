@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -40,6 +40,8 @@ WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotedFullName}'
             OR tablename = '{OON.UnquotedFullName}' )
             AND indexname = '{ON.UnquotedObjectName}'
 ",
+                ConnectionManagerType.ClickHouse 
+                    => $"SHOW INDEX FROM {OnObjectName} where key_name = '{ObjectName}';",
                 _ => string.Empty
             };
         }
@@ -67,5 +69,13 @@ WHERE     ( CONCAT(schemaname,'.',tablename) = '{OON.UnquotedFullName}'
             {
                 ConnectionManager = connectionManager
             }.Exists();
+
+        public override void Execute()
+        {
+            if (!string.IsNullOrEmpty(Sql))
+            {
+                DoesExist = ConnectionManager.IndexExists(this, Sql);
+            }
+        }
     }
 }

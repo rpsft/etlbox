@@ -1,6 +1,9 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using System.Linq;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox
 {
@@ -9,6 +12,9 @@ namespace ALE.ETLBox
         public string Name { get; set; }
         public List<TableColumn> Columns { get; set; }
         public string PrimaryKeyConstraintName { get; set; }
+
+        // Only for ClickHouse
+        public string OrderBy { get; set; }
 
         public int? IDColumnIndex
         {
@@ -38,29 +44,45 @@ namespace ALE.ETLBox
             Columns = columns;
         }
 
+        /// <summary>
+        /// Only for ClickHouse
+        /// </summary>
+        public string Engine { get; set; }
+
+        private static readonly string[] trueArray = new[] { "yes", "true", "on", "1", "да" };
+
         public void CreateTable(IConnectionManager connectionManager) =>
             CreateTableTask.Create(connectionManager, this);
 
         public static TableDefinition GetDefinitionFromTableName(
-            IConnectionManager connection,
+            IConnectionManager connectionManager,
             string tableName
         )
         {
-            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
-            ConnectionManagerType connectionType = connection.ConnectionManagerType;
-            ObjectNameDescriptor tn = new ObjectNameDescriptor(
+            // Clone the connection manager for the case, when original manager already has connection with open cursor
+            using var metadataConnection = connectionManager.Clone();
+            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(metadataConnection, tableName);
+            ConnectionManagerType connectionType = metadataConnection.ConnectionManagerType;
+            var tn = new ObjectNameDescriptor(
                 tableName,
-                connection.QB,
-                connection.QE
+                metadataConnection.QB,
+                metadataConnection.QE
             );
 
             return connectionType switch
             {
-                ConnectionManagerType.SqlServer => ReadTableDefinitionFromSqlServer(connection, tn),
-                ConnectionManagerType.SQLite => ReadTableDefinitionFromSQLite(connection, tn),
-                ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(connection, tn),
-                ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(connection, tn),
-                ConnectionManagerType.Access => ReadTableDefinitionFromAccess(connection, tn),
+                ConnectionManagerType.SqlServer
+                    => ReadTableDefinitionFromSqlServer(metadataConnection, tn),
+                ConnectionManagerType.SQLite
+                    => ReadTableDefinitionFromSQLite(metadataConnection, tn),
+                ConnectionManagerType.MySql
+                    => ReadTableDefinitionFromMySqlServer(metadataConnection, tn),
+                ConnectionManagerType.Postgres
+                    => ReadTableDefinitionFromPostgres(metadataConnection, tn),
+                ConnectionManagerType.Access
+                    => ReadTableDefinitionFromAccess(metadataConnection, tn),
+                ConnectionManagerType.ClickHouse
+                    => ReadTableDefinitionFromClickHouse(metadataConnection, tn),
                 _
                     => throw new ETLBoxException(
                         "Unknown connection type - please pass a valid TableDefinition!"
@@ -68,12 +90,59 @@ namespace ALE.ETLBox
             };
         }
 
+        private static TableDefinition ReadTableDefinitionFromClickHouse(
+            IConnectionManager connection,
+            ObjectNameDescriptor tn
+        )
+        {
+            var result = new TableDefinition(tn.ObjectName);
+            TableColumn curCol = null;
+
+            var readMetaSql = new SqlTask(
+                $"Read column meta data for table {tn.ObjectName}",
+                $@"
+                SELECT 
+                     c.name
+                    ,c.type as type
+                    ,c.is_in_primary_key as primary_key
+                    ,c.default_expression as default_value
+                    ,ic.is_nullable
+                    ,c.comment
+                FROM system.columns c
+                LEFT JOIN information_schema.columns as ic
+                    ON ic.table_name = c.table
+                    AND ic.column_name = c.name
+                WHERE c.database = currentDatabase()
+                  AND table = '{tn.ObjectName}'",
+                () =>
+                {
+                    curCol = new TableColumn();
+                },
+                () =>
+                {
+                    result.Columns.Add(curCol);
+                },
+                name => curCol.Name = name.ToString(),
+                type => curCol.DataType = type.ToString(),
+                primaryKey => curCol.IsPrimaryKey = ParseBoolean(primaryKey),
+                defaultValue => curCol.DefaultValue = defaultValue?.ToString(),
+                is_nullable => curCol.AllowNulls = ParseBoolean(is_nullable),
+                comment => curCol.Comment = comment?.ToString()
+            )
+            {
+                DisableLogging = true,
+                ConnectionManager = connection
+            };
+            readMetaSql.ExecuteReader();
+            return result;
+        }
+
         private static TableDefinition ReadTableDefinitionFromSqlServer(
             IConnectionManager connection,
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
@@ -93,6 +162,7 @@ SELECT  cols.name
      , defconstr.definition AS default_value
      , cols.collation_name
      , compCol.definition AS computed_column_definition
+     , comment.value AS comment
 FROM sys.columns cols
 INNER JOIN (
     SELECT name, type, object_id, schema_id FROM sys.tables 
@@ -118,6 +188,7 @@ LEFT JOIN sys.default_constraints defconstr
     AND defconstr.parent_column_id = cols.column_id
 LEFT JOIN sys.computed_columns compCol
     ON compCol.object_id = cols.object_id
+{GetComment()}
 WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tn.UnquotedFullName}' OR  tbl.name = '{tn.UnquotedFullName}' )
     AND tbl.type IN ('U','V')
     AND tpes.name <> 'sysname'
@@ -146,7 +217,8 @@ ORDER BY cols.column_id
                 computedColumnDefinition =>
                     curCol.ComputedColumn = computedColumnDefinition
                         ?.ToString()
-                        .Substring(1, computedColumnDefinition.ToString().Length - 2)
+                        .Substring(1, computedColumnDefinition.ToString().Length - 2),
+                comment => curCol.Comment = comment?.ToString()
             )
             {
                 DisableLogging = true,
@@ -156,16 +228,35 @@ ORDER BY cols.column_id
             return result;
         }
 
+        private static string GetComment() =>
+            $"outer apply fn_listextendedproperty('ColumnDescription', 'schema', sc.name, 'table', tbl.name, 'column', cols.name) as comment";
+
         private static TableDefinition ReadTableDefinitionFromSQLite(
             IConnectionManager connection,
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
             var readMetaSql = new SqlTask(
                 $"Read column meta data for table {tn.ObjectName}",
-                $@"PRAGMA table_info(""{tn.UnquotedFullName}"")",
+                $@"
+                SELECT
+                  c.name AS column_name,
+                  c.type AS column_type,
+                  CASE WHEN pk.name IS NOT NULL THEN 1 ELSE 0 END AS is_primary_key,
+                  c.dflt_value as default_value,
+                  CASE WHEN c.""notnull"" = 0 THEN 1 ELSE 0 END AS is_nullable
+                FROM
+                      sqlite_master AS m
+                    JOIN
+                      pragma_table_info(m.name) AS c ON true
+                    LEFT JOIN
+                      pragma_index_info AS pk ON c.cid = pk.cid
+                WHERE m.type = 'table'
+                  AND m.name = '{tn.UnquotedFullName}'
+                ORDER BY
+                  c.cid;",
                 () =>
                 {
                     curCol = new TableColumn();
@@ -174,12 +265,13 @@ ORDER BY cols.column_id
                 {
                     result.Columns.Add(curCol);
                 },
-                _ => { },
                 name => curCol.Name = name.ToString(),
                 type => curCol.DataType = type.ToString(),
-                notNull => curCol.AllowNulls = (long)notNull == 1,
+                pk =>
+                    curCol.IsPrimaryKey =
+                        (long.TryParse(pk?.ToString(), out long res) ? res : 0) >= 1,
                 defaultValue => curCol.DefaultValue = defaultValue?.ToString(),
-                pk => curCol.IsPrimaryKey = (long)pk >= 1
+                is_nullable => curCol.AllowNulls = ParseBoolean(is_nullable)
             )
             {
                 DisableLogging = true,
@@ -194,7 +286,7 @@ ORDER BY cols.column_id
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
@@ -258,7 +350,7 @@ ORDER BY cols.ordinal_position
             ObjectNameDescriptor tn
         )
         {
-            TableDefinition result = new TableDefinition(tn.ObjectName);
+            var result = new TableDefinition(tn.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask(
@@ -291,6 +383,10 @@ END AS ""datatype""
 , cols.column_default
 , cols.collation_name
 , cols.generation_expression
+, pgd.description
+, cols.is_identity
+, cols.identity_start
+, cols.identity_increment
 FROM INFORMATION_SCHEMA.COLUMNS cols
 INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -309,6 +405,12 @@ LEFT JOIN information_schema.constraint_column_usage tccu
     AND tccu.constraint_schema = tc.constraint_schema
     AND tccu.constraint_catalog = tc.constraint_catalog
     AND cols.column_name = tccu.column_name
+left join pg_catalog.pg_statio_all_tables as st
+    on st.schemaname = cols.table_schema
+    and st.relname = cols.table_name
+left join pg_catalog.pg_description pgd
+    on pgd.objoid = st.relid
+    and  pgd.objsubid = cols.ordinal_position
 WHERE(cols.table_name = '{tn.UnquotedFullName}'  OR  CONCAT(cols.table_schema, '.', cols.table_name) = '{tn.UnquotedFullName}')
     AND cols.table_catalog = CURRENT_DATABASE()
 ORDER BY cols.ordinal_position
@@ -332,7 +434,20 @@ ORDER BY cols.ordinal_position
                         ?.ToString()
                         .ReplaceIgnoreCase("::character varying", ""),
                 collationName => curCol.Collation = collationName?.ToString(),
-                generationExpression => curCol.ComputedColumn = generationExpression?.ToString()
+                generationExpression => curCol.ComputedColumn = generationExpression?.ToString(),
+                comment => curCol.Comment = comment?.ToString(),
+                is_identity => curCol.IsIdentity = ParseBoolean(is_identity),
+                identity_start =>
+                    curCol.IdentitySeed = int.TryParse(identity_start?.ToString(), out int start)
+                        ? start
+                        : null,
+                identity_increment =>
+                    curCol.IdentityIncrement = int.TryParse(
+                        identity_increment?.ToString(),
+                        out int inc
+                    )
+                        ? inc
+                        : null
             )
             {
                 DisableLogging = true,
@@ -340,6 +455,15 @@ ORDER BY cols.ordinal_position
             };
             readMetaSql.ExecuteReader();
             return result;
+        }
+
+        private static bool ParseBoolean(object value)
+        {
+            if (value is null)
+            {
+                return false;
+            }
+            return trueArray.Contains(value.ToString().ToLower());
         }
 
         private static TableDefinition ReadTableDefinitionFromAccess(

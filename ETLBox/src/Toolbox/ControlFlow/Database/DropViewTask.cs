@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+﻿using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {

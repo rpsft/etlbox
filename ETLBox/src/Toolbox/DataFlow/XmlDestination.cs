@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ALE.ETLBox.Common.DataFlow;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
@@ -69,7 +70,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (TypeInfo.IsDynamic)
                 {
-                    string json = JsonConvert.SerializeObject(data);
+                    var json = JsonConvert.SerializeObject(data);
                     XDocument doc = JsonConvert.DeserializeXNode(
                         json,
                         DynamicElementName ?? "Dynamic"

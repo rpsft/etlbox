@@ -1,8 +1,11 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestFlatFileConnectors.Helpers;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonDestinationTests : FlatFileConnectorsTestBase
     {
         public JsonDestinationTests(FlatFileToDatabaseFixture fixture)
@@ -19,15 +22,15 @@ namespace TestFlatFileConnectors.JsonDestination
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestSimple");
+            var s2C = new TwoColumnsTableFixture("JsonDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "JsonDestSimple"
             );
 
             //Act
-            JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>(
+            var dest = new JsonDestination<MySimpleRow>(
                 "./SimpleWithObject.json",
                 ResourceType.File
             );

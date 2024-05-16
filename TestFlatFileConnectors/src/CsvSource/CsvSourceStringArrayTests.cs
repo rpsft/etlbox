@@ -1,7 +1,11 @@
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvSourceStringArrayTests : FlatFileConnectorsTestBase
     {
         public CsvSourceStringArrayTests(FlatFileToDatabaseFixture fixture)
@@ -11,16 +15,16 @@ namespace TestFlatFileConnectors.CsvSource
         public void SimpleCSVIntoDatabase()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CsvDestination2Columns"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "CsvDestination2Columns"
             );
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
+            var source = new CsvSource<string[]>("res/CsvSource/TwoColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -33,16 +37,16 @@ namespace TestFlatFileConnectors.CsvSource
         public void MoreColumnsInCSV()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CsvDestination2Columns"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "CsvDestination2Columns"
             );
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumns.csv");
+            var source = new CsvSource<string[]>("res/CsvSource/ThreeColumns.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -56,13 +60,13 @@ namespace TestFlatFileConnectors.CsvSource
         {
             //Arrange
             var unused = new TwoColumnsTableFixture("CsvDestination2Columns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "CsvDestination2Columns"
             );
 
             //Act
-            CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/OneColumn.csv");
+            var source = new CsvSource<string[]>("res/CsvSource/OneColumn.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

@@ -1,11 +1,13 @@
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
-using ALE.ETLBox.Helper;
 using TestTransformations.Fixtures;
 
 namespace TestTransformations.UseCases
 {
+    [Collection("Transformations")]
     public class UpdateOnHashMatchTests : TransformationsTestBase
     {
         public UpdateOnHashMatchTests(TransformationsDatabaseFixture fixture)
@@ -14,7 +16,7 @@ namespace TestTransformations.UseCases
         private void CreateSourceTable(string tableName)
         {
             DropTableTask.DropIfExists(SqlConnection, tableName);
-            TableDefinition sourceTable = new TableDefinition(
+            var sourceTable = new TableDefinition(
                 tableName,
                 new List<TableColumn>
                 {
@@ -44,7 +46,7 @@ namespace TestTransformations.UseCases
         private void CreateDestinationTable(string tableName)
         {
             DropTableTask.DropIfExists(SqlConnection, tableName);
-            TableDefinition sourceTable = new TableDefinition(
+            var sourceTable = new TableDefinition(
                 tableName,
                 new List<TableColumn>
                 {
@@ -75,20 +77,20 @@ namespace TestTransformations.UseCases
             CreateDestinationTable("dbo.HashMatchDestination");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "dbo.HashMatchSource"
             );
 
-            RowTransformation<string[]> trans = new RowTransformation<string[]>(row =>
+            var trans = new RowTransformation<string[]>(row =>
             {
                 Array.Resize(ref row, row.Length + 1);
                 row[^1] = HashHelper.Encrypt_Char40(string.Join("", row));
                 return row;
             });
 
-            List<string[]> allEntriesInDestination = new List<string[]>();
-            LookupTransformation<string[], string[]> lookup = new LookupTransformation<
+            var allEntriesInDestination = new List<string[]>();
+            var lookup = new LookupTransformation<
                 string[],
                 string[]
             >(
@@ -119,7 +121,7 @@ namespace TestTransformations.UseCases
                 allEntriesInDestination
             );
 
-            VoidDestination<string[]> voidDest = new VoidDestination<string[]>();
+            var voidDest = new VoidDestination<string[]>();
             source.LinkTo(trans);
             trans.LinkTo(lookup);
             lookup.LinkTo(voidDest);

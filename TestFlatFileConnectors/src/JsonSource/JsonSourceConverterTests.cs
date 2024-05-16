@@ -1,8 +1,13 @@
+using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Helper;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonSourceConverterTests : FlatFileConnectorsTestBase
     {
         public JsonSourceConverterTests(FlatFileToDatabaseFixture fixture)

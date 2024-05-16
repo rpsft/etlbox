@@ -3,6 +3,7 @@ using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceDynamicObjectTests : OtherConnectorsTestBase
     {
         public CustomSourceDynamicObjectTests(OtherConnectorsDatabaseFixture fixture)

@@ -1,7 +1,9 @@
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceErrorLinkingTests : OtherConnectorsTestBase
     {
         public CustomSourceErrorLinkingTests(OtherConnectorsDatabaseFixture fixture)

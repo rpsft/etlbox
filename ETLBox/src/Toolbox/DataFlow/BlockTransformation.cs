@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.DataFlow
+﻿using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// A block transformation will wait for all data to be loaded into the buffer before the transformation is applied. After all data is in the buffer, the transformation
@@ -88,14 +91,14 @@
 
         private void WriteIntoOutput()
         {
-            NLogStart();
+            LogStart();
             OutputData = BlockTransformationFunc(InputData);
             foreach (TOutput row in OutputData)
             {
                 OutputBuffer.SendAsync(row).Wait();
                 LogProgress();
             }
-            NLogFinish();
+            LogFinish();
         }
     }
 

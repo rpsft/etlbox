@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowDuplication
 {
+    [Collection("Transformations")]
     public class RowDuplicationStringArrayTests : TransformationsTestBase
     {
         public RowDuplicationStringArrayTests(TransformationsDatabaseFixture fixture)
@@ -13,17 +14,17 @@ namespace TestTransformations.RowDuplication
         public void DataIsInList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowDuplicationStringArraySource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "RowDuplicationStringArraySource"
             );
-            RowDuplication<string[]> duplication = new RowDuplication<string[]>();
-            MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
+            var duplication = new RowDuplication<string[]>();
+            var dest = new MemoryDestination<string[]>();
 
             //Act
             source.LinkTo(duplication);

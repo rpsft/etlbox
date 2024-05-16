@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationBatchChangesTests : DatabaseConnectorsTestBase
     {
         public DbDestinationBatchChangesTests(DatabaseSourceDestinationFixture fixture)

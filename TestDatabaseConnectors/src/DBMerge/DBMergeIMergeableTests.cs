@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeIMergeableTests : DatabaseConnectorsTestBase
     {
         public DbMergeIMergeableTests(DatabaseSourceDestinationFixture fixture)
@@ -60,8 +61,8 @@ namespace TestDatabaseConnectors.DBMerge
             Assert.True(dest.DeltaTable.Count == 7);
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Update) == 3);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 10
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 10
                 ) == 1
             );
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Insert) == 3);

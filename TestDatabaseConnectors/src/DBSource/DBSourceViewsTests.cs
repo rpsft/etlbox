@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbSourceViewsTests : DatabaseConnectorsTestBase
     {
         public DbSourceViewsTests(DatabaseSourceDestinationFixture fixture)
@@ -75,7 +76,7 @@ namespace TestDatabaseConnectors.DBSource
             FourColumnsTableFixture d4C = new FourColumnsTableFixture(
                 connection,
                 "DbDestinationExtended",
-                1
+                IsIdentitySupported(connection) ? 1 : -1
             );
 
             //Act

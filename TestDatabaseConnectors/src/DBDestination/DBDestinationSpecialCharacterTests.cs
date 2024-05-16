@@ -1,10 +1,11 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationSpecialCharacterTests : DatabaseConnectorsTestBase
     {
         public DbDestinationSpecialCharacterTests(DatabaseSourceDestinationFixture fixture)

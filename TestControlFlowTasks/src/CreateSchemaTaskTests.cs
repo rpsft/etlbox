@@ -1,16 +1,18 @@
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class CreateSchemaTaskTests : ControlFlowTestBase
     {
         public CreateSchemaTaskTests(ControlFlowDatabaseFixture fixture)
             : base(fixture) { }
 
-        [Theory, MemberData(nameof(AllConnectionsWithoutSQLite))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutSQLiteAndClickHouse))]
         public void CreateSchema(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(MySqlConnectionManager))
@@ -26,7 +28,7 @@ namespace TestControlFlowTasks
             Assert.True(IfSchemaExistsTask.IsExisting(connection, schemaName));
         }
 
-        [Theory, MemberData(nameof(AllConnectionsWithoutSQLite))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutSQLiteAndClickHouse))]
         public void CreateSchemaWithSpecialChar(IConnectionManager connection)
         {
             if (connection.GetType() == typeof(MySqlConnectionManager))

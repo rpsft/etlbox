@@ -1,30 +1,33 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ConnectionManager;
+using ETLBox.ClickHouse.ConnectionManager;
+using ETLBox.Primitives;
 using TestShared.Helper;
-
 
 namespace TestDatabaseConnectors
 {
-    [CollectionDefinition("DatabaseConnectors", DisableParallelization = false)]
-    public class DataFlowSourceDestinationCollectionClass
+    [CollectionDefinition(
+        nameof(DataFlowSourceDestinationCollection),
+        DisableParallelization = false
+    )]
+    public class DataFlowSourceDestinationCollection
         : ICollectionFixture<DatabaseSourceDestinationFixture> { }
 
-    [Collection("DatabaseConnectors")]
-    public class DatabaseConnectorsTestBase
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
+    public abstract class DatabaseConnectorsTestBase : IDisposable
     {
         private const string SourceConfigSection =
             DatabaseSourceDestinationFixture.SourceConfigSection;
-
-        private const string DestinationConfigSection =
-            DatabaseSourceDestinationFixture.DestinationConfigSection;
 
         private const string OtherConfigSection =
             DatabaseSourceDestinationFixture.OtherConfigSection;
 
         protected readonly DatabaseSourceDestinationFixture Fixture;
+        private readonly string _sqLiteDbSuffix;
 
         protected DatabaseConnectorsTestBase(DatabaseSourceDestinationFixture fixture)
         {
             Fixture = fixture;
+            _sqLiteDbSuffix = Fixture.GetSQLiteDbSuffix();
         }
 
         protected static SqlConnectionManager SqlConnection =>
@@ -36,62 +39,89 @@ namespace TestDatabaseConnectors
         protected static SqlConnectionManager AzureSqlConnection =>
             Config.AzureSqlConnection.ConnectionManager(OtherConfigSection);
 
-        public static IEnumerable<object[]> AllSqlConnections =>
-            Config.AllSqlConnections(SourceConfigSection);
+        public static TheoryData<IConnectionManager> AllSqlConnections =>
+            new(Config.AllSqlConnections(SourceConfigSection));
+
+        public static TheoryData<IConnectionManager> ConnectionsWithoutClickHouse =>
+            new(Config.AllSqlConnectionsWithoutClickHouse(SourceConfigSection));
 
         protected static IEnumerable<CultureInfo> AllLocalCultures => Config.AllLocalCultures();
 
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
-            Config.AllConnectionsWithoutSQLite(SourceConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLite =>
+            new(Config.AllConnectionsWithoutSQLiteAndClickHouse(SourceConfigSection));
 
-        public static IEnumerable<object[]> AllOdbcConnections =>
-            Config.AllOdbcConnections(OtherConfigSection);
+        public static TheoryData<IConnectionManager> AllOdbcConnections =>
+            new(Config.AllOdbcConnections(OtherConfigSection));
 
-        public static IEnumerable<object[]> MixedSourceDestinations() =>
-            new[]
+        public static TheoryData<Type, Type> MixedSourceDestinations()
+        {
+            var data = new TheoryData<Type, Type>
             {
                 //Same DB
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager(SourceConfigSection),
-                    Config.SqlConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
-                    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.MySqlConnection.ConnectionManager(SourceConfigSection),
-                    Config.MySqlConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.PostgresConnection.ConnectionManager(SourceConfigSection),
-                    Config.PostgresConnection.ConnectionManager(DestinationConfigSection)
-                },
+                { typeof(SqlConnectionManager), typeof(SqlConnectionManager) },
+                { typeof(SQLiteConnectionManager), typeof(SQLiteConnectionManager) },
+                { typeof(MySqlConnectionManager), typeof(MySqlConnectionManager) },
+                { typeof(PostgresConnectionManager), typeof(PostgresConnectionManager) },
+                { typeof(ClickHouseConnectionManager), typeof(ClickHouseConnectionManager) },
                 //Mixed
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager(SourceConfigSection),
-                    Config.SQLiteConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.SQLiteConnection.ConnectionManager(SourceConfigSection),
-                    Config.SqlConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.MySqlConnection.ConnectionManager(SourceConfigSection),
-                    Config.PostgresConnection.ConnectionManager(DestinationConfigSection)
-                },
-                new object[]
-                {
-                    Config.SqlConnection.ConnectionManager(SourceConfigSection),
-                    Config.PostgresConnection.ConnectionManager(DestinationConfigSection)
-                }
+                { typeof(SqlConnectionManager), typeof(SQLiteConnectionManager) },
+                { typeof(SQLiteConnectionManager), typeof(SqlConnectionManager) },
+                { typeof(MySqlConnectionManager), typeof(PostgresConnectionManager) },
+                { typeof(SqlConnectionManager), typeof(PostgresConnectionManager) },
+                { typeof(PostgresConnectionManager), typeof(ClickHouseConnectionManager) },
+                { typeof(ClickHouseConnectionManager), typeof(PostgresConnectionManager) }
             };
+            return data;
+        }
+
+        protected IConnectionManager GetConnectionManager(Type connectionType, string configSection)
+        {
+            if (
+                !connectionType.IsClass
+                || !connectionType.IsAssignableTo(typeof(IConnectionManager))
+            )
+                throw new ArgumentException(
+                    $"Type {connectionType.Name} must be a subclass of IConnectionManager!"
+                );
+            return connectionType.Name switch
+            {
+                nameof(SQLiteConnectionManager)
+                    => Config.SQLiteConnection.ConnectionManager(configSection, _sqLiteDbSuffix),
+                nameof(SqlConnectionManager)
+                    => Config.SqlConnection.ConnectionManager(configSection),
+                nameof(PostgresConnectionManager)
+                    => Config.PostgresConnection.ConnectionManager(configSection),
+                nameof(MySqlConnectionManager)
+                    => Config.MySqlConnection.ConnectionManager(configSection),
+                nameof(ClickHouseConnectionManager)
+                    => Config.ClickHouseConnection.ConnectionManager(configSection),
+                _ => throw new ArgumentOutOfRangeException(nameof(connectionType))
+            };
+        }
+
+        protected bool IsIdentitySupported(IConnectionManager connection)
+        {
+            return connection.ConnectionManagerType != ConnectionManagerType.ClickHouse;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+            Fixture?.DisposeSqliteDb(_sqLiteDbSuffix);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~DatabaseConnectorsTestBase()
+        {
+            Dispose(false);
+        }
     }
 }

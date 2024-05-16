@@ -25,7 +25,7 @@ namespace TestTransformations.AggregationTests
         public void GroupingAndKeepingKey()
         {
             //Arrange
-            MemorySource<MyRow> source = new MemorySource<MyRow>
+            var source = new MemorySource<MyRow>
             {
                 DataAsList = new List<MyRow>
                 {
@@ -86,7 +86,7 @@ namespace TestTransformations.AggregationTests
                 (key, agg) => agg.GroupName = (string)key
             );
 
-            MemoryDestination<MyAggRow> dest = new MemoryDestination<MyAggRow>();
+            var dest = new MemoryDestination<MyAggRow>();
 
             //Act
             source.LinkTo(agg);

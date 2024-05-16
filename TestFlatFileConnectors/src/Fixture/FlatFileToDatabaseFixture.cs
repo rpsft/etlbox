@@ -1,4 +1,4 @@
-﻿using TestShared.Helper;
+using TestShared.Helper;
 
 namespace TestFlatFileConnectors.Fixture
 {

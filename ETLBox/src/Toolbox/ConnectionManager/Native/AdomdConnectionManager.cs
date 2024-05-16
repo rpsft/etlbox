@@ -1,4 +1,5 @@
-﻿using Microsoft.AnalysisServices.AdomdClient;
+﻿using ETLBox.Primitives;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -42,7 +43,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            AdomdConnectionManager clone = new AdomdConnectionManager(
+            var clone = new AdomdConnectionManager(
                 (SqlConnectionString)ConnectionString
             )
             {

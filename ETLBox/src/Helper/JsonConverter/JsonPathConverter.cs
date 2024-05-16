@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -34,8 +34,8 @@ namespace ALE.ETLBox.Helper
             JsonSerializer serializer
         )
         {
-            JObject jObject = JObject.Load(reader);
-            object targetObj = Activator.CreateInstance(objectType);
+            var jObject = JObject.Load(reader);
+            var targetObj = Activator.CreateInstance(objectType);
 
             foreach (
                 PropertyInfo prop in objectType.GetProperties().Where(p => p.CanRead && p.CanWrite)
@@ -45,7 +45,7 @@ namespace ALE.ETLBox.Helper
                     .OfType<JsonPropertyAttribute>()
                     .FirstOrDefault();
 
-                string jsonPath = attribute != null ? attribute.PropertyName! : prop.Name;
+                var jsonPath = attribute != null ? attribute.PropertyName! : prop.Name;
 
                 if (serializer.ContractResolver is DefaultContractResolver resolver)
                 {
@@ -60,7 +60,7 @@ namespace ALE.ETLBox.Helper
                 JToken token = jObject.SelectToken(jsonPath);
                 if (token != null && token.Type != JTokenType.Null)
                 {
-                    object value = token.ToObject(prop.PropertyType, serializer);
+                    var value = token.ToObject(prop.PropertyType, serializer);
                     prop.SetValue(targetObj, value, null);
                 }
             }
@@ -82,14 +82,14 @@ namespace ALE.ETLBox.Helper
                 .GetType()
                 .GetRuntimeProperties()
                 .Where(p => p.CanRead && p.CanWrite);
-            JObject main = new JObject();
+            var main = new JObject();
             foreach (PropertyInfo prop in properties)
             {
                 JsonPropertyAttribute attribute = prop.GetCustomAttributes(true)
                     .OfType<JsonPropertyAttribute>()
                     .FirstOrDefault();
 
-                string jsonPath = attribute != null ? attribute.PropertyName! : prop.Name;
+                var jsonPath = attribute != null ? attribute.PropertyName! : prop.Name;
 
                 if (serializer.ContractResolver is DefaultContractResolver resolver)
                 {
@@ -99,7 +99,7 @@ namespace ALE.ETLBox.Helper
                 var nesting = jsonPath.Split('.');
                 JObject lastLevel = main;
 
-                for (int i = 0; i < nesting.Length; i++)
+                for (var i = 0; i < nesting.Length; i++)
                 {
                     if (i == nesting.Length - 1)
                     {

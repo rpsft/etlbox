@@ -1,11 +1,48 @@
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Helper;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
+
 namespace ALE.ETLBox.DataFlow
 {
+    internal abstract class MappingTypeInfo<TInput, TOutput>
+        : MappingTypeInfo,
+            IMappingTypeInfo<TInput, TOutput>
+    {
+        protected MappingTypeInfo()
+            : base(typeof(TInput), typeof(TOutput)) { }
+
+        public void SetOutputValueOrThrow(
+            TOutput outputRow,
+            object value,
+            AttributeMappingInfo attributeMapping,
+            bool convertToUnderlyingType
+        )
+        {
+            if (convertToUnderlyingType)
+            {
+                PropertyInfo propInfo = attributeMapping.PropInOutput;
+                var conversionType = TypeInfo.TryGetUnderlyingType(propInfo.PropertyType);
+                var output = Convert.ChangeType(value, conversionType);
+                attributeMapping.PropInOutput.SetValueOrThrow(outputRow, output);
+            }
+            else
+            {
+                attributeMapping.PropInOutput.TrySetValue(outputRow, value);
+            }
+        }
+
+        public object GetInputValue(TInput inputRow, AttributeMappingInfo attributeMapping)
+        {
+            return attributeMapping.PropInInput.GetValue(inputRow);
+        }
+    }
+
     internal abstract class MappingTypeInfo
     {
         private Dictionary<string, PropertyInfo> InputPropertiesByName { get; } = new();
         private bool IsArray => IsArrayInput || IsArrayOutput;
         private bool IsArrayInput { get; }
-        internal bool IsArrayOutput { get; }
+        public bool IsArrayOutput { get; }
         private bool IsDynamic { get; }
 
         private protected MappingTypeInfo(Type inputType, Type outputType)
@@ -37,17 +74,20 @@ namespace ALE.ETLBox.DataFlow
 
         protected abstract void CombineInputAndOutputMapping();
 
-        protected void AssignInputProperty(List<AttributeMappingInfo> columnList)
+        protected void AssignInputProperty(IList<AttributeMappingInfo> columnList)
         {
             foreach (var attributeMappingInfo in columnList)
             {
-                if (!InputPropertiesByName.ContainsKey(attributeMappingInfo.PropNameInInput))
+                if (
+                    !InputPropertiesByName.TryGetValue(
+                        attributeMappingInfo.PropNameInInput,
+                        out PropertyInfo value
+                    )
+                )
                     throw new ETLBoxException(
                         $"Property {attributeMappingInfo.PropNameInInput} does not exists in target object!"
                     );
-                attributeMappingInfo.PropInInput = InputPropertiesByName[
-                    attributeMappingInfo.PropNameInInput
-                ];
+                attributeMappingInfo.PropInInput = value;
             }
         }
     }

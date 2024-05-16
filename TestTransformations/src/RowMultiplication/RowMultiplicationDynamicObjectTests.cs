@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
+    [Collection("Transformations")]
     public class RowMultiplicationDynamicObjectTests : TransformationsTestBase
     {
         public RowMultiplicationDynamicObjectTests(TransformationsDatabaseFixture fixture)
@@ -13,18 +14,18 @@ namespace TestTransformations.RowMultiplication
         public void ReturningNewDynamicObject()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowMultiplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource source = new DbSource(SqlConnection, "RowMultiplicationSource");
+            var source = new DbSource(SqlConnection, "RowMultiplicationSource");
             ALE.ETLBox.DataFlow.RowMultiplication multiplication =
                 new ALE.ETLBox.DataFlow.RowMultiplication(row =>
                 {
-                    List<ExpandoObject> result = new List<ExpandoObject>();
+                    var result = new List<ExpandoObject>();
                     dynamic r = row;
-                    for (int i = 0; i <= r.Col1; i++)
+                    for (var i = 0; i <= r.Col1; i++)
                     {
                         dynamic newdynamic = new ExpandoObject();
                         newdynamic.Col3 = i * r.Col1;
@@ -32,7 +33,7 @@ namespace TestTransformations.RowMultiplication
                     }
                     return result;
                 });
-            MemoryDestination dest = new MemoryDestination();
+            var dest = new MemoryDestination();
 
             //Act
             source.LinkTo(multiplication);

@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
+    [Collection("Transformations")]
     public class RowMultiplicationTests : TransformationsTestBase
     {
         public RowMultiplicationTests(TransformationsDatabaseFixture fixture)
@@ -24,20 +25,20 @@ namespace TestTransformations.RowMultiplication
         public void RandomDoubling()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowMultiplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowMultiplicationSource"
             );
-            RowMultiplication<MySimpleRow> multiplication =
+            var multiplication =
                 new RowMultiplication<MySimpleRow>(row =>
                 {
-                    List<MySimpleRow> result = new List<MySimpleRow>();
-                    for (int i = 0; i < row.Col1; i++)
+                    var result = new List<MySimpleRow>();
+                    for (var i = 0; i < row.Col1; i++)
                     {
                         result.Add(
                             new MySimpleRow { Col1 = row.Col1 + i, Col2 = "Test" + (row.Col1 + i) }
@@ -45,7 +46,7 @@ namespace TestTransformations.RowMultiplication
                     }
                     return result;
                 });
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
             source.LinkTo(multiplication);
@@ -69,28 +70,28 @@ namespace TestTransformations.RowMultiplication
         public void DifferentOutputType()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowMultiplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowMultiplicationSource"
             );
-            RowMultiplication<MySimpleRow, MyOtherRow> multiplication = new RowMultiplication<
+            var multiplication = new RowMultiplication<
                 MySimpleRow,
                 MyOtherRow
             >(row =>
             {
-                List<MyOtherRow> result = new List<MyOtherRow>();
-                for (int i = 0; i <= row.Col1; i++)
+                var result = new List<MyOtherRow>();
+                for (var i = 0; i <= row.Col1; i++)
                 {
                     result.Add(new MyOtherRow { Col3 = i * row.Col1 });
                 }
                 return result;
             });
-            MemoryDestination<MyOtherRow> dest = new MemoryDestination<MyOtherRow>();
+            var dest = new MemoryDestination<MyOtherRow>();
 
             //Act
             source.LinkTo(multiplication);

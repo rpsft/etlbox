@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class DropViewTaskTests : ControlFlowTestBase
     {
         public DropViewTaskTests(ControlFlowDatabaseFixture fixture)

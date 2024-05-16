@@ -1,7 +1,10 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class ExcelSourceNameAttributeTests : FlatFileConnectorsTestBase
     {
         public ExcelSourceNameAttributeTests(FlatFileToDatabaseFixture fixture)
@@ -23,13 +26,13 @@ namespace TestFlatFileConnectors.ExcelSource
         public void SimpleData()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationWithNameAttribute"
             );
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnWithHeader.xlsx"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ExcelDestinationWithNameAttribute"
             );

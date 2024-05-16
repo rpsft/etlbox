@@ -1,6 +1,7 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ETLBox.Primitives;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
@@ -85,7 +86,7 @@ namespace ALE.ETLBox.DataFlow
                 TOutput output;
                 if (TypeInfo.IsDynamic)
                 {
-                    string jsonText = JsonConvert.SerializeXNode(xmlElement);
+                    var jsonText = JsonConvert.SerializeXNode(xmlElement);
                     dynamic res = JsonConvert.DeserializeObject<ExpandoObject>(jsonText);
                     output = ((IDictionary<string, object>)res)[ElementName] as dynamic;
                 }

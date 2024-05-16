@@ -1,36 +1,33 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationDifferentDBTests : DatabaseConnectorsTestBase
     {
         public DbDestinationDifferentDBTests(DatabaseSourceDestinationFixture fixture)
             : base(fixture) { }
 
         [Theory, MemberData(nameof(MixedSourceDestinations))]
-        public void TestTransferBetweenDBs(
-            IConnectionManager sourceConnection,
-            IConnectionManager destConnection
-        )
+        public void TestTransferBetweenDBs(Type sourceConnectionType, Type destConnectionType)
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
-                sourceConnection,
-                "Source"
+            IConnectionManager sourceConnection = GetConnectionManager(
+                sourceConnectionType,
+                DatabaseSourceDestinationFixture.SourceConfigSection
             );
+            IConnectionManager destConnection = GetConnectionManager(
+                destConnectionType,
+                DatabaseSourceDestinationFixture.DestinationConfigSection
+            );
+            var source2Columns = new TwoColumnsTableFixture(sourceConnection, "Source");
             source2Columns.InsertTestData();
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
-                destConnection,
-                "Destination"
-            );
+            var dest2Columns = new TwoColumnsTableFixture(destConnection, "Destination");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(sourceConnection, "Source");
-            DbDestination<string[]> dest = new DbDestination<string[]>(
-                destConnection,
-                "Destination"
-            );
+            var source = new DbSource<string[]>(sourceConnection, "Source");
+            var dest = new DbDestination<string[]>(destConnection, "Destination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

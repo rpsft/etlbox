@@ -2,6 +2,7 @@ using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceTests : OtherConnectorsTestBase
     {
         public CustomSourceTests(OtherConnectorsDatabaseFixture fixture)

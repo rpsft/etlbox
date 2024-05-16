@@ -1,7 +1,10 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvDestinationTests : FlatFileConnectorsTestBase
     {
         public CsvDestinationTests(FlatFileToDatabaseFixture fixture)
@@ -22,15 +25,15 @@ namespace TestFlatFileConnectors.CsvDestination
         public void SimpleFlowWithObject()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimple");
+            var s2C = new TwoColumnsTableFixture("CSVDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "CSVDestSimple"
             );
 
             //Act
-            CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>(
+            var dest = new CsvDestination<MySimpleRow>(
                 "./SimpleWithObject.csv"
             );
             source.LinkTo(dest);

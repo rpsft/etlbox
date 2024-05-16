@@ -1,8 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeDeltaTests : DatabaseConnectorsTestBase
     {
         public DbMergeDeltaTests(DatabaseSourceDestinationFixture fixture)
@@ -56,23 +57,23 @@ namespace TestDatabaseConnectors.DBMerge
             d2C.AssertTestData();
             Assert.True(dest.DeltaTable.Count == 4);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Update && row.Key == 2
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Update && row.Key == 2
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Insert && row.Key == 3
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Insert && row.Key == 3
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 4
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 4
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 10
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 10
                 ) == 1
             );
         }

@@ -1,9 +1,11 @@
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowMultiplication
 {
+    [Collection("Transformations")]
     public class RowMultiplicationErrorLinkingTests : TransformationsTestBase
     {
         public RowMultiplicationErrorLinkingTests(TransformationsDatabaseFixture fixture)
@@ -20,25 +22,25 @@ namespace TestTransformations.RowMultiplication
         public void ThrowExceptionInFlow()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowMultiplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowMultiplicationSource"
             );
-            RowMultiplication<MySimpleRow> multiplication =
+            var multiplication =
                 new RowMultiplication<MySimpleRow>(row =>
                 {
-                    List<MySimpleRow> result = new List<MySimpleRow> { row };
+                    var result = new List<MySimpleRow> { row };
                     if (row.Col1 == 2)
                         throw new Exception("Error in Flow!");
                     return result;
                 });
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var dest = new MemoryDestination<MySimpleRow>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
             source.LinkTo(multiplication);
@@ -62,24 +64,24 @@ namespace TestTransformations.RowMultiplication
         public void ThrowExceptionWithoutHandling()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowMultiplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowMultiplicationSource"
             );
-            RowMultiplication<MySimpleRow> multiplication =
+            var multiplication =
                 new RowMultiplication<MySimpleRow>(row =>
                 {
-                    List<MySimpleRow> result = new List<MySimpleRow> { row };
+                    var result = new List<MySimpleRow> { row };
                     if (row.Col1 == 2)
                         throw new Exception("Error in Flow!");
                     return result;
                 });
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act & Assert
             source.LinkTo(multiplication);

@@ -1,9 +1,10 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class IfIndexExistsTaskTests : ControlFlowTestBase
     {
         public IfIndexExistsTaskTests(ControlFlowDatabaseFixture fixture)
@@ -15,20 +16,30 @@ namespace TestControlFlowTasks
         public void IfIndexExists(IConnectionManager connection)
         {
             //Arrange
-            SqlTask.ExecuteNonQuery(
+            if (IfTableOrViewExistsTask.IsExisting(connection, "indextable"))
+            {
+                DropTableTask.Drop(connection, "indextable");
+            }
+            CreateTableTask.Create(
                 connection,
-                "Create index test table",
-                @"CREATE TABLE indextable (col1 INT NULL)"
+                "indextable",
+                new List<ALE.ETLBox.TableColumn>
+                {
+                    new ALE.ETLBox.TableColumn("col1", "INT", false, true),
+                    new ALE.ETLBox.TableColumn("col2", "INT", true)
+                }
             );
 
             //Act
             var existsBefore = IfIndexExistsTask.IsExisting(connection, "index_test", "indextable");
 
-            SqlTask.ExecuteNonQuery(
+            CreateIndexTask.CreateOrRecreate(
                 connection,
-                "Create test index",
-                @"CREATE INDEX index_test ON indextable (col1)"
+                "index_test",
+                "indextable",
+                new List<string> { "col2" }
             );
+
             var existsAfter = IfIndexExistsTask.IsExisting(connection, "index_test", "indextable");
 
             //Assert

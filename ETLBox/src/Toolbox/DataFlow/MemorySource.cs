@@ -1,4 +1,8 @@
-﻿namespace ALE.ETLBox.DataFlow
+using System.Threading;
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Reads data from a memory source. While reading the data from the list, data is also asnychronously posted into the targets.
@@ -30,13 +34,13 @@
             Data = data;
         }
 
-        public override void Execute()
+        public override void Execute(CancellationToken cancellationToken)
         {
-            NLogStart();
+            LogStart();
             ReadRecordAndSendIntoBuffer();
             LogProgress();
             Buffer.Complete();
-            NLogFinish();
+            LogFinish();
         }
 
         private void ReadRecordAndSendIntoBuffer()

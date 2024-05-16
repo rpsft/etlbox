@@ -1,8 +1,11 @@
 using System.Linq;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class ExcelSourceBlankRowsTests : FlatFileConnectorsTestBase
     {
         public ExcelSourceBlankRowsTests(FlatFileToDatabaseFixture fixture)
@@ -42,9 +45,9 @@ namespace TestFlatFileConnectors.ExcelSource
 
         private static IList<MyDataRow> LoadExcelIntoMemory(string filename)
         {
-            MemoryDestination<MyDataRow> dest = new MemoryDestination<MyDataRow>();
+            var dest = new MemoryDestination<MyDataRow>();
 
-            ExcelSource<MyDataRow> source = new ExcelSource<MyDataRow>(filename)
+            var source = new ExcelSource<MyDataRow>(filename)
             {
                 Range = new ExcelRange(1, 3),
                 HasNoHeader = true
@@ -70,19 +73,19 @@ namespace TestFlatFileConnectors.ExcelSource
         public void IgnoreBlankRows()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelDestinationBlankRows"
             );
 
             //Act
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnBlankRow.xlsx"
             )
             {
                 IgnoreBlankRows = true,
                 HasNoHeader = true
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ExcelDestinationBlankRows",
                 2

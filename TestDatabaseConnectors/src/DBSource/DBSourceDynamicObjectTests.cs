@@ -1,9 +1,11 @@
 using System.Dynamic;
-using ALE.ETLBox.ConnectionManager;
+using System.Threading;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbSourceDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbSourceDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
@@ -36,7 +38,7 @@ namespace TestDatabaseConnectors.DBSource
             );
 
             source.LinkTo(dest);
-            source.Execute();
+            source.Execute(CancellationToken.None);
             dest.Wait();
 
             //Assert

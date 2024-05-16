@@ -1,6 +1,5 @@
-﻿using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 
 namespace TestShared.Helper
 {
@@ -43,50 +42,66 @@ namespace TestShared.Helper
         }
 
         private static void ActOnDatabase<TConnectionManager, TConnectionString>(
-            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
             string section,
             string dbNameSuffix,
             Action<TConnectionManager, string> databaseAction
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new()
         {
-            var connManagerMaster = new TConnectionManager
-            {
-                ConnectionString = connectionDetails
-                    .ConnectionString(section)
-                    .CloneWithMasterDbName()
-            };
+            using var connManagerMaster = new TConnectionManager();
+            connManagerMaster.ConnectionString = connectionDetails
+                .ConnectionString(section)
+                .CloneWithMasterDbName();
             var dbName =
                 connectionDetails.ConnectionString(section).DbName + (dbNameSuffix ?? string.Empty);
             databaseAction(connManagerMaster, dbName);
         }
 
-        public static void DropDatabase<TConnectionManager, TConnectionString>(
-            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+        public static void DropDatabase(
+            SQLiteConnectionDetails connectionDetails,
             string section,
             string dbNameSuffix = null
         )
-            where TConnectionManager : IConnectionManager, new()
+        {
+            connectionDetails.DeleteDatabase(section, dbNameSuffix);
+        }
+
+        public static void DropDatabase<TConnectionManager, TConnectionString>(
+            ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            string section,
+            string dbNameSuffix = null
+        )
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, DropDatabase);
 
         public static void CreateDatabase<TConnectionManager, TConnectionString>(
-            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
             string section,
             string dbNameSuffix = null
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, CreateDatabase);
 
         public static void RecreateDatabase<TConnectionManager, TConnectionString>(
-            Config.ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
+            ConnectionDetails<TConnectionString, TConnectionManager> connectionDetails,
             string section,
             string dbNameSuffix = null
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, DropAndCreate);
+
+        public static void RecreateDatabase(
+            SQLiteConnectionDetails connectionDetails,
+            string section,
+            string dbNameSuffix = null
+        )
+        {
+            connectionDetails.CopyFromTemplate(section, dbNameSuffix);
+        }
     }
 }

@@ -1,11 +1,14 @@
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Logging.Database;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging
+namespace TestNonParallel.Logging
 {
+    [Collection("Logging")]
     public sealed class DifferentLoggingDBTests
         : NonParallelTestBase,
             IDisposable,
@@ -24,13 +27,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
         {
             NoLoggingDatabaseFixture = noLoggingDatabaseFixture;
             CreateLogTableTask.Create(LoggingConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(LoggingConnection);
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(LoggingConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(LoggingConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }
 
@@ -47,7 +50,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)"
             );
 
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = NoLogConnection;
 
             SqlTask.ExecuteNonQuery(
                 "Insert demo data",

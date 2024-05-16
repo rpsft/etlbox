@@ -1,4 +1,6 @@
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -22,6 +24,7 @@ namespace ALE.ETLBox.ControlFlow
                     is ConnectionManagerType.SQLite
                         or ConnectionManagerType.Postgres
                         or ConnectionManagerType.Access
+                        or ConnectionManagerType.ClickHouse
                 && IsExisting
             )
                 new DropViewTask(ViewName)
@@ -79,6 +82,7 @@ AS
             IsExisting
             && ConnectionType != ConnectionManagerType.SQLite
             && ConnectionType != ConnectionManagerType.Postgres
+            && ConnectionType != ConnectionManagerType.ClickHouse
                 ? "ALTER"
                 : "CREATE";
     }

@@ -1,4 +1,4 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -22,6 +22,8 @@ namespace ALE.ETLBox.ControlFlow
                     => $@"SELECT COUNT(*)  FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{ON.UnquotedObjectName}'",
                 ConnectionManagerType.Postgres
                     => $@"SELECT COUNT(*) FROM pg_database WHERE datname = '{ON.UnquotedObjectName}'",
+                ConnectionManagerType.ClickHouse
+                    => $@"SELECT COUNT(*) FROM system.databases WHERE name = '{ON.UnquotedObjectName}'",
                 _ => string.Empty
             };
         }

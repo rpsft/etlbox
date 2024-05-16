@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using ALE.ETLBox.ConnectionManager;
-using ALE.ETLBox.Helper;
+using System.Linq;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow.SqlServer
 {
@@ -25,7 +26,7 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
             if (!DbConnectionManager.SupportSchemas)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            List<string> allColumns = new List<string>();
+            var allColumns = new List<string>();
             new SqlTask(this, Sql)
             {
                 Actions = new List<Action<object>> { col => allColumns.Add((string)col) }

@@ -1,3 +1,5 @@
+using ALE.ETLBox.DataFlow;
+
 namespace TestFlatFileConnectors.JsonSource
 {
     public class JsonSourceEmptyTests
@@ -9,7 +11,7 @@ namespace TestFlatFileConnectors.JsonSource
                 "res/JsonSource/EmptyArray.json",
                 ResourceType.File
             );
-            MemoryDestination dest = new MemoryDestination();
+            var dest = new MemoryDestination();
 
             source.LinkTo(dest);
             source.Execute();
@@ -25,7 +27,7 @@ namespace TestFlatFileConnectors.JsonSource
                 "res/JsonSource/EmptyObject.json",
                 ResourceType.File
             );
-            MemoryDestination dest = new MemoryDestination();
+            var dest = new MemoryDestination();
 
             source.LinkTo(dest);
             source.Execute();

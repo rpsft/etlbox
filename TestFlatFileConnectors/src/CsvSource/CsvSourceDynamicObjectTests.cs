@@ -1,7 +1,12 @@
+using ALE.ETLBox;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvSource
 {
+    [Collection("FlatFilesToDatabase")]
     public sealed class CsvSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
         public CsvSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
@@ -11,14 +16,14 @@ namespace TestFlatFileConnectors.CsvSource
         public void SimpleFlowWithDynamicObject()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceDynamic");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest2Columns = new TwoColumnsTableFixture("CsvSourceDynamic");
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "CsvSourceDynamic"
             );
 
             //Act
-            CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>(
+            var source = new CsvSource<ExpandoObject>(
                 "res/CsvSource/TwoColumnsForDynamic.csv"
             );
             source.LinkTo(dest);
@@ -33,16 +38,16 @@ namespace TestFlatFileConnectors.CsvSource
         public void MoreColumnsInSource()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "CsvSourceDynamicColsInSource"
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "CsvSourceDynamicColsInSource"
             );
 
             //Act
-            CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>(
+            var source = new CsvSource<ExpandoObject>(
                 "res/CsvSource/FourColumnsForDynamic.csv"
             );
             source.LinkTo(dest);
@@ -68,13 +73,13 @@ namespace TestFlatFileConnectors.CsvSource
                     new("ColX", "INT", allowNulls: true)
                 }
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "CsvSourceDynamicColsInDest"
             );
 
             //Act
-            CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>(
+            var source = new CsvSource<ExpandoObject>(
                 "res/CsvSource/TwoColumnsForDynamic.csv"
             );
             source.LinkTo(dest);

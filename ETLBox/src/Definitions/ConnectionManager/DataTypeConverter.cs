@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -14,16 +15,16 @@ namespace ALE.ETLBox.ConnectionManager
         public const int DefaultDecimalLength = 41;
         public const int DefaultStringLength = 255;
 
-        private const string Regex = @"(.*?)char\((\d*)\)(.*?)";
+        private const string CharTypeDefinitionRegex = @"(.*?)char\((\d*)\)(.*?)";
 
         public static bool IsCharTypeDefinition(string value) =>
-            new Regex(Regex, RegexOptions.IgnoreCase).IsMatch(value);
+            new Regex(CharTypeDefinitionRegex, RegexOptions.IgnoreCase).IsMatch(value);
 
         public static int GetStringLengthFromCharString(string value)
         {
-            string possibleResult = System.Text.RegularExpressions.Regex.Replace(
+            var possibleResult = Regex.Replace(
                 value,
-                Regex,
+                CharTypeDefinitionRegex,
                 "${2}",
                 RegexOptions.IgnoreCase
             );
@@ -98,11 +99,11 @@ namespace ALE.ETLBox.ConnectionManager
         }
 
         public static string TryGetDBSpecificType(
-            string dbSpecificTypeName,
+            ITableColumn col,
             ConnectionManagerType connectionType
         )
         {
-            var typeName = dbSpecificTypeName.Trim().ToUpper();
+            var typeName = col.DataType.Trim().ToUpper();
             switch (connectionType)
             {
                 case ConnectionManagerType.SqlServer when typeName.Replace(" ", "") == "TEXT":
@@ -116,27 +117,24 @@ namespace ALE.ETLBox.ConnectionManager
                     return GetStringLengthFromCharString(typeName) > 255 ? "LONGTEXT" : typeName;
                 }
                 case ConnectionManagerType.Access:
-                    return dbSpecificTypeName;
+                    return col.DataType;
                 case ConnectionManagerType.SQLite when typeName is "INT" or "BIGINT":
                     return "INTEGER";
                 case ConnectionManagerType.SQLite:
-                    return dbSpecificTypeName;
+                    return col.DataType;
                 case ConnectionManagerType.Postgres:
                 {
-                    if (IsCharTypeDefinition(typeName))
-                    {
-                        if (typeName.StartsWith("N"))
-                            return typeName.Substring(1);
-                    }
-                    else if (typeName == "DATETIME")
-                        return "TIMESTAMP";
-                    return dbSpecificTypeName;
+                    return GetPostgreSqlType(typeName, col);
+                }
+                case ConnectionManagerType.ClickHouse:
+                {
+                    return GetClickHouseType(typeName, col);
                 }
                 case ConnectionManagerType.Unknown:
                 case ConnectionManagerType.Adomd:
                 case ConnectionManagerType.MySql:
                 default:
-                    return dbSpecificTypeName;
+                    return col.DataType;
             }
         }
 
@@ -154,6 +152,32 @@ namespace ALE.ETLBox.ConnectionManager
                 "timestamptz" => DateTimeKind.Utc,
                 _ => null
             };
+        }
+
+        private static string GetPostgreSqlType(string typeName, ITableColumn col)
+        {
+            if (IsCharTypeDefinition(typeName))
+            {
+                if (typeName.StartsWith("N"))
+                    return typeName.Substring(1);
+            }
+            else if (typeName == "DATETIME")
+                return "TIMESTAMP";
+            return col.DataType;
+        }
+
+        private static string GetClickHouseType(string typeName, ITableColumn col)
+        {
+            var type = col.DataType;
+            if (IsCharTypeDefinition(typeName))
+            {
+                type = "String";
+            }
+            if (col.AllowNulls && !type.StartsWith("Nullable"))
+            {
+                return $"Nullable({type})";
+            }
+            return type;
         }
     }
 }

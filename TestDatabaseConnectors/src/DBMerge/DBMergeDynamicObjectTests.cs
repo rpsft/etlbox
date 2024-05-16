@@ -1,9 +1,11 @@
 using System.Dynamic;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbMergeDynamicObjectTests(DatabaseSourceDestinationFixture fixture)

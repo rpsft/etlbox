@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.Multicast
 {
+    [Collection("Transformations")]
     public class MulticastStringArrayTests : TransformationsTestBase
     {
         public MulticastStringArrayTests(TransformationsDatabaseFixture fixture)
@@ -13,23 +14,23 @@ namespace TestTransformations.Multicast
         public void SplitInto2Tables()
         {
             //Arrange
-            TwoColumnsTableFixture sourceTable = new TwoColumnsTableFixture("Source");
+            var sourceTable = new TwoColumnsTableFixture("Source");
             sourceTable.InsertTestData();
-            TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("Destination1");
-            TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
+            var dest1Table = new TwoColumnsTableFixture("Destination1");
+            var dest2Table = new TwoColumnsTableFixture("Destination2");
 
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "Source");
-            DbDestination<string[]> dest1 = new DbDestination<string[]>(
+            var source = new DbSource<string[]>(SqlConnection, "Source");
+            var dest1 = new DbDestination<string[]>(
                 SqlConnection,
                 "Destination1"
             );
-            DbDestination<string[]> dest2 = new DbDestination<string[]>(
+            var dest2 = new DbDestination<string[]>(
                 SqlConnection,
                 "Destination2"
             );
 
             //Act
-            Multicast<string[]> multicast = new Multicast<string[]>();
+            var multicast = new Multicast<string[]>();
 
             source.LinkTo(multicast);
             multicast.LinkTo(dest1);

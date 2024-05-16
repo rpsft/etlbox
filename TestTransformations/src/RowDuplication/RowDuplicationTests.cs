@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowDuplication
 {
+    [Collection("Transformations")]
     public class RowDuplicationTests : TransformationsTestBase
     {
         public RowDuplicationTests(TransformationsDatabaseFixture fixture)
@@ -19,17 +20,17 @@ namespace TestTransformations.RowDuplication
         public void NoParameter()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowDuplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowDuplicationSource"
             );
-            RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>();
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var duplication = new RowDuplication<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
             source.LinkTo(duplication);
@@ -53,17 +54,17 @@ namespace TestTransformations.RowDuplication
         public void DuplicateTwice()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowDuplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowDuplicationSource"
             );
-            RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(2);
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var duplication = new RowDuplication<MySimpleRow>(2);
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
             source.LinkTo(duplication);
@@ -90,19 +91,19 @@ namespace TestTransformations.RowDuplication
         public void WithPredicate()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowDuplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(
+            var source = new DbSource<MySimpleRow>(
                 SqlConnection,
                 "RowDuplicationSource"
             );
-            RowDuplication<MySimpleRow> duplication = new RowDuplication<MySimpleRow>(
+            var duplication = new RowDuplication<MySimpleRow>(
                 row => row.Col1 == 1 || row.Col2 == "Test3"
             );
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
             source.LinkTo(duplication);

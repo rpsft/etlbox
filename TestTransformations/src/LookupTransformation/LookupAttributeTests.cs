@@ -1,4 +1,4 @@
-using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.DataFlow;
 
 namespace TestTransformations.LookupTransformation
@@ -26,12 +26,12 @@ namespace TestTransformations.LookupTransformation
         public void OneMatchOneRetrieveColumn()
         {
             //Arrange
-            MemorySource<InputDataRow> source = new MemorySource<InputDataRow>();
+            var source = new MemorySource<InputDataRow>();
             source.DataAsList.Add(new InputDataRow { LookupId = 1 });
             source.DataAsList.Add(new InputDataRow { LookupId = 2 });
             source.DataAsList.Add(new InputDataRow { LookupId = 4 });
             source.DataAsList.Add(new InputDataRow { LookupId = 3 });
-            MemorySource<LookupData> lookupSource = new MemorySource<LookupData>();
+            var lookupSource = new MemorySource<LookupData>();
             lookupSource.DataAsList.Add(new LookupData { Id = 1, Value = "Test1" });
             lookupSource.DataAsList.Add(new LookupData { Id = 2, Value = "Test2" });
             lookupSource.DataAsList.Add(new LookupData { Id = 3, Value = "Test3" });
@@ -40,7 +40,7 @@ namespace TestTransformations.LookupTransformation
             {
                 Source = lookupSource
             };
-            MemoryDestination<InputDataRow> dest = new MemoryDestination<InputDataRow>();
+            var dest = new MemoryDestination<InputDataRow>();
             source.LinkTo(lookup);
             lookup.LinkTo(dest);
             source.Execute();
@@ -85,12 +85,12 @@ namespace TestTransformations.LookupTransformation
         public void MultipleMatchAndRetrieveColumns()
         {
             //Arrange
-            MemorySource<InputDataMultiple> source = new MemorySource<InputDataMultiple>();
+            var source = new MemorySource<InputDataMultiple>();
             source.DataAsList.Add(new InputDataMultiple { LookupId1 = 1, LookupId2 = "T1" });
             source.DataAsList.Add(new InputDataMultiple { LookupId1 = 2, LookupId2 = "TX" });
             source.DataAsList.Add(new InputDataMultiple { LookupId1 = 4, LookupId2 = "T2" });
             source.DataAsList.Add(new InputDataMultiple { LookupId1 = 3, LookupId2 = "T3" });
-            MemorySource<LookupDataMultiple> lookupSource = new MemorySource<LookupDataMultiple>();
+            var lookupSource = new MemorySource<LookupDataMultiple>();
             lookupSource.DataAsList.Add(
                 new LookupDataMultiple
                 {
@@ -121,7 +121,7 @@ namespace TestTransformations.LookupTransformation
             {
                 Source = lookupSource
             };
-            MemoryDestination<InputDataMultiple> dest = new MemoryDestination<InputDataMultiple>();
+            var dest = new MemoryDestination<InputDataMultiple>();
             source.LinkTo(lookup);
             lookup.LinkTo(dest);
             source.Execute();
@@ -176,11 +176,11 @@ namespace TestTransformations.LookupTransformation
         private static void RunExceptionFlowWithType<T>()
         {
             //Arrange
-            MemorySource<InputDataRow> source = new MemorySource<InputDataRow>();
+            var source = new MemorySource<InputDataRow>();
             source.DataAsList.Add(new InputDataRow { LookupId = 1 });
-            MemorySource<T> lookupSource = new MemorySource<T>();
+            var lookupSource = new MemorySource<T>();
             var lookup = new LookupTransformation<InputDataRow, T>(lookupSource);
-            MemoryDestination<InputDataRow> dest = new MemoryDestination<InputDataRow>();
+            var dest = new MemoryDestination<InputDataRow>();
 
             source.LinkTo(lookup);
             lookup.LinkTo(dest);

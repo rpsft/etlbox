@@ -1,4 +1,7 @@
-﻿namespace ALE.ETLBox.DataFlow
+using ALE.ETLBox.Common.DataFlow;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
+
+namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
     /// Creates one or more duplicates of your incoming rows.
@@ -17,7 +20,6 @@
         public override ITargetBlock<TInput> TargetBlock => TransformBlock;
 
         /* Private stuff */
-        private TransformManyBlock<TInput, TInput> TransformBlock { get; set; }
         private ObjectCopy<TInput> ObjectCopy { get; set; }
         private TypeInfo TypeInfo { get; set; }
 
@@ -52,9 +54,9 @@
         {
             if (row == null)
                 return Array.Empty<TInput>();
-            List<TInput> result = new List<TInput>(NumberOfDuplicates) { row };
+            var result = new List<TInput>(NumberOfDuplicates) { row };
             LogProgress();
-            for (int i = 0; i < NumberOfDuplicates; i++)
+            for (var i = 0; i < NumberOfDuplicates; i++)
             {
                 if (!(CanDuplicate?.Invoke(row) ?? true))
                 {

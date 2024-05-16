@@ -1,8 +1,11 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestFlatFileConnectors.Helpers;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonDestinationDynamicObjectTests : FlatFileConnectorsTestBase
     {
         public JsonDestinationDynamicObjectTests(FlatFileToDatabaseFixture fixture)

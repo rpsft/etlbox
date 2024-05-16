@@ -1,11 +1,13 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.RegularExpressions;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ALE.ETLBoxTests.NonParallel.Fixtures;
+using ETLBox.Logging.Database;
+using TestNonParallel.Fixtures;
 
-namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
+namespace TestNonParallel.Logging.LogTable
 {
+    [Collection("Logging")]
     public sealed class GetLogAsJsonTests : NonParallelTestBase, IDisposable
     {
         public GetLogAsJsonTests(LoggingDatabaseFixture fixture)
@@ -13,15 +15,18 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
         {
             CreateLoadProcessTableTask.Create(SqlConnection);
             CreateLogTableTask.Create(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.AddLoggingDatabaseToConfig(SqlConnection);
-            ETLBox.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
+            DatabaseLoggingConfiguration.AddDatabaseLoggingConfiguration(SqlConnection);
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.DefaultDbConnection = SqlConnection;
         }
 
         public void Dispose()
         {
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(SqlConnection, ETLBox.ControlFlow.ControlFlow.LoadProcessTable);
-            ETLBox.ControlFlow.ControlFlow.ClearSettings();
+            DropTableTask.Drop(SqlConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(
+                SqlConnection,
+                ALE.ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
+            );
+            ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
         }
 
         private static string RemoveHashes(string jsonresult) =>

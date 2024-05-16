@@ -1,7 +1,11 @@
+using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.JsonSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class JsonSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
         public JsonSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
@@ -17,17 +21,17 @@ namespace TestFlatFileConnectors.JsonSource
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "JsonSourceErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "JsonSourceErrorLinking"
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>(
+            var source = new JsonSource<MySimpleRow>(
                 "res/JsonSource/TwoColumnsErrorLinking.json",
                 ResourceType.File
             );
@@ -57,10 +61,10 @@ namespace TestFlatFileConnectors.JsonSource
         public void WithoutErrorLinking()
         {
             //Arrange
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            JsonSource<MySimpleRow> source = new JsonSource<MySimpleRow>(
+            var source = new JsonSource<MySimpleRow>(
                 "res/JsonSource/TwoColumnsErrorLinking.json",
                 ResourceType.File
             );

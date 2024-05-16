@@ -4,6 +4,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.RowDuplication
 {
+    [Collection("Transformations")]
     public class RowDuplicationDynamicObjectTests : TransformationsTestBase
     {
         public RowDuplicationDynamicObjectTests(TransformationsDatabaseFixture fixture)
@@ -13,15 +14,15 @@ namespace TestTransformations.RowDuplication
         public void NoParameter()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowDuplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource source = new DbSource(SqlConnection, "RowDuplicationSource");
+            var source = new DbSource(SqlConnection, "RowDuplicationSource");
             ALE.ETLBox.DataFlow.RowDuplication duplication =
                 new ALE.ETLBox.DataFlow.RowDuplication();
-            MemoryDestination dest = new MemoryDestination();
+            var dest = new MemoryDestination();
 
             //Act
             source.LinkTo(duplication);
@@ -63,19 +64,19 @@ namespace TestTransformations.RowDuplication
         public void WithPredicate()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "RowDuplicationSource"
             );
             source2Columns.InsertTestData();
 
-            DbSource source = new DbSource(SqlConnection, "RowDuplicationSource");
+            var source = new DbSource(SqlConnection, "RowDuplicationSource");
             ALE.ETLBox.DataFlow.RowDuplication duplication =
                 new ALE.ETLBox.DataFlow.RowDuplication(row =>
                 {
                     dynamic r = row;
                     return r.Col1 == 1 || r.Col2 == "Test3";
                 });
-            MemoryDestination dest = new MemoryDestination();
+            var dest = new MemoryDestination();
 
             //Act
             source.LinkTo(duplication);

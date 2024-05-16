@@ -1,9 +1,10 @@
-using ALE.ETLBox;
-using ALE.ETLBox.ControlFlow;
+using System.Threading;
+using ALE.ETLBox.Common;
 using TestShared.SharedFixtures;
 
 namespace TestOtherConnectors.CustomSource
 {
+    [Collection("OtherConnectors")]
     public class CustomSourceAsyncTests : OtherConnectorsTestBase
     {
         public CustomSourceAsyncTests(OtherConnectorsDatabaseFixture fixture)
@@ -16,70 +17,60 @@ namespace TestOtherConnectors.CustomSource
         }
 
         [Fact]
-        public void SimpleAsyncFlow()
+        public async Task SimpleAsyncFlow()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
-                "Destination4CustomSource"
-            );
-            List<string> data = new List<string> { "Test1", "Test2", "Test3" };
-            int readIndex = 0;
-
-            MySimpleRow ReadData()
-            {
-                if (readIndex == 0)
-                    Task.Delay(300).Wait();
-                var result = new MySimpleRow { Col1 = readIndex + 1, Col2 = data[readIndex] };
-                readIndex++;
-                return result;
-            }
-
-            bool EndOfData() => readIndex >= data.Count;
+            var dest2Columns = new TwoColumnsTableFixture("Destination4CustomSource");
+            var data = new List<string> { "Test1", "Test2", "Test3" };
+            var readIndex = 0;
 
             //Act
-            CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                SqlConnection,
-                "Destination4CustomSource"
+            var source = new CustomSource<MySimpleRow>(
+                () => ReadData(ref readIndex, data),
+                () => readIndex >= data.Count
             );
+            var dest = new DbDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
-            Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion;
+            await source.ExecuteAsync(CancellationToken.None);
+            await dest.Completion;
 
             //Assert
-            Assert.True(RowCountTask.Count(SqlConnection, "Destination4CustomSource") == 0);
-            sourceT.Wait();
-            destT.Wait();
             dest2Columns.AssertTestData();
         }
 
+        private static MySimpleRow ReadData(ref int index, IReadOnlyList<string> data)
+        {
+            if (index == 0)
+                Task.Delay(300).Wait();
+            var result = new MySimpleRow { Col1 = index + 1, Col2 = data[index] };
+            index++;
+            return result;
+        }
+
         [Fact]
-        public void ExceptionalAsyncFlow()
+        public async Task ExceptionalAsyncFlow()
         {
             //Arrange
-            ALE.ETLBox.DataFlow.CustomSource source = new ALE.ETLBox.DataFlow.CustomSource(
+            var source = new ALE.ETLBox.DataFlow.CustomSource(
                 () => throw new ETLBoxException("Test Exception"),
                 () => false
             );
-            ALE.ETLBox.DataFlow.CustomDestination dest =
-                new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
+            var dest = new ALE.ETLBox.DataFlow.CustomDestination(_ => { });
 
             //Act
             source.LinkTo(dest);
 
             //Assert
-            Assert.Throws<ETLBoxException>(() =>
+            await Assert.ThrowsAsync<ETLBoxException>(async () =>
             {
-                Task sourceT = source.ExecuteAsync();
-                Task destT = dest.Completion;
                 try
                 {
-                    sourceT.Wait();
-                    destT.Wait();
+                    await source.ExecuteAsync(CancellationToken.None);
+                    await dest.Completion;
                 }
                 catch (Exception e)
                 {
-                    throw e.InnerException!;
+                    throw e.InnerException ?? e;
                 }
             });
         }

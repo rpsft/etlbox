@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.BlockTransformationTests
 {
+    [Collection("Transformations")]
     public class BlockTransformationStringArrayTests : TransformationsTestBase
     {
         public BlockTransformationStringArrayTests(TransformationsDatabaseFixture fixture)
@@ -14,23 +15,23 @@ namespace TestTransformations.BlockTransformationTests
         public void ModifyInputDataList()
         {
             //Arrange
-            TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture(
+            var source2Columns = new TwoColumnsTableFixture(
                 "BlockTransSourceNonGeneric"
             );
             source2Columns.InsertTestData();
             var _ = new TwoColumnsTableFixture("BlockTransDestNonGeneric");
 
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "BlockTransSourceNonGeneric"
             );
-            DbDestination<string[]> dest = new DbDestination<string[]>(
+            var dest = new DbDestination<string[]>(
                 SqlConnection,
                 "BlockTransDestNonGeneric"
             );
 
             //Act
-            BlockTransformation<string[]> block = new BlockTransformation<string[]>(inputData =>
+            var block = new BlockTransformation<string[]>(inputData =>
             {
                 inputData.RemoveRange(1, 2);
                 inputData.Add(new[] { "4", "Test4" });

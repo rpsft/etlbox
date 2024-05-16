@@ -1,10 +1,13 @@
-﻿using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.DataFlow;
 using ALE.ETLBoxTests.Performance.Fixtures;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance
 {
+    [Collection("Performance")]
     public class DbMergeDeleteTests : PerformanceTestBase
     {
         public DbMergeDeleteTests(PerformanceDatabaseFixture fixture)
@@ -30,7 +33,7 @@ namespace ALE.ETLBoxTests.Performance
             List<MyMergeRow> knownGuids = CreateTestData(rowsInSource);
             TransferTestDataIntoDestination(knownGuids);
             MemorySource<MyMergeRow> source = AddNewTestData(rowsInDest, knownGuids);
-            DbMerge<MyMergeRow> mergeDest = new DbMerge<MyMergeRow>(
+            var mergeDest = new DbMerge<MyMergeRow>(
                 SqlConnectionManager,
                 "MergeDestination"
             );
@@ -73,8 +76,8 @@ namespace ALE.ETLBoxTests.Performance
 
         private static List<MyMergeRow> CreateTestData(int rowsInSource)
         {
-            List<MyMergeRow> knownGuids = new List<MyMergeRow>();
-            for (int i = 0; i < rowsInSource; i++)
+            var knownGuids = new List<MyMergeRow>();
+            for (var i = 0; i < rowsInSource; i++)
                 knownGuids.Add(
                     new MyMergeRow
                     {
@@ -88,11 +91,11 @@ namespace ALE.ETLBoxTests.Performance
 
         private void TransferTestDataIntoDestination(List<MyMergeRow> knownGuids)
         {
-            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>
+            var source = new MemorySource<MyMergeRow>
             {
                 DataAsList = knownGuids
             };
-            DbDestination<MyMergeRow> dest = new DbDestination<MyMergeRow>(
+            var dest = new DbDestination<MyMergeRow>(
                 SqlConnectionManager,
                 "MergeDestination"
             );
@@ -106,11 +109,11 @@ namespace ALE.ETLBoxTests.Performance
             List<MyMergeRow> knownGuids
         )
         {
-            MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>
+            var source = new MemorySource<MyMergeRow>
             {
                 DataAsList = knownGuids
             };
-            for (int i = 0; i < rowsInDest; i++)
+            for (var i = 0; i < rowsInDest; i++)
                 knownGuids.Add(
                     new MyMergeRow
                     {

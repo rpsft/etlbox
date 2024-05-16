@@ -1,6 +1,7 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.AzureSql
 {
@@ -16,7 +17,7 @@ namespace TestDatabaseConnectors.AzureSql
             Environment.GetEnvironmentVariable("ETLBoxAzure") != null;
     }
 
-    public sealed class AzureSqlTests : DatabaseConnectorsTestBase, IDisposable
+    public sealed class AzureSqlTests : DatabaseConnectorsTestBase
     {
         public AzureSqlTests(DatabaseSourceDestinationFixture fixture)
             : base(fixture)
@@ -27,10 +28,14 @@ namespace TestDatabaseConnectors.AzureSql
             CreateSchemaTask.Create(AzureSqlConnection, "[dest]");
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[source]");
-            CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[dest]");
+            if (disposing)
+            {
+                CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[source]");
+                CleanUpSchemaTask.CleanUp(AzureSqlConnection, "[dest]");
+            }
+            base.Dispose(disposing);
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]

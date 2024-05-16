@@ -1,4 +1,5 @@
 using ALE.ETLBox;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using CsvHelper.Configuration;
@@ -7,6 +8,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.UseCases
 {
+    [Collection("Transformations")]
     public class DuplicateCheckTests : TransformationsTestBase
     {
         public DuplicateCheckTests(TransformationsDatabaseFixture fixture)
@@ -24,7 +26,7 @@ namespace TestTransformations.UseCases
 
         private static CsvSource<Poco> CreateDuplicateCsvSource(string fileName)
         {
-            CsvSource<Poco> source = new CsvSource<Poco>(fileName)
+            var source = new CsvSource<Poco>(fileName)
             {
                 Configuration =
                 {
@@ -40,7 +42,7 @@ namespace TestTransformations.UseCases
         {
             DropTableTask.DropIfExists(SqlConnection, tableName);
             var dest = new DbDestination<Poco>(SqlConnection, tableName);
-            TableDefinition stagingTable = new TableDefinition(
+            var stagingTable = new TableDefinition(
                 tableName,
                 new List<TableColumn>
                 {
@@ -88,10 +90,10 @@ namespace TestTransformations.UseCases
         {
             //Arrange
             CsvSource<Poco> source = CreateDuplicateCsvSource("res/UseCases/DuplicateCheck.csv");
-            List<int> IDs = new List<int>(); //at the end of the flow, this list will contain all IDs of your source
+            var IDs = new List<int>(); //at the end of the flow, this list will contain all IDs of your source
 
             //Act
-            RowTransformation<Poco, Poco> rowTrans = new RowTransformation<Poco, Poco>(input =>
+            var rowTrans = new RowTransformation<Poco, Poco>(input =>
             {
                 if (IDs.Contains(input.ID))
                     input.IsDuplicate = true;
@@ -100,9 +102,9 @@ namespace TestTransformations.UseCases
                 return input;
             });
 
-            Multicast<Poco> multicast = new Multicast<Poco>();
+            var multicast = new Multicast<Poco>();
             DbDestination<Poco> dest = CreateDestinationTable("dbo.DuplicateCheck");
-            VoidDestination<Poco> trash = new VoidDestination<Poco>();
+            var trash = new VoidDestination<Poco>();
 
             source.LinkTo(rowTrans);
             rowTrans.LinkTo(multicast);
@@ -124,7 +126,7 @@ namespace TestTransformations.UseCases
             CsvSource<Poco> source = CreateDuplicateCsvSource("res/UseCases/DuplicateCheck.csv");
 
             //Act
-            BlockTransformation<Poco> blockTrans = new BlockTransformation<Poco>(inputList =>
+            var blockTrans = new BlockTransformation<Poco>(inputList =>
             {
                 return inputList.GroupBy(item => item.ID).Select(y => y.First()).ToList();
             });

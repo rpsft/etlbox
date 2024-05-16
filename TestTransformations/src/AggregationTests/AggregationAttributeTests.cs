@@ -52,7 +52,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateSum()
         {
             //Arrange
-            List<MyInputRow> sourceData = new List<MyInputRow>
+            var sourceData = new List<MyInputRow>
             {
                 new() { Id = 1, DetailValue = 3.5 },
                 new() { Id = 2, DetailValue = 4.5 },
@@ -68,7 +68,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateSumWithNullable()
         {
             //Arrange
-            List<MyInputRow> sourceData = new List<MyInputRow>
+            var sourceData = new List<MyInputRow>
             {
                 new() { Id = 1, DetailValue = 3.5 },
                 new() { Id = 2, DetailValue = 4.5 },
@@ -85,7 +85,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateMax()
         {
             //Arrange
-            List<MyInputRow> sourceData = new List<MyInputRow>
+            var sourceData = new List<MyInputRow>
             {
                 new() { DetailValue = 3.5F },
                 new() { DetailValue = 4.5F },
@@ -101,7 +101,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateMin()
         {
             //Arrange
-            List<MyInputRow> sourceData = new List<MyInputRow>
+            var sourceData = new List<MyInputRow>
             {
                 new() { DetailValue = 3 },
                 new() { DetailValue = 4 },
@@ -117,7 +117,7 @@ namespace TestTransformations.AggregationTests
         public void AggregateCount()
         {
             //Arrange
-            List<MyInputRow> sourceData = new List<MyInputRow>
+            var sourceData = new List<MyInputRow>
             {
                 new() { DetailValue = 5 },
                 new() { DetailValue = 7 },
@@ -131,14 +131,14 @@ namespace TestTransformations.AggregationTests
 
         private static MemoryDestination<T> CreateFlow<T>(List<MyInputRow> sourceData)
         {
-            MemorySource<MyInputRow> source = new MemorySource<MyInputRow>
+            var source = new MemorySource<MyInputRow>
             {
                 DataAsList = sourceData
             };
 
-            Aggregation<MyInputRow, T> agg = new Aggregation<MyInputRow, T>();
+            var agg = new Aggregation<MyInputRow, T>();
 
-            MemoryDestination<T> dest = new MemoryDestination<T>();
+            var dest = new MemoryDestination<T>();
 
             //Act
             source.LinkTo(agg);

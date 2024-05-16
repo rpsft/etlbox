@@ -1,8 +1,9 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationMultipleSourcesTests : DatabaseConnectorsTestBase
     {
         public DbDestinationMultipleSourcesTests(DatabaseSourceDestinationFixture fixture)

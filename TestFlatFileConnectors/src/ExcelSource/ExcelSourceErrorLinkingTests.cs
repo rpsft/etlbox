@@ -1,7 +1,11 @@
+using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.ExcelSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class ExcelSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
         public ExcelSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
@@ -20,17 +24,17 @@ namespace TestFlatFileConnectors.ExcelSource
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "ExcelSourceErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "ExcelSourceErrorLinking"
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnErrorLinking.xlsx"
             )
             {
@@ -57,13 +61,13 @@ namespace TestFlatFileConnectors.ExcelSource
         public void WithoutErrorLinking()
         {
             //Arrange
-            ExcelSource<MySimpleRow> source = new ExcelSource<MySimpleRow>(
+            var source = new ExcelSource<MySimpleRow>(
                 "res/Excel/TwoColumnErrorLinking.xlsx"
             )
             {
                 HasNoHeader = true
             };
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act & Assert
             Assert.Throws<FormatException>(() =>

@@ -1,5 +1,7 @@
-﻿using CsvHelper;
+using ALE.ETLBox.Common.DataFlow;
+using CsvHelper;
 using CsvHelper.Configuration;
+using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -64,7 +66,9 @@ namespace ALE.ETLBox.DataFlow
         private void WriteHeaderIfRequired(TInput tInput)
         {
             if (
-                TypeInfo.IsArray || !Configuration.HasHeaderRecord || CsvWriter.HeaderRecord != null
+                TypeInfo.IsArray
+                || !Configuration.HasHeaderRecord
+                || CsvWriter.HeaderRecord != null
             )
             {
                 return;

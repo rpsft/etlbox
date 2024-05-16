@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using ETLBox.Primitives;
+using Microsoft.Data.SqlClient;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -34,7 +35,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            using SqlBulkCopy bulkCopy = new SqlBulkCopy(
+            using var bulkCopy = new SqlBulkCopy(
                 DbConnection,
                 SqlBulkCopyOptions.TableLock,
                 Transaction as SqlTransaction
@@ -55,7 +56,7 @@ namespace ALE.ETLBox.ConnectionManager
 
             try
             {
-                string dbName = DbConnection.Database;
+                var dbName = DbConnection.Database;
                 PageVerify = ExecuteScalar(
                         $"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'"
                     )
@@ -88,7 +89,7 @@ namespace ALE.ETLBox.ConnectionManager
 
             try
             {
-                string dbName = DbConnection.Database;
+                var dbName = DbConnection.Database;
                 ExecuteNonQuery(@"USE master");
                 ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
                 ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
@@ -102,7 +103,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override IConnectionManager Clone()
         {
-            SqlConnectionManager clone = new SqlConnectionManager(
+            var clone = new SqlConnectionManager(
                 (SqlConnectionString)ConnectionString
             )
             {

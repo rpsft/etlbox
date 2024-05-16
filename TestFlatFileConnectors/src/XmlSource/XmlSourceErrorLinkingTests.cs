@@ -1,7 +1,11 @@
+using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.XmlSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class XmlSourceErrorLinkingTests : FlatFileConnectorsTestBase
     {
         public XmlSourceErrorLinkingTests(FlatFileToDatabaseFixture fixture)
@@ -17,17 +21,17 @@ namespace TestFlatFileConnectors.XmlSource
         public void WithObjectErrorLinking()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "XmlSourceErrorLinking"
             );
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
+            var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "XmlSourceErrorLinking"
             );
-            MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
+            var errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act
-            XmlSource<MySimpleRow> source = new XmlSource<MySimpleRow>(
+            var source = new XmlSource<MySimpleRow>(
                 "res/XmlSource/TwoColumnsErrorLinking.xml",
                 ResourceType.File
             );
@@ -53,10 +57,10 @@ namespace TestFlatFileConnectors.XmlSource
         public void WithoutErrorLinking()
         {
             //Arrange
-            MemoryDestination<MySimpleRow> dest = new MemoryDestination<MySimpleRow>();
+            var dest = new MemoryDestination<MySimpleRow>();
 
             //Act
-            XmlSource<MySimpleRow> source = new XmlSource<MySimpleRow>(
+            var source = new XmlSource<MySimpleRow>(
                 "res/XmlSource/TwoColumnsErrorLinking.xml",
                 ResourceType.File
             );

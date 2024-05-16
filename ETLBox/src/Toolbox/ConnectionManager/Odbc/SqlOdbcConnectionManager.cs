@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox.ConnectionManager
+using ETLBox.Primitives;
+
+namespace ALE.ETLBox.ConnectionManager
 {
     /// <summary>
     /// Sql Connection manager for an ODBC connection based on ADO.NET to Sql Server.
@@ -37,7 +39,7 @@
 
         public override void BulkInsert(ITableData data, string tableName)
         {
-            BulkInsertSql bulkInsert = new BulkInsertSql
+            var bulkInsert = new BulkInsertSql
             {
                 UseParameterQuery = true,
                 QB = QB,
@@ -49,7 +51,7 @@
 
         public override IConnectionManager Clone()
         {
-            SqlOdbcConnectionManager clone = new SqlOdbcConnectionManager(
+            var clone = new SqlOdbcConnectionManager(
                 (OdbcConnectionString)ConnectionString
             )
             {

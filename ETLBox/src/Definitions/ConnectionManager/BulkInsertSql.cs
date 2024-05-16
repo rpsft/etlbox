@@ -2,6 +2,8 @@
 using System.Data.Odbc;
 using System.Linq;
 using System.Text;
+using ALE.ETLBox.Common;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ConnectionManager
 {
@@ -64,10 +66,10 @@ namespace ALE.ETLBox.ConnectionManager
         {
             while (data.Read())
             {
-                List<string> values = new List<string>();
-                foreach (string destColumnName in DestColumnNames)
+                var values = new List<string>();
+                foreach (var destColumnName in DestColumnNames)
                 {
-                    int colIndex = data.GetOrdinal(destColumnName);
+                    var colIndex = data.GetOrdinal(destColumnName);
                     if (data.IsDBNull(colIndex))
                         AddNullValue(values, destColumnName);
                     else
@@ -85,7 +87,7 @@ namespace ALE.ETLBox.ConnectionManager
             }
             else
             {
-                string value = IsAccessDatabase ? $"NULL AS {destColumnName}" : "NULL";
+                var value = IsAccessDatabase ? $"NULL AS {destColumnName}" : "NULL";
                 values.Add(value);
             }
         }
@@ -103,8 +105,8 @@ namespace ALE.ETLBox.ConnectionManager
             }
             else
             {
-                string value = data.GetString(colIndex).Replace("'", "''");
-                string valueSql = IsAccessDatabase
+                var value = data.GetString(colIndex).Replace("'", "''");
+                var valueSql = IsAccessDatabase
                     ? $"'{value}' AS {destColumnName}"
                     : $"'{value}'";
                 values.Add(valueSql);
@@ -120,7 +122,7 @@ namespace ALE.ETLBox.ConnectionManager
                 return "?";
             }
 
-            string parName = $"@P{ParameterNameCount++}";
+            var parName = $"@P{ParameterNameCount++}";
             par.ParameterName = parName;
             return parName;
         }

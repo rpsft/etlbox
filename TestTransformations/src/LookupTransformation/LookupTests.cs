@@ -1,10 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 using TestShared.SharedFixtures;
 using TestTransformations.Fixtures;
 
 namespace TestTransformations.LookupTransformation
 {
+    [Collection("Transformations")]
     public class LookupTests : TransformationsTestBase
     {
         public LookupTests(TransformationsDatabaseFixture fixture)
@@ -38,26 +39,26 @@ namespace TestTransformations.LookupTransformation
         public void InputTypeSameAsOutput(IConnectionManager connection)
         {
             //Arrange
-            FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
+            var source4Columns = new FourColumnsTableFixture(
                 connection,
                 "SourceLookupSameType"
             );
             source4Columns.InsertTestData();
-            FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
+            var dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "DestinationLookupSameType"
             );
-            FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(
+            var lookup4Columns = new FourColumnsTableFixture(
                 connection,
                 "LookupSameType"
             );
             lookup4Columns.InsertTestData();
 
-            DbSource<MyDataRow> source = new DbSource<MyDataRow>(
+            var source = new DbSource<MyDataRow>(
                 connection,
                 "SourceLookupSameType"
             );
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(
+            var lookupSource = new DbSource<MyLookupRow>(
                 connection,
                 "LookupSameType"
             );
@@ -76,7 +77,7 @@ namespace TestTransformations.LookupTransformation
                 return row;
             };
             lookup.Source = lookupSource;
-            DbDestination<MyDataRow> dest = new DbDestination<MyDataRow>(
+            var dest = new DbDestination<MyDataRow>(
                 connection,
                 "DestinationLookupSameType"
             );

@@ -5,6 +5,7 @@ using TestTransformations.Fixtures;
 
 namespace TestTransformations.MergeJoin
 {
+    [Collection("Transformations")]
     public class MergeJoinDynamicObjectTests : TransformationsTestBase
     {
         public MergeJoinDynamicObjectTests(TransformationsDatabaseFixture fixture)
@@ -14,31 +15,31 @@ namespace TestTransformations.MergeJoin
         public void MergeJoinUsingOneObject()
         {
             //Arrange
-            TwoColumnsTableFixture source1Table = new TwoColumnsTableFixture(
+            var source1Table = new TwoColumnsTableFixture(
                 "MergeJoinDynamicSource1"
             );
             source1Table.InsertTestData();
-            TwoColumnsTableFixture source2Table = new TwoColumnsTableFixture(
+            var source2Table = new TwoColumnsTableFixture(
                 "MergeJoinDynamicSource2"
             );
             source2Table.InsertTestDataSet2();
             var _ = new TwoColumnsTableFixture("MergeJoinDynamicDestination");
 
-            DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>(
+            var source1 = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "MergeJoinDynamicSource1"
             );
-            DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>(
+            var source2 = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "MergeJoinDynamicSource2"
             );
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "MergeJoinDynamicDestination"
             );
 
             //Act
-            MergeJoin<ExpandoObject> join = new MergeJoin<ExpandoObject>(
+            var join = new MergeJoin<ExpandoObject>(
                 (inputRow1, inputRow2) =>
                 {
                     dynamic ir1 = inputRow1;

@@ -1,11 +1,13 @@
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class CreateDatabaseTaskTests : ControlFlowTestBase
     {
         public CreateDatabaseTaskTests(ControlFlowDatabaseFixture fixture)

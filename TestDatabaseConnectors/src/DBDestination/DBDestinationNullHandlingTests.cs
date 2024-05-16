@@ -2,6 +2,7 @@ using ALE.ETLBox.DataFlow;
 
 namespace TestDatabaseConnectors.DBDestination
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationNullHandlingTests : DatabaseConnectorsTestBase
     {
         public DbDestinationNullHandlingTests(DatabaseSourceDestinationFixture fixture)

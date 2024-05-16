@@ -1,7 +1,10 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvDestinationDynamicObjectTests : FlatFileConnectorsTestBase
     {
         public CsvDestinationDynamicObjectTests(FlatFileToDatabaseFixture fixture)
@@ -11,15 +14,15 @@ namespace TestFlatFileConnectors.CsvDestination
         public void SimpleFlow()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestDynamicObject");
+            var s2C = new TwoColumnsTableFixture("CSVDestDynamicObject");
             s2C.InsertTestDataSet3();
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(
+            var source = new DbSource<ExpandoObject>(
                 SqlConnection,
                 "CSVDestDynamicObject"
             );
 
             //Act
-            CsvDestination<ExpandoObject> dest = new CsvDestination<ExpandoObject>(
+            var dest = new CsvDestination<ExpandoObject>(
                 "./SimpleWithDynamicObject.csv"
             );
             source.LinkTo(dest);

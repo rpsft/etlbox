@@ -1,5 +1,7 @@
 using System.Linq;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -45,16 +47,27 @@ namespace ALE.ETLBox.ControlFlow
         public IList<string> IncludeColumns { get; set; }
         public bool IsUnique { get; set; }
         public bool IsClustered { get; set; }
-        public string Sql
+        public string Sql => ConnectionManager.ConnectionManagerType switch
         {
-            get
+            _ => $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IfNotExists()} {IN.QuotedFullName} 
+                    ON {TN.QuotedFullName} ( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
+                    {IncludeSql} {GetIndexType()}"
+        };
+
+        private string IfNotExists()
+            => ConnectionType switch
             {
-                return $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IN.QuotedFullName} ON {TN.QuotedFullName}
-( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
-{IncludeSql}
-";
-            }
-        }
+                ConnectionManagerType.Postgres or ConnectionManagerType.ClickHouse 
+                    => "IF NOT EXISTS",
+                _ => ""
+            };
+
+        private string GetIndexType()
+            => ConnectionType switch
+            {
+                ConnectionManagerType.ClickHouse => $"TYPE {IndexType ?? "bloom_filter"}",
+                _ => ""
+            };
 
         public CreateIndexTask() { }
 
@@ -134,5 +147,10 @@ namespace ALE.ETLBox.ControlFlow
                     ? string.Empty
                     : $"INCLUDE ({string.Join("  ,", IncludeColumns!.Select(col => QB + col + QE))})";
         }
+
+        /// <summary>
+        /// for clickhouse only
+        /// </summary>
+        public object IndexType { get; set; }
     }
 }

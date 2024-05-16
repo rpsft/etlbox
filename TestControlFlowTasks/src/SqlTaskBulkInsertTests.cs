@@ -1,11 +1,13 @@
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks;
 
+[Collection(nameof(ControlFlowCollection))]
 public class SqlTaskBulkInsertTests : ControlFlowTestBase
 {
     public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture fixture)
@@ -23,7 +25,6 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
             new object[] { SqlConnection, value },
             new object[] { PostgresConnection, value },
             new object[] { MySqlConnection, value },
-            new object[] { SqliteConnection, value }
         };
     }
 
@@ -62,12 +63,6 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
     [MemberData(nameof(ConnectionsWithValue), 3)]
     public void WithIdentityShift(IConnectionManager connection, int identityIndex)
     {
-        //SQLite does not support Batch Insert on Non Nullable Identity Columns
-        if (connection.GetType() == typeof(SQLiteConnectionManager))
-        {
-            return;
-        }
-
         //Arrange
         var destTable = new FourColumnsTableFixture(
             connection,

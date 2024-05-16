@@ -1,3 +1,6 @@
+using ALE.ETLBox.Common.DataFlow;
+using ETLBox.Primitives;
+
 namespace TestOtherConnectors.CustomDestination
 {
     public class CustomDestinationErrorLinkingTests

@@ -1,10 +1,11 @@
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class TruncateTableTaskTests : ControlFlowTestBase
     {
         public TruncateTableTaskTests(ControlFlowDatabaseFixture fixture)

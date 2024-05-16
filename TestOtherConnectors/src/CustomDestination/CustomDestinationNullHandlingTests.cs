@@ -1,3 +1,5 @@
+using ALE.ETLBox.Common.DataFlow;
+
 namespace TestOtherConnectors.CustomDestination
 {
     public class CustomDestinationNullHandlingTests
@@ -27,8 +29,8 @@ namespace TestOtherConnectors.CustomDestination
 
             //Act
             List<MySimpleRow> result = new List<MySimpleRow>();
-            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
-                row => result.Add(row)
+            CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(row =>
+                result.Add(row)
             );
             source.LinkTo(dest);
             source.Execute();

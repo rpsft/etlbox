@@ -1,3 +1,6 @@
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.ControlFlow;
+
 namespace ALE.ETLBox.ControlFlow
 {
     [PublicAPI]
@@ -5,7 +8,7 @@ namespace ALE.ETLBox.ControlFlow
     {
         public override string TaskName => $"Check if {ObjectName} exists";
 
-        public void Execute()
+        public virtual void Execute()
         {
             if (Sql != string.Empty)
                 DoesExist = new SqlTask(this, Sql).ExecuteScalarAsBool();

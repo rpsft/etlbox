@@ -1,12 +1,17 @@
+using ALE.ETLBox;
+using ALE.ETLBox.Common;
+using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using ALE.ETLBox.DataFlow;
 using ALE.ETLBoxTests.Performance.Fixtures;
 using ALE.ETLBoxTests.Performance.Helper;
+using ETLBox.Primitives;
 using TestShared.Helper;
 
 namespace ALE.ETLBoxTests.Performance
 {
+    [Collection("Performance")]
     public class CsvSourceIntoDBTests : PerformanceTestBase
     {
         private readonly ITestOutputHelper _output;
@@ -129,16 +134,16 @@ namespace ALE.ETLBoxTests.Performance
             return timeElapsedETLBox;
         }
 
-        [Theory]
+
         [Trait("Category", "Performance")]
-        [MemberData(nameof(SqlConnection), 1000000, 1000, 1.3)]
-        public void CheckMemoryUsage(
-            IConnectionManager connection,
-            int numberOfRows,
-            int batchSize,
-            double deviation
-        )
+        [Fact()]
+        public void CheckMemoryUsage()
         {
+            SqlConnectionManager connection = SqlConnectionManager;
+            int numberOfRows = 1000000;
+            int batchSize = 1000;
+            double deviation = 1.3;
+
             //Arrange
             BigDataCsvSource.CreateCsvFileIfNeeded(numberOfRows);
             ReCreateDestinationTable(connection, "CsvDestinationWithTransformation");

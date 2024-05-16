@@ -1,10 +1,12 @@
 using ALE.ETLBox;
-using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
+using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeCompositeKeysTests : DatabaseConnectorsTestBase
     {
         public DbMergeCompositeKeysTests(DatabaseSourceDestinationFixture fixture)

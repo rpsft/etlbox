@@ -1,11 +1,12 @@
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.ControlFlow.SqlServer;
-using ALE.ETLBox.Helper;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.SqlServer
 {
+    [Collection(nameof(ControlFlowCollection))]
     public class CleanUpSchemaTaskTests : ControlFlowTestBase
     {
         public CleanUpSchemaTaskTests(ControlFlowDatabaseFixture fixture)

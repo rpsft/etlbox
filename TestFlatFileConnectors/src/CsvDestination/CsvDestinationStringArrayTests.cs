@@ -1,7 +1,10 @@
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.CsvDestination
 {
+    [Collection("FlatFilesToDatabase")]
     public class CsvDestinationStringArrayTests : FlatFileConnectorsTestBase
     {
         public CsvDestinationStringArrayTests(FlatFileToDatabaseFixture fixture)
@@ -11,15 +14,15 @@ namespace TestFlatFileConnectors.CsvDestination
         public void SimpleNonGeneric()
         {
             //Arrange
-            TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimpleNonGeneric");
+            var s2C = new TwoColumnsTableFixture("CSVDestSimpleNonGeneric");
             s2C.InsertTestDataSet3();
-            DbSource<string[]> source = new DbSource<string[]>(
+            var source = new DbSource<string[]>(
                 SqlConnection,
                 "CSVDestSimpleNonGeneric"
             );
 
             //Act
-            CsvDestination<string[]> dest = new CsvDestination<string[]>("./SimpleNonGeneric.csv");
+            var dest = new CsvDestination<string[]>("./SimpleNonGeneric.csv");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

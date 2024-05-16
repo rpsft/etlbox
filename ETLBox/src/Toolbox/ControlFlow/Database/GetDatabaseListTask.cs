@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.Common.ControlFlow;
+using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
 {
@@ -29,15 +30,14 @@ namespace ALE.ETLBox.ControlFlow
             }.ExecuteReader();
 
             if (ConnectionType == ConnectionManagerType.MySql)
-                DatabaseNames.RemoveAll(
-                    m =>
-                        new List<string>
-                        {
-                            "information_schema",
-                            "mysql",
-                            "performance_schema",
-                            "sys"
-                        }.Contains(m)
+                DatabaseNames.RemoveAll(m =>
+                    new List<string>
+                    {
+                        "information_schema",
+                        "mysql",
+                        "performance_schema",
+                        "sys"
+                    }.Contains(m)
                 );
         }
 
@@ -52,6 +52,7 @@ namespace ALE.ETLBox.ControlFlow
                 ConnectionManagerType.MySql => "SHOW DATABASES",
                 ConnectionManagerType.Postgres
                     => "SELECT datname FROM pg_database WHERE datistemplate=false",
+                ConnectionManagerType.ClickHouse => "SHOW DATABASES",
                 _ => throw new ETLBoxNotSupportedException("This database is not supported!")
             };
         }

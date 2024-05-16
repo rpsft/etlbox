@@ -1,7 +1,11 @@
+using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.DataFlow;
+using TestFlatFileConnectors.Fixture;
 using TestShared.SharedFixtures;
 
 namespace TestFlatFileConnectors.XmlSource
 {
+    [Collection("FlatFilesToDatabase")]
     public class XmlSourceDynamicObjectTests : FlatFileConnectorsTestBase
     {
         public XmlSourceDynamicObjectTests(FlatFileToDatabaseFixture fixture)
@@ -11,23 +15,23 @@ namespace TestFlatFileConnectors.XmlSource
         public void SourceWithDifferentNames()
         {
             //Arrange
-            TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(
+            var dest2Columns = new TwoColumnsTableFixture(
                 "XmlSource2ColsDynamic"
             );
-            RowTransformation<ExpandoObject> trans = new RowTransformation<ExpandoObject>(row =>
+            var trans = new RowTransformation<ExpandoObject>(row =>
             {
                 dynamic r = row;
                 r.Col1 = r.Column1;
                 r.Col2 = r.Column2;
                 return r;
             });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(
+            var dest = new DbDestination<ExpandoObject>(
                 SqlConnection,
                 "XmlSource2ColsDynamic"
             );
 
             //Act
-            XmlSource<ExpandoObject> source = new XmlSource<ExpandoObject>(
+            var source = new XmlSource<ExpandoObject>(
                 "res/XmlSource/TwoColumnsElementDifferentNames.xml",
                 ResourceType.File
             )
