@@ -3,14 +3,13 @@ using System.Globalization;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ClickHouse.Ado;
 using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class SqlTaskTests : ControlFlowTestBase
     {
         public SqlTaskTests(ControlFlowDatabaseFixture fixture)

@@ -1,10 +1,8 @@
 using System.Data.Odbc;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.ConnectionManager;
-using CsvHelper;
 using ETLBox.Primitives;
 
 namespace ALE.ETLBox.ControlFlow
@@ -277,9 +275,7 @@ namespace ALE.ETLBox.ControlFlow
             BeforeRowReadAction?.Invoke();
             for (var i = 0; i < Actions?.Count; i++)
             {
-                Actions?[i]?.Invoke(
-                    !reader.IsDBNull(i) ? reader.GetValue(i) : null
-                );
+                Actions?[i]?.Invoke(!reader.IsDBNull(i) ? reader.GetValue(i) : null);
             }
             AfterRowReadAction?.Invoke();
         }

@@ -3,7 +3,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationErrorLinkingTests : DatabaseConnectorsTestBase
     {
         public DbDestinationErrorLinkingTests(DatabaseSourceDestinationFixture fixture)
@@ -21,7 +21,11 @@ namespace TestDatabaseConnectors.DBDestination
         public void RedirectBatch(IConnectionManager connection)
         {
             //Arrange
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, "DestLinkError", true);
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
+                connection,
+                "DestLinkError",
+                true
+            );
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>

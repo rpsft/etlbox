@@ -88,66 +88,55 @@ FORMAT CSV
             cmd.ExecuteNonQuery();
         }
 
-        private string? GetValue(object? r, TableColumn col)
+        private static string? GetValue(object? r, TableColumn col)
         {
-            switch (r)
+            var dataType = col.DataType.ToUpper();
+            return r switch
             {
-                case null:
-                    return "";
-                case DateTime
-                    when new[] { "DATE", "NULLABLE(DATE)" }.Contains(col.DataType.ToUpper()):
-                    return $"{r:yyyy-MM-dd}";
-                case DateTime:
-                    return $"{r:yyyy-MM-dd HH:mm:ss}";
-                case decimal
+                null => "",
+                DateTime when dataType is "DATE" or "NULLABLE(DATE)" => $"{r:yyyy-MM-dd}",
+                DateTime => $"{r:yyyy-MM-dd HH:mm:ss}",
+                bool b => b ? "1" : "0",
+                decimal
                 or int
                 or long
                 or double
-                or float:
-                    return Convert.ToString(r, CultureInfo.InvariantCulture);
-            }
-
-            if (
-                !DataTypeConverter.IsCharTypeDefinition(col.DataType)
-                && !col.DataType.ToUpper().Contains("STR")
-            )
-            {
-                return ConvertToType(r, col.DataType);
-            }
-            if (r is bool b)
-            {
-                return b ? "1" : "0";
-            }
-            var value = r.ToString()!.Replace(@"""", @"""""");
-            return $@"""{value}""";
+                or float
+                    => Convert.ToString(r, CultureInfo.InvariantCulture),
+                _ => ConvertToValueType(r, dataType)
+            };
         }
 
-        private string? ConvertToType(object r, string dataType)
+        private static string? ConvertToValueType(object r, string dataType)
         {
-            if (dataType.ToUpper().Contains("DECIMAL"))
+            return !DataTypeConverter.IsCharTypeDefinition(dataType) && !dataType.Contains("STR")
+                ? ConvertStringToNonStringType(r, dataType)
+                : $@"""{r.ToString()!.Replace(@"""", @"""""")}""";
+        }
+
+        private static string? ConvertStringToNonStringType(object r, string dataType)
+        {
+            if (dataType.Contains("DECIMAL"))
             {
                 return Convert.ToDecimal(r).ToString(CultureInfo.InvariantCulture);
             }
-            if (dataType.ToUpper().Contains("INT"))
+            if (dataType.Contains("INT"))
             {
                 return Convert.ToInt64(r, CultureInfo.InvariantCulture).ToString();
             }
-            if (dataType.ToUpper().Contains("DATETIME"))
+            if (dataType.Contains("DATETIME"))
             {
                 return Convert.ToDateTime(r).ToString("yyyy-MM-dd HH:mm:ss");
             }
-            if (dataType.ToUpper().Contains("DATE"))
+            if (dataType.Contains("DATE"))
             {
                 return Convert.ToDateTime(r).ToString("yyyy-MM-dd");
             }
-            if (dataType.ToUpper().Contains("BOOL") || dataType.ToUpper().Contains("BIT"))
+            if (dataType.Contains("BOOL") || dataType.Contains("BIT"))
             {
                 return Convert.ToBoolean(r, CultureInfo.InvariantCulture).ToString();
             }
-            else
-            {
-                return r?.ToString();
-            }
+            return r.ToString();
         }
 
         public override void PrepareBulkInsert(string tableName)
@@ -155,9 +144,9 @@ FORMAT CSV
             ReadTableDefinition(tableName);
         }
 
-        private void ReadTableDefinition(string tablename)
+        private void ReadTableDefinition(string tableName)
         {
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tablename);
+            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tableName);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {

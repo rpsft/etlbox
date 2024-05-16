@@ -25,6 +25,25 @@ public class ScriptBuilderTests
     }
 
     [Fact]
+    public async Task ShouldEmitRuntimeErrorFromInvalidScript()
+    {
+        // Arrange
+        var options = ScriptOptions.Default.WithImports("System.Math");
+        var script = CSharpScript
+            .Create("int X = W; int Y = 2;", options: options)
+            .ContinueWith("X + Y", options);
+        // Act
+        script.Compile();
+        var exception = await Assert.ThrowsAsync<CompilationErrorException>(
+            async () => await script.RunAsync()
+        );
+        // Assert
+        Assert.NotNull(exception);
+        Assert.Contains("W", exception.Message);
+        Assert.Contains("error CS0103:", exception.Message); // The name 'W' does not exist in the current context
+    }
+
+    [Fact]
     public void ShouldCompileScriptWithDynamicGlobals()
     {
         // Arrange
@@ -49,10 +68,8 @@ public class ScriptBuilderTests
             "(Global1.Number+WhatEverNameIWant.Number+Global2.Number).ToString() + Global1.Text + WhatEverNameIWant.Text";
 
         dynamic globals = new ExpandoObject();
-        globals.Global1 = new MyCoolClass
-            { Number = 100, Text = "Something" };
-        globals.WhatEverNameIWant = new MyCoolClass
-            { Number = 500, Text = "Longer Text Value" };
+        globals.Global1 = new MyCoolClass { Number = 100, Text = "Something" };
+        globals.WhatEverNameIWant = new MyCoolClass { Number = 500, Text = "Longer Text Value" };
         globals.Global2 = new ExpandoObject();
         globals.Global2.Number = 600;
 

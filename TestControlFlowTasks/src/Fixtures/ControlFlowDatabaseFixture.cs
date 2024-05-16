@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace TestControlFlowTasks.Fixtures
 {
-    [CollectionDefinition("ControlFlow")]
-    public class ControlFlowCollectionClass : ICollectionFixture<ControlFlowDatabaseFixture> { }
+    [CollectionDefinition(nameof(ControlFlowCollection))]
+    public class ControlFlowCollection : ICollectionFixture<ControlFlowDatabaseFixture> { }
 
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public sealed class ControlFlowDatabaseFixture : IDisposable

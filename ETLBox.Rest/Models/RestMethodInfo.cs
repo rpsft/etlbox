@@ -5,14 +5,14 @@ namespace ETLBox.Rest.Models
     public sealed class RestMethodInfo
     {
         /// <summary>
-        /// шаблон url (формат Liquid)
+        /// URL template (Liquid format)
         /// </summary>
         public string? Url { get; set; }
 
         /// <summary>
-        /// массив заголовков
+        /// Array of headers
         /// </summary>
-        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Headers { get; set; } = new();
 
         /// <summary>
         /// { GET, POST, PUT, DELETE }
@@ -20,18 +20,18 @@ namespace ETLBox.Rest.Models
         public string? Method { get; set; }
 
         /// <summary>
-        /// шаблон тела запроса(формат Liquid)
+        /// Request body template (Liquid format)
         /// </summary>
         public string? Body { get; set; }
 
         /// <summary>
-        /// количество повторений запроса
+        /// Number of request retries
         /// </summary>
         public int RetryCount { get; set; }
 
         /// <summary>
-        /// пауза между попытками(сек.) повторения запроса
+        /// Pause between retry attempts (seconds)
         /// </summary>
-        public int RetryInterval { get; set; }
+        public double RetryInterval { get; set; }
     }
 }

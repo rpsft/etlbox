@@ -49,12 +49,6 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
         /// JsonPath to the value inside JSON field the source object or `null` to use the whole field
         /// </summary>
         public string? Path { get; set; }
-
-        public void Deconstruct(out string name, out string? path)
-        {
-            name = Name;
-            path = Path;
-        }
     }
 
     public JsonTransformation()

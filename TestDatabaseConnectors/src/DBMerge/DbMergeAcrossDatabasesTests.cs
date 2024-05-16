@@ -7,7 +7,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeAcrossDatabasesTests : DatabaseConnectorsTestBase
     {
         public DbMergeAcrossDatabasesTests(DatabaseSourceDestinationFixture fixture)
@@ -53,15 +53,12 @@ namespace TestDatabaseConnectors.DBMerge
             var nameSource = new DbSource<Name>(sourceConnection, "Name");
             var personMerge = new DbMerge<People>(destConnection, "People");
 
-            var transform = new RowTransformation<Name, People>(
-                d =>
-                    new People
-                    {
-                        FirstName = d.FIRST_NAME,
-                        LastName = d.LAST_NAME,
-                        Id = d.ID
-                    }
-            );
+            var transform = new RowTransformation<Name, People>(d => new People
+            {
+                FirstName = d.FIRST_NAME,
+                LastName = d.LAST_NAME,
+                Id = d.ID
+            });
 
             nameSource.LinkTo(transform);
             transform.LinkTo(personMerge);

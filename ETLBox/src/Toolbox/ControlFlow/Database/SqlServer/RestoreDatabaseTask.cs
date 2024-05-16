@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
 
 namespace ALE.ETLBox.ControlFlow.SqlServer
@@ -56,9 +55,8 @@ RESTORE DATABASE [{DatabaseName}] FROM  DISK = N'{Path.GetFullPath(FileName)}' W
                         "," + Environment.NewLine,
                         FileList
                             .OrderBy(file => file.FileId)
-                            .Select(
-                                file =>
-                                    $"MOVE N'{file.LogicalName}' TO N'{Path.Combine(DefaultDataPath, DatabaseName + file.Suffix)}'"
+                            .Select(file =>
+                                $"MOVE N'{file.LogicalName}' TO N'{Path.Combine(DefaultDataPath, DatabaseName + file.Suffix)}'"
                             )
                     )
                     + @"

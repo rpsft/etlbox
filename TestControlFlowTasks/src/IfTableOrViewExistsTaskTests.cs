@@ -1,4 +1,3 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
@@ -6,7 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class IfTableOrViewExistsTaskTests : ControlFlowTestBase
     {
         public IfTableOrViewExistsTaskTests(ControlFlowDatabaseFixture fixture)
@@ -29,11 +28,12 @@ namespace TestControlFlowTasks
             CreateTableTask.Create(
                 connection,
                 "existtable_test",
-                new List<ALE.ETLBox.TableColumn>() 
-                { 
+                new List<ALE.ETLBox.TableColumn>()
+                {
                     new ALE.ETLBox.TableColumn("Id", "Int", false, true),
                     new ALE.ETLBox.TableColumn("Col1", "Int", true),
-                });
+                }
+            );
 
             var existsAfter = IfTableOrViewExistsTask.IsExisting(connection, "existtable_test");
 
@@ -47,9 +47,7 @@ namespace TestControlFlowTasks
         {
             //Arrange
             if (connection.GetType() != typeof(AccessOdbcConnectionManager))
-                DropViewTask.DropIfExists(
-                    connection,
-                    "existview_test");
+                DropViewTask.DropIfExists(connection, "existview_test");
 
             //Act
             var existsBefore = IfTableOrViewExistsTask.IsExisting(connection, "existview_test");

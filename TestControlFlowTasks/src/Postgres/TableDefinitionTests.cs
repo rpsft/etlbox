@@ -4,7 +4,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks.Postgres
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class TableDefinitionTests : ControlFlowTestBase
     {
         public TableDefinitionTests(ControlFlowDatabaseFixture fixture)

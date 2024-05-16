@@ -1,4 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 using TestShared.Helper;
 using TestTransformations.Fixtures;
 
@@ -20,7 +21,7 @@ namespace TestTransformations
         protected static SqlConnectionManager SqlConnection =>
             Config.SqlConnection.ConnectionManager("DataFlow");
 
-        public static IEnumerable<object[]> AllSqlConnections =>
-            Config.AllSqlConnections("DataFlow");
+        public static TheoryData<IConnectionManager> AllSqlConnections =>
+            new(Config.AllSqlConnections("DataFlow"));
     }
 }

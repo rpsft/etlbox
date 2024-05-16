@@ -302,3 +302,9 @@ pre
 Deserialize
 Utils
 dll
+metadata
+Deserializer
+deserializer
+roslyn
+system-data-sqlite-close-not-releasing-database-file
+regex-expression-for-parsing-sql-server-schema-and-tablename

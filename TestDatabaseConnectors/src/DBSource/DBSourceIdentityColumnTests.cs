@@ -3,7 +3,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbSourceIdentityColumnTests : DatabaseConnectorsTestBase
     {
         public DbSourceIdentityColumnTests(DatabaseSourceDestinationFixture fixture)
@@ -33,9 +33,7 @@ namespace TestDatabaseConnectors.DBSource
         private void IdentityColumnsAtTheBeginning(IConnectionManager connection)
         {
             //Arrange
-            var identityIndex = IsIdentitySupported(connection)
-                ? 0
-                : -1;
+            var identityIndex = IsIdentitySupported(connection) ? 0 : -1;
             FourColumnsTableFixture source4Columns = new FourColumnsTableFixture(
                 connection,
                 "Source4Cols",

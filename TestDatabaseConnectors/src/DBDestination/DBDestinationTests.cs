@@ -4,7 +4,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationTests : DatabaseConnectorsTestBase
     {
         public DbDestinationTests(DatabaseSourceDestinationFixture fixture)
@@ -39,25 +39,20 @@ namespace TestDatabaseConnectors.DBDestination
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(
                 connection,
                 "Destination",
-                identityColumnIndex: IsIdentitySupported(connection)
-                    ? 2
-                    : -1
+                identityColumnIndex: IsIdentitySupported(connection) ? 2 : -1
             );
 
             DbSource<string[]> source = new DbSource<string[]>(connection, "Source");
             RowTransformation<string[], MyExtendedRow> trans = new RowTransformation<
                 string[],
                 MyExtendedRow
-            >(
-                row =>
-                    new MyExtendedRow
-                    {
-                        Id = int.Parse(row[0]),
-                        Text = row[1],
-                        Value = row[2] != null ? long.Parse(row[2]) : null,
-                        Percentage = decimal.Parse(row[3])
-                    }
-            );
+            >(row => new MyExtendedRow
+            {
+                Id = int.Parse(row[0]),
+                Text = row[1],
+                Value = row[2] != null ? long.Parse(row[2]) : null,
+                Percentage = decimal.Parse(row[3])
+            });
 
             //Act
             DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(

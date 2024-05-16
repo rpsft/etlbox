@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ETLBox.ClickHouse.ConnectionStrings
 {
-    public class ClickHouseConnectionStringBuilder: DbConnectionStringBuilder
+    public class ClickHouseConnectionStringBuilder : DbConnectionStringBuilder
     {
         public string Host
         {
@@ -36,9 +36,10 @@ namespace ETLBox.ClickHouse.ConnectionStrings
             set => this["Database"] = value;
         }
 
-        public override ICollection Keys
-#pragma warning disable S2365 // Нет сеттера у свойства Keys, не получается установить корректные ключи
-            => base.Keys.Cast<string>().Select(k => $"{k.ToUpper()[0]}{k.Substring(1)}").ToArray();
+        public override ICollection? Keys
+#pragma warning disable S2365 // The property Keys does not have a setter, it is not possible to set the correct keys
+            =>
+            base.Keys?.Cast<string>().Select(k => $"{k.ToUpper()[0]}{k.Substring(1)}").ToArray();
 #pragma warning restore S2365 // Properties should not make collection or array copies
 
         // Helper method to get a value from the connection string
@@ -55,7 +56,8 @@ namespace ETLBox.ClickHouse.ConnectionStrings
         public override string ToString()
         {
             // Build the connection string based on the properties
-            var connectionString = $"Host={Host};Port={Port};Database={Database};User={User};Password={Password}";
+            var connectionString =
+                $"Host={Host};Port={Port};Database={Database};User={User};Password={Password}";
             return connectionString;
         }
     }

@@ -4,7 +4,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBSource
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbSourceViewsTests : DatabaseConnectorsTestBase
     {
         public DbSourceViewsTests(DatabaseSourceDestinationFixture fixture)
@@ -76,9 +76,7 @@ namespace TestDatabaseConnectors.DBSource
             FourColumnsTableFixture d4C = new FourColumnsTableFixture(
                 connection,
                 "DbDestinationExtended",
-                IsIdentitySupported(connection)
-                    ? 1
-                    : -1
+                IsIdentitySupported(connection) ? 1 : -1
             );
 
             //Act

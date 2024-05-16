@@ -5,7 +5,7 @@ using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class RowCountTaskTests : ControlFlowTestBase
     {
         public RowCountTaskTests(ControlFlowDatabaseFixture fixture)

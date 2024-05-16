@@ -1,4 +1,5 @@
 using ALE.ETLBox.ConnectionManager;
+using ETLBox.Primitives;
 using TestNonParallel.Fixtures;
 using TestShared.Helper;
 
@@ -20,10 +21,10 @@ namespace TestNonParallel
         protected static SqlConnectionManager SqlConnection =>
             Config.SqlConnection.ConnectionManager("Logging");
 
-        public static IEnumerable<object[]> AllSqlConnections =>
-            Config.AllSqlConnections("Logging");
+        public static TheoryData<IConnectionManager> AllSqlConnections =>
+            new(Config.AllSqlConnections("Logging"));
 
-        public static IEnumerable<object[]> AllSqlConnectionsWithoutClickHouse =>
-            Config.AllSqlConnectionsWithoutClickHouse("Logging");
+        public static TheoryData<IConnectionManager> AllSqlConnectionsWithoutClickHouse =>
+            new(Config.AllSqlConnectionsWithoutClickHouse("Logging"));
     }
 }

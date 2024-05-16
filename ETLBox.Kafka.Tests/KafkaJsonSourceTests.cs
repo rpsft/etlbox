@@ -14,7 +14,7 @@ using CancellationTokenSource = System.Threading.CancellationTokenSource;
 
 namespace ETLBox.Kafka.Tests;
 
-public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
+public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
 {
     private readonly KafkaFixture _fixture;
     private readonly ITestOutputHelper _output;
@@ -84,7 +84,8 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
     public void ShouldReadDynamicObject()
     {
         // Arrange
-        const string jsonString = "{\"name\":\"test\"}";
+        const string jsonString =
+            "{\"name\": \"test\", \"true\": true, \"false\": false, \"null\": null, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}";
         ProduceJson(jsonString);
         var (block, target) = SetupMockTarget();
         target.Setup(t => t.TargetBlock).Returns(block.Object);
@@ -97,17 +98,72 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         // Act
         kafkaSource.Execute();
         // Assert
+        block.Verify(b =>
+            b.OfferMessage(
+                It.IsAny<DataflowMessageHeader>(),
+                It.IsAny<ExpandoObject>(),
+                It.IsAny<ISourceBlock<ExpandoObject>>(),
+                It.IsAny<bool>()
+            )
+        );
+        dynamic result = block.Invocations[0].Arguments[1];
+        Assert.Equivalent(
+            new Dictionary<string, object?>()
+            {
+                ["name"] = "test",
+                ["true"] = true,
+                ["false"] = false,
+                ["null"] = null,
+                ["array"] = new[] { 1, 2, 3 },
+                ["object"] = new Dictionary<string, object>() { ["key"] = "value" }
+            },
+            result
+        );
+    }
+
+    [Fact]
+    public void ShouldProduceErrorOnInvalidJson()
+    {
+        // Arrange
+        const string jsonString = "{\"name\": test\"}";
+        ProduceJson(jsonString);
+        var (block, target) = SetupMockTarget();
+        target.Setup(t => t.TargetBlock).Returns(block.Object);
+        var errorTarget = new Mock<IDataFlowLinkTarget<ETLBoxError>>();
+        var errorTargetBlock = new Mock<ITargetBlock<ETLBoxError>>();
+        errorTarget.Setup(x => x.TargetBlock).Returns(errorTargetBlock.Object);
+        var kafkaSource = new KafkaJsonSource<ExpandoObject>
+        {
+            ConsumerConfig = GetConsumerConfig(true),
+            Topic = TopicName,
+        };
+        kafkaSource.LinkTo(target.Object);
+        kafkaSource.LinkErrorTo(errorTarget.Object);
+        // Act
+        kafkaSource.Execute();
+        // Assert
         block.Verify(
             b =>
                 b.OfferMessage(
                     It.IsAny<DataflowMessageHeader>(),
-                    It.Is<ExpandoObject>(
-                        message =>
-                            ((IDictionary<string, object?>)message)["name"] as string == "test"
-                    ),
+                    It.IsAny<ExpandoObject>(),
                     It.IsAny<ISourceBlock<ExpandoObject>>(),
                     It.IsAny<bool>()
-                )
+                ),
+            Times.Never
+        );
+        errorTarget.Verify(t => t.TargetBlock);
+        errorTargetBlock.Verify(
+            b =>
+                b.OfferMessage(
+                    It.IsAny<DataflowMessageHeader>(),
+                    It.Is<ETLBoxError>(e =>
+                        e.Exception is JsonException && e.RecordAsJson == jsonString
+                    ),
+                    It.IsAny<ISourceBlock<ETLBoxError>>(),
+                    It.IsAny<bool>()
+                ),
+            Times.Once
         );
     }
 
@@ -149,23 +205,22 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         // Act
         kafkaSource.Execute();
         // Assert
-        block.Verify(
-            b =>
-                b.OfferMessage(
-                    It.IsAny<DataflowMessageHeader>(),
-                    It.Is(
-                        new TestRecord(
-                            "test",
-                            1,
-                            true,
-                            new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Local),
-                            "test"
-                        ),
-                        EqualityComparer<TestRecord>.Default
+        block.Verify(b =>
+            b.OfferMessage(
+                It.IsAny<DataflowMessageHeader>(),
+                It.Is(
+                    new TestRecord(
+                        "test",
+                        1,
+                        true,
+                        new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "test"
                     ),
-                    It.IsAny<ISourceBlock<TestRecord>>(),
-                    It.IsAny<bool>()
-                )
+                    EqualityComparer<TestRecord>.Default
+                ),
+                It.IsAny<ISourceBlock<TestRecord>>(),
+                It.IsAny<bool>()
+            )
         );
     }
 
@@ -271,14 +326,13 @@ public class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
     {
         var block = new Mock<ITargetBlock<ExpandoObject>>();
         block
-            .Setup(
-                b =>
-                    b.OfferMessage(
-                        It.IsAny<DataflowMessageHeader>(),
-                        It.IsAny<ExpandoObject>(),
-                        It.IsAny<ISourceBlock<ExpandoObject>>(),
-                        It.IsAny<bool>()
-                    )
+            .Setup(b =>
+                b.OfferMessage(
+                    It.IsAny<DataflowMessageHeader>(),
+                    It.IsAny<ExpandoObject>(),
+                    It.IsAny<ISourceBlock<ExpandoObject>>(),
+                    It.IsAny<bool>()
+                )
             )
             .Returns(
                 (
