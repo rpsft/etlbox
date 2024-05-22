@@ -70,7 +70,7 @@ namespace ETLBox.Kafka.Tests
             // Assert
             Assert.Single(result);
 
-            Assert.Equal("{\"NewMessage\": {\"TestValue\":\"Tom\"}}", result.First());
+            Assert.Equal("{\"NewMessage\": {\"TestValue\":\"Tom\"}}", result[0]);
         }
 
         private IEnumerable<string> ConsumeJson(
