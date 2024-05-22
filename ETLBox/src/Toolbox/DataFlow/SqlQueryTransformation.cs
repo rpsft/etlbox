@@ -1,4 +1,5 @@
 using ALE.ETLBox.DataFlow;
+using DotLiquid;
 
 namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
@@ -19,11 +20,11 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
             };
         }
 
-        public string SQL { get;set; }
+        public string SQLTemplate { get;set; }
 
         public virtual string TransformParameters(TInput obj)
         { 
-            return SQL;
+            return SQLTemplate;
         }
     }
 
@@ -31,7 +32,10 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
     {
         public override string TransformParameters(ExpandoObject obj)
         {
-            return SQL.Replace("{{lastId}}", (obj as IDictionary<string, object>)["LastId"]?.ToString());
+            var templateSQL = Template.Parse(SQLTemplate);            
+            var resultQuery = templateSQL.Render(Hash.FromDictionary(obj));
+
+            return resultQuery;
         }
     };
 }

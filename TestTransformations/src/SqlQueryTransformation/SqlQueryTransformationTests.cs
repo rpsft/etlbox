@@ -22,7 +22,7 @@ namespace TestTransformations.RowMultiplication
 
             var query = new SqlQueryTransformation();
             query.ConnectionManager = SqlConnection;
-            query.SQL = "select {{lastId}} as LastId";
+            query.SQLTemplate = "select {{lastId}} as LastId";
 
             var dest = new MemoryDestination<ExpandoObject>();
 

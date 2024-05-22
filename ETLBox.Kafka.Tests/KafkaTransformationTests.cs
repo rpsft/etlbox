@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using Confluent.Kafka;
@@ -40,7 +35,7 @@ namespace ETLBox.Kafka.Tests
         }
 
         [Fact]
-        public async Task ShouldProduceAndConsumeDirectlyToKafka()
+        public void ShouldProduceAndConsumeDirectlyToKafka()
         {
             // Arrange
             dynamic data = new ExpandoObject();
@@ -56,16 +51,15 @@ namespace ETLBox.Kafka.Tests
             };
 
             var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
-                        
-            source.LinkTo(transformation);
+            var dest = new MemoryDestination<ExpandoObject?>();
 
             //Act
+            source.LinkTo(transformation);
+            transformation.LinkTo(dest);
             source.Execute();
-
-            await Task.Delay(10000);
+            dest.Wait();
 
             var result = ConsumeJson(true, CancellationToken.None).ToArray();
-
 
             // Assert
             Assert.Single(result);

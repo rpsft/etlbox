@@ -63,8 +63,8 @@ namespace ALE.ETLBox.DataFlow
             }
 
             var templateMessage = Template.Parse(MessageTemplate);
-            var ss = input is IDictionary<string, object> ? input as IDictionary<string, object> : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
-            var messageValue = templateMessage.Render(Hash.FromDictionary(ss));
+            var inputDictionary = input is IDictionary<string, object> ? input as IDictionary<string, object> : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
+            var messageValue = templateMessage.Render(Hash.FromDictionary(inputDictionary));
 
             var message = new Message<Null, string> { Value = messageValue };
             if (_producer != null)
