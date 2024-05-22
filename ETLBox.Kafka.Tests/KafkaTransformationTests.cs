@@ -40,7 +40,7 @@ namespace ETLBox.Kafka.Tests
         }
 
         [Fact]
-        public async void ShouldProduceAndConsumeDirectlyToKafka()
+        public async Task ShouldProduceAndConsumeDirectlyToKafka()
         {
             // Arrange
             dynamic data = new ExpandoObject();
