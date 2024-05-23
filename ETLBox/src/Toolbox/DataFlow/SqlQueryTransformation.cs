@@ -1,3 +1,4 @@
+using System.Linq;
 using ALE.ETLBox.DataFlow;
 using DotLiquid;
 
@@ -22,9 +23,13 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
 
         public string SQLTemplate { get;set; }
 
-        public virtual string TransformParameters(TInput obj)
+        public virtual string TransformParameters(TInput input)
         { 
-            return SQLTemplate;
+            var templateSQL = Template.Parse(SQLTemplate);
+            var inputDictionary = input is IDictionary<string, object> ? input as IDictionary<string, object> : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
+            var resultQuery = templateSQL.Render(Hash.FromDictionary(inputDictionary));
+
+            return resultQuery;
         }
     }
 
