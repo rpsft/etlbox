@@ -7,21 +7,18 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
 {
     public abstract class SqlCommandTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput>
     {
-        public SqlCommandTransformation()
-        {
-            TransformationFunc = obj =>
-            {
-                var sql = TransformParameters(obj);
+        protected SqlCommandTransformation() => TransformationFunc = obj =>
+                                                      {
+                                                          var sql = TransformParameters(obj);
 
-                var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute", sql)
-                {
-                    ConnectionManager = ConnectionManager
-                };
-                var affectedRows = task.ExecuteNonQuery();
+                                                          var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute", sql)
+                                                          {
+                                                              ConnectionManager = ConnectionManager
+                                                          };
+                                                          var affectedRows = task.ExecuteNonQuery();
 
-                return TransformResult(obj, affectedRows);
-            };
-        }
+                                                          return TransformResult(obj, affectedRows);
+                                                      };
 
         public string SQLTemplate { get; set; }
 

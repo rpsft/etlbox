@@ -31,10 +31,7 @@ namespace ALE.ETLBox.DataFlow
             _processResult = processResultFunc;
         }
 
-        public KafkaTransformation(IProducer<Null, string> producer, Func<TInput, TOutput>? processResult) : this(processResult)
-        {
-            _producer = producer;
-        }
+        public KafkaTransformation(IProducer<Null, string> producer, Func<TInput, TOutput>? processResult) : this(processResult) => _producer = producer;
 
         public TOutput? SendToKafka(TInput input)
         {
