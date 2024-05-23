@@ -22,7 +22,7 @@ namespace TestTransformations.src.SqlCommandTransformation
         public void ConvertIntoObject()
         {
             //Arrange
-            new TwoColumnsTableFixture(
+            _ = new TwoColumnsTableFixture(
                 "DestinationRowTransformation"
             );
 
