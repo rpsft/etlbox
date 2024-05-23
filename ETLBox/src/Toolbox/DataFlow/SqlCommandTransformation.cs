@@ -11,7 +11,7 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
                                                       {
                                                           var sql = TransformParameters(obj);
 
-                                                          var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute", sql)
+                                                          var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute: {sql}", sql)
                                                           {
                                                               ConnectionManager = ConnectionManager
                                                           };
