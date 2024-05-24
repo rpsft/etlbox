@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Text.Json;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using DotLiquid;
@@ -12,7 +11,7 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
                                                       {
                                                           var sql = TransformParameters(obj);
 
-                                                          var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute: {sql} kkklllkkk {JsonSerializer.Serialize(obj)} kkklllkkk {SQLTemplate}", sql)
+                                                          var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute", sql)
                                                           {
                                                               ConnectionManager = ConnectionManager
                                                           };
