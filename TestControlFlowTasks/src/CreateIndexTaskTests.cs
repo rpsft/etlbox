@@ -5,7 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class CreateIndexTaskTests : ControlFlowTestBase
     {
         public CreateIndexTaskTests(ControlFlowDatabaseFixture fixture)

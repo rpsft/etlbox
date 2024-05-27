@@ -5,7 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class DropTableTaskTests : ControlFlowTestBase
     {
         public DropTableTaskTests(ControlFlowDatabaseFixture fixture)
@@ -19,7 +19,8 @@ namespace TestControlFlowTasks
         public void Drop(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> {
+            List<TableColumn> columns = new List<TableColumn>
+            {
                 new("id", "int", false, true),
                 new("value", "int", true)
             };
@@ -38,8 +39,8 @@ namespace TestControlFlowTasks
         {
             //Arrange
             DropTableTask.DropIfExists(connection, "DropIfExistsTableTest");
-            List<TableColumn> columns = new List<TableColumn> 
-            { 
+            List<TableColumn> columns = new List<TableColumn>
+            {
                 new("id", "int", false, true),
                 new("value", "int", true)
             };

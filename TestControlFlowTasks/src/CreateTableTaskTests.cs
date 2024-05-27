@@ -7,7 +7,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class CreateTableTaskTests : ControlFlowTestBase
     {
         public CreateTableTaskTests(ControlFlowDatabaseFixture fixture)
@@ -15,7 +15,8 @@ namespace TestControlFlowTasks
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
-        public static IEnumerable<object[]> ConnectionsWithoutClickHouse => AllConnectionsWithoutClickHouse;
+        public static IEnumerable<object[]> ConnectionsWithoutClickHouse =>
+            AllConnectionsWithoutClickHouse;
 
         public static IEnumerable<object[]> Access => AccessConnection;
 
@@ -23,7 +24,7 @@ namespace TestControlFlowTasks
         public void CreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> 
+            List<TableColumn> columns = new List<TableColumn>
             {
                 new("Id", "INT", false, true),
                 new("Col1", "INT")
@@ -40,10 +41,10 @@ namespace TestControlFlowTasks
         public void ReCreateTable(IConnectionManager connection)
         {
             //Arrange
-            List<TableColumn> columns = new List<TableColumn> 
+            List<TableColumn> columns = new List<TableColumn>
             {
                 new("Id", "INT", false, true),
-                new("value", "INT") 
+                new("value", "INT")
             };
             CreateTableTask.Create(connection, "CreateTable2", columns);
             //Act
@@ -132,9 +133,7 @@ namespace TestControlFlowTasks
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable41"));
             var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable41");
-            Assert.True(
-                td.Columns.Count(col => col.IsPrimaryKey && col.Name.StartsWith("Id")) == 2
-            );
+            Assert.Equal(2, td.Columns.Count(col => col.IsPrimaryKey && col.Name.StartsWith("Id")));
         }
 
         [Theory, MemberData(nameof(Connections))]
@@ -371,9 +370,10 @@ namespace TestControlFlowTasks
             CreateTableTask.Create(ClickHouseConnection, definition);
 
             //Assert
-            Assert.True(IfTableOrViewExistsTask.IsExisting(ClickHouseConnection, "CreateTable10_copy"));
+            Assert.True(
+                IfTableOrViewExistsTask.IsExisting(ClickHouseConnection, "CreateTable10_copy")
+            );
         }
-
 
         [Theory, MemberData(nameof(Connections))]
         public void CreateTableWithPKConstraintName(IConnectionManager connection)
@@ -402,10 +402,9 @@ namespace TestControlFlowTasks
                 "ThisIsAReallyLongTableWhichICantChange"
             );
             Assert.True(
-                td.Columns.Count(
-                    col =>
-                        col.IsPrimaryKey
-                        && col.Name == "ThisIsAReallyLongAndPrettyColumnNameWhichICantChange"
+                td.Columns.Count(col =>
+                    col.IsPrimaryKey
+                    && col.Name == "ThisIsAReallyLongAndPrettyColumnNameWhichICantChange"
                 ) == 1
             );
         }

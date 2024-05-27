@@ -1,4 +1,3 @@
-using System.Data;
 using System.Threading;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
@@ -6,7 +5,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeTests : DatabaseConnectorsTestBase
     {
         public DbMergeTests(DatabaseSourceDestinationFixture fixture)
@@ -58,14 +57,14 @@ namespace TestDatabaseConnectors.DBMerge
             Assert.True(dest.DeltaTable.Count == 7);
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Update) == 2);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 10
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 10
                 ) == 1
             );
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Insert) == 3);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Exists && row.Key == 1
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Exists && row.Key == 1
                 ) == 1
             );
         }
@@ -96,18 +95,18 @@ namespace TestDatabaseConnectors.DBMerge
             Assert.Equal(5, RowCountTask.Count(connection, "DBMergeDestination"));
             Assert.True(dest.DeltaTable.Count == 3);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Insert && row.Key == 3
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Insert && row.Key == 3
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Update && row.Key == 2
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Update && row.Key == 2
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Exists && row.Key == 1
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Exists && row.Key == 1
                 ) == 1
             );
         }
@@ -138,28 +137,28 @@ namespace TestDatabaseConnectors.DBMerge
             Assert.Equal(3, RowCountTask.Count(connection, "DBMergeDestination"));
             Assert.True(dest.DeltaTable.Count == 5);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Exists && row.Key == 1
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Exists && row.Key == 1
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Update && row.Key == 2
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Update && row.Key == 2
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Insert && row.Key == 3
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Insert && row.Key == 3
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 4
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 4
                 ) == 1
             );
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 10
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 10
                 ) == 1
             );
         }
@@ -233,10 +232,7 @@ namespace TestDatabaseConnectors.DBMerge
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(connection, sourceTable);
             s2C.InsertTestData();
             s2C.InsertTestDataSet2();
-            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
-                connection,
-                destTable
-            );
+            TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(connection, destTable);
             d2C.InsertTestDataSet3();
             DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, sourceTable);
 
@@ -261,14 +257,14 @@ namespace TestDatabaseConnectors.DBMerge
             Assert.True(dest.DeltaTable.Count == 7);
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Update) == 2);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Delete && row.Key == 10
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Delete && row.Key == 10
                 ) == 1
             );
             Assert.True(dest.DeltaTable.Count(row => row.ChangeAction == ChangeAction.Insert) == 3);
             Assert.True(
-                dest.DeltaTable.Count(
-                    row => row.ChangeAction == ChangeAction.Exists && row.Key == 1
+                dest.DeltaTable.Count(row =>
+                    row.ChangeAction == ChangeAction.Exists && row.Key == 1
                 ) == 1
             );
         }

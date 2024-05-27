@@ -1,4 +1,3 @@
-using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.Primitives;
 
@@ -86,7 +85,9 @@ namespace ALE.ETLBox.ControlFlow
                 DisableLogging = true
             }.Exists();
             if (!tableExists)
-                throw new InvalidOperationException($"A table {tableName} does not exists in the database!");
+                throw new InvalidOperationException(
+                    $"A table {tableName} does not exists in the database!"
+                );
         }
     }
 }

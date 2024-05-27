@@ -1,5 +1,4 @@
-﻿using ALE.ETLBox.Common;
-using ALE.ETLBox.Common.DataFlow;
+﻿using ALE.ETLBox.Common.DataFlow;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow

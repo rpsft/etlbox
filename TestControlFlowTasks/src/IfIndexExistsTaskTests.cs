@@ -4,7 +4,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class IfIndexExistsTaskTests : ControlFlowTestBase
     {
         public IfIndexExistsTaskTests(ControlFlowDatabaseFixture fixture)
@@ -12,7 +12,7 @@ namespace TestControlFlowTasks
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
-         [Theory, MemberData(nameof(Connections))]
+        [Theory, MemberData(nameof(Connections))]
         public void IfIndexExists(IConnectionManager connection)
         {
             //Arrange
@@ -24,10 +24,11 @@ namespace TestControlFlowTasks
                 connection,
                 "indextable",
                 new List<ALE.ETLBox.TableColumn>
-                { 
+                {
                     new ALE.ETLBox.TableColumn("col1", "INT", false, true),
                     new ALE.ETLBox.TableColumn("col2", "INT", true)
-                });
+                }
+            );
 
             //Act
             var existsBefore = IfIndexExistsTask.IsExisting(connection, "index_test", "indextable");
@@ -36,10 +37,8 @@ namespace TestControlFlowTasks
                 connection,
                 "index_test",
                 "indextable",
-                new List<string>
-                {
-                    "col2"
-                });
+                new List<string> { "col2" }
+            );
 
             var existsAfter = IfIndexExistsTask.IsExisting(connection, "index_test", "indextable");
 

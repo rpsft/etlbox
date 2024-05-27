@@ -4,11 +4,10 @@ using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using TestDatabaseConnectors.DBSource;
 
 namespace TestDatabaseConnectors.DBDestination
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbDestinationDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbDestinationDynamicObjectTests(DatabaseSourceDestinationFixture fixture)
@@ -48,10 +47,7 @@ namespace TestDatabaseConnectors.DBDestination
                 "DestinationDynamicDiffCols",
                 new List<TableColumn>
                 {
-                    new("Id", "int")
-                    { 
-                        DefaultValue = "0"
-                    },
+                    new("Id", "int") { DefaultValue = "0" },
                     new("Col5", "VARCHAR(100)", true),
                     new("Col2", "VARCHAR(100)", true),
                     new("Col1", "INT", true),

@@ -1,5 +1,4 @@
-﻿using ALE.ETLBox.Common;
-using ALE.ETLBox.Common.ControlFlow;
+﻿using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.Logging;
 using ETLBox.Primitives;
 using Newtonsoft.Json;

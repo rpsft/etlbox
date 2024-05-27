@@ -5,7 +5,7 @@ using ETLBox.Primitives;
 
 namespace TestDatabaseConnectors.DBMerge
 {
-    [Collection("DatabaseConnectors")]
+    [Collection(nameof(DataFlowSourceDestinationCollection))]
     public class DbMergeDynamicObjectTests : DatabaseConnectorsTestBase
     {
         public DbMergeDynamicObjectTests(DatabaseSourceDestinationFixture fixture)

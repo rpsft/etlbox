@@ -102,15 +102,15 @@ public class ScriptBuilder
         Compilation compilation = CSharpCompilation.Create(
             $"ScriptGlobalTypeBuilder{typeName}",
             new[] { syntaxTree },
-            referencedAssemblies.Select(
-                assembly => MetadataReference.CreateFromFile(assembly.Location)
+            referencedAssemblies.Select(assembly =>
+                MetadataReference.CreateFromFile(assembly.Location)
             ),
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
         );
 
         ImmutableArray<byte> assemblyBytes = EmitToArray(compilation);
         PortableExecutableReference libRef = MetadataReference.CreateFromImage(assemblyBytes);
-        Assembly assembly = Assembly.Load(assemblyBytes.ToArray());
+        var assembly = Assembly.Load(assemblyBytes.ToArray());
 
         Type type =
             assembly.GetType(typeName)
@@ -153,24 +153,23 @@ public class ScriptBuilder
             nestedTypeDeclarations.Add(member.Key, (innerType, code));
         }
 
-        // Member declarations for both typed and untyped members
+        // Member declarations for both typed and non-typed members
         var memberDeclarations = typedMembers
             .Select(pair => $"public {FullTypeName(pair.Value)} {pair.Key} {{ get; }}")
             .Concat(
-                nestedTypeDeclarations.Select(
-                    pair => $"public {pair.Value.type} {pair.Key} {{ get; }}"
+                nestedTypeDeclarations.Select(pair =>
+                    $"public {pair.Value.type} {pair.Key} {{ get; }}"
                 )
             );
 
-        // Generate assignments in constrcutor for both typed and untyped members
+        // Generate assignments in constructor for both typed and non-typed members
         var typedArgumentAssignments = typedMembers
             .Where(pair => pair.Value != null)
-            .Select(
-                pair => $"{pair.Key} = ({FullTypeName(pair.Value)})extensions[\"{pair.Key}\"];"
+            .Select(pair =>
+                $"{pair.Key} = ({FullTypeName(pair.Value)})extensions[\"{pair.Key}\"];"
             );
-        var dynamicArgumentAssignments = nestedTypeDeclarations.Select(
-            pair =>
-                $"{pair.Key} = new {pair.Value.type}((IDictionary<string, object?>)extensions[\"{pair.Key}\"]);"
+        var dynamicArgumentAssignments = nestedTypeDeclarations.Select(pair =>
+            $"{pair.Key} = new {pair.Value.type}((IDictionary<string, object?>)extensions[\"{pair.Key}\"]);"
         );
         var constructorArguments = typedArgumentAssignments.Concat(dynamicArgumentAssignments);
 
@@ -193,12 +192,12 @@ public class {typeName}
     /// <summary>
     /// Fix naming of nested types like "ETLBox.Scripting.Tests.ScriptBuilderTests+MyCoolClass"
     /// </summary>
-    private string FullTypeName(Type? type) => type?.FullName?.Replace('+', '.') ?? "object";
+    private static string FullTypeName(Type? type) => type?.FullName?.Replace('+', '.') ?? "object";
 
     /// <summary>
     /// Detect anonymous types
     /// </summary>
-    private bool IsAnonymousType(Type? type)
+    private static bool IsAnonymousType(Type? type)
     {
         if (type == null)
             return false;
@@ -212,7 +211,7 @@ public class {typeName}
 
     private static ImmutableArray<byte> EmitToArray(Compilation compilation)
     {
-        using MemoryStream assemblyStream = new MemoryStream();
+        using var assemblyStream = new MemoryStream();
         Microsoft.CodeAnalysis.Emit.EmitResult emitResult = compilation.Emit(assemblyStream);
 
         if (emitResult.Success)
@@ -234,10 +233,8 @@ SOURCE CODE:
         string.Join(
             Environment.NewLine,
             emitResultDiagnostics
-                .Where(
-                    diagnostic =>
-                        diagnostic.IsWarningAsError
-                        || diagnostic.Severity == DiagnosticSeverity.Error
+                .Where(diagnostic =>
+                    diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error
                 )
                 .Select(GetLineError)
         );

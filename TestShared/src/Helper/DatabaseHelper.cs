@@ -47,15 +47,13 @@ namespace TestShared.Helper
             string dbNameSuffix,
             Action<TConnectionManager, string> databaseAction
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new()
         {
-            var connManagerMaster = new TConnectionManager
-            {
-                ConnectionString = connectionDetails
-                    .ConnectionString(section)
-                    .CloneWithMasterDbName()
-            };
+            using var connManagerMaster = new TConnectionManager();
+            connManagerMaster.ConnectionString = connectionDetails
+                .ConnectionString(section)
+                .CloneWithMasterDbName();
             var dbName =
                 connectionDetails.ConnectionString(section).DbName + (dbNameSuffix ?? string.Empty);
             databaseAction(connManagerMaster, dbName);
@@ -75,7 +73,7 @@ namespace TestShared.Helper
             string section,
             string dbNameSuffix = null
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, DropDatabase);
 
@@ -84,7 +82,7 @@ namespace TestShared.Helper
             string section,
             string dbNameSuffix = null
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, CreateDatabase);
 
@@ -93,7 +91,7 @@ namespace TestShared.Helper
             string section,
             string dbNameSuffix = null
         )
-            where TConnectionManager : IConnectionManager, new()
+            where TConnectionManager : class, IConnectionManager, new()
             where TConnectionString : IDbConnectionString, new() =>
             ActOnDatabase(connectionDetails, section, dbNameSuffix, DropAndCreate);
 

@@ -5,7 +5,7 @@ using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class DropIndexTaskTests : ControlFlowTestBase
     {
         public DropIndexTaskTests(ControlFlowDatabaseFixture fixture)
@@ -18,11 +18,7 @@ namespace TestControlFlowTasks
             CreateTableTask.Create(
                 connection,
                 "DropIndexTable",
-                new List<TableColumn> 
-                {
-                    new("Id", "INT", false, true),
-                    new("Test1", "INT") 
-                }
+                new List<TableColumn> { new("Id", "INT", false, true), new("Test1", "INT") }
             );
             CreateIndexTask.CreateOrRecreate(
                 connection,
@@ -47,11 +43,7 @@ namespace TestControlFlowTasks
             CreateTableTask.Create(
                 connection,
                 "DropIfExistsIndexTable",
-                new List<TableColumn> 
-                {
-                    new("Id", "INT", false, true),
-                    new("Test1", "INT", true)
-                }
+                new List<TableColumn> { new("Id", "INT", false, true), new("Test1", "INT", true) }
             );
             CreateIndexTask.CreateOrRecreate(
                 connection,

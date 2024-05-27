@@ -1,10 +1,11 @@
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.ClickHouse.ConnectionManager;
+using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
 {
-    [Collection("ControlFlow")]
+    [Collection(nameof(ControlFlowCollection))]
     public class ControlFlowTestBase
     {
         private readonly ControlFlowDatabaseFixture _fixture;
@@ -33,20 +34,20 @@ namespace TestControlFlowTasks
         protected SQLiteConnectionManager SqliteConnection =>
             Config.SQLiteConnection.ConnectionManager(ConfigSection, _fixture.SQLiteDbSuffix);
 
-        public static IEnumerable<object[]> AccessConnection =>
-            Config.AccessConnection(ConfigSection);
+        public static TheoryData<IConnectionManager> AccessConnection =>
+            new(Config.AccessConnection(ConfigSection));
 
-        public static IEnumerable<object[]> AllSqlConnections =>
-            Config.AllSqlConnections(ConfigSection);
+        public static TheoryData<IConnectionManager> AllSqlConnections =>
+            new(Config.AllSqlConnections(ConfigSection));
 
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLite =>
-            Config.AllConnectionsWithoutSQLite(ConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLite =>
+            new(Config.AllConnectionsWithoutSQLite(ConfigSection));
 
-        public static IEnumerable<object[]> AllConnectionsWithoutClickHouse =>
-            Config.AllConnectionsWithoutClickHouse(ConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutClickHouse =>
+            new(Config.AllConnectionsWithoutClickHouse(ConfigSection));
 
-        public static IEnumerable<object[]> AllConnectionsWithoutSQLiteAndClickHouse =>
-            Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection);
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLiteAndClickHouse =>
+            new(Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection));
 
         public static IEnumerable<object[]> DbConnectionsWithMaster() =>
             new[]
@@ -54,8 +55,8 @@ namespace TestControlFlowTasks
                 new object[]
                 {
                     new ClickHouseConnectionManager(
-                        Config.ClickHouseConnection
-                            .ConnectionString(ConfigSection)
+                        Config
+                            .ClickHouseConnection.ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
                 },
@@ -68,16 +69,16 @@ namespace TestControlFlowTasks
                 new object[]
                 {
                     new PostgresConnectionManager(
-                        Config.PostgresConnection
-                            .ConnectionString(ConfigSection)
+                        Config
+                            .PostgresConnection.ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
                 },
                 new object[]
                 {
                     new MySqlConnectionManager(
-                        Config.MySqlConnection
-                            .ConnectionString(ConfigSection)
+                        Config
+                            .MySqlConnection.ConnectionString(ConfigSection)
                             .CloneWithMasterDbName()
                     )
                 },

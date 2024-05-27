@@ -1,8 +1,6 @@
 using System;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
-using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.DataFlow;
 using Confluent.Kafka;
 using ETLBox.Primitives;
@@ -107,29 +105,43 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
 
             var outputValue = ConvertToOutputValue(
                 kafkaValue,
-                (exception, row) => ErrorHandler.Send(exception, row)
+                (exception, row) =>
+                {
+                    if (ErrorHandler.HasErrorBuffer)
+                        ErrorHandler.Send(exception, row);
+                }
             );
             if (outputValue == null)
             {
                 return true;
             }
 
-            // We do not pass cancellation token to SendAsync because we want write operation to complete before cancelling
+            // We do not pass cancellation token to SendAsync because we want write operation to complete before canceling
+            // ReSharper disable once MethodSupportsCancellation
+#pragma warning disable CA2016
             Buffer.SendAsync(outputValue, CancellationToken.None).Wait();
+#pragma warning restore CA2016
             LogProgress();
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception) when (!ErrorHandler.HasErrorBuffer)
+        {
+            throw;
+        }
+        catch (ConsumeException ex)
+        {
+            ErrorHandler.Send(
+                ex,
+                $"Offset: {ex.ConsumerRecord.Offset} -- Key(base64): {Convert.ToBase64String(ex.ConsumerRecord.Message.Key)} -- Value(base64): {Convert.ToBase64String(ex.ConsumerRecord.Message.Value)}"
+            );
         }
         catch (Exception e)
         {
-            if (!ErrorHandler.HasErrorBuffer || e is OperationCanceledException)
-                throw;
-            if (e is ConsumeException ex)
-                ErrorHandler.Send(
-                    e,
-                    $"Offset: {ex.ConsumerRecord.Offset} -- Key(base64): {Convert.ToBase64String(ex.ConsumerRecord.Message.Key)} -- Value(base64): {Convert.ToBase64String(ex.ConsumerRecord.Message.Value)}"
-                );
             ErrorHandler.Send(e, "N/A");
         }
-
         return true;
     }
 }
