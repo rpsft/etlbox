@@ -10,12 +10,6 @@ namespace TestTransformations.src.SqlCommandTransformation
         public SqlCommandTransformationTests(TransformationsDatabaseFixture fixture)
             : base(fixture) { }
 
-        public class MySimpleRow
-        {
-            public int Col1 { get; set; }
-            public string Col2 { get; set; }
-        }
-
         [Fact]
         public void ConvertIntoObject()
         {
