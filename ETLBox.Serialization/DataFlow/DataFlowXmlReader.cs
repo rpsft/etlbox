@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ public sealed class DataFlowXmlReader
     // Data flow instance to configure
     private readonly IDataFlow _dataFlow;
 
-    // Universal error handler for all supporiting sources
+    // Universal error handler for all supporting sources
     private readonly IDataFlowDestination<ETLBoxError>? _linkAllErrorsTo;
 
     // Check if the universal error destination was added to data flow
@@ -56,7 +57,7 @@ public sealed class DataFlowXmlReader
                 var assembly = Assembly.Load(name);
                 assemblies.Add(assembly);
             }
-            catch (System.BadImageFormatException)
+            catch (BadImageFormatException)
             {
                 // Ignore
             }
@@ -187,7 +188,7 @@ public sealed class DataFlowXmlReader
 
     private static bool IsValueTypeProperty(PropertyInfo prop)
     {
-        return prop.PropertyType.IsValueType || prop.PropertyType == typeof(string);
+        return IsValueType(prop.PropertyType);
     }
 
     private static bool IsSourceType(Type type)
@@ -239,14 +240,10 @@ public sealed class DataFlowXmlReader
 
     private object? CreateList(Type type, XContainer node)
     {
-        var elementType = type.GenericTypeArguments[0];
-
-        if (elementType is null)
-        {
-            throw new InvalidDataException(
-                $"Invalid configuration. Implementation for element type of array '{type}' not found"
-            );
-        }
+        var elementType = type.GenericTypeArguments[0]
+                          ?? throw new InvalidDataException(
+                              $"Invalid configuration. Implementation for element type of array '{type}' not found"
+                              );
 
         var list = DataFlowActivator.CreateInstance(type);
         var set = type.GetMethod("Add");
@@ -320,7 +317,7 @@ public sealed class DataFlowXmlReader
             return;
         }
 
-        if (prop.PropertyType.IsValueType || prop.PropertyType == typeof(string))
+        if (IsValueType(prop.PropertyType))
         {
             SetValueTypeProperty(instance, prop, propXml);
             return;
@@ -423,14 +420,9 @@ public sealed class DataFlowXmlReader
 
     private Array CreateArray(Type type, XContainer node)
     {
-        var elementType = type.GetElementType();
-
-        if (elementType is null)
-        {
-            throw new InvalidDataException(
+        var elementType = type.GetElementType() ?? throw new InvalidDataException(
                 $"Invalid configuration. Implementation for element type of array '{type}' not found"
             );
-        }
 
         var elements = node.Elements().ToArray();
         var array = Array.CreateInstance(elementType, elements.Length);
@@ -481,14 +473,9 @@ public sealed class DataFlowXmlReader
         }
 
         var dictToCreate = typeof(Dictionary<,>).MakeGenericType(arguments);
-        var dict = Activator.CreateInstance(dictToCreate);
-
-        if (dict is null)
-        {
-            throw new InvalidOperationException(
+        var dict = Activator.CreateInstance(dictToCreate) ?? throw new InvalidOperationException(
                 $"Invalid configuration. Can't create dictionary of type '{type}'"
             );
-        }
 
         var elements = node.Elements().ToArray();
         var add = type.GetMethod("Add", new[] { keyType, valueType });
@@ -606,21 +593,14 @@ public sealed class DataFlowXmlReader
             return null;
         }
 
-        try
+        if (type == typeof(string))
         {
-            if (value.TryParse(type, out var objValue))
-            {
-                return objValue;
-            }
-        }
-        catch
-        {
-            throw new InvalidOperationException(
-                $"Invalid configuration. Value '{value}' for type '{type}' is not valid"
-            );
+            return value;
         }
 
-        return value;
+        var t = Nullable.GetUnderlyingType(type) ?? type;
+        var objValue = TypeDescriptor.GetConverter(t).ConvertFromInvariantString(value);
+        return objValue ?? value;
     }
 
     private static bool IsDictionary(Type type)
