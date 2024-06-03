@@ -1,15 +1,23 @@
 using System;
+using System.ComponentModel;
 using System.Globalization;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
 
-internal static class TypeExtensions
+internal static class DataFlowTypesExtensions
 {
     public static bool IsNullable(this Type type) =>
         Nullable.GetUnderlyingType(type) != null || !type.IsValueType;
 
-    public static bool TryParse(this string value, Type type, out object? objValue) =>
-        type switch
+    public static bool TryParse(this string value, Type type, out object? objValue)
+    {
+        if (type == typeof(string))
+        {
+            objValue = value;
+            return true;
+        }
+
+        return type switch
         {
             not null when IsOfType<char>(type)
                 => TryParse<char>(value, out objValue, char.TryParse),
@@ -28,11 +36,12 @@ internal static class TypeExtensions
                 => TryParse<ulong>(value, out objValue, ulong.TryParse),
             not null when IsOfType<bool>(type)
                 => TryParse<bool>(value, out objValue, bool.TryParse),
+            not null when IsOfType<double>(type) => TryParseDouble(value, out objValue),
             not null when IsOfType<DateTime>(type) => TryParseDateTime(value, out objValue),
-            not null when IsOfType<Guid>(type)
-                => TryParse<Guid>(value, out objValue, Guid.TryParse),
+            not null when IsOfType<Guid>(type) => TryParse<Guid>(value, out objValue, Guid.TryParse),
             _ => FalseAndNull(out objValue)
         };
+    }
 
     private delegate bool TryParseDelegate<T>(string value, out T result);
 
@@ -54,12 +63,18 @@ internal static class TypeExtensions
     {
         var result = DateTime.TryParse(
             value,
-            CultureInfo.CurrentCulture,
+            CultureInfo.InvariantCulture,
             DateTimeStyles.None,
             out var parsedValue
         );
         objValue = result ? parsedValue : default;
         return result;
+    }
+
+    private static bool TryParseDouble(string value, out object? objValue)
+    {
+        objValue = TypeDescriptor.GetConverter(typeof(double)).ConvertFromInvariantString(value);
+        return objValue != null;
     }
 
     private static bool FalseAndNull(out object? objValue)
