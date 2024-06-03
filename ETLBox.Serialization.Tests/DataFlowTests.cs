@@ -133,7 +133,7 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.NullLong.Should().Be(-1);
             customCsvSource.Double.Should().Be(1.0);
             customCsvSource.NullDouble.Should().Be(-1.0);
-            customCsvSource.NullDouble.Should().BeOfType(typeof(double?));
+            customCsvSource.NullDouble.Should().BeOfType(typeof(double));
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
