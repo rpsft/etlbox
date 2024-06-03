@@ -50,12 +50,14 @@ namespace ETLBox.Serialization.Tests
                         <Ulong>1</Ulong>
                         <Short>-1</Short>
                         <Ushort>1</Ushort>
+                        <Double>1.0</Double>
                         <NullInt>-1</NullInt>
                         <NullUint>1</NullUint>
                         <NullLong>-1</NullLong>
                         <NullUlong>1</NullUlong>
                         <NullShort>-1</NullShort>
                         <NullUshort>1</NullUshort>
+                        <NullDouble>-1.0</NullDouble>
                         <Uri>{_csvUri}</Uri>
                         <Strings>
                             <string>test</string>
@@ -121,6 +123,16 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.NullEnum.Should().Be(CustomCsvSource.EnumType.Value1);
             customCsvSource.IntegerList.Should().NotBeNullOrEmpty();
             customCsvSource.IntegerList.Should().BeEquivalentTo(new[] { 1, 2, 3 });
+            customCsvSource.Char.Should().Be('#');
+            customCsvSource.Byte.Should().Be(1);
+            customCsvSource.Int.Should().Be(-1);
+            customCsvSource.Uint.Should().Be(1);
+            customCsvSource.NullInt.Should().Be(-1);
+            customCsvSource.Long.Should().Be(-1);
+            customCsvSource.Ulong.Should().Be(1);
+            customCsvSource.NullLong.Should().Be(-1);
+            customCsvSource.Double.Should().Be(1);
+            customCsvSource.NullDouble.Should().Be(-1);
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
@@ -311,6 +323,8 @@ namespace ETLBox.Serialization.Tests
             public short? NullShort { get; set; }
             public ushort Ushort { get; set; }
             public ushort? NullUshort { get; set; }
+            public double Double { get; set; }
+            public double? NullDouble { get; set; }
             public IEnumerable<string> Strings { get; set; } = null!;
             public Stream Stream { get; set; } = null!;
             public EnumType Enum { get; set; } = EnumType.Value1;

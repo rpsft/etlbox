@@ -584,6 +584,7 @@ public sealed class DataFlowXmlReader
         return isArray ? type?.MakeArrayType() : type;
     }
 
+
     private static object? GetValue(Type type, string value)
     {
         value = value.Trim();
@@ -593,14 +594,21 @@ public sealed class DataFlowXmlReader
             return null;
         }
 
-        if (type == typeof(string))
+        try
         {
-            return value;
+            if (value.TryParse(type, out var objValue))
+            {
+                return objValue;
+            }
+        }
+        catch
+        {
+            throw new InvalidOperationException(
+                $"Invalid configuration. Value '{value}' for type '{type}' is not valid"
+            );
         }
 
-        var t = Nullable.GetUnderlyingType(type) ?? type;
-        var objValue = TypeDescriptor.GetConverter(t).ConvertFromInvariantString(value);
-        return objValue ?? value;
+        return value;
     }
 
     private static bool IsDictionary(Type type)
