@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
 
-internal static class TypeExtensions
+internal static class DataFlowTypesExtensions
 {
     public static bool IsNullable(this Type type) =>
         Nullable.GetUnderlyingType(type) != null || !type.IsValueType;
