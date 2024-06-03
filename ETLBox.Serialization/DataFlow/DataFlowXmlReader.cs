@@ -360,16 +360,19 @@ public sealed class DataFlowXmlReader
         XElement? element
     )
     {
-        if (element is null)
+        if (string.IsNullOrEmpty(element?.Value))
         {
-            prop.SetValue(instance, null);
+            if (prop.PropertyType.IsNullable())
+            {
+                prop.SetValue(instance, null);
+            }
 
             return;
         }
 
         var underlyingType =
             Nullable.GetUnderlyingType(prop.PropertyType) ?? throw new InvalidOperationException();
-        var eval = Enum.Parse(underlyingType, element.Value);
+        var eval = Enum.Parse(underlyingType, element!.Value);
         prop.SetValue(instance, eval);
     }
 

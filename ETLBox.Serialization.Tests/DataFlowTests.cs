@@ -158,6 +158,80 @@ namespace ETLBox.Serialization.Tests
         }
 
         [Fact]
+        public void DataFlow_ReadFromXml_NotSetNullableShouldBeProcessed()
+        {
+            var referenceId = Guid.NewGuid();
+            var name = Guid.NewGuid().ToString();
+            const int ms = 100;
+            var xml =
+                @$"<EtlDataFlowStep>
+			        <ReferenceId>
+                        {referenceId}
+                    </ReferenceId>
+			        <Name>
+                        {name}
+                    </Name>
+			        <TimeoutMilliseconds>{ms}</TimeoutMilliseconds>
+                    <CustomCsvSource>
+                        <NullBool/>
+                        <NullChar/>
+                        <NullByte/>
+                        <NullDateTime/>
+                        <NullGuid/>
+                        <NullInt/>
+                        <NullUint/>
+                        <NullLong/>
+                        <NullUlong/>
+                        <NullShort/>
+                        <NullUshort/>
+                        <NullDouble/>
+                        <NullEnum/>
+                        <LinkTo>
+                            <MemoryDestination/>
+                        </LinkTo>
+                    </CustomCsvSource>
+		        </EtlDataFlowStep>";
+
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
+            var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+
+            //Assert
+            step.Should().NotBeNull();
+            step.ReferenceId.Should().Be(referenceId);
+            step.Name.Should().Be(name);
+
+            step.Source.Should().BeOfType<CustomCsvSource>();
+            var customCsvSource = (CustomCsvSource)step.Source;
+            customCsvSource.NullBool.Should().BeNull();
+            customCsvSource.NullBool.HasValue.Should().BeFalse();
+            customCsvSource.NullChar.Should().BeNull();
+            customCsvSource.NullChar.HasValue.Should().BeFalse();
+            customCsvSource.NullByte.Should().BeNull();
+            customCsvSource.NullByte.HasValue.Should().BeFalse();
+            customCsvSource.NullDateTime.Should().BeNull();
+            customCsvSource.NullDateTime.HasValue.Should().BeFalse();
+            customCsvSource.NullGuid.Should().BeNull();
+            customCsvSource.NullGuid.HasValue.Should().BeFalse();
+            customCsvSource.NullEnum.Should().BeNull();
+            customCsvSource.NullEnum.HasValue.Should().BeFalse();
+            customCsvSource.NullShort.Should().BeNull();
+            customCsvSource.NullShort.HasValue.Should().BeFalse();
+            customCsvSource.NullUshort.Should().BeNull();
+            customCsvSource.NullUshort.HasValue.Should().BeFalse();
+            customCsvSource.NullInt.Should().BeNull();
+            customCsvSource.NullInt.HasValue.Should().BeFalse();
+            customCsvSource.NullUint.Should().BeNull();
+            customCsvSource.NullUint.HasValue.Should().BeFalse();
+            customCsvSource.NullLong.Should().BeNull();
+            customCsvSource.NullLong.HasValue.Should().BeFalse();
+            customCsvSource.NullUlong.Should().BeNull();
+            customCsvSource.NullUlong.HasValue.Should().BeFalse();
+            customCsvSource.NullDouble.Should().BeNull();
+            customCsvSource.NullDouble.HasValue.Should().BeFalse();
+        }
+
+        [Fact]
         public void DataFlow_TransformationError_ShouldBeHandled()
         {
             // Arrange
