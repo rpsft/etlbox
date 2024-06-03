@@ -55,5 +55,19 @@ namespace ETLBox.Serialization.Tests
             result.Should().BeTrue();
             obj.Should().Be(now);
         }
+
+        [Fact]
+        public void GetValue_NullValueShouldBeReturned()
+        {
+            var result = "1".TryParse(typeof(UnsupportedType), out var obj);
+
+            result.Should().BeFalse();
+            obj.Should().BeNull();
+        }
+
+        public struct UnsupportedType
+        {
+            // test
+        }
     }
 }

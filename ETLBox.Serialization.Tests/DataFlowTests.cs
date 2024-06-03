@@ -131,8 +131,9 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.Long.Should().Be(-1);
             customCsvSource.Ulong.Should().Be(1);
             customCsvSource.NullLong.Should().Be(-1);
-            customCsvSource.Double.Should().Be(1);
-            customCsvSource.NullDouble.Should().Be(-1);
+            customCsvSource.Double.Should().Be(1.0);
+            customCsvSource.NullDouble.Should().Be(-1.0);
+            customCsvSource.NullDouble.Should().BeOfType(typeof(double?));
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
