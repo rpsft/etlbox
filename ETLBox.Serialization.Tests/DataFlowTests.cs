@@ -377,27 +377,27 @@ namespace ETLBox.Serialization.Tests
         private sealed class CustomCsvSource : CsvSource
         {
             public DateTime DateTime { get; set; }
-            public DateTime? NullDateTime { get; set; }
+            public DateTime? NullDateTime { get; set; } = null;
             public Guid Guid { get; set; } = Guid.Empty;
             public Guid? NullGuid { get; set; } = null;
             public char Char { get; set; } = (char)0;
-            public char? NullChar { get; set; }
+            public char? NullChar { get; set; } = null;
             public byte Byte { get; set; } = 0;
-            public byte? NullByte { get; set; }
+            public byte? NullByte { get; set; } = null;
             public bool Bool { get; set; }
-            public bool? NullBool { get; set; }
+            public bool? NullBool { get; set; } = null;
             public int Int { get; set; } = 0;
             public int? NullInt { get; set; } = null;
             public uint Uint { get; set; } = 0;
-            public uint? NullUint { get; set; }
+            public uint? NullUint { get; set; } = null;
             public long Long { get; set; } = 0;
             public long? NullLong { get; set; } = null;
             public ulong Ulong { get; set; } = 0;
-            public ulong? NullUlong { get; set; }
+            public ulong? NullUlong { get; set; } = null;
             public short Short { get; set; }
-            public short? NullShort { get; set; }
+            public short? NullShort { get; set; } = null;
             public ushort Ushort { get; set; }
-            public ushort? NullUshort { get; set; }
+            public ushort? NullUshort { get; set; } = null;
             public double Double { get; set; } = 0;
             public double? NullDouble { get; set; } = null;
             public IEnumerable<string> Strings { get; set; } = null!;
