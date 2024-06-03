@@ -584,7 +584,6 @@ public sealed class DataFlowXmlReader
         return isArray ? type?.MakeArrayType() : type;
     }
 
-
     private static object? GetValue(Type type, string value)
     {
         value = value.Trim();
