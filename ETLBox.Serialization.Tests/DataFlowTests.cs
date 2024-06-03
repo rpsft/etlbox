@@ -305,26 +305,26 @@ namespace ETLBox.Serialization.Tests
             public DateTime? NullDateTime { get; set; }
             public Guid Guid { get; set; } = Guid.Empty;
             public Guid? NullGuid { get; set; } = null;
-            public char Char { get; set; }
+            public char Char { get; set; } = (char)0;
             public char? NullChar { get; set; }
-            public byte Byte { get; set; }
+            public byte Byte { get; set; } = 0;
             public byte? NullByte { get; set; }
             public bool Bool { get; set; }
             public bool? NullBool { get; set; }
-            public int Int { get; set; }
-            public int? NullInt { get; set; }
-            public uint Uint { get; set; }
+            public int Int { get; set; } = 0;
+            public int? NullInt { get; set; } = null;
+            public uint Uint { get; set; } = 0;
             public uint? NullUint { get; set; }
-            public long Long { get; set; }
-            public long? NullLong { get; set; }
-            public ulong Ulong { get; set; }
+            public long Long { get; set; } = 0;
+            public long? NullLong { get; set; } = null;
+            public ulong Ulong { get; set; } = 0;
             public ulong? NullUlong { get; set; }
             public short Short { get; set; }
             public short? NullShort { get; set; }
             public ushort Ushort { get; set; }
             public ushort? NullUshort { get; set; }
-            public double Double { get; set; }
-            public double? NullDouble { get; set; }
+            public double Double { get; set; } = 0;
+            public double? NullDouble { get; set; } = null;
             public IEnumerable<string> Strings { get; set; } = null!;
             public Stream Stream { get; set; } = null!;
             public EnumType Enum { get; set; } = EnumType.Value1;
