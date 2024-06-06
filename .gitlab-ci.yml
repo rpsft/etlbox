@@ -71,9 +71,13 @@ test_job:
       alias: localclickhouse
     - name: krisgeus/docker-kafka
       alias: kafka
-    - name: rabbitmq:3-management
-      alias: rabbitmq      
+    #- name: rabbitmq:3-management
+    #  alias: rabbitmq
+    - name: docker:24.0.5-dind
+      alias: docker
+      command: [ "dockerd", "--tls=false", "--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock" ]
   variables:
+    DOCKER_HOST: tcp://docker:2375
     # MySQL image customization
     MYSQL_ROOT_HOST: '%'
     MYSQL_ROOT_PASSWORD: 'etlboxpassword'
