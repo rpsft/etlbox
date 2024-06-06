@@ -120,31 +120,59 @@ namespace ALE.ETLBox.DataFlow
                 properties.ContentType = Properties.ContentType;
             if (Properties.CorrelationId != null)
                 properties.CorrelationId = Properties.CorrelationId;
-            if (Properties.DeliveryMode != null)
-                properties.DeliveryMode = Properties.DeliveryMode.GetValueOrDefault();
+            UpdateDeliveryMode(properties);
             if (Properties.Expiration != null)
                 properties.Expiration = Properties.Expiration;
-            if (Properties.Headers != null)
-            {
-                properties.Headers = Properties.Headers.ToDictionary(h => h.Key, h => (object)h.Value);
-            }
+            UpdateHeaders(properties);
             if (Properties.MessageId != null)
                 properties.MessageId = Properties.MessageId;
-            if (Properties.Persistent != null)
-                properties.Persistent = Properties.Persistent.GetValueOrDefault();
-            if (Properties.Priority != null)
-                properties.Priority = Properties.Priority.GetValueOrDefault();
+            UpdatePersistent(properties);
+            UpdatePriority(properties);
             if (Properties.ReplyTo != null)
                 properties.ReplyTo = Properties.ReplyTo;
-            if (Properties.ReplyToAddress != null)
-                properties.ReplyToAddress =
-                    new RabbitMQ.Client.PublicationAddress(Properties.ReplyToAddress.ExchangeType, Properties.ReplyToAddress.ExchangeName, Properties.ReplyToAddress.RoutingKey);
+            UpdateReplyToAddress(properties);
             if (Properties.Type != null)
                 properties.Type = Properties.Type;
-            if (Properties?.Timestamp != null)
-                properties.Timestamp = new AmqpTimestamp(Properties.Timestamp.GetValueOrDefault());
+            UpdateTimestamp(properties);
             if (Properties?.UserId != null)
                 properties.UserId = Properties.UserId;
+        }
+
+        private void UpdatePriority(IBasicProperties properties)
+        {
+            if (Properties?.Priority != null)
+                properties.Priority = Properties.Priority.GetValueOrDefault();
+        }
+
+        private void UpdatePersistent(IBasicProperties properties)
+        {
+            if (Properties?.Persistent != null)
+                properties.Persistent = Properties.Persistent.GetValueOrDefault();
+        }
+
+        private void UpdateDeliveryMode(IBasicProperties properties)
+        {
+            if (Properties?.DeliveryMode != null)
+                properties.DeliveryMode = Properties.DeliveryMode.GetValueOrDefault();
+        }
+
+        private void UpdateHeaders(IBasicProperties properties)
+        {
+            if (Properties?.Headers != null)
+                properties.Headers = Properties.Headers.ToDictionary(h => h.Key, h => (object)h.Value);
+        }
+
+        private void UpdateTimestamp(IBasicProperties properties)
+        {
+            if (Properties?.Timestamp != null)
+                properties.Timestamp = new AmqpTimestamp(Properties.Timestamp.GetValueOrDefault());
+        }
+
+        private void UpdateReplyToAddress(IBasicProperties properties)
+        {
+            if (Properties?.ReplyToAddress != null)
+                properties.ReplyToAddress =
+                    new RabbitMQ.Client.PublicationAddress(Properties.ReplyToAddress.ExchangeType, Properties.ReplyToAddress.ExchangeName, Properties.ReplyToAddress.RoutingKey);
         }
     }
 
