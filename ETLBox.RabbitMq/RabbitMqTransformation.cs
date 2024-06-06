@@ -13,11 +13,11 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class RabbitMqTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput?>
     {
-        private readonly IConnectionFactory _connectionFactory;
+        private readonly IConnectionFactory? _connectionFactory;
 
         protected Func<TInput, TOutput>? ProcessResult;
 
-        public string? ConnectionString { get; }
+        public string ConnectionString { get; set; } = string.Empty;
 
         public string Queue { get; set; } = string.Empty;
 
@@ -78,7 +78,12 @@ namespace ALE.ETLBox.DataFlow
                 ? objects : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
             var messageValue = templateMessage.Render(Hash.FromDictionary(inputDictionary));
 
-            using var connection = _connectionFactory.CreateConnection();
+            var connectionFactory = _connectionFactory ?? new ConnectionFactory
+            {
+                Uri = new Uri(ConnectionString)
+            };
+
+            using var connection = connectionFactory.CreateConnection();
             using var channelToPublish = connection.CreateModel();
 
             channelToPublish.BasicPublish(string.Empty, Queue, null, Encoding.Default.GetBytes(messageValue));
