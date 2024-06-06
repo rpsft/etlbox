@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.DataFlow.Models;
 using DotLiquid;
 using JetBrains.Annotations;
 using RabbitMQ.Client;
@@ -20,6 +21,8 @@ namespace ALE.ETLBox.DataFlow
         public string ConnectionString { get; set; } = string.Empty;
 
         public string Queue { get; set; } = string.Empty;
+
+        public RabbitMqProperties? Properties { get; set; }
 
         /// <summary>
         /// MessageTemplate
@@ -86,9 +89,62 @@ namespace ALE.ETLBox.DataFlow
             using var connection = connectionFactory.CreateConnection();
             using var channelToPublish = connection.CreateModel();
 
-            channelToPublish.BasicPublish(string.Empty, Queue, null, Encoding.Default.GetBytes(messageValue));
+            channelToPublish.BasicPublish(string.Empty, Queue, GetChannelProperties(channelToPublish), Encoding.Default.GetBytes(messageValue));
 
             return ProcessResult == null ? default : ProcessResult(input);
+        }
+
+        private IBasicProperties? GetChannelProperties(IModel channelToPublish)
+        {
+            if (Properties is null)
+            {
+                return null;
+            }
+
+            var properties = channelToPublish.CreateBasicProperties();
+
+            UpdateProperties(properties);
+
+            return properties;
+        }
+
+        private void UpdateProperties(IBasicProperties properties)
+        {
+            if (Properties!.AppId != null)
+                properties.AppId = Properties.AppId;
+            if (Properties.ClusterId != null)
+                properties.ClusterId = Properties.ClusterId;
+            if (Properties.ContentEncoding != null)
+                properties.ContentEncoding = Properties.ContentEncoding;
+            if (Properties.ContentType != null)
+                properties.ContentType = Properties.ContentType;
+            if (Properties.CorrelationId != null)
+                properties.CorrelationId = Properties.CorrelationId;
+            if (Properties.DeliveryMode != null)
+                properties.DeliveryMode = Properties.DeliveryMode.GetValueOrDefault();
+            if (Properties.Expiration != null)
+                properties.Expiration = Properties.Expiration;
+            if (Properties.Headers != null)
+            {
+                properties.Headers = Properties.Headers.ToDictionary(h => h.Key, h => (object)h.Value);
+            }
+            if (Properties.MessageId != null)
+                properties.MessageId = Properties.MessageId;
+            if (Properties.Persistent != null)
+                properties.Persistent = Properties.Persistent.GetValueOrDefault();
+            if (Properties.Priority != null)
+                properties.Priority = Properties.Priority.GetValueOrDefault();
+            if (Properties.ReplyTo != null)
+                properties.ReplyTo = Properties.ReplyTo;
+            if (Properties.ReplyToAddress != null)
+                properties.ReplyToAddress =
+                    new RabbitMQ.Client.PublicationAddress(Properties.ReplyToAddress.ExchangeType, Properties.ReplyToAddress.ExchangeName, Properties.ReplyToAddress.RoutingKey);
+            if (Properties.Type != null)
+                properties.Type = Properties.Type;
+            if (Properties?.Timestamp != null)
+                properties.Timestamp = new AmqpTimestamp(Properties.Timestamp.GetValueOrDefault());
+            if (Properties?.UserId != null)
+                properties.UserId = Properties.UserId;
         }
     }
 

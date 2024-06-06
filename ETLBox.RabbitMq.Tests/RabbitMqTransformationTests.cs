@@ -1,6 +1,7 @@
 using System.Dynamic;
 using System.Text;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.DataFlow.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Xunit.Abstractions;
@@ -32,10 +33,16 @@ namespace ETLBox.RabbitMq.Tests
             using var channelToConsume = connection.CreateModel();
             channelToConsume.QueueDeclare(Queue, false, false, false, null);
 
+            var correlationId = Guid.NewGuid().ToString();
+
             var transformation = new RabbitMqTransformation(Fixture.GetConnectionFactory())
             {
                 MessageTemplate = "{\"NewMessage\": {\"TestValue\":\"{{TestName}}\"}}",
-                Queue = Queue
+                Queue = Queue,
+                Properties = new RabbitMqProperties
+                {
+                    CorrelationId = correlationId
+                }
             };
 
             var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
