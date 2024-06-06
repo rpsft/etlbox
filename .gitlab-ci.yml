@@ -70,7 +70,9 @@ test_job:
     - name: clickhouse/clickhouse-server
       alias: localclickhouse
     - name: krisgeus/docker-kafka
-      alias: kafka      
+      alias: kafka
+    - name: rabbitmq:3-management
+      alias: rabbitmq      
   variables:
     # MySQL image customization
     MYSQL_ROOT_HOST: '%'
