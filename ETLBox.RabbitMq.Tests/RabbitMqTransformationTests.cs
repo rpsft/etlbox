@@ -24,14 +24,23 @@ namespace ETLBox.RabbitMq.Tests
             dynamic data = new ExpandoObject();
             data.TestName = "Tom";
 
+            using var connection = Fixture.GetConnectionFactory().CreateConnection();
+
             // Signal the completion of message reception.
             EventWaitHandle waitHandle = new ManualResetEvent(false);
 
-            using var connection = Fixture.GetConnectionFactory().CreateConnection();
-
-            // Send a message to the channel.
             using var channelToConsume = connection.CreateModel();
             channelToConsume.QueueDeclare(Queue, false, false, false, null);
+
+            string? actualMessage = null;
+
+            // Consume a message from the channel.
+            var consumer = new EventingBasicConsumer(channelToConsume);
+            consumer.Received += (_, eventArgs) =>
+            {
+                actualMessage = Encoding.Default.GetString(eventArgs.Body.ToArray());
+                waitHandle.Set();
+            };
 
             var correlationId = Guid.NewGuid().ToString();
 
@@ -53,16 +62,6 @@ namespace ETLBox.RabbitMq.Tests
             transformation.LinkTo(dest);
             source.Execute();
             dest.Wait();
-
-            string? actualMessage = null;
-
-            // Consume a message from the channel.
-            var consumer = new EventingBasicConsumer(channelToConsume);
-            consumer.Received += (_, eventArgs) =>
-            {
-                actualMessage = Encoding.Default.GetString(eventArgs.Body.ToArray());
-                waitHandle.Set();
-            };
 
             channelToConsume.BasicConsume(Queue, true, consumer);
             waitHandle.WaitOne(TimeSpan.FromSeconds(1));

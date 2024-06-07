@@ -76,10 +76,20 @@ namespace ALE.ETLBox.DataFlow
                 throw new ArgumentNullException(nameof(input));
             }
 
+            if (_connectionFactory is null && string.IsNullOrEmpty(ConnectionString))
+            {
+                throw new InvalidOperationException("Connection string can't be null or empty");
+            }
+
             var templateMessage = Template.Parse(MessageTemplate);
             var inputDictionary = input is IDictionary<string, object> objects
                 ? objects : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
             var messageValue = templateMessage.Render(Hash.FromDictionary(inputDictionary));
+
+            if (string.IsNullOrEmpty(messageValue))
+            {
+                return ProcessResult == null ? default : ProcessResult(input);
+            }
 
             var connectionFactory = _connectionFactory ?? new ConnectionFactory
             {

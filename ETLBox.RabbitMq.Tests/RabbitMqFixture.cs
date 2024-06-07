@@ -5,7 +5,7 @@ namespace ETLBox.RabbitMq.Tests;
 
 public sealed class RabbitMqFixture : IAsyncLifetime
 {
-    private readonly RabbitMqContainer _rabbitMqContainer = new Testcontainers.RabbitMq.RabbitMqBuilder().Build();
+    private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder().Build();
 
     public Task InitializeAsync()
     {
@@ -17,10 +17,6 @@ public sealed class RabbitMqFixture : IAsyncLifetime
         return _rabbitMqContainer.DisposeAsync().AsTask();
     }
 
-    /// <summary>
-    /// GetConnectionString
-    /// </summary>
-    /// <returns>"amqp://guest:guest@127.0.0.1:15672/"</returns>
     public string GetConnectionString()
     {
         
