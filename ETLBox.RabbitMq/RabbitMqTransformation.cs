@@ -11,6 +11,9 @@ using RabbitMQ.Client;
 
 namespace ALE.ETLBox.DataFlow
 {
+    /// <summary>
+    /// Represents a transformation that performs RabbitMQ publishing.
+    /// </summary>
     [PublicAPI]
     public class RabbitMqTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput?>
     {
@@ -18,38 +21,47 @@ namespace ALE.ETLBox.DataFlow
 
         protected Func<TInput, TOutput>? ProcessResult;
 
+        /// <summary>
+        /// AMQP Uri to be used for connections.
+        /// </summary>
         public string ConnectionString { get; set; } = string.Empty;
 
+        /// <summary>
+        /// RabbitMQ queue
+        /// </summary>
         public string Queue { get; set; } = string.Empty;
 
+        /// <summary>Common AMQP Basic content-class headers interface,
+        /// spanning the union of the functionality offered by versions
+        /// 0-8, 0-8qpid, 0-9 and 0-9-1 of AMQP.</summary>
         public RabbitMqProperties? Properties { get; set; }
 
         /// <summary>
-        /// MessageTemplate
+        /// Template for a message to be published to a queue
         /// </summary>
         public string MessageTemplate { get; set; } = null!;
 
+        /// <summary>
+        /// .ctor
+        /// </summary>
         public RabbitMqTransformation(Func<TInput, TOutput>? processResultFunc)
         {
             TransformationFunc = Publish;
             ProcessResult = processResultFunc;
         }
 
+        /// <summary>
+        /// .ctor
+        /// </summary>
         public RabbitMqTransformation(IConnectionFactory connectionFactory, Func<TInput, TOutput>? processResult
         ) : this(processResult)
         {
             _connectionFactory = connectionFactory;
         }
 
-        public RabbitMqTransformation(string connectionString, Func<TInput, TOutput>? processResult) : this(processResult)
-        {
-            ConnectionString = connectionString;
-            _connectionFactory = new ConnectionFactory
-            {
-                Uri = new Uri(connectionString)
-            };
-        }
-
+        /// <summary>
+        /// Publish to AMPQ queue
+        /// </summary>
         public TOutput? Publish(TInput input)
         {
             try
@@ -193,10 +205,6 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public RabbitMqTransformation(IConnectionFactory connectionFactory) : base(connectionFactory, input => input)
-        {
-        }
-
-        public RabbitMqTransformation(string connectionString) : base(connectionString, input => input)
         {
         }
     }

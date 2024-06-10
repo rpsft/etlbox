@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit.Abstractions;
 
 namespace ETLBox.RabbitMq.Tests;
@@ -15,7 +16,7 @@ public sealed class TestOutputLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        return new ConsoleLogger(_logger);
+        return new TestOutputLogger(_logger);
     }
 
     public void Dispose()
@@ -23,11 +24,11 @@ public sealed class TestOutputLoggerProvider : ILoggerProvider
     }
 }
 
-internal class ConsoleLogger : ILogger
+internal class TestOutputLogger : ILogger
 {
     private readonly ITestOutputHelper _logger;
 
-    public ConsoleLogger(ITestOutputHelper logger)
+    public TestOutputLogger(ITestOutputHelper logger)
     {
         _logger = logger;
     }
@@ -35,12 +36,12 @@ internal class ConsoleLogger : ILogger
     public IDisposable BeginScope<TState>(TState state)
         where TState : notnull
     {
-        throw new NotImplementedException();
+        return new Mock<IDisposable>().Object;
     }
 
     public bool IsEnabled(LogLevel logLevel)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     public void Log<TState>(
