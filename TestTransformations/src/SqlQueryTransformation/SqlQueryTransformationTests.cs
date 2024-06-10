@@ -40,7 +40,7 @@ namespace TestTransformations.RowMultiplication
         }
 
         [Fact]
-        public void ShouldProcessComplexSqlTest()
+        public void ShouldProcessSqlQueryWithCTETest()
         {
             //Arrange               
             dynamic obj = new ExpandoObject();

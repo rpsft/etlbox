@@ -23,12 +23,26 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
             };
         }
 
+        /// <summary>
+        /// Sql query columns definition
+        /// </summary>
         public TableDefinition SourceTableDefinition { get; set; }
 
+        /// <summary>
+        /// Column list definition
+        /// </summary>
         public List<string> ColumnNames { get; set; }
 
+        /// <summary>
+        /// Sql template
+        /// </summary>
         public string SQLTemplate { get;set; }
 
+        /// <summary>
+        /// Sql template transformation function
+        /// </summary>
+        /// <param name="input">input object</param>
+        /// <returns>sql query</returns>
         public virtual string TransformParameters(TInput input)
         { 
             var templateSQL = Template.Parse(SQLTemplate);
