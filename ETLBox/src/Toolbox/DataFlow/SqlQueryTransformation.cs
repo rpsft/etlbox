@@ -11,6 +11,8 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
             MultiplicationFunc = obj => 
             { 
                 var dbSource = new DbSource<TOutput>(ConnectionManager);
+                dbSource.SourceTableDefinition = SourceTableDefinition;
+                dbSource.ColumnNames = ColumnNames;
                 var sql = TransformParameters(obj);
                 dbSource.Sql = sql;
                 var dest = new MemoryDestination<TOutput>();
@@ -20,6 +22,10 @@ namespace ALE.ETLBox.src.Toolbox.DataFlow
                 return dest.Data;
             };
         }
+
+        public TableDefinition SourceTableDefinition { get; set; }
+
+        public List<string> ColumnNames { get; set; }
 
         public string SQLTemplate { get;set; }
 
