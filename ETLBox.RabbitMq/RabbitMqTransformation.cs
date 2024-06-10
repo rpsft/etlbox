@@ -198,12 +198,21 @@ namespace ALE.ETLBox.DataFlow
         }
     }
 
+    /// <summary>
+    /// Represents a transformation that performs RabbitMQ publishing.
+    /// </summary>
     public class RabbitMqTransformation : RabbitMqTransformation<ExpandoObject, ExpandoObject>
     {
+        /// <summary>
+        /// .ctor
+        /// </summary>
         public RabbitMqTransformation() : base(input => input)
         {
         }
 
+        /// <summary>
+        /// .ctor
+        /// </summary>
         public RabbitMqTransformation(IConnectionFactory connectionFactory) : base(connectionFactory, input => input)
         {
         }
