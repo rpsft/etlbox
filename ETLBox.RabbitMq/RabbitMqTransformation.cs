@@ -199,7 +199,7 @@ namespace ALE.ETLBox.DataFlow
     }
 
     /// <summary>
-    /// Represents a transformation that performs RabbitMQ publishing.
+    /// Non-generic RabbitMQ publishing transformation on dynamically typed data.
     /// </summary>
     public class RabbitMqTransformation : RabbitMqTransformation<ExpandoObject, ExpandoObject>
     {
