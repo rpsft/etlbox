@@ -6,7 +6,6 @@ using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using Npgsql;
 using TestConnectionManager.Fixtures;
-using TestShared.Attributes;
 
 namespace TestConnectionManager.ConnectionManager
 {
