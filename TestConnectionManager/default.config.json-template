@@ -1,29 +1,6 @@
 {
-    "DataFlow": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlow",
-        "SqlOdbcConnectionString": "Driver={SQL Server};Server=${CFG_MSSQL_IP};Database=ETLBox_DataFlow;Uid=sa;Pwd=YourStrong@Passw0rd;",
-        "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLiteDataFlow.db;",
-        "AccessOdbcConnectionString": "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=.${CFG_PD}db${CFG_PD}AccessDataFlow.accdb",
-        "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_DataFlow;Uid=root;Pwd=etlboxpassword;",
-        "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;",
-        "AzureSqlConnectionString": "Server=tcp:etlbox.database.windows.net,1433;Initial Catalog=etlbox;Persist Security Info=False;User ID=etlboxadmin;Password=ETLBoxPassw0rd!;",
-		"ClickHouseConnectionString": "Host=${CFG_CLICKHOUSE_IP};Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
-    },
-    "DataFlowSource": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlowSource",
-        "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLiteDataFlowSource.db;",
-        "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_DataFlowSource;Uid=root;Pwd=etlboxpassword;",
-        "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_DataFlowSource;User Id=postgres;Password=etlboxpassword;",
-		"ClickHouseConnectionString": "Host=${CFG_CLICKHOUSE_IP};Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
-    },
-    "DataFlowDestination": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_DataFlowDestination",
-        "SQLiteConnectionString": "Data Source=.${CFG_PD}db${CFG_PD}SQLiteDataFlowDestination.db;",
-        "MySqlConnectionString": "Server=${CFG_MYSQL_IP};Database=ETLBox_DataFlowDestination;Uid=root;Pwd=etlboxpassword;",
-        "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_DataFlowDestination;User Id=postgres;Password=etlboxpassword;",
-		"ClickHouseConnectionString": "Host=${CFG_CLICKHOUSE_IP};Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
-    },
     "ConnectionManager": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ConnectionManager"
+        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ConnectionManager",
+        "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_ConnectionManager;User Id=postgres;Password=etlboxpassword;"
     }
 }

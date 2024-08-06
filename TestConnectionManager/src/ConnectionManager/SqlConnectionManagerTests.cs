@@ -11,7 +11,7 @@ namespace TestConnectionManager.ConnectionManager
     public sealed class SqlConnectionManagerTests : ConnectionManagerTestBase
     {
         public SqlConnectionManagerTests(ConnectionManagerFixture fixture)
-            : base(fixture) { }
+            : base(ETLBox.Primitives.ConnectionManagerType.SqlServer, fixture) { }
 
         private static void AssertOpenConnectionCount(
             int allowedOpenConnections,
