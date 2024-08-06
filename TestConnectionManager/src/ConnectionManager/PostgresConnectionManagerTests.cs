@@ -125,7 +125,7 @@ namespace TestConnectionManager.ConnectionManager
             var con = new PostgresConnectionManager(PostgresConnectionStringParameter);
 
             var tableName = "BulkInsertTest";
-            TableDefinition tableDef = PrepareBulkInsert(con, tableName);
+            TableDefinition tableDef = Prepare(con, tableName);
 
             var data = new TableData<string[]>(tableDef);
             object[] values = { "1", "Test1" };
@@ -150,7 +150,7 @@ namespace TestConnectionManager.ConnectionManager
             var con = new PostgresConnectionManager(PostgresConnectionStringParameter);
 
             var tableName = "BulkInsertTest";
-            PrepareBulkInsert(con, tableName);
+            Prepare(con, tableName);
 
             var data = new ExpandoObject();
             var dict = data as IDictionary<string, object>;
@@ -181,7 +181,7 @@ namespace TestConnectionManager.ConnectionManager
             var con = new PostgresConnectionManager(PostgresConnectionStringParameter);
 
             var tableName = "BulkInsertTest";
-            PrepareBulkInsert(con, tableName);
+            Prepare(con, tableName);
 
             var data = new ExpandoObject();
             var dict = data as IDictionary<string, object>;
@@ -207,7 +207,7 @@ namespace TestConnectionManager.ConnectionManager
             Assert.Equal(0, connectionCount - initialConnectionCount);
         }
 
-        private static TableDefinition PrepareBulkInsert(PostgresConnectionManager con, string tableName)
+        private static TableDefinition Prepare(PostgresConnectionManager con, string tableName)
         {
             DropTableTask.DropIfExists(con, tableName);
 
