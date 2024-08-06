@@ -1,4 +1,4 @@
-﻿using TestConnectionManager.Fixtures;
+using TestConnectionManager.Fixtures;
 using TestShared.Helper;
 
 namespace TestConnectionManager
@@ -8,7 +8,10 @@ namespace TestConnectionManager
     {
         protected ConnectionManagerTestBase(ConnectionManagerFixture fixture) { }
 
-        protected static string ConnectionStringParameter =>
+        protected static string SqlConnectionStringParameter =>
             Config.SqlConnection.RawConnectionString("ConnectionManager");
+
+        protected static string PostgresConnectionStringParameter =>
+            Config.PostgresConnection.RawConnectionString("ConnectionManager");
     }
 }

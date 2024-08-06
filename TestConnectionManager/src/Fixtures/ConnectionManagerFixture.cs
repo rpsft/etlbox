@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using TestShared.Helper;
 
 namespace TestConnectionManager.Fixtures
@@ -15,11 +15,13 @@ namespace TestConnectionManager.Fixtures
         public ConnectionManagerFixture()
         {
             DatabaseHelper.RecreateDatabase(Config.SqlConnection, Section);
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, Section);
         }
 
         public void Dispose()
         {
             DatabaseHelper.DropDatabase(Config.SqlConnection, Section);
+            DatabaseHelper.DropDatabase(Config.PostgresConnection, Section);
         }
     }
 }

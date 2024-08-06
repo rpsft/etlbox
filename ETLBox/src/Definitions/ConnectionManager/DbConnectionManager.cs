@@ -14,7 +14,7 @@ namespace ALE.ETLBox.ConnectionManager
         public int MaxLoginAttempts { get; set; } = 3;
         public virtual bool LeaveOpen
         {
-            get => _leaveOpen || IsInBulkInsert || Transaction != null;
+            get => _leaveOpen || Transaction != null;
             set => _leaveOpen = value;
         }
 
@@ -23,7 +23,6 @@ namespace ALE.ETLBox.ConnectionManager
         protected TConnection DbConnection { get; private set; }
         public ConnectionState? State => DbConnection?.State;
         public IDbTransaction Transaction { get; set; }
-        public bool IsInBulkInsert { get; set; }
         private bool _leaveOpen;
 
         public abstract string QB { get; }
@@ -204,7 +203,7 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 Transaction?.Dispose();
                 Transaction = null;
-                DbConnection?.Close();
+                DbConnection?.Dispose();
                 DbConnection = null;
             }
             _disposedValue = true;

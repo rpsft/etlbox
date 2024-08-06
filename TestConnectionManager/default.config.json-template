@@ -24,6 +24,7 @@
 		"ClickHouseConnectionString": "Host=${CFG_CLICKHOUSE_IP};Port=9000;Database=default;User=clickhouse;Password=Qwe123456;"
     },
     "ConnectionManager": {
-        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ConnectionManager"
+        "SqlConnectionString": "Data Source=${CFG_MSSQL_IP};TrustServerCertificate=true;User Id=sa;Password=YourStrong@Passw0rd;Initial Catalog=ETLBox_ConnectionManager",
+        "PostgresConnectionString": "Server=${CFG_POSTGRES_IP};Database=ETLBox_DataFlowDestination;User Id=postgres;Password=etlboxpassword;"
     }
 }

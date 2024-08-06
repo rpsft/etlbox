@@ -98,7 +98,7 @@ namespace ALE.ETLBox.DataFlow
             if (!HasDestinationTableDefinition)
                 LoadTableDefinitionFromTableName();
             BulkInsertConnectionManager = DbConnectionManager.CloneIfAllowed();
-            BulkInsertConnectionManager.IsInBulkInsert = true;
+            BulkInsertConnectionManager.LeaveOpen = true;
             BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
             TableData = new TableData<TInput>(DestinationTableDefinition, BatchSize);
         }
@@ -133,7 +133,7 @@ namespace ALE.ETLBox.DataFlow
                 return;
             }
 
-            BulkInsertConnectionManager.IsInBulkInsert = false;
+            BulkInsertConnectionManager.LeaveOpen = false;
             BulkInsertConnectionManager.CleanUpBulkInsert(DestinationTableDefinition?.Name);
             BulkInsertConnectionManager.CloseIfAllowed();
         }

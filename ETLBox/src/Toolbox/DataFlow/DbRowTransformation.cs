@@ -83,7 +83,6 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
         if (!HasDestinationTableDefinition)
             LoadTableDefinitionFromTableName();
         BulkInsertConnectionManager = DbConnectionManager.CloneIfAllowed();
-        BulkInsertConnectionManager.IsInBulkInsert = true;
         BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
         TableData = new TableData<TInput>(DestinationTableDefinition, 1);
     }

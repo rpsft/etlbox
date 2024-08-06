@@ -37,38 +37,38 @@ namespace TestConnectionManager.ConnectionManager
         public void TestOpeningCloseConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
+            var con = new SqlConnectionManager(new SqlConnectionString(SqlConnectionStringParameter));
 
             //Act
-            AssertOpenConnectionCount(0, ConnectionStringParameter);
+            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
             con.Open();
-            AssertOpenConnectionCount(1, ConnectionStringParameter);
+            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
             con.Close(); //won't close any connection - ado.net will keep the connection open in it's pool in case it's needed again
-            AssertOpenConnectionCount(1, ConnectionStringParameter);
+            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
             SqlConnection.ClearAllPools();
 
             //Assert
-            AssertOpenConnectionCount(0, ConnectionStringParameter);
+            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
         }
 
         [Fact]
         public void TestOpeningConnectionTwice()
         {
-            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
-            AssertOpenConnectionCount(0, ConnectionStringParameter);
+            var con = new SqlConnectionManager(new SqlConnectionString(SqlConnectionStringParameter));
+            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
             con.Open();
             con.Open();
-            AssertOpenConnectionCount(1, ConnectionStringParameter);
+            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
             con.Close();
-            AssertOpenConnectionCount(1, ConnectionStringParameter);
+            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
             SqlConnection.ClearAllPools();
-            AssertOpenConnectionCount(0, ConnectionStringParameter);
+            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
         }
 
         [MultiprocessorOnlyFact(Skip = "TODO: Hangs on Apple silicon and Docker")]
         public void TestOpeningConnectionsParallelOnSqlTask()
         {
-            AssertOpenConnectionCount(0, ConnectionStringParameter);
+            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
             var array = new List<int> { 1, 2, 3, 4 };
             Parallel.ForEach(
                 array,
@@ -91,21 +91,21 @@ namespace TestConnectionManager.ConnectionManager
                     )
                     {
                         ConnectionManager = new SqlConnectionManager(
-                            new SqlConnectionString(ConnectionStringParameter)
+                            new SqlConnectionString(SqlConnectionStringParameter)
                         ),
                         DisableLogging = true
                     }.ExecuteNonQuery()
             );
-            AssertOpenConnectionCount(2, ConnectionStringParameter);
+            AssertOpenConnectionCount(2, SqlConnectionStringParameter);
             SqlConnection.ClearAllPools();
-            AssertOpenConnectionCount(0, ConnectionStringParameter);
+            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
         }
 
         [Fact]
         public void TestCloningConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(ConnectionStringParameter);
+            var con = new SqlConnectionManager(SqlConnectionStringParameter);
 
             //Act
             var clone = con.Clone();
