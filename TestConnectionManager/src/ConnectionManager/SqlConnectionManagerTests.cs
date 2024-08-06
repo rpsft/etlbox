@@ -11,7 +11,7 @@ namespace TestConnectionManager.ConnectionManager
     public sealed class SqlConnectionManagerTests : ConnectionManagerTestBase
     {
         public SqlConnectionManagerTests(ConnectionManagerFixture fixture)
-            : base(fixture) { }
+            : base(ETLBox.Primitives.ConnectionManagerType.SqlServer, fixture) { }
 
         private static void AssertOpenConnectionCount(
             int allowedOpenConnections,
@@ -37,38 +37,38 @@ namespace TestConnectionManager.ConnectionManager
         public void TestOpeningCloseConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(new SqlConnectionString(SqlConnectionStringParameter));
+            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
 
             //Act
-            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(0, ConnectionStringParameter);
             con.Open();
-            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(1, ConnectionStringParameter);
             con.Close(); //won't close any connection - ado.net will keep the connection open in it's pool in case it's needed again
-            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(1, ConnectionStringParameter);
             SqlConnection.ClearAllPools();
 
             //Assert
-            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
 
         [Fact]
         public void TestOpeningConnectionTwice()
         {
-            var con = new SqlConnectionManager(new SqlConnectionString(SqlConnectionStringParameter));
-            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
+            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
+            AssertOpenConnectionCount(0, ConnectionStringParameter);
             con.Open();
             con.Open();
-            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(1, ConnectionStringParameter);
             con.Close();
-            AssertOpenConnectionCount(1, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(1, ConnectionStringParameter);
             SqlConnection.ClearAllPools();
-            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
 
         [MultiprocessorOnlyFact(Skip = "TODO: Hangs on Apple silicon and Docker")]
         public void TestOpeningConnectionsParallelOnSqlTask()
         {
-            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(0, ConnectionStringParameter);
             var array = new List<int> { 1, 2, 3, 4 };
             Parallel.ForEach(
                 array,
@@ -91,21 +91,21 @@ namespace TestConnectionManager.ConnectionManager
                     )
                     {
                         ConnectionManager = new SqlConnectionManager(
-                            new SqlConnectionString(SqlConnectionStringParameter)
+                            new SqlConnectionString(ConnectionStringParameter)
                         ),
                         DisableLogging = true
                     }.ExecuteNonQuery()
             );
-            AssertOpenConnectionCount(2, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(2, ConnectionStringParameter);
             SqlConnection.ClearAllPools();
-            AssertOpenConnectionCount(0, SqlConnectionStringParameter);
+            AssertOpenConnectionCount(0, ConnectionStringParameter);
         }
 
         [Fact]
         public void TestCloningConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(SqlConnectionStringParameter);
+            var con = new SqlConnectionManager(ConnectionStringParameter);
 
             //Act
             var clone = con.Clone();

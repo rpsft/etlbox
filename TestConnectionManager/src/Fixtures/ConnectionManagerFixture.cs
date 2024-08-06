@@ -10,18 +10,16 @@ namespace TestConnectionManager.Fixtures
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public sealed class ConnectionManagerFixture : IDisposable
     {
-        public const string Section = "ConnectionManager";
-
         public ConnectionManagerFixture()
         {
-            DatabaseHelper.RecreateDatabase(Config.SqlConnection, Section);
-            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, Section);
+            DatabaseHelper.RecreateDatabase(Config.SqlConnection, "ConnectionManager");
+            DatabaseHelper.RecreateDatabase(Config.PostgresConnection, "ConnectionManager");
         }
 
         public void Dispose()
         {
-            DatabaseHelper.DropDatabase(Config.SqlConnection, Section);
-            DatabaseHelper.DropDatabase(Config.PostgresConnection, Section);
+            DatabaseHelper.DropDatabase(Config.SqlConnection, "ConnectionManager");
+            DatabaseHelper.DropDatabase(Config.PostgresConnection, "ConnectionManager");
         }
     }
 }
