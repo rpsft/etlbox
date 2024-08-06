@@ -28,6 +28,7 @@ namespace ETLBox.Primitives
         IConnectionManager Clone();
         IConnectionManager CloneIfAllowed();
         bool LeaveOpen { get; set; }
+        bool IsInBulkInsert { get; set; }
         void PrepareBulkInsert(string tableName);
         void CleanUpBulkInsert(string tableName);
         void BeginTransaction(IsolationLevel isolationLevel);
