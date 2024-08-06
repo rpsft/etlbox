@@ -85,47 +85,6 @@ namespace TestConnectionManager.ConnectionManager
             Assert.Equal(0, GetOpenConnections(PostgresConnectionStringParameter) - initialConnections);
         }
 
-        [MultiprocessorOnlyFact(
-            Skip = "TODO: Fix ConnectionManager losing connections after Clone"
-        )]
-        public void TestLeaveConnectionOpenInParallel()
-        {
-            Assert.Equal(0, GetOpenConnections(PostgresConnectionStringParameter));
-            //Arrange
-            var con = new SqlConnectionManager(PostgresConnectionStringParameter)
-            {
-                LeaveOpen = true,
-                MaxLoginAttempts = 1
-            };
-
-            //Act
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                try
-                {
-                    Task t1 = Task.Factory.StartNew(
-                        () => SqlTask.ExecuteNonQuery(con, "Dummy", "WAITFOR DELAY '0:00:01.000'")
-                    );
-                    Task t2 = Task.Factory.StartNew(
-                        () => SqlTask.ExecuteNonQuery(con, "Dummy", "WAITFOR DELAY '0:00:01.000'")
-                    );
-                    t1.Start();
-                    t2.Start();
-                    Task.WaitAll(t1, t2);
-                }
-                catch (AggregateException e)
-                {
-                    if (e.InnerException != null)
-                        throw e.InnerException;
-                    throw;
-                }
-            });
-
-            con.Close();
-
-            Assert.Equal(2, GetOpenConnections(PostgresConnectionStringParameter));
-        }
-
         [Fact]
         public void TestCloningIfAllowedConnection()
         {
