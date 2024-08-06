@@ -89,7 +89,7 @@ namespace TestConnectionManager.ConnectionManager
         public void TestCloningIfAllowedConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(PostgresConnectionStringParameter) { LeaveOpen = true };
+            var con = new PostgresConnectionManager(PostgresConnectionStringParameter) { LeaveOpen = true };
 
             //Act
             var cloneIfAllowed = con.CloneIfAllowed();
