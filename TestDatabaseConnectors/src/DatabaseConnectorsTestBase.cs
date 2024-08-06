@@ -7,7 +7,7 @@ namespace TestDatabaseConnectors
 {
     [CollectionDefinition(
         nameof(DataFlowSourceDestinationCollection),
-        DisableParallelization = true
+        DisableParallelization = false
     )]
     public class DataFlowSourceDestinationCollection
         : ICollectionFixture<DatabaseSourceDestinationFixture> { }
