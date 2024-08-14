@@ -147,18 +147,18 @@ namespace ETLBox.Rest.Tests
             );
             var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object?>;
             dest.Should().NotBeNull();
+            dest!["http_code"].Should().Be(httpStatusCode);
+            dest["raw_response"].Should().Be(errorContent);
+            dest["raw_response"].Should().Be(errorContent);
             if (expectExpandoObjectOnResult)
             {
                 var result = dest!["result"] as IDictionary<string, object?>;
                 result.Should().NotBeNull();
                 result.Should().BeOfType<ExpandoObject>();
                 result!["code"].Should().Be("OK");
-                dest!["raw_response"].Should().Be(errorContent);
             }
             else
             {
-                dest!["http_code"].Should().Be(httpStatusCode);
-                dest["raw_response"].Should().Be(errorContent);
                 dest["exception"].Should().NotBeNull();
                 dest["exception"].Should().BeOfType<HttpStatusCodeException>();
                 HttpStatusCodeException exception = (HttpStatusCodeException)dest["exception"]!;

@@ -179,7 +179,7 @@ namespace ETLBox.Rest
                     var outputValue = GetResponseObject(response);
 
                     var res = input as IDictionary<string, object?>;
-                    res[HttpCodeField] = (int)HttpStatusCode.OK;
+                    res[HttpCodeField] = HttpStatusCode.OK;
                     res[ResultField] = outputValue;
                     if (!string.IsNullOrEmpty(RawResponseField))
                     { 
