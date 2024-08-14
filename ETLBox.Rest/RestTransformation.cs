@@ -43,7 +43,7 @@ namespace ETLBox.Rest
         public string HttpCodeField { get; set; } = "HTTPCode";
 
         /// <summary>
-        /// Gets or sets the field name where the result of the REST call will be stored.
+        /// Gets or sets the field name where the deserialized result of the REST call will be stored.
         /// </summary>
         public string ResultField { get; set; } = null!;
 
