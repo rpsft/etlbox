@@ -57,7 +57,7 @@ namespace ETLBox.Rest.Tests
                         ["urlRouteParameter"] = "Tom",
                         ["urlQueryParameter"] = 46,
                         ["port"] = 90210,
-                        ["http_code"] = 200,
+                        ["http_code"] = HttpStatusCode.OK,
                         ["result"] = new Dictionary<string, object?> { ["jsonResponse"] = 100 },
                         ["raw_response"] = "{ \"jsonResponse\" : 100 }"
                     }
