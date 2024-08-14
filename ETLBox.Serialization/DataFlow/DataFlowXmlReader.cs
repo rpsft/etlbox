@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
 
@@ -443,12 +444,12 @@ public sealed class DataFlowXmlReader
 
     private static object? CreateValueType(Type type, XContainer node)
     {
-        if (node.FirstNode is null)
+        StringBuilder builder = new StringBuilder();
+        foreach (var item in node.DescendantNodes().Where(n => n != null))
         {
-            return null;
+            builder.Append((item as XText)?.Value.Trim() ?? "");
         }
-        XDocument xDoc = XDocument.Parse($"<root>{node.FirstNode.ToString().Trim()}</root>");
-        return GetValue(type, xDoc.Root.Value);
+        return GetValue(type, builder.ToString());
     }
 
     private object CreateDictionary(Type type, XContainer node)

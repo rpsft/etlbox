@@ -60,7 +60,9 @@ namespace ETLBox.Serialization.Tests
                         <NullDouble>-1.0</NullDouble>
                         <Uri>{_csvUri}</Uri>
                         <Strings>
-                            <string><![CDATA[test]]></string>
+                            <string>test</string>
+                            <string><![CDATA[test<!"""">]]></string>
+                            <string><![CDATA[test1<!"""">]]><![CDATA[test2<!"""">]]></string>
                         </Strings>
                         <Stream type=""MemoryStream"" />
                         <Enum>Value2</Enum>
@@ -115,8 +117,12 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.Configuration.Delimiter.Should().Be(";");
             customCsvSource.Configuration.Escape.Should().Be('#');
             customCsvSource.Strings.Should().NotBeNullOrEmpty();
-            customCsvSource.Strings.Should().HaveCount(1);
-            customCsvSource.Strings!.First().Should().Be("test");
+
+            var strings = customCsvSource.Strings.ToArray();
+            strings.Should().HaveCount(3);
+            strings[0].Should().Be("test");
+            strings[1].Should().Be("test<!\"\">");
+            strings[2].Should().Be("test1<!\"\">test2<!\"\">");
             customCsvSource.Stream.Should().NotBeNull();
             customCsvSource.Stream.Should().BeOfType<MemoryStream>();
             customCsvSource.Enum.Should().Be(CustomCsvSource.EnumType.Value2);

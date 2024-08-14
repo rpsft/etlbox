@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -38,9 +39,19 @@ namespace ETLBox.Rest
         public RestMethodInfo RestMethodInfo { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets the field name where the HTTP code of the REST call will be stored.
+        /// </summary>
+        public string HttpCodeField { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets the field name where the result of the REST call will be stored.
         /// </summary>
         public string ResultField { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the field name where the raw response string of the REST call will be stored.
+        /// </summary>
+        public string RawResponseField { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the field name where any exception message will be stored.
@@ -138,6 +149,12 @@ namespace ETLBox.Rest
                     $"Property '{nameof(ResultField)}' not defined"
                 );
             }
+            if (HttpCodeField is null)
+            {
+                throw new InvalidOperationException(
+                    $"Property '{nameof(HttpCodeField)}' not defined"
+                );
+            }
 
             var method = GetMethod(RestMethodInfo.Method!);
             var templateUrl = Template.Parse(RestMethodInfo.Url!);
@@ -159,10 +176,15 @@ namespace ETLBox.Rest
                     var response = await httpClient
                         .InvokeAsync(url, method, RestMethodInfo.Headers, body)
                         .ConfigureAwait(false);
-                    var outputValue = GetResponseObject(response, ExceptionField);
+                    var outputValue = GetResponseObject(response);
 
                     var res = input as IDictionary<string, object?>;
+                    res[HttpCodeField] = (int)HttpStatusCode.OK;
                     res[ResultField] = outputValue;
+                    if (!string.IsNullOrEmpty(RawResponseField))
+                    { 
+                        res[RawResponseField] = response;
+                    }
                     LogProgress();
                     return (ExpandoObject)res;
                 }
@@ -257,12 +279,17 @@ namespace ETLBox.Rest
             res[ExceptionField] = ex;
             if (ex is HttpStatusCodeException httpStatusCodeException)
             {
-                res[ResultField] = GetResponseObject(httpStatusCodeException.Content, ExceptionField);
+                res[ResultField] = new ExpandoObject();
+                res[HttpCodeField] = httpStatusCodeException.HttpCode;
+                if (!string.IsNullOrEmpty(RawResponseField))
+                {
+                    res[RawResponseField] = httpStatusCodeException.Content;
+                }
             }
             return (ExpandoObject)res;
         }
 
-        private ExpandoObject? GetResponseObject(string response, string field)
+        private ExpandoObject? GetResponseObject(string response)
         {
             try
             {
@@ -271,9 +298,7 @@ namespace ETLBox.Rest
             }
             catch
             {
-                var res = new ExpandoObject();
-                (res as IDictionary<string, object?>).Add(field, response);
-                return res;
+                return null;
             }
         }
     }

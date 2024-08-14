@@ -35,7 +35,7 @@ namespace ETLBox.Rest.Tests
             //Arrange
             var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { _fakeSourceData });
             var destination = new MemoryDestination<ExpandoObject>();
-            var httpClientMock = CreateMockHttpClient(@"{ ""jsonResponse"" : 100}");
+            var httpClientMock = CreateMockHttpClient(@"{ ""jsonResponse"" : 100 }");
             var trans1 = SetupRestTransformation(httpClientMock.Object);
             source.LinkTo(trans1).LinkTo(destination);
 
@@ -57,7 +57,9 @@ namespace ETLBox.Rest.Tests
                         ["urlRouteParameter"] = "Tom",
                         ["urlQueryParameter"] = 46,
                         ["port"] = 90210,
-                        ["result"] = new Dictionary<string, object?> { ["jsonResponse"] = 100 }
+                        ["http_code"] = 200,
+                        ["result"] = new Dictionary<string, object?> { ["jsonResponse"] = 100 },
+                        ["raw_response"] = "{ \"jsonResponse\" : 100 }"
                     }
                 );
         }
@@ -110,15 +112,14 @@ namespace ETLBox.Rest.Tests
         }
 
         [Theory]
-        [InlineData(HttpStatusCode.BadRequest, "BadRequest", false, 1)]
-        [InlineData(HttpStatusCode.BadRequest, @"{ ""field"": ""value"" }", true, 1)]
+        [InlineData(HttpStatusCode.OK, @"{ ""code"": ""OK"" }", true, 1)]
+        [InlineData(HttpStatusCode.BadRequest, @"{ ""field"": ""value"" }", false, 1)]
         [InlineData(HttpStatusCode.InternalServerError, "InternalServerError", false, 2)]
-        [InlineData(HttpStatusCode.ServiceUnavailable, "ServiceUnavailable", false, 2)]
         [InlineData(HttpStatusCode.Found, "Found", false, 1)]
         public void RestTransformation_WithError_ShouldNotRetryAndImmediatelyReturnResult(
             HttpStatusCode httpStatusCode,
             string errorContent,
-            bool isResponseJson,
+            bool expectExpandoObjectOnResult,
             int repeatCount
         )
         {
@@ -144,26 +145,26 @@ namespace ETLBox.Rest.Tests
                     ),
                 Times.Exactly(repeatCount)
             );
-            var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object>;
+            var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object?>;
             dest.Should().NotBeNull();
-            var result = dest!["result"]! as IDictionary<string, object?>;
-            if (isResponseJson)
+            if (expectExpandoObjectOnResult)
             {
+                var result = dest!["result"] as IDictionary<string, object?>;
                 result.Should().NotBeNull();
-                result!["field"].Should().Be("value");
+                result.Should().BeOfType<ExpandoObject>();
+                result!["code"].Should().Be("OK");
+                dest!["raw_response"].Should().Be(errorContent);
             }
             else
             {
-                dest!["result"].Should().NotBeNull();
-                result!["exception"].Should().Be(errorContent);
+                dest!["http_code"].Should().Be(httpStatusCode);
+                dest["raw_response"].Should().Be(errorContent);
+                dest["exception"].Should().NotBeNull();
+                dest["exception"].Should().BeOfType<HttpStatusCodeException>();
+                HttpStatusCodeException exception = (HttpStatusCodeException)dest["exception"]!;
+                exception.Message.Should().Be(errorContent);
+                exception.HttpCode.Should().Be(httpStatusCode);
             }
-            dest["exception"].Should().NotBeNull();
-            dest["exception"]
-                .Should()
-                .BeOfType<HttpStatusCodeException>()
-                .And.Subject.As<HttpStatusCodeException>()
-                .HttpCode.Should()
-                .Be(httpStatusCode);
         }
 
         [Fact]
@@ -204,8 +205,10 @@ namespace ETLBox.Rest.Tests
                     RetryCount = 2,
                     RetryInterval = 5
                 },
+                HttpCodeField = "http_code",
                 ResultField = "result",
                 ExceptionField = "errorMessage",
+                RawResponseField = "raw_response",
                 FailOnError = false
             };
 
@@ -341,6 +344,8 @@ namespace ETLBox.Rest.Tests
                 },
                 ResultField = "result",
                 ExceptionField = "exception",
+                HttpCodeField = "http_code",
+                RawResponseField = "raw_response",
                 FailOnError = failOnError
             };
     }
