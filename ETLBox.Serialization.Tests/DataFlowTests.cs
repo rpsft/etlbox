@@ -60,7 +60,7 @@ namespace ETLBox.Serialization.Tests
                         <NullDouble>-1.0</NullDouble>
                         <Uri>{_csvUri}</Uri>
                         <Strings>
-                            <string>test</string>
+                            <string><![CDATA[test]]></string>
                         </Strings>
                         <Stream type=""MemoryStream"" />
                         <Enum>Value2</Enum>
