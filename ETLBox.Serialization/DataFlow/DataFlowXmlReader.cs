@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -444,7 +443,12 @@ public sealed class DataFlowXmlReader
 
     private static object? CreateValueType(Type type, XContainer node)
     {
-        return node.FirstNode is null ? null : GetValue(type, node.FirstNode.ToString().Trim());
+        if (node.FirstNode is null)
+        {
+            return null;
+        }
+        XDocument xDoc = XDocument.Parse($"<root>{node.FirstNode.ToString().Trim()}</root>");
+        return GetValue(type, xDoc.Root.Value);
     }
 
     private object CreateDictionary(Type type, XContainer node)

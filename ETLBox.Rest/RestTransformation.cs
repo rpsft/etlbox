@@ -158,16 +158,9 @@ namespace ETLBox.Rest
                     var response = await httpClient
                         .InvokeAsync(url, method, RestMethodInfo.Headers, body)
                         .ConfigureAwait(false);
+                    var outputValue = GetResponseObject(response);
 
-                    var outputValue =
-                        (ExpandoObject?)
-                            JsonSerializer.Deserialize(
-                                response,
-                                typeof(ExpandoObject),
-                                _jsonSerializerOptions
-                            ) ?? throw new InvalidOperationException();
-
-                    var res = input as IDictionary<string, object>;
+                    var res = input as IDictionary<string, object?>;
                     res[ResultField] = outputValue;
                     LogProgress();
                     return (ExpandoObject)res;
@@ -254,18 +247,25 @@ namespace ETLBox.Rest
 
         private ExpandoObject HandleError(ExpandoObject input, Exception ex)
         {
+            Logger.LogError(ex, "Failed REST transformation: '{Message}'", ex.Message);
             if (FailOnError)
             {
                 throw ex;
             }
-            Logger.LogError(ex, "Failed REST transformation");
-            var res = input as IDictionary<string, object>;
+            var res = input as IDictionary<string, object?>;
             res[ExceptionField] = ex;
             if (ex is HttpStatusCodeException httpStatusCodeException)
             {
-                res[ResultField] = httpStatusCodeException.Content;
+                res[ResultField] = GetResponseObject(httpStatusCodeException.Content);
             }
             return (ExpandoObject)res;
         }
+
+        private ExpandoObject? GetResponseObject(string response)
+        => (ExpandoObject?)JsonSerializer.Deserialize(
+                response,
+                typeof(ExpandoObject),
+                _jsonSerializerOptions
+            );
     }
 }
