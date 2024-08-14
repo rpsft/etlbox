@@ -285,7 +285,7 @@ namespace ETLBox.Rest
             }
             catch
             {
-                return null;
+                return new ExpandoObject();
             }
         }
     }

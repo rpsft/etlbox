@@ -113,6 +113,7 @@ namespace ETLBox.Rest.Tests
 
         [Theory]
         [InlineData(HttpStatusCode.OK, @"{ ""code"": ""OK"" }", true, 1)]
+        [InlineData(HttpStatusCode.OK, @"invalid_json", false, 1)]
         [InlineData(HttpStatusCode.BadRequest, @"{ ""field"": ""value"" }", false, 1)]
         [InlineData(HttpStatusCode.InternalServerError, "InternalServerError", false, 2)]
         [InlineData(HttpStatusCode.Found, "Found", false, 1)]
@@ -157,8 +158,12 @@ namespace ETLBox.Rest.Tests
                 result.Should().BeOfType<ExpandoObject>();
                 result!["code"].Should().Be("OK");
             }
-            else
+            if (httpStatusCode == HttpStatusCode.OK)
             {
+                dest.Should().NotContainKey("exception");
+            }
+            else
+            { 
                 dest["exception"].Should().NotBeNull();
                 dest["exception"].Should().BeOfType<HttpStatusCodeException>();
                 HttpStatusCodeException exception = (HttpStatusCodeException)dest["exception"]!;
