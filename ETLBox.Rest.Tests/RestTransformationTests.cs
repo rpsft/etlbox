@@ -110,13 +110,15 @@ namespace ETLBox.Rest.Tests
         }
 
         [Theory]
-        [InlineData(HttpStatusCode.BadRequest, "BadRequest", 1)]
-        [InlineData(HttpStatusCode.InternalServerError, "InternalServerError", 2)]
-        [InlineData(HttpStatusCode.ServiceUnavailable, "ServiceUnavailable", 2)]
-        [InlineData(HttpStatusCode.Found, "Found", 1)]
+        [InlineData(HttpStatusCode.BadRequest, "BadRequest", false, 1)]
+        [InlineData(HttpStatusCode.BadRequest, @"{ ""field"": ""value"" }", true, 1)]
+        [InlineData(HttpStatusCode.InternalServerError, "InternalServerError", false, 2)]
+        [InlineData(HttpStatusCode.ServiceUnavailable, "ServiceUnavailable", false, 2)]
+        [InlineData(HttpStatusCode.Found, "Found", false, 1)]
         public void RestTransformation_WithError_ShouldNotRetryAndImmediatelyReturnResult(
             HttpStatusCode httpStatusCode,
             string errorContent,
+            bool isResponseJson,
             int repeatCount
         )
         {
@@ -144,7 +146,17 @@ namespace ETLBox.Rest.Tests
             );
             var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object>;
             dest.Should().NotBeNull();
-            dest!["result"].Should().Be(errorContent);
+            var result = dest!["result"]! as IDictionary<string, object?>;
+            if (isResponseJson)
+            {
+                result.Should().NotBeNull();
+                result!["field"].Should().Be("value");
+            }
+            else
+            {
+                dest!["result"].Should().NotBeNull();
+                result!["exception"].Should().Be(errorContent);
+            }
             dest["exception"].Should().NotBeNull();
             dest["exception"]
                 .Should()

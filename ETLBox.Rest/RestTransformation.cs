@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ALE.ETLBox;
@@ -158,7 +159,7 @@ namespace ETLBox.Rest
                     var response = await httpClient
                         .InvokeAsync(url, method, RestMethodInfo.Headers, body)
                         .ConfigureAwait(false);
-                    var outputValue = GetResponseObject(response);
+                    var outputValue = GetResponseObject(response, ExceptionField);
 
                     var res = input as IDictionary<string, object?>;
                     res[ResultField] = outputValue;
@@ -256,16 +257,24 @@ namespace ETLBox.Rest
             res[ExceptionField] = ex;
             if (ex is HttpStatusCodeException httpStatusCodeException)
             {
-                res[ResultField] = GetResponseObject(httpStatusCodeException.Content);
+                res[ResultField] = GetResponseObject(httpStatusCodeException.Content, ExceptionField);
             }
             return (ExpandoObject)res;
         }
 
-        private ExpandoObject? GetResponseObject(string response)
-        => (ExpandoObject?)JsonSerializer.Deserialize(
-                response,
-                typeof(ExpandoObject),
-                _jsonSerializerOptions
-            );
+        private ExpandoObject? GetResponseObject(string response, string field)
+        {
+            try
+            {
+                var doc = JsonDocument.Parse(response);
+                return doc.Deserialize<ExpandoObject?>(_jsonSerializerOptions);
+            }
+            catch
+            {
+                var res = new ExpandoObject();
+                (res as IDictionary<string, object?>).Add(field, response);
+                return res;
+            }
+        }
     }
 }
