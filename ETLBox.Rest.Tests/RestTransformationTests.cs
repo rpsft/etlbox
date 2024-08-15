@@ -112,15 +112,17 @@ namespace ETLBox.Rest.Tests
         }
 
         [Theory]
-        [InlineData(HttpStatusCode.OK, @"{ ""code"": ""OK"" }", true, 1)]
-        [InlineData(HttpStatusCode.OK, @"invalid_json", false, 1)]
-        [InlineData(HttpStatusCode.BadRequest, @"{ ""field"": ""value"" }", false, 1)]
-        [InlineData(HttpStatusCode.InternalServerError, "InternalServerError", false, 2)]
-        [InlineData(HttpStatusCode.Found, "Found", false, 1)]
+        [InlineData(HttpStatusCode.OK, @"{ ""code"": ""OK"" }", true, false, 1)]
+        [InlineData(HttpStatusCode.OK, "invalid_json", false, false, 1)]
+        [InlineData(HttpStatusCode.BadRequest, @"{ ""field"": ""value"" }", false, true, 1)]
+        [InlineData(HttpStatusCode.InternalServerError, "InternalServerError", false, true, 2)]
+        [InlineData(HttpStatusCode.Found, "invalid_json", false, true, 1)]
+        [InlineData(HttpStatusCode.Found, @"{ ""code"": ""OK"" }", true, true, 1)]
         public void RestTransformation_WithError_ShouldNotRetryAndImmediatelyReturnResult(
             HttpStatusCode httpStatusCode,
             string errorContent,
             bool expectExpandoObjectOnResult,
+            bool expectException,
             int repeatCount
         )
         {
@@ -150,7 +152,6 @@ namespace ETLBox.Rest.Tests
             dest.Should().NotBeNull();
             dest!["http_code"].Should().Be(httpStatusCode);
             dest["raw_response"].Should().Be(errorContent);
-            dest["raw_response"].Should().Be(errorContent);
             if (expectExpandoObjectOnResult)
             {
                 var result = dest!["result"] as IDictionary<string, object?>;
@@ -158,17 +159,17 @@ namespace ETLBox.Rest.Tests
                 result.Should().BeOfType<ExpandoObject>();
                 result!["code"].Should().Be("OK");
             }
-            if (httpStatusCode == HttpStatusCode.OK)
+            if (expectException)
             {
-                dest.Should().NotContainKey("exception");
-            }
-            else
-            { 
                 dest["exception"].Should().NotBeNull();
                 dest["exception"].Should().BeOfType<HttpStatusCodeException>();
                 HttpStatusCodeException exception = (HttpStatusCodeException)dest["exception"]!;
                 exception.Message.Should().Be(errorContent);
                 exception.HttpCode.Should().Be(httpStatusCode);
+            }
+            else
+            {
+                dest.Should().NotContainKey("exception");
             }
         }
 

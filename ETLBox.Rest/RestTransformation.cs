@@ -269,7 +269,7 @@ namespace ETLBox.Rest
             res[ExceptionField] = ex;
             if (ex is HttpStatusCodeException httpStatusCodeException)
             {
-                res[ResultField] = new ExpandoObject();
+                res[ResultField] = GetResponseObject(httpStatusCodeException.Content);
                 res[HttpCodeField] = httpStatusCodeException.HttpCode;
                 res[RawResponseField] = httpStatusCodeException.Content;
             }
@@ -285,7 +285,7 @@ namespace ETLBox.Rest
             }
             catch
             {
-                return new ExpandoObject();
+                return null;
             }
         }
     }
