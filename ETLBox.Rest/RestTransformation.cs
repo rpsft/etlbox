@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -37,9 +38,19 @@ namespace ETLBox.Rest
         public RestMethodInfo RestMethodInfo { get; set; } = null!;
 
         /// <summary>
-        /// Gets or sets the field name where the result of the REST call will be stored.
+        /// Gets or sets the field name where the HTTP code of the REST call will be stored.
+        /// </summary>
+        public string? HttpCodeField { get; set; }
+
+        /// <summary>
+        /// Gets or sets the field name where the deserialized result of the REST call will be stored.
         /// </summary>
         public string ResultField { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the field name where the raw response string of the REST call will be stored.
+        /// </summary>
+        public string? RawResponseField { get; set; }
 
         /// <summary>
         /// Gets or sets the field name where any exception message will be stored.
@@ -121,22 +132,9 @@ namespace ETLBox.Rest
             IHttpClient httpClient
         )
         {
-            if (input is null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            if (RestMethodInfo is null)
-            {
-                throw new InvalidOperationException(
-                    $"Property '{nameof(RestMethodInfo)}' not defined"
-                );
-            }
-            if (ResultField is null)
-            {
-                throw new InvalidOperationException(
-                    $"Property '{nameof(ResultField)}' not defined"
-                );
-            }
+            ValidateParameter(input, nameof(input));
+            ValidateParameter(RestMethodInfo, nameof(RestMethodInfo));
+            ValidateParameter(ResultField, nameof(ResultField));
 
             var method = GetMethod(RestMethodInfo.Method!);
             var templateUrl = Template.Parse(RestMethodInfo.Url!);
@@ -158,17 +156,12 @@ namespace ETLBox.Rest
                     var response = await httpClient
                         .InvokeAsync(url, method, RestMethodInfo.Headers, body)
                         .ConfigureAwait(false);
+                    var outputValue = GetResponseObject(response);
 
-                    var outputValue =
-                        (ExpandoObject?)
-                            JsonSerializer.Deserialize(
-                                response,
-                                typeof(ExpandoObject),
-                                _jsonSerializerOptions
-                            ) ?? throw new InvalidOperationException();
-
-                    var res = input as IDictionary<string, object>;
+                    var res = input as IDictionary<string, object?>;
                     res[ResultField] = outputValue;
+                    SetFieldValue(res, HttpCodeField, HttpStatusCode.OK);
+                    SetFieldValue(res, RawResponseField, response);
                     LogProgress();
                     return (ExpandoObject)res;
                 }
@@ -254,18 +247,51 @@ namespace ETLBox.Rest
 
         private ExpandoObject HandleError(ExpandoObject input, Exception ex)
         {
+            Logger.LogError(ex, "Failed REST transformation: '{Message}'", ex.Message);
             if (FailOnError)
             {
                 throw ex;
             }
-            Logger.LogError(ex, "Failed REST transformation");
-            var res = input as IDictionary<string, object>;
+            var res = input as IDictionary<string, object?>;
             res[ExceptionField] = ex;
             if (ex is HttpStatusCodeException httpStatusCodeException)
             {
-                res[ResultField] = httpStatusCodeException.Content;
+                res[ResultField] = GetResponseObject(httpStatusCodeException.Content);
+                SetFieldValue(res, HttpCodeField, httpStatusCodeException.HttpCode);
+                SetFieldValue(res, RawResponseField, httpStatusCodeException.Content);
             }
             return (ExpandoObject)res;
+        }
+
+        private ExpandoObject? GetResponseObject(string response)
+        {
+            try
+            {
+                var doc = JsonDocument.Parse(response);
+                return doc.Deserialize<ExpandoObject?>(_jsonSerializerOptions);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void SetFieldValue(IDictionary<string, object?> res, string? field, object value)
+        {
+            if (!string.IsNullOrEmpty(field))
+            {
+                res[field!] = value;
+            }
+        }
+
+        private void ValidateParameter(object field, string fieldName)
+        {
+            if (field is null)
+            {
+                throw new InvalidOperationException(
+                    $"Property '{fieldName}' not defined"
+                );
+            }
         }
     }
 }

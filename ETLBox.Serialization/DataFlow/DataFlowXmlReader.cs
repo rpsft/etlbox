@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
 
@@ -444,7 +444,12 @@ public sealed class DataFlowXmlReader
 
     private static object? CreateValueType(Type type, XContainer node)
     {
-        return node.FirstNode is null ? null : GetValue(type, node.FirstNode.ToString().Trim());
+        StringBuilder builder = new StringBuilder();
+        foreach (var item in node.DescendantNodes().Where(n => n != null))
+        {
+            builder.Append((item as XText)?.Value.Trim() ?? "");
+        }
+        return GetValue(type, builder.ToString());
     }
 
     private object CreateDictionary(Type type, XContainer node)
