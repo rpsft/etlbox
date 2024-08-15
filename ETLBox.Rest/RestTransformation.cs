@@ -40,7 +40,7 @@ namespace ETLBox.Rest
         /// <summary>
         /// Gets or sets the field name where the HTTP code of the REST call will be stored.
         /// </summary>
-        public string HttpCodeField { get; set; } = "HTTPCode";
+        public string? HttpCodeField { get; set; }
 
         /// <summary>
         /// Gets or sets the field name where the deserialized result of the REST call will be stored.
@@ -50,7 +50,7 @@ namespace ETLBox.Rest
         /// <summary>
         /// Gets or sets the field name where the raw response string of the REST call will be stored.
         /// </summary>
-        public string RawResponseField { get; set; } = "RawResponse";
+        public string? RawResponseField { get; set; }
 
         /// <summary>
         /// Gets or sets the field name where any exception message will be stored.
@@ -132,22 +132,9 @@ namespace ETLBox.Rest
             IHttpClient httpClient
         )
         {
-            if (input is null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            if (RestMethodInfo is null)
-            {
-                throw new InvalidOperationException(
-                    $"Property '{nameof(RestMethodInfo)}' not defined"
-                );
-            }
-            if (ResultField is null)
-            {
-                throw new InvalidOperationException(
-                    $"Property '{nameof(ResultField)}' not defined"
-                );
-            }
+            ValidateParameter(input, nameof(input));
+            ValidateParameter(RestMethodInfo, nameof(RestMethodInfo));
+            ValidateParameter(ResultField, nameof(ResultField));
 
             var method = GetMethod(RestMethodInfo.Method!);
             var templateUrl = Template.Parse(RestMethodInfo.Url!);
@@ -173,8 +160,8 @@ namespace ETLBox.Rest
 
                     var res = input as IDictionary<string, object?>;
                     res[ResultField] = outputValue;
-                    res[HttpCodeField] = HttpStatusCode.OK;
-                    res[RawResponseField] = response;
+                    SetFieldValue(res, HttpCodeField, HttpStatusCode.OK);
+                    SetFieldValue(res, RawResponseField, response);
                     LogProgress();
                     return (ExpandoObject)res;
                 }
@@ -270,8 +257,8 @@ namespace ETLBox.Rest
             if (ex is HttpStatusCodeException httpStatusCodeException)
             {
                 res[ResultField] = GetResponseObject(httpStatusCodeException.Content);
-                res[HttpCodeField] = httpStatusCodeException.HttpCode;
-                res[RawResponseField] = httpStatusCodeException.Content;
+                SetFieldValue(res, HttpCodeField, httpStatusCodeException.HttpCode);
+                SetFieldValue(res, RawResponseField, httpStatusCodeException.Content);
             }
             return (ExpandoObject)res;
         }
@@ -286,6 +273,24 @@ namespace ETLBox.Rest
             catch
             {
                 return null;
+            }
+        }
+
+        private void SetFieldValue(IDictionary<string, object?> res, string? field, object value)
+        {
+            if (!string.IsNullOrEmpty(field))
+            {
+                res[field!] = value;
+            }
+        }
+
+        private void ValidateParameter(object field, string fieldName)
+        {
+            if (field is null)
+            {
+                throw new InvalidOperationException(
+                    $"Property '{fieldName}' not defined"
+                );
             }
         }
     }
