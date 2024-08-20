@@ -57,9 +57,9 @@ build_job:
         dotnet versionize --aggregate-pre-releases --pre-release ${SOURCE_BRANCH}
       fi
   script:
-    - echo "Building version $PACKAGE_VERSION"
+    - echo "Building solution"
     - dotnet build --packages .nuget/packages/ -c Release
-    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - dotnet pack --no-build -c Release -o $NUPKG_FOLDER --include-symbols --include-source
 
     - echo "Pushing version changes to GIT"
     - git add **/*.csproj
@@ -124,7 +124,7 @@ test_job:
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
     - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
-    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet build --packages .nuget/packages/ -c Release
   script:
     - >
       dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
@@ -156,7 +156,7 @@ publish:internal:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
+    - echo "Publishing version internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
   needs:
     - build_job
@@ -166,10 +166,10 @@ publish:nuget-org:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
+    - echo "Publishing version to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta.*$/ )
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/ )
       when: manual
   needs:
     - build_job
