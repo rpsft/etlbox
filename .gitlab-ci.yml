@@ -5,11 +5,14 @@ include:
 variables:
   # Opt out of telemetry (turbo and others), see https://consoledonottrack.com/
   DO_NOT_TRACK: 1
-  
+  # Enable debug services
   CI_DEBUG_SERVICES: "true"
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
+  # Nupkg folder
   NUPKG_FOLDER: ".packages"
+  # avoid shallow clone to give sonar all the info it needs
+  GIT_DEPTH: 1000
 
 workflow:
   rules:
