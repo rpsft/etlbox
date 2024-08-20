@@ -38,7 +38,7 @@ stages:
   - test
   - deploy
 
-bump_version:
+build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
   before_script:
@@ -49,7 +49,6 @@ bump_version:
     - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
     - git fetch origin $SOURCE_BRANCH
     - git switch $SOURCE_BRANCH
-  script:
     - echo "Collecting change log and bumping version"
     - |
       if [ "$CI_COMMIT_BRANCH" = "master" ]; then
@@ -57,19 +56,16 @@ bump_version:
       else
         dotnet versionize --aggregate-pre-releases --pre-release ${SOURCE_BRANCH}
       fi
-
-build_job:
-  stage: build
-  image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
     - echo "Building version $PACKAGE_VERSION"
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   after_script: 
     - echo "Pushing version changes to GIT"
-    - git add .
+    - git add **/*.csproj
+    - git add CHANGELOG.md
     - git commit --no-verify -m "Publish packages, version bump"
-    - git push origin $SOURCE_BRANCH -o ci.skip
+    - git push -follow-tags origin $SOURCE_BRANCH -o ci.skip
   cache:
     key: dotnet-packages-cache
     paths:
@@ -80,8 +76,6 @@ build_job:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - "$NUPKG_FOLDER/"
-  needs:
-    - bump_version
 
 test_job:
   stage: test
