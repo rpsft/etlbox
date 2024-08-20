@@ -58,9 +58,9 @@ build_job:
       fi
   script:
     - echo "Building version $PACKAGE_VERSION"
-    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet build --packages .nuget/packages/ -c Release
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
-  after_script: 
+
     - echo "Pushing version changes to GIT"
     - git add **/*.csproj
     - git add CHANGELOG.md

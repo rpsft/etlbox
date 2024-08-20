@@ -23,7 +23,6 @@
   <PropertyGroup>
     <BuildDependsOn>
       InstallHusky;
-      ParseVersionFile;
       $(BuildDependsOn)
     </BuildDependsOn>
   </PropertyGroup>
