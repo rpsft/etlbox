@@ -52,9 +52,9 @@ build_job:
     - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
     - |
       if [ "$SOURCE_BRANCH" = "master" ]; then
-        dotnet versionize --aggregate-pre-releases
+        dotnet versionize
       else
-        dotnet versionize --aggregate-pre-releases --pre-release $SOURCE_BRANCH
+        dotnet versionize --pre-release $SOURCE_BRANCH
       fi
   script:
     - echo "Building solution"
