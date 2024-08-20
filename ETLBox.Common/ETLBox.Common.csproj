@@ -5,6 +5,7 @@
     <RootNamespace>ALE.ETLBox.Common</RootNamespace>
     <LangVersion>default</LangVersion>
     <PackageId>EtlBox.Classic.Common</PackageId>
+    <Version>1.11.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="ETLBox;ETLBox.Kafka" />

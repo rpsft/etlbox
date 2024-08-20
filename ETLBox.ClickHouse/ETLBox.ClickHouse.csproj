@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.ClickHouse</PackageId>
+    <Version>1.11.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

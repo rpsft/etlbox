@@ -18,6 +18,7 @@
     <RootNamespace>ALE.ETLBox</RootNamespace>
     <LangVersion>default</LangVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>1.11.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
