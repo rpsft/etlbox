@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.RabbitMq</PackageId>
-    <Version>1.11.2-versionize.0</Version>
+    <Version>1.11.2-versionize.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
