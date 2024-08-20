@@ -51,10 +51,10 @@ build_job:
     - git switch $SOURCE_BRANCH
     - echo "Collecting change log and bumping version"
     - |
-      if [ "$CI_COMMIT_BRANCH" = "master" ]; then
+      if [ "$SOURCE_BRANCH" = "master" ]; then
         dotnet versionize --aggregate-pre-releases
       else
-        dotnet versionize --aggregate-pre-releases --pre-release ${SOURCE_BRANCH}
+        dotnet versionize --aggregate-pre-releases --pre-release $SOURCE_BRANCH
       fi
   script:
     - echo "Building solution"
@@ -64,8 +64,13 @@ build_job:
     - echo "Pushing version changes to GIT"
     - git add **/*.csproj
     - git add CHANGELOG.md
-    - git commit --no-verify -m "Publish packages, version bump"
-    - git push -follow-tags origin $SOURCE_BRANCH -o ci.skip
+    - |
+      if git diff-index --quiet HEAD --; then
+        echo "No changes to commit"
+      else
+        git commit --no-verify -m "Publish packages, version bump"
+      fi
+    - git push --follow-tags origin $SOURCE_BRANCH -o ci.skip
   cache:
     key: dotnet-packages-cache
     paths:
