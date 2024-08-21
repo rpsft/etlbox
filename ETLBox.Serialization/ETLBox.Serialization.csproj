@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>ALE.ETLBox.Serialization</RootNamespace>
-        <LangVersion>10</LangVersion>
-        <PackageId>ETLBox.Classic.Serialization</PackageId>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ALE.ETLBox.Serialization</RootNamespace>
+    <LangVersion>10</LangVersion>
+    <PackageId>ETLBox.Classic.Serialization</PackageId>
+    <Nullable>enable</Nullable>
+    <Version>1.11.2-versionize.2</Version>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="CsvHelper" Version="30.0.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
-      <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
+    <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+  </ItemGroup>
 
 </Project>
