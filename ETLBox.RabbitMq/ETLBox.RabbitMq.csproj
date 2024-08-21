@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.RabbitMq</PackageId>
+    <Version>1.11.2-versionize.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>EtlBox.Classic.Primitives</PackageId>
+    <Version>1.11.2-versionize.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

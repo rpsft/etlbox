@@ -23,7 +23,6 @@
   <PropertyGroup>
     <BuildDependsOn>
       InstallHusky;
-      ParseVersionFile;
       $(BuildDependsOn)
     </BuildDependsOn>
   </PropertyGroup>
@@ -33,24 +32,5 @@
     <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High"/>
     <Exec Command="dotnet husky install" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High"/>
   </Target>
-
-  <Target Name="ParseVersionFile">
-    <PropertyGroup Condition="$([System.IO.File]::Exists('$(MSBuildThisFileDirectory).version.yml')) And '$(Version)' == '1.0.0' ">
-      <VersionYmlText>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory).version.yml'))</VersionYmlText>
-      <VersionPrefix>$([System.Text.RegularExpressions.Regex]::Match($(VersionYmlText), 'PACKAGE_RELEASE:\s*([^\s]+)').Groups[1].Value)</VersionPrefix>
-      <VersionSuffix>$([System.Text.RegularExpressions.Regex]::Match($(VersionYmlText), 'PACKAGE_POSTFIX:[\s\-]*([^\s\-][^\s]*)').Groups[1].Value)</VersionSuffix>
-      <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
-      <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
-      <PackageVersion>$(Version)</PackageVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Version)' == '1.0.0' ">
-      <VersionSuffix>development</VersionSuffix>
-      <VersionPrefix>1.10.0</VersionPrefix>
-      <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
-      <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
-    </PropertyGroup>
-    <Message Text="Building project $(MSBuildProjectName) version: $(PackageVersion)" Importance="high"/>
-  </Target>
-  
 
 </Project>
