@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. See [versio
 <a name="1.11.2-versionize.2"></a>
 ## 1.11.2-versionize.2 (2024-08-21)
 
+<a name="1.11.2-versionize.2"></a>
+## 1.11.2-versionize.2 (2024-08-21)
+
 <a name="1.11.2-versionize.1"></a>
 ## 1.11.2-versionize.1 (2024-08-20)
 
