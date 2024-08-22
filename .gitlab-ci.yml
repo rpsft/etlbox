@@ -57,17 +57,7 @@ build_job:
     - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
     - 'echo "Tags collected:"'
     - git tag --list 'v*'
-    # Set SemVer suffix based on branch name
-    - |
-      if [[ "$CI_PIPELINE_SOURCE" == "merge_request_event" && "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master" ]]; then
-        SEMVER_SUFFIX="rc.$CI_PIPELINE_IID"
-      elif [[ "$SOURCE_BRANCH" == release* ]]; then
-        SEMVER_SUFFIX="rc.$CI_PIPELINE_IID"
-      elif [[ "$SOURCE_BRANCH" == "develop" ]]; then
-        SEMVER_SUFFIX="develop.$CI_PIPELINE_IID"
-      else
-        SEMVER_SUFFIX="alpha.$CI_PIPELINE_IID"
-      fi
+    - SEMVER_SUFFIX="pre.$CI_PIPELINE_IID"
     - 'echo "SemVer pre-release suffix: $SEMVER_SUFFIX"'
     - |
       if [ "$SOURCE_BRANCH" = "master" ]; then
