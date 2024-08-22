@@ -14,10 +14,17 @@ variables:
   # Disable Husky in dotnet tools restore
   HUSKY: 0
 
-workflow:
+stages:
+  - build
+  - test
+  - deploy
+
+bump_version:
+  stage: .pre
+  image: mcr.microsoft.com/dotnet/sdk:6.0
   rules:
-    # Avoid duplicate pipelines in merges
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+    # Do not run on tags
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^v[0-9]+(\.[0-9]+)*(-[0-9A-Za-z-.]+)?$/ )
       when: never
     # Detect source branch name in few scenarios
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -29,15 +36,6 @@ workflow:
     - if: $CI_PIPELINE_SOURCE =~ /web/
       variables:
         SOURCE_BRANCH: $CI_COMMIT_BRANCH
-
-stages:
-  - build
-  - test
-  - deploy
-
-bump_version:
-  stage: .pre
-  image: mcr.microsoft.com/dotnet/sdk:6.0
   before_script:
     - dotnet tool restore
     - git config user.email "noreply@rapidsoft.ru"
