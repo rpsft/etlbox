@@ -6,7 +6,7 @@
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.Json</PackageId>
     <RootNamespace>ALE.ETLBox.Common.DataFlow</RootNamespace>
-    <Version>1.11.2-rc.453</Version>
+    <Version>1.11.3-pre.0</Version>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       Support for Json transformations.
