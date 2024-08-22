@@ -11,6 +11,11 @@ if (Args.Count != 1)
 }
 private var msg = File.ReadAllLines(Args[0])[0];
 
+if (Regex.IsMatch(msg, "^Revert"))
+{
+    return 0;
+}
+
 bool CheckLength(string message) => message.Length >= 1 && message.Length <= 90;
 bool CheckType(string message) => Regex.IsMatch(message, $"^({CommitTypes})[:\\(]");
 bool CheckScopeAndColon(string message) => Regex.IsMatch(message, $"^({CommitTypes})(\\(.+\\))?:");
