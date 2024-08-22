@@ -6,7 +6,7 @@
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.Json</PackageId>
     <RootNamespace>ALE.ETLBox.Common.DataFlow</RootNamespace>
-    <Version>1.11.2-versionize.2</Version>
+    <Version>1.11.2-versionize.3</Version>
   </PropertyGroup>
 
   <ItemGroup>

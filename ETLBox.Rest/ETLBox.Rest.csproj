@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.Rest</PackageId>
-    <Version>1.11.2-versionize.2</Version>
+    <Version>1.11.2-versionize.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
