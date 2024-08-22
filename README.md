@@ -1,14 +1,30 @@
 # ETLBox.Classic
 
 This is a fully open-source (MIT) fork from original ETLBox library.
-Starting version 2.0 the author of the original library decided to close the source and commercialize the newer branch.
+
+Starting with version 2.0 the author of the original library decided to close the source and commercialize the newer branch.
 ETLBox.Classic is aiming at keeping original 1.x branch up to date with .Net and DB libraries.
 
-### Documentation note
+> ⚠️ **IMPORTANT NOTICE:** ⚠️
+> 
+> ETLBox.Classic is not a direct fork of original ETLBox library. It is a copy of the original source code, modified to
+> keep on open-source.
+> 
+> As we are actively developing it, we anticipate the need for breaking changes in the near future.
+> In order to avoid versioning conflict with original ETLBox library, we decided to rename version 2.x and on from
+> "EtlBox.Classic" to "EtlKit". We expect migration to 2.0 to be as easy as updating Nuget references and changing
+> namespaces.
 
-Please note, that most of the documentation below is not updated and may contain broken links. Documentation PRs
-are most welcome. If you use this library, please consider updating some of its documentation.
+## Installation
 
+You can use ETLBox within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions
+of .NET)
+
+[ETLBox is available on nuget](https://www.nuget.org/packages?q=EtlBox.Classic). Just add the package to your project via your
+nuget package manager.
+
+See individual package descriptions to make sense of what each of them does.
+For very basic set up you would need to install only [EtlBox.Classic](https://www.nuget.org/packages/EtlBox.Classic)
 
 ## What is ETLBox
 
@@ -134,15 +150,17 @@ of ETLBox.
 **You can *always* integrate any other system not listed here by using a `CustomSource` or `CustomDestination` - though
 you have to write the integration code yourself.**
 
-|  Source or Destination | Support for                          | Limitations                                   |
-|------------------------|--------------------------------------|-----------------------------------------------|
-|  Databases             | Sql Server, Postgres, SQLite, MySql  | Full support                                  |
-|  Flat files            | Csv, Json, Xml                       | Full support                                  |
-|  Office                | Microsoft Access, Excel              | Full support for Access, Excel only as source |
-|  Cube                  | Sql Server Analysis Service          | Only XMLA statements                          |
-|  Memory                | .NET IEnumerable & Collections       | Full support                                  |
-|  Cloud Services        | Tested with Azure                    | Full support                                  |
-|  Any other             | integration with custom written code | No limitations                                |
+| Source or Destination | Support for                                     | Limitations                                       |
+|-----------------------|-------------------------------------------------|---------------------------------------------------|
+| Databases             | Sql Server, Postgres, SQLite, MySql, Clickhouse | Full support                                      |
+| Queues and streaming  | Kafka, RabbitMQ                                 | Kafka — full support, RabbitMQ — destination only | 
+| Flat files            | Csv, Json, Xml                                  | Full support                                      |
+| Office                | Microsoft Access, Excel                         | Full support for Access, Excel only as source     |
+| Cube                  | Sql Server Analysis Service                     | Only XMLA statements                              |
+| Memory                | .NET IEnumerable & Collections                  | Full support                                      |
+| API                   | REST                                            | Full support                                      | 
+| Cloud Services        | Tested with Azure                               | Full support                                      |
+| Any other             | integration with custom written code            | No limitations                                    |
 
 You can choose between different sources and destination components. `DbSource` and `DbDestination` will connect to the
 most used databases (e.g. Sql Server, Postgres, MySql, SQLite). `CsvSource`, `CsvDestination` give you support for flat
@@ -163,14 +181,16 @@ subsequently.
 
 The following table is an overview of the most common transformations in ETLBox:
 
-|  Non-blocking      | Partially blocking   | Blocking            |
-|--------------------|----------------------|---------------------|
-|  RowTransformation | LookupTransformation | BlockTransformation |
-|  Aggregation       | CrossJoin            | Sort                |
-|  MergeJoin         |                      |                     |
-|  Multicast         |                      |                     |
-|  RowDuplication    |                      |                     |
-|  RowMultiplication |                      |                     |
+| Non-blocking              | Partially blocking   | Blocking            |
+|---------------------------|----------------------|---------------------|
+| RowTransformation         | LookupTransformation | BlockTransformation |
+| Aggregation               | CrossJoin            | Sort                |
+| MergeJoin                 |                      |                     |
+| Multicast                 |                      |                     |
+| RowDuplication            |                      |                     |
+| RowMultiplication         |                      |                     |
+| JsonTransformation        |                      |                     |
+| ScriptedRowTransformation |                      |                     |
 
 #### Designed for big data
 
@@ -179,6 +199,21 @@ Batch operations. By default, every component comes with an input and/or output 
 that only batches or your data is stored in memory, which are kept in different buffers for every component to increase
 throughput. All operations can be execute asynchrounously, so that your processing will run only within separate
 threads.
+
+#### Data transformations
+
+Data transformations take input data from source, perform an external operation (via DB, API, or queue) and return
+produced result into a destination. Namely data transformations are:
+
+| Transformation            | Input                                                          | Processing                                      | Output                                                                                  |
+|---------------------------|----------------------------------------------------------------|-------------------------------------------------|-----------------------------------------------------------------------------------------|
+| SqlQueryTransformation    | Parameters to a liquid-based SQL query template                | Execute SQL query                               | SQL query results (0..N for each input row)                                             |
+| SqlCommmandTransformation | Parameters to a liquid-based SQL query template                | Execute SQL non-query statement                 | Input object (or this can be customised with Transform delegate) — 1 for each input row |
+| KafkaTransformation       | Parameters to a liquid-based string message template           | Produce messages to Kafka topic                 | Input object or null                                                                    |
+| RabbitMqTransformation    | Parameters to a liquid-based string message template           | Publish messages to RabbitMQ channel            | Input object or null                                                                    |
+| JsonTransformation        | Json object                                                    | Execute JSON path transformation for each field | Output object where each field is the result of Json path evaluation                    |
+| RestTransformation        | Parameters to a liquid-based request URL and body templates    | Execute HTTP request                            | ExpandoObject with response code, raw body and Json parsed body in fields               |
+| ScriptRowTransformation   | Object as Globals to C# script templates for each result field | Execute C# code                                 | Result object with one field per script                                                 |
 
 ### Control Flow - overview
 
@@ -210,17 +245,7 @@ up a ILogger configuration called `ILogger.config`, and create a target and a lo
 get logging output for all tasks and components in
 ETLBox. [Read more about logging here](https://etlbox.net/articles/overview_logging.html).
 
-## Getting ETLBox
-
-You can use ETLBox within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions
-of .NET)
-
-**Variant 1:** Nuget
-
-[ETLBox is available on nuget](https://www.nuget.org/packages/ETLBox.Classic). Just add the package to your project via your
-nuget package manager.
-
-**Variant 2:** Download the sources
+## Contribution
 
 Clone the repository:
 
@@ -228,8 +253,12 @@ Clone the repository:
 git clone https://github.com/rpsft/etlbox.git
 ```
 
-Then, open the downloaded solution file ETLBox.sln with Visual Studio 2019 or higher.
+Then, open the downloaded solution file ETLBox.sln with Visual Studio 2022 or Jetbrains Rider.
 Now you can build the solution, and use it as a reference in other projects.
+
+### Running tests
+
+See [TEST_SETUP.md](TEST-SETUP.md) for instructions.
 
 ## Going further
 
@@ -238,11 +267,3 @@ appreciated.
 
 To dig deeper into it, have a look at the test projects. There is a test for (almost) everything that you can do with
 ETLBox.
-
-<span class="hideOnWebsite">
-
-[See the ETLBox Project website](https://etlbox.net)
-for [introductional articles](https://etlbox.net/articles/getting_started.html) and
-a [complete API documentation](https://etlbox.net/api/index.html). Enjoy!
-
-</span>

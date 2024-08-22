@@ -1,10 +1,10 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 using Newtonsoft.Json.Linq;
-using TestNonParallel.Fixtures;
 
-namespace TestNonParallel.Logging.LoadProcessTable
+namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 {
     [Collection("Logging")]
     public sealed class GetLoadProcessAsJSONTaskTests : NonParallelTestBase, IDisposable

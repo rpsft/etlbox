@@ -19,7 +19,7 @@ namespace ALE.ETLBox.DataFlow
     {
         private readonly IConnectionFactory? _connectionFactory;
 
-        protected Func<TInput, TOutput>? ProcessResult;
+        protected Func<TInput, TOutput>? TransformResult;
 
         /// <summary>
         /// AMQP Uri to be used for connections.
@@ -44,17 +44,20 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// .ctor
         /// </summary>
-        public RabbitMqTransformation(Func<TInput, TOutput>? processResultFunc)
+        public RabbitMqTransformation(Func<TInput, TOutput>? transformResultFunc)
         {
             TransformationFunc = Publish;
-            ProcessResult = processResultFunc;
+            TransformResult = transformResultFunc;
         }
 
         /// <summary>
         /// .ctor
         /// </summary>
-        public RabbitMqTransformation(IConnectionFactory connectionFactory, Func<TInput, TOutput>? processResult
-        ) : this(processResult)
+        public RabbitMqTransformation(
+            IConnectionFactory connectionFactory,
+            Func<TInput, TOutput>? transformResult
+        )
+            : this(transformResult)
         {
             _connectionFactory = connectionFactory;
         }
@@ -94,26 +97,33 @@ namespace ALE.ETLBox.DataFlow
             }
 
             var templateMessage = Template.Parse(MessageTemplate);
-            var inputDictionary = input is IDictionary<string, object> objects
-                ? objects : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
+            var inputDictionary =
+                input as IDictionary<string, object>
+                ?? input
+                    .GetType()
+                    .GetProperties()
+                    .ToDictionary(p => p.Name, p => p.GetValue(input));
             var messageValue = templateMessage.Render(Hash.FromDictionary(inputDictionary));
 
             if (string.IsNullOrEmpty(messageValue))
             {
-                return ProcessResult == null ? default : ProcessResult(input);
+                return TransformResult == null ? default : TransformResult(input);
             }
 
-            var connectionFactory = _connectionFactory ?? new ConnectionFactory
-            {
-                Uri = new Uri(ConnectionString)
-            };
+            var connectionFactory =
+                _connectionFactory ?? new ConnectionFactory { Uri = new Uri(ConnectionString) };
 
             using var connection = connectionFactory.CreateConnection();
             using var channelToPublish = connection.CreateModel();
 
-            channelToPublish.BasicPublish(string.Empty, Queue, GetChannelProperties(channelToPublish), Encoding.Default.GetBytes(messageValue));
+            channelToPublish.BasicPublish(
+                string.Empty,
+                Queue,
+                GetChannelProperties(channelToPublish),
+                Encoding.Default.GetBytes(messageValue)
+            );
 
-            return ProcessResult == null ? default : ProcessResult(input);
+            return TransformResult == null ? default : TransformResult(input);
         }
 
         private IBasicProperties? GetChannelProperties(IModel channelToPublish)
@@ -181,7 +191,10 @@ namespace ALE.ETLBox.DataFlow
         private void UpdateHeaders(IBasicProperties properties)
         {
             if (Properties?.Headers != null)
-                properties.Headers = Properties.Headers.ToDictionary(h => h.Key, h => (object)h.Value);
+                properties.Headers = Properties.Headers.ToDictionary(
+                    h => h.Key,
+                    h => (object)h.Value
+                );
         }
 
         private void UpdateTimestamp(IBasicProperties properties)
@@ -193,8 +206,11 @@ namespace ALE.ETLBox.DataFlow
         private void UpdateReplyToAddress(IBasicProperties properties)
         {
             if (Properties?.ReplyToAddress != null)
-                properties.ReplyToAddress =
-                    new RabbitMQ.Client.PublicationAddress(Properties.ReplyToAddress.ExchangeType, Properties.ReplyToAddress.ExchangeName, Properties.ReplyToAddress.RoutingKey);
+                properties.ReplyToAddress = new RabbitMQ.Client.PublicationAddress(
+                    Properties.ReplyToAddress.ExchangeType,
+                    Properties.ReplyToAddress.ExchangeName,
+                    Properties.ReplyToAddress.RoutingKey
+                );
         }
     }
 
@@ -206,15 +222,13 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// .ctor
         /// </summary>
-        public RabbitMqTransformation() : base(input => input)
-        {
-        }
+        public RabbitMqTransformation()
+            : base(input => input) { }
 
         /// <summary>
         /// .ctor
         /// </summary>
-        public RabbitMqTransformation(IConnectionFactory connectionFactory) : base(connectionFactory, input => input)
-        {
-        }
+        public RabbitMqTransformation(IConnectionFactory connectionFactory)
+            : base(connectionFactory, input => input) { }
     }
 }
