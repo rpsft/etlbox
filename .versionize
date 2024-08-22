@@ -1,5 +1,5 @@
 {
-  "changelogAll": true,
+  "changelogAll": false,
   "changelog": {
     "header": "EtlBox.Clasic change log",
     "sections": [
