@@ -23,6 +23,9 @@ bump_version:
   stage: .pre
   image: mcr.microsoft.com/dotnet/sdk:6.0
   rules:
+    # Avoid duplicate pipelines in merges
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
     # Do not run on tags
     - if: $CI_COMMIT_TAG
       when: never
@@ -31,11 +34,11 @@ bump_version:
       variables:
         SOURCE_BRANCH: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     # Run on web events
-    - if: $CI_PIPELINE_SOURCE =~ /web/
+    - if: $CI_PIPELINE_SOURCE == "web"
       variables:
         SOURCE_BRANCH: $CI_COMMIT_BRANCH
     # Run on push events only if no open merge request is present
-    - if: $CI_PIPELINE_SOURCE == "push" && !($CI_OPEN_MERGE_REQUESTS) && !($CI_COMMIT_TAG)
+    - if: $CI_PIPELINE_SOURCE == "push"
       variables:
         SOURCE_BRANCH: $CI_COMMIT_BRANCH
   before_script:
