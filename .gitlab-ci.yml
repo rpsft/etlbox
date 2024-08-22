@@ -14,6 +14,7 @@ variables:
   # Disable Husky in dotnet tools restore
   HUSKY: 0
 
+
 workflow:
   rules:
     # Avoid duplicate pipelines in merges
