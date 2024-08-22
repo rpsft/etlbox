@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. See [versio
 <a name="1.11.3-pre.0"></a>
 ## 1.11.3-pre.0 (2024-08-22)
 
+<a name="1.11.3-pre.0"></a>
+## 1.11.3-pre.0 (2024-08-22)
+
 <a name="1.11.2-rc.453"></a>
 ## 1.11.2-rc.453 (2024-08-22)
 
