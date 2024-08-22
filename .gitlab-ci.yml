@@ -1,7 +1,3 @@
-include:
-  # Release version in current branch
-  - .version.yml
-
 variables:
   # Opt out of telemetry (turbo and others), see https://consoledonottrack.com/
   DO_NOT_TRACK: 1
