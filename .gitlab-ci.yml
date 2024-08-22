@@ -19,9 +19,6 @@ workflow:
     # Avoid duplicate pipelines in merges
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
-    # Skip pipeline on Publish packages, version bump commits
-    - if: $CI_COMMIT_TITLE =~ /Publish packages, version bump/
-      when: never
     # Detect source branch name in few scenarios
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
@@ -38,8 +35,8 @@ stages:
   - test
   - deploy
 
-build_job:
-  stage: build
+bump_version:
+  stage: .pre
   image: mcr.microsoft.com/dotnet/sdk:6.0
   before_script:
     - dotnet tool restore
@@ -47,11 +44,14 @@ build_job:
     - git config user.name "Gitlab Runner"
     - echo "Source branch ${SOURCE_BRANCH}"
     - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-    - git fetch origin $SOURCE_BRANCH
+    - git fetch --depth=1000 --tags origin $SOURCE_BRANCH
     - git switch $SOURCE_BRANCH
     - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
     - 'echo "Tags collected:"'
     - git tag --list 'v*'
+    # Convert the entire branch name to a valid SemVer suffix
+    - SEMVER_SUFFIX=$(echo "$SOURCE_BRANCH" | tr '[:upper:]' '[:lower:]' | tr '/+' '-')
+    - 'echo "SemVer pre-release suffix: $SEMVER_SUFFIX"'
     - |
       if [ "$SOURCE_BRANCH" = "master" ]; then
         echo "Upgrading to release version"
@@ -61,10 +61,6 @@ build_job:
         dotnet versionize --pre-release $SOURCE_BRANCH
       fi
   script:
-    - echo "Building solution"
-    - dotnet build --packages .nuget/packages/ -c Release
-    - dotnet pack --no-build -c Release -o $NUPKG_FOLDER --include-symbols --include-source
-
     - echo "Pushing version changes to GIT"
     - git add **/*.csproj
     - git add CHANGELOG.md
@@ -75,6 +71,16 @@ build_job:
         git commit --no-verify -m "Publish packages, version bump"
       fi
     - git push --follow-tags origin $SOURCE_BRANCH -o ci.skip
+
+build_job:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  script:
+    - echo "Building solution"
+    - dotnet build --packages .nuget/packages/ -c Release
+    - dotnet pack --no-build -c Release -o $NUPKG_FOLDER --include-symbols --include-source
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^v[0-9]+(\.[0-9]+)*(-[0-9A-Za-z-.]+)?$/ )
   cache:
     key: dotnet-packages-cache
     paths:
@@ -143,6 +149,8 @@ test_job:
     - .tools/reportgenerator "-reports:./**/*.cobertura.xml" "-targetdir:.coverage" -reportTypes:TextSummary
     - cat .coverage/Summary.txt
     - echo 'End Summary'
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+(\.[0-9]+)*(-[0-9A-Za-z-.]+)?$/'
   coverage: /Line coverage:[\s\S].+%/
   cache:
     key: dotnet-packages-cache
@@ -167,6 +175,8 @@ publish:internal:
   script:
     - echo "Publishing version internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^v[0-9]+(\.[0-9]+)*(-[0-9A-Za-z-.]+)?$/ )
   needs:
     - build_job
     - test_job
