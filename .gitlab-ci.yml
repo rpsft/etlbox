@@ -42,7 +42,7 @@ build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
   before_script:
-    - dotnet tool restore
+    - dotnet tool install versionize --tool-path .tools || true
     - git config user.email "noreply@rapidsoft.ru"
     - git config user.name "Gitlab Runner"
     - echo "Source branch ${SOURCE_BRANCH}"
@@ -52,16 +52,25 @@ build_job:
     - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
     - 'echo "Tags collected:"'
     - git tag --list 'v*'
-    # Convert the entire branch name to a valid SemVer suffix
-    - SEMVER_SUFFIX=$(echo "$SOURCE_BRANCH" | tr '[:upper:]' '[:lower:]' | tr '/+' '-')
+    # Set SemVer suffix based on branch name
+    - |
+      if [[ "$CI_PIPELINE_SOURCE" == "merge_request_event" && "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" == "master" ]]; then
+        SEMVER_SUFFIX="rc"
+      elif [[ "$SOURCE_BRANCH" == release* ]]; then
+        SEMVER_SUFFIX="rc"
+      elif [[ "$SOURCE_BRANCH" == "develop" ]]; then
+        SEMVER_SUFFIX="develop"
+      else
+        SEMVER_SUFFIX="alpha.$(echo "$SOURCE_BRANCH" | tr '[:upper:]' '[:lower:]' | tr '/+' '-')"
+      fi
     - 'echo "SemVer pre-release suffix: $SEMVER_SUFFIX"'
     - |
       if [ "$SOURCE_BRANCH" = "master" ]; then
         echo "Upgrading to release version"
-        dotnet versionize --aggregate-pre-releases 
+        .tools/versionize --aggregate-pre-releases 
       else
         echo "Upgrading to pre-release version in branch $SOURCE_BRANCH"
-        dotnet versionize --pre-release "$SEMVER_SUFFIX"
+        .tools/versionize --pre-release "$SEMVER_SUFFIX"
       fi
   script:
     - echo "Building solution"
@@ -82,7 +91,7 @@ build_job:
     key: dotnet-packages-cache
     paths:
       - .nuget/packages/
-      - tools/
+      - .tools/
     unprotect: true
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
@@ -151,7 +160,7 @@ test_job:
     key: dotnet-packages-cache
     paths:
       - .nuget/packages/
-      - tools/
+      - .tools/
     unprotect: true
   artifacts:
     when: always
