@@ -16,6 +16,9 @@ variables:
 
 
 workflow:
+  auto_cancel:
+    on_new_commit: all
+    on_job_failure: all
   rules:
     # Avoid duplicate pipelines in merges
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
@@ -30,7 +33,7 @@ workflow:
     - if: $CI_COMMIT_BRANCH
       variables:
         SOURCE_BRANCH: $CI_COMMIT_BRANCH
-    - if: $CI_PIPELINE_SOURCE =~ /web/
+    - if: $CI_PIPELINE_SOURCE == "web"
       variables:
         SOURCE_BRANCH: $CI_COMMIT_BRANCH
 
@@ -91,7 +94,7 @@ build_job:
       else
         git commit --no-verify -m "Publish packages, version bump"
       fi
-    - git push --follow-tags origin $SOURCE_BRANCH -o ci.skip
+    - git push --follow-tags origin $SOURCE_BRANCH
   cache:
     key: dotnet-packages-cache
     paths:
