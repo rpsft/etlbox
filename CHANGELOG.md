@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.11.2-rc.3"></a>
+## 1.11.2-rc.3 (2024-08-22)
+
 <a name="1.11.2-rc.2"></a>
 ## 1.11.2-rc.2 (2024-08-22)
 
