@@ -4,7 +4,7 @@ using ETLBox.Primitives;
 using NLog.Layouts;
 using NLog.Targets;
 
-namespace ETLBox.Logging.Database;
+namespace EtlBox.Logging.Database;
 
 internal sealed class CreateDatabaseTarget
 {
@@ -38,7 +38,7 @@ SELECT {LogDate}
             return ConnectionManager.ConnectionManagerType switch
             {
                 ConnectionManagerType.SqlServer
-                    or ConnectionManagerType.MySql
+                or ConnectionManagerType.MySql
                     => "CAST(@LogDate AS DATETIME)",
                 ConnectionManagerType.Postgres => "@LogDate::TIMESTAMP",
                 _ => "@LogDate"
@@ -46,18 +46,20 @@ SELECT {LogDate}
         }
     }
 
-    private string Varchar => ConnectionManager.ConnectionManagerType switch
-    {
-        ConnectionManagerType.MySql => "CHAR",
-        _ => "VARCHAR"
-    };
+    private string Varchar =>
+        ConnectionManager.ConnectionManagerType switch
+        {
+            ConnectionManagerType.MySql => "CHAR",
+            _ => "VARCHAR"
+        };
 
-    private string Int => ConnectionManager.ConnectionManagerType switch
-    {
-        ConnectionManagerType.MySql => "UNSIGNED",
-        ConnectionManagerType.ClickHouse => "Nullable(INT)",
-        _ => "INT"
-    };
+    private string Int =>
+        ConnectionManager.ConnectionManagerType switch
+        {
+            ConnectionManagerType.MySql => "UNSIGNED",
+            ConnectionManagerType.ClickHouse => "Nullable(INT)",
+            _ => "INT"
+        };
 
     private IConnectionManager ConnectionManager { get; set; }
     private string LogTableName { get; set; }
@@ -98,11 +100,7 @@ SELECT {LogDate}
         return dbTarget;
     }
 
-    private static void AddParameter(
-        DatabaseTarget dbTarget,
-        string parameterName,
-        string layout
-    )
+    private static void AddParameter(DatabaseTarget dbTarget, string parameterName, string layout)
     {
         var par = new DatabaseParameterInfo(parameterName, new SimpleLayout(layout));
         dbTarget.Parameters.Add(par);

@@ -3,7 +3,7 @@ using ALE.ETLBox.DataFlow;
 using TestShared.SharedFixtures;
 using TestTransformations.Fixtures;
 
-namespace TestTransformations.src.SqlCommandTransformation
+namespace TestTransformations.SqlCommandTransformation
 {
     public class SqlCommandTransformationTests : TransformationsTestBase
     {
@@ -14,9 +14,7 @@ namespace TestTransformations.src.SqlCommandTransformation
         public void ConvertIntoObject()
         {
             //Arrange
-            _ = new TwoColumnsTableFixture(
-                "DestinationRowTransformation"
-            );
+            _ = new TwoColumnsTableFixture("DestinationRowTransformation");
 
             var rowsCountBefore = RowCountTask.Count(SqlConnection, "DestinationRowTransformation");
 
@@ -26,10 +24,11 @@ namespace TestTransformations.src.SqlCommandTransformation
 
             var settings = new MemorySource<ExpandoObject>(new[] { (ExpandoObject)obj });
 
-            var query = new ALE.ETLBox.src.Toolbox.DataFlow.SqlCommandTransformation
+            var query = new ALE.ETLBox.DataFlow.SqlCommandTransformation
             {
                 ConnectionManager = SqlConnection,
-                SQLTemplate = "Insert INTO DestinationRowTransformation VALUES({{Col1}}, '{{Col2}}')"
+                SqlTemplate =
+                    "Insert INTO DestinationRowTransformation VALUES({{Col1}}, '{{Col2}}')"
             };
 
             var dest = new MemoryDestination<ExpandoObject>();
@@ -41,7 +40,10 @@ namespace TestTransformations.src.SqlCommandTransformation
             dest.Wait();
 
             //Assert
-            Assert.Equal(rowsCountBefore + 1, RowCountTask.Count(SqlConnection, "DestinationRowTransformation"));
+            Assert.Equal(
+                rowsCountBefore + 1,
+                RowCountTask.Count(SqlConnection, "DestinationRowTransformation")
+            );
         }
     }
 }

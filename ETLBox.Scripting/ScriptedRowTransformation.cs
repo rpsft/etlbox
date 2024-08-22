@@ -35,8 +35,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     public IEnumerable<string> AdditionalAssemblyNames
     {
         get => _additionalAssemblies.Select(x => x.GetName().FullName);
-        set => _additionalAssemblies = value
-            .Select(Assembly.Load);
+        set => _additionalAssemblies = value.Select(Assembly.Load);
     }
 
     /// <summary>
@@ -56,14 +55,6 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
                 "Array types are not supported. Use a singular object type instead."
             );
         TransformationFunc = ScriptedTransformation;
-    }
-
-    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields")]
-    public sealed override Func<TInput, TOutput> TransformationFunc
-    {
-        // This property needs to get sealed as it is called from constructor
-        get => base.TransformationFunc;
-        set => base.TransformationFunc = value;
     }
 
     private TOutput ScriptedTransformation(TInput arg)

@@ -1,9 +1,9 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
 using ETLBox.Primitives;
-using TestNonParallel.Fixtures;
 
-namespace TestNonParallel.Logging.ErrorTable
+namespace ALE.ETLBoxTests.NonParallel.Logging.ErrorTable
 {
     [Collection("Logging")]
     public sealed class ErrorTableTaskTests : NonParallelTestBase, IDisposable

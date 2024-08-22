@@ -3,10 +3,10 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
-using TestNonParallel.Fixtures;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace TestNonParallel.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging
 {
     [Collection("Logging")]
     public sealed class DifferentLoggingDBTests
@@ -32,7 +32,10 @@ namespace TestNonParallel.Logging
 
         public void Dispose()
         {
-            DropTableTask.Drop(LoggingConnection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
+            DropTableTask.Drop(
+                LoggingConnection,
+                ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable
+            );
             ALE.ETLBox.Common.ControlFlow.ControlFlow.ClearSettings();
             DataFlow.ClearSettings();
         }

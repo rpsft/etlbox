@@ -1,12 +1,12 @@
 using System.Linq;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 using ETLBox.Primitives;
 using Microsoft.Extensions.Logging;
-using TestNonParallel.Fixtures;
 
-namespace TestNonParallel.Logging.LogTable
+namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
 {
     [Collection("Logging")]
     public sealed class LogTaskTests : NonParallelTestBase, IDisposable
@@ -16,7 +16,8 @@ namespace TestNonParallel.Logging.LogTable
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
-        public static IEnumerable<object[]> ConnectionsWithoutClickHouse => AllSqlConnectionsWithoutClickHouse;
+        public static IEnumerable<object[]> ConnectionsWithoutClickHouse =>
+            AllSqlConnectionsWithoutClickHouse;
 
         public void Dispose()
         {
@@ -146,7 +147,8 @@ namespace TestNonParallel.Logging.LogTable
             SqlTask.ExecuteNonQuery(connection, "Test Task", "Select 1 as test");
 
             //Act
-            List<LogEntry> entries = ReadLogTableTask.Read(connection)
+            List<LogEntry> entries = ReadLogTableTask
+                .Read(connection)
                 .OrderBy(e => e.LogDate)
                 .ToList();
 

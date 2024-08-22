@@ -3,50 +3,90 @@ using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using DotLiquid;
 
-namespace ALE.ETLBox.src.Toolbox.DataFlow
+namespace ALE.ETLBox.DataFlow
 {
-    public abstract class SqlCommandTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput>
+    /// <summary>
+    /// Sql Command Transformation accepts a SQL statement that is executed for each input row.
+    /// The Sql statement can contain liquid placeholders, parameters for which are expected
+    /// from input source. Performs non-query execution and returns number of rows affected for each input row.
+    /// </summary>
+    /// <typeparam name="TInput">Parameters for SQL template</typeparam>
+    /// <typeparam name="TOutput">Destination type</typeparam>
+    public abstract class SqlCommandTransformation<TInput, TOutput>
+        : RowTransformation<TInput, TOutput>
     {
-        protected SqlCommandTransformation() => TransformationFunc = obj =>
-                                                      {
-                                                          var sql = TransformParameters(obj);
+        protected SqlCommandTransformation() =>
+            TransformationFunc = obj =>
+            {
+                var sql = TransformParameters(obj);
 
-                                                          var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute", sql)
-                                                          {
-                                                              ConnectionManager = ConnectionManager
-                                                          };
-                                                          var affectedRows = task.ExecuteNonQuery();
+                var task = new SqlTask($"{nameof(SqlCommandTransformation)}->Execute", sql)
+                {
+                    ConnectionManager = ConnectionManager
+                };
+                var affectedRows = task.ExecuteNonQuery();
 
-                                                          return TransformResult(obj, affectedRows);
-                                                      };
+                return TransformResult(obj, affectedRows);
+            };
 
-        public string SQLTemplate { get; set; }
+        /// <summary>
+        /// Sql command template in Liquid syntax
+        /// </summary>
+        public string SqlTemplate { get; set; }
 
-        public virtual string TransformParameters(TInput input)
+#pragma warning disable S2376
+        // ReSharper disable once UnusedMember.Global
+        // ReSharper disable once InconsistentNaming
+        [Obsolete($"use {nameof(SqlTemplate)}")]
+        public string SQLTemplate
         {
-            var templateSQL = Template.Parse(SQLTemplate);
-            var inputDictionary = input is IDictionary<string, object> ? input as IDictionary<string, object> : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
-            var resultQuery = templateSQL.Render(Hash.FromDictionary(inputDictionary));
+            set { SqlTemplate = value; }
+        }
+#pragma warning restore S2376
+
+        protected virtual string TransformParameters(TInput input)
+        {
+            var templateSql = Template.Parse(SqlTemplate);
+            var inputDictionary =
+                input as IDictionary<string, object>
+                ?? input
+                    .GetType()
+                    .GetProperties()
+                    .ToDictionary(p => p.Name, p => p.GetValue(input));
+            var resultQuery = templateSql.Render(Hash.FromDictionary(inputDictionary));
 
             return resultQuery;
         }
 
-        public abstract TOutput TransformResult(TInput obj, int affectedRows);
+        /// <summary>
+        /// Transform function type for non-query execution result, accepts input object and number of rows affected
+        /// </summary>
+        public delegate TOutput TransformResultFunc(TInput input, int affectedRows);
+
+        /// <summary>
+        /// Transform function for non-query execution result, accepts input object and number of rows affected
+        /// </summary>
+        // ReSharper disable once MemberCanBeProtected.Global
+        public TransformResultFunc TransformResult { get; set; } = (_, _) => default;
     }
+
+    /// <summary>
+    /// Non-generic for <see cref="SqlCommandTransformation&lt;TInput,TOutput&gt;" />, working with dynamic objects
+    /// </summary>
 
     public class SqlCommandTransformation : SqlCommandTransformation<ExpandoObject, ExpandoObject>
     {
-        public override string TransformParameters(ExpandoObject obj)
+        public SqlCommandTransformation()
         {
-            var templateSQL = Template.Parse(SQLTemplate);
-            var resultQuery = templateSQL.Render(Hash.FromDictionary(obj));
-
-            return resultQuery;
+            TransformResult = (input, _) => input;
         }
 
-        public override ExpandoObject TransformResult(ExpandoObject obj, int affectedRows)
+        protected override string TransformParameters(ExpandoObject obj)
         {
-            return obj;
+            var templateSql = Template.Parse(SqlTemplate);
+            var resultQuery = templateSql.Render(Hash.FromDictionary(obj));
+
+            return resultQuery;
         }
     };
 }

@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 using ETLBox.Primitives;
 using Microsoft.Extensions.Logging;
-using TestNonParallel.Fixtures;
 
-namespace TestNonParallel.Logging.LoadProcessTable
+namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 {
     [Collection("Logging")]
     public sealed class LoadProcessTasksTests : NonParallelTestBase, IDisposable
@@ -210,7 +210,10 @@ namespace TestNonParallel.Logging.LoadProcessTable
 
             //Cleanup
             DropTableTask.Drop(connection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LogTable);
-            DropTableTask.Drop(connection, ALE.ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable);
+            DropTableTask.Drop(
+                connection,
+                ALE.ETLBox.Common.ControlFlow.ControlFlow.LoadProcessTable
+            );
         }
 
         [Fact]

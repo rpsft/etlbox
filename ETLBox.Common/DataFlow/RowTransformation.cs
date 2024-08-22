@@ -1,9 +1,11 @@
+using System;
+using System.Dynamic;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using ALE.ETLBox.Common.ControlFlow;
+using ALE.ETLBox.Common.TaskUtilities;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
-using System;
-using ALE.ETLBox.Common.ControlFlow;
-using System.Dynamic;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -29,13 +31,13 @@ namespace ALE.ETLBox.Common.DataFlow
         public sealed override string TaskName { get; set; } = "Execute row transformation";
 
         /* Public Properties */
-        public virtual Func<TInput, TOutput> TransformationFunc
+        public Func<TInput, TOutput> TransformationFunc
         {
             get { return _transformationFunc; }
             set
             {
                 _transformationFunc = value;
-                TransformBlock = new TransformBlock<TInput, TOutput>(row =>
+                TransformBlock = new TransformBlockWithCompletion<TInput, TOutput>(row =>
                 {
                     try
                     {
@@ -48,7 +50,10 @@ namespace ALE.ETLBox.Common.DataFlow
                         ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(row));
                         return default;
                     }
-                });
+                })
+                {
+                    OnComplete = CleanUp
+                };
             }
         }
         public Action InitAction { get; set; }
@@ -59,7 +64,6 @@ namespace ALE.ETLBox.Common.DataFlow
 
         /* Private stuff */
         private Func<TInput, TOutput> _transformationFunc;
-
 
         public RowTransformation() { }
 
@@ -117,6 +121,11 @@ namespace ALE.ETLBox.Common.DataFlow
             }
             LogProgress();
             return TransformationFunc.Invoke(row);
+        }
+
+        protected virtual void CleanUp(Task transformTask)
+        {
+            // Do nothing by default.
         }
     }
 

@@ -12,7 +12,7 @@ namespace ALE.ETLBox.DataFlow;
 /// Kafka generic source
 /// </summary>
 /// <typeparam name="TOutput">Result type</typeparam>
-/// <typeparam name="TKafkaValue"></typeparam>
+/// <typeparam name="TKafkaValue">Kafka value type</typeparam>
 [PublicAPI]
 public abstract class KafkaSource<TOutput, TKafkaValue>
     : DataFlowSource<TOutput>,

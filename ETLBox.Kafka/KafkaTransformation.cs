@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 using ALE.ETLBox.Common.DataFlow;
 using Confluent.Kafka;
 using DotLiquid;
@@ -9,90 +10,122 @@ using JetBrains.Annotations;
 
 namespace ALE.ETLBox.DataFlow
 {
+    /// <summary>
+    /// Transformation sends text messages to Kafka and provides to output rows, successfully processed.
+    /// Message template is defined in configuration with <a href="https://shopify.github.io/liquid/">Liquid</a> syntax.
+    /// </summary>
+    /// <typeparam name="TInput">Parameters for text message template</typeparam>
+    /// <typeparam name="TKafkaValue">Kafka value type</typeparam>
     [PublicAPI]
-    public class KafkaTransformation<TInput, TOutput> : RowTransformation<TInput, TOutput?>
+    public abstract class KafkaTransformation<TInput, TKafkaValue>
+        : RowTransformation<TInput, TInput?>
     {
-        private readonly IProducer<Null, string>? _producer = null;
-
-        protected Func<TInput, TOutput>? _processResult;
-
-        public ProducerConfig ProducerConfig { get; set; } = new();
-
+        /// <summary>
+        /// Kafka topic name
+        /// </summary>
         public string TopicName { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the information about the Kafka method to be invoked.
+        /// Kafka producer configuration
         /// </summary>
-        public string MessageTemplate { get; set; } = null!;
+        public ProducerConfig ProducerConfig { get; set; } = new();
 
-        public KafkaTransformation(Func<TInput, TOutput>? processResultFunc)
+        /// <summary>
+        /// Additional configuration for the producer builder, before building producer
+        /// </summary>
+        public Action<ProducerBuilder<Ignore, TKafkaValue>>? ConfigureProducerBuilder { get; set; }
+
+        /// <summary>
+        /// Producer instance override for use in tests
+        /// </summary>
+        private IProducer<Null, TKafkaValue>? _producer;
+
+        /// <summary>
+        /// Build Kafka message
+        /// </summary>
+        protected abstract TKafkaValue BuildMessageValue(TInput input);
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        protected KafkaTransformation()
         {
             TransformationFunc = SendToKafka;
-            _processResult = processResultFunc;
+            InitAction = () =>
+                _producer ??= new ProducerBuilder<Null, TKafkaValue>(ProducerConfig).Build();
         }
 
-        public KafkaTransformation(IProducer<Null, string> producer, Func<TInput, TOutput>? processResult) : this(processResult) => _producer = producer;
+        /// <summary>
+        /// Constructor with producer, for unit testing only
+        /// </summary>
+        protected KafkaTransformation(IProducer<Null, TKafkaValue> producer)
+            : this()
+        {
+            _producer = producer;
+        }
 
-        public TOutput? SendToKafka(TInput input)
+        protected override void CleanUp(Task transformTask)
+        {
+            _producer?.Flush();
+            _producer?.Dispose();
+            base.CleanUp(transformTask);
+        }
+
+        private TInput? SendToKafka(TInput input)
         {
             try
             {
-                var result = SendToKafkaInternal(input);
+                SendToKafkaInternal(input);
                 LogProgress();
-
-                return result;
+                return input;
             }
             catch (Exception e)
             {
-                if (!ErrorHandler.HasErrorBuffer)
-                    throw;
-                ErrorHandler.Send(e, ErrorHandler.ConvertErrorData(input));
+                var errorData = ErrorHandler.ConvertErrorData(input);
+                if (ErrorHandler.HasErrorBuffer)
+                {
+                    ErrorHandler.Send(e, errorData);
+                }
             }
-
             return default;
         }
 
-        private TOutput? SendToKafkaInternal(TInput input)
+        private void SendToKafkaInternal(TInput input)
+        {
+            var messageValue = BuildMessageValue(input);
+            var message = new Message<Null, TKafkaValue> { Value = messageValue };
+            if (_producer == null)
+                throw new InvalidOperationException("Producer is not initialized.");
+            _producer.Produce(TopicName, message);
+        }
+    }
+
+    public class KafkaStringTransformation<TInput> : KafkaTransformation<TInput, string>
+    {
+        /// <summary>
+        /// Message template in <a href="https://shopify.github.io/liquid/">Liquid</a> syntax.
+        /// </summary>
+        /// <remarks>
+        /// Parameters are provided from input source
+        /// </remarks>
+        public string MessageTemplate { get; set; } = null!;
+
+        protected override string BuildMessageValue(TInput input)
         {
             if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
-
             var templateMessage = Template.Parse(MessageTemplate);
-            var inputDictionary = input is IDictionary<string, object> ? input as IDictionary<string, object> : input.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(input));
-            var messageValue = templateMessage.Render(Hash.FromDictionary(inputDictionary));
-
-            var message = new Message<Null, string> { Value = messageValue };
-            if (_producer != null)
-            {
-                Produce(message, _producer);
-            }
-            else
-            {
-                using var producer = new ProducerBuilder<Null, string>(ProducerConfig).Build();
-                Produce(message, producer);
-            }
-
-            return _processResult == null ? default : _processResult(input);
-        }
-
-        private void Produce(Message<Null, string> message, IProducer<Null, string> producer)
-        {
-            producer.Produce(TopicName, message);
-
-            producer.Flush();
+            var inputDictionary =
+                input as IDictionary<string, object>
+                ?? input
+                    .GetType()
+                    .GetProperties()
+                    .ToDictionary(p => p.Name, p => p.GetValue(input));
+            return templateMessage.Render(Hash.FromDictionary(inputDictionary));
         }
     }
 
-    public class KafkaTransformation : KafkaTransformation<ExpandoObject, ExpandoObject>
-    {
-        public KafkaTransformation() : base(input => input)
-        {
-        }
-
-        public KafkaTransformation(IProducer<Null, string> producer) : base(producer, input => input)
-        {
-        }
-    }
+    public class KafkaTransformation : KafkaStringTransformation<ExpandoObject> { }
 }
