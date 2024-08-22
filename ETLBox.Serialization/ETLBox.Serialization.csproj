@@ -6,7 +6,7 @@
     <LangVersion>10</LangVersion>
     <PackageId>ETLBox.Classic.Serialization</PackageId>
     <Nullable>enable</Nullable>
-    <Version>1.11.3-pre.1</Version>
+    <Version>1.11.3-pre.459.0</Version>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       Support for XML serialized dataflow configuration.
