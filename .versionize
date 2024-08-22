@@ -1,7 +1,7 @@
 {
   "changelogAll": false,
   "changelog": {
-    "header": "EtlBox.Clasic change log",
+    "header": "EtlBox.Classic Changelog",
     "sections": [
       {
         "type": "feat",
