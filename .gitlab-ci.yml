@@ -20,7 +20,7 @@ workflow:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     # Skip pipeline on Publish packages, version bump commits
-    - if: $CI_COMMIT_TITLE =~ /Publish packages, version bump/
+    - if: $CI_COMMIT_TITLE =~ /^(Publish packages, version bump|chore\(release\):)/
       when: never
     # Detect source branch name in few scenarios
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
