@@ -10,7 +10,7 @@
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       ETLBox database logging support using NLog.
     </Description>
-    <Version>1.11.3-pre</Version>
+    <Version>1.11.3-pre.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
