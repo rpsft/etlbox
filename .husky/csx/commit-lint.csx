@@ -11,7 +11,7 @@ if (Args.Count != 1)
 }
 private var msg = File.ReadAllLines(Args[0])[0];
 
-if (Regex.IsMatch(msg, "^(Revert|Merge branch)"))
+if (Regex.IsMatch(msg, "^(Revert|Merge branch|Merge remote-tracking branch)"))
 {
     return 0;
 }
