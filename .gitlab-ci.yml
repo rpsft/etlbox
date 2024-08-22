@@ -41,6 +41,7 @@ bump_version:
     - if: $CI_PIPELINE_SOURCE == "push"
       variables:
         SOURCE_BRANCH: $CI_COMMIT_BRANCH
+      when: always
   before_script:
     - dotnet tool restore
     - git config user.email "noreply@rapidsoft.ru"
