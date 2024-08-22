@@ -6,8 +6,11 @@
     <RootNamespace>EtlBox.Logging.Database</RootNamespace>
     <PackageId>EtlBox.Classic.Logging.Database</PackageId>
     <Authors>RapidSoft</Authors>
-    <Description>ETLBox database logging support using NLog</Description>
-    <Version>1.11.2-versionize.3</Version>
+    <Description>
+      EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
+      ETLBox database logging support using NLog.
+    </Description>
+    <Version>1.11.2-rc.453</Version>
   </PropertyGroup>
 
   <ItemGroup>

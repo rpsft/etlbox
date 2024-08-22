@@ -5,10 +5,10 @@ using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
-using TestNonParallel.Fixtures;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace TestNonParallel.Logging
+namespace ALE.ETLBoxTests.NonParallel.Logging
 {
     [Collection("Logging")]
     public sealed class DataFlowLoggingTests : NonParallelTestBase, IDisposable

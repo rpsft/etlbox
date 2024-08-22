@@ -2,10 +2,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
-using TestNonParallel.Fixtures;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace TestNonParallel.Logging.LogTable
+namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
 {
     [Collection("Logging")]
     public sealed class GetLogAsJsonTests : NonParallelTestBase, IDisposable

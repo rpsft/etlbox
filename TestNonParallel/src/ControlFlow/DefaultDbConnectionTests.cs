@@ -1,10 +1,10 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Logging;
-using ETLBox.Logging.Database;
-using TestNonParallel.Fixtures;
+using ALE.ETLBoxTests.NonParallel.Fixtures;
+using EtlBox.Logging.Database;
 
-namespace TestNonParallel.ControlFlow
+namespace ALE.ETLBoxTests.NonParallel.ControlFlow
 {
     [Collection("Logging")]
     public sealed class DefaultDbConnectionTests : NonParallelTestBase, IDisposable
