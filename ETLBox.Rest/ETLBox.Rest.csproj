@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.Rest</PackageId>
-    <Version>1.11.2-rc.3</Version>
+    <Version>1.11.2-rc.4</Version>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       Support for REST HTTP transformations in data flow.
