@@ -25,7 +25,16 @@ namespace ALE.ETLBox.Common.TaskUtilities
         public TransformBlockWithCompletion(Func<TInput, TOutput> transform)
         {
             _innerTransformBlock = new TransformBlock<TInput, TOutput>(transform);
-            Completion = _innerTransformBlock.Completion.ContinueWith(t => OnComplete?.Invoke(t));
+            Completion = _innerTransformBlock.Completion.ContinueWith(t =>
+            {
+                OnComplete?.Invoke(t);
+                if (t.Status == TaskStatus.Faulted)
+                {
+                    if (t.Exception != null)
+                        throw t.Exception;
+                    throw new InvalidOperationException("Transform block faulted");
+                }
+            });
         }
 
         /// <summary>
