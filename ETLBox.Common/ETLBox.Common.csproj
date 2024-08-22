@@ -5,7 +5,7 @@
     <RootNamespace>ALE.ETLBox.Common</RootNamespace>
     <LangVersion>default</LangVersion>
     <PackageId>EtlBox.Classic.Common</PackageId>
-    <Version>1.11.2-rc.452.0</Version>
+    <Version>1.11.2-rc.453</Version>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       Common algorythms and base classes for use in other EtlBox.Classic packages.
