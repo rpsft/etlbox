@@ -9,7 +9,12 @@ internal static class DataFlowTypesExtensions
     public static bool IsNullable(this Type type) =>
         Nullable.GetUnderlyingType(type) != null || !type.IsValueType;
 
-    public static bool TryParse(this string value, Type type, out object? objValue)
+    public static bool TryParse(
+        this string value,
+        Type type,
+        CultureInfo cultureInfo,
+        out object? objValue
+    )
     {
         if (type == typeof(string))
         {
@@ -37,8 +42,10 @@ internal static class DataFlowTypesExtensions
             not null when IsOfType<bool>(type)
                 => TryParse<bool>(value, out objValue, bool.TryParse),
             not null when IsOfType<double>(type) => TryParseDouble(value, out objValue),
-            not null when IsOfType<DateTime>(type) => TryParseDateTime(value, out objValue),
-            not null when IsOfType<Guid>(type) => TryParse<Guid>(value, out objValue, Guid.TryParse),
+            not null when IsOfType<DateTime>(type)
+                => TryParseDateTime(value, cultureInfo, out objValue),
+            not null when IsOfType<Guid>(type)
+                => TryParse<Guid>(value, out objValue, Guid.TryParse),
             _ => FalseAndNull(out objValue)
         };
     }
@@ -59,11 +66,15 @@ internal static class DataFlowTypesExtensions
         return result;
     }
 
-    private static bool TryParseDateTime(string value, out object? objValue)
+    private static bool TryParseDateTime(
+        string value,
+        CultureInfo cultureInfo,
+        out object? objValue
+    )
     {
         var result = DateTime.TryParse(
             value,
-            CultureInfo.InvariantCulture,
+            cultureInfo,
             DateTimeStyles.None,
             out var parsedValue
         );

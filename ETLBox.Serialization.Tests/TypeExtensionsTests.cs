@@ -24,7 +24,7 @@ namespace ETLBox.Serialization.Tests
         [InlineData(typeof(double), (double)1)]
         public void GetValue_ObjectValueShouldBeReturned(Type type, object? value)
         {
-            var result = "1".TryParse(type, out var obj);
+            var result = "1".TryParse(type, CultureInfo.InvariantCulture, out var obj);
             result.Should().BeTrue();
             obj.Should().Be(value);
         }
@@ -36,7 +36,11 @@ namespace ETLBox.Serialization.Tests
         {
             var id = Guid.Parse("db31477f-1b02-4e82-a14e-fa26a35a27da");
 
-            var result = "db31477f-1b02-4e82-a14e-fa26a35a27da".TryParse(type, out var obj);
+            var result = "db31477f-1b02-4e82-a14e-fa26a35a27da".TryParse(
+                type,
+                CultureInfo.InvariantCulture,
+                out var obj
+            );
 
             result.Should().BeTrue();
             obj.Should().Be(id);
@@ -47,10 +51,10 @@ namespace ETLBox.Serialization.Tests
         [InlineData(typeof(DateTime?))]
         public void GetValue_WithDateTime_ObjectValueShouldBeReturned(Type type)
         {
-            var now = new DateTime(2024,1,2,3,4, 0, DateTimeKind.Local);
+            var now = new DateTime(2024, 1, 2, 3, 4, 0, DateTimeKind.Local);
             var date = now.ToString(CultureInfo.InvariantCulture);
 
-            var result = date.TryParse(type, out var obj);
+            var result = date.TryParse(type, CultureInfo.InvariantCulture, out var obj);
 
             result.Should().BeTrue();
             obj.Should().Be(now);
@@ -59,7 +63,11 @@ namespace ETLBox.Serialization.Tests
         [Fact]
         public void GetValue_NullValueShouldBeReturned()
         {
-            var result = "1".TryParse(typeof(UnsupportedType), out var obj);
+            var result = "1".TryParse(
+                typeof(UnsupportedType),
+                CultureInfo.InvariantCulture,
+                out var obj
+            );
 
             result.Should().BeFalse();
             obj.Should().BeNull();
