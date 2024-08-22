@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
 <a name="1.11.2-versionize.2"></a>
+## 1.11.2-versionize.2 (2024-08-22)
+
+### Bug Fixes
+
+* correction of localization usage in deserialization
+
+<a name="1.11.2-versionize.2"></a>
 ## 1.11.2-versionize.2 (2024-08-21)
 
 <a name="1.11.2-versionize.2"></a>
