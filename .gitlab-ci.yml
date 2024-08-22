@@ -50,10 +50,14 @@ build_job:
     - git fetch origin $SOURCE_BRANCH
     - git switch $SOURCE_BRANCH
     - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
+    - 'echo "Tags collected:"'
+    - git tag --list 'v*'
     - |
       if [ "$SOURCE_BRANCH" = "master" ]; then
-        dotnet versionize
+        echo "Upgrading to release version"
+        dotnet versionize --aggregate-pre-releases 
       else
+        echo "Upgrading to pre-release version in branch $SOURCE_BRANCH"
         dotnet versionize --pre-release $SOURCE_BRANCH
       fi
   script:
