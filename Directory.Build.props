@@ -3,7 +3,14 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>CS0618</WarningsNotAsErrors>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://www.rapidsoft.ru</PackageProjectUrl>
+    <RepositoryUrl>https://git.rapidsoft.ru/open-source/etlbox</RepositoryUrl>
+    <PackageTags>etl elt ssis dataflow controlflow data integration etlbox</PackageTags>
+    <PackageIcon>logo_bw.png</PackageIcon>
   </PropertyGroup>
+  
   <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
     <PackageReference Include="coverlet.collector" Version="6.0.0">
@@ -15,6 +22,7 @@
   <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="WeCantSpell.Roslyn" Version="2.0.8-beta">
       <PrivateAssets>all</PrivateAssets>
@@ -24,5 +32,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)docs/images/logo_bw.png" Pack="true" PackagePath="">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="$(MSBuildThisFileDirectory)/README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

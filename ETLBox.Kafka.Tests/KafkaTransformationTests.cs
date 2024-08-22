@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace ETLBox.Kafka.Tests
 {
-    public partial class KafkaTransformationTests : IClassFixture<KafkaFixture>
+    public class KafkaTransformationTests : IClassFixture<KafkaFixture>
     {
         private readonly KafkaFixture _fixture;
         private readonly ITestOutputHelper _output;
@@ -41,11 +41,12 @@ namespace ETLBox.Kafka.Tests
             dynamic data = new ExpandoObject();
             data.TestName = "Tom";
 
-            var config = new ProducerConfig { BootstrapServers = _fixture.BootstrapAddress };
-            using var producer = new ProducerBuilder<Null, string>(config).Build();
-
-            var transformation = new KafkaTransformation(producer)
+            var transformation = new KafkaTransformation()
             {
+                ProducerConfig = new ProducerConfig
+                {
+                    BootstrapServers = _fixture.BootstrapAddress
+                },
                 MessageTemplate = "{\"NewMessage\": {\"TestValue\":\"{{TestName}}\"}}",
                 TopicName = TopicName
             };
@@ -68,10 +69,10 @@ namespace ETLBox.Kafka.Tests
         }
 
         private IEnumerable<string> ConsumeJson(
-        bool enablePartitionEof,
-        CancellationToken cancellationToken,
-        string? topicName = null
-    )
+            bool enablePartitionEof,
+            CancellationToken cancellationToken,
+            string? topicName = null
+        )
         {
             using var consumer = new ConsumerBuilder<Ignore, string>(
                 GetConsumerConfig(enablePartitionEof, topicName)
