@@ -45,13 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="img/logo_bw.png" Pack="true" PackagePath="">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="../README.md" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
     <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
   </ItemGroup>
