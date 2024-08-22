@@ -47,7 +47,7 @@ namespace TestConnectionManager.src.ConnectionManager
             // Assert
             Assert.NotNull(dbDefinition);
             Assert.Single(dbDefinition.Columns);
-            Assert.Single(table.Columns[0].Name, dbDefinition.Columns[0].Name);
+            Assert.Equal(table.Columns[0].Name, dbDefinition.Columns[0].Name);
         }
 
         private static void RecreateDatabase(IConnectionManager con, string dbName)
