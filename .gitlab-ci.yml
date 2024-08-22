@@ -17,7 +17,7 @@ variables:
 
 workflow:
   auto_cancel:
-    on_new_commit: all
+    on_new_commit: interruptible
     on_job_failure: all
   rules:
     # Avoid duplicate pipelines in merges
@@ -43,6 +43,7 @@ stages:
   - deploy
 
 build_job:
+  interruptible: true
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
   before_script:
@@ -107,6 +108,7 @@ build_job:
       - "$NUPKG_FOLDER/"
 
 test_job:
+  interruptible: true
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:6.0
   services:
@@ -182,6 +184,7 @@ test_job:
         path: ./**/coverage.cobertura.xml
 
 publish:internal:
+  interruptible: true
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
@@ -192,6 +195,7 @@ publish:internal:
     - test_job
 
 publish:nuget-org:
+  interruptible: true
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
