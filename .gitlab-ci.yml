@@ -47,7 +47,7 @@ build_job:
     - git config user.name "Gitlab Runner"
     - echo "Source branch ${SOURCE_BRANCH}"
     - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-    - git fetch --depth=1000 --tags origin $SOURCE_BRANCH
+    - git fetch --depth=1000 --tags --prune origin $SOURCE_BRANCH
     - git switch $SOURCE_BRANCH
     - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
     - 'echo "Tags collected:"'
