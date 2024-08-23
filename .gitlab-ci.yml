@@ -192,7 +192,7 @@ publish:nuget-org:
     - echo "Publishing version to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $SOURCE_BRANCH == "master"
+    - if: $SOURCE_BRANCH == "master"
       when: manual
   needs:
     - build_job
