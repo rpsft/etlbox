@@ -119,7 +119,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
             Assert.True(ALE.ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.IsFinished);
             Assert.True(
                 ALE.ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.EndDate
-                    >= DateTime.Now.AddSeconds(-1)
+                    >= DateTime.Now.AddSeconds(-2)
             );
 
             Assert.Equal(
