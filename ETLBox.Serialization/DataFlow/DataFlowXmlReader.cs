@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,14 +24,18 @@ public sealed class DataFlowXmlReader
     // Data flow instance to configure
     private readonly IDataFlow _dataFlow;
 
-    // Universal error handler for all supporiting sources
+    // Universal error handler for all supporting sources
     private readonly IDataFlowDestination<ETLBoxError>? _linkAllErrorsTo;
 
     // Check if the universal error destination was added to data flow
     private bool _allErrorsDestinationAdded;
 
+    // Culture settings for deserialization
+    public CultureInfo CurrentCulture { get; set; } = CultureInfo.CurrentCulture;
+
     public DataFlowXmlReader(
         IDataFlow dataFlow,
+        CultureInfo currentCulture = null!,
         IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null
     )
     {
@@ -38,6 +43,7 @@ public sealed class DataFlowXmlReader
         _dataFlow = dataFlow ?? throw new ArgumentNullException(nameof(dataFlow));
         _dataFlow.Destinations = new List<IDataFlowDestination<ExpandoObject>>();
         _dataFlow.ErrorDestinations = new List<IDataFlowDestination<ETLBoxError>>();
+        CurrentCulture = currentCulture ?? CultureInfo.CurrentCulture;
 
         var types = new List<Type>();
         var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -56,7 +62,7 @@ public sealed class DataFlowXmlReader
                 var assembly = Assembly.Load(name);
                 assemblies.Add(assembly);
             }
-            catch (System.BadImageFormatException)
+            catch (BadImageFormatException)
             {
                 // Ignore
             }
@@ -101,7 +107,7 @@ public sealed class DataFlowXmlReader
         using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
         using var xmlReader = XmlReader.Create(stream);
         var step = Activator.CreateInstance<T>();
-        var reader = new DataFlowXmlReader(step, errorLogDestination);
+        var reader = new DataFlowXmlReader(step, CultureInfo.InvariantCulture, errorLogDestination);
         reader.Read(xmlReader);
         return step;
     }
@@ -133,7 +139,7 @@ public sealed class DataFlowXmlReader
 
         if (IsValueTypeProperty(prop))
         {
-            SetValueTypeProperty(_dataFlow, prop, element);
+            SetValueTypeProperty(_dataFlow, prop, element, CurrentCulture);
             return;
         }
 
@@ -166,7 +172,12 @@ public sealed class DataFlowXmlReader
         prop.SetValue(instance, value);
     }
 
-    private static void SetValueTypeProperty(object instance, PropertyInfo prop, XElement? element)
+    private static void SetValueTypeProperty(
+        object instance,
+        PropertyInfo prop,
+        XElement? element,
+        CultureInfo cultureInfo
+    )
     {
         if (element is null)
         {
@@ -175,7 +186,7 @@ public sealed class DataFlowXmlReader
             );
         }
 
-        var value = GetValue(prop.PropertyType, element.Value);
+        var value = GetValue(prop.PropertyType, cultureInfo, element.Value);
 
         if (value is null)
         {
@@ -187,7 +198,7 @@ public sealed class DataFlowXmlReader
 
     private static bool IsValueTypeProperty(PropertyInfo prop)
     {
-        return prop.PropertyType.IsValueType || prop.PropertyType == typeof(string);
+        return IsValueType(prop.PropertyType);
     }
 
     private static bool IsSourceType(Type type)
@@ -216,7 +227,7 @@ public sealed class DataFlowXmlReader
     {
         if (IsValueType(type))
         {
-            return CreateValueType(type, node);
+            return CreateValueType(type, node, CurrentCulture);
         }
 
         if (type.IsArray)
@@ -239,14 +250,11 @@ public sealed class DataFlowXmlReader
 
     private object? CreateList(Type type, XContainer node)
     {
-        var elementType = type.GenericTypeArguments[0];
-
-        if (elementType is null)
-        {
-            throw new InvalidDataException(
+        var elementType =
+            type.GenericTypeArguments[0]
+            ?? throw new InvalidDataException(
                 $"Invalid configuration. Implementation for element type of array '{type}' not found"
             );
-        }
 
         var list = DataFlowActivator.CreateInstance(type);
         var set = type.GetMethod("Add");
@@ -320,9 +328,9 @@ public sealed class DataFlowXmlReader
             return;
         }
 
-        if (prop.PropertyType.IsValueType || prop.PropertyType == typeof(string))
+        if (IsValueType(prop.PropertyType))
         {
-            SetValueTypeProperty(instance, prop, propXml);
+            SetValueTypeProperty(instance, prop, propXml, CurrentCulture);
             return;
         }
 
@@ -363,16 +371,19 @@ public sealed class DataFlowXmlReader
         XElement? element
     )
     {
-        if (element is null)
+        if (string.IsNullOrEmpty(element?.Value))
         {
-            prop.SetValue(instance, null);
+            if (prop.PropertyType.IsNullable())
+            {
+                prop.SetValue(instance, null);
+            }
 
             return;
         }
 
         var underlyingType =
             Nullable.GetUnderlyingType(prop.PropertyType) ?? throw new InvalidOperationException();
-        var eval = Enum.Parse(underlyingType, element.Value);
+        var eval = Enum.Parse(underlyingType, element!.Value);
         prop.SetValue(instance, eval);
     }
 
@@ -423,14 +434,11 @@ public sealed class DataFlowXmlReader
 
     private Array CreateArray(Type type, XContainer node)
     {
-        var elementType = type.GetElementType();
-
-        if (elementType is null)
-        {
-            throw new InvalidDataException(
+        var elementType =
+            type.GetElementType()
+            ?? throw new InvalidDataException(
                 $"Invalid configuration. Implementation for element type of array '{type}' not found"
             );
-        }
 
         var elements = node.Elements().ToArray();
         var array = Array.CreateInstance(elementType, elements.Length);
@@ -447,9 +455,14 @@ public sealed class DataFlowXmlReader
         return array;
     }
 
-    private static object? CreateValueType(Type type, XContainer node)
+    private static object? CreateValueType(Type type, XContainer node, CultureInfo cultureInfo)
     {
-        return node.FirstNode is null ? null : GetValue(type, node.FirstNode.ToString().Trim());
+        StringBuilder builder = new StringBuilder();
+        foreach (var item in node.DescendantNodes().Where(n => n != null))
+        {
+            builder.Append((item as XText)?.Value.Trim() ?? "");
+        }
+        return GetValue(type, cultureInfo, builder.ToString());
     }
 
     private object CreateDictionary(Type type, XContainer node)
@@ -481,14 +494,11 @@ public sealed class DataFlowXmlReader
         }
 
         var dictToCreate = typeof(Dictionary<,>).MakeGenericType(arguments);
-        var dict = Activator.CreateInstance(dictToCreate);
-
-        if (dict is null)
-        {
-            throw new InvalidOperationException(
+        var dict =
+            Activator.CreateInstance(dictToCreate)
+            ?? throw new InvalidOperationException(
                 $"Invalid configuration. Can't create dictionary of type '{type}'"
             );
-        }
 
         var elements = node.Elements().ToArray();
         var add = type.GetMethod("Add", new[] { keyType, valueType });
@@ -597,7 +607,7 @@ public sealed class DataFlowXmlReader
         return isArray ? type?.MakeArrayType() : type;
     }
 
-    private static object? GetValue(Type type, string value)
+    private static object? GetValue(Type type, CultureInfo cultureInfo, string value)
     {
         value = value.Trim();
 
@@ -608,7 +618,7 @@ public sealed class DataFlowXmlReader
 
         try
         {
-            if (value.TryParse(type, out var objValue))
+            if (value.TryParse(type, cultureInfo, out var objValue))
             {
                 return objValue;
             }

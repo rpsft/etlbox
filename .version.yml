@@ -1,3 +1,0 @@
-variables:
-    PACKAGE_RELEASE: 1.10.0
-    PACKAGE_POSTFIX: -alpha

@@ -9,17 +9,39 @@ namespace ALE.ETLBox.Common.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowTransformation<TInput, TOutput>
-        : DataFlowTask, IDataFlowTransformation<TInput, TOutput>, ILinkErrorSource
+        : DataFlowTask,
+            IDataFlowTransformation<TInput, TOutput>,
+            ILinkErrorSource
     {
+        /// <summary>
+        /// Target for the previous component in the data flow.
+        /// </summary>
         public virtual ITargetBlock<TInput> TargetBlock { get; }
+
+        /// <summary>
+        /// Source for the next component in the data flow.
+        /// </summary>
         public virtual ISourceBlock<TOutput> SourceBlock { get; }
 
+        /// <summary>
+        /// List of completion Tasks from all preceding components.
+        /// </summary>
         protected List<Task> PredecessorCompletions { get; set; } = new();
 
+        /// <summary>
+        /// Transformation block component
+        /// </summary>
         protected IPropagatorBlock<TInput, TOutput> TransformBlock { get; set; }
 
+        /// <summary>
+        /// Error handler
+        /// </summary>
         protected ErrorHandler ErrorHandler { get; set; } = new();
 
+        /// <summary>
+        /// Link to error target block
+        /// </summary>
+        /// <param name="target"></param>
         public void LinkErrorTo(IDataFlowLinkTarget<ETLBoxError> target) =>
             ErrorHandler.LinkErrorTo(target, TransformBlock.Completion);
 
@@ -34,15 +56,11 @@ namespace ALE.ETLBox.Common.DataFlow
             Task.WhenAll(PredecessorCompletions)
                 .ContinueWith(t =>
                 {
-                    if (TargetBlock.Completion.IsCompleted)
-                    {
-                        return;
-                    }
-
-                    if (t.IsFaulted)
-                        TargetBlock.Fault(t.Exception!.InnerException!);
-                    else
-                        TargetBlock.Complete();
+                    if (!TargetBlock.Completion.IsCompleted)
+                        if (t.IsFaulted)
+                            TargetBlock.Fault(t.Exception!.InnerException!);
+                        else
+                            TargetBlock.Complete();
                 });
         }
 

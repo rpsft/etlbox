@@ -25,8 +25,8 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
 
-        public async Task ExecuteAsync() 
-            => await OutputSource.ExecuteAsync(CancellationToken.None);
+        public async Task ExecuteAsync() => await OutputSource.ExecuteAsync(CancellationToken.None);
+
         public void Execute() => OutputSource.Execute(CancellationToken.None);
 
         /* Public Properties */
@@ -34,13 +34,18 @@ namespace ALE.ETLBox.DataFlow
         public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
         public DeltaMode DeltaMode { get; set; }
         public TableDefinition DestinationTableDefinition { get; set; }
-        public string TableName { 
+        public string TableName
+        {
             get => _tableName;
             set
-            { 
+            {
                 _tableName = value;
                 DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
-                DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName, BatchSize);
+                DestinationTable = new DbDestination<TInput>(
+                    ConnectionManager,
+                    TableName,
+                    BatchSize
+                );
                 InitInternalFlow();
                 InitOutputFlow();
             }
@@ -60,7 +65,7 @@ namespace ALE.ETLBox.DataFlow
 
         private bool _useTruncateMethod;
 
-        public int BatchSize { get;set; }
+        public int BatchSize { get; set; }
 
         public MergeProperties MergeProperties { get; set; } = new();
 
@@ -187,8 +192,8 @@ namespace ALE.ETLBox.DataFlow
                 return false;
             }
 
-            return TypeInfo.DeleteAttributeProps.TrueForAll(
-                tuple => tuple.Item1?.GetValue(row)?.Equals(tuple.Item2) ?? false
+            return TypeInfo.DeleteAttributeProps.TrueForAll(tuple =>
+                tuple.Item1?.GetValue(row)?.Equals(tuple.Item2) ?? false
             );
         }
 
@@ -237,8 +242,8 @@ namespace ALE.ETLBox.DataFlow
             }
 
             return TypeInfo.CompareAttributeProps.Count > 0
-                && TypeInfo.CompareAttributeProps.TrueForAll(
-                    propInfo => propInfo?.GetValue(self)?.Equals(propInfo.GetValue(other)) ?? false
+                && TypeInfo.CompareAttributeProps.TrueForAll(propInfo =>
+                    propInfo?.GetValue(self)?.Equals(propInfo.GetValue(other)) ?? false
                 );
         }
 
@@ -246,11 +251,10 @@ namespace ALE.ETLBox.DataFlow
             IDictionary<string, object> self,
             IDictionary<string, object> other
         ) =>
-            MergeProperties.ComparePropertyNames.TrueForAll(
-                compColumn =>
-                    self!.ContainsKey(compColumn)
-                    && other!.ContainsKey(compColumn)
-                    && self[compColumn]!.Equals(other[compColumn])
+            MergeProperties.ComparePropertyNames.TrueForAll(compColumn =>
+                self!.ContainsKey(compColumn)
+                && other!.ContainsKey(compColumn)
+                && self[compColumn]!.Equals(other[compColumn])
             );
 
         private void InitInternalFlow()
@@ -271,17 +275,15 @@ namespace ALE.ETLBox.DataFlow
                 if (!UseTruncateMethod)
                 {
                     SqlDeleteIds(
-                        batch.Where(
-                            row =>
-                                GetChangeAction(row) != ChangeAction.Insert
-                                && GetChangeAction(row) != ChangeAction.Exists
+                        batch.Where(row =>
+                            GetChangeAction(row) != ChangeAction.Insert
+                            && GetChangeAction(row) != ChangeAction.Exists
                         )
                     );
                     return batch
-                        .Where(
-                            row =>
-                                GetChangeAction(row) == ChangeAction.Insert
-                                || GetChangeAction(row) == ChangeAction.Update
+                        .Where(row =>
+                            GetChangeAction(row) == ChangeAction.Insert
+                            || GetChangeAction(row) == ChangeAction.Update
                         )
                         .ToArray();
                 }
@@ -293,11 +295,10 @@ namespace ALE.ETLBox.DataFlow
                     );
                 TruncateDestinationOnce();
                 return batch
-                    .Where(
-                        row =>
-                            GetChangeAction(row) == ChangeAction.Insert
-                            || GetChangeAction(row) == ChangeAction.Update
-                            || GetChangeAction(row) == ChangeAction.Exists
+                    .Where(row =>
+                        GetChangeAction(row) == ChangeAction.Insert
+                        || GetChangeAction(row) == ChangeAction.Update
+                        || GetChangeAction(row) == ChangeAction.Exists
                     )
                     .ToArray();
             };
@@ -420,7 +421,7 @@ namespace ALE.ETLBox.DataFlow
         private void SqlDeleteIds(IEnumerable<TInput> rowsToDelete)
         {
             var delete = rowsToDelete as TInput[] ?? rowsToDelete?.ToArray();
-            if (delete is null or { Length : 0 })
+            if (delete is null or { Length: 0 })
                 return;
             var deleteString = delete.Select(row => $"'{GetUniqueId(row)}'");
             var idNames = $"{QB}{IdColumnNames[0]}{QE}";

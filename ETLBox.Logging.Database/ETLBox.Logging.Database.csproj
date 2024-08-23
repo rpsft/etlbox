@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,11 @@
     <RootNamespace>EtlBox.Logging.Database</RootNamespace>
     <PackageId>EtlBox.Classic.Logging.Database</PackageId>
     <Authors>RapidSoft</Authors>
-    <Description>ETLBox database logging support using NLog</Description>
+    <Description>
+      EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
+      ETLBox database logging support using NLog.
+    </Description>
+    <Version>1.11.3-pre.463</Version>
   </PropertyGroup>
 
   <ItemGroup>

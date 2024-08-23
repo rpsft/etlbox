@@ -1,17 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>default</LangVersion>
-        <Nullable>enable</Nullable>
-        <RootNamespace>ALE.ETLBox.Scripting</RootNamespace>
-        <PackageId>EtlBox.Classic.Scripting</PackageId>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ALE.ETLBox.Scripting</RootNamespace>
+    <PackageId>EtlBox.Classic.Scripting</PackageId>
+    <Version>1.11.3-pre.463</Version>
+    <Description>
+      EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
+      Support for C# scripting transformations.
+    </Description>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+  </ItemGroup>
 </Project>

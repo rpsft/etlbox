@@ -110,10 +110,11 @@ namespace ALE.ETLBox
                     ,c.comment
                 FROM system.columns c
                 LEFT JOIN information_schema.columns as ic
-                    ON ic.table_name = c.table
+                    ON ic.table_catalog= c.database
+                    AND ic.table_name = c.table
                     AND ic.column_name = c.name
                 WHERE c.database = currentDatabase()
-                  AND table = '{tn.ObjectName}'",
+                  AND c.table = '{tn.ObjectName}'",
                 () =>
                 {
                     curCol = new TableColumn();

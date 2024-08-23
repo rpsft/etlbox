@@ -50,15 +50,19 @@ namespace ETLBox.Serialization.Tests
                         <Ulong>1</Ulong>
                         <Short>-1</Short>
                         <Ushort>1</Ushort>
+                        <Double>1.0</Double>
                         <NullInt>-1</NullInt>
                         <NullUint>1</NullUint>
                         <NullLong>-1</NullLong>
                         <NullUlong>1</NullUlong>
                         <NullShort>-1</NullShort>
                         <NullUshort>1</NullUshort>
+                        <NullDouble>-1.0</NullDouble>
                         <Uri>{_csvUri}</Uri>
                         <Strings>
                             <string>test</string>
+                            <string><![CDATA[test<!"""">]]></string>
+                            <string><![CDATA[test1<!"""">]]><![CDATA[test2<!"""">]]></string>
                         </Strings>
                         <Stream type=""MemoryStream"" />
                         <Enum>Value2</Enum>
@@ -113,14 +117,29 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.Configuration.Delimiter.Should().Be(";");
             customCsvSource.Configuration.Escape.Should().Be('#');
             customCsvSource.Strings.Should().NotBeNullOrEmpty();
-            customCsvSource.Strings.Should().HaveCount(1);
-            customCsvSource.Strings!.First().Should().Be("test");
+
+            var strings = customCsvSource.Strings.ToArray();
+            strings.Should().HaveCount(3);
+            strings[0].Should().Be("test");
+            strings[1].Should().Be("test<!\"\">");
+            strings[2].Should().Be("test1<!\"\">test2<!\"\">");
             customCsvSource.Stream.Should().NotBeNull();
             customCsvSource.Stream.Should().BeOfType<MemoryStream>();
             customCsvSource.Enum.Should().Be(CustomCsvSource.EnumType.Value2);
             customCsvSource.NullEnum.Should().Be(CustomCsvSource.EnumType.Value1);
             customCsvSource.IntegerList.Should().NotBeNullOrEmpty();
             customCsvSource.IntegerList.Should().BeEquivalentTo(new[] { 1, 2, 3 });
+            customCsvSource.Char.Should().Be('#');
+            customCsvSource.Byte.Should().Be(1);
+            customCsvSource.Int.Should().Be(-1);
+            customCsvSource.Uint.Should().Be(1);
+            customCsvSource.NullInt.Should().Be(-1);
+            customCsvSource.Long.Should().Be(-1);
+            customCsvSource.Ulong.Should().Be(1);
+            customCsvSource.NullLong.Should().Be(-1);
+            customCsvSource.Double.Should().Be(1.0);
+            customCsvSource.NullDouble.Should().Be(-1.0);
+            customCsvSource.NullDouble.Should().BeOfType(typeof(double));
 
             step.Destinations.Should().NotBeNull();
             step.Destinations.Should().NotBeEmpty();
@@ -142,6 +161,80 @@ namespace ETLBox.Serialization.Tests
             col.Col1 = 3;
             col.Col2 = "Test3";
             dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
+        }
+
+        [Fact]
+        public void DataFlow_ReadFromXml_NotSetNullableShouldBeProcessed()
+        {
+            var referenceId = Guid.NewGuid();
+            var name = Guid.NewGuid().ToString();
+            const int ms = 100;
+            var xml =
+                @$"<EtlDataFlowStep>
+			        <ReferenceId>
+                        {referenceId}
+                    </ReferenceId>
+			        <Name>
+                        {name}
+                    </Name>
+			        <TimeoutMilliseconds>{ms}</TimeoutMilliseconds>
+                    <CustomCsvSource>
+                        <NullBool/>
+                        <NullChar/>
+                        <NullByte/>
+                        <NullDateTime/>
+                        <NullGuid/>
+                        <NullInt/>
+                        <NullUint/>
+                        <NullLong/>
+                        <NullUlong/>
+                        <NullShort/>
+                        <NullUshort/>
+                        <NullDouble/>
+                        <NullEnum/>
+                        <LinkTo>
+                            <MemoryDestination/>
+                        </LinkTo>
+                    </CustomCsvSource>
+		        </EtlDataFlowStep>";
+
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
+            var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+
+            //Assert
+            step.Should().NotBeNull();
+            step.ReferenceId.Should().Be(referenceId);
+            step.Name.Should().Be(name);
+
+            step.Source.Should().BeOfType<CustomCsvSource>();
+            var customCsvSource = (CustomCsvSource)step.Source;
+            customCsvSource.NullBool.Should().BeNull();
+            customCsvSource.NullBool.HasValue.Should().BeFalse();
+            customCsvSource.NullChar.Should().BeNull();
+            customCsvSource.NullChar.HasValue.Should().BeFalse();
+            customCsvSource.NullByte.Should().BeNull();
+            customCsvSource.NullByte.HasValue.Should().BeFalse();
+            customCsvSource.NullDateTime.Should().BeNull();
+            customCsvSource.NullDateTime.HasValue.Should().BeFalse();
+            customCsvSource.NullGuid.Should().BeNull();
+            customCsvSource.NullGuid.HasValue.Should().BeFalse();
+            customCsvSource.NullEnum.Should().BeNull();
+            customCsvSource.NullEnum.HasValue.Should().BeFalse();
+            customCsvSource.NullShort.Should().BeNull();
+            customCsvSource.NullShort.HasValue.Should().BeFalse();
+            customCsvSource.NullUshort.Should().BeNull();
+            customCsvSource.NullUshort.HasValue.Should().BeFalse();
+            customCsvSource.NullInt.Should().BeNull();
+            customCsvSource.NullInt.HasValue.Should().BeFalse();
+            customCsvSource.NullUint.Should().BeNull();
+            customCsvSource.NullUint.HasValue.Should().BeFalse();
+            customCsvSource.NullLong.Should().BeNull();
+            customCsvSource.NullLong.HasValue.Should().BeFalse();
+            customCsvSource.NullUlong.Should().BeNull();
+            customCsvSource.NullUlong.HasValue.Should().BeFalse();
+            customCsvSource.NullDouble.Should().BeNull();
+            customCsvSource.NullDouble.HasValue.Should().BeFalse();
         }
 
         [Fact]
@@ -290,27 +383,29 @@ namespace ETLBox.Serialization.Tests
         private sealed class CustomCsvSource : CsvSource
         {
             public DateTime DateTime { get; set; }
-            public DateTime? NullDateTime { get; set; }
+            public DateTime? NullDateTime { get; set; } = null;
             public Guid Guid { get; set; } = Guid.Empty;
             public Guid? NullGuid { get; set; } = null;
-            public char Char { get; set; }
-            public char? NullChar { get; set; }
-            public byte Byte { get; set; }
-            public byte? NullByte { get; set; }
+            public char Char { get; set; } = (char)0;
+            public char? NullChar { get; set; } = null;
+            public byte Byte { get; set; } = 0;
+            public byte? NullByte { get; set; } = null;
             public bool Bool { get; set; }
-            public bool? NullBool { get; set; }
-            public int Int { get; set; }
-            public int? NullInt { get; set; }
-            public uint Uint { get; set; }
-            public uint? NullUint { get; set; }
-            public long Long { get; set; }
-            public long? NullLong { get; set; }
-            public ulong Ulong { get; set; }
-            public ulong? NullUlong { get; set; }
+            public bool? NullBool { get; set; } = null;
+            public int Int { get; set; } = 0;
+            public int? NullInt { get; set; } = null;
+            public uint Uint { get; set; } = 0;
+            public uint? NullUint { get; set; } = null;
+            public long Long { get; set; } = 0;
+            public long? NullLong { get; set; } = null;
+            public ulong Ulong { get; set; } = 0;
+            public ulong? NullUlong { get; set; } = null;
             public short Short { get; set; }
-            public short? NullShort { get; set; }
+            public short? NullShort { get; set; } = null;
             public ushort Ushort { get; set; }
-            public ushort? NullUshort { get; set; }
+            public ushort? NullUshort { get; set; } = null;
+            public double Double { get; set; } = 0;
+            public double? NullDouble { get; set; } = null;
             public IEnumerable<string> Strings { get; set; } = null!;
             public Stream Stream { get; set; } = null!;
             public EnumType Enum { get; set; } = EnumType.Value1;
