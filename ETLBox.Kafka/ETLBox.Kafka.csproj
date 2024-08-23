@@ -6,7 +6,7 @@
     <LangVersion>default</LangVersion>
     <PackageId>EtlBox.Classic.Kafka</PackageId>
     <Nullable>enable</Nullable>
-    <Version>1.11.3-pre.460</Version>
+    <Version>1.11.3-pre.461.0</Version>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       Support for Kafka producer and consumer in data flow.
