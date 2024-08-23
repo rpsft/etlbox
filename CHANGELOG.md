@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.11.3"></a>
+## 1.11.3 (2024-08-23)
+
 <a name="1.11.3-pre.463"></a>
 ## 1.11.3-pre.463 (2024-08-23)
 
