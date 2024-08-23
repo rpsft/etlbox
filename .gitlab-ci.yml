@@ -1,38 +1,41 @@
-include:
-  # Release version in current branch
-  - .version.yml
-
 variables:
+  # Opt out of telemetry (turbo and others), see https://consoledonottrack.com/
+  DO_NOT_TRACK: 1
+  # Enable debug services
   CI_DEBUG_SERVICES: "true"
   # Enable service network
   FF_NETWORK_PER_BUILD: "true"
+  # Nupkg folder
   NUPKG_FOLDER: ".packages"
+  # avoid shallow clone to give sonar all the info it needs
+  GIT_DEPTH: 1000
+  # Disable dotnet first time experience
+  DOTNET_NOLOGO: true
+  # Disable Husky in dotnet tools restore
+  HUSKY: 0
+
 
 workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+    on_job_failure: all
   rules:
-    # Avoid duplicate jobs in merge requests
-    # See https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines
+    # Avoid duplicate pipelines in merges
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9].*/
-      variables:
-        PACKAGE_VERSION: $CI_COMMIT_TAG
-    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
-      variables:
-        PACKAGE_VERSION: "${PACKAGE_RELEASE}-${CI_COMMIT_BRANCH}.${CI_PIPELINE_IID}"
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
-      variables:
-        PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $PACKAGE_VERSION == null
-      variables: 
-        PACKAGE_VERSION: "${PACKAGE_RELEASE}-merge.${CI_PIPELINE_IID}"
-    - if: $CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == null
-      variables: 
-        # Package version "by default", from .version.yml and added current pipeline no
-        # (when pipeline is started on a tag, the tag name provides version number)
-        PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
-    - if: $CI_PIPELINE_SOURCE == "schedule"
+    # Skip pipeline on Publish packages, version bump commits
+    - if: $CI_COMMIT_TITLE =~ /^(Publish packages, version bump|chore\(release\):)/
       when: never
+    # Detect source branch name in few scenarios
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        SOURCE_BRANCH: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - if: $CI_COMMIT_BRANCH
+      variables:
+        SOURCE_BRANCH: $CI_COMMIT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+      variables:
+        SOURCE_BRANCH: $CI_COMMIT_BRANCH
 
 stages:
   - build
@@ -40,17 +43,54 @@ stages:
   - deploy
 
 build_job:
+  interruptible: true
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
+  before_script:
+    - dotnet tool install versionize --tool-path .tools || true
+    - git config user.email "noreply@rapidsoft.ru"
+    - git config user.name "Gitlab Runner"
+    - echo "Source branch ${SOURCE_BRANCH}"
+    - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+    - git fetch --depth=1000 --tags --prune origin $SOURCE_BRANCH
+    - git switch $SOURCE_BRANCH
+    - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
+    - 'echo "Tags collected:"'
+    - git tag --list 'v*'
+    - SEMVER_SUFFIX="pre.$CI_PIPELINE_IID"
+    - 'echo "SemVer pre-release suffix: $SEMVER_SUFFIX"'
+    - |
+      if [ "$SOURCE_BRANCH" = "master" ]; then
+        echo "Upgrading to release version"
+        .tools/versionize --aggregate-pre-releases 
+      else
+        echo "Upgrading to pre-release version in branch $SOURCE_BRANCH"
+        .tools/versionize --pre-release "$SEMVER_SUFFIX"
+      fi
   script:
-    - echo "Building version $PACKAGE_VERSION"
-    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
-    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
+    - echo "Building solution"
+    - dotnet build --packages .nuget/packages/ -c Release
+    - dotnet pack --no-build -c Release -o $NUPKG_FOLDER --include-symbols --include-source
+
+    - echo "Pushing version changes to GIT"
+    - git add **/*.csproj
+    - |
+      if [ "$SOURCE_BRANCH" = "master" ]; then
+        echo "Adding CHANGELOG.md to git"
+        git add CHANGELOG.md
+      fi
+    - |
+      if git diff-index --quiet HEAD --; then
+        echo "No changes to commit"
+      else
+        git commit --no-verify -m "Publish packages, version bump"
+      fi
+    - git push --follow-tags origin $SOURCE_BRANCH
   cache:
     key: dotnet-packages-cache
     paths:
       - .nuget/packages/
-      - tools/
+      - .tools/
     unprotect: true
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
@@ -58,6 +98,7 @@ build_job:
       - "$NUPKG_FOLDER/"
 
 test_job:
+  interruptible: true
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:6.0
   services:
@@ -70,8 +111,12 @@ test_job:
     - name: clickhouse/clickhouse-server
       alias: localclickhouse
     - name: krisgeus/docker-kafka
-      alias: kafka      
+      alias: kafka
+    - name: docker:24.0.5-dind
+      alias: docker
+      command: [ "dockerd", "--tls=false", "--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock" ]
   variables:
+    DOCKER_HOST: tcp://docker:2375
     # MySQL image customization
     MYSQL_ROOT_HOST: '%'
     MYSQL_ROOT_PASSWORD: 'etlboxpassword'
@@ -100,7 +145,7 @@ test_job:
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
     - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
-    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet build --packages .nuget/packages/ -c Release
   script:
     - >
       dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
@@ -115,7 +160,7 @@ test_job:
     key: dotnet-packages-cache
     paths:
       - .nuget/packages/
-      - tools/
+      - .tools/
     unprotect: true
   artifacts:
     when: always
@@ -129,23 +174,25 @@ test_job:
         path: ./**/coverage.cobertura.xml
 
 publish:internal:
+  interruptible: true
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
+    - echo "Publishing version internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
   needs:
     - build_job
     - test_job
 
 publish:nuget-org:
+  interruptible: true
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
+    - echo "Publishing version to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/ || $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+-beta.*$/ )
+    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/ )
       when: manual
   needs:
     - build_job

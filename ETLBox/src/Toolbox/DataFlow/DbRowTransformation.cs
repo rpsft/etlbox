@@ -52,14 +52,6 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
         ConnectionManager = connectionManager;
     }
 
-    public sealed override Func<TInput, TInput> TransformationFunc
-    {
-#pragma warning disable S4275 // we are only sealing the property to prevent it from being overridden
-        get => base.TransformationFunc;
-        set => base.TransformationFunc = value;
-#pragma warning restore S4275
-    }
-
     private void InitObjects()
     {
         TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
@@ -83,7 +75,6 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
         if (!HasDestinationTableDefinition)
             LoadTableDefinitionFromTableName();
         BulkInsertConnectionManager = DbConnectionManager.CloneIfAllowed();
-        BulkInsertConnectionManager.IsInBulkInsert = true;
         BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
         TableData = new TableData<TInput>(DestinationTableDefinition, 1);
     }

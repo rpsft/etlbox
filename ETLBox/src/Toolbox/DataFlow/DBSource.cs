@@ -1,15 +1,16 @@
 using System.Linq;
-using ALE.ETLBox.ControlFlow;
-using ALE.ETLBox.Helper;
+using System.Threading;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.ControlFlow;
+using ALE.ETLBox.Helper;
 using ETLBox.Primitives;
-using System.Threading;
 
 namespace ALE.ETLBox.DataFlow
 {
     /// <summary>
-    /// A database source defines either a table or sql query that returns data from a database. While reading the result set or the table, data is asnychronously posted
+    /// A database source defines either a table or sql query that returns data from a database.
+    /// While reading the result set or the table, data is asnychronously posted
     /// into the targets.
     /// </summary>
     /// <typeparam name="TOutput">Type of data output.</typeparam>
@@ -199,14 +200,12 @@ namespace ALE.ETLBox.DataFlow
                     => colValue =>
                     {
                         CopyColumnToObjectWithReflection(colName, colValue);
-                    }
-                ,
+                    },
                 (true, false)
                     => colValue =>
                     {
                         CopyColumnToDynamicObject(colName, colValue);
-                    }
-                ,
+                    },
                 (_, _) => _ => { }
             };
 

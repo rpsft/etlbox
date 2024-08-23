@@ -5,6 +5,12 @@
     <RootNamespace>ALE.ETLBox.Common</RootNamespace>
     <LangVersion>default</LangVersion>
     <PackageId>EtlBox.Classic.Common</PackageId>
+    <Version>1.11.3-pre.463</Version>
+    <Description>
+      EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
+      Common algorythms and base classes for use in other EtlBox.Classic packages.
+      This package is not to be installed as direct dependency unless you want to write extensions to EtlBox.Classic.
+    </Description>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="ETLBox;ETLBox.Kafka" />

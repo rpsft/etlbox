@@ -1,10 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.ClickHouse</PackageId>
+    <Version>1.11.3-pre.463</Version>
+    <Description>
+      EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
+      Support for Clickhouse columnar database
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
