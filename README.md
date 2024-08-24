@@ -1,26 +1,27 @@
 # ETLBox.Classic
 
-This is a fully open-source (MIT) fork from original ETLBox library.
+This project originated as a fully open-source (MIT) fork from ETLBox library by Andreas Lennartz.
 
-Starting with version 2.0 the author of the original library decided to close the source and commercialize the newer branch.
-ETLBox.Classic is aiming at keeping original 1.x branch up to date with .Net and DB libraries.
+Starting with version 2.0 the author of the original library decided to close the source and commercialize its newer branch.
+ETLBox.Classic was aiming at keeping original 1.x branch up to date with .Net and DB libraries.
 
 > ⚠️ **IMPORTANT NOTICE:** ⚠️
 > 
-> ETLBox.Classic is not a direct fork of original ETLBox library. It is a copy of the original source code, modified to
-> keep on open-source.
+> ETLBox.Classic went 1000+ commits from being a direct fork of original ETLBox library.
+> 
+> It was a copy of the original source code, modified to keep it open-source, but over the years multiple new features were added.
 > 
 > As we are actively developing it, we anticipate the need for breaking changes in the near future.
 > In order to avoid versioning conflict with original ETLBox library, we decided to rename version 2.x and on from
 > "EtlBox.Classic" to "EtlKit". We expect migration to 2.0 to be as easy as updating Nuget references and changing
-> namespaces.
+> namespaces. Our best guess on the timing of the transition is somewhere in 2025.
 
 ## Installation
 
-You can use ETLBox within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions
+You can use EtlBox.Classic within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions
 of .NET)
 
-[ETLBox is available on nuget](https://www.nuget.org/packages?q=EtlBox.Classic). Just add the package to your project via your
+[EtlBox.Classic is available on nuget](https://www.nuget.org/packages?q=EtlBox.Classic). Just add the package to your project via your
 nuget package manager.
 
 See individual package descriptions to make sense of what each of them does.
@@ -32,53 +33,53 @@ A lightweight ETL (extract, transform, load) library and data integration toolbo
 components let you read and write data from the most common databases and file types. Transformations allow you to you
 harmonize, filter, aggregate, validate and clean your data.
 
-Create your own tailor-made data flow with your .NET language of choice. ETLBox is written in C# and offers full support
+Create your own tailor-made data flow with your .NET language of choice. EtlBox.Classic is written in C# and offers full support
 for .NET Core.
 
 
 ## Why ETLBox
 
-ETLBox is a comprehensive C# class library that is able to manage your
+EtlBox.Classic is a comprehensive C# class library that is able to manage your
 whole [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)
 or [ELT](https://en.wikipedia.org/wiki/Extract,_load,_transform). You can use it to create your own dataflow pipelines
 programmatically in .NET, e.g. with C#. Besides a big set of dataflow components it comes which some control flow task
 that let you easily manage your database or simple execute Sql code without any boilerplate code. It also offers
 extended logging capabilites based on ILogger to monitor and anlayze your ETL job runs.
 
-ETLBox is a fully functional alternative to other ETL tools like Sql Server Integrations Services (SSIS). Creating your
+EtlBox.Classic is a fully functional alternative to other ETL tools like Sql Server Integrations Services (SSIS). Creating your
 ETL processes programatically has some advantages:
 
 **Build ETL in .NET**: Code your ETL with your favorite .NET language fitting your team’s skills and that is coming with
 a mature toolset.
 
-**Runs everywhere**: ETLBox runs on Linux, macOS, and Windows. It is written in the current .NET Standard and
+**Runs everywhere**: EtlBox.Classic runs on Linux, macOS, and Windows. It is written in the current .NET Standard and
 successfully tested with the latest versions of .NET Core & .NET.
 
 **Run locally**: Develop and test your ETL code locally on your desktop using your existing development & debugging
 tools.
 
-**Process In-Memory**: ETLBox comes with dataflow components that allow in-memory processing which is much faster than
+**Process In-Memory**: EtlBox.Classic comes with dataflow components that allow in-memory processing which is much faster than
 storing data on disk and processing later.
 
 **Manage Change**: Track you changes with git (or other source controls), code review your etl logic, and use your
 existing CI/CD processes.
 
-**Data integration**: While supporting different databases, flat files and web services, you can use ETLBox as a
+**Data integration**: While supporting different databases, flat files and web services, you can use EtlBox.Classic as a
 foundation for your custom made Data Integregation platform.
 
-**Made for big data**: ETLBox relies
+**Made for big data**: EtlBox.Classic relies
 on [Microsoft's TPL.Dataflow library](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library)
 and was designed to work with big amounts of data.
 
 ## Data Flow and Control Flow
 
-ETLBox is split into two main components: Data Flow and Control Flow Tasks. The Data Flow part offers the core ETL
+EtlBox.Classic is split into two main components: Data Flow and Control Flow Tasks. The Data Flow part offers the core ETL
 components. The tasks in the Control Flow allow you to manage your databases with a simple syntax. Both components come
 with customizable logging functionalities.
 
 ### Data Flow overview
 
-ETLBox comes with a set of Data Flow component to construct your own ETL pipeline . You can connect with different
+EtlBox.Classic comes with a set of Data Flow component to construct your own ETL pipeline . You can connect with different
 sources (e.g. a Csv file), add some transformations to manipulate that data on-the-fly (e.g. calculating a sum or
 combining two columns) and then store the changed data in a connected destination (e.g. a database table).
 
@@ -146,7 +147,7 @@ csvDest.Wait();
 
 The heart of an ETL framework is it's ability to integrate with other systems.
 The following table shows which types of sources and destination are supported out-of-the box with the current version
-of ETLBox.
+of EtlBox.Classic.
 **You can *always* integrate any other system not listed here by using a `CustomSource` or `CustomDestination` - though
 you have to write the integration code yourself.**
 
@@ -172,7 +173,7 @@ component.
 
 ### Transformations
 
-ETLBox has 3 type of transformations: Non-blocking, partially blocking and blocking transformations. Non-blocking
+EtlBox.Classic has 3 type of transformations: Non-blocking, partially blocking and blocking transformations. Non-blocking
 transformations will
 only store the row that is currently processed in memory (plus some more in the buffer to optimize throughput and
 performance). Partially blocking transformations will load some data in the memory before they process data row-by-row.
@@ -194,7 +195,7 @@ The following table is an overview of the most common transformations in ETLBox:
 
 #### Designed for big data
 
-ETLBox was designed for performance and is able to deal with big amounts of data. All destinations do support Bulk or
+EtlBox.Classic was designed for performance and is able to deal with big amounts of data. All destinations do support Bulk or
 Batch operations. By default, every component comes with an input and/or output buffer. You can design your data flow
 that only batches or your data is stored in memory, which are kept in different buffers for every component to increase
 throughput. All operations can be execute asynchrounously, so that your processing will run only within separate
@@ -239,11 +240,10 @@ CreateTableTask.Create(conn, "Table1", new List<TableColumn>() {
 
 ### Logging
 
-By default, ETLBox uses ILogger. ETLBox already comes with ILogger as dependency - so
-you don't need to include additional packages from nuget. In order to have the logging activating, you just have to set
-up a ILogger configuration called `ILogger.config`, and create a target and a logger rule. After adding this, you will already
-get logging output for all tasks and components in
-ETLBox. [Read more about logging here](https://etlbox.net/articles/overview_logging.html).
+EtlBox.Classic uses [Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/)
+which is a de-facto standart for modern .Net. EtlBox.Classic also has its own logging-to-database capabilites,
+implemented in `EtlBox.Classic.Logging.Database` package, which has its own configuration and uses NLog internally
+at the time being.
 
 ## Contribution
 
