@@ -14,11 +14,7 @@ variables:
   # Disable Husky in dotnet tools restore
   HUSKY: 0
 
-
 workflow:
-  auto_cancel:
-    on_new_commit: interruptible
-    on_job_failure: all
   rules:
     # Avoid duplicate pipelines in merges
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
@@ -43,7 +39,6 @@ stages:
   - deploy
 
 build_job:
-  interruptible: true
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
   before_script:
@@ -98,7 +93,6 @@ build_job:
       - "$NUPKG_FOLDER/"
 
 test_job:
-  interruptible: true
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:6.0
   services:
@@ -174,7 +168,6 @@ test_job:
         path: ./**/coverage.cobertura.xml
 
 publish:internal:
-  interruptible: true
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
@@ -192,7 +185,7 @@ publish:nuget-org:
     - echo "Publishing version to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ( $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/ )
+    - if: $SOURCE_BRANCH == "master"
       when: manual
   needs:
     - build_job
