@@ -13,7 +13,7 @@
     <RootNamespace>ALE.ETLBox</RootNamespace>
     <LangVersion>default</LangVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.11.7</Version>
+    <Version>1.11.8</Version>
   </PropertyGroup>
 
   <ItemGroup>
