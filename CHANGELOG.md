@@ -2,47 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
-<a name="1.11.8"></a>
-## 1.11.8 (2024-08-24)
-
 <a name="1.11.7"></a>
-## 1.11.7 (2024-08-23)
-
-<a name="1.11.6"></a>
-## 1.11.6 (2024-08-23)
-
-<a name="1.11.5"></a>
-## 1.11.5 (2024-08-23)
-
-<a name="1.11.4"></a>
-## 1.11.4 (2024-08-23)
-
-<a name="1.11.3"></a>
-## 1.11.3 (2024-08-23)
-
-<a name="1.11.3-pre.463"></a>
-## 1.11.3-pre.463 (2024-08-23)
-
-<a name="1.11.3-pre.462"></a>
-## 1.11.3-pre.462 (2024-08-23)
-
-<a name="1.11.3-pre.461.0"></a>
-## 1.11.3-pre.461.0 (2024-08-23)
-
-<a name="1.11.3-pre.460"></a>
-## 1.11.3-pre.460 (2024-08-22)
-
-<a name="1.11.3-pre.459.0"></a>
-## 1.11.3-pre.459.0 (2024-08-22)
-
-<a name="1.11.3-pre.1"></a>
-## 1.11.3-pre.1 (2024-08-22)
-
-<a name="1.11.3-pre"></a>
-## 1.11.3-pre (2024-08-22)
-
-<a name="1.11.1"></a>
-## 1.11.1 (2024-08-20)
+## 1.11.7 (2024-08-24)
 ✨ Features
 * New transformation: SqlRowTransformation, SqlCommandTransformation to run parametrised SQL queries/commands
 * New transformation: KafkaTransformation producing to Kafka topics
