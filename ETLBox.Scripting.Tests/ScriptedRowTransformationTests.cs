@@ -136,7 +136,7 @@ public class ScriptedRowTransformationTests
         script.Mappings.Add("NewId", "MassTransit.NewId.NextSequentialGuid()");
         script.Mappings.Add("Id", "Id + 1");
 
-        var assemblyName = typeof(MassTransit.NewId).Assembly.GetName().FullName!;
+        var assemblyName = "Files/NewId.dll";
         script.AdditionalAssemblyNames = new[] { assemblyName };
 
         var memoryDestination = new MemoryDestination<ExpandoObject>();
