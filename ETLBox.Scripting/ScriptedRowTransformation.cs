@@ -35,7 +35,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     public IEnumerable<string> AdditionalAssemblyNames
     {
         get => _additionalAssemblies.Select(x => x.GetName().FullName);
-        set => _additionalAssemblies = value.Select(Assembly.Load);
+        set => _additionalAssemblies = value.Select(Assembly.LoadFrom);
     }
 
     /// <summary>
