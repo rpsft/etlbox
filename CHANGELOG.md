@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.11.10"></a>
+## 1.11.10 (2024-09-12)
+
 <a name="1.11.10-pre.476.0"></a>
 ## 1.11.10-pre.476.0 (2024-09-12)
 
