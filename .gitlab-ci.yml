@@ -56,7 +56,7 @@ version_bump_job:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
   script:
-    - pwsh ./bump-version.ps1 $CI_COMMIT_BRANCH
+    - pwsh ./bump-version-env.ps1 $CI_COMMIT_BRANCH
   artifacts: 
     reports: 
       dotenv: .gitlab-ci.env
