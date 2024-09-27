@@ -1,3 +1,7 @@
+include:
+  # Release version in current branch
+  - .version.yml
+
 variables:
   # Opt out of telemetry (turbo and others), see https://consoledonottrack.com/
   DO_NOT_TRACK: 1
@@ -7,8 +11,11 @@ variables:
   FF_NETWORK_PER_BUILD: "true"
   # Nupkg folder
   NUPKG_FOLDER: ".packages"
-  # avoid shallow clone to give sonar all the info it needs
-  GIT_DEPTH: 1000
+  NUGET_SOURCE: https://nuget.rapidsoft.ru/nuget/Rapidsoft-Nuget/v3/index.json
+  NUGETORG_SOURCE: https://api.nuget.org/v3/index.json
+  # All console out of dotnet should be in English
+  #LANG: C
+  #LCID: 1033
   # Disable dotnet first time experience
   DOTNET_NOLOGO: true
   # Disable Husky in dotnet tools restore
@@ -19,68 +26,48 @@ workflow:
     # Avoid duplicate pipelines in merges
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
-    # Skip pipeline on Publish packages, version bump commits
-    - if: $CI_COMMIT_TITLE =~ /^(Publish packages, version bump|chore\(release\):)/
-      when: never
-    # Detect source branch name in few scenarios
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
-        SOURCE_BRANCH: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
-    - if: $CI_COMMIT_BRANCH
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-merge.${CI_MERGE_REQUEST_IID}.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
       variables:
-        SOURCE_BRANCH: $CI_COMMIT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "web"
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
       variables:
-        SOURCE_BRANCH: $CI_COMMIT_BRANCH
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "web" || ($CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == null)
+      variables:
+        # Package version "by default", from .version.yml and added current pipeline no
+        # (when pipeline is started on a tag, the tag name provides version number)
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9].*/
+      when: never
 
 stages:
   - build
   - test
   - deploy
 
+version_bump_job:
+  stage: .pre
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
+  script:
+    - pwsh ./bump-version.ps1 $CI_COMMIT_BRANCH
+  artifacts: 
+    reports: 
+      dotenv: .gitlab-ci.env
+
 build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:6.0
-  before_script:
-    - dotnet tool install versionize --tool-path .tools || true
-    - git config user.email "noreply@rapidsoft.ru"
-    - git config user.name "Gitlab Runner"
-    - echo "Source branch ${SOURCE_BRANCH}"
-    - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-    - git fetch --depth=1000 --tags --prune origin $SOURCE_BRANCH
-    - git switch $SOURCE_BRANCH
-    - 'echo "Collecting change log and bumping version on branch: $SOURCE_BRANCH"'
-    - 'echo "Tags collected:"'
-    - git tag --list 'v*'
-    - SEMVER_SUFFIX="pre.$CI_PIPELINE_IID"
-    - 'echo "SemVer pre-release suffix: $SEMVER_SUFFIX"'
-    - |
-      if [ "$SOURCE_BRANCH" = "master" ]; then
-        echo "Upgrading to release version"
-        .tools/versionize --aggregate-pre-releases 
-      else
-        echo "Upgrading to pre-release version in branch $SOURCE_BRANCH"
-        .tools/versionize --pre-release "$SEMVER_SUFFIX"
-      fi
   script:
-    - echo "Building solution"
-    - dotnet build --packages .nuget/packages/ -c Release
-    - dotnet pack --no-build -c Release -o $NUPKG_FOLDER --include-symbols --include-source
-
-    - echo "Pushing version changes to GIT"
-    - git add **/*.csproj
-    - |
-      if [ "$SOURCE_BRANCH" = "master" ]; then
-        echo "Adding CHANGELOG.md to git"
-        git add CHANGELOG.md
-      fi
-    - |
-      if git diff-index --quiet HEAD --; then
-        echo "No changes to commit"
-      else
-        git commit --no-verify -m "Publish packages, version bump"
-      fi
-    - git push --follow-tags origin $SOURCE_BRANCH
+    - echo "Building version $PACKAGE_VERSION"
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
+    - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   cache:
     key: dotnet-packages-cache
     paths:
@@ -139,7 +126,7 @@ test_job:
     - pwsh ./Set-Configuration.ps1 gitlab-ci
     - popd
     - dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools || true
-    - dotnet build --packages .nuget/packages/ -c Release
+    - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
   script:
     - >
       dotnet test --no-build --configuration=Release --filter="Category!=Performance" --logger="console;verbosity=detailed"
@@ -167,11 +154,38 @@ test_job:
         coverage_format: cobertura
         path: ./**/coverage.cobertura.xml
 
+commit_release:
+  stage: deploy
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
+  script:
+    - git config user.email "noreply@rapidsoft.ru"
+    - git config user.name "Gitlab Runner"
+    - echo "Source branch ${SOURCE_BRANCH}"
+    - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+    - git fetch --depth=1000 --tags --prune origin $SOURCE_BRANCH
+    - git switch $SOURCE_BRANCH
+    - pwsh ./bump-version-write.ps1
+    - echo "Pushing version changes to GIT"
+    - git add .version.yml
+    - |
+      if git diff-index --quiet HEAD --; then
+        echo "No changes to commit"
+      else
+        git commit --no-verify -m "Publish packages, version bump"
+        git tag -a "v${PACKAGE_RELEASE}" -m "Release version ${PACKAGE_RELEASE}"
+      fi
+    - git push --follow-tags origin $SOURCE_BRANCH
+  needs:
+    - build_job
+    - test_job
+    
 publish:internal:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Publishing version internally to $NUGET_SOURCE"
+    - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
   needs:
     - build_job
@@ -182,8 +196,8 @@ publish:nuget-org:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:6.0
   script:
-    - echo "Publishing version to nuget.org..."
-    - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_ORG_API_KEY
+    - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
+    - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGETORG_SOURCE --api-key $NUGET_ORG_API_KEY
   rules:
     - if: $SOURCE_BRANCH == "master"
       when: manual
