@@ -2,29 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.11.11-pre.480.0"></a>
+## 1.11.11-pre.480.0 (2024-09-27)
+
 <a name="1.11.11-pre.478.0"></a>
 ## 1.11.11-pre.478.0 (2024-09-19)
 
 <a name="1.11.10"></a>
 ## 1.11.10 (2024-09-12)
 
-<a name="1.11.10-pre.476.0"></a>
-## 1.11.10-pre.476.0 (2024-09-12)
-
-<a name="1.11.10-pre.475"></a>
-## 1.11.10-pre.475 (2024-09-12)
-
-<a name="1.11.10-pre.474.0"></a>
-## 1.11.10-pre.474.0 (2024-09-11)
-
-<a name="1.11.10-pre.473"></a>
-## 1.11.10-pre.473 (2024-09-11)
-
-<a name="1.11.10-pre.472.0"></a>
-## 1.11.10-pre.472.0 (2024-09-11)
-
-<a name="1.11.9"></a>
-## 1.11.9 (2024-08-24)
+🐛 Bug Fixes
+* Fixed a bug in `ScriptedRowTransformation` where the dependency injection was not working properly.
 
 <a name="1.11.7"></a>
 ## 1.11.7 (2024-08-24)
