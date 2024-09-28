@@ -26,7 +26,10 @@ if ($branch -eq "develop") {
 # Construct the new version
 $newRelease = "$major.$minor.$build"
 
-Write-Output "Version bumped to: $newRelease"
+# Update the version in the YAML content
+$newVersionContent = [regex]::Replace($versionContent, 'PACKAGE_RELEASE:\s*\d+\.\d+\.\d+', "PACKAGE_RELEASE: $newRelease")
 
-# Write the release vars to .env file for use in the build
-Set-Content -Path '.gitlab-ci.env' -Value "PACKAGE_RELEASE=$newRelease`nPACKAGE_VERSION=$newRelease"
+# Write the updated content back to the .version.yml file
+Set-Content -Path $versionFile -Value $newVersionContent
+
+Write-Output "Version updated to $env:PACKAGE_RELEASE"
