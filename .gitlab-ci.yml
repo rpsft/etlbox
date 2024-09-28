@@ -20,8 +20,6 @@ variables:
   DOTNET_NOLOGO: true
   # Disable Husky in dotnet tools restore
   HUSKY: 0
-  # Marker message for version bump commit
-  VERSION_BUMP_MESSAGE: "version bump"
 
 workflow:
   rules:
@@ -32,7 +30,7 @@ workflow:
       when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9].*/
       when: never
-    - if: $CI_COMMIT_MESSAGE =~ /$VERSION_BUMP_MESSAGE/
+    - if: $CI_COMMIT_MESSAGE =~ /^chore\(version bump\).*/
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
@@ -145,7 +143,7 @@ test_job:
         coverage_format: cobertura
         path: ./**/coverage.cobertura.xml
 
-commit_release:
+bump_version:
   stage: deploy
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
@@ -165,7 +163,7 @@ commit_release:
       if git diff-index --quiet HEAD --; then
         echo "No changes to commit"
       else
-        git commit --no-verify -m "$VERSION_BUMP_MESSAGE"
+        git commit --no-verify -m "chore(version bump): bump version to $PACKAGE_RELEASE"
       fi
     - git push --follow-tags origin $CI_COMMIT_BRANCH
   needs:

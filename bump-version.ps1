@@ -32,4 +32,6 @@ $newVersionContent = [regex]::Replace($versionContent, 'PACKAGE_RELEASE:\s*\d+\.
 # Write the updated content back to the .version.yml file
 Set-Content -Path $versionFile -Value $newVersionContent
 
-Write-Output "Version updated to $env:PACKAGE_RELEASE"
+Write-Output "Version updated to $newRelease"
+
+$env:PACKAGE_RELEASE = $newRelease
