@@ -34,4 +34,5 @@ Set-Content -Path $versionFile -Value $newVersionContent
 
 Write-Output "Version updated to $newRelease"
 
-$env:PACKAGE_RELEASE = $newRelease
+# Output the environment variable in a format that can be sourced by bash
+"PACKAGE_RELEASE=$newRelease" | Out-File -FilePath /tmp/env-vars.sh -Encoding ascii

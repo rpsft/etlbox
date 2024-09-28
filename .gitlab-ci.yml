@@ -157,6 +157,11 @@ bump_version:
     - echo "Tagging current version $PACKAGE_RELEASE"
     - git tag -a "v${PACKAGE_RELEASE}" -m "Release version ${PACKAGE_RELEASE}"
     - pwsh ./bump-version.ps1 $CI_COMMIT_BRANCH
+    - |
+      # Source the environment variables
+      if [ -f /tmp/env-vars.sh ]; then
+        source /tmp/env-vars.sh
+      fi
     - echo "Pushing version changes to GIT"
     - git add .version.yml
     - |
