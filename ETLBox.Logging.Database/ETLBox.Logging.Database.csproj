@@ -10,22 +10,21 @@
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       ETLBox database logging support using NLog.
     </Description>
-    <Version>1.11.11-pre.481</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="NLog.Database" Version="5.2.7" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0"/>
+    <PackageReference Include="NLog.Database" Version="5.2.7"/>
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.7"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
-    <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj"/>
+    <ProjectReference Include="..\ETLBox\ETLBox.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj"/>
   </ItemGroup>
 
 </Project>
