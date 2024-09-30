@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <PackageId>EtlBox.Classic.ClickHouse</PackageId>
-    <Version>1.11.11</Version>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).
       Support for Clickhouse columnar database
@@ -13,12 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClickHouse.Ado" Version="2.0.2.2" />
+    <PackageReference Include="ClickHouse.Ado" Version="2.0.2.2"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
-    <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
+    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj"/>
+    <ProjectReference Include="..\ETLBox\ETLBox.csproj"/>
   </ItemGroup>
 
 </Project>
