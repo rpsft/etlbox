@@ -2,9 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
-<a name="1.11.11"></a>
-## 1.11.11 (2024-09-26)
-
 <a name="1.11.10"></a>
 ## 1.11.10 (2024-09-12)
 

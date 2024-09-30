@@ -9,7 +9,8 @@ if (Args.Count != 1)
     Console.WriteLine("Please provide the path to the commit message file.");
     return 1;
 }
-private var msg = File.ReadAllLines(Args[0])[0];
+private var msgFilePath = Args[0];
+private var msg = File.ReadAllLines(msgFilePath)[0];
 
 if (Regex.IsMatch(msg, "^(Revert|Merge branch|Merge remote-tracking branch)"))
 {
@@ -21,6 +22,14 @@ bool CheckType(string message) => Regex.IsMatch(message, $"^({CommitTypes})[:\\(
 bool CheckScopeAndColon(string message) => Regex.IsMatch(message, $"^({CommitTypes})(\\(.+\\))?:");
 bool CheckSubject(string message) => Regex.IsMatch(message, $"^({CommitTypes})(\\(.+\\))?: .{{4,}}");
 bool CheckEnding(string message) => !Regex.IsMatch(message, @"[.\s]$");
+
+string GetTrailer(string message)
+{
+    if (message.StartsWith("feat")) return "\n\nChangelog: added";
+    if (message.StartsWith("fix")) return "\n\nChangelog: fixed";
+    if (message.StartsWith("perf")) return "\n\nChangelog: performance";
+    return "\n\nChangelog: other";
+}
 
 string errorMessage;
 if (!CheckLength(msg))
@@ -45,6 +54,9 @@ else if (!CheckEnding(msg))
 }
 else
 {
+    // Append GitLab trailer to the commit message
+    msg += GetTrailer(msg);
+    File.WriteAllText(msgFilePath, msg);
     return 0;
 }
 
