@@ -1,4 +1,6 @@
 #nullable enable
+using System.Collections.Concurrent;
+using System.Data.Common;
 using System.Dynamic;
 using System.Globalization;
 using System.Net;
@@ -14,6 +16,7 @@ using CsvHelper.Configuration;
 using ETLBox.Primitives;
 using ETLBox.Rest.Models;
 using FluentAssertions;
+using JetBrains.Annotations;
 using Moq;
 
 namespace ETLBox.Rest.Tests
@@ -59,7 +62,7 @@ namespace ETLBox.Rest.Tests
                         ["port"] = 90210,
                         ["http_code"] = HttpStatusCode.OK,
                         ["result"] = new Dictionary<string, object?> { ["jsonResponse"] = 100 },
-                        ["raw_response"] = "{ \"jsonResponse\" : 100 }"
+                        ["raw_response"] = "{ \"jsonResponse\" : 100 }",
                     }
                 );
         }
@@ -77,8 +80,8 @@ namespace ETLBox.Rest.Tests
                 {
                     Delimiter = ";",
                     Escape = '#',
-                    Quote = '$'
-                }
+                    Quote = '$',
+                },
             };
             const string jsonString =
                 "{\"name\": \"test\", \"true\": true, \"false\": false, \"null\": null, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}";
@@ -106,7 +109,7 @@ namespace ETLBox.Rest.Tests
                         ["false"] = false,
                         ["null"] = null,
                         ["array"] = new[] { 1, 2, 3 },
-                        ["object"] = new Dictionary<string, object> { ["key"] = "value" }
+                        ["object"] = new Dictionary<string, object> { ["key"] = "value" },
                     }
                 );
         }
@@ -159,6 +162,7 @@ namespace ETLBox.Rest.Tests
                 result.Should().BeOfType<ExpandoObject>();
                 result!["code"].Should().Be("OK");
             }
+
             if (expectException)
             {
                 dest["exception"].Should().NotBeNull();
@@ -209,13 +213,13 @@ namespace ETLBox.Rest.Tests
                     Headers = new() { { "header1", "testHeaderValue" } },
                     Method = "GET",
                     RetryCount = 2,
-                    RetryInterval = 5
+                    RetryInterval = 5,
                 },
                 HttpCodeField = "http_code",
                 ResultField = "result",
                 ExceptionField = "errorMessage",
                 RawResponseField = "raw_response",
-                FailOnError = false
+                FailOnError = false,
             };
 
             //Act
@@ -253,15 +257,31 @@ namespace ETLBox.Rest.Tests
         [Serializable]
         public class EtlDataFlowStep : IDataFlow, IXmlSerializable
         {
+            private readonly ConcurrentDictionary<
+                (Type type, string? key),
+                IConnectionManager
+            > _connectionManagers = new();
+
             public Guid? ReferenceId { get; set; }
 
             public string Name { get; set; } = null!;
 
             public int? TimeoutMilliseconds { get; set; }
 
+            public IConnectionManager GetOrAddConnectionManager(
+                Type connectionManagerType,
+                string? key,
+                Func<Type, string?, IConnectionManager> factory
+            ) =>
+                _connectionManagers.GetOrAdd(
+                    (connectionManagerType, key),
+                    k => factory(k.type, k.key)
+                );
+
             public IDataFlowSource<ExpandoObject> Source { get; set; } = null!;
 
             public IList<IDataFlowDestination<ExpandoObject>> Destinations { get; set; } = null!;
+
             public IList<IDataFlowDestination<ETLBoxError>> ErrorDestinations { get; set; } = null!;
 
             public XmlSchema? GetSchema() => null;
@@ -282,6 +302,25 @@ namespace ETLBox.Rest.Tests
                 Source.Execute(CancellationToken.None);
                 var tasks = Destinations.Select(d => d.Completion).ToArray();
                 Task.WaitAll(tasks);
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this); // Violates rule
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposing)
+                {
+                    return;
+                }
+
+                foreach (var value in _connectionManagers.Values)
+                {
+                    value.Dispose();
+                }
             }
         }
 
@@ -317,6 +356,7 @@ namespace ETLBox.Rest.Tests
                     )
                     .Throws(() => new HttpStatusCodeException(resultCode, response));
             }
+
             return httpClientMock;
         }
 
@@ -342,7 +382,7 @@ namespace ETLBox.Rest.Tests
                     Headers = new Dictionary<string, string>
                     {
                         ["header1"] = "testHeaderValue",
-                        ["header2"] = "testHeaderValue2"
+                        ["header2"] = "testHeaderValue2",
                     },
                     Method = "GET",
                     RetryCount = 2,
@@ -352,7 +392,7 @@ namespace ETLBox.Rest.Tests
                 ExceptionField = "exception",
                 HttpCodeField = "http_code",
                 RawResponseField = "raw_response",
-                FailOnError = failOnError
+                FailOnError = failOnError,
             };
     }
 }
