@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj" />
-    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
+    <ProjectReference Include="..\ETLBox.Common\ETLBox.Common.csproj"/>
+    <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj"/>
   </ItemGroup>
 
 </Project>
