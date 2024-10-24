@@ -10,12 +10,14 @@ using System.Xml;
 using System.Xml.Linq;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
 
 /// <summary>
 /// Read data flow configuration from XML
 /// </summary>
+[PublicAPI]
 public sealed class DataFlowXmlReader
 {
     // Type cache for all serializable Dataflow types
@@ -31,11 +33,11 @@ public sealed class DataFlowXmlReader
     private bool _allErrorsDestinationAdded;
 
     // Culture settings for deserialization
-    public CultureInfo CurrentCulture { get; set; } = CultureInfo.CurrentCulture;
+    public CultureInfo CurrentCulture { get; set; }
 
     public DataFlowXmlReader(
         IDataFlow dataFlow,
-        CultureInfo currentCulture = null!,
+        CultureInfo? currentCulture = null,
         IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null
     )
     {
@@ -97,6 +99,7 @@ public sealed class DataFlowXmlReader
             {
                 break;
             }
+
             InitializeRootPropertiesFromXml(reader);
         }
     }
@@ -268,6 +271,7 @@ public sealed class DataFlowXmlReader
                 set.Invoke(list, new[] { item });
             }
         }
+
         return list;
     }
 
@@ -310,6 +314,7 @@ public sealed class DataFlowXmlReader
         }
 
         var prop = instance.GetType().GetProperty(propXml.Name.LocalName);
+
         if (prop is null || !prop.CanWrite)
         {
             TryInvokeSourceMethod(instance, propXml);
@@ -394,42 +399,53 @@ public sealed class DataFlowXmlReader
         PropertyInfo prop
     )
     {
-        Type? propType;
-        // If Type is IEnumerable, assign array
+        var propType = GetPropertyType(typeName, propXml, prop);
+        if (typeof(IConnectionManager).IsAssignableFrom(propType))
+        {
+            var connectionString = propXml
+                .Element(nameof(IConnectionManager.ConnectionString))
+                ?.Value;
+            var value = _dataFlow.GetOrAddConnectionManager(
+                propType,
+                connectionString,
+                (type, _) =>
+                    CreateInstance(type, propXml) as IConnectionManager
+                    ?? throw new InvalidDataException(
+                        $"Failed to create connection manager instance of type {type}"
+                    )
+            );
+            prop.SetValue(instance, value);
+        }
+        else
+        {
+            var value = CreateObject(propType, propXml);
+            if (value is not null)
+            {
+                prop.SetValue(instance, value);
+            }
+        }
+    }
+
+    private static Type GetPropertyType(string typeName, XElement propXml, PropertyInfo prop)
+    {
         if (
             prop.PropertyType.IsGenericType
             && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
         )
         {
-            propType = prop.PropertyType.GenericTypeArguments[0].MakeArrayType();
+            // If Type is IEnumerable, assign array
+            return prop.PropertyType.GenericTypeArguments[0].MakeArrayType();
         }
-        else
+
+        var propTypeName = propXml.Attribute("type")?.Value;
+        if (string.IsNullOrEmpty(propTypeName))
         {
-            var propTypeName = propXml.Attribute("type")?.Value;
-            if (string.IsNullOrEmpty(propTypeName))
-            {
-                throw new InvalidDataException(
-                    $"Type attribute is required to assign '{typeName}.{prop.Name}' value"
-                );
-            }
-
-            propType = GetType(propTypeName!, prop.PropertyType);
-
-            if (propType is null)
-            {
-                throw new InvalidDataException(
-                    $"Type '{propType}' is not found for '{typeName}.{prop.Name}'"
-                );
-            }
+            throw new InvalidDataException(
+                $"Type attribute is required to assign '{typeName}.{prop.Name}' value"
+            );
         }
-
-        var value = CreateObject(propType, propXml);
-        if (value is null)
-        {
-            return;
-        }
-
-        prop.SetValue(instance, value);
+        return GetType(propTypeName!, prop.PropertyType)
+            ?? throw new InvalidDataException($"Type  is not found for '{typeName}.{prop.Name}'");
     }
 
     private Array CreateArray(Type type, XContainer node)
@@ -462,6 +478,7 @@ public sealed class DataFlowXmlReader
         {
             builder.Append((item as XText)?.Value.Trim() ?? "");
         }
+
         return GetValue(type, cultureInfo, builder.ToString());
     }
 
@@ -561,6 +578,7 @@ public sealed class DataFlowXmlReader
         {
             _dataFlow.Destinations.Add(dest);
         }
+
         if (obj is IDataFlowDestination<ETLBoxError> err)
         {
             _dataFlow.ErrorDestinations.Add(err);
@@ -597,6 +615,7 @@ public sealed class DataFlowXmlReader
             {
                 types = types.Where(t => Array.Exists(t.GetInterfaces(), i => i == baseType));
             }
+
             type = types.LastOrDefault(t => t.Name == typeName);
             if (type != null)
             {
@@ -653,12 +672,14 @@ public sealed class DataFlowXmlReader
         {
             throw new InvalidDataException("Invalid configuration. Type name is empty");
         }
+
         // First look for non-generic types, exactly matching the name
         var type = Array.Find(types, t => t.Name == name && !t.IsGenericTypeDefinition);
         if (type != null)
         {
             return type;
         }
+
         // Now look for generic types, matching the name, accepting single type parameter
         type = Array.Find(
             types,
@@ -671,6 +692,7 @@ public sealed class DataFlowXmlReader
         {
             throw new InvalidOperationException($"Could not find type by name '{name}'");
         }
+
         return type.MakeGenericType(typeof(ExpandoObject));
     }
 
