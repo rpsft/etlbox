@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Dynamic;
 using System.Xml;
 using System.Xml.Schema;
@@ -11,11 +12,23 @@ namespace ETLBox.Serialization.Tests
     [Serializable]
     public class EtlDataFlowStep : IDataFlow, IXmlSerializable
     {
+        private readonly ConcurrentDictionary<
+            (Type type, string? key),
+            IConnectionManager
+        > _connectionManagers = new();
+
         public Guid? ReferenceId { get; set; }
 
         public string? Name { get; set; }
 
         public int? TimeoutMilliseconds { get; set; }
+
+        public IConnectionManager GetOrAddConnectionManager(
+            Type connectionManagerType,
+            string? key,
+            Func<Type, string?, IConnectionManager> factory
+        ) =>
+            _connectionManagers.GetOrAdd((connectionManagerType, key), k => factory(k.type, k.key));
 
         public IDataFlowSource<ExpandoObject> Source { get; set; } = null!;
 
@@ -33,7 +46,7 @@ namespace ETLBox.Serialization.Tests
 
         public void WriteXml(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void Invoke(CancellationToken cancellationToken)
@@ -44,6 +57,31 @@ namespace ETLBox.Serialization.Tests
                 .Concat(ErrorDestinations.Select(ed => ed.Completion))
                 .ToArray();
             Task.WaitAll(tasks, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Method for check a connectionManagers added for dispose
+        /// </summary>
+        /// <returns></returns>
+        public int ConnectionManagerCount() => _connectionManagers.Count;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this); // Violates rule
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            foreach (var value in _connectionManagers.Values)
+            {
+                value.Dispose();
+            }
         }
     }
 }

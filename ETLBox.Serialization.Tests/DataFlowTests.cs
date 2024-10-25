@@ -1,8 +1,10 @@
 using System.Dynamic;
 using System.Text;
 using System.Xml.Serialization;
+using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Serialization.DataFlow;
+using ETLBox.Primitives;
 using FluentAssertions;
 using JetBrains.Annotations;
 
@@ -361,6 +363,46 @@ namespace ETLBox.Serialization.Tests
             step.ErrorDestinations.Should().AllBeAssignableTo<ErrorLogDestination>();
         }
 
+        [Fact]
+        public void DataFlow_ReadFromXml_CheckConnectionManagerToDispose()
+        {
+            var referenceId = Guid.NewGuid();
+            var name = Guid.NewGuid().ToString();
+            const int ms = 100;
+            var xml =
+                @$"<EtlDataFlowStep>
+			        <ReferenceId>
+                        {referenceId}
+                    </ReferenceId>
+			        <Name>
+                        {name}
+                    </Name>
+			        <TimeoutMilliseconds>{ms}</TimeoutMilliseconds>
+                    <MemorySource>
+                        <ConnectionManager type=""PostgresConnectionManager"">
+                            <ConnectionString type=""PostgresConnectionString"">
+                                <Value>Server=local;Port=123;Database=test;User ID=userId;Password=secret;</Value>
+                            </ConnectionString>
+                        </ConnectionManager>
+                        <LinkTo>
+                            <MemoryDestination />
+                        </LinkTo>
+                    </MemorySource>
+		        </EtlDataFlowStep>";
+
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
+            using var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+
+            step.Invoke(CancellationToken.None);
+
+            //Assert
+            step.Should().NotBeNull();
+            step.ReferenceId.Should().Be(referenceId);
+            step.Name.Should().Be(name);
+            step.ConnectionManagerCount().Should().Be(1);
+        }
+
         private static string GetCsv()
         {
             var builder = new StringBuilder();
@@ -415,7 +457,7 @@ namespace ETLBox.Serialization.Tests
             public enum EnumType
             {
                 Value1 = 1,
-                Value2 = 2
+                Value2 = 2,
             }
         }
 
