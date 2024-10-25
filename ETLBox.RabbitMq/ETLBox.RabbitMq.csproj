@@ -13,10 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotLiquid" Version="2.2.692"/>
-    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0"/>
-    <PackageReference Include="RabbitMQ.Client" Version="6.8.1"/>
-    <PackageReference Include="System.Text.Json" Version="8.0.4"/>
+    <PackageReference Include="DotLiquid" Version="2.2.692" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
