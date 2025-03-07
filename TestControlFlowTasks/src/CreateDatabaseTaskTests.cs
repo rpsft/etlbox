@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Threading;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
@@ -36,6 +38,7 @@ namespace TestControlFlowTasks
         public void CreateWithCollation(IConnectionManager connection)
         {
             //Arrange
+            using var save = SetCurrentCulture(CultureInfo.GetCultureInfo("en-US"));
             var dbName = "ETLBox_" + HashHelper.RandomString(10);
             var collation = "Latin1_General_CS_AS";
             if (connection.GetType() == typeof(PostgresConnectionManager))
@@ -60,5 +63,22 @@ namespace TestControlFlowTasks
                 () => CreateDatabaseTask.Create(SqliteConnection, "Test")
             );
         }
+
+        internal static IDisposable SetCurrentCulture(CultureInfo culture)
+        {
+            var oldCulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = culture;
+
+            return new DeferredExecutionDisposable(() => CultureInfo.CurrentCulture = oldCulture);
+        }
+    }
+
+    public sealed class DeferredExecutionDisposable : IDisposable
+    {
+        private readonly Action _action;
+
+        internal DeferredExecutionDisposable(Action action) => _action = action;
+
+        public void Dispose() => _action();
     }
 }

@@ -28,7 +28,8 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
             BootstrapServers = _fixture.BootstrapAddress,
             GroupId = $"{topicName ?? TopicName}-group",
             AutoOffsetReset = AutoOffsetReset.Earliest,
-            EnablePartitionEof = enablePartitionEof
+            EnablePartitionEof = enablePartitionEof,
+            SocketTimeoutMs = 1000,
         };
     }
 
@@ -54,7 +55,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         Assert.Equal(jsonString, result[0]);
     }
 
-    [Fact(Timeout = 10000)]
+    [Fact]
     public void ShouldProduceAndConsumeDirectlyToKafkaWithMultipleTopics()
     {
         // Arrange
@@ -75,7 +76,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         watch.Stop();
 
         // Assert
-        Assert.InRange(watch.ElapsedMilliseconds, timeout.TotalMilliseconds, 300000);
+        Assert.InRange(watch.ElapsedMilliseconds, timeout.TotalMilliseconds, 10000);
         Assert.Single(preResults);
         Assert.Equal(2, results.Count);
     }
@@ -115,7 +116,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
                 ["false"] = false,
                 ["null"] = null,
                 ["array"] = new[] { 1, 2, 3 },
-                ["object"] = new Dictionary<string, object>() { ["key"] = "value" }
+                ["object"] = new Dictionary<string, object>() { ["key"] = "value" },
             },
             result
         );
@@ -198,8 +199,8 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
             Topic = TopicName,
             JsonSerializerOptions = new JsonSerializerOptions
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            },
         };
         kafkaSource.LinkTo(target.Object);
         // Act
@@ -240,6 +241,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         {
             ProduceJson($"{{\"name\":\"test{i}\"}}");
         }
+
         kafkaSource.Execute();
         target.Object.Wait();
         // Assert
@@ -283,7 +285,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         var kafkaSource = new TestKafkaJsonSource(_output)
         {
             ConsumerConfig = GetConsumerConfig(false),
-            Topic = TopicName
+            Topic = TopicName,
         };
         kafkaSource.LinkTo(target.Object);
 
@@ -377,6 +379,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
             {
                 break;
             }
+
             if (consumeResult.IsPartitionEOF || consumeResult.Message is null)
             {
                 break;
@@ -388,14 +391,25 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
 
     private void ProduceJson(string jsonString, string? topicName = null)
     {
-        var config = new ProducerConfig { BootstrapServers = _fixture.BootstrapAddress };
+        var config = new ProducerConfig
+        {
+            BootstrapServers = _fixture.BootstrapAddress,
+            SocketTimeoutMs = 1000,
+        };
         using var producer = new ProducerBuilder<Null, string>(config).Build();
         var message = new Message<Null, string> { Value = jsonString };
         _output.WriteLine(
             $"Producing message {message.Value} to topic {topicName ?? TopicName}..."
         );
         producer.Produce(topicName ?? TopicName, message);
-        producer.Flush();
+        for (var i = 0; i < 10; i++)
+        {
+            if (producer.Flush(TimeSpan.FromMilliseconds(100)) == 0)
+                break;
+            if (i == 9)
+                throw new TimeoutException("Flush operation timed out after 10 attempts");
+            Thread.Sleep(500);
+        }
     }
 }
 

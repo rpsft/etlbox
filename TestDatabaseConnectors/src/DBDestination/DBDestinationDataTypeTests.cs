@@ -20,7 +20,7 @@ namespace TestDatabaseConnectors.DBDestination
         public enum EnumType
         {
             Value1 = 1,
-            Value2 = 2
+            Value2 = 2,
         }
 
         // Each culture for each database
@@ -32,7 +32,7 @@ namespace TestDatabaseConnectors.DBDestination
             {
                 foreach (var connection in AllSqlConnections)
                 {
-                    result.Add((IConnectionManager)connection[0], culture);
+                    result.Add(connection, culture);
                 }
             }
             return result;
@@ -69,7 +69,7 @@ namespace TestDatabaseConnectors.DBDestination
                             ? "BIT"
                             : "BOOL",
                         allowNulls: true
-                    )
+                    ),
                 }
             );
             var connectionCulture = connection.ConnectionCulture;
@@ -96,8 +96,8 @@ namespace TestDatabaseConnectors.DBDestination
                         StringAsBool =
                             connection.ConnectionManagerType == ConnectionManagerType.MySql
                                 ? "1"
-                                : "True"
-                    }
+                                : "True",
+                    },
                 }
             );
 
