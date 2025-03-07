@@ -31,16 +31,32 @@ namespace ALE.ETLBox.DataFlow
         /// </summary>
         public int BatchSize
         {
-            get { return _batchSize; }
+            get => _batchSize ?? DefaultBatchSize;
             set
             {
                 _batchSize = value;
-                InitObjects(_batchSize);
+                InitObjects(value);
             }
         }
-        private int _batchSize;
+        private int? _batchSize;
 
         public const int DefaultBatchSize = 1000;
+
+        /// <summary>
+        /// Gets or sets the maximum number of messages that may be buffered by the block.
+        /// If not set, `3 * <see cref="BatchSize"/>` is assumed.
+        /// </summary>
+        public int BoundedCapacity
+        {
+            get => _boundedCapacity ?? BatchSize * 3;
+            set
+            {
+                _boundedCapacity = value;
+                InitObjects(BatchSize);
+            }
+        }
+
+        private int? _boundedCapacity;
 
         protected bool WasInitialized { get; set; }
 
@@ -78,7 +94,8 @@ namespace ALE.ETLBox.DataFlow
 
         protected virtual void InitObjects(int initBatchSize)
         {
-            Buffer = new BatchBlock<TInput>(initBatchSize);
+            var options = new GroupingDataflowBlockOptions { BoundedCapacity = BoundedCapacity };
+            Buffer = new BatchBlock<TInput>(initBatchSize, options);
             TargetAction = new ActionBlock<TInput[]>(WriteBatch);
             SetCompletionTask();
             Buffer.LinkTo(TargetAction, new DataflowLinkOptions { PropagateCompletion = true });

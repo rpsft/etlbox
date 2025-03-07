@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
+using TestShared;
 using TestShared.SharedFixtures;
 
 namespace TestControlFlowTasks;
@@ -13,20 +14,18 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
     public SqlTaskBulkInsertTests(ControlFlowDatabaseFixture fixture)
         : base(fixture) { }
 
-    public static IEnumerable<object[]> Connections =>
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? AllSqlConnections.Concat(AccessConnection)
-            : AllSqlConnections;
+    public static TheoryData<IConnectionManager> Connections =>
+        !RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? AllSqlConnections
+            : AllSqlConnections.Concat(AccessConnection);
 
-    public static IEnumerable<object[]> ConnectionsWithValue(int value)
-    {
-        return new[]
+    public static TheoryData<IConnectionManager, int> ConnectionsWithValue(int value) =>
+        new()
         {
-            new object[] { SqlConnection, value },
-            new object[] { PostgresConnection, value },
-            new object[] { MySqlConnection, value },
+            { SqlConnection, value },
+            { PostgresConnection, value },
+            { MySqlConnection, value },
         };
-    }
 
     [Theory]
     [MemberData(nameof(Connections))]
@@ -38,11 +37,11 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
         var destTable = new TwoColumnsTableFixture(connection, "BulkInsert2Columns");
 
         var data = new TableData<string[]>(destTable.TableDefinition);
-        object[] values = { "1", "Test1" };
+        object[] values = ["1", "Test1"];
         data.Rows.Add(values);
-        object[] values2 = { "2", "Test2" };
+        object[] values2 = ["2", "Test2"];
         data.Rows.Add(values2);
-        object[] values3 = { "3", "Test3" };
+        object[] values3 = ["3", "Test3"];
         data.Rows.Add(values3);
 
         //Act
@@ -71,11 +70,11 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
         );
 
         var data = new TableData(destTable.TableDefinition, 2);
-        object[] values = { "Test1", null, 1.2 };
+        object[] values = ["Test1", null, 1.2];
         data.Rows.Add(values);
-        object[] values2 = { "Test2", 4711, 1.23 };
+        object[] values2 = ["Test2", 4711, 1.23];
         data.Rows.Add(values2);
-        object[] values3 = { "Test3", 185, 1.234 };
+        object[] values3 = ["Test3", 185, 1.234];
         data.Rows.Add(values3);
 
         //Act

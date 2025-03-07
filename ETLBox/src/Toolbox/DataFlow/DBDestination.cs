@@ -42,6 +42,7 @@ namespace ALE.ETLBox.DataFlow
 
         public DbDestination()
         {
+            // this internally calls InitObjects()
             BatchSize = DefaultBatchSize;
         }
 
@@ -113,7 +114,7 @@ namespace ALE.ETLBox.DataFlow
                 var sql = new SqlTask(this, "Execute Bulk insert")
                 {
                     DisableLogging = true,
-                    ConnectionManager = BulkInsertConnectionManager
+                    ConnectionManager = BulkInsertConnectionManager,
                 };
                 sql.BulkInsert(TableData, DestinationTableDefinition.Name);
             }
@@ -170,9 +171,10 @@ namespace ALE.ETLBox.DataFlow
                     TypeInfo.GetTypeInfoGroup() switch
                     {
                         TypeInfo.TypeInfoGroup.Array => currentRow as object[],
-                        TypeInfo.TypeInfoGroup.Dynamic
-                            => ConvertDynamicRow(currentRow as IDictionary<string, object>),
-                        _ => ConvertObjectRow(currentRow)
+                        TypeInfo.TypeInfoGroup.Dynamic => ConvertDynamicRow(
+                            currentRow as IDictionary<string, object>
+                        ),
+                        _ => ConvertObjectRow(currentRow),
                     }
                 );
             }

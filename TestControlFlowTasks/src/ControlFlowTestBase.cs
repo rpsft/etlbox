@@ -49,39 +49,24 @@ namespace TestControlFlowTasks
         public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLiteAndClickHouse =>
             new(Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection));
 
-        public static IEnumerable<object[]> DbConnectionsWithMaster() =>
-            new[]
-            {
-                new object[]
-                {
-                    new ClickHouseConnectionManager(
-                        Config
-                            .ClickHouseConnection.ConnectionString(ConfigSection)
-                            .CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new SqlConnectionManager(
-                        Config.SqlConnection.ConnectionString(ConfigSection).CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new PostgresConnectionManager(
-                        Config
-                            .PostgresConnection.ConnectionString(ConfigSection)
-                            .CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new MySqlConnectionManager(
-                        Config
-                            .MySqlConnection.ConnectionString(ConfigSection)
-                            .CloneWithMasterDbName()
-                    )
-                },
-            };
+        public static TheoryData<IConnectionManager> DbConnectionsWithMaster() =>
+            [
+                new ClickHouseConnectionManager(
+                    Config
+                        .ClickHouseConnection.ConnectionString(ConfigSection)
+                        .CloneWithMasterDbName()
+                ),
+                new SqlConnectionManager(
+                    Config.SqlConnection.ConnectionString(ConfigSection).CloneWithMasterDbName()
+                ),
+                new PostgresConnectionManager(
+                    Config
+                        .PostgresConnection.ConnectionString(ConfigSection)
+                        .CloneWithMasterDbName()
+                ),
+                new MySqlConnectionManager(
+                    Config.MySqlConnection.ConnectionString(ConfigSection).CloneWithMasterDbName()
+                ),
+            ];
     }
 }
