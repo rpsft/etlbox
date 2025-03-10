@@ -1,12 +1,17 @@
 # Change Log
 
-All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
+All notable changes to this project will be documented in this file.
 
-<a name="1.11.10"></a>
-## 1.11.10 (2024-09-12)
+<a name="1.14.0"></a>
+✨ Features
+* Improvement: Added `BoundedCapacity` to `DataFlowBatchDestination` options to restrict buffer size and max memory consumption
 
 🐛 Bug Fixes
+* Fixed a memory leak when connection managers were not owned and not disposed. 
 * Fixed a bug in `ScriptedRowTransformation` where the dependency injection was not working properly.
+
+Other changes
+* Moved back from [versionize](https://github.com/versionize/versionize) to scripted version bump in CI/CD pipeline
 
 <a name="1.11.7"></a>
 ## 1.11.7 (2024-08-24)
