@@ -71,22 +71,33 @@ namespace ALE.ETLBox
 
             return connectionType switch
             {
-                ConnectionManagerType.SqlServer
-                    => ReadTableDefinitionFromSqlServer(metadataConnection, tn),
-                ConnectionManagerType.SQLite
-                    => ReadTableDefinitionFromSQLite(metadataConnection, tn),
-                ConnectionManagerType.MySql
-                    => ReadTableDefinitionFromMySqlServer(metadataConnection, tn),
-                ConnectionManagerType.Postgres
-                    => ReadTableDefinitionFromPostgres(metadataConnection, tn),
-                ConnectionManagerType.Access
-                    => ReadTableDefinitionFromAccess(metadataConnection, tn),
-                ConnectionManagerType.ClickHouse
-                    => ReadTableDefinitionFromClickHouse(metadataConnection, tn),
-                _
-                    => throw new ETLBoxException(
-                        "Unknown connection type - please pass a valid TableDefinition!"
-                    )
+                ConnectionManagerType.SqlServer => ReadTableDefinitionFromSqlServer(
+                    metadataConnection,
+                    tn
+                ),
+                ConnectionManagerType.SQLite => ReadTableDefinitionFromSQLite(
+                    metadataConnection,
+                    tn
+                ),
+                ConnectionManagerType.MySql => ReadTableDefinitionFromMySqlServer(
+                    metadataConnection,
+                    tn
+                ),
+                ConnectionManagerType.Postgres => ReadTableDefinitionFromPostgres(
+                    metadataConnection,
+                    tn
+                ),
+                ConnectionManagerType.Access => ReadTableDefinitionFromAccess(
+                    metadataConnection,
+                    tn
+                ),
+                ConnectionManagerType.ClickHouse => ReadTableDefinitionFromClickHouse(
+                    metadataConnection,
+                    tn
+                ),
+                _ => throw new ETLBoxException(
+                    "Unknown connection type - please pass a valid TableDefinition!"
+                ),
             };
         }
 
@@ -132,7 +143,7 @@ namespace ALE.ETLBox
             )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             readMetaSql.ExecuteReader();
             return result;
@@ -223,7 +234,7 @@ ORDER BY cols.column_id
             )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             readMetaSql.ExecuteReader();
             return result;
@@ -245,7 +256,7 @@ ORDER BY cols.column_id
                 SELECT
                   c.name AS column_name,
                   c.type AS column_type,
-                  CASE WHEN pk.name IS NOT NULL THEN 1 ELSE 0 END AS is_primary_key,
+                  CASE WHEN c.pk > 0 THEN 1 ELSE 0 END AS is_primary_key,
                   c.dflt_value as default_value,
                   CASE WHEN c.""notnull"" = 0 THEN 1 ELSE 0 END AS is_nullable
                 FROM
@@ -254,7 +265,7 @@ ORDER BY cols.column_id
                       pragma_table_info(m.name) AS c ON true
                     LEFT JOIN
                       pragma_index_info AS pk ON c.cid = pk.cid
-                WHERE m.type = 'table'
+                WHERE m.type in ('table', 'view')
                   AND m.name = '{tn.UnquotedFullName}'
                 ORDER BY
                   c.cid;",
@@ -276,7 +287,7 @@ ORDER BY cols.column_id
             )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             readMetaSql.ExecuteReader();
             return result;
@@ -340,7 +351,7 @@ ORDER BY cols.ordinal_position
             )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             readMetaSql.ExecuteReader();
             return result;
@@ -452,7 +463,7 @@ ORDER BY cols.ordinal_position
             )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             readMetaSql.ExecuteReader();
             return result;

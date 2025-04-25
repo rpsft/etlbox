@@ -1,6 +1,5 @@
 using System.Dynamic;
 using System.Threading;
-using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
 
@@ -13,7 +12,7 @@ namespace TestDatabaseConnectors.DBTransformation
             : base(fixture) { }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void SourceMoreColumnsThanDestination(IConnectionManager connection)
         {
             //Arrange

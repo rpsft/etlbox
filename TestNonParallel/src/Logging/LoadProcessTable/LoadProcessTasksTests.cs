@@ -202,7 +202,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
                 )
                 {
                     DisableLogging = true,
-                    ConnectionManager = connection
+                    ConnectionManager = connection,
                 }
                     .Count()
                     .Rows
@@ -297,7 +297,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
                     $"message='Test Task' AND load_process_id = {processId1}"
                 )
                 {
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows
@@ -316,7 +316,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
                     $"message='Test Task' AND load_process_id = {processId2}"
                 )
                 {
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows
@@ -354,7 +354,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
                     $"message like 'Test%' AND load_process_id = {processId1}"
                 )
                 {
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows

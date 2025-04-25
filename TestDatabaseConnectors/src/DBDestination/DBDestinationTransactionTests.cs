@@ -3,6 +3,7 @@ using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using TestShared;
 
 namespace TestDatabaseConnectors.DBDestination
 {
@@ -13,33 +14,34 @@ namespace TestDatabaseConnectors.DBDestination
             : base(fixture) { }
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
+        public static IEnumerable<object[]> ConnectionsWithPK => AllSqlConnectionsWithPK;
 
         [Theory]
-        [MemberData(nameof(Connections))]
-        public void ErrorInBatch(IConnectionManager connection)
+        [MemberData(nameof(ConnectionsWithPK))]
+        public void ErrorInBatch(ConnectionManagerWithPK data)
         {
             //Arrange
-            var _ = new TwoColumnsTableFixture(connection, "TransactionDest", true);
+            var _ = new TwoColumnsTableFixture(data.Connection, "TransactionDest", data.WithPK);
             var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
                     new() { Col1 = "1", Col2 = "Test1" },
                     new() { Col1 = "2", Col2 = "Test2" },
-                    new() { Col1 = null, Col2 = "Test3" }
-                }
+                    new() { Col1 = null, Col2 = "Test3" },
+                },
             };
-            var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
+            var dest = new DbDestination<MySimpleRow>(data.Connection, "TransactionDest", 2);
 
             //Act & Assert
             source.LinkTo(dest);
 
             // ClickHouse writes a default values in not-null columns
-            if (connection.ConnectionManagerType == ConnectionManagerType.ClickHouse)
+            if (data.Connection.ConnectionManagerType == ConnectionManagerType.ClickHouse)
             {
                 source.Execute();
                 dest.Wait();
-                Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));
+                Assert.Equal(3, RowCountTask.Count(data.Connection, "TransactionDest"));
             }
             else
             {
@@ -49,24 +51,24 @@ namespace TestDatabaseConnectors.DBDestination
                     dest.Wait();
                 });
 
-                Assert.Equal(2, RowCountTask.Count(connection, "TransactionDest"));
+                Assert.Equal(2, RowCountTask.Count(data.Connection, "TransactionDest"));
             }
 
             //Assert
             Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(connection.State == null);
+            Assert.True(data.Connection.State == null);
         }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
-        public void CloseConnectionDuringTransaction(IConnectionManager sourceConnection)
+        [MemberData(nameof(AllConnectionsWithoutClickHouseWithPK))]
+        public void CloseConnectionDuringTransaction(ConnectionManagerWithPK data)
         {
             //Arrange
-            var s2C = new TwoColumnsTableFixture(sourceConnection, "TransactionSource");
+            var s2C = new TwoColumnsTableFixture(data.Connection, "TransactionSource", data.WithPK);
             s2C.InsertTestData();
-            var source = new DbSource<MySimpleRow>(sourceConnection, "TransactionSource");
+            var source = new DbSource<MySimpleRow>(data.Connection, "TransactionSource");
 
-            var destinationConnection = sourceConnection.Clone();
+            var destinationConnection = data.Connection.Clone();
             var _ = new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
             var dest = new DbDestination<MySimpleRow>(destinationConnection, "TransactionDest", 2);
 
@@ -81,18 +83,18 @@ namespace TestDatabaseConnectors.DBDestination
 
             //Assert Connections are closed
             Assert.True(dest.BulkInsertConnectionManager.State == null);
-            Assert.True(sourceConnection.State == null);
+            Assert.True(data.Connection.State == null);
             Assert.True(destinationConnection.State == null);
         }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void CommitTransaction(IConnectionManager connection)
         {
             //Arrange
             var s2C = new TwoColumnsTableFixture(connection, "TransactionSource");
             s2C.InsertTestData();
-            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
+            new TwoColumnsTableFixture(connection, "TransactionDest");
             var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
             var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
@@ -123,7 +125,7 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void RollbackTransaction(IConnectionManager sourceConnection)
         {
             //Arrange
@@ -132,7 +134,7 @@ namespace TestDatabaseConnectors.DBDestination
             var source = new DbSource<MySimpleRow>(sourceConnection, "TransactionSource");
 
             var destinationConnection = sourceConnection.Clone();
-            var _ = new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
+            new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
             var dest = new DbDestination<MySimpleRow>(destinationConnection, "TransactionDest", 2);
 
             //Act & Assert
@@ -152,13 +154,13 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void LeaveOpen(IConnectionManager connection)
         {
             //Arrange
             var s2C = new TwoColumnsTableFixture(connection, "TransactionSource");
             s2C.InsertTestData();
-            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
+            new TwoColumnsTableFixture(connection, "TransactionDest");
             var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
             var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 

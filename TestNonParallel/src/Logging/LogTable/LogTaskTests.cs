@@ -123,7 +123,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
                 new RowCountTask("test_log_stage", "message='Test Task' and stage = 'SETUP'")
                 {
                     DisableLogging = true,
-                    ConnectionManager = SqlConnection
+                    ConnectionManager = SqlConnection,
                 }
                     .Count()
                     .Rows

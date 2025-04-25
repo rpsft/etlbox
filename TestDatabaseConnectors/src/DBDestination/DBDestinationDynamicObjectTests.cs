@@ -14,7 +14,7 @@ namespace TestDatabaseConnectors.DBDestination
             : base(fixture) { }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void SourceMoreColumnsThanDestination(IConnectionManager connection)
         {
             //Arrange
@@ -51,7 +51,7 @@ namespace TestDatabaseConnectors.DBDestination
                     new("Col5", "VARCHAR(100)", true),
                     new("Col2", "VARCHAR(100)", true),
                     new("Col1", "INT", true),
-                    new("ColX", "INT", true)
+                    new("ColX", "INT", true),
                 }
             );
 
@@ -94,7 +94,7 @@ namespace TestDatabaseConnectors.DBDestination
         }
 
         [Theory]
-        [MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void DestinationMoreColumnsThanSource_WithIdentity(IConnectionManager connection)
         {
             //Arrange
@@ -110,7 +110,7 @@ namespace TestDatabaseConnectors.DBDestination
                 {
                     new("Id", "int", false, true, true),
                     new("Col2", "VARCHAR(100)", true),
-                    new("Col1", "INT", true)
+                    new("Col1", "INT", true),
                 }
             );
 
@@ -167,7 +167,7 @@ namespace TestDatabaseConnectors.DBDestination
                     new("Id", "BIGINT", false, true, true),
                     new("Col2", "VARCHAR(100)", true),
                     new("Col1", "INT", true),
-                    new("ColX", "INT", true)
+                    new("ColX", "INT", true),
                 }
             );
 

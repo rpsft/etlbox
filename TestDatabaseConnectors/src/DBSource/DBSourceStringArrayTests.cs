@@ -31,12 +31,12 @@ namespace TestDatabaseConnectors.DBSource
             DbSource<string[]> source = new DbSource<string[]>
             {
                 SourceTableDefinition = source2Columns.TableDefinition,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             DbDestination<string[]> dest = new DbDestination<string[]>
             {
                 DestinationTableDefinition = dest2Columns.TableDefinition,
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             source.LinkTo(dest);
             source.Execute();
@@ -62,7 +62,7 @@ namespace TestDatabaseConnectors.DBSource
             {
                 Sql =
                     $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceWithSql{s2C.QE}",
-                ConnectionManager = connection
+                ConnectionManager = connection,
             };
             DbDestination<string[]> dest = new DbDestination<string[]>(
                 connection,
@@ -89,7 +89,7 @@ namespace TestDatabaseConnectors.DBSource
             //Act
             DbSource<string[]> source = new DbSource<string[]>(SqlConnection)
             {
-                Sql = $"SELECT * FROM {s2C.QB}SourceWithSelectStar{s2C.QE}"
+                Sql = $"SELECT * FROM {s2C.QB}SourceWithSelectStar{s2C.QE}",
             };
             DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "SomeTable");
 
@@ -102,7 +102,7 @@ namespace TestDatabaseConnectors.DBSource
             });
         }
 
-        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void OnlyNullValue(IConnectionManager connection)
         {
             //Arrange
