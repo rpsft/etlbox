@@ -1,3 +1,4 @@
+using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBoxTests.NonParallel.Fixtures;
 using ETLBox.Primitives;
@@ -25,6 +26,6 @@ namespace ALE.ETLBoxTests.NonParallel
             new(Config.AllSqlConnections("Logging"));
 
         public static TheoryData<IConnectionManager> AllSqlConnectionsWithoutClickHouse =>
-            new(Config.AllSqlConnectionsWithoutClickHouse("Logging"));
+            new(Config.AllConnectionsWithoutClickHouse("Logging"));
     }
 }

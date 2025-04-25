@@ -63,7 +63,7 @@ namespace TestDatabaseConnectors.DBSource
             public string Text { get; set; }
         }
 
-        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouse))]
         public void ColumnMappingExtended(IConnectionManager connection)
         {
             //Arrange
