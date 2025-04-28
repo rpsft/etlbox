@@ -4,6 +4,8 @@ using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using Npgsql;
+using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBDestination
 {
@@ -91,6 +93,41 @@ namespace TestDatabaseConnectors.DBDestination
                     $"{qb}Col1{qe} = 3 AND {qb}Col2{qe}='Test3' AND {qb}Col5{qe} IS NULL AND {qb}ColX{qe} IS NULL"
                 )
             );
+        }
+
+        [Theory]
+        [MemberData(nameof(AllConnectionsWithoutSQLite))]
+        public void DestinationDifferentColumnSizeThanSource(IConnectionManager connection)
+        {
+            //Arrange
+            DropTableTask.DropIfExists(connection, "DestinationDynamicDiffCols");
+            var source2Columns = new TwoColumnsTableFixture(connection, "SourceDynamicDiffCols");
+            source2Columns.InsertTestData();
+            CreateTableTask.Create(
+                connection,
+                "DestinationDynamicDiffCols",
+                new List<TableColumn>
+                {
+                    new("Id", "int") { DefaultValue = "0" },
+                    new("Col5", "VARCHAR(4)", true),
+                    new("Col2", "VARCHAR(4)", true),
+                    new("Col1", "INT", true),
+                    new("ColX", "INT", true),
+                }
+            );
+
+            //Arrange
+            var source = new DbSource<ExpandoObject>(connection, "SourceDynamicDiffCols");
+            var dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamicDiffCols");
+
+            source.LinkTo(dest);
+
+            //Act & Assert
+            Assert.Throws<AggregateException>(() =>
+            {
+                source.Execute();
+                dest.Wait();
+            });
         }
 
         [Theory]
