@@ -33,10 +33,7 @@ namespace ALE.ETLBoxTests.Performance
             List<MyMergeRow> knownGuids = CreateTestData(rowsInSource);
             TransferTestDataIntoDestination(knownGuids);
             MemorySource<MyMergeRow> source = AddNewTestData(rowsInDest, knownGuids);
-            var mergeDest = new DbMerge<MyMergeRow>(
-                SqlConnectionManager,
-                "MergeDestination"
-            );
+            var mergeDest = new DbMerge<MyMergeRow>(SqlConnectionManager, "MergeDestination");
             source.LinkTo(mergeDest);
 
             //Act
@@ -54,8 +51,10 @@ namespace ALE.ETLBoxTests.Performance
                 rowsInDest + rowsInSource,
                 RowCountTask.Count(SqlConnectionManager, "MergeDestination") ?? 0
             );
-            Assert.True(
-                executionTime <= TimeSpan.FromMilliseconds((rowsInDest + rowsInSource) * 2)
+            Assert.InRange(
+                executionTime,
+                TimeSpan.Zero,
+                TimeSpan.FromMilliseconds((rowsInDest + rowsInSource) * 2)
             );
         }
 
@@ -69,7 +68,7 @@ namespace ALE.ETLBoxTests.Performance
                 {
                     new("Id", "UNIQUEIDENTIFIER", allowNulls: false, isPrimaryKey: true),
                     new("LastUpdated", "DATETIMEOFFSET", allowNulls: false),
-                    new("Value", "CHAR(1)", allowNulls: false)
+                    new("Value", "CHAR(1)", allowNulls: false),
                 }
             );
         }
@@ -83,7 +82,7 @@ namespace ALE.ETLBoxTests.Performance
                     {
                         Id = Guid.NewGuid(),
                         LastUpdated = DateTime.Now,
-                        Value = HashHelper.RandomString(1)
+                        Value = HashHelper.RandomString(1),
                     }
                 );
             return knownGuids;
@@ -91,14 +90,8 @@ namespace ALE.ETLBoxTests.Performance
 
         private void TransferTestDataIntoDestination(List<MyMergeRow> knownGuids)
         {
-            var source = new MemorySource<MyMergeRow>
-            {
-                DataAsList = knownGuids
-            };
-            var dest = new DbDestination<MyMergeRow>(
-                SqlConnectionManager,
-                "MergeDestination"
-            );
+            var source = new MemorySource<MyMergeRow> { DataAsList = knownGuids };
+            var dest = new DbDestination<MyMergeRow>(SqlConnectionManager, "MergeDestination");
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -109,17 +102,14 @@ namespace ALE.ETLBoxTests.Performance
             List<MyMergeRow> knownGuids
         )
         {
-            var source = new MemorySource<MyMergeRow>
-            {
-                DataAsList = knownGuids
-            };
+            var source = new MemorySource<MyMergeRow> { DataAsList = knownGuids };
             for (var i = 0; i < rowsInDest; i++)
                 knownGuids.Add(
                     new MyMergeRow
                     {
                         Id = Guid.NewGuid(),
                         LastUpdated = DateTime.Now,
-                        Value = HashHelper.RandomString(1)
+                        Value = HashHelper.RandomString(1),
                     }
                 );
             return source;

@@ -9,6 +9,7 @@
     <RepositoryUrl>https://git.rapidsoft.ru/open-source/etlbox</RepositoryUrl>
     <PackageTags>etl elt ssis dataflow controlflow data integration etlbox</PackageTags>
     <PackageIcon>logo_bw.png</PackageIcon>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">

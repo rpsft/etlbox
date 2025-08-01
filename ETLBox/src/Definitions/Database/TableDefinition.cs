@@ -7,6 +7,7 @@ using ETLBox.Primitives;
 
 namespace ALE.ETLBox
 {
+    [PublicAPI]
     public class TableDefinition
     {
         public string Name { get; set; }
@@ -159,61 +160,58 @@ namespace ALE.ETLBox
 
             var readMetaSql = new SqlTask(
                 $"Read column meta data for table {tn.ObjectName}",
-                $@"
-SELECT  cols.name
-     , CASE WHEN tpes.name IN ('varchar','char','binary','varbinary') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length, ')')
-            WHEN tpes.name IN ('nvarchar','nchar') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length/2, ')')
-            WHEN tpes.name IN ('decimal','numeric') THEN CONCAT(UPPER(tpes.name), '(', cols.precision,',',cols.scale, ')')
-            ELSE UPPER(tpes.name)            
-       END AS type_name
-     , cols.is_nullable
-     , cols.is_identity
-     , ident.seed_value
-     , ident.increment_value
-     , CONVERT (BIT, CASE WHEN pkidxcols.index_column_id IS NOT NULL THEN 1 ELSE 0 END ) AS primary_key
-     , defconstr.definition AS default_value
-     , cols.collation_name
-     , compCol.definition AS computed_column_definition
-     , comment.value AS comment
-FROM sys.columns cols
-INNER JOIN (
-    SELECT name, type, object_id, schema_id FROM sys.tables 
-    UNION 
-    SELECT  name, type, object_id, schema_id FROM sys.views
-    ) tbl
-    ON cols.object_id = tbl.object_id
-INNER JOIN sys.schemas sc
-    ON tbl.schema_id = sc.schema_id
-INNER JOIN sys.systypes tpes
-    ON tpes.xtype = cols.system_type_id
-LEFT JOIN sys.identity_columns ident
-    ON ident.object_id = cols.object_id
-LEFT JOIN sys.indexes pkidx
-    ON pkidx.object_id = cols.object_id
-    AND pkidx.is_primary_key = 1
-LEFT JOIN sys.index_columns pkidxcols
-    on pkidxcols.object_id = cols.object_id
-    AND pkidxcols.column_id = cols.column_id
-    AND pkidxcols.index_id = pkidx.index_id
-LEFT JOIN sys.default_constraints defconstr
-    ON defconstr.parent_object_id = cols.object_id
-    AND defconstr.parent_column_id = cols.column_id
-LEFT JOIN sys.computed_columns compCol
-    ON compCol.object_id = cols.object_id
-{GetComment()}
-WHERE ( CONCAt (sc.name,'.',tbl.name) ='{tn.UnquotedFullName}' OR  tbl.name = '{tn.UnquotedFullName}' )
-    AND tbl.type IN ('U','V')
-    AND tpes.name <> 'sysname'
-ORDER BY cols.column_id
-",
-                () =>
-                {
-                    curCol = new TableColumn();
-                },
-                () =>
-                {
-                    result.Columns.Add(curCol);
-                },
+                // language=sql
+                $"""
+
+                SELECT  cols.name
+                     , CASE WHEN tpes.name IN ('varchar','char','binary','varbinary') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length, ')')
+                            WHEN tpes.name IN ('nvarchar','nchar') THEN CONCAT(UPPER(tpes.name), '(', cols.max_length/2, ')')
+                            WHEN tpes.name IN ('decimal','numeric') THEN CONCAT(UPPER(tpes.name), '(', cols.precision,',',cols.scale, ')')
+                            ELSE UPPER(tpes.name)            
+                       END AS type_name
+                     , cols.is_nullable
+                     , cols.is_identity
+                     , ident.seed_value
+                     , ident.increment_value
+                     , CONVERT (BIT, CASE WHEN pkidxcols.index_column_id IS NOT NULL THEN 1 ELSE 0 END ) AS primary_key
+                     , defconstr.definition AS default_value
+                     , cols.collation_name
+                     , compCol.definition AS computed_column_definition
+                     , comment.value AS comment
+                FROM sys.columns cols
+                INNER JOIN (
+                    SELECT name, type, object_id, schema_id FROM sys.tables 
+                    UNION 
+                    SELECT  name, type, object_id, schema_id FROM sys.views
+                    ) tbl
+                    ON cols.object_id = tbl.object_id
+                INNER JOIN sys.schemas sc
+                    ON tbl.schema_id = sc.schema_id
+                INNER JOIN sys.systypes tpes
+                    ON tpes.xusertype = cols.user_type_id
+                LEFT JOIN sys.identity_columns ident
+                    ON ident.object_id = cols.object_id
+                LEFT JOIN sys.indexes pkidx
+                    ON pkidx.object_id = cols.object_id
+                    AND pkidx.is_primary_key = 1
+                LEFT JOIN sys.index_columns pkidxcols
+                    on pkidxcols.object_id = cols.object_id
+                    AND pkidxcols.column_id = cols.column_id
+                    AND pkidxcols.index_id = pkidx.index_id
+                LEFT JOIN sys.default_constraints defconstr
+                    ON defconstr.parent_object_id = cols.object_id
+                    AND defconstr.parent_column_id = cols.column_id
+                LEFT JOIN sys.computed_columns compCol
+                    ON compCol.object_id = cols.object_id
+                {GetComment()}
+                WHERE ( CONCAT (sc.name,'.',tbl.name) ='{tn.UnquotedFullName}' OR  tbl.name = '{tn.UnquotedFullName}' )
+                    AND tbl.type IN ('U','V')
+                    AND tpes.name <> 'sysname'
+                ORDER BY cols.column_id
+                
+                """,
+                beforeRowReadAction: () => curCol = new TableColumn(),
+                afterRowReadAction: () => result.Columns.Add(curCol),
                 name => curCol.Name = name.ToString(),
                 typeName => curCol.DataType = typeName.ToString(),
                 isNullable => curCol.AllowNulls = (bool)isNullable,
