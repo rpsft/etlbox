@@ -1,3 +1,4 @@
+version: '2'
 services:
   zookeeper:
     restart: no
@@ -12,7 +13,7 @@ services:
 
   kafka:
     restart: no
-    image: confluentinc/cp-server:latest
+    image: confluentinc/cp-kafka:7.4.0
     hostname: kafka
     container_name: kafka
     depends_on:

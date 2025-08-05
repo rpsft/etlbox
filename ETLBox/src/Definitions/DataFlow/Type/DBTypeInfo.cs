@@ -21,7 +21,7 @@ namespace ALE.ETLBox.DataFlow
             AddUnderlyingType(propInfo);
         }
 
-        private void AddColumnMappingAttribute(MemberInfo propInfo)
+        private void AddColumnMappingAttribute(PropertyInfo propInfo)
         {
             if (propInfo.GetCustomAttribute(typeof(ColumnMapAttribute)) is ColumnMapAttribute attr)
                 ColumnMap2Property.Add(attr.ColumnName, propInfo.Name);
