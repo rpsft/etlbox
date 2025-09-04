@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ETLBox.Kafka\ETLBox.Kafka.csproj" />
     <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
+    <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
     <ProjectReference Include="..\TestShared\TestShared.csproj" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@ namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
     /// Count the row in a table. This task normally uses the  COUNT(*) method (could take some time on big tables).
-    /// You can pass a a filter condition for the count.
+    /// You can pass a filter condition for the count.
     /// </summary>
     /// <example>
     /// <code>
@@ -135,7 +135,7 @@ FROM {TN.QuotedFullName}
         ) =>
             new RowCountTask(tableName, condition, options)
             {
-                ConnectionManager = connectionManager
+                ConnectionManager = connectionManager,
             }
                 .Count()
                 .Rows;
@@ -154,6 +154,6 @@ FROM {TN.QuotedFullName}
     {
         None,
         QuickQueryMode,
-        NoLock
+        NoLock,
     }
 }

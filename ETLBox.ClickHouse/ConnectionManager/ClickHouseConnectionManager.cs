@@ -5,12 +5,14 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using ALE.ETLBox;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
 using ClickHouse.Ado;
 using CsvHelper.Configuration;
 using ETLBox.ClickHouse.ConnectionStrings;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 
 namespace ETLBox.ClickHouse.ConnectionManager
 {
@@ -40,11 +42,19 @@ namespace ETLBox.ClickHouse.ConnectionManager
             Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
         }
 
-        private TableDefinition DestTableDef { get; set; } = null!;
-        private Dictionary<string, TableColumn> DestinationColumns { get; set; } = null!;
+        private TableDefinition? DestTableDef { get; set; }
+        private Dictionary<string, TableColumn>? DestinationColumns { get; set; }
 
         public override void BulkInsert(ITableData data, string tableName)
         {
+            if (DestinationColumns is null)
+            {
+                throw new ETLBoxException("DestinationColumns is null");
+            }
+            if (DbConnection is null)
+            {
+                throw new ETLBoxException("Database connection is not established!");
+            }
             var csvData = new StringBuilder();
             var destColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
@@ -74,7 +84,7 @@ namespace ETLBox.ClickHouse.ConnectionManager
                 csvData.AppendLine();
             }
 
-            if (DbConnection.State != ConnectionState.Open)
+            if (DbConnection!.State != ConnectionState.Open)
             {
                 DbConnection.Open();
             }
@@ -97,13 +107,11 @@ FORMAT CSV
                 DateTime when dataType is "DATE" or "NULLABLE(DATE)" => $"{r:yyyy-MM-dd}",
                 DateTime => $"{r:yyyy-MM-dd HH:mm:ss}",
                 bool b => b ? "1" : "0",
-                decimal
-                or int
-                or long
-                or double
-                or float
-                    => Convert.ToString(r, CultureInfo.InvariantCulture),
-                _ => ConvertToValueType(r, dataType)
+                decimal or int or long or double or float => Convert.ToString(
+                    r,
+                    CultureInfo.InvariantCulture
+                ),
+                _ => ConvertToValueType(r, dataType),
             };
         }
 
@@ -164,15 +172,13 @@ FORMAT CSV
 
         public override void AfterBulkInsert(string tableName) { }
 
+        [MustDisposeResource]
         public override IConnectionManager Clone()
         {
-            var clone = new ClickHouseConnectionManager(
-                (ClickHouseConnectionString)ConnectionString
-            )
+            return new ClickHouseConnectionManager((ClickHouseConnectionString)ConnectionString)
             {
-                MaxLoginAttempts = MaxLoginAttempts
+                MaxLoginAttempts = MaxLoginAttempts,
             };
-            return clone;
         }
 
         public override bool IndexExists(ITask callingTask, string sql)

@@ -27,15 +27,15 @@ public class JsonTransformationTests
             Mappings =
             {
                 ["Col1"] = new JsonTransformation.Mapping("data", "$.Data.Id"),
-                ["Col2"] = new JsonTransformation.Mapping("data", "$.Data.Name")
-            }
+                ["Col2"] = new JsonTransformation.Mapping("data", "$.Data.Name"),
+            },
         };
 
         var dest = new MemoryDestination<ExpandoObject>();
         source.LinkTo(trans);
         trans.LinkTo(dest);
         await source.ExecuteAsync(CancellationToken.None);
-        await dest.Completion;
+        await dest.Completion.ConfigureAwait(true);
 
         //Assert
         Assert.Equal(3, dest.Data.Count);
@@ -71,17 +71,14 @@ public class JsonTransformationTests
         //Act
         var trans = new JsonTransformation
         {
-            Mappings =
-            {
-                ["Col1"] = new JsonTransformation.Mapping("EventId", null!)
-            }
+            Mappings = { ["Col1"] = new JsonTransformation.Mapping("EventId", null!) },
         };
 
         var dest = new MemoryDestination<ExpandoObject>();
         source.LinkTo(trans);
         trans.LinkTo(dest);
         await source.ExecuteAsync(CancellationToken.None);
-        await dest.Completion;
+        await dest.Completion.ConfigureAwait(true);
 
         //Assert
         Assert.Single(dest.Data);

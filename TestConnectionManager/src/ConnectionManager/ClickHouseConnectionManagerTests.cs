@@ -28,17 +28,17 @@ namespace TestConnectionManager.src.ConnectionManager
                 new ETLBox.ClickHouse.ConnectionStrings.ClickHouseConnectionStringBuilder();
             builder.ConnectionString = connectionString;
 
-            var con = new ClickHouseConnectionManager(builder.ConnectionString);
+            using var con = new ClickHouseConnectionManager(builder.ConnectionString);
 
             RecreateDatabase(con, dbName1);
             RecreateDatabase(con, dbName2);
 
             builder.Database = dbName1;
-            var con1 = new ClickHouseConnectionManager(builder.ConnectionString);
+            using var con1 = new ClickHouseConnectionManager(builder.ConnectionString);
             CreateTableTask.Create(con1, table);
 
             builder.Database = dbName2;
-            var con2 = new ClickHouseConnectionManager(builder.ConnectionString);
+            using var con2 = new ClickHouseConnectionManager(builder.ConnectionString);
             CreateTableTask.Create(con2, table);
 
             // Act
@@ -56,14 +56,14 @@ namespace TestConnectionManager.src.ConnectionManager
             {
                 TaskName = $"Drop database {dbName}",
                 DisableLogging = true,
-                ConnectionManager = con
+                ConnectionManager = con,
             }.DropIfExists();
 
             new CreateDatabaseTask(dbName)
             {
                 TaskName = $"Create database {dbName}",
                 DisableLogging = true,
-                ConnectionManager = con
+                ConnectionManager = con,
             }.Execute();
         }
     }

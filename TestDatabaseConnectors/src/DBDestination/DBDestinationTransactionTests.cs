@@ -21,7 +21,7 @@ namespace TestDatabaseConnectors.DBDestination
         public void ErrorInBatch(ConnectionManagerWithPK data)
         {
             //Arrange
-            var _ = new TwoColumnsTableFixture(data.Connection, "TransactionDest", data.WithPK);
+            _ = new TwoColumnsTableFixture(data.Connection, "TransactionDest", data.WithPK);
             var source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
@@ -55,7 +55,7 @@ namespace TestDatabaseConnectors.DBDestination
             }
 
             //Assert
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
+            Assert.Null(dest.BulkInsertConnectionManager?.State);
             Assert.True(data.Connection.State == null);
         }
 
@@ -82,7 +82,7 @@ namespace TestDatabaseConnectors.DBDestination
             Assert.Equal(0, RowCountTask.Count(destinationConnection, "TransactionDest"));
 
             //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
+            Assert.Null(dest.BulkInsertConnectionManager?.State);
             Assert.True(data.Connection.State == null);
             Assert.True(destinationConnection.State == null);
         }
@@ -94,7 +94,7 @@ namespace TestDatabaseConnectors.DBDestination
             //Arrange
             var s2C = new TwoColumnsTableFixture(connection, "TransactionSource");
             s2C.InsertTestData();
-            new TwoColumnsTableFixture(connection, "TransactionDest");
+            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
             var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
             var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
@@ -120,7 +120,7 @@ namespace TestDatabaseConnectors.DBDestination
             Assert.Equal(3, RowCountTask.Count(connection.Clone(), "TransactionDest"));
 
             //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
+            Assert.Null(dest.BulkInsertConnectionManager?.State);
             Assert.True(connection.State == null);
         }
 
@@ -134,7 +134,7 @@ namespace TestDatabaseConnectors.DBDestination
             var source = new DbSource<MySimpleRow>(sourceConnection, "TransactionSource");
 
             var destinationConnection = sourceConnection.Clone();
-            new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
+            var _ = new TwoColumnsTableFixture(destinationConnection, "TransactionDest");
             var dest = new DbDestination<MySimpleRow>(destinationConnection, "TransactionDest", 2);
 
             //Act & Assert
@@ -148,7 +148,7 @@ namespace TestDatabaseConnectors.DBDestination
             Assert.Equal(0, RowCountTask.Count(destinationConnection, "TransactionDest"));
 
             //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == null);
+            Assert.Null(dest.BulkInsertConnectionManager?.State);
             Assert.True(destinationConnection.State == null);
             Assert.True(sourceConnection.State == null);
         }
@@ -160,7 +160,7 @@ namespace TestDatabaseConnectors.DBDestination
             //Arrange
             var s2C = new TwoColumnsTableFixture(connection, "TransactionSource");
             s2C.InsertTestData();
-            new TwoColumnsTableFixture(connection, "TransactionDest");
+            var _ = new TwoColumnsTableFixture(connection, "TransactionDest");
             var source = new DbSource<MySimpleRow>(connection, "TransactionSource");
             var dest = new DbDestination<MySimpleRow>(connection, "TransactionDest", 2);
 
@@ -175,8 +175,8 @@ namespace TestDatabaseConnectors.DBDestination
             //Assert
             Assert.Equal(connection, dest.BulkInsertConnectionManager);
 
-            //Assert Connections are closed
-            Assert.True(dest.BulkInsertConnectionManager.State == ConnectionState.Open);
+            //Assert Connections are open
+            Assert.Equal(ConnectionState.Open, dest.BulkInsertConnectionManager!.State);
             Assert.True(connection.State == ConnectionState.Open);
 
             Assert.Equal(3, RowCountTask.Count(connection, "TransactionDest"));

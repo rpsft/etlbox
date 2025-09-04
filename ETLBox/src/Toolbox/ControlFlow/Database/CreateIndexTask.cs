@@ -6,7 +6,7 @@ using ETLBox.Primitives;
 namespace ALE.ETLBox.ControlFlow
 {
     /// <summary>
-    /// Creates an index if the index doesn't exists, otherwise the index is dropped and recreated.
+    /// Creates an index if the index doesn't exist, otherwise the index is dropped and recreated.
     /// </summary>
     /// <example>
     /// <code>
@@ -25,13 +25,13 @@ namespace ALE.ETLBox.ControlFlow
                 new IfIndexExistsTask(IndexName, TableName)
                 {
                     ConnectionManager = ConnectionManager,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }.Exists()
             )
                 new DropIndexTask(IndexName, TableName)
                 {
                     ConnectionManager = ConnectionManager,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }.DropIfExists();
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
@@ -47,26 +47,24 @@ namespace ALE.ETLBox.ControlFlow
         public IList<string> IncludeColumns { get; set; }
         public bool IsUnique { get; set; }
         public bool IsClustered { get; set; }
-        public string Sql => ConnectionManager.ConnectionManagerType switch
-        {
-            _ => $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IfNotExists()} {IN.QuotedFullName} 
+        public string Sql =>
+            $@"CREATE {UniqueSql} {ClusteredSql} INDEX {IfNotExists()} {IN.QuotedFullName} 
                     ON {TN.QuotedFullName} ( {string.Join(",", IndexColumns.Select(col => QB + col + QE))} )
-                    {IncludeSql} {GetIndexType()}"
-        };
+                    {IncludeSql} {GetIndexType()}";
 
-        private string IfNotExists()
-            => ConnectionType switch
+        private string IfNotExists() =>
+            ConnectionType switch
             {
-                ConnectionManagerType.Postgres or ConnectionManagerType.ClickHouse 
-                    => "IF NOT EXISTS",
-                _ => ""
+                ConnectionManagerType.Postgres or ConnectionManagerType.ClickHouse =>
+                    "IF NOT EXISTS",
+                _ => "",
             };
 
-        private string GetIndexType()
-            => ConnectionType switch
+        private string GetIndexType() =>
+            ConnectionType switch
             {
                 ConnectionManagerType.ClickHouse => $"TYPE {IndexType ?? "bloom_filter"}",
-                _ => ""
+                _ => "",
             };
 
         public CreateIndexTask() { }
@@ -111,7 +109,7 @@ namespace ALE.ETLBox.ControlFlow
         ) =>
             new CreateIndexTask(indexName, tableName, indexColumns)
             {
-                ConnectionManager = connectionManager
+                ConnectionManager = connectionManager,
             }.Execute();
 
         public static void CreateOrRecreate(
@@ -123,7 +121,7 @@ namespace ALE.ETLBox.ControlFlow
         ) =>
             new CreateIndexTask(indexName, tableName, indexColumns, includeColumns)
             {
-                ConnectionManager = connectionManager
+                ConnectionManager = connectionManager,
             }.Execute();
 
         private string UniqueSql => IsUnique ? "UNIQUE" : string.Empty;
@@ -142,7 +140,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             get =>
                 IncludeColumns == null
-                || IncludeColumns?.Count == 0
+                || IncludeColumns.Count == 0
                 || ConnectionType == ConnectionManagerType.SQLite
                     ? string.Empty
                     : $"INCLUDE ({string.Join("  ,", IncludeColumns!.Select(col => QB + col + QE))})";

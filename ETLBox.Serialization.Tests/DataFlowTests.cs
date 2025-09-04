@@ -1,10 +1,8 @@
 using System.Dynamic;
 using System.Text;
 using System.Xml.Serialization;
-using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Serialization.DataFlow;
-using ETLBox.Primitives;
 using FluentAssertions;
 using JetBrains.Annotations;
 

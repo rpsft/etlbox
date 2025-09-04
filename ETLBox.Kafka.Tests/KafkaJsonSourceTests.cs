@@ -70,7 +70,8 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
 
         var watch = new Stopwatch();
         watch.Start();
-        var cancellationToken = new CancellationTokenSource(timeout).Token;
+        using var tokenSource = new CancellationTokenSource(timeout);
+        var cancellationToken = tokenSource.Token;
         var results = ConsumeJson(false, cancellationToken).ToList();
 
         watch.Stop();
@@ -266,7 +267,7 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
         {
             for (var i = 1; i < 10; i++)
             {
-                await Task.Delay(100, CancellationToken.None);
+                await Task.Delay(100, CancellationToken.None).ConfigureAwait(false);
                 ProduceJson($"{{\"name\":\"test{i}\"}}");
                 _output.WriteLine($"Produced test {i} to topic {TopicName}");
             }
@@ -279,7 +280,14 @@ public partial class KafkaJsonSourceTests : IClassFixture<KafkaFixture>
             offerMessageInvokeCounter++;
             if (offerMessageInvokeCounter >= 10)
             {
-                tokenSource.Cancel();
+                try
+                {
+                    tokenSource.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // ignore
+                }
             }
         });
         var kafkaSource = new TestKafkaJsonSource(_output)

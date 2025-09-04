@@ -48,7 +48,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected void WriteData(TInput data)
         {
-            if (data == null)
+            if (data is null)
                 return;
 
             if (StreamWriter == null)
@@ -71,7 +71,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 CanWriteCompletionSource = new TaskCompletionSource<bool>();
                 DoneWritingCompletionSource = new TaskCompletionSource<bool>();
-                var request = HttpRequestMessage.Clone();
+                using var request = HttpRequestMessage.Clone();
                 request.RequestUri = new Uri(Uri);
                 var pushStreamContent = new PushStreamContent(
                     async (stream, _, _) =>
@@ -89,7 +89,7 @@ namespace ALE.ETLBox.DataFlow
                             CanWriteCompletionSource?.SetException(ex);
                         }
 
-                        await DoneWritingCompletionSource.Task;
+                        await DoneWritingCompletionSource.Task.ConfigureAwait(false);
                         stream?.Close();
                     },
                     HttpContentType

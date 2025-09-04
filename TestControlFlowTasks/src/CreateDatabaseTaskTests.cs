@@ -1,10 +1,8 @@
 using System.Globalization;
-using System.Threading;
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBox.ControlFlow;
-using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
@@ -15,10 +13,11 @@ namespace TestControlFlowTasks
         public CreateDatabaseTaskTests(ControlFlowDatabaseFixture fixture)
             : base(fixture) { }
 
-        [Theory, MemberData(nameof(DbConnectionsWithMaster))]
-        public void CreateSimple(IConnectionManager connection)
+        [Theory, MemberData(nameof(DbConnectionTypesWithMaster))]
+        public void CreateSimple(string dbType)
         {
             //Arrange
+            using var connection = CreateConnectionManager(dbType);
             var dbName = "ETLBox_" + HashHelper.RandomString(10);
             var dbListBefore = GetDatabaseListTask.List(connection);
             Assert.DoesNotContain(dbName, dbListBefore);
@@ -34,11 +33,12 @@ namespace TestControlFlowTasks
             DropDatabaseTask.Drop(connection, dbName);
         }
 
-        [Theory, MemberData(nameof(DbConnectionsWithMaster))]
-        public void CreateWithCollation(IConnectionManager connection)
+        [Theory, MemberData(nameof(DbConnectionTypesWithMaster))]
+        public void CreateWithCollation(string dbType)
         {
             //Arrange
             using var save = SetCurrentCulture(CultureInfo.GetCultureInfo("en-US"));
+            using var connection = CreateConnectionManager(dbType);
             var dbName = "ETLBox_" + HashHelper.RandomString(10);
             var collation = "Latin1_General_CS_AS";
             if (connection.GetType() == typeof(PostgresConnectionManager))

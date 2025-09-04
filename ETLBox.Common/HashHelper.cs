@@ -14,7 +14,8 @@ namespace ALE.ETLBox.Common
                 return string.Empty;
 
             var hexBuilder = new StringBuilder();
-            var hashValue = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(text));
+            using var hashManager = new SHA1Managed();
+            var hashValue = hashManager.ComputeHash(Encoding.UTF8.GetBytes(text));
 
             foreach (var hashByte in hashValue)
                 hexBuilder.Append(hashByte.ToString("x2"));

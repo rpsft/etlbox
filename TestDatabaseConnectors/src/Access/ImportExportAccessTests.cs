@@ -44,13 +44,13 @@ namespace TestDatabaseConnectors.Access
                 new List<TableColumn>
                 {
                     new("Field1", "NUMBER", allowNulls: true),
-                    new("Field2", "CHAR", allowNulls: true)
+                    new("Field2", "CHAR", allowNulls: true),
                 }
             );
             new CreateTableTask(testTable)
             {
                 ThrowErrorIfTableExists = true,
-                ConnectionManager = AccessOdbcConnection
+                ConnectionManager = AccessOdbcConnection,
             }.Execute();
             return testTable;
         }
@@ -80,7 +80,7 @@ namespace TestDatabaseConnectors.Access
             DbDestination<string[]> dest = new DbDestination<string[]>(batchSize: 2)
             {
                 DestinationTableDefinition = _destinationTable,
-                ConnectionManager = AccessOdbcConnection
+                ConnectionManager = AccessOdbcConnection,
             };
             source.LinkTo(dest);
             source.Execute();
@@ -105,7 +105,7 @@ namespace TestDatabaseConnectors.Access
         public async Task AccessIntoDBWithTableDefinition()
         {
             //Arrange
-            await InsertTestData(_sourceTable);
+            await InsertTestData(_sourceTable).ConfigureAwait(false);
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTableWTD"
@@ -114,14 +114,14 @@ namespace TestDatabaseConnectors.Access
             //Act
             DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection)
             {
-                SourceTableDefinition = _sourceTable
+                SourceTableDefinition = _sourceTable,
             };
             DbDestination<Data> dest = new DbDestination<Data>(
                 SqlConnection,
                 "dbo.AccessTargetTableWTD"
             );
             source.LinkTo(dest);
-            source.Execute();
+            await source.ExecuteAsync().ConfigureAwait(false);
             dest.Wait();
 
             //Assert
@@ -147,7 +147,7 @@ namespace TestDatabaseConnectors.Access
             );
             // Below is a workaround for a bug in the Access ODBC driver to allow data to be read
             AccessOdbcConnection.Close();
-            await Task.Delay(500);
+            await Task.Delay(500).ConfigureAwait(false);
             Assert.Equal(3, RowCountTask.Count(AccessOdbcConnection, table.Name));
         }
 
@@ -156,7 +156,7 @@ namespace TestDatabaseConnectors.Access
         {
             //Arrange
             var sourceTable = RecreateAccessTestTable(nameof(AccessIntoDB));
-            await InsertTestData(sourceTable);
+            await InsertTestData(sourceTable).ConfigureAwait(false);
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(
                 SqlConnection,
                 "dbo.AccessTargetTable"
@@ -169,7 +169,7 @@ namespace TestDatabaseConnectors.Access
                 destTable.TableDefinition.Name
             );
             source.LinkTo(dest);
-            source.Execute();
+            await source.ExecuteAsync().ConfigureAwait(false);
             dest.Wait();
 
             //Assert

@@ -36,7 +36,7 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
         //Arrange
         var destTable = new TwoColumnsTableFixture(connection, "BulkInsert2Columns");
 
-        var data = new TableData<string[]>(destTable.TableDefinition);
+        using var data = new TableData<string[]>(destTable.TableDefinition);
         object[] values = ["1", "Test1"];
         data.Rows.Add(values);
         object[] values2 = ["2", "Test2"];
@@ -69,7 +69,7 @@ public class SqlTaskBulkInsertTests : ControlFlowTestBase
             identityIndex
         );
 
-        var data = new TableData(destTable.TableDefinition, 2);
+        using var data = new TableData(destTable.TableDefinition, 2);
         object[] values = ["Test1", null, 1.2];
         data.Rows.Add(values);
         object[] values2 = ["Test2", 4711, 1.23];

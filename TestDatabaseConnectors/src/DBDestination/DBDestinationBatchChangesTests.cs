@@ -28,7 +28,7 @@ namespace TestDatabaseConnectors.DBDestination
                 {
                     rowArray[0][1] = "NewValue";
                     return rowArray;
-                }
+                },
             };
 
             //Act
@@ -61,8 +61,8 @@ namespace TestDatabaseConnectors.DBDestination
         public void AfterBatchWrite(IConnectionManager connection)
         {
             //Arrange
-            bool wasExecuted = false;
-            var _ = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
+            var wasExecuted = false;
+            _ = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
             DbDestination<string[]> dest = new DbDestination<string[]>(
                 connection,
                 "DbDestinationBatchChanges",
@@ -73,7 +73,7 @@ namespace TestDatabaseConnectors.DBDestination
                 {
                     Assert.True(rowArray.Length == 1);
                     wasExecuted = true;
-                }
+                },
             };
 
             //Act

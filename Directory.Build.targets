@@ -56,5 +56,15 @@
     </PropertyGroup>
     <Message Text="Building project $(MSBuildProjectName) version: $(PackageVersion) - $(PackageDescription)" Importance="high"/>
   </Target>
+  
+  <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <SignAssembly>false</SignAssembly>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
 
 </Project>

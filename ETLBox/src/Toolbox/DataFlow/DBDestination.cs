@@ -36,9 +36,16 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
         private bool HasDestinationTableDefinition => DestinationTableDefinition != null;
         private bool HasTableName => !string.IsNullOrWhiteSpace(TableName);
+
+        [CanBeNull]
         private TableData<TInput> TableData { get; set; }
 
-        public IConnectionManager BulkInsertConnectionManager { get; set; }
+        [CanBeNull]
+        internal IConnectionManager BulkInsertConnectionManager =>
+            _ownBulkInsertConnectionManager ?? DbConnectionManager;
+
+        [CanBeNull]
+        private IConnectionManager _ownBulkInsertConnectionManager;
 
         public DbDestination()
         {
@@ -81,6 +88,17 @@ namespace ALE.ETLBox.DataFlow
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
         }
 
+        private void CloneIfAllowed()
+        {
+            if (DbConnectionManager.LeaveOpen)
+            {
+                return;
+            }
+
+            _ownBulkInsertConnectionManager?.Dispose();
+            _ownBulkInsertConnectionManager = DbConnectionManager.Clone();
+        }
+
         private void LoadTableDefinitionFromTableName()
         {
             if (HasTableName)
@@ -98,14 +116,20 @@ namespace ALE.ETLBox.DataFlow
         {
             if (!HasDestinationTableDefinition)
                 LoadTableDefinitionFromTableName();
-            BulkInsertConnectionManager = DbConnectionManager.CloneIfAllowed();
-            BulkInsertConnectionManager.IsInBulkInsert = true;
-            BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
-            TableData = new TableData<TInput>(DestinationTableDefinition, BatchSize);
+
+            TableData ??= new TableData<TInput>(DestinationTableDefinition, BatchSize);
+
+            CloneIfAllowed();
+            BulkInsertConnectionManager!.PrepareBulkInsert(DestinationTableDefinition.Name);
         }
 
         protected override void TryBulkInsertData(TInput[] data)
         {
+            if (TableData is null)
+            {
+                throw new ETLBoxException("TableData is null.");
+            }
+
             TryAddDynamicColumnsToTableDef(data);
             try
             {
@@ -129,14 +153,12 @@ namespace ALE.ETLBox.DataFlow
         protected override void FinishWrite()
         {
             TableData?.Close();
-            if (BulkInsertConnectionManager == null)
-            {
-                return;
-            }
+            TableData = null;
 
-            BulkInsertConnectionManager.IsInBulkInsert = false;
-            BulkInsertConnectionManager.CleanUpBulkInsert(DestinationTableDefinition?.Name);
-            BulkInsertConnectionManager.CloseIfAllowed();
+            BulkInsertConnectionManager?.CleanUpBulkInsert(DestinationTableDefinition?.Name);
+
+            _ownBulkInsertConnectionManager?.Dispose(); // initialized when LeaveOpen == false
+            _ownBulkInsertConnectionManager = null;
         }
 
         private void TryAddDynamicColumnsToTableDef(TInput[] data)
@@ -153,7 +175,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 foreach (var key in dynamicObject.Select(c => c.Key))
                 {
-                    var newPropIndex = TableData.DynamicColumnNames.Count;
+                    var newPropIndex = TableData!.DynamicColumnNames.Count;
                     if (!TableData.DynamicColumnNames.ContainsKey(key))
                         TableData.DynamicColumnNames.Add(key, newPropIndex);
                 }
@@ -164,10 +186,10 @@ namespace ALE.ETLBox.DataFlow
         {
             foreach (var currentRow in data)
             {
-                if (currentRow == null)
+                if (currentRow is null)
                     continue;
 
-                TableData.Rows.Add(
+                TableData!.Rows.Add(
                     TypeInfo.GetTypeInfoGroup() switch
                     {
                         TypeInfo.TypeInfoGroup.Array => currentRow as object[],
@@ -195,7 +217,7 @@ namespace ALE.ETLBox.DataFlow
 
         private object[] ConvertDynamicRow(IDictionary<string, object> propertyValues)
         {
-            var rowResult = new object[TableData.DynamicColumnNames.Count];
+            var rowResult = new object[TableData!.DynamicColumnNames.Count];
             foreach (var prop in propertyValues)
             {
                 var columnIndex = TableData.DynamicColumnNames[prop.Key];

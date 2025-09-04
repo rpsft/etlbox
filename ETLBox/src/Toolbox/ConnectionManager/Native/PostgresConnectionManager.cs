@@ -36,6 +36,11 @@ namespace ALE.ETLBox.ConnectionManager
 
         public override void BulkInsert(ITableData data, string tableName)
         {
+            if (DbConnection is null)
+            {
+                throw new ETLBoxException("Database connection is not established!");
+            }
+
             var tn = new ObjectNameDescriptor(tableName, QB, QE);
             var destColumnNames = data.GetColumnMapping()
                 .Cast<IColumnMapping>()
@@ -43,11 +48,12 @@ namespace ALE.ETLBox.ConnectionManager
                 .ToList();
             var quotedDestColumns = destColumnNames.Select(col => tn.QB + col + tn.QE);
 
-            using var writer = DbConnection.BeginBinaryImport(
-                $@"
-COPY {tn.QuotedFullName} ({string.Join(", ", quotedDestColumns)})
-FROM STDIN (FORMAT BINARY)"
-            );
+            var copyCommandSql = $"""
+                COPY {tn.QuotedFullName} ({string.Join(", ", quotedDestColumns)})
+                FROM STDIN (FORMAT BINARY)
+                """;
+
+            using var writer = DbConnection.BeginBinaryImport(copyCommandSql);
             while (data.Read())
             {
                 writer.StartRow();
@@ -59,16 +65,13 @@ FROM STDIN (FORMAT BINARY)"
                     if (val != null)
                     {
                         object convertedVal;
-                        if (colDef.NETDataType == typeof(System.Guid) && (val is string))
+                        if (colDef.NETDataType == typeof(Guid) && (val is string s))
                         {
-                            convertedVal = Guid.Parse((string)val);
+                            convertedVal = Guid.Parse(s);
                         }
                         else
                         {
-                            convertedVal = Convert.ChangeType(
-                                val,
-                                colDef.NETDataType
-                                );
+                            convertedVal = Convert.ChangeType(val, colDef.NETDataType);
                         }
                         writer.Write(convertedVal, colDef.InternalDataType.ToLower());
                     }
@@ -89,7 +92,7 @@ FROM STDIN (FORMAT BINARY)"
         private void ReadTableDefinition(string tableName)
         {
             DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tableName);
-            DestinationColumns = new Dictionary<string, TableColumn>();
+            DestinationColumns = [];
             foreach (var colDef in DestTableDef.Columns)
             {
                 DestinationColumns.Add(colDef.Name, colDef);
@@ -106,15 +109,13 @@ FROM STDIN (FORMAT BINARY)"
 
         public override void AfterBulkInsert(string tableName) { }
 
+        [MustDisposeResource]
         public override IConnectionManager Clone()
         {
-            var clone = new PostgresConnectionManager(
-                (PostgresConnectionString)ConnectionString
-            )
+            return new PostgresConnectionManager((PostgresConnectionString)ConnectionString)
             {
-                MaxLoginAttempts = MaxLoginAttempts
+                MaxLoginAttempts = MaxLoginAttempts,
             };
-            return clone;
         }
 
         protected override void MapQueryParameterToCommandParameter(

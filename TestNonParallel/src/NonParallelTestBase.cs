@@ -1,4 +1,3 @@
-using System.Linq;
 using ALE.ETLBox.ConnectionManager;
 using ALE.ETLBoxTests.NonParallel.Fixtures;
 using ETLBox.Primitives;

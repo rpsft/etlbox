@@ -52,7 +52,7 @@ namespace ALE.ETLBox.DataFlow
 
         private IEnumerable<TInput> DuplicateRow(TInput row)
         {
-            if (row == null)
+            if (row is null)
                 return Array.Empty<TInput>();
             var result = new List<TInput>(NumberOfDuplicates) { row };
             LogProgress();

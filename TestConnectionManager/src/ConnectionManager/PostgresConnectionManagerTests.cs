@@ -18,17 +18,18 @@ namespace TestConnectionManager.ConnectionManager
         private static int? GetOpenConnections(string connectionString)
         {
             var conString = new PostgresConnectionString(connectionString);
-            var master = new PostgresConnectionManager(conString.CloneWithMasterDbName());
+            using var master = new PostgresConnectionManager(conString.CloneWithMasterDbName());
             var dbName = conString.Builder.Database;
-            int? openConnections = new SqlTask(
-                "Count open connections", $@"
+            var openConnections = new SqlTask(
+                "Count open connections",
+                $@"
                 SELECT count(*)
                 FROM pg_stat_activity
                 where datname = '{dbName}'"
             )
             {
                 ConnectionManager = master,
-                DisableLogging = true
+                DisableLogging = true,
             }.ExecuteScalar<int>();
             return openConnections;
         }
@@ -56,6 +57,8 @@ namespace TestConnectionManager.ConnectionManager
             con.Close();
             NpgsqlConnection.ClearAllPools();
             Assert.Equal(0, GetOpenConnections(ConnectionStringParameter) - 0);
+
+            con.Dispose();
         }
 
         [Fact]
@@ -88,11 +91,12 @@ namespace TestConnectionManager.ConnectionManager
         public void TestCloningIfAllowedConnection()
         {
             //Arrange
-            var con = new PostgresConnectionManager(ConnectionStringParameter) { LeaveOpen = true };
+            using var con = new PostgresConnectionManager(ConnectionStringParameter);
+            con.LeaveOpen = true;
 
             //Act
-            var cloneIfAllowed = con.CloneIfAllowed();
-            var clone = con.Clone();
+            using var cloneIfAllowed = con.CloneIfAllowed();
+            using var clone = con.Clone();
 
             //Assert
             Assert.Equal(cloneIfAllowed, con);
@@ -107,12 +111,9 @@ namespace TestConnectionManager.ConnectionManager
             var con = new PostgresConnectionManager(ConnectionStringParameter);
 
             //Act
-            new SqlTask("DUMMY", "select 1")
-            { 
-                ConnectionManager = con
-            }.ExecuteScalar();
+            new SqlTask("DUMMY", "select 1") { ConnectionManager = con }.ExecuteScalar();
 
-            //ASsert
+            //Assert
             NpgsqlConnection.ClearAllPools();
             var connectionCount = GetOpenConnections(ConnectionStringParameter);
             Assert.Equal(0, connectionCount - initialConnectionCount);
@@ -122,12 +123,12 @@ namespace TestConnectionManager.ConnectionManager
         public void TestBulkInsertForNotLeakingConnections()
         {
             //Arrange
-            var con = new PostgresConnectionManager(ConnectionStringParameter);
+            using var con = new PostgresConnectionManager(ConnectionStringParameter);
 
             var tableName = "BulkInsertTest";
             TableDefinition tableDef = Prepare(con, tableName);
 
-            var data = new TableData<string[]>(tableDef);
+            using var data = new TableData<string[]>(tableDef);
             object[] values = { "1", "Test1" };
             data.Rows.Add(values);
 
@@ -137,7 +138,7 @@ namespace TestConnectionManager.ConnectionManager
             //Act
             SqlTask.BulkInsert(con, "BI", data, tableName);
 
-            //ASsert
+            //Assert
             NpgsqlConnection.ClearAllPools();
             var connectionCount = GetOpenConnections(ConnectionStringParameter);
             Assert.Equal(0, connectionCount - initialConnectionCount);
@@ -147,7 +148,7 @@ namespace TestConnectionManager.ConnectionManager
         public void TestDbDestinationForNotLeakingConnections()
         {
             //Arrange
-            var con = new PostgresConnectionManager(ConnectionStringParameter);
+            using var con = new PostgresConnectionManager(ConnectionStringParameter);
 
             var tableName = "BulkInsertTest";
             Prepare(con, tableName);
@@ -161,7 +162,7 @@ namespace TestConnectionManager.ConnectionManager
             var initialConnectionCount = GetOpenConnections(ConnectionStringParameter);
 
             //Act
-            var source = new MemorySource(new[] { data });
+            var source = new MemorySource([data]);
             var dest = new DbDestination(con, tableName);
             source.LinkTo(dest);
 
@@ -178,7 +179,7 @@ namespace TestConnectionManager.ConnectionManager
         public void TestDbRowTransformationForNotLeakingConnections()
         {
             //Arrange
-            var con = new PostgresConnectionManager(ConnectionStringParameter);
+            using var con = new PostgresConnectionManager(ConnectionStringParameter);
 
             var tableName = "BulkInsertTest";
             Prepare(con, tableName);
@@ -207,6 +208,33 @@ namespace TestConnectionManager.ConnectionManager
             Assert.Equal(0, connectionCount - initialConnectionCount);
         }
 
+        [Fact]
+        public void TestOpeningConnectionTwice_WithLeaveOpenFalse()
+        {
+            using var con = new PostgresConnectionManager(ConnectionStringParameter);
+            con.LeaveOpen = false;
+            var connectionCount = GetOpenConnections(ConnectionStringParameter);
+            Assert.Equal(0, connectionCount);
+
+            con.Open();
+            connectionCount = GetOpenConnections(ConnectionStringParameter);
+            Assert.Equal(1, connectionCount);
+
+            // With LeaveOpen = false, second Open() closes the first connection and creates a new one
+            con.Open();
+            connectionCount = GetOpenConnections(ConnectionStringParameter);
+            // Allow for up to 2 connections due to timing of connection closure
+            Assert.True(
+                connectionCount is 1 or 2,
+                $"Expected 1 or 2 connections, but got {connectionCount}"
+            );
+
+            con.Close();
+            NpgsqlConnection.ClearAllPools();
+            connectionCount = GetOpenConnections(ConnectionStringParameter);
+            Assert.Equal(0, connectionCount);
+        }
+
         private static TableDefinition Prepare(PostgresConnectionManager con, string tableName)
         {
             DropTableTask.DropIfExists(con, tableName);
@@ -216,7 +244,7 @@ namespace TestConnectionManager.ConnectionManager
                 new List<TableColumn>
                 {
                     new("Col1", "INT", allowNulls: false, isPrimaryKey: true),
-                    new("Col2", "VARCHAR(100)", allowNulls: true)
+                    new("Col2", "VARCHAR(100)", allowNulls: true),
                 }
             );
             tableDef.CreateTable(con);

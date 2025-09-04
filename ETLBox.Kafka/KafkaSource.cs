@@ -111,7 +111,7 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
                         ErrorHandler.Send(exception, row);
                 }
             );
-            if (outputValue == null)
+            if (outputValue is null)
             {
                 return true;
             }

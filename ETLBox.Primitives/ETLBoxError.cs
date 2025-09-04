@@ -3,7 +3,7 @@ using System;
 namespace ETLBox.Primitives
 {
     /// <summary>
-    /// The generic ETLBox Exception. See inner exception for more details.
+    /// The generic ETLBox Exception. See the inner exception for more details.
     /// </summary>
     public class ETLBoxError
     {

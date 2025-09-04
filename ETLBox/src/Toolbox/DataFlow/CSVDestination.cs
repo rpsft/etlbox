@@ -46,7 +46,7 @@ namespace ALE.ETLBox.DataFlow
             CsvWriter = new CsvWriter(StreamWriter, Configuration, true);
             CsvWriter.Context.TypeConverterOptionsCache.GetOptions<DateTime>().Formats = new[]
             {
-                "yyyy-MM-dd HH:mm:ss.fff"
+                "yyyy-MM-dd HH:mm:ss.fff",
             };
         }
 
@@ -88,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteArray(TInput data)
         {
-            if (data == null)
+            if (data is null)
                 return;
             var recordAsArray = data as object[];
             try
@@ -110,7 +110,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void WriteObject(TInput data)
         {
-            if (data == null)
+            if (data is null)
                 return;
             try
             {

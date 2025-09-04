@@ -89,6 +89,7 @@ namespace TestDatabaseConnectors
             return data;
         }
 
+        [MustDisposeResource]
         protected IConnectionManager GetConnectionManager(Type connectionType, string configSection)
         {
             if (

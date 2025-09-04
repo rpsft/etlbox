@@ -28,7 +28,7 @@ namespace ALE.ETLBox.DataFlow
             JsonSerializer = new JsonSerializer
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
             };
             InitTargetAction();
         }
@@ -63,7 +63,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void WriteIntoStream(TInput data)
         {
-            if (data == null)
+            if (data is null)
                 return;
 
             JsonSerializer.Serialize(JsonTextWriter, data);
