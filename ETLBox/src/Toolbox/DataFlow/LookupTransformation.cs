@@ -84,7 +84,7 @@ namespace ALE.ETLBox.DataFlow
         {
             RowTransformation = new RowTransformation<TInput, TInput>(this, _rowTransformationFunc)
             {
-                InitAction = initAction
+                InitAction = initAction,
             };
         }
 
@@ -120,7 +120,7 @@ namespace ALE.ETLBox.DataFlow
                 }
                 return same;
             });
-            if (lookupHit == null)
+            if (lookupHit is null)
             {
                 return row;
             }

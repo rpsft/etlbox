@@ -4,8 +4,6 @@ using ALE.ETLBox;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
-using Npgsql;
-using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBDestination
 {

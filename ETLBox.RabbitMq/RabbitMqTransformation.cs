@@ -166,7 +166,7 @@ namespace ALE.ETLBox.DataFlow
             if (Properties.Type != null)
                 properties.Type = Properties.Type;
             UpdateTimestamp(properties);
-            if (Properties?.UserId != null)
+            if (Properties.UserId != null)
                 properties.UserId = Properties.UserId;
         }
 

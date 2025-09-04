@@ -32,7 +32,7 @@ namespace TestOtherConnectors.CustomSource
             var dest = new DbDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             await source.ExecuteAsync(CancellationToken.None);
-            await dest.Completion;
+            await dest.Completion.ConfigureAwait(true);
 
             //Assert
             dest2Columns.AssertTestData();
@@ -65,8 +65,8 @@ namespace TestOtherConnectors.CustomSource
             {
                 try
                 {
-                    await source.ExecuteAsync(CancellationToken.None);
-                    await dest.Completion;
+                    await source.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+                    await dest.Completion.ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

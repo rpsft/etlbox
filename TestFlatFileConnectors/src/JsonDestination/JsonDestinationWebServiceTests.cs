@@ -25,10 +25,10 @@ namespace TestFlatFileConnectors.JsonDestination
                 .Returns(
                     async (HttpRequestMessage request, CancellationToken _) =>
                     {
-                        result = await request.Content!.ReadAsStringAsync(_);
+                        result = await request.Content!.ReadAsStringAsync(_).ConfigureAwait(false);
                         return new HttpResponseMessage
                         {
-                            Content = new StringContent($"Hello, {result}")
+                            Content = new StringContent($"Hello, {result}"),
                         };
                     }
                 )
@@ -43,7 +43,7 @@ namespace TestFlatFileConnectors.JsonDestination
             //Act
             var dest = new JsonDestination<MySimpleRow>("http://test.test", ResourceType.Http)
             {
-                HttpClient = httpClient
+                HttpClient = httpClient,
             };
             source.LinkTo(dest);
             source.Execute();

@@ -342,7 +342,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LoadProcessTable
 
             //Act
             StartLoadProcessTask.Start("Test process 15");
-            long? processId1 = ALE.ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
+            var processId1 = ALE.ETLBox.Common.ControlFlow.ControlFlow.CurrentLoadProcess.Id;
             LogTask.Error("Test1");
             LogTask.Warn("Test2");
             LogTask.Info("Test3");

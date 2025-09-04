@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
 
@@ -6,24 +7,36 @@ namespace ALE.ETLBox.ConnectionManager
 {
     [PublicAPI]
     [DebuggerDisplay("{ConnectionManagerType}:{ConnectionString}")]
+    [MustDisposeResource]
     public abstract class DbConnectionManager<TConnection> : IConnectionManager
         where TConnection : class, IDbConnection, new()
     {
         public abstract ConnectionManagerType ConnectionManagerType { get; }
 
         public int MaxLoginAttempts { get; set; } = 3;
+
         public virtual bool LeaveOpen
         {
-            get => _leaveOpen || IsInBulkInsert || Transaction != null;
+            get => _leaveOpen || Transaction != null;
             set => _leaveOpen = value;
+        }
+
+        public bool IsInBulkInsert
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         public IDbConnectionString ConnectionString { get; set; }
 
-        protected TConnection DbConnection { get; private set; }
+        [CanBeNull]
+        protected TConnection DbConnection { get; set; }
+
         public ConnectionState? State => DbConnection?.State;
+
+        [CanBeNull]
         public IDbTransaction Transaction { get; set; }
-        public bool IsInBulkInsert { get; set; }
+
         private bool _leaveOpen;
 
         public abstract string QB { get; }
@@ -53,7 +66,7 @@ namespace ALE.ETLBox.ConnectionManager
                 DbConnection?.Close();
                 DbConnection = new TConnection { ConnectionString = ConnectionString.Value };
             }
-            if (DbConnection.State != ConnectionState.Open)
+            if (DbConnection!.State != ConnectionState.Open)
             {
                 TryOpenConnectionXTimes();
             }
@@ -67,24 +80,38 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 try
                 {
+                    if (DbConnection!.State == ConnectionState.Open)
+                    {
+                        successfullyConnected = true;
+                        break;
+                    }
+
                     DbConnection.Open();
-                    successfullyConnected = true;
+                    successfullyConnected = DbConnection.State == ConnectionState.Open;
                 }
                 catch (Exception e)
                 {
                     successfullyConnected = false;
                     lastException = e;
-                    Task.Delay(1000).Wait();
                 }
+
                 if (successfullyConnected)
                 {
                     break;
                 }
+
+                Task.Delay(1000).Wait();
             }
-            if (!successfullyConnected)
+
+            if (successfullyConnected)
             {
-                throw lastException ?? new Exception("Could not connect to database!");
+                return;
             }
+
+            DbConnection?.Dispose();
+            DbConnection = null;
+
+            throw lastException ?? new ETLBoxException("Could not connect to database!");
         }
 
         public IDbCommand CreateCommand(
@@ -92,6 +119,11 @@ namespace ALE.ETLBox.ConnectionManager
             IEnumerable<IQueryParameter> parameterList
         )
         {
+            if (DbConnection is null)
+            {
+                throw new ETLBoxException("Database connection is not established!");
+            }
+
             var cmd = DbConnection.CreateCommand();
             cmd.CommandTimeout = 0;
             cmd.CommandType = CommandType.Text;
@@ -129,7 +161,7 @@ namespace ALE.ETLBox.ConnectionManager
             IEnumerable<IQueryParameter> parameterList = null
         )
         {
-            IDbCommand cmd = CreateCommand(command, parameterList);
+            using var cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteNonQuery();
         }
 
@@ -138,7 +170,7 @@ namespace ALE.ETLBox.ConnectionManager
             IEnumerable<IQueryParameter> parameterList = null
         )
         {
-            IDbCommand cmd = CreateCommand(command, parameterList);
+            using var cmd = CreateCommand(command, parameterList);
             return cmd.ExecuteScalar();
         }
 
@@ -147,8 +179,10 @@ namespace ALE.ETLBox.ConnectionManager
             IEnumerable<IQueryParameter> parameterList = null
         )
         {
-            IDbCommand cmd = CreateCommand(command, parameterList);
-            return cmd.ExecuteReader();
+            return new DisposableDataReader(
+                () => CreateCommand(command, parameterList),
+                LeaveOpen ? null : CommandBehavior.CloseConnection
+            );
         }
 
         public IConnectionManager CloneIfAllowed()
@@ -178,7 +212,7 @@ namespace ALE.ETLBox.ConnectionManager
 
         public void CloseTransaction()
         {
-            Transaction.Dispose();
+            Transaction?.Dispose();
             Transaction = null;
             CloseIfAllowed();
         }
@@ -204,7 +238,7 @@ namespace ALE.ETLBox.ConnectionManager
             {
                 Transaction?.Dispose();
                 Transaction = null;
-                DbConnection?.Close();
+                DbConnection?.Dispose();
                 DbConnection = null;
             }
             _disposedValue = true;
@@ -219,7 +253,9 @@ namespace ALE.ETLBox.ConnectionManager
         public void CloseIfAllowed()
         {
             if (!LeaveOpen)
+            {
                 Dispose();
+            }
         }
 
         public void Close()

@@ -1,7 +1,6 @@
 using System.Dynamic;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
-using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.DataFlow.Models;
 using ETLBox.Primitives;
@@ -18,9 +17,8 @@ namespace ETLBox.RabbitMq.Tests
     {
         private string Queue { get; } = $"test-{Guid.NewGuid()}";
 
-        public RabbitMqTransformationTests(RabbitMqFixture fixture, ITestOutputHelper logger) : base(fixture, logger)
-        {
-        }
+        public RabbitMqTransformationTests(RabbitMqFixture fixture, ITestOutputHelper logger)
+            : base(fixture, logger) { }
 
         [Fact]
         public void ShouldPublishAndConsume()
@@ -54,13 +52,10 @@ namespace ETLBox.RabbitMq.Tests
             {
                 MessageTemplate = "{\"NewMessage\": {\"TestValue\":\"{{TestName}}\"}}",
                 Queue = Queue,
-                Properties = new RabbitMqProperties
-                {
-                    CorrelationId = correlationId
-                }
+                Properties = new RabbitMqProperties { CorrelationId = correlationId },
             };
 
-            var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
+            var source = new MemorySource<ExpandoObject>([data]);
             var dest = new MemoryDestination<ExpandoObject?>();
 
             //Act
@@ -70,9 +65,11 @@ namespace ETLBox.RabbitMq.Tests
             source.Execute();
             dest.Wait();
 
-            // Consume published message to check it is published for sure.
+            // Consume a published message to check it is published for sure.
             channelToConsume.BasicConsume(Queue, true, consumer);
             waitHandle.WaitOne(TimeSpan.FromSeconds(1));
+
+            waitHandle.Dispose();
 
             // Assert
 
@@ -114,18 +111,18 @@ namespace ETLBox.RabbitMq.Tests
                 {
                     ExchangeType = "test",
                     ExchangeName = "test",
-                    RoutingKey = "/"
+                    RoutingKey = "/",
                 },
                 Timestamp = DateTime.Now.Ticks,
                 Type = "test",
-                UserId = "test"
+                UserId = "test",
             };
 
             var transformation = new RabbitMqTransformation(connectionFactory.Object)
             {
                 MessageTemplate = "{\"NewMessage\": {\"TestValue\":\"{{TestName}}\"}}",
                 Queue = Queue,
-                Properties = properties
+                Properties = properties,
             };
 
             var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });
@@ -139,24 +136,40 @@ namespace ETLBox.RabbitMq.Tests
             dest.Wait();
 
             // Assert
-            channel.Verify(c => c.BasicPublish(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(),
-                It.Is<IBasicProperties>(p => AreEqual(properties, p)), It.IsAny<ReadOnlyMemory<byte>>()), Times.Once);
+            channel.Verify(
+                c =>
+                    c.BasicPublish(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<bool>(),
+                        It.Is<IBasicProperties>(p => AreEqual(properties, p)),
+                        It.IsAny<ReadOnlyMemory<byte>>()
+                    ),
+                Times.Once
+            );
         }
 
         private static bool AreEqual(RabbitMqProperties properties, IBasicProperties p)
         {
-            return properties.AppId == p.AppId && properties.CorrelationId == p.CorrelationId &&
-                   properties.ContentType == p.ContentType && properties.ContentEncoding == p.ContentEncoding &&
-                   properties.DeliveryMode == p.DeliveryMode && properties.Expiration == p.Expiration &&
-                   properties.Headers!.All(h => p.Headers.ContainsKey(h.Key) && p.Headers[h.Key].ToString() == h.Value
-                   ) &&
-                   properties.MessageId == p.MessageId && properties.Persistent == p.Persistent &&
-                   properties.Priority == p.Priority && properties.ReplyTo == p.ReplyTo &&
-                   properties.ReplyToAddress!.ExchangeName == properties.ReplyToAddress.ExchangeName &&
-                   properties.ReplyToAddress!.ExchangeType == properties.ReplyToAddress.ExchangeType &&
-                   properties.ReplyToAddress!.RoutingKey == properties.ReplyToAddress.RoutingKey &&
-                   properties.Timestamp == p.Timestamp.UnixTime && properties.Type == p.Type && properties.UserId == p.UserId;
-
+            return properties.AppId == p.AppId
+                && properties.CorrelationId == p.CorrelationId
+                && properties.ContentType == p.ContentType
+                && properties.ContentEncoding == p.ContentEncoding
+                && properties.DeliveryMode == p.DeliveryMode
+                && properties.Expiration == p.Expiration
+                && properties.Headers!.All(h =>
+                    p.Headers.ContainsKey(h.Key) && p.Headers[h.Key].ToString() == h.Value
+                )
+                && properties.MessageId == p.MessageId
+                && properties.Persistent == p.Persistent
+                && properties.Priority == p.Priority
+                && properties.ReplyTo == p.ReplyTo
+                && properties.ReplyToAddress!.ExchangeName == properties.ReplyToAddress.ExchangeName
+                && properties.ReplyToAddress!.ExchangeType == properties.ReplyToAddress.ExchangeType
+                && properties.ReplyToAddress!.RoutingKey == properties.ReplyToAddress.RoutingKey
+                && properties.Timestamp == p.Timestamp.UnixTime
+                && properties.Type == p.Type
+                && properties.UserId == p.UserId;
         }
 
         [Fact]
@@ -166,8 +179,7 @@ namespace ETLBox.RabbitMq.Tests
 
             var errorTarget = new Mock<IDataFlowLinkTarget<ETLBoxError>>();
             var targetBlock = new Mock<ITargetBlock<ETLBoxError>>();
-            errorTarget.Setup(t => t.TargetBlock)
-                .Returns(targetBlock.Object);
+            errorTarget.Setup(t => t.TargetBlock).Returns(targetBlock.Object);
 
             var transformation = new RabbitMqTransformation();
             transformation.LinkErrorTo(errorTarget.Object);
@@ -180,8 +192,16 @@ namespace ETLBox.RabbitMq.Tests
 
             Assert.Null(result);
 
-            targetBlock.Verify(t => t.OfferMessage(It.IsAny<DataflowMessageHeader>(),It.IsAny<ETLBoxError>(),
-                It.IsAny<ISourceBlock<ETLBoxError>?>(), It.IsAny<bool>()), Times.Once);
+            targetBlock.Verify(
+                t =>
+                    t.OfferMessage(
+                        It.IsAny<DataflowMessageHeader>(),
+                        It.IsAny<ETLBoxError>(),
+                        It.IsAny<ISourceBlock<ETLBoxError>?>(),
+                        It.IsAny<bool>()
+                    ),
+                Times.Once
+            );
         }
     }
 }

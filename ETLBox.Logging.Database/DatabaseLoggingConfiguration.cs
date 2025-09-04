@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.Logging;
 using ETLBox.Primitives;
@@ -30,6 +31,11 @@ namespace EtlBox.Logging.Database
         public static void AddDatabaseLoggingConfiguration(IConnectionManager connection) =>
             AddDatabaseLoggingConfiguration(connection, LogLevel.Information, LogTable);
 
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "DatabaseTarget is passed to NLog configuration which takes ownership and manages its lifecycle"
+        )]
         public static void AddDatabaseLoggingConfiguration(
             IConnectionManager connectionManager,
             LogLevel minLogLevel,
@@ -45,6 +51,8 @@ namespace EtlBox.Logging.Database
                 tableName = LogTable;
             }
 
+            // CA2000: DatabaseTarget is passed to NLog configuration which takes ownership of the object
+            // and manages its lifecycle. Disposing it here would cause issues with logging functionality.
             var newTarget = new CreateDatabaseTarget(
                 connectionManager,
                 tableName
@@ -58,7 +66,7 @@ namespace EtlBox.Logging.Database
                     .ClearProviders()
                     .AddNLog(
                         config,
-                        new NLogProviderOptions()
+                        new NLogProviderOptions
                         {
                             IncludeScopes = true,
                             CaptureMessageParameters = true,
@@ -77,7 +85,7 @@ namespace EtlBox.Logging.Database
                 LogLevel.Warning => NLog.LogLevel.Warn,
                 LogLevel.Critical => NLog.LogLevel.Error,
                 LogLevel.Error => NLog.LogLevel.Fatal,
-                _ => throw new NotSupportedException($"LogLevel '{logLevel}' is not supported")
+                _ => throw new NotSupportedException($"LogLevel '{logLevel}' is not supported"),
             };
     }
 }

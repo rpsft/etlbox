@@ -2,6 +2,7 @@ using System.IO;
 using ALE.ETLBox;
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.Primitives;
+using JetBrains.Annotations;
 
 namespace TestShared.Helper;
 
@@ -30,11 +31,12 @@ public class SQLiteConnectionDetails
         return connectionString;
     }
 
+    [MustDisposeResource]
     public SQLiteConnectionManager ConnectionManager(string section, string dbNameSuffix = null)
     {
         return new SQLiteConnectionManager
         {
-            ConnectionString = ConnectionString(section, dbNameSuffix)
+            ConnectionString = ConnectionString(section, dbNameSuffix),
         };
     }
 

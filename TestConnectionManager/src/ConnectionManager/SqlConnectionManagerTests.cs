@@ -19,7 +19,7 @@ namespace TestConnectionManager.ConnectionManager
         )
         {
             var conString = new SqlConnectionString(connectionString);
-            var master = new SqlConnectionManager(conString.CloneWithMasterDbName());
+            using var master = new SqlConnectionManager(conString.CloneWithMasterDbName());
             var dbName = conString.Builder.InitialCatalog;
             var openConnections = new SqlTask(
                 "Count open connections",
@@ -28,7 +28,7 @@ namespace TestConnectionManager.ConnectionManager
             )
             {
                 ConnectionManager = master,
-                DisableLogging = true
+                DisableLogging = true,
             }.ExecuteScalar<int>();
             Assert.Equal(allowedOpenConnections, openConnections);
         }
@@ -37,7 +37,9 @@ namespace TestConnectionManager.ConnectionManager
         public void TestOpeningCloseConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
+            using var con = new SqlConnectionManager(
+                new SqlConnectionString(ConnectionStringParameter)
+            );
 
             //Act
             AssertOpenConnectionCount(0, ConnectionStringParameter);
@@ -54,7 +56,9 @@ namespace TestConnectionManager.ConnectionManager
         [Fact]
         public void TestOpeningConnectionTwice()
         {
-            var con = new SqlConnectionManager(new SqlConnectionString(ConnectionStringParameter));
+            using var con = new SqlConnectionManager(
+                new SqlConnectionString(ConnectionStringParameter)
+            );
             AssertOpenConnectionCount(0, ConnectionStringParameter);
             con.Open();
             con.Open();
@@ -70,6 +74,9 @@ namespace TestConnectionManager.ConnectionManager
         {
             AssertOpenConnectionCount(0, ConnectionStringParameter);
             var array = new List<int> { 1, 2, 3, 4 };
+            var manager = new SqlConnectionManager(
+                new SqlConnectionString(ConnectionStringParameter)
+            );
             Parallel.ForEach(
                 array,
                 new ParallelOptions { MaxDegreeOfParallelism = 2 },
@@ -90,25 +97,25 @@ namespace TestConnectionManager.ConnectionManager
             "
                     )
                     {
-                        ConnectionManager = new SqlConnectionManager(
-                            new SqlConnectionString(ConnectionStringParameter)
-                        ),
-                        DisableLogging = true
+                        ConnectionManager = manager,
+                        DisableLogging = true,
                     }.ExecuteNonQuery()
             );
             AssertOpenConnectionCount(2, ConnectionStringParameter);
             SqlConnection.ClearAllPools();
             AssertOpenConnectionCount(0, ConnectionStringParameter);
+
+            manager?.Dispose();
         }
 
         [Fact]
         public void TestCloningConnection()
         {
             //Arrange
-            var con = new SqlConnectionManager(ConnectionStringParameter);
+            using var con = new SqlConnectionManager(ConnectionStringParameter);
 
             //Act
-            var clone = con.Clone();
+            using var clone = con.Clone() as SqlConnectionManager;
 
             //Assert
             Assert.NotEqual(clone, con);

@@ -25,7 +25,8 @@ namespace ALE.ETLBox.DataFlow
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, update or delete in destination";
 
-        public async Task ExecuteAsync() => await OutputSource.ExecuteAsync(CancellationToken.None);
+        public async Task ExecuteAsync() =>
+            await OutputSource.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
 
         public void Execute() => OutputSource.Execute(CancellationToken.None);
 
@@ -343,7 +344,7 @@ namespace ALE.ETLBox.DataFlow
         private void SetInsertUpdateAction(TInput row, TInput find)
         {
             SetChangeAction(row, ChangeAction.Insert);
-            if (find == null)
+            if (find is null)
             {
                 return;
             }
@@ -362,7 +363,7 @@ namespace ALE.ETLBox.DataFlow
 
         private void SetDeleteAction(TInput row, TInput find)
         {
-            if (find == null)
+            if (find is null)
             {
                 return;
             }
@@ -436,7 +437,7 @@ namespace ALE.ETLBox.DataFlow
             )"
             )
             {
-                DisableLogging = true
+                DisableLogging = true,
             }.ExecuteNonQuery();
         }
 
@@ -458,7 +459,7 @@ namespace ALE.ETLBox.DataFlow
     {
         Full = 0,
         NoDeletions = 1,
-        Delta = 2
+        Delta = 2,
     }
 
     public class MergeProperties

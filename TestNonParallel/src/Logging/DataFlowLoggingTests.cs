@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             new DropTableTask(tableName)
             {
                 ConnectionManager = SqlConnection,
-                DisableLogging = true
+                DisableLogging = true,
             }.DropIfExists();
 
             new CreateTableTask(
@@ -41,13 +41,13 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                     new List<TableColumn>
                     {
                         new("Col1", "INT", allowNulls: false),
-                        new("Col2", "NVARCHAR(100)", allowNulls: true)
+                        new("Col2", "NVARCHAR(100)", allowNulls: true),
                     }
                 )
             )
             {
                 ConnectionManager = SqlConnection,
-                DisableLogging = true
+                DisableLogging = true,
             }.Create();
         }
 
@@ -57,7 +57,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new SqlTask("Insert demo data", $"INSERT INTO {tableName} VALUES({i},'Test{i}')")
                 {
                     ConnectionManager = SqlConnection,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }.ExecuteNonQuery();
         }
 
@@ -83,7 +83,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new RowCountTask("etlbox_log", "task_type = 'DbSource' AND task_action = 'LOG'")
                 {
                     DisableLogging = true,
-                    ConnectionManager = SqlConnection
+                    ConnectionManager = SqlConnection,
                 }
                     .Count()
                     .Rows
@@ -96,7 +96,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 )
                 {
                     DisableLogging = true,
-                    ConnectionManager = SqlConnection
+                    ConnectionManager = SqlConnection,
                 }
                     .Count()
                     .Rows
@@ -127,7 +127,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new RowCountTask("etlbox_log", "task_type = 'DbSource'")
                 {
                     ConnectionManager = SqlConnection,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows
@@ -137,7 +137,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new RowCountTask("etlbox_log", "task_type = 'DbDestination'")
                 {
                     ConnectionManager = SqlConnection,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows
@@ -171,7 +171,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 )
                 {
                     DisableLogging = true,
-                    ConnectionManager = SqlConnection
+                    ConnectionManager = SqlConnection,
                 }
                     .Count()
                     .Rows
@@ -204,7 +204,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new RowCountTask("etlbox_log", "task_type LIKE 'CsvSource%' ")
                 {
                     DisableLogging = true,
-                    ConnectionManager = SqlConnection
+                    ConnectionManager = SqlConnection,
                 }
                     .Count()
                     .Rows
@@ -235,7 +235,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
             DbDestination dest = new DbDestination(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             await source.ExecuteAsync(CancellationToken.None);
-            await dest.Completion;
+            await dest.Completion.ConfigureAwait(true);
 
             //Assert
             Assert.Equal(
@@ -243,7 +243,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new RowCountTask("etlbox_log", "task_type = 'CustomSource'")
                 {
                     ConnectionManager = SqlConnection,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows
@@ -253,7 +253,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging
                 new RowCountTask("etlbox_log", "task_type = 'DbDestination'")
                 {
                     ConnectionManager = SqlConnection,
-                    DisableLogging = true
+                    DisableLogging = true,
                 }
                     .Count()
                     .Rows

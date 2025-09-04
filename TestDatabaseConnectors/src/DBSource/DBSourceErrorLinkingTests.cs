@@ -54,8 +54,8 @@ namespace TestDatabaseConnectors.DBSource
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
             await source.ExecuteAsync(CancellationToken.None);
-            await dest.Completion;
-            await errorDest.Completion;
+            await dest.Completion.ConfigureAwait(true);
+            await errorDest.Completion.ConfigureAwait(true);
 
             //Assert
             dest2Columns.AssertTestData();
@@ -114,7 +114,7 @@ namespace TestDatabaseConnectors.DBSource
                     new("Id", "INT", allowNulls: false, true),
                     new("Col1", "VARCHAR(100)", allowNulls: true),
                     new("Col2", "VARCHAR(100)", allowNulls: true),
-                    new("Col3", "VARCHAR(100)", allowNulls: true)
+                    new("Col3", "VARCHAR(100)", allowNulls: true),
                 }
             );
             tableDefinition.CreateTable(connection);

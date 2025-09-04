@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.ControlFlow;
@@ -28,11 +29,19 @@ namespace ALE.ETLBox.Logging
                     col => LoadProcess.Id = Convert.ToInt64(col),
                     col =>
                         LoadProcess.StartDate = col is string str
-                            ? DateTime.Parse(str, CultureInfo.CurrentCulture, DateTimeStyles.RoundtripKind)
+                            ? DateTime.Parse(
+                                str,
+                                CultureInfo.CurrentCulture,
+                                DateTimeStyles.RoundtripKind
+                            )
                             : (DateTime)col,
                     col =>
                         LoadProcess.EndDate = col is string str
-                            ? DateTime.Parse(str, CultureInfo.CurrentCulture, DateTimeStyles.RoundtripKind)
+                            ? DateTime.Parse(
+                                str,
+                                CultureInfo.CurrentCulture,
+                                DateTimeStyles.RoundtripKind
+                            )
                             : (DateTime?)col,
                     col => LoadProcess.Source = (string)col,
                     col => LoadProcess.ProcessName = (string)col,
@@ -41,8 +50,8 @@ namespace ALE.ETLBox.Logging
                     col => LoadProcess.EndMessage = (string)col,
                     col => LoadProcess.WasSuccessful = Convert.ToInt16(col) > 0,
                     col => LoadProcess.AbortMessage = (string)col,
-                    col => LoadProcess.WasAborted = Convert.ToInt16(col) > 0
-                }
+                    col => LoadProcess.WasAborted = Convert.ToInt16(col) > 0,
+                },
             };
             if (ReadOption == ReadOptions.ReadAllProcesses)
             {
@@ -62,8 +71,20 @@ namespace ALE.ETLBox.Logging
         public LoadProcess LoadProcess { get; private set; }
         public List<LoadProcess> AllLoadProcesses { get; set; }
 
+        [SuppressMessage(
+            "Code Quality",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Private set is reserved for future use."
+        )]
         public LoadProcess LastFinished { get; private set; }
+
+        [SuppressMessage(
+            "Code Quality",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Private set is reserved for future use."
+        )]
         public LoadProcess LastTransferred { get; private set; }
+
         public ReadOptions ReadOption { get; set; } = ReadOptions.ReadSingleProcess;
 
         public string Sql
@@ -179,6 +200,6 @@ FROM {Tn.QuotedFullName}"
         ReadAllProcesses,
         ReadLastFinishedProcess,
         ReadLastSuccessful,
-        ReadLastAborted
+        ReadLastAborted,
     }
 }

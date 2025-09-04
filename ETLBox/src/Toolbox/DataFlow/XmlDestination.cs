@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using ALE.ETLBox.Common.DataFlow;
@@ -64,7 +64,7 @@ namespace ALE.ETLBox.DataFlow
 
         protected override void WriteIntoStream(TInput data)
         {
-            if (data == null)
+            if (data is null)
                 return;
             try
             {

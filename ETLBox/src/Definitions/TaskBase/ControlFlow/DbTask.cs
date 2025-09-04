@@ -39,8 +39,8 @@ namespace ALE.ETLBox.ControlFlow
         public IDbTransaction Transaction { get; set; }
         internal virtual string NameAsComment =>
             CommentStart + TaskName + CommentEnd + Environment.NewLine;
-        private string CommentStart => DoXMLCommentStyle ? @"<!--" : "/*";
-        private string CommentEnd => DoXMLCommentStyle ? @"-->" : "*/";
+        private string CommentStart => DoXMLCommentStyle ? "<!--" : "/*";
+        private string CommentEnd => DoXMLCommentStyle ? "-->" : "*/";
         public string Command
         {
             get
@@ -53,6 +53,11 @@ namespace ALE.ETLBox.ControlFlow
         public IEnumerable<QueryParameter> Parameter { get; set; }
 
         /* Internal/Private properties */
+        [SuppressMessage(
+            "Code Quality",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Private set is reserved for future use."
+        )]
         internal bool DoSkipSql { get; private set; }
         private bool HasSql => !string.IsNullOrWhiteSpace(Sql);
 
@@ -114,7 +119,7 @@ namespace ALE.ETLBox.ControlFlow
             {
                 conn.CloseIfAllowed();
             }
-            return RowsAffected ?? 0;
+            return RowsAffected.GetValueOrDefault();
         }
 
         public object ExecuteScalar()
@@ -187,10 +192,12 @@ namespace ALE.ETLBox.ControlFlow
                             {
                                 continue;
                             }
+
                             break;
                         }
                     }
                 }
+
                 if (!DisableLogging)
                     LoggingEnd();
             }
@@ -226,7 +233,7 @@ namespace ALE.ETLBox.ControlFlow
         {
             None,
             Rows,
-            Bulk
+            Bulk,
         }
 
         private void LoggingStart(LogType logType = LogType.None)
@@ -275,22 +282,15 @@ namespace ALE.ETLBox.ControlFlow
             BeforeRowReadAction?.Invoke();
             for (var i = 0; i < Actions?.Count; i++)
             {
-                Actions?[i]?.Invoke(!reader.IsDBNull(i) ? reader.GetValue(i) : null);
+                Actions[i].Invoke(!reader.IsDBNull(i) ? reader.GetValue(i) : null);
             }
             AfterRowReadAction?.Invoke();
         }
 
         private static bool HandleClickHouseError(IConnectionManager conn, IDataReader reader)
         {
-            if (conn.ConnectionManagerType == ConnectionManagerType.ClickHouse)
-            {
-                var hasNextResult = reader.NextResult();
-                if (hasNextResult)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return conn.ConnectionManagerType == ConnectionManagerType.ClickHouse
+                && reader.NextResult();
         }
     }
 }
