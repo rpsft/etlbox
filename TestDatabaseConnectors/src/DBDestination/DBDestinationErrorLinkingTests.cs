@@ -1,5 +1,7 @@
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using TestShared;
+using TestShared.Helper;
 
 namespace TestDatabaseConnectors.DBDestination
 {
@@ -17,30 +19,30 @@ namespace TestDatabaseConnectors.DBDestination
             public string Col2 { get; set; }
         }
 
-        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
-        public void RedirectBatch(IConnectionManager connection)
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouseWithPK))]
+        public void RedirectBatch(ConnectionManagerWithPK data)
         {
             //Arrange
             TwoColumnsTableFixture d2C = new TwoColumnsTableFixture(
-                connection,
+                data.Connection,
                 "DestLinkError",
-                true
+                data.WithPK
             );
             MemorySource<MySimpleRow> source = new MemorySource<MySimpleRow>
             {
                 DataAsList = new List<MySimpleRow>
                 {
-                    new() { Col1 = null, Col2 = "ErrorRecord" },
-                    new() { Col1 = "X2", Col2 = "ErrorRecord" },
+                    new() { Col1 = null, Col2 = "ErrorRecord1" },
+                    new() { Col1 = "X2", Col2 = "ErrorRecord2" },
                     new() { Col1 = "1", Col2 = "Test1" },
                     new() { Col1 = "2", Col2 = "Test2" },
                     new() { Col1 = "3", Col2 = "Test3 - good, but in error batch" },
-                    new() { Col1 = null, Col2 = "ErrorRecord" },
-                    new() { Col1 = "3", Col2 = "Test3" }
-                }
+                    new() { Col1 = null, Col2 = "ErrorRecord3" },
+                    new() { Col1 = "3", Col2 = "Test3" },
+                },
             };
             DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(
-                connection,
+                data.Connection,
                 "DestLinkError",
                 batchSize: 2
             );
@@ -52,6 +54,8 @@ namespace TestDatabaseConnectors.DBDestination
             source.Execute();
             dest.Wait();
             errorDest.Wait();
+
+            var table = DebugHelper.GetTableData(d2C.TableDefinition, data.Connection);
 
             //Assert
             d2C.AssertTestData();

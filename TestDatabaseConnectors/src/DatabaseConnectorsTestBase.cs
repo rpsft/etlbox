@@ -1,6 +1,7 @@
 using ALE.ETLBox.ConnectionManager;
 using ETLBox.ClickHouse.ConnectionManager;
 using ETLBox.Primitives;
+using TestShared;
 using TestShared.Helper;
 
 namespace TestDatabaseConnectors
@@ -42,8 +43,22 @@ namespace TestDatabaseConnectors
         public static TheoryData<IConnectionManager> AllSqlConnections =>
             new(Config.AllSqlConnections(SourceConfigSection));
 
-        public static TheoryData<IConnectionManager> ConnectionsWithoutClickHouse =>
-            new(Config.AllSqlConnectionsWithoutClickHouse(SourceConfigSection));
+        public static TheoryData<ConnectionManagerWithPK> AllSqlConnectionsWithPK =>
+            new(
+                Config
+                    .AllSqlConnections(SourceConfigSection)
+                    .Select(r => new ConnectionManagerWithPK(r))
+            );
+
+        public static TheoryData<IConnectionManager> AllConnectionsWithoutClickHouse =>
+            new(Config.AllConnectionsWithoutClickHouse(SourceConfigSection));
+
+        public static TheoryData<ConnectionManagerWithPK> AllConnectionsWithoutClickHouseWithPK =>
+            new(
+                Config
+                    .AllConnectionsWithoutClickHouse(SourceConfigSection)
+                    .Select(r => new ConnectionManagerWithPK(r))
+            );
 
         protected static IEnumerable<CultureInfo> AllLocalCultures => Config.AllLocalCultures();
 
@@ -69,11 +84,12 @@ namespace TestDatabaseConnectors
                 { typeof(MySqlConnectionManager), typeof(PostgresConnectionManager) },
                 { typeof(SqlConnectionManager), typeof(PostgresConnectionManager) },
                 { typeof(PostgresConnectionManager), typeof(ClickHouseConnectionManager) },
-                { typeof(ClickHouseConnectionManager), typeof(PostgresConnectionManager) }
+                { typeof(ClickHouseConnectionManager), typeof(PostgresConnectionManager) },
             };
             return data;
         }
 
+        [MustDisposeResource]
         protected IConnectionManager GetConnectionManager(Type connectionType, string configSection)
         {
             if (
@@ -85,17 +101,22 @@ namespace TestDatabaseConnectors
                 );
             return connectionType.Name switch
             {
-                nameof(SQLiteConnectionManager)
-                    => Config.SQLiteConnection.ConnectionManager(configSection, _sqLiteDbSuffix),
-                nameof(SqlConnectionManager)
-                    => Config.SqlConnection.ConnectionManager(configSection),
-                nameof(PostgresConnectionManager)
-                    => Config.PostgresConnection.ConnectionManager(configSection),
-                nameof(MySqlConnectionManager)
-                    => Config.MySqlConnection.ConnectionManager(configSection),
-                nameof(ClickHouseConnectionManager)
-                    => Config.ClickHouseConnection.ConnectionManager(configSection),
-                _ => throw new ArgumentOutOfRangeException(nameof(connectionType))
+                nameof(SQLiteConnectionManager) => Config.SQLiteConnection.ConnectionManager(
+                    configSection,
+                    _sqLiteDbSuffix
+                ),
+                nameof(SqlConnectionManager) => Config.SqlConnection.ConnectionManager(
+                    configSection
+                ),
+                nameof(PostgresConnectionManager) => Config.PostgresConnection.ConnectionManager(
+                    configSection
+                ),
+                nameof(MySqlConnectionManager) => Config.MySqlConnection.ConnectionManager(
+                    configSection
+                ),
+                nameof(ClickHouseConnectionManager) =>
+                    Config.ClickHouseConnection.ConnectionManager(configSection),
+                _ => throw new ArgumentOutOfRangeException(nameof(connectionType)),
             };
         }
 

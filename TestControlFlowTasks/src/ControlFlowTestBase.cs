@@ -49,39 +49,31 @@ namespace TestControlFlowTasks
         public static TheoryData<IConnectionManager> AllConnectionsWithoutSQLiteAndClickHouse =>
             new(Config.AllConnectionsWithoutSQLiteAndClickHouse(ConfigSection));
 
-        public static IEnumerable<object[]> DbConnectionsWithMaster() =>
-            new[]
+        public static TheoryData<string> DbConnectionTypesWithMaster() =>
+            ["ClickHouse", "SqlServer", "Postgres", "MySql"];
+
+        public static ClickHouseConnectionManager CreateClickHouseConnectionManager() =>
+            new(
+                Config.ClickHouseConnection.ConnectionString(ConfigSection).CloneWithMasterDbName()
+            );
+
+        public static SqlConnectionManager CreateSqlConnectionManager() =>
+            new(Config.SqlConnection.ConnectionString(ConfigSection).CloneWithMasterDbName());
+
+        public static PostgresConnectionManager CreatePostgresConnectionManager() =>
+            new(Config.PostgresConnection.ConnectionString(ConfigSection).CloneWithMasterDbName());
+
+        public static MySqlConnectionManager CreateMySqlConnectionManager() =>
+            new(Config.MySqlConnection.ConnectionString(ConfigSection).CloneWithMasterDbName());
+
+        public static IConnectionManager CreateConnectionManager(string dbType) =>
+            dbType switch
             {
-                new object[]
-                {
-                    new ClickHouseConnectionManager(
-                        Config
-                            .ClickHouseConnection.ConnectionString(ConfigSection)
-                            .CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new SqlConnectionManager(
-                        Config.SqlConnection.ConnectionString(ConfigSection).CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new PostgresConnectionManager(
-                        Config
-                            .PostgresConnection.ConnectionString(ConfigSection)
-                            .CloneWithMasterDbName()
-                    )
-                },
-                new object[]
-                {
-                    new MySqlConnectionManager(
-                        Config
-                            .MySqlConnection.ConnectionString(ConfigSection)
-                            .CloneWithMasterDbName()
-                    )
-                },
+                "ClickHouse" => CreateClickHouseConnectionManager(),
+                "SqlServer" => CreateSqlConnectionManager(),
+                "Postgres" => CreatePostgresConnectionManager(),
+                "MySql" => CreateMySqlConnectionManager(),
+                _ => throw new ArgumentException($"Unknown database type: {dbType}"),
             };
     }
 }

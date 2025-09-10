@@ -82,18 +82,9 @@ public static class Config
         yield return PostgresConnection.ConnectionManager(section);
         yield return MySqlConnection.ConnectionManager(section);
         yield return SqlConnection.ConnectionManager(section);
-        // SQLiteConnection
+        yield return SQLiteConnection.ConnectionManager(section);
     }
 
-    public static IEnumerable<IConnectionManager> AllSqlConnectionsWithoutClickHouse(string section)
-    {
-        yield return PostgresConnection.ConnectionManager(section);
-        yield return MySqlConnection.ConnectionManager(section);
-        yield return SqlConnection.ConnectionManager(section);
-        // new object[] { SQLiteConnection.ConnectionManager(section) }
-    }
-
-#pragma warning disable S4144
     public static IEnumerable<IConnectionManager> AllConnectionsWithoutSQLite(string section)
 #pragma warning restore S4144
     {
@@ -103,14 +94,12 @@ public static class Config
         yield return SqlConnection.ConnectionManager(section);
     }
 
-#pragma warning disable S4144
     public static IEnumerable<IConnectionManager> AllConnectionsWithoutClickHouse(string section)
-#pragma warning restore S4144
     {
         yield return PostgresConnection.ConnectionManager(section);
         yield return MySqlConnection.ConnectionManager(section);
         yield return SqlConnection.ConnectionManager(section);
-        // new object[] { SQLiteConnection.ConnectionManager(section) }
+        yield return SQLiteConnection.ConnectionManager(section);
     }
 
     public static IEnumerable<IConnectionManager> AllConnectionsWithoutSQLiteAndClickHouse(

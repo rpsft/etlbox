@@ -26,8 +26,16 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
     private TypeInfo TypeInfo { get; set; }
     private bool HasDestinationTableDefinition => DestinationTableDefinition != null;
     private bool HasTableName => !string.IsNullOrWhiteSpace(TableName);
+
+    [CanBeNull]
     private TableData<TInput> TableData { get; set; }
-    private IConnectionManager BulkInsertConnectionManager { get; set; }
+
+    [CanBeNull]
+    private IConnectionManager BulkInsertConnectionManager =>
+        _ownBulkInsertConnectionManager ?? DbConnectionManager;
+
+    [CanBeNull]
+    private IConnectionManager _ownBulkInsertConnectionManager;
 
     public DbRowTransformation()
     {
@@ -35,7 +43,14 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
         TransformationFunc = source =>
         {
             PrepareWrite();
-            return TryBulkInsertData(source) ? source : default;
+            try
+            {
+                return TryBulkInsertData(source) ? source : default;
+            }
+            finally
+            {
+                FinishWrite();
+            }
         };
     }
 
@@ -74,13 +89,30 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
     {
         if (!HasDestinationTableDefinition)
             LoadTableDefinitionFromTableName();
-        BulkInsertConnectionManager = DbConnectionManager.CloneIfAllowed();
-        BulkInsertConnectionManager.PrepareBulkInsert(DestinationTableDefinition.Name);
-        TableData = new TableData<TInput>(DestinationTableDefinition, 1);
+
+        CloneIfAllowed();
+        BulkInsertConnectionManager!.PrepareBulkInsert(DestinationTableDefinition.Name);
+        TableData ??= new TableData<TInput>(DestinationTableDefinition, 1);
+    }
+
+    private void CloneIfAllowed()
+    {
+        if (DbConnectionManager.LeaveOpen)
+        {
+            return;
+        }
+
+        _ownBulkInsertConnectionManager?.Dispose();
+        _ownBulkInsertConnectionManager = DbConnectionManager.Clone();
     }
 
     private bool TryBulkInsertData(params TInput[] data)
     {
+        if (TableData is null)
+        {
+            throw new ETLBoxException("TableData is null.");
+        }
+
         TryAddDynamicColumnsToTableDef(data);
         try
         {
@@ -89,7 +121,7 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
             var sql = new SqlTask(this, "Execute Bulk insert")
             {
                 DisableLogging = true,
-                ConnectionManager = BulkInsertConnectionManager
+                ConnectionManager = BulkInsertConnectionManager,
             };
             sql.BulkInsert(TableData, DestinationTableDefinition.Name);
             return true;
@@ -117,7 +149,7 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
         {
             foreach (var key in dynamicObject.Select(c => c.Key))
             {
-                var newPropIndex = TableData.DynamicColumnNames.Count;
+                var newPropIndex = TableData!.DynamicColumnNames.Count;
                 if (!TableData.DynamicColumnNames.ContainsKey(key))
                     TableData.DynamicColumnNames.Add(key, newPropIndex);
             }
@@ -128,16 +160,17 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
     {
         foreach (var currentRow in data)
         {
-            if (currentRow == null)
+            if (currentRow is null)
                 continue;
 
-            TableData.Rows.Add(
+            TableData!.Rows.Add(
                 TypeInfo.GetTypeInfoGroup() switch
                 {
                     TypeInfo.TypeInfoGroup.Array => currentRow as object[],
-                    TypeInfo.TypeInfoGroup.Dynamic
-                        => ConvertDynamicRow(currentRow as IDictionary<string, object>),
-                    _ => ConvertObjectRow(currentRow)
+                    TypeInfo.TypeInfoGroup.Dynamic => ConvertDynamicRow(
+                        currentRow as IDictionary<string, object>
+                    ),
+                    _ => ConvertObjectRow(currentRow),
                 }
             );
         }
@@ -158,7 +191,7 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
 
     private object[] ConvertDynamicRow(IDictionary<string, object> propertyValues)
     {
-        var rowResult = new object[TableData.DynamicColumnNames.Count];
+        var rowResult = new object[TableData!.DynamicColumnNames.Count];
         foreach (var prop in propertyValues)
         {
             var columnIndex = TableData.DynamicColumnNames[prop.Key];
@@ -166,5 +199,16 @@ public class DbRowTransformation<TInput> : RowTransformation<TInput>
         }
 
         return rowResult;
+    }
+
+    private void FinishWrite()
+    {
+        TableData?.Close();
+        TableData = null;
+
+        BulkInsertConnectionManager?.CleanUpBulkInsert(DestinationTableDefinition?.Name);
+
+        _ownBulkInsertConnectionManager?.Dispose(); // initialized when LeaveOpen == false
+        _ownBulkInsertConnectionManager = null;
     }
 }

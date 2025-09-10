@@ -31,16 +31,16 @@ namespace ALE.ETLBox.DataFlow
                 request.Headers.Add(header.Key, header.Value);
             }
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsStringAsync();
+                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
 
             throw new HttpStatusCodeException(
                 response.StatusCode,
-                await response.Content.ReadAsStringAsync()
+                await response.Content.ReadAsStringAsync().ConfigureAwait(false)
             );
         }
     }

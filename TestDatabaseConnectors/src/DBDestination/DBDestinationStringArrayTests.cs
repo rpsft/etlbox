@@ -1,6 +1,7 @@
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
+using TestShared;
 
 namespace TestDatabaseConnectors.DBDestination
 {
@@ -12,17 +13,18 @@ namespace TestDatabaseConnectors.DBDestination
 
         public static IEnumerable<object[]> Connections => AllSqlConnections;
 
-        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
-        public void WithSqlNotMatchingColumns(IConnectionManager connection)
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouseWithPK))]
+        public void WithSqlNotMatchingColumns(ConnectionManagerWithPK data)
         {
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture(
-                connection,
-                "SourceNotMatchingCols"
+                data.Connection,
+                "SourceNotMatchingCols",
+                data.WithPK
             );
             s2C.InsertTestData();
             SqlTask.ExecuteNonQuery(
-                connection,
+                data.Connection,
                 "Create destination table",
                 $@"CREATE TABLE destination_notmatchingcols
                 ( col3 VARCHAR(100) NULL
@@ -35,10 +37,10 @@ namespace TestDatabaseConnectors.DBDestination
             {
                 Sql =
                     $"SELECT {s2C.QB}Col1{s2C.QE}, {s2C.QB}Col2{s2C.QE} FROM {s2C.QB}SourceNotMatchingCols{s2C.QE}",
-                ConnectionManager = connection
+                ConnectionManager = data.Connection,
             };
             DbDestination<string[]> dest = new DbDestination<string[]>(
-                connection,
+                data.Connection,
                 "destination_notmatchingcols"
             );
             source.LinkTo(dest);
@@ -46,11 +48,11 @@ namespace TestDatabaseConnectors.DBDestination
             dest.Wait();
 
             //Assert
-            Assert.Equal(3, RowCountTask.Count(connection, "destination_notmatchingcols"));
+            Assert.Equal(3, RowCountTask.Count(data.Connection, "destination_notmatchingcols"));
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    data.Connection,
                     "destination_notmatchingcols",
                     "col3 = '1' AND col4='Test1'"
                 )
@@ -58,7 +60,7 @@ namespace TestDatabaseConnectors.DBDestination
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    data.Connection,
                     "destination_notmatchingcols",
                     "col3 = '2' AND col4='Test2'"
                 )
@@ -66,7 +68,7 @@ namespace TestDatabaseConnectors.DBDestination
             Assert.Equal(
                 1,
                 RowCountTask.Count(
-                    connection,
+                    data.Connection,
                     "destination_notmatchingcols",
                     "col3 = '3' AND col4='Test3'"
                 )
@@ -86,7 +88,7 @@ namespace TestDatabaseConnectors.DBDestination
                 "destination_onecolumn",
                 new List<ALE.ETLBox.TableColumn>()
                 {
-                    new ALE.ETLBox.TableColumn("colx", "VARCHAR(100)", false, true)
+                    new ALE.ETLBox.TableColumn("colx", "VARCHAR(100)", false, true),
                 }
             );
 
@@ -126,7 +128,7 @@ namespace TestDatabaseConnectors.DBDestination
                     new ALE.ETLBox.TableColumn("id", "INT", false, true),
                     new ALE.ETLBox.TableColumn("col1", "VARCHAR(100)", true),
                     new ALE.ETLBox.TableColumn("col2", "VARCHAR(100)", true),
-                    new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", true)
+                    new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", true),
                 }
             );
 
@@ -165,7 +167,7 @@ namespace TestDatabaseConnectors.DBDestination
                     new ALE.ETLBox.TableColumn("id", "INT", false, true),
                     new ALE.ETLBox.TableColumn("col1", "VARCHAR(100)", true),
                     new ALE.ETLBox.TableColumn("col2", "VARCHAR(100)", true),
-                    new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", false)
+                    new ALE.ETLBox.TableColumn("col3", "VARCHAR(100)", false),
                 }
             );
 

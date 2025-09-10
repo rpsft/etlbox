@@ -71,7 +71,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     (true, _) => $"table {SourceTableDefinition.Name}",
                     (_, true) => $"table {TableName}",
-                    (_, _) => "custom sql"
+                    (_, _) => "custom sql",
                 };
         }
 
@@ -185,7 +185,7 @@ namespace ALE.ETLBox.DataFlow
             }
             sqlT.AfterRowReadAction = () =>
             {
-                if (_row != null)
+                if (_row is not null)
                 {
                     LogProgress();
                     Buffer.SendAsync(_row).Wait();
@@ -196,24 +196,22 @@ namespace ALE.ETLBox.DataFlow
         private Action<object> GenerateColumnCopyAction(string colName) =>
             (TypeInfo.IsDynamic, TypeInfo.HasPropertyOrColumnMapping(colName)) switch
             {
-                (_, true)
-                    => colValue =>
-                    {
-                        CopyColumnToObjectWithReflection(colName, colValue);
-                    },
-                (true, false)
-                    => colValue =>
-                    {
-                        CopyColumnToDynamicObject(colName, colValue);
-                    },
-                (_, _) => _ => { }
+                (_, true) => colValue =>
+                {
+                    CopyColumnToObjectWithReflection(colName, colValue);
+                },
+                (true, false) => colValue =>
+                {
+                    CopyColumnToDynamicObject(colName, colValue);
+                },
+                (_, _) => _ => { },
             };
 
         private void CopyColumnToArray(object columnValue, int columnIndex)
         {
             try
             {
-                if (_row != null)
+                if (_row is not null)
                 {
                     var ar = _row as Array;
                     var con = Convert.ChangeType(columnValue, typeof(TOutput).GetElementType()!);
@@ -233,7 +231,7 @@ namespace ALE.ETLBox.DataFlow
         {
             try
             {
-                if (_row == null)
+                if (_row is null)
                     return;
 
                 var propInfo = TypeInfo.GetInfoByPropertyNameOrColumnMapping(colName);
@@ -242,7 +240,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     (null, _) => null,
                     (_, true) => colValue,
-                    (_, _) => Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo])
+                    (_, _) => Convert.ChangeType(colValue, TypeInfo.UnderlyingPropType[propInfo]),
                 };
 
                 propInfo.TrySetValue(_row, con, TypeInfo.UnderlyingPropType[propInfo]);
@@ -260,7 +258,7 @@ namespace ALE.ETLBox.DataFlow
         {
             try
             {
-                if (_row == null)
+                if (_row is null)
                 {
                     return;
                 }

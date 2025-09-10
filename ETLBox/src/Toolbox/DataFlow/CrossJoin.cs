@@ -39,7 +39,7 @@ namespace ALE.ETLBox.DataFlow
             InMemoryTarget = new MemoryDestination<TInput1>(this);
             PassingTarget = new CustomDestination<TInput2>(this, CrossJoinData)
             {
-                OnCompletion = () => Buffer.Complete()
+                OnCompletion = () => Buffer.Complete(),
             };
         }
 
@@ -66,13 +66,13 @@ namespace ALE.ETLBox.DataFlow
         {
             try
             {
-                if (inMemoryRow == null || passingRow == null)
+                if (inMemoryRow is null || passingRow is null)
                 {
                     return;
                 }
 
                 TOutput result = CrossJoinFunc.Invoke(inMemoryRow, passingRow);
-                if (result == null)
+                if (result is null)
                 {
                     return;
                 }

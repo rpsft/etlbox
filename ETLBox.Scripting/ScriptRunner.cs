@@ -33,14 +33,12 @@ public class ScriptRunner<TOutput>
         CancellationToken cancellationToken = default
     )
     {
-        if (globals is IDictionary<string, object?> expando)
+        if (globals is not IDictionary<string, object?> expando)
         {
-            dynamic args = Activator.CreateInstance(GlobalsTypeInfo.Type, expando)!;
-            return await Script.RunAsync(args, cancellationToken);
+            return await Script.RunAsync(globals, cancellationToken).ConfigureAwait(false);
         }
-        else
-        {
-            return await Script.RunAsync(globals, cancellationToken);
-        }
+
+        dynamic args = Activator.CreateInstance(GlobalsTypeInfo.Type, expando)!;
+        return await Script.RunAsync(args, cancellationToken).ConfigureAwait(false);
     }
 }

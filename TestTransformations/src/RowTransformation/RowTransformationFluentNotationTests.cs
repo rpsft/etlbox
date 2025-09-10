@@ -37,7 +37,7 @@ namespace TestTransformations.RowTransformation
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
             await source.ExecuteAsync(CancellationToken.None);
-            await dest.Completion;
+            await dest.Completion.ConfigureAwait(true);
 
             //Assert
             dest2Columns.AssertTestData();
@@ -60,13 +60,13 @@ namespace TestTransformations.RowTransformation
             source.LinkTo(trans1, row => row.Col1 < 4, row => row.Col1 >= 4).LinkTo(dest);
 
             await source.ExecuteAsync(CancellationToken.None);
-            await dest.Completion;
+            await dest.Completion.ConfigureAwait(true);
 
             //Assert
             dest2Columns.AssertTestData();
         }
 
-        public class MyOtherRow
+        private class MyOtherRow
         {
             [ColumnMap("Col1")]
             public int ColA { get; set; }
@@ -85,9 +85,11 @@ namespace TestTransformations.RowTransformation
 
             var source = new DbSource<MySimpleRow>(SqlConnection, "SourceMultipleLinks");
             var dest = new DbDestination<MyOtherRow>(SqlConnection, "DestinationMultipleLinks");
-            var trans1 = new RowTransformation<MySimpleRow, MyOtherRow>(
-                row => new MyOtherRow { ColA = row.Col1, ColB = row.Col2 }
-            );
+            var trans1 = new RowTransformation<MySimpleRow, MyOtherRow>(row => new MyOtherRow
+            {
+                ColA = row.Col1,
+                ColB = row.Col2,
+            });
 
             //Act
             source.LinkTo<MyOtherRow>(trans1).LinkTo(dest);

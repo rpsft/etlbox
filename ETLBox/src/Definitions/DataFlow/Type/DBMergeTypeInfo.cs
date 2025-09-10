@@ -29,7 +29,7 @@ namespace ALE.ETLBox.DataFlow
             AddChangeDateProp(propInfo);
         }
 
-        private void AddMergeIdColumnNameAttribute(MemberInfo propInfo)
+        private void AddMergeIdColumnNameAttribute(PropertyInfo propInfo)
         {
             if (MergeProps.IdPropertyNames.Contains(propInfo.Name))
             {

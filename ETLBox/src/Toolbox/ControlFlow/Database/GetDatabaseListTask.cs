@@ -23,10 +23,10 @@ namespace ALE.ETLBox.ControlFlow
             if (!DbConnectionManager.SupportDatabases)
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
-            DatabaseNames = new List<string>();
+            DatabaseNames = [];
             new SqlTask(this, GetSql())
             {
-                Actions = new List<Action<object>> { name => DatabaseNames.Add((string)name) }
+                Actions = [name => DatabaseNames.Add((string)name)],
             }.ExecuteReader();
 
             if (ConnectionType == ConnectionManagerType.MySql)
@@ -36,7 +36,7 @@ namespace ALE.ETLBox.ControlFlow
                         "information_schema",
                         "mysql",
                         "performance_schema",
-                        "sys"
+                        "sys",
                     }.Contains(m)
                 );
         }
@@ -47,13 +47,13 @@ namespace ALE.ETLBox.ControlFlow
         {
             return ConnectionType switch
             {
-                ConnectionManagerType.SqlServer
-                    => "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4",
+                ConnectionManagerType.SqlServer =>
+                    "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4",
                 ConnectionManagerType.MySql => "SHOW DATABASES",
-                ConnectionManagerType.Postgres
-                    => "SELECT datname FROM pg_database WHERE datistemplate=false",
+                ConnectionManagerType.Postgres =>
+                    "SELECT datname FROM pg_database WHERE datistemplate=false",
                 ConnectionManagerType.ClickHouse => "SHOW DATABASES",
-                _ => throw new ETLBoxNotSupportedException("This database is not supported!")
+                _ => throw new ETLBoxNotSupportedException("This database is not supported!"),
             };
         }
 

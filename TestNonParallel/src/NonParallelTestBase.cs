@@ -25,6 +25,6 @@ namespace ALE.ETLBoxTests.NonParallel
             new(Config.AllSqlConnections("Logging"));
 
         public static TheoryData<IConnectionManager> AllSqlConnectionsWithoutClickHouse =>
-            new(Config.AllSqlConnectionsWithoutClickHouse("Logging"));
+            new(Config.AllConnectionsWithoutClickHouse("Logging"));
     }
 }

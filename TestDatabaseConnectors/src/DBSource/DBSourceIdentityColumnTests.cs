@@ -53,7 +53,7 @@ namespace TestDatabaseConnectors.DBSource
             dest4Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouse))]
         private void IdentityColumnInTheMiddle(IConnectionManager connection)
         {
             //Arrange
@@ -76,7 +76,7 @@ namespace TestDatabaseConnectors.DBSource
             dest4Columns.AssertTestData();
         }
 
-        [Theory, MemberData(nameof(ConnectionsWithoutClickHouse))]
+        [Theory, MemberData(nameof(AllConnectionsWithoutClickHouse))]
         private void IdentityColumnAtTheEnd(IConnectionManager connection)
         {
             //Arrange

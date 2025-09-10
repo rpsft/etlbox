@@ -20,7 +20,7 @@ namespace TestDatabaseConnectors.DBDestination
         public enum EnumType
         {
             Value1 = 1,
-            Value2 = 2
+            Value2 = 2,
         }
 
         // Each culture for each database
@@ -32,7 +32,7 @@ namespace TestDatabaseConnectors.DBDestination
             {
                 foreach (var connection in AllSqlConnections)
                 {
-                    result.Add((IConnectionManager)connection[0], culture);
+                    result.Add(connection, culture);
                 }
             }
             return result;
@@ -69,7 +69,7 @@ namespace TestDatabaseConnectors.DBDestination
                             ? "BIT"
                             : "BOOL",
                         allowNulls: true
-                    )
+                    ),
                 }
             );
             var connectionCulture = connection.ConnectionCulture;
@@ -96,8 +96,8 @@ namespace TestDatabaseConnectors.DBDestination
                         StringAsBool =
                             connection.ConnectionManagerType == ConnectionManagerType.MySql
                                 ? "1"
-                                : "True"
-                    }
+                                : "True",
+                    },
                 }
             );
 
@@ -137,10 +137,18 @@ namespace TestDatabaseConnectors.DBDestination
                         Convert.ToString(col, connectionCulture)?.Replace("0", "")
                             == 13.4566m.ToString(connectionCulture)
                     ),
-                col => Assert.Equal(1, col),
-                col => Assert.Equal(new DateTime(2010, 1, 1, 10, 10, 10, DateTimeKind.Utc), col),
-                col => Assert.Equal(new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc), col),
-                col => Assert.Equal(true, col)
+                col => Assert.Equal(1, Convert.ToInt32(col)),
+                col =>
+                    Assert.Equal(
+                        new DateTime(2010, 1, 1, 10, 10, 10, DateTimeKind.Utc),
+                        Convert.ToDateTime(col)
+                    ),
+                col =>
+                    Assert.Equal(
+                        new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                        Convert.ToDateTime(col)
+                    ),
+                col => Assert.True(Convert.ToBoolean(col))
             );
         }
 

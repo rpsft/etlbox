@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ALE.ETLBox.ConnectionManager.Helpers;
 using ETLBox.Primitives;
 using Microsoft.Data.Sqlite;
@@ -96,7 +96,7 @@ VALUES ({string.Join(",", paramNames)})";
                 Value = value ?? DBNull.Value,
                 IsNullable = value is null,
                 DbType = SqliteConvert.TypeToDbType(value),
-                SqliteType = SqliteConvert.TypeToAffinity(value)
+                SqliteType = SqliteConvert.TypeToAffinity(value),
             };
         }
 
@@ -147,7 +147,7 @@ VALUES ({string.Join(",", paramNames)})";
             var clone = new SQLiteConnectionManager((SQLiteConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = MaxLoginAttempts,
-                ModifyDBSettings = ModifyDBSettings
+                ModifyDBSettings = ModifyDBSettings,
             };
             return clone;
         }

@@ -1,6 +1,5 @@
 #nullable enable
 using System.Collections.Concurrent;
-using System.Data.Common;
 using System.Dynamic;
 using System.Globalization;
 using System.Net;
@@ -16,7 +15,6 @@ using CsvHelper.Configuration;
 using ETLBox.Primitives;
 using ETLBox.Rest.Models;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 
 namespace ETLBox.Rest.Tests

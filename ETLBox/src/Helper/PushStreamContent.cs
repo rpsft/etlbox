@@ -36,9 +36,11 @@ namespace ALE.ETLBox.Helper
         {
             var pushStreamContent = this;
             var serializeToStreamTask = new TaskCompletionSource<bool>();
-            Stream stream1 = new CompleteTaskOnCloseStream(stream, serializeToStreamTask);
-            await pushStreamContent._onStreamAvailable(stream1, pushStreamContent, context);
-            await serializeToStreamTask.Task;
+            using var stream1 = new CompleteTaskOnCloseStream(stream, serializeToStreamTask);
+            await pushStreamContent
+                ._onStreamAvailable(stream1, pushStreamContent, context)
+                .ConfigureAwait(false);
+            await serializeToStreamTask.Task.ConfigureAwait(false);
         }
 
         protected override bool TryComputeLength(out long length)

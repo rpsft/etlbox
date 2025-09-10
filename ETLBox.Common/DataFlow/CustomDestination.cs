@@ -63,7 +63,7 @@ namespace ALE.ETLBox.Common.DataFlow
                     LogStart();
                 try
                 {
-                    if (input != null)
+                    if (input is not null)
                         writeAction.Invoke(input);
                 }
                 catch (Exception e)

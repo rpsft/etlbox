@@ -49,13 +49,15 @@ csharp_new_line_before_members_in_object_initializers = true
 csharp_new_line_before_members_in_anonymous_types = true
 csharp_new_line_within_query_expression_clauses = true
 
-
 # Indentation preferences
 csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
 csharp_indent_labels = flush_left
+
+# All performance - related inspections
+# dotnet_analyzer_diagnostic.category-Performance.severity = warning
 
 # avoid this. unless absolutely necessary
 dotnet_style_qualification_for_field = false:suggestion
@@ -105,9 +107,10 @@ dotnet_naming_style.camel_case_underscore_style.required_prefix = _
 dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
 
 # Code style defaults
-dotnet_sort_system_directives_first = true
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = false
+dotnet_separate_import_directive_groups = true
+dotnet_sort_system_directives_first = true
 
 # Expression-level preferences
 dotnet_style_object_initializer = true:suggestion
@@ -124,6 +127,14 @@ csharp_style_expression_bodied_properties = true:none
 csharp_style_expression_bodied_indexers = true:none
 csharp_style_expression_bodied_accessors = true:none
 
+# Do not prefer primary constructors
+csharp_style_prefer_primary_constructors = false
+resharper_convert_to_primary_constructor_highlighting = none
+
+# file-scoped namespaces
+csharp_style_namespace_declarations=file_scoped:suggestion
+resharper_namespace_body = file_scoped
+resharper_arrange_namespace_body_highlighting = suggestion
 # Pattern matching
 csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
@@ -190,7 +201,7 @@ dotnet_diagnostic.S2631.severity = warning
 # https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-3884
 dotnet_diagnostic.S3884.severity = error
 # https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-2755
-dotnet_diagnostic.S3884.severity = warning
+dotnet_diagnostic.S2755.severity = warning
 # A secure password should be used when connecting to a database
 # https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-2115
 dotnet_diagnostic.S2115.severity = warning
@@ -226,12 +237,40 @@ dotnet_diagnostic.S3329.severity = warning
 dotnet_diagnostic.S2053.severity = warning
 # Types allowed to be deserialized should be restricted
 # https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-5773
-dotnet_diagnostic.S2053.severity = suggestion
+dotnet_diagnostic.S5773.severity = suggestion
 # Serialization constructors should be secured
 # https://rules.sonarsource.com/csharp/type/Vulnerability/RSPEC-4212
 dotnet_diagnostic.S4212.severity = suggestion
 dotnet_diagnostic.S1133.severity = suggestion
 dotnet_diagnostic.S101.severity = suggestion
+# Dotnet CodeAnalysis properties
+# CA1001: Types that own disposable fields should be disposable
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1001
+dotnet_diagnostic.CA1001.severity = warning
+# CA2000: Dispose objects before losing scope
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2000
+dotnet_diagnostic.CA2000.severity = warning
+# CA2001: Avoid calling problematic methods
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2001
+dotnet_diagnostic.CA2001.severity = warning
+# CA2002: Do not lock on objects with weak identity
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2002
+dotnet_diagnostic.CA2002.severity = warning
+# CA2004: Remove calls to GC.KeepAlive
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2004
+dotnet_diagnostic.CA2004.severity = suggestion
+# CA2005: Avoid calling methods that reference the current object
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2005
+dotnet_diagnostic.CA2005.severity = suggestion
+# CA2006: Use SafeHandle to encapsulate native resources
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2006
+dotnet_diagnostic.CA2006.severity = suggestion
+# CA2007: Do not directly await a Task
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2007
+dotnet_diagnostic.CA2007.severity = warning
+# CA2213: Disposable fields should be disposed
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2213
+dotnet_diagnostic.CA2213.severity = warning
 
 [Test*/**/*.cs]
 dotnet_diagnostic.CS1591.severity = none

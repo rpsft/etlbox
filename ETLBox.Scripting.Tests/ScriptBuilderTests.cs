@@ -35,7 +35,7 @@ public class ScriptBuilderTests
         // Act
         script.Compile();
         var exception = await Assert.ThrowsAsync<CompilationErrorException>(
-            async () => await script.RunAsync()
+            async () => await script.RunAsync().ConfigureAwait(false)
         );
         // Assert
         Assert.NotNull(exception);

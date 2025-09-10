@@ -1,7 +1,6 @@
 using ALE.ETLBox;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.ControlFlow;
-using ETLBox.Primitives;
 using TestControlFlowTasks.Fixtures;
 
 namespace TestControlFlowTasks
@@ -12,10 +11,11 @@ namespace TestControlFlowTasks
         public DropDatabaseTaskTests(ControlFlowDatabaseFixture fixture)
             : base(fixture) { }
 
-        [Theory, MemberData(nameof(DbConnectionsWithMaster))]
-        public void Drop(IConnectionManager connection)
+        [Theory, MemberData(nameof(DbConnectionTypesWithMaster))]
+        public void Drop(string dbType)
         {
             //Arrange
+            using var connection = CreateConnectionManager(dbType);
             string dbName = "ETLBox_" + HashHelper.RandomString(10);
             CreateDatabaseTask.Create(connection, dbName);
             bool existsBefore = IfDatabaseExistsTask.IsExisting(connection, dbName);
@@ -29,10 +29,11 @@ namespace TestControlFlowTasks
             Assert.False(existsAfter);
         }
 
-        [Theory, MemberData(nameof(DbConnectionsWithMaster))]
-        public void DropIfExists(IConnectionManager connection)
+        [Theory, MemberData(nameof(DbConnectionTypesWithMaster))]
+        public void DropIfExists(string dbType)
         {
             //Arrange
+            using var connection = CreateConnectionManager(dbType);
             string dbName = "ETLBox_" + HashHelper.RandomString(10);
             DropDatabaseTask.DropIfExists(connection, dbName);
             CreateDatabaseTask.Create(connection, dbName);

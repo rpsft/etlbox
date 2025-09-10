@@ -88,7 +88,7 @@ namespace ALE.ETLBox.DataFlow
                 else
                 {
                     TOutput row = ParseDataRow();
-                    if (row != null)
+                    if (row is not null)
                     {
                         Buffer.SendAsync(row).Wait();
                         LogProgress();
@@ -162,15 +162,16 @@ namespace ALE.ETLBox.DataFlow
         {
             TOutput row = GetNewOutputInstance();
             var emptyRow = true;
-            for (int col = 0, colNrInRange = -1; col < ExcelDataReader.FieldCount; col++)
+            var colNrInRange = -1;
+            for (var col = 0; col < ExcelDataReader.FieldCount; col++)
             {
                 if (HasRange && col > Range.EndColumnIfSet)
                     break;
                 if (HasRange && col + 1 < Range.StartColumn)
                     continue;
-                colNrInRange++;
                 emptyRow &= ExcelDataReader.IsDBNull(col);
                 var value = ExcelDataReader.GetValue(col);
+                colNrInRange++;
                 SetOutputValue(row, colNrInRange, value);
             }
 
@@ -214,13 +215,12 @@ namespace ALE.ETLBox.DataFlow
         {
             PropertyInfo propInfo = null;
             if (
-
-                    HasHeaderData
+                HasHeaderData
                     && TypeInfo.ExcelColumnName2PropertyIndex.TryGetValue(
                         _headerColumns[colNrInRange],
                         out var propertyIndex
                     )
-                 || TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out propertyIndex)
+                || TypeInfo.ExcelIndex2PropertyIndex.TryGetValue(colNrInRange, out propertyIndex)
             )
                 propInfo = TypeInfo.Properties[propertyIndex];
             propInfo?.TrySetValue(

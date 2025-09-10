@@ -27,12 +27,14 @@ namespace ALE.ETLBox.DataFlow
 
         public RowMultiplication()
         {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>((Func<TInput, IEnumerable<TOutput>>)MultiplyRow);
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(
+                (Func<TInput, IEnumerable<TOutput>>)MultiplyRow
+            );
         }
 
         private IEnumerable<TOutput> MultiplyRow(TInput row)
         {
-            if (row == null)
+            if (row is null)
                 return Array.Empty<TOutput>();
             try
             {
@@ -58,9 +60,7 @@ namespace ALE.ETLBox.DataFlow
         public RowMultiplication() { }
 
         public RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>> multiplicationFunc)
-            : base(multiplicationFunc)
-        {
-        }
+            : base(multiplicationFunc) { }
     }
 
     /// <inheritdoc/>
@@ -70,8 +70,6 @@ namespace ALE.ETLBox.DataFlow
         public RowMultiplication() { }
 
         public RowMultiplication(Func<TInput, IEnumerable<TInput>> multiplicationFunc)
-            : base(multiplicationFunc)
-        {
-        }
+            : base(multiplicationFunc) { }
     }
 }

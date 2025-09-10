@@ -1,5 +1,5 @@
-using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.DataFlow;
 using Xunit.Abstractions;
 
 namespace TestFlatFileConnectors.CsvDestination
@@ -17,9 +17,9 @@ namespace TestFlatFileConnectors.CsvDestination
         {
             public override void Execute(CancellationToken cancellationToken)
             {
-                Buffer.SendAsync(new[] { "1", "2" }, cancellationToken).Wait(cancellationToken);
+                Buffer.SendAsync(["1", "2"], cancellationToken).Wait(cancellationToken);
                 Thread.Sleep(100);
-                Buffer.SendAsync(new[] { "3", "4" }, cancellationToken).Wait(cancellationToken);
+                Buffer.SendAsync(["3", "4"], cancellationToken).Wait(cancellationToken);
                 Buffer.Complete();
             }
         }
@@ -50,7 +50,7 @@ namespace TestFlatFileConnectors.CsvDestination
             await source.ExecuteAsync(CancellationToken.None);
             while (!File.Exists(filename))
                 await Task.Delay(10);
-            await dest.Completion;
+            await dest.Completion.ConfigureAwait(true);
 
             //Assert
             Assert.Multiple(

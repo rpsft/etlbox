@@ -1,12 +1,84 @@
 # Change Log
 
-All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
+All notable changes to this project will be documented in this file.
+
+<a name="1.13.3"></a>
+# 1.13.3
+✨ Features
+* Improvement: Added `BoundedCapacity` to `DataFlowBatchDestination` options to restrict buffer size and max memory consumption
+
+🐛 Bug Fixes
+* Fixed a memory leak when connection managers were not owned and not disposed.
+* Fixed a bug in `ScriptedRowTransformation` where the dependency injection was not working properly.
+
+Other changes
+* Moved back from [versionize](https://github.com/versionize/versionize) to scripted version bump in CI/CD pipeline
+
+<a name="1.13.1"></a>
+## 1.13.1 (2025-03-10)
+Other changes
+* Version bump and release preparation
+
+<a name="1.13.0"></a>
+## 1.13.0 (2025-03-10)
+✨ Features
+* Enhanced data flow process with connection manager pooling for better resource management
+* Improved memory management and connection disposal
+
+🐛 Bug Fixes
+* Fixed vulnerabilities in dependencies (RSSL-10261)
+* Added proper connection manager disposal to prevent memory leaks
+
+Other changes
+* Improved test debugging under .NET 8 SDK
+* Updated documentation and TODO items
+
+<a name="1.12.4"></a>
+## 1.12.4 (2024-09-30)
+Other changes
+* Build improvements and dependency updates
+
+<a name="1.12.3"></a>
+## 1.12.3 (2024-09-28)
+Other changes
+* Added script to append GitLab changelog trailer to commits
+* CI/CD pipeline improvements
+
+<a name="1.12.2"></a>
+## 1.12.2 (2024-09-28)
+🐛 Bug Fixes
+* Removed duplicating `<Version>` tags from project files
+
+<a name="1.12.1"></a>
+## 1.12.1 (2024-09-28)
+Other changes
+* Updated CI pipeline to handle version bump commits and renamed deploy job
+
+<a name="1.12.0"></a>
+## 1.12.0 (2024-09-28)
+Other changes
+* Added version bump script and updated CI pipeline configuration
+* Improved CI/CD automation
+
+<a name="1.11.11"></a>
+## 1.11.11 (2024-09-26)
+Other changes
+* Updated CHANGELOG.md and documentation
 
 <a name="1.11.10"></a>
 ## 1.11.10 (2024-09-12)
+Other changes
+* Minor release with internal improvements
 
-🐛 Bug Fixes
-* Fixed a bug in `ScriptedRowTransformation` where the dependency injection was not working properly.
+<a name="1.11.9"></a>
+## 1.11.9 (2024-08-24)
+Other changes
+* Minor release with internal improvements
+
+<a name="1.11.8"></a>
+## 1.11.8 (2024-08-24)
+Other changes
+* Minor release with internal improvements
 
 <a name="1.11.7"></a>
 ## 1.11.7 (2024-08-24)

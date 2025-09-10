@@ -39,7 +39,7 @@ namespace TestDatabaseConnectors.DBSource
             DbSource<string[]> source = new DbSource<string[]>
             {
                 ConnectionManager = SqlConnection,
-                SourceTableDefinition = def
+                SourceTableDefinition = def,
             };
             MemoryDestination<string[]> dest = new MemoryDestination<string[]>();
 
@@ -62,8 +62,8 @@ namespace TestDatabaseConnectors.DBSource
             //Act & Assert
             await Assert.ThrowsAsync<SqlException>(async () =>
             {
-                await source.ExecuteAsync(CancellationToken.None);
-                await dest.Completion;
+                await source.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+                await dest.Completion.ConfigureAwait(true);
             });
         }
     }

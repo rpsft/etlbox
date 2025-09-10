@@ -7,7 +7,7 @@ namespace ALE.ETLBox.Logging
     /// <summary>
     /// Will create the default log table for the default database logging
     /// You can use `ControlFlow.SetLoggingDatabase(IConnectionManager connectionManager, string logTableName) to let ETLBox
-    /// update your nlog.config add add this table as database target automatically.
+    /// update your nlog.config add this table as database target automatically.
     /// Or you can update your nlog.config manually.
     /// </summary>
     [PublicAPI]
@@ -52,7 +52,7 @@ namespace ALE.ETLBox.Logging
                 new("task_action", "VARCHAR(5)", allowNulls: true),
                 new("task_hash", "CHAR(40)", allowNulls: true),
                 new("source", "VARCHAR(20)", allowNulls: true),
-                new("load_process_id", "BIGINT", allowNulls: true)
+                new("load_process_id", "BIGINT", allowNulls: true),
             };
             LogTable = new CreateTableTask(LogTableName, columns);
         }

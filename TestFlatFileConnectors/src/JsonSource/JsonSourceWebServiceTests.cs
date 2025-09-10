@@ -19,16 +19,17 @@ namespace TestFlatFileConnectors.JsonSource
         public void JsonFromWebService()
         {
             // Arrange
-            HttpClient httpClient = MoqJsonResponse(File.ReadAllText("res/JsonSource/Todos.json"));
+            var response = new HttpResponseMessage();
+            var httpClient = MoqJsonResponse(
+                File.ReadAllText("res/JsonSource/Todos.json"),
+                response
+            );
 
             //Arrange
             var dest = new MemoryDestination<Todo>();
 
             //Act
-            var source = new JsonSource<Todo>("http://test.com/")
-            {
-                HttpClient = httpClient
-            };
+            var source = new JsonSource<Todo>("https://test.com/") { HttpClient = httpClient };
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -36,11 +37,17 @@ namespace TestFlatFileConnectors.JsonSource
             //Assert
             Assert.All(dest.Data, item => Assert.True(item.Key > 0));
             Assert.Equal(5, dest.Data.Count);
+
+            httpClient.Dispose();
+            response.Dispose();
         }
 
-        private static HttpClient MoqJsonResponse(string json)
+        private static HttpClient MoqJsonResponse(string json, HttpResponseMessage response)
         {
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
+            response.StatusCode = HttpStatusCode.OK;
+            response.Content = new StringContent(json);
+
             handlerMock
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -48,13 +55,7 @@ namespace TestFlatFileConnectors.JsonSource
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>()
                 )
-                .ReturnsAsync(
-                    new HttpResponseMessage
-                    {
-                        StatusCode = HttpStatusCode.OK,
-                        Content = new StringContent(json)
-                    }
-                )
+                .ReturnsAsync(response)
                 .Verifiable();
 
             return new HttpClient(handlerMock.Object);
@@ -71,7 +72,7 @@ namespace TestFlatFileConnectors.JsonSource
             {
                 GetNextUri = _ => "res/JsonSource/Todos_Page" + page++ + ".json",
                 HasNextUri = _ => page <= 3,
-                ResourceType = ResourceType.File
+                ResourceType = ResourceType.File,
             };
 
             source.LinkTo(dest);

@@ -32,7 +32,7 @@ namespace ALE.ETLBox.DataFlow
         protected void WriteRecord(TInput data)
         {
             Data ??= new BlockingCollection<TInput>();
-            if (data == null)
+            if (data is null)
                 return;
             Data.Add(data);
             LogProgress();

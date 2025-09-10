@@ -12,6 +12,7 @@ namespace ALE.ETLBox.ConnectionManager
     /// </code>
     /// </example>
     [PublicAPI]
+    [MustDisposeResource]
     public class SqlConnectionManager : DbConnectionManager<SqlConnection>
     {
         public override ConnectionManagerType ConnectionManagerType { get; } =
@@ -56,7 +57,7 @@ namespace ALE.ETLBox.ConnectionManager
 
             try
             {
-                var dbName = DbConnection.Database;
+                var dbName = DbConnection!.Database;
                 PageVerify = ExecuteScalar(
                         $"SELECT page_verify_option_desc FROM sys.databases WHERE NAME = '{dbName}'"
                     )
@@ -89,7 +90,7 @@ namespace ALE.ETLBox.ConnectionManager
 
             try
             {
-                var dbName = DbConnection.Database;
+                var dbName = DbConnection!.Database;
                 ExecuteNonQuery(@"USE master");
                 ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET PAGE_VERIFY {PageVerify};");
                 ExecuteNonQuery($@"ALTER DATABASE [{dbName}] SET RECOVERY {RecoveryModel}");
@@ -101,16 +102,14 @@ namespace ALE.ETLBox.ConnectionManager
             }
         }
 
+        [MustDisposeResource]
         public override IConnectionManager Clone()
         {
-            var clone = new SqlConnectionManager(
-                (SqlConnectionString)ConnectionString
-            )
+            return new SqlConnectionManager((SqlConnectionString)ConnectionString)
             {
                 MaxLoginAttempts = MaxLoginAttempts,
-                ModifyDBSettings = ModifyDBSettings
+                ModifyDBSettings = ModifyDBSettings,
             };
-            return clone;
         }
     }
 }
