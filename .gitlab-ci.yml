@@ -151,7 +151,7 @@ bump_version:
     - git config user.email "noreply@rapidsoft.ru"
     - git config user.name "Gitlab Runner"
     - echo "Source branch ${CI_COMMIT_BRANCH}"
-    - git remote set-url origin  "https://$CI_PROJECT_NAME:$CI_PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+    - git remote set-url origin  "https://gitlab-ci-token:$REPO_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
     - git fetch --prune origin $CI_COMMIT_BRANCH
     - git switch $CI_COMMIT_BRANCH
     - echo "Tagging current version $PACKAGE_RELEASE"
