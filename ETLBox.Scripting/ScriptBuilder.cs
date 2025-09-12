@@ -163,11 +163,9 @@ public class ScriptBuilder
             );
 
         // Generate assignments in constructor for both typed and non-typed members
-        var typedArgumentAssignments = typedMembers
-            .Where(pair => pair.Value != null)
-            .Select(pair =>
-                $"{pair.Key} = ({FullTypeName(pair.Value)})extensions[\"{pair.Key}\"];"
-            );
+        var typedArgumentAssignments = typedMembers.Select(pair =>
+            $"{pair.Key} = ({FullTypeName(pair.Value)})extensions[\"{pair.Key}\"];"
+        );
         var dynamicArgumentAssignments = nestedTypeDeclarations.Select(pair =>
             $"{pair.Key} = new {pair.Value.type}((IDictionary<string, object?>)extensions[\"{pair.Key}\"]);"
         );
