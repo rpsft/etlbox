@@ -190,7 +190,8 @@ public class {typeName}
     /// <summary>
     /// Fix naming of nested types like "ETLBox.Scripting.Tests.ScriptBuilderTests+MyCoolClass"
     /// </summary>
-    private static string FullTypeName(Type? type) => type?.FullName?.Replace('+', '.') ?? "object";
+    private static string FullTypeName(Type? type) =>
+        type?.FullName?.Replace('+', '.') ?? "dynamic";
 
     /// <summary>
     /// Detect anonymous types
@@ -251,7 +252,7 @@ SOURCE CODE:
 
     private static int GetExpandoObjectTypeHash(IDictionary<string, object?> expando)
     {
-        var orderedKeys = expando.Keys.OrderBy(k => k);
+        var orderedKeys = expando.Keys.Where(k => expando[k] is not null).OrderBy(k => k);
         unchecked // Overflow is fine, just wrap
         {
             var hash = 17;
@@ -269,7 +270,7 @@ SOURCE CODE:
                 }
                 else
                 {
-                    hash = hash * 23 + value.GetHashCode();
+                    hash = hash * 23 + value.GetType().GetHashCode();
                 }
             }
 
@@ -297,7 +298,11 @@ SOURCE CODE:
         IDictionary<string, object?> expando
     )
     {
-        var assemblies = new HashSet<Assembly> { typeof(Attribute).Assembly };
+        var assemblies = new HashSet<Assembly>
+        {
+            typeof(Attribute).Assembly,
+            typeof(DynamicAttribute).Assembly,
+        };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;
     }
