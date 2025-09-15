@@ -89,11 +89,12 @@ public class ScriptBuilderTests
         dynamic context = new ExpandoObject();
         context.X = "абра";
         context.Y = null;
-        var builder = ScriptBuilder.Default.ForType(context);
+        ScriptBuilder.Default.ForType(context);
 
         dynamic newContext = new ExpandoObject();
         newContext.X = "абра";
         newContext.Y = "кадабра";
+        var builder = ScriptBuilder.Default.ForType(newContext);
 
         var runner = builder.CreateRunner(@"X + ""-"" + Y");
         // Act
