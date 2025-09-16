@@ -82,6 +82,34 @@ public class ScriptBuilderTests
         Assert.Equal("1200SomethingLonger Text Value", result.ReturnValue);
     }
 
+    [Fact]
+    public void ShouldApplyValueToAllProperties()
+    {
+        // Arrange
+        dynamic context = new ExpandoObject();
+        context.X = "абра";
+        context.Y = null;
+        ScriptBuilder.Default.ForType(context);
+
+        dynamic сontext2 = new ExpandoObject();
+        сontext2.X = null;
+        сontext2.Y = "кадабра";
+        ScriptBuilder.Default.ForType(сontext2);
+
+        dynamic context3 = new ExpandoObject();
+        context3.X = "абра";
+        context3.Y = "кадабра";
+        var builder = ScriptBuilder.Default.ForType(context3);
+
+        var runner = builder.CreateRunner(@"X + ""-"" + Y");
+        // Act
+        var diagnostics = runner.Script.Compile();
+        var result = runner.RunAsync(context3).Result.ReturnValue;
+        // Assert
+        Assert.Empty(diagnostics);
+        Assert.Equal("абра-кадабра", result);
+    }
+
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public class MyCoolClass
     {
