@@ -163,11 +163,9 @@ public class ScriptBuilder
             );
 
         // Generate assignments in constructor for both typed and non-typed members
-        var typedArgumentAssignments = typedMembers
-            .Where(pair => pair.Value != null)
-            .Select(pair =>
-                $"{pair.Key} = ({FullTypeName(pair.Value)})extensions[\"{pair.Key}\"];"
-            );
+        var typedArgumentAssignments = typedMembers.Select(pair =>
+            $"{pair.Key} = ({FullTypeName(pair.Value)})extensions[\"{pair.Key}\"];"
+        );
         var dynamicArgumentAssignments = nestedTypeDeclarations.Select(pair =>
             $"{pair.Key} = new {pair.Value.type}((IDictionary<string, object?>)extensions[\"{pair.Key}\"]);"
         );
@@ -192,7 +190,8 @@ public class {typeName}
     /// <summary>
     /// Fix naming of nested types like "ETLBox.Scripting.Tests.ScriptBuilderTests+MyCoolClass"
     /// </summary>
-    private static string FullTypeName(Type? type) => type?.FullName?.Replace('+', '.') ?? "object";
+    private static string FullTypeName(Type? type) =>
+        type?.FullName?.Replace('+', '.') ?? "dynamic";
 
     /// <summary>
     /// Detect anonymous types
@@ -253,14 +252,14 @@ SOURCE CODE:
 
     private static int GetExpandoObjectTypeHash(IDictionary<string, object?> expando)
     {
-        var orderedKeys = expando.Keys.OrderBy(k => k);
+        var keys = expando.Keys.ToArray();
         unchecked // Overflow is fine, just wrap
         {
             var hash = 17;
-            foreach (var key in orderedKeys)
+            for (var i = 0; i < keys.Length; i++)
             {
-                hash = hash * 23 + key.GetHashCode();
-                var value = expando[key];
+                hash = hash * 23 + i + keys[i].GetHashCode();
+                var value = expando[keys[i]];
 
                 if (value == null)
                     continue;
@@ -271,7 +270,7 @@ SOURCE CODE:
                 }
                 else
                 {
-                    hash = hash * 23 + value.GetHashCode();
+                    hash = hash * 23 + value.GetType().GetHashCode();
                 }
             }
 
@@ -299,7 +298,11 @@ SOURCE CODE:
         IDictionary<string, object?> expando
     )
     {
-        var assemblies = new HashSet<Assembly> { typeof(Attribute).Assembly };
+        var assemblies = new HashSet<Assembly>
+        {
+            typeof(Attribute).Assembly,
+            typeof(DynamicAttribute).Assembly,
+        };
         CollectExpandoObjectAssemblies(expando, assemblies);
         return assemblies;
     }
