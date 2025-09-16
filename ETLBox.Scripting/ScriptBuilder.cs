@@ -252,14 +252,14 @@ SOURCE CODE:
 
     private static int GetExpandoObjectTypeHash(IDictionary<string, object?> expando)
     {
-        var orderedKeys = expando.Keys.Where(k => expando[k] is not null).OrderBy(k => k).ToArray();
+        var keys = expando.Keys.ToArray();
         unchecked // Overflow is fine, just wrap
         {
             var hash = 17;
-            for (var i = 0; i < orderedKeys.Length; i++)
+            for (var i = 0; i < keys.Length; i++)
             {
-                hash = hash * 23 + i + orderedKeys[i].GetHashCode();
-                var value = expando[orderedKeys[i]];
+                hash = hash * 23 + i + keys[i].GetHashCode();
+                var value = expando[keys[i]];
 
                 if (value == null)
                     continue;
