@@ -47,6 +47,9 @@ workflow:
         # (when pipeline is started on a tag, the tag name provides version number)
         PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
 
+include:
+  - component: $CI_SERVER_FQDN/open-source/ci-components/ultimate-auto-semversioning@0.1.5
+
 default:
   image: mcr.microsoft.com/dotnet/sdk:8.0
 
@@ -56,6 +59,8 @@ stages:
   - deploy
 
 build_job:
+  variables:
+    PACKAGE_VERSION: ${GitVersion_SemVer}
   stage: build
   script:
     - echo "Building version $PACKAGE_VERSION"
@@ -110,6 +115,7 @@ test_job:
       command: [ "dockerd", "--tls=false", "--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock" ]
   variables:
     DOCKER_HOST: tcp://docker:2375
+    PACKAGE_VERSION: ${GitVersion_SemVer}
   before_script:
     - pushd test
     - pwsh ./Set-Configuration.ps1 gitlab-ci
@@ -143,39 +149,9 @@ test_job:
         coverage_format: cobertura
         path: ./**/coverage.cobertura.xml
 
-bump_version:
-  stage: deploy
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
-  script:
-    - git config user.email "noreply@rapidsoft.ru"
-    - git config user.name "Gitlab Runner"
-    - echo "Source branch ${CI_COMMIT_BRANCH}"
-    - git remote set-url origin  "https://gitlab-ci-token:$REPO_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-    - git fetch --prune origin $CI_COMMIT_BRANCH
-    - git switch $CI_COMMIT_BRANCH
-    - echo "Tagging current version $PACKAGE_RELEASE"
-    - git tag -a "v${PACKAGE_RELEASE}" -m "Release version ${PACKAGE_RELEASE}"
-    - pwsh ./bump-version.ps1 $CI_COMMIT_BRANCH
-    - |
-      # Source the environment variables
-      if [ -f /tmp/env-vars.sh ]; then
-        source /tmp/env-vars.sh
-      fi
-    - echo "Pushing version changes to GIT"
-    - git add .version.yml
-    - |
-      if git diff-index --quiet HEAD --; then
-        echo "No changes to commit"
-      else
-        git commit --no-verify -m "chore(version bump): bump version to $PACKAGE_RELEASE"
-      fi
-    - git push --follow-tags origin $CI_COMMIT_BRANCH
-  needs:
-    - build_job
-    - test_job
-    
 publish:internal:
+  variables:
+    PACKAGE_VERSION: ${GitVersion_SemVer}
   stage: deploy
   script:
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
@@ -185,6 +161,8 @@ publish:internal:
     - test_job
 
 publish:nuget-org:
+  variables:
+    PACKAGE_VERSION: ${GitVersion_SemVer}
   interruptible: true
   stage: deploy
   script:
