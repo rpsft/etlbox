@@ -1,0 +1,35 @@
+mode: ContinuousDeployment
+branches:
+  master:
+    tag: ""
+    regex: ^master$
+    mode: ContinuousDeployment
+    track-merge-target: false
+  develop:
+    tag: "alpha"
+    regex: ^develop$
+    mode: ContinuousDeployment
+    track-merge-target: true
+  release:
+    tag: "rc"
+    regex: ^release/.*$
+    mode: ContinuousDeployment
+    track-merge-target: false
+  feature:
+    tag: "feature"
+    regex: ^feature/.*$
+    mode: ContinuousDeployment
+    track-merge-target: false
+  hotfix:
+    tag: "hotfix"
+    regex: ^hotfix/.*$
+    mode: ContinuousDeployment
+    track-merge-target: false
+ignore:
+  sha: []
+major-version-bump-message: '\+semver:\s?(breaking|major)'
+minor-version-bump-message: '\+semver:\s?(feature|minor)'
+patch-version-bump-message: '\+semver:\s?(fix|patch)'
+legacy-semver-padding: 4
+build-metadata-padding: 4
+commits-since-version-source-padding: 4
