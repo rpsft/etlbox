@@ -37,15 +37,15 @@ workflow:
         PACKAGE_VERSION: "${PACKAGE_RELEASE}-merge.${CI_MERGE_REQUEST_IID}.${CI_PIPELINE_IID}"
     - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
       variables:
-        PACKAGE_VERSION: "${GitVersion_SemVer}"
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
       variables:
-        PACKAGE_VERSION: "${GitVersion_SemVer}"
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}-rc.${CI_PIPELINE_IID}"
     - if: $CI_PIPELINE_SOURCE == "web" || ($CI_PIPELINE_SOURCE == "push" && $PACKAGE_VERSION == null)
       variables:
-        # Package version "by default", from GitVersion and added current pipeline no
+        # Package version "by default", from .version.yml and added current pipeline no
         # (when pipeline is started on a tag, the tag name provides version number)
-        PACKAGE_VERSION: "${GitVersion_SemVer}"
+        PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
 
 include:
   - component: $CI_SERVER_FQDN/open-source/ci-components/ultimate-auto-semversioning@0.1.5
