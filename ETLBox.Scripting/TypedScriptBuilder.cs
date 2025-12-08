@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -24,6 +25,11 @@ namespace ALE.ETLBox.Scripting
         {
             _globalsTypeInfo = globalsTypeInfo;
         }
+
+        /// <summary>
+        /// The type of global context with which the script will be executed.
+        /// </summary>
+        public Type GlobalsType => _globalsTypeInfo.Type;
 
         /// <summary>
         /// Copy and add references to the script.
@@ -59,8 +65,8 @@ namespace ALE.ETLBox.Scripting
         public ScriptRunner<TOutput> CreateRunner<TOutput>(string scriptContent)
         {
             //ref: https://github.com/dotnet/roslyn/blob/main/docs/wiki/Scripting-API-Samples.md
-            var options = ScriptOptions.Default
-                .AddImports("System")
+            var options = ScriptOptions
+                .Default.AddImports("System")
                 .AddImports("System.Text")
                 .AddReferences(_globalsTypeInfo.ReferencedAssemblies)
                 .AddReferences(_globalsTypeInfo.Reference);

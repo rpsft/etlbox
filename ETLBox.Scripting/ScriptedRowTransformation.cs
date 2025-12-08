@@ -70,12 +70,14 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type '{typeof(TOutput).FullName}'. This may be caused by a missing parameterless constructor."
             );
+
         var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
 
         foreach (var key in Mappings.Keys)
         {
             var runner = GetScriptRunner(key, type);
             dynamic? value = runner?.RunAsync(arg).Result.ReturnValue;
+
             try
             {
                 ((IDictionary<string, object?>)output)[key] = value;
@@ -135,10 +137,13 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
 
     private ScriptRunner<object>? GetScriptRunner(string key, TypedScriptBuilder builder) =>
         _runnersCache.GetOrAdd(
-            Mappings[key],
-            script =>
+            // The cache key must include the globals type. Otherwise, a runner compiled
+            // for one ExpandoObject shape may be reused for a different shape and fail
+            // when constructing the globals object (argument initialization).
+            $"{builder.GlobalsType.FullName}::{Mappings[key]}",
+            _ =>
             {
-                var runner = builder.CreateRunner<object>(script);
+                var runner = builder.CreateRunner<object>(Mappings[key]);
                 var diagnostics = runner.Script.Compile();
 
                 if (!diagnostics.Any())
