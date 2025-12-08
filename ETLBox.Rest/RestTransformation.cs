@@ -222,7 +222,7 @@ namespace ETLBox.Rest
                 "DELETE" => HttpMethod.Delete,
                 "OPTIONS" => HttpMethod.Options,
                 "TRACE" => HttpMethod.Trace,
-                _ => throw new ArgumentOutOfRangeException(nameof(method))
+                _ => throw new ArgumentOutOfRangeException(nameof(method)),
             };
         }
 
@@ -257,7 +257,11 @@ namespace ETLBox.Rest
             }
         }
 
-        private void SetFieldValue(IDictionary<string, object?> res, string? field, object value)
+        private static void SetFieldValue(
+            IDictionary<string, object?> res,
+            string? field,
+            object value
+        )
         {
             if (!string.IsNullOrEmpty(field))
             {
@@ -265,7 +269,7 @@ namespace ETLBox.Rest
             }
         }
 
-        private void ValidateParameter(object field, string fieldName)
+        private static void ValidateParameter(object field, string fieldName)
         {
             if (field is null)
             {
