@@ -22,7 +22,7 @@ namespace ALE.ETLBox.DataFlow
     public class CsvSource<TOutput> : DataFlowStreamSource<TOutput>, IDataFlowSource<TOutput>
     {
         [SuppressMessage("Performance", "CA1822")]
-        private CultureInfo CsvDefaultCulture => CultureInfo.InvariantCulture;
+        private static CultureInfo CsvDefaultCulture => CultureInfo.InvariantCulture;
 
         /* ITask Interface */
         public override string TaskName => $"Read Csv data from Uri: {CurrentRequestUri ?? ""}";
