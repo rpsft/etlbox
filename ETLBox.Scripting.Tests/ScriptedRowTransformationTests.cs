@@ -31,6 +31,47 @@ public class ScriptedRowTransformationTests
     }
 
     [Fact]
+    public void ShouldNotFailWhenFailOnMissingFieldIsFalseAndNestedPayloadChangedToEmpty()
+    {
+        // Arrange
+        var itemWithPayload = new ExpandoObject() as IDictionary<string, object?>;
+        itemWithPayload["meta"] = new ExpandoObject();
+        itemWithPayload["payload"] = new ExpandoObject();
+        var payload = (IDictionary<string, object?>)itemWithPayload["payload"]!;
+        payload["ID"] = "7d51954d-5a06-4226-b7a3-defcdf0246a4";
+
+        var itemWithEmptyPayload = new ExpandoObject() as IDictionary<string, object?>;
+        itemWithEmptyPayload["meta"] = new ExpandoObject();
+        itemWithEmptyPayload["payload"] = new ExpandoObject();
+
+        var memorySource = new MemorySource();
+        memorySource.DataAsList.Add((ExpandoObject)itemWithPayload);
+        memorySource.DataAsList.Add((ExpandoObject)itemWithEmptyPayload);
+
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = false,
+        };
+        script.Mappings.Add("ResultId", "payload.ID");
+
+        var memoryDestination = new MemoryDestination<ExpandoObject>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Equal(2, memoryDestination.Data.Count);
+        var list = memoryDestination.Data.ToList();
+        var first = (IDictionary<string, object?>)list[0];
+        var second = (IDictionary<string, object?>)list[1];
+        Assert.Equal("7d51954d-5a06-4226-b7a3-defcdf0246a4", first["ResultId"]);
+        Assert.Null(second["ResultId"]);
+    }
+
+    [Fact]
     public void ShouldTransformExpandoObjectWithMissingFieldOnSource()
     {
         // Arrange
@@ -38,7 +79,7 @@ public class ScriptedRowTransformationTests
         memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
         var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
         {
-            FailOnMissingField = false
+            FailOnMissingField = false,
         };
         script.Mappings.Add("NewId", "Id + 1");
         script.Mappings.Add("NewName", "$\"New{Name}\"");
@@ -106,9 +147,11 @@ public class ScriptedRowTransformationTests
     {
         // Arrange
         var memorySource = new MemorySource();
-        memorySource.DataAsList.Add(new ExpandoObject());
-        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>();
-        script.FailOnMissingField = false;
+        memorySource.DataAsList.Add([]);
+        var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+        {
+            FailOnMissingField = false,
+        };
         script.Mappings.Add("NewId", "Id + 1");
         script.Mappings.Add("NewName", "$\"New{Name}\"");
         script.Mappings.Add("NewMissingField", "$\"New{MissingField}\"");
@@ -131,13 +174,13 @@ public class ScriptedRowTransformationTests
         memorySource.DataAsList.Add(CreateTestDataItem(1, "Test"));
         var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
         {
-            FailOnMissingField = true
+            FailOnMissingField = true,
         };
         script.Mappings.Add("NewId", "MassTransit.NewId.NextSequentialGuid()");
         script.Mappings.Add("Id", "Id + 1");
 
         var assemblyName = "Files/NewId.dll";
-        script.AdditionalAssemblyNames = new[] { assemblyName };
+        script.AdditionalAssemblyNames = [assemblyName];
 
         var memoryDestination = new MemoryDestination<ExpandoObject>();
         memorySource.LinkTo(script);
@@ -168,12 +211,12 @@ public class ScriptedRowTransformationTests
 
         var script = new ScriptedRowTransformation<ExpandoObject, ExpandoObject>
         {
-            FailOnMissingField = true
+            FailOnMissingField = true,
         };
         script.Mappings.Add("Id", "Data.Id + 1");
         script.Mappings.Add("Json", "Newtonsoft.Json.JsonConvert.SerializeObject(Data)");
 
-        script.AdditionalAssemblyNames = new[] { "Newtonsoft.Json.dll" };
+        script.AdditionalAssemblyNames = ["Newtonsoft.Json.dll"];
 
         var memoryDestination = new MemoryDestination<ExpandoObject>();
         memorySource.LinkTo(script);
