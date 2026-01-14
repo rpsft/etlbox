@@ -152,14 +152,14 @@ of EtlBox.Classic.
 you have to write the integration code yourself.**
 
 | Source or Destination | Support for                                     | Limitations                                       |
-|-----------------------|-------------------------------------------------|---------------------------------------------------|
+| --------------------- | ----------------------------------------------- | ------------------------------------------------- |
 | Databases             | Sql Server, Postgres, SQLite, MySql, Clickhouse | Full support                                      |
-| Queues and streaming  | Kafka, RabbitMQ                                 | Kafka — full support, RabbitMQ — destination only | 
+| Queues and streaming  | Kafka, RabbitMQ                                 | Kafka — full support, RabbitMQ — destination only |
 | Flat files            | Csv, Json, Xml                                  | Full support                                      |
 | Office                | Microsoft Access, Excel                         | Full support for Access, Excel only as source     |
 | Cube                  | Sql Server Analysis Service                     | Only XMLA statements                              |
 | Memory                | .NET IEnumerable & Collections                  | Full support                                      |
-| API                   | REST                                            | Full support                                      | 
+| API                   | REST, OpenAI                                    | Full support                                      |
 | Cloud Services        | Tested with Azure                               | Full support                                      |
 | Any other             | integration with custom written code            | No limitations                                    |
 
@@ -183,8 +183,9 @@ subsequently.
 The following table is an overview of the most common transformations in ETLBox:
 
 | Non-blocking              | Partially blocking   | Blocking            |
-|---------------------------|----------------------|---------------------|
+| ------------------------- | -------------------- | ------------------- |
 | RowTransformation         | LookupTransformation | BlockTransformation |
+| RowBatchTransformation    |                      |                     |
 | Aggregation               | CrossJoin            | Sort                |
 | MergeJoin                 |                      |                     |
 | Multicast                 |                      |                     |
@@ -192,6 +193,7 @@ The following table is an overview of the most common transformations in ETLBox:
 | RowMultiplication         |                      |                     |
 | JsonTransformation        |                      |                     |
 | ScriptedRowTransformation |                      |                     |
+| AIBatchTransformation     |                      |                     |
 
 #### Designed for big data
 
@@ -206,15 +208,16 @@ threads.
 Data transformations take input data from source, perform an external operation (via DB, API, or queue) and return
 produced result into a destination. Namely data transformations are:
 
-| Transformation            | Input                                                          | Processing                                      | Output                                                                                  |
-|---------------------------|----------------------------------------------------------------|-------------------------------------------------|-----------------------------------------------------------------------------------------|
-| SqlQueryTransformation    | Parameters to a liquid-based SQL query template                | Execute SQL query                               | SQL query results (0..N for each input row)                                             |
-| SqlCommmandTransformation | Parameters to a liquid-based SQL query template                | Execute SQL non-query statement                 | Input object (or this can be customised with Transform delegate) — 1 for each input row |
-| KafkaTransformation       | Parameters to a liquid-based string message template           | Produce messages to Kafka topic                 | Input object or null                                                                    |
-| RabbitMqTransformation    | Parameters to a liquid-based string message template           | Publish messages to RabbitMQ channel            | Input object or null                                                                    |
-| JsonTransformation        | Json object                                                    | Execute JSON path transformation for each field | Output object where each field is the result of Json path evaluation                    |
-| RestTransformation        | Parameters to a liquid-based request URL and body templates    | Execute HTTP request                            | ExpandoObject with response code, raw body and Json parsed body in fields               |
-| ScriptRowTransformation   | Object as Globals to C# script templates for each result field | Execute C# code                                 | Result object with one field per script                                                 |
+| Transformation            | Input                                                          | Processing                                         | Output                                                                                  |
+| ------------------------- | -------------------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| SqlQueryTransformation    | Parameters to a liquid-based SQL query template                | Execute SQL query                                  | SQL query results (0..N for each input row)                                             |
+| SqlCommmandTransformation | Parameters to a liquid-based SQL query template                | Execute SQL non-query statement                    | Input object (or this can be customised with Transform delegate) — 1 for each input row |
+| KafkaTransformation       | Parameters to a liquid-based string message template           | Produce messages to Kafka topic                    | Input object or null                                                                    |
+| RabbitMqTransformation    | Parameters to a liquid-based string message template           | Publish messages to RabbitMQ channel               | Input object or null                                                                    |
+| JsonTransformation        | Json object                                                    | Execute JSON path transformation for each field    | Output object where each field is the result of Json path evaluation                    |
+| RestTransformation        | Parameters to a liquid-based request URL and body templates    | Execute HTTP request                               | ExpandoObject with response code, raw body and Json parsed body in fields               |
+| ScriptRowTransformation   | Object as Globals to C# script templates for each result field | Execute C# code                                    | Result object with one field per script                                                 |
+| AIBatchTransformation     | Parameters to a liquid-based AI prompt template                | Execute request to configured OpenAI HTTP endpoint | ExpandoObject with response code, raw body and Json parsed body in fields               |
 
 ### Control Flow - overview
 
