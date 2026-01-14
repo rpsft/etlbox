@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.15.2"></a>
+# 1.15.2
+✨ Features
+* New library: `ETLBox.AI` to apply AI features to `DataFlow`
+* New transformation: `AIBatchTransformation` to post prompt data to a [OpenAI](https://openai.com/) API endpoint and get results
+
 <a name="1.13.3"></a>
 # 1.13.3
 ✨ Features
