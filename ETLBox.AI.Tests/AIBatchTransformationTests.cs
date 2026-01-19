@@ -271,10 +271,10 @@ public class AIBatchTransformationTests
         var source = new MemorySource<ExpandoObject>(input);
         var dest = new MemoryDestination<ExpandoObject>();
 
-        var trans = new AIBatchTransformation()
+        var trans = new AIBatchTransformation
         {
             ApiSettings = new(),
-            Prompt = null!, // ключевая проверка ветки if (field is null)
+            Prompt = null!, // check if (field is null)
             ResultSettings = RS(ResultsSchemaRidOnly()),
             BatchSize = 1,
             FailOnError = true,
@@ -312,7 +312,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -412,7 +412,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -483,7 +483,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -552,7 +552,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -622,6 +622,169 @@ public class AIBatchTransformationTests
         Assert.Equal(2, arr.GetArrayLength());
         Assert.Equal("1", arr[0].GetProperty("id").GetString());
         Assert.Equal("negative", arr[1].GetProperty("sentiment").GetString());
+    }
+
+    [Fact]
+    public void PromptParameters_WithNestedDictionaries_ShouldRenderCorrectly()
+    {
+        // Arrange: verify that PromptParameters with nested dictionaries work correctly in DotLiquid template
+        var input = new[] { CreateExpando(1), CreateExpando(2) };
+        var source = new MemorySource<ExpandoObject>(input);
+        var dest = new MemoryDestination<ExpandoObject>();
+
+        var response = "{\"results\":[{\"rid\":\"1\"},{\"rid\":\"2\"}]}";
+        var mock = new Mock<IChatClient>();
+
+        // Capture the actual prompt sent to the AI client
+        string capturedPrompt = null;
+        mock.Setup(c =>
+                c.GetResponseAsync(
+                    It.IsAny<IEnumerable<ChatMessage>>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
+            .Callback<
+                IEnumerable<ChatMessage>,
+                Microsoft.Extensions.AI.ChatOptions,
+                CancellationToken
+            >(
+                (messages, _, _) =>
+                {
+                    capturedPrompt = messages.First().Text;
+                }
+            )
+            .ReturnsAsync(() => new ChatResponse([new(ChatRole.User, response)]));
+
+        var settings = new ApiSettings();
+        var trans = new AIBatchTransformation(
+            (s) =>
+            {
+                Assert.Equal(settings, s);
+                return mock.Object;
+            }
+        )
+        {
+            ApiSettings = settings,
+            // Template with nested parameter access
+            Prompt =
+                @"{
+              ""model"": ""{{ config.model }}"",
+              ""test_value"": {{ config.params.test_value }},
+              ""max_value"": {{ config.params.settings.max_value }},
+              ""language"": ""{{ system.language }}"",
+              ""threshold"": {{ threshold }},
+              ""tags"": [{% for tag in tags %}""{{ tag }}""{% unless forloop.last %}, {% endunless %}{% endfor %}],
+              ""items"": {{ input | json_array }}
+            }",
+            // PromptParameters as JSON string (easy to store in XML/config)
+            PromptParameters =
+                @"{
+              ""config"": {
+                ""model"": ""xyz"",
+                ""params"": {
+                  ""test_value"": 0.7,
+                  ""settings"": {
+                    ""max_value"": 2000
+                  }
+                }
+              },
+              ""system"": {
+                ""language"": ""ru""
+              },
+              ""threshold"": 0.95,
+              ""tags"": [ ""production"", ""high-priority"", ""batch-processing"" ]
+            }",
+            ResultSettings = RS(ResultsSchemaRidOnly()),
+            BatchSize = 2,
+            FailOnError = true,
+        };
+
+        // Act
+        source.LinkTo(trans);
+        trans.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        // Assert: verify that the prompt was rendered correctly with nested parameters
+        Assert.NotNull(capturedPrompt);
+        Assert.Contains("\"model\": \"xyz\"", capturedPrompt);
+        Assert.Contains("\"test_value\": 0.7", capturedPrompt);
+        Assert.Contains("\"max_value\": 2000", capturedPrompt);
+        Assert.Contains("\"language\": \"ru\"", capturedPrompt);
+        Assert.Contains("\"threshold\": 0.95", capturedPrompt);
+        Assert.Contains("\"items\":", capturedPrompt);
+        Assert.Contains(
+            "\"tags\": [\"production\", \"high-priority\", \"batch-processing\"]",
+            capturedPrompt
+        );
+
+        // Verify that results were processed correctly
+        Assert.Equal(2, dest.Data.Count);
+    }
+
+    [Fact]
+    public void PromptParameters_ShouldNotOverrideInputParameter()
+    {
+        // Arrange: verify that even if PromptParameters contains "input", it gets overridden by the actual input
+        var input = new[] { CreateExpando(42) };
+        var source = new MemorySource<ExpandoObject>(input);
+        var dest = new MemoryDestination<ExpandoObject>();
+
+        var response = "{\"results\":[{\"rid\":\"42\"}]}";
+        var mock = new Mock<IChatClient>();
+
+        string capturedPrompt = null;
+        mock.Setup(c =>
+                c.GetResponseAsync(
+                    It.IsAny<IEnumerable<ChatMessage>>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
+            .Callback<
+                IEnumerable<ChatMessage>,
+                Microsoft.Extensions.AI.ChatOptions,
+                CancellationToken
+            >(
+                (messages, _, _) =>
+                {
+                    capturedPrompt = messages.First().Text;
+                }
+            )
+            .ReturnsAsync(() => new ChatResponse([new(ChatRole.User, response)]));
+
+        var settings = new ApiSettings();
+        var trans = new AIBatchTransformation(
+            (s) =>
+            {
+                Assert.Equal(settings, s);
+                return mock.Object;
+            }
+        )
+        {
+            ApiSettings = settings,
+            Prompt = "{{ input | json_array }}",
+            // Try to override "input" - should be ignored
+            PromptParameters =
+                @"{
+              ""input"": ""this should be overridden""
+            }",
+            ResultSettings = RS(ResultsSchemaRidOnly()),
+            BatchSize = 1,
+            FailOnError = true,
+        };
+
+        // Act
+        source.LinkTo(trans);
+        trans.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        // Assert: verify that actual input data was used, not the PromptParameters value
+        Assert.NotNull(capturedPrompt);
+        Assert.Contains("\"id\":42", capturedPrompt);
+        Assert.DoesNotContain("this should be overridden", capturedPrompt);
     }
 
     [Fact]
@@ -821,7 +984,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -886,7 +1049,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -925,7 +1088,7 @@ public class AIBatchTransformationTests
         // Assert: first enriched, second with Exception (no result for id=2)
         Assert.Equal(2, dest.Data.Count);
         Assert.Equal("1", (object)((dynamic)dest.Data.ElementAt(0)).result.rid);
-        var second = (IDictionary<string, object?>)dest.Data.ElementAt(1);
+        var second = (IDictionary<string, object>)dest.Data.ElementAt(1);
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -943,7 +1106,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -982,7 +1145,7 @@ public class AIBatchTransformationTests
         // Assert: row marked with Exception due to enum violation
         Assert.Single(dest.Data);
         IDictionary<string, object> row = dest.Data.ElementAt(0);
-        Assert.True(row.ContainsKey("result")); // результат присутствует, но с ошибкой валидации
+        Assert.True(row.ContainsKey("result")); // result exists with validation error
         Assert.IsType<string>(row["ex"], exactMatch: false);
     }
 
@@ -999,7 +1162,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1052,13 +1215,13 @@ public class AIBatchTransformationTests
         var source = new MemorySource<ExpandoObject>(input);
         var dest = new MemoryDestination<ExpandoObject>();
 
-        var rawItem = "{\"rid\":\"7\",\"x\":1}"; // лишнее поле x нарушает схему
+        var rawItem = "{\"rid\":\"7\",\"x\":1}"; // x is a wrong schema property
         var response = $"{{\"results\":[{rawItem}]}}";
         var mock = new Mock<IChatClient>();
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1120,7 +1283,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1171,7 +1334,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1217,7 +1380,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1234,7 +1397,7 @@ public class AIBatchTransformationTests
         // Assert: first enriched, second has Exception
         Assert.Equal(2, dest.Data.Count);
         Assert.Equal("1", (object)((dynamic)dest.Data.ElementAt(0)).result.rid);
-        var second = (IDictionary<string, object?>)dest.Data.ElementAt(1);
+        var second = (IDictionary<string, object>)dest.Data.ElementAt(1);
         Assert.False(second.ContainsKey("result"));
         Assert.IsType<string>(second["ex"], exactMatch: false);
     }
@@ -1252,7 +1415,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1292,7 +1455,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1329,7 +1492,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )
@@ -1375,7 +1538,7 @@ public class AIBatchTransformationTests
         mock.Setup(c =>
                 c.GetResponseAsync(
                     It.IsAny<IEnumerable<ChatMessage>>(),
-                    It.IsAny<Microsoft.Extensions.AI.ChatOptions?>(),
+                    It.IsAny<Microsoft.Extensions.AI.ChatOptions>(),
                     It.IsAny<CancellationToken>()
                 )
             )

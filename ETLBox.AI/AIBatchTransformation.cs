@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
@@ -45,6 +46,13 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     /// Example: <c>"{"items": {{ input | json_array }} }"</c>
     /// </summary>
     public string Prompt { get; set; } = null!;
+
+    /// <summary>
+    /// Additional parameters to use in DotLiquid template as JSON string.
+    /// Example: {"config":{"model":"AAA"},"threshold":0.95}
+    /// Nested objects are supported and will be accessible in template via dot notation.
+    /// </summary>
+    public string? PromptParameters { get; set; }
 
     /// <summary>
     /// Grouped result-related settings (schema, field names and identifiers).
@@ -150,10 +158,51 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     private string BuildPrompt(ExpandoObject[] input)
     {
         var template = Template.Parse(Prompt);
-        // Pass the whole batch into template variable "input"
-        return template.Render(
-            Hash.FromDictionary(new Dictionary<string, object> { ["input"] = input })
+
+        // Start with custom parameters (if provided)
+        var parameters = ParsePromptParameters();
+
+        // Pass the whole batch into template variable "input" (always has priority)
+        parameters["input"] = input;
+
+        // Use InvariantCulture to ensure numbers are formatted with "." as decimal separator (JSON standard)
+        var result = template.Render(
+            new RenderParameters(CultureInfo.InvariantCulture)
+            {
+                LocalVariables = Hash.FromDictionary(parameters),
+            }
         );
+
+        return result;
+    }
+
+    private IDictionary<string, object?> ParsePromptParameters()
+    {
+        if (string.IsNullOrWhiteSpace(PromptParameters))
+        {
+            return new Dictionary<string, object?>();
+        }
+
+        try
+        {
+            // Parse JSON (more lenient, accepts unescaped newlines)
+            var jsonObject = JObject.Parse(PromptParameters!);
+
+            // Normalize to strict JSON (escapes newlines, fixes formatting)
+            var normalizedJson = jsonObject.ToString(Formatting.None);
+
+            // Deserialize to ExpandoObject with proper nested structure
+            return DeserializeExpandoObject(normalizedJson)
+                ?? throw new ETLBoxException("Failed to parse PromptParameters as JSON");
+        }
+        catch (ETLBoxException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            throw new ETLBoxException($"Failed to parse PromptParameters as JSON: {e.Message}", e);
+        }
     }
 
     private static string GetCleanText(string text)
@@ -230,7 +279,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
                 continue;
             }
 
-            var key = Convert.ToString(ridVal, System.Globalization.CultureInfo.InvariantCulture);
+            var key = Convert.ToString(ridVal, CultureInfo.InvariantCulture);
             if (!string.IsNullOrEmpty(key) && !dict.ContainsKey(key))
                 dict[key] = resultItem;
         }
@@ -354,8 +403,9 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
         {
             return JsonSerializer.Deserialize<ExpandoObject?>(response, s_jsonOptions);
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return null;
         }
     }
