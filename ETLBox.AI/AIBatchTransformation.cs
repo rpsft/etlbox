@@ -403,9 +403,8 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
         {
             return JsonSerializer.Deserialize<ExpandoObject?>(response, s_jsonOptions);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine(e.Message);
             return null;
         }
     }
