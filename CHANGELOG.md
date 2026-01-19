@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.15.3"></a>
+# 1.15.3
+✨ Features
+* Improvement: `AIBatchTransformation` now supports `PromptParameters` setting, that contains json dictionary with custom parameters for liquid-based Propmt template.
+
 <a name="1.15.2"></a>
 # 1.15.2
 ✨ Features
