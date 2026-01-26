@@ -284,6 +284,7 @@ public sealed class DataFlowXmlReader
             return null;
         }
 
+        // Standard property-by-property deserialization
         foreach (var propXml in node.Elements())
         {
             InitializeInstanceProperty(instance, type, propXml);
@@ -336,6 +337,14 @@ public sealed class DataFlowXmlReader
         if (IsValueType(prop.PropertyType))
         {
             SetValueTypeProperty(instance, prop, propXml, CurrentCulture);
+            return;
+        }
+
+        // Special handling for IDictionary<string, object?> - parse as nested XML
+        if (IsDictionaryWithObjectValue(prop.PropertyType))
+        {
+            var dict = CreateDictionary(prop.PropertyType, propXml);
+            prop.SetValue(instance, dict);
             return;
         }
 
@@ -473,7 +482,7 @@ public sealed class DataFlowXmlReader
 
     private static object? CreateValueType(Type type, XContainer node, CultureInfo cultureInfo)
     {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         foreach (var item in node.DescendantNodes().Where(n => n != null))
         {
             builder.Append((item as XText)?.Value.Trim() ?? "");
@@ -520,9 +529,22 @@ public sealed class DataFlowXmlReader
         var elements = node.Elements().ToArray();
         var add = type.GetMethod("Add", new[] { keyType, valueType });
 
+        // Special handling for IDictionary<string, object?> - parse nested structures
+        var isObjectValueType = valueType == typeof(object);
+
         foreach (var element in elements)
         {
-            var item = CreateObject(valueType, element);
+            object? item;
+            if (isObjectValueType)
+            {
+                // For object? values, parse recursively to handle nested structures
+                item = ParseXmlElementToObject(element);
+            }
+            else
+            {
+                item = CreateObject(valueType, element);
+            }
+
             if (item != null)
             {
                 add?.Invoke(dict, new[] { element.Name.LocalName, item });
@@ -530,6 +552,29 @@ public sealed class DataFlowXmlReader
         }
 
         return dict;
+    }
+
+    /// <summary>
+    /// Recursively parses XML element to object, creating dictionaries for nested elements
+    /// </summary>
+    private object? ParseXmlElementToObject(XElement element)
+    {
+        // If element has no child elements, return text value
+        if (!element.HasElements)
+        {
+            return string.IsNullOrEmpty(element.Value) ? null : element.Value;
+        }
+
+        // If element has child elements, create a dictionary
+        var nestedDict = new Dictionary<string, object?>();
+
+        foreach (var childElement in element.Elements())
+        {
+            var childValue = ParseXmlElementToObject(childElement);
+            nestedDict[childElement.Name.LocalName] = childValue;
+        }
+
+        return nestedDict;
     }
 
     private void TryInvokeSourceMethod(object instance, XElement propXml)
@@ -659,6 +704,36 @@ public sealed class DataFlowXmlReader
                 type.GetInterfaces(),
                 i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)
             );
+    }
+
+    private static bool IsDictionaryWithObjectValue(Type type)
+    {
+        // Handle both IDictionary<string, object> and IDictionary<string, object?>
+        var dictInterface =
+            type.IsInterface && type.IsGenericType
+                ? type
+                : Array.Find(
+                    type.GetInterfaces(),
+                    i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)
+                );
+
+        if (
+            dictInterface == null
+            || dictInterface.GetGenericTypeDefinition() != typeof(IDictionary<,>)
+        )
+        {
+            return false;
+        }
+
+        var genericArgs = dictInterface.GetGenericArguments();
+        if (genericArgs.Length != 2 || genericArgs[0] != typeof(string))
+        {
+            return false;
+        }
+
+        // Check for both object and object? (Nullable<object> doesn't exist, but the generic arg could still be object)
+        var valueType = genericArgs[1];
+        return valueType == typeof(object);
     }
 
     private static bool IsValueType(Type type)

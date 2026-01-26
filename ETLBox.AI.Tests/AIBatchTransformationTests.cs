@@ -461,7 +461,7 @@ public class AIBatchTransformationTests
         {
             var d = (IDictionary<string, object>)row;
             Assert.IsType<string>(d["ex"], exactMatch: false);
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, d["code"]);
+            Assert.Equal("BadRequest", d["code"]);
             Assert.Equal(errorContent, d["raw"]);
             Assert.True(d.ContainsKey("result"));
             // result deserialized from errorContent and contains rid="1"
@@ -532,7 +532,7 @@ public class AIBatchTransformationTests
         {
             var d = (IDictionary<string, object>)row;
             Assert.IsType<string>(d["ex"], exactMatch: false);
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, d["code"]);
+            Assert.Equal("BadRequest", d["code"]);
             Assert.Equal(errorContent, d["raw"]);
             Assert.True(d.ContainsKey("result"));
             Assert.Null(d["result"]);
@@ -599,7 +599,7 @@ public class AIBatchTransformationTests
         Assert.Single(dest.Data);
         var d = (IDictionary<string, object>)dest.Data.ElementAt(0);
         Assert.IsType<string>(d["ex"]);
-        Assert.Equal(System.Net.HttpStatusCode.BadRequest, d["code"]);
+        Assert.Equal("BadRequest", d["code"]);
         Assert.Empty((string)d["raw"]);
         Assert.True(d.ContainsKey("result"));
         Assert.Null(d["result"]);
@@ -677,24 +677,22 @@ public class AIBatchTransformationTests
               ""tags"": [{% for tag in tags %}""{{ tag }}""{% unless forloop.last %}, {% endunless %}{% endfor %}],
               ""items"": {{ input | json_array }}
             }",
-            // PromptParameters as JSON string (easy to store in XML/config)
-            PromptParameters =
-                @"{
-              ""config"": {
-                ""model"": ""xyz"",
-                ""params"": {
-                  ""test_value"": 0.7,
-                  ""settings"": {
-                    ""max_value"": 2000
-                  }
-                }
-              },
-              ""system"": {
-                ""language"": ""ru""
-              },
-              ""threshold"": 0.95,
-              ""tags"": [ ""production"", ""high-priority"", ""batch-processing"" ]
-            }",
+            // PromptParameters as dictionary
+            PromptParameters = new Dictionary<string, object>
+            {
+                ["config"] = new Dictionary<string, object>
+                {
+                    ["model"] = "xyz",
+                    ["params"] = new Dictionary<string, object>
+                    {
+                        ["test_value"] = 0.7,
+                        ["settings"] = new Dictionary<string, object> { ["max_value"] = 2000 },
+                    },
+                },
+                ["system"] = new Dictionary<string, object?> { ["language"] = "ru" },
+                ["threshold"] = 0.95,
+                ["tags"] = new[] { "production", "high-priority", "batch-processing" },
+            },
             ResultSettings = RS(ResultsSchemaRidOnly()),
             BatchSize = 2,
             FailOnError = true,
@@ -766,10 +764,10 @@ public class AIBatchTransformationTests
             ApiSettings = settings,
             Prompt = "{{ input | json_array }}",
             // Try to override "input" - should be ignored
-            PromptParameters =
-                @"{
-              ""input"": ""this should be overridden""
-            }",
+            PromptParameters = new Dictionary<string, object?>
+            {
+                ["input"] = "this should be overridden",
+            },
             ResultSettings = RS(ResultsSchemaRidOnly()),
             BatchSize = 1,
             FailOnError = true,

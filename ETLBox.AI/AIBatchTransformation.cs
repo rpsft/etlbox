@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -48,11 +47,11 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     public string Prompt { get; set; } = null!;
 
     /// <summary>
-    /// Additional parameters to use in DotLiquid template as JSON string.
-    /// Example: {"config":{"model":"AAA"},"threshold":0.95}
-    /// Nested objects are supported and will be accessible in template via dot notation.
+    /// Additional parameters to use in DotLiquid template.
+    /// Supports nested objects and will be accessible in template via dot notation.
+    /// This property is automatically populated during XML deserialization.
     /// </summary>
-    public string? PromptParameters { get; set; }
+    public IDictionary<string, object?>? PromptParameters { get; set; }
 
     /// <summary>
     /// Grouped result-related settings (schema, field names and identifiers).
@@ -178,31 +177,9 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
 
     private IDictionary<string, object?> ParsePromptParameters()
     {
-        if (string.IsNullOrWhiteSpace(PromptParameters))
-        {
-            return new Dictionary<string, object?>();
-        }
-
-        try
-        {
-            // Parse JSON (more lenient, accepts unescaped newlines)
-            var jsonObject = JObject.Parse(PromptParameters!);
-
-            // Normalize to strict JSON (escapes newlines, fixes formatting)
-            var normalizedJson = jsonObject.ToString(Formatting.None);
-
-            // Deserialize to ExpandoObject with proper nested structure
-            return DeserializeExpandoObject(normalizedJson)
-                ?? throw new ETLBoxException("Failed to parse PromptParameters as JSON");
-        }
-        catch (ETLBoxException)
-        {
-            throw;
-        }
-        catch (Exception e)
-        {
-            throw new ETLBoxException($"Failed to parse PromptParameters as JSON: {e.Message}", e);
-        }
+        return PromptParameters is { Count: > 0 }
+            ? PromptParameters
+            : new Dictionary<string, object?>();
     }
 
     private static string GetCleanText(string text)
@@ -294,7 +271,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     {
         foreach (var item in input)
         {
-            SetFieldValue(item, ResultSettings.HttpCodeField, HttpStatusCode.OK);
+            SetFieldValue(item, ResultSettings.HttpCodeField, "OK");
 
             ExpandoObject? found = null;
             var res = (IDictionary<string, object?>)item;
@@ -369,7 +346,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     private void ApplyErrorHttp(IDictionary<string, object?> res, HttpStatusCodeException httpEx)
     {
         res[ResultSettings.ResultField] = DeserializeExpandoObject(httpEx.Content);
-        SetFieldValue(res, ResultSettings.HttpCodeField, httpEx.HttpCode);
+        SetFieldValue(res, ResultSettings.HttpCodeField, httpEx.HttpCode.ToString());
         SetFieldValue(res, ResultSettings.RawResponseField, httpEx.Content);
     }
 
