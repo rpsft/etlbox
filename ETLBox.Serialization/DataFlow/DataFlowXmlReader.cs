@@ -559,11 +559,13 @@ public sealed class DataFlowXmlReader
     /// <summary>
     /// Recursively parses XML element to object, creating dictionaries for nested elements.
     /// Leaf values (elements without children) are returned as strings since XML has no type information.
+    /// Empty or whitespace-only leaf elements are returned as null and will be excluded from the dictionary.
     /// </summary>
     private static object? ParseXmlElementToDictionary(XElement element)
     {
         // If element has no child elements, return text value as string
         // Note: All leaf values are strings - caller must convert if needed
+        // Empty values return null, which causes them to be skipped in CreateDictionary
         if (!element.HasElements)
         {
             return string.IsNullOrEmpty(element.Value) ? null : element.Value;
