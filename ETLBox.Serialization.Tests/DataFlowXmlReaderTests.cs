@@ -191,6 +191,49 @@ public class DataFlowXmlReaderTests
         Assert.Equal("30", nested["Timeout"]);
     }
 
+    [Fact]
+    public void DataFlowXmlReader_SimpleValuesWithNumbers_ShouldDeserializeAsStrings()
+    {
+        // Arrange - verify that simple values in IDictionary<string, object?> are deserialized as strings
+        // This is expected behavior because XML has no type information
+        var xml =
+            @"
+            <TestClassWithDictionary>
+                <Name>TypeTest</Name>
+                <Parameters>
+                    <IntValue>42</IntValue>
+                    <DecimalValue>3.14</DecimalValue>
+                    <BoolValue>true</BoolValue>
+                    <DateValue>2025-01-26</DateValue>
+                    <TextValue>hello</TextValue>
+                </Parameters>
+            </TestClassWithDictionary>";
+
+        // Act
+        var result = DeserializeXml(xml);
+
+        // Assert - all values are strings (XML has no type metadata)
+        Assert.NotNull(result);
+        Assert.NotNull(result.Parameters);
+        Assert.Equal(5, result.Parameters.Count);
+
+        // All simple values are deserialized as strings
+        Assert.IsType<string>(result.Parameters["IntValue"]);
+        Assert.Equal("42", result.Parameters["IntValue"]);
+
+        Assert.IsType<string>(result.Parameters["DecimalValue"]);
+        Assert.Equal("3.14", result.Parameters["DecimalValue"]);
+
+        Assert.IsType<string>(result.Parameters["BoolValue"]);
+        Assert.Equal("true", result.Parameters["BoolValue"]);
+
+        Assert.IsType<string>(result.Parameters["DateValue"]);
+        Assert.Equal("2025-01-26", result.Parameters["DateValue"]);
+
+        Assert.IsType<string>(result.Parameters["TextValue"]);
+        Assert.Equal("hello", result.Parameters["TextValue"]);
+    }
+
     private static TestClassWithDictionary DeserializeXml(string xml)
     {
         var xElement = XElement.Parse(xml);

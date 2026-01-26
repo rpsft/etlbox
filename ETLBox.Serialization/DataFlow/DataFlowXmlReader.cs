@@ -530,6 +530,8 @@ public sealed class DataFlowXmlReader
         var add = type.GetMethod("Add", new[] { keyType, valueType });
 
         // Special handling for IDictionary<string, object?> - parse nested structures
+        // Note: For object? values, all leaf values are deserialized as strings (XML has no type info)
+        // Only nested elements with children become Dictionary<string, object?>
         var isObjectValueType = valueType == typeof(object);
 
         foreach (var element in elements)
@@ -555,11 +557,13 @@ public sealed class DataFlowXmlReader
     }
 
     /// <summary>
-    /// Recursively parses XML element to object, creating dictionaries for nested elements
+    /// Recursively parses XML element to object, creating dictionaries for nested elements.
+    /// Leaf values (elements without children) are returned as strings since XML has no type information.
     /// </summary>
     private object? ParseXmlElementToObject(XElement element)
     {
-        // If element has no child elements, return text value
+        // If element has no child elements, return text value as string
+        // Note: All leaf values are strings - caller must convert if needed
         if (!element.HasElements)
         {
             return string.IsNullOrEmpty(element.Value) ? null : element.Value;
