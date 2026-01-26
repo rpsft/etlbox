@@ -560,7 +560,7 @@ public sealed class DataFlowXmlReader
     /// Recursively parses XML element to object, creating dictionaries for nested elements.
     /// Leaf values (elements without children) are returned as strings since XML has no type information.
     /// </summary>
-    private object? ParseXmlElementToObject(XElement element)
+    private static IDictionary<string, object?> ParseXmlElementToDictionary(XElement element)
     {
         // If element has no child elements, return text value as string
         // Note: All leaf values are strings - caller must convert if needed
