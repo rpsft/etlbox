@@ -540,7 +540,7 @@ public sealed class DataFlowXmlReader
             if (isObjectValueType)
             {
                 // For object? values, parse recursively to handle nested structures
-                item = ParseXmlElementToObject(element);
+                item = ParseXmlElementToDictionary(element);
             }
             else
             {
@@ -560,7 +560,7 @@ public sealed class DataFlowXmlReader
     /// Recursively parses XML element to object, creating dictionaries for nested elements.
     /// Leaf values (elements without children) are returned as strings since XML has no type information.
     /// </summary>
-    private static IDictionary<string, object?> ParseXmlElementToDictionary(XElement element)
+    private static object? ParseXmlElementToDictionary(XElement element)
     {
         // If element has no child elements, return text value as string
         // Note: All leaf values are strings - caller must convert if needed
@@ -574,7 +574,7 @@ public sealed class DataFlowXmlReader
 
         foreach (var childElement in element.Elements())
         {
-            var childValue = ParseXmlElementToObject(childElement);
+            var childValue = ParseXmlElementToDictionary(childElement);
             nestedDict[childElement.Name.LocalName] = childValue;
         }
 
