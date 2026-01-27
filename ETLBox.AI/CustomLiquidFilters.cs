@@ -35,6 +35,13 @@ public static class CustomLiquidFilters
         return input?.Replace("'", "''");
     }
 
+    // Escape backslash by doubling them
+    [PublicAPI]
+    public static string? EscapeBackslash(string? input)
+    {
+        return input?.Replace("\\", "\\\\");
+    }
+
     // Recursively escape single quotes inside nested objects/dictionaries
     [PublicAPI]
     public static object? EscapeSingleQuotesRecursive(object? input)

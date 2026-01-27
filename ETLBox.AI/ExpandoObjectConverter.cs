@@ -58,12 +58,21 @@ namespace ETLBox.AI
                 JsonTokenType.StartObject => Read(ref reader, typeof(ExpandoObject), options),
                 JsonTokenType.StartArray => ReadArray(ref reader, options),
                 JsonTokenType.String => reader.GetString(),
-                JsonTokenType.Number => reader.TryGetInt64(out var l) ? l : reader.GetDouble(),
+                JsonTokenType.Number => GetNumber(reader),
                 JsonTokenType.True => reader.GetBoolean(),
                 JsonTokenType.False => reader.GetBoolean(),
                 JsonTokenType.Null => null,
                 _ => throw new JsonException(),
             };
+        }
+
+        private static object GetNumber(Utf8JsonReader reader)
+        {
+            if (reader.TryGetInt64(out var l))
+            {
+                return l;
+            }
+            return reader.GetDouble();
         }
 
         private object?[] ReadArray(ref Utf8JsonReader reader, JsonSerializerOptions options)

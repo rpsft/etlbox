@@ -36,7 +36,7 @@ public class ExpandoObjectConverterTests
         // Assert
         var d = (IDictionary<string, object>)exp;
         Assert.Equal("text", d["s"]);
-        Assert.Equal(1.0, d["i"]);
+        Assert.Equal(1L, d["i"]);
         Assert.Equal(1.5, d["d"]);
         Assert.True((bool)d["b1"]);
         Assert.False((bool)d["b0"]);
@@ -45,17 +45,17 @@ public class ExpandoObjectConverterTests
 
         Assert.IsAssignableFrom<ExpandoObject>(d["obj"]);
         var obj = (IDictionary<string, object>)(ExpandoObject)d["obj"]!;
-        Assert.Equal(2.0, obj["a"]);
+        Assert.Equal(2L, obj["a"]);
 
         Assert.IsAssignableFrom<object[]>(d["arr"]);
         var arr = (object[])d["arr"]!;
         Assert.Equal(4, arr.Length);
-        Assert.Equal(1.0, arr[0]);
+        Assert.Equal(1L, arr[0]);
         Assert.Equal("x", arr[1]);
         Assert.Null(arr[2]);
         Assert.IsAssignableFrom<ExpandoObject>(arr[3]);
         var arrObj = (IDictionary<string, object>)(ExpandoObject)arr[3]!;
-        Assert.Equal(2.0, arrObj["k"]);
+        Assert.Equal(2L, arrObj["k"]);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class ExpandoObjectConverterTests
         // Assert (partial shape verification)
         var d = (IDictionary<string, object>)dst;
         Assert.Equal("alice", d["name"]);
-        Assert.Equal(33.0, d["age"]);
+        Assert.Equal(33L, d["age"]);
         Assert.Contains("city", ((IDictionary<string, object>)d["addr"]).Keys);
         var flags = (object[])d["flags"]!;
         Assert.True((bool)flags[0]);

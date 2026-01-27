@@ -1,6 +1,4 @@
-﻿
-using System.Dynamic;
-
+﻿using System.Dynamic;
 using DotLiquid;
 
 namespace ETLBox.AI.Tests;
@@ -61,6 +59,17 @@ public class CustomLiquidFiltersTests
     }
 
     [Fact]
+    public void EscapeBackslash_ShouldDoubleBackslash_AndHandleNull()
+    {
+        Assert.Equal(
+            @"{""Response"": ""{\\""respondent_id\\"":1}""}",
+            CustomLiquidFilters.EscapeBackslash(@"{""Response"": ""{\""respondent_id\"":1}""}")
+        );
+        Assert.Null(CustomLiquidFilters.EscapeBackslash(null!));
+        Assert.Equal(string.Empty, CustomLiquidFilters.EscapeBackslash(string.Empty));
+    }
+
+    [Fact]
     public void JsonArray_ShouldSerializeExpandoArray_WithoutNulls()
     {
         dynamic a = new ExpandoObject();
@@ -101,5 +110,118 @@ public class CustomLiquidFiltersTests
 
         Assert.Equal("123", CustomLiquidFilters.AsString(123));
         Assert.Null(CustomLiquidFilters.AsString(null!));
+    }
+
+    [Fact]
+    public void JsonArray_ShouldEscapeDoubleQuotes_InStringValues()
+    {
+        // Arrange: create an object with strings containing double quotes
+        // This simulates error messages like:
+        // "Value " neutral " is not defined in enum. Path 'reasons[0].polarity', line 1, position 124."
+        dynamic obj = new ExpandoObject();
+        obj.id = 1;
+        obj.message =
+            "Value \" neutral \" is not defined in enum. Path 'reasons[0].polarity', line 1, position 124.";
+        obj.description = "This is a \"test\" message with \"multiple\" quotes";
+
+        var input = new ExpandoObject[] { obj };
+
+        // Act: serialize using JsonArray filter
+        var json = CustomLiquidFilters.JsonArray(input);
+
+        // Assert: verify JSON is valid and quotes are properly escaped
+        var doc = System.Text.Json.JsonDocument.Parse(json);
+        var arr = doc.RootElement;
+
+        Assert.Equal(System.Text.Json.JsonValueKind.Array, arr.ValueKind);
+        Assert.Equal(1, arr.GetArrayLength());
+
+        var firstItem = arr[0];
+        Assert.Equal(1, firstItem.GetProperty("id").GetInt32());
+
+        // Verify that the message was deserialized correctly (quotes preserved in value)
+        var message = firstItem.GetProperty("message").GetString();
+        Assert.Equal(
+            "Value \" neutral \" is not defined in enum. Path 'reasons[0].polarity', line 1, position 124.",
+            message
+        );
+
+        var description = firstItem.GetProperty("description").GetString();
+        Assert.Equal("This is a \"test\" message with \"multiple\" quotes", description);
+
+        // Verify that in the JSON string itself, quotes are escaped with backslash
+        Assert.Contains("\\\" neutral \\\"", json);
+        Assert.Contains("\\\"test\\\"", json);
+        Assert.Contains("\\\"multiple\\\"", json);
+    }
+
+    [Fact]
+    public void AsString_ShouldEscapeDoubleQuotes_ForDictionaryValues()
+    {
+        // Arrange: dictionary with string containing embedded double quotes
+        var dict = new Dictionary<string, object>
+        {
+            ["error"] = "Value \" neutral \" is not defined",
+            ["path"] = "reasons[0].polarity",
+        };
+
+        // Act: serialize using AsString filter
+        var json = CustomLiquidFilters.AsString(dict);
+
+        // Assert: verify JSON is valid and quotes are properly escaped
+        Assert.NotNull(json);
+
+        var doc = System.Text.Json.JsonDocument.Parse(json);
+        var root = doc.RootElement;
+
+        Assert.Equal(System.Text.Json.JsonValueKind.Object, root.ValueKind);
+
+        // Verify deserialized values preserve original quotes
+        var error = root.GetProperty("error").GetString();
+        Assert.Equal("Value \" neutral \" is not defined", error);
+
+        var path = root.GetProperty("path").GetString();
+        Assert.Equal("reasons[0].polarity", path);
+
+        // Verify that in the JSON string itself, quotes are escaped
+        Assert.Contains("\\\" neutral \\\"", json);
+    }
+
+    [Fact]
+    public void JsonArray_WithSpecialCharacters_ShouldProduceValidJson()
+    {
+        // Arrange: test various special characters that need escaping in JSON
+        dynamic obj = new ExpandoObject();
+        obj.id = 1;
+        obj.quotes = "double\"quote and single'quote";
+        obj.backslash = "path\\to\\file";
+        obj.newline = "line1\nline2";
+        obj.tab = "col1\tcol2";
+        obj.carriageReturn = "text\rmore";
+
+        var input = new ExpandoObject[] { obj };
+
+        // Act
+        var json = CustomLiquidFilters.JsonArray(input);
+
+        // Assert: JSON should be valid and parseable
+        var doc = System.Text.Json.JsonDocument.Parse(json);
+        var arr = doc.RootElement;
+
+        Assert.Equal(1, arr.GetArrayLength());
+        var firstItem = arr[0];
+
+        // Verify all special characters are correctly escaped and preserved
+        Assert.Equal("double\"quote and single'quote", firstItem.GetProperty("quotes").GetString());
+        Assert.Equal("path\\to\\file", firstItem.GetProperty("backslash").GetString());
+        Assert.Equal("line1\nline2", firstItem.GetProperty("newline").GetString());
+        Assert.Equal("col1\tcol2", firstItem.GetProperty("tab").GetString());
+        Assert.Equal("text\rmore", firstItem.GetProperty("carriageReturn").GetString());
+
+        // Verify escaping in the raw JSON string
+        Assert.Contains("\\\"quote", json); // escaped double quote
+        Assert.Contains("\\\\to\\\\", json); // escaped backslash
+        Assert.Contains("\\n", json); // escaped newline
+        Assert.Contains("\\t", json); // escaped tab
     }
 }

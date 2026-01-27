@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.15.4"></a>
+# 1.15.4
+✨ Features
+* Improvement: Add to `DataFlowXmlReader` in `ETLBox.Serialization` library ability to deserialize `IDictionary<string,object>` type from `DataFlow` XML.
+* Improvement: Changed type of `PromptParameters` setting in `AIBatchTransformation`. `PromptParameters` now have `IDictionary<string,object>` type with custom parameters for liquid-based Propmpt template to use it in render directly.
+
+<a name="1.15.3"></a>
+# 1.15.3
+✨ Features
+* Improvement: `AIBatchTransformation` now supports `PromptParameters` string setting, that contains json dictionary with custom parameters for liquid-based Propmpt template.
+
 <a name="1.15.2"></a>
 # 1.15.2
 ✨ Features

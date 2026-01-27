@@ -77,6 +77,14 @@ namespace ETLBox.Serialization.Tests
                             <Escape>#</Escape>
                             <Quote>$</Quote>
                         </Configuration>
+                        <Metadata>
+                            <Source>TestSystem</Source>
+                            <Version>1.0</Version>
+                            <Settings>
+                                <Timeout>30</Timeout>
+                                <Retries>3</Retries>
+                            </Settings>
+                        </Metadata>
                         <LinkTo>
                             <JsonTransformation>
                                 <Mappings>
@@ -129,6 +137,23 @@ namespace ETLBox.Serialization.Tests
             customCsvSource.NullEnum.Should().Be(CustomCsvSource.EnumType.Value1);
             customCsvSource.IntegerList.Should().NotBeNullOrEmpty();
             customCsvSource.IntegerList.Should().BeEquivalentTo(new[] { 1, 2, 3 });
+
+            // Verify Metadata (IDictionary<string, object?>) deserialization
+            customCsvSource.Metadata.Should().NotBeNull();
+            customCsvSource.Metadata.Should().HaveCount(3);
+            customCsvSource.Metadata.Should().ContainKey("Source");
+            customCsvSource.Metadata.Should().ContainKey("Version");
+            customCsvSource.Metadata.Should().ContainKey("Settings");
+            customCsvSource.Metadata!["Source"].Should().Be("TestSystem");
+            customCsvSource.Metadata["Version"].Should().Be("1.0");
+
+            var settings = customCsvSource.Metadata["Settings"] as IDictionary<string, object?>;
+            settings.Should().NotBeNull();
+            settings!.Should().ContainKey("Timeout");
+            settings.Should().ContainKey("Retries");
+            settings!["Timeout"].Should().Be("30");
+            settings["Retries"].Should().Be("3");
+
             customCsvSource.Char.Should().Be('#');
             customCsvSource.Byte.Should().Be(1);
             customCsvSource.Int.Should().Be(-1);
@@ -305,6 +330,87 @@ namespace ETLBox.Serialization.Tests
             );
         }
 
+        [Fact]
+        public void DataFlow_AITransformation_ShouldBePassed()
+        {
+            // Arrange
+            var referenceId = Guid.NewGuid();
+            var name = Guid.NewGuid().ToString();
+            var xml =
+                @$"<EtlDataFlowStep>
+			        <ReferenceId>
+                        {referenceId}
+                    </ReferenceId>
+			        <Name>
+                        {name}
+                    </Name>
+			        <TimeoutMilliseconds>100</TimeoutMilliseconds>
+                    <CustomCsvSource>
+                        <Uri>{_csvUri}</Uri>
+                        <Configuration>
+                            <Delimiter>;</Delimiter>
+                            <Escape>#</Escape>
+                            <Quote>$</Quote>
+                        </Configuration>
+                        <LinkTo>
+                            <AIBatchTransformation>
+						<BatchSize>10</BatchSize>
+						<ApiSettings>
+							<ApiKey>ApiKey</ApiKey>
+							<ApiType>openai</ApiType>
+							<ApiModel>ApiModel</ApiModel>
+							<ApiBaseUrl>https://localhost</ApiBaseUrl>
+						</ApiSettings>
+						<FailOnError>false</FailOnError>
+						<ResultSettings>
+						<ResultItemsJsonPath>results</ResultItemsJsonPath>
+						<ResultField>Result</ResultField>
+						<RawResponseField>Response</RawResponseField>
+						<ExceptionField>Exception</ExceptionField>
+						<HttpCodeField>HttpCode</HttpCodeField>
+						<InputDataIdentificationField>respondent_id</InputDataIdentificationField>
+						<ResultDataIdentificationField>respondent_id</ResultDataIdentificationField>
+						<ResultsJsonSchema></ResultsJsonSchema>
+						</ResultSettings>
+                        <PromptParameters>
+                          <ReasonsList>12345</ReasonsList>
+                          <MaxTokens>1000</MaxTokens>
+                          <Temperature>0.7</Temperature>
+                          <NestedConfig>
+                            <Model>gpt-4</Model>
+                            <Version>v1</Version>
+                          </NestedConfig>
+                        </PromptParameters>
+						<Prompt>Prompt</Prompt>
+                                <LinkTo>
+                                    <MemoryDestination>
+                                    </MemoryDestination>
+                                </LinkTo>
+                                <LinkErrorTo>
+                                    <ErrorLogDestination/>
+                                </LinkErrorTo>
+                            </AIBatchTransformation>
+                        </LinkTo>
+                    </CustomCsvSource>
+		        </EtlDataFlowStep>";
+
+            using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
+            var serializer = new XmlSerializer(typeof(EtlDataFlowStep));
+
+            // Act
+            var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
+            step.Invoke(CancellationToken.None);
+
+            // Assert - Verify basic deserialization
+            step.Source.Should().NotBeNull().And.BeOfType<CustomCsvSource>();
+            step.Destinations.Should().NotBeNull().And.HaveCountGreaterThan(0);
+
+            // Verify ErrorDestinations structure
+            step.ErrorDestinations.Should().NotBeNull();
+            step.ErrorDestinations.Should().HaveCount(1);
+            step.ErrorDestinations[0].Should().BeOfType<ErrorLogDestination>();
+        }
+
         [Theory]
         [InlineData(nameof(MemoryDestination))]
         [InlineData(nameof(DbDestination))]
@@ -451,6 +557,7 @@ namespace ETLBox.Serialization.Tests
             public EnumType Enum { get; set; } = EnumType.Value1;
             public EnumType? NullEnum { get; set; } = null;
             public List<int> IntegerList { get; set; } = null!;
+            public IDictionary<string, object?>? Metadata { get; set; } = null;
 
             public enum EnumType
             {
@@ -460,8 +567,6 @@ namespace ETLBox.Serialization.Tests
         }
 
         private sealed class CustomCsvDestination<T> : CsvDestination<T> { }
-
-#pragma warning restore S1144 // Unused private types or members should be removed
 
         public void Dispose()
         {
