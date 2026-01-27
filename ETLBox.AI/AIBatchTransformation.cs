@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -45,6 +45,13 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     /// Example: <c>"{"items": {{ input | json_array }} }"</c>
     /// </summary>
     public string Prompt { get; set; } = null!;
+
+    /// <summary>
+    /// Additional parameters to use in DotLiquid template.
+    /// Supports nested objects and will be accessible in template via dot notation.
+    /// This property is automatically populated during XML deserialization.
+    /// </summary>
+    public IDictionary<string, object?>? PromptParameters { get; set; }
 
     /// <summary>
     /// Grouped result-related settings (schema, field names and identifiers).
@@ -150,10 +157,29 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     private string BuildPrompt(ExpandoObject[] input)
     {
         var template = Template.Parse(Prompt);
-        // Pass the whole batch into template variable "input"
-        return template.Render(
-            Hash.FromDictionary(new Dictionary<string, object> { ["input"] = input })
+
+        // Start with custom parameters (if provided)
+        var parameters = ParsePromptParameters();
+
+        // Pass the whole batch into template variable "input" (always has priority)
+        parameters["input"] = input;
+
+        // Use InvariantCulture to ensure numbers are formatted with "." as decimal separator (JSON standard)
+        var result = template.Render(
+            new RenderParameters(CultureInfo.InvariantCulture)
+            {
+                LocalVariables = Hash.FromDictionary(parameters),
+            }
         );
+
+        return result;
+    }
+
+    private IDictionary<string, object?> ParsePromptParameters()
+    {
+        return PromptParameters is { Count: > 0 }
+            ? PromptParameters
+            : new Dictionary<string, object?>();
     }
 
     private static string GetCleanText(string text)
@@ -230,7 +256,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
                 continue;
             }
 
-            var key = Convert.ToString(ridVal, System.Globalization.CultureInfo.InvariantCulture);
+            var key = Convert.ToString(ridVal, CultureInfo.InvariantCulture);
             if (!string.IsNullOrEmpty(key) && !dict.ContainsKey(key))
                 dict[key] = resultItem;
         }
@@ -245,7 +271,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     {
         foreach (var item in input)
         {
-            SetFieldValue(item, ResultSettings.HttpCodeField, HttpStatusCode.OK);
+            SetFieldValue(item, ResultSettings.HttpCodeField, "OK");
 
             ExpandoObject? found = null;
             var res = (IDictionary<string, object?>)item;
@@ -320,7 +346,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     private void ApplyErrorHttp(IDictionary<string, object?> res, HttpStatusCodeException httpEx)
     {
         res[ResultSettings.ResultField] = DeserializeExpandoObject(httpEx.Content);
-        SetFieldValue(res, ResultSettings.HttpCodeField, httpEx.HttpCode);
+        SetFieldValue(res, ResultSettings.HttpCodeField, httpEx.HttpCode.ToString());
         SetFieldValue(res, ResultSettings.RawResponseField, httpEx.Content);
     }
 
@@ -354,7 +380,7 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
         {
             return JsonSerializer.Deserialize<ExpandoObject?>(response, s_jsonOptions);
         }
-        catch
+        catch (Exception)
         {
             return null;
         }

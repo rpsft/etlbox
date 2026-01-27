@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ETLBox.AI\ETLBox.AI.csproj" />
     <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
     <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
     <ProjectReference Include="..\ETLBox.Serialization\ETLBox.Serialization.csproj" />
