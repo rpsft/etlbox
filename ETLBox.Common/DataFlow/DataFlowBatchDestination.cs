@@ -1,7 +1,12 @@
-using ALE.ETLBox.Common.DataFlow;
+using System;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+
 using ETLBox.Primitives;
 
-namespace ALE.ETLBox.DataFlow
+using JetBrains.Annotations;
+
+namespace ALE.ETLBox.Common.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowBatchDestination<TInput>

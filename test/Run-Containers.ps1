@@ -1,4 +1,5 @@
 #!/usr/bin/env pwsh
+#requires -PSEdition Core
 param (
   [Alias("c")]
   [switch]
