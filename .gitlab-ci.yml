@@ -1,6 +1,8 @@
 include:
   # Release version in current branch
   - .version.yml
+  # GitVersion component
+  - component: $CI_SERVER_FQDN/open-source/ci-components/ultimate-auto-semversioning@0.1.5
 
 variables:
   # Opt out of telemetry (turbo and others), see https://consoledonottrack.com/
@@ -46,9 +48,6 @@ workflow:
         # Package version "by default", from .version.yml and added current pipeline no
         # (when pipeline is started on a tag, the tag name provides version number)
         PACKAGE_VERSION: "${PACKAGE_RELEASE}${PACKAGE_POSTFIX}.${CI_PIPELINE_IID}"
-
-include:
-  - component: $CI_SERVER_FQDN/open-source/ci-components/ultimate-auto-semversioning@0.1.5
 
 default:
   image: mcr.microsoft.com/dotnet/sdk:8.0
@@ -169,7 +168,7 @@ publish:nuget-org:
     - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGETORG_SOURCE --api-key $NUGET_ORG_API_KEY
   rules:
-    - if: $SOURCE_BRANCH == "master"
+    - if: $GitVersion_SemVer =~ /^[0-9]+\.[0-9]+\.[0-9]+$/
       when: manual
   needs:
     - build_job
