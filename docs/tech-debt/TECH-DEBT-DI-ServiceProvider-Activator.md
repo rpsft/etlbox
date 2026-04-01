@@ -65,8 +65,11 @@ Add an optional `IServiceProvider` parameter to `DataFlowXmlReader` that enables
 
        public object? CreateInstance(Type type)
        {
-           // Use ActivatorUtilities.CreateInstance for DI-aware instantiation
-           return ActivatorUtilities.CreateInstance(_serviceProvider, type);
+           // First try to resolve from the container to respect registered lifetimes
+           // (Transient/Scoped/Singleton). Fall back to ActivatorUtilities.CreateInstance
+           // for types not registered in the container.
+           return _serviceProvider.GetService(type)
+               ?? ActivatorUtilities.CreateInstance(_serviceProvider, type);
        }
    }
    ```
