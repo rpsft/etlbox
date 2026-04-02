@@ -188,8 +188,12 @@ Each ETLBox library should provide extension methods for `IServiceCollection` to
    }
    ```
 
-3. **Aggregate registration method**:
+3. **Aggregate registration method** *(example for consuming applications, not part of ETLBox packages)*:
+
+   > **Note:** This extension is shown as a reference for third-party consumers who want a single registration call across multiple ETLBox packages. It should NOT be shipped inside any individual ETLBox NuGet package, as it would introduce dependencies on all other ETLBox packages, defeating the purpose of the modular package structure.
+
    ```csharp
+   // Example: consumers can create this in their own project
    public static class EtlBoxServiceCollectionExtensions
    {
        public static IServiceCollection AddEtlBox(this IServiceCollection services)
@@ -199,7 +203,7 @@ Each ETLBox library should provide extension methods for `IServiceCollection` to
            services.AddEtlBoxJson();
            services.AddEtlBoxXml();
            services.AddEtlBoxSerialization();
-           // ... other libraries
+           // ... other libraries as needed
            return services;
        }
    }
