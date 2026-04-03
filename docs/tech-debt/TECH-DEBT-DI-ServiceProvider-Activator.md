@@ -223,66 +223,95 @@ Each ETLBox library should provide extension methods for `IServiceCollection` to
 
 ## Part 3: ILogger Constructor Support for All Steps
 
-Add an optional `ILogger` parameter to constructors of all data flow steps to enable structured logging.
+Add an optional `ILogger` parameter to constructors of all data flow steps to enable structured logging. This uses a **combined approach**: base classes store a non-generic `ILogger` property, while concrete classes accept `ILogger<T>` in their constructors for proper log category resolution.
+
+### Design Rationale
+
+- `ILogger<T>` implements `ILogger`, so a concrete class can accept `ILogger<T>` and pass it up to a base class that stores `ILogger` — no information is lost at the DI level, and the base class can use the logger without knowing the concrete type.
+- DI containers resolve `ILogger<T>` automatically (no special registration needed), preserving the concrete class name as the log category.
+- **Do NOT provide both `ILogger<T>` and `ILogger` constructor overloads on the same class** — this creates DI ambiguity since `ILogger<T>` already is-a `ILogger`. Concrete classes should only accept `ILogger<T>`; base classes should only use non-generic `ILogger`.
+- The `= null` default on every constructor level ensures existing parameterless constructors keep working — no breaking change.
 
 ### Implementation Pattern
 
-1. **Add `ILogger` field to base classes or each step**:
+1. **Base class stores `ILogger` and chains through the hierarchy**:
+
+   This replaces the current static `ControlFlow.LoggerFactory.CreateLogger<GenericTask>()` pattern with instance-level logger injection. Each level in the hierarchy forwards the logger via `= null` default parameter.
+
    ```csharp
-   public class DbSource<TOutput> : DataFlowSource<TOutput>
-   {
-       private readonly ILogger? _logger;
-
-       // Existing parameterless constructor (preserved for backward compatibility)
-       public DbSource() : this(null) { }
-
-       // New constructor with ILogger
-       public DbSource(ILogger<DbSource<TOutput>>? logger)
-       {
-           _logger = logger;
-       }
-
-       // Alternative: non-generic ILogger for easier DI registration
-       public DbSource(ILogger? logger)
-       {
-           _logger = logger;
-       }
-   }
-   ```
-
-2. **Consider base class approach**:
-   ```csharp
-   public abstract class DataFlowComponent
+   // Top-level base — single storage point for the logger
+   public abstract class GenericTask : ITask
    {
        protected ILogger? Logger { get; }
 
-       protected DataFlowComponent(ILogger? logger = null)
+       protected GenericTask(ILogger? logger = null)
        {
            Logger = logger;
        }
    }
+
+   // Intermediate base — forwards logger to GenericTask
+   public abstract class DataFlowTask : GenericTask
+   {
+       protected DataFlowTask(ILogger? logger = null) : base(logger) { }
+
+       // LogStart, LogProgress, LogFinish use this.Logger directly
+   }
+
+   // Category-specific base — forwards logger to DataFlowTask
+   public abstract class DataFlowSource<TOutput> : DataFlowTask
+   {
+       protected DataFlowSource(ILogger? logger = null) : base(logger) { }
+   }
    ```
 
-3. **Usage in steps**:
+2. **Concrete classes accept `ILogger<T>` (generic) for DI resolution**:
+
+   The generic `ILogger<T>` preserves the concrete class name as the log category (e.g., `"ETLBox.DbSource<MyRow>"` appears in log output). Since `ILogger<T> : ILogger`, it flows up to the base naturally.
+
    ```csharp
-   public class RowTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
+   public class DbSource<TOutput> : DataFlowSource<TOutput>
    {
-       private readonly ILogger? _logger;
+       // Existing parameterless constructor (backward compatibility)
+       public DbSource() : this(logger: null) { }
 
-       public RowTransformation() : this(null) { }
-
-       public RowTransformation(ILogger? logger)
+       // Existing constructors chain to the logger-accepting one
+       public DbSource(string tableName) : this(logger: null)
        {
-           _logger = logger;
+           TableName = tableName;
        }
 
-       protected override void ProcessRow(TInput row)
+       // New: DI-resolved constructor
+       public DbSource(ILogger<DbSource<TOutput>>? logger) : base(logger) { }
+
+       public DbSource(IConnectionManager connectionManager,
+                        ILogger<DbSource<TOutput>>? logger = null) : base(logger)
        {
-           _logger?.LogDebug("Processing row: {RowType}", typeof(TInput).Name);
-           // ... existing logic
+           ConnectionManager = connectionManager;
        }
    }
    ```
+
+3. **Usage in steps — logger is inherited from base, no private field needed**:
+   ```csharp
+   public class RowTransformation<TInput, TOutput> : DataFlowTransformation<TInput, TOutput>
+   {
+       public RowTransformation() : this(logger: null) { }
+
+       public RowTransformation(ILogger<RowTransformation<TInput, TOutput>>? logger)
+           : base(logger) { }
+
+       protected override void ProcessRow(TInput row)
+       {
+           Logger?.LogDebug("Processing row: {RowType}", typeof(TInput).Name);
+           // ... existing logic — Logger comes from base class
+       }
+   }
+   ```
+
+### Constructor Chaining Depth
+
+The current hierarchy is 4 levels deep (`GenericTask → DataFlowTask → DataFlowSource<T> → DbSource<T>`). Each intermediate level must forward the `ILogger? logger = null` parameter. This is verbose but mechanical and can be done incrementally — one level at a time, bottom-up.
 
 ### Affected Step Categories
 
@@ -318,9 +347,9 @@ Medium - This is an enhancement that improves extensibility but doesn't block cu
 
 1. Create `IDataFlowActivator` interface and implementations
 2. Update `DataFlowXmlReader` to use activator abstraction
-3. Add `ILogger` constructors to all data flow steps (can be done incrementally)
-4. Create `IServiceCollection` registration extensions per library
-5. Create aggregate registration extension
+3. Add `ILogger? logger = null` parameter to base class hierarchy (`GenericTask` → `DataFlowTask` → intermediate bases)
+4. Add `ILogger<T>` constructors to concrete data flow steps (can be done incrementally, per-library)
+5. Create `IServiceCollection` registration extensions per library
 6. Update documentation and examples
 
 ## Related Files
