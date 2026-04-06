@@ -254,15 +254,12 @@ public class LoggerInjectionTests
     [Fact]
     public void DI_ShouldResolveComponentWithLogger()
     {
-        // Test that DI container can resolve components with ILogger<T>
-        // Use DbSource which has no ambiguous constructors (unlike MemorySource
-        // which has both ILogger<T> and IEnumerable<T> ctors).
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddTransient<DbSource<ExpandoObject>>();
+        services.AddTransient<MemorySource>();
         var provider = services.BuildServiceProvider();
 
-        var source = provider.GetRequiredService<DbSource<ExpandoObject>>();
+        var source = provider.GetRequiredService<MemorySource>();
 
         source.Should().NotBeNull();
     }
