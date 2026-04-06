@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.Common.ControlFlow;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -8,6 +9,17 @@ namespace ALE.ETLBox.Common.DataFlow
     [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
     public abstract class DataFlowTask : GenericTask
     {
+        /// <summary>
+        /// Creates a new instance with no logger (uses static LoggerFactory fallback).
+        /// </summary>
+        protected DataFlowTask() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        protected DataFlowTask(ILogger logger)
+            : base(logger) { }
+
         private int? _loggingThresholdRows;
         public virtual int? LoggingThresholdRows
         {

@@ -1,0 +1,269 @@
+using System.Dynamic;
+using ALE.ETLBox.Common.DataFlow;
+using ALE.ETLBox.DataFlow;
+using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace ETLBox.Serialization.Tests;
+
+/// <summary>
+/// Tests that ILogger&lt;T&gt; constructors work correctly on concrete data flow classes.
+/// Verifies the logger is properly stored and used instead of the static LoggerFactory fallback.
+/// </summary>
+public class LoggerInjectionTests
+{
+    [Fact]
+    public void DbSource_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<DbSource<ExpandoObject>>>();
+
+        var source = new DbSource<ExpandoObject>(logger);
+
+        source.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void DbSource_NonGeneric_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<DbSource>>();
+
+        var source = new DbSource(logger);
+
+        source.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void DbDestination_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<DbDestination<ExpandoObject>>>();
+
+        var dest = new DbDestination<ExpandoObject>(logger);
+
+        dest.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void RowTransformation_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<
+            ILogger<RowTransformation<ExpandoObject, ExpandoObject>>
+        >();
+
+        var transform = new RowTransformation<ExpandoObject, ExpandoObject>(logger);
+
+        transform.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void RowTransformation_SingleGeneric_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<RowTransformation<ExpandoObject>>>();
+
+        var transform = new RowTransformation<ExpandoObject>(logger);
+
+        transform.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void RowTransformation_NonGeneric_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<RowTransformation>>();
+
+        var transform = new RowTransformation(logger);
+
+        transform.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void MemorySource_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<MemorySource<ExpandoObject>>>();
+
+        var source = new MemorySource<ExpandoObject>(logger);
+
+        source.Logger.Should().BeSameAs(logger);
+        source.Data.Should().NotBeNull(); // init code should still run
+    }
+
+    [Fact]
+    public void MemoryDestination_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<MemoryDestination<ExpandoObject>>>();
+
+        var dest = new MemoryDestination<ExpandoObject>(logger);
+
+        dest.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void CustomDestination_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<CustomDestination<ExpandoObject>>>();
+
+        var dest = new CustomDestination<ExpandoObject>(logger);
+
+        dest.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void CsvSource_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<CsvSource<ExpandoObject>>>();
+
+        var source = new CsvSource<ExpandoObject>(logger);
+
+        source.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void JsonSource_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<JsonSource<ExpandoObject>>>();
+
+        var source = new JsonSource<ExpandoObject>(logger);
+
+        source.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void Sort_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<Sort<ExpandoObject>>>();
+
+        var sort = new Sort<ExpandoObject>(logger);
+
+        sort.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void Multicast_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<Multicast<ExpandoObject>>>();
+
+        var multicast = new Multicast<ExpandoObject>(logger);
+
+        multicast.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void VoidDestination_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<VoidDestination<ExpandoObject>>>();
+
+        var dest = new VoidDestination<ExpandoObject>(logger);
+
+        dest.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void ErrorLogDestination_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<ILogger<ErrorLogDestination>>();
+
+        var dest = new ErrorLogDestination(logger);
+
+        dest.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void Aggregation_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<
+            ILogger<Aggregation<ExpandoObject, ExpandoObject>>
+        >();
+
+        var agg = new Aggregation<ExpandoObject, ExpandoObject>(logger);
+
+        agg.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void BlockTransformation_WithLogger_ShouldUseInjectedLogger()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        var provider = services.BuildServiceProvider();
+        var logger = provider.GetRequiredService<
+            ILogger<BlockTransformation<ExpandoObject, ExpandoObject>>
+        >();
+
+        var block = new BlockTransformation<ExpandoObject, ExpandoObject>(logger);
+
+        block.Logger.Should().BeSameAs(logger);
+    }
+
+    [Fact]
+    public void Component_WithoutLogger_ShouldFallbackToStaticLoggerFactory()
+    {
+        // Without passing a logger, the component should still work
+        // (using the static ControlFlow.LoggerFactory fallback)
+        var source = new MemorySource<ExpandoObject>();
+
+        source.Logger.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void DI_ShouldResolveComponentWithLogger()
+    {
+        // Test that DI container can resolve components with ILogger<T>
+        // Use DbSource which has no ambiguous constructors (unlike MemorySource
+        // which has both ILogger<T> and IEnumerable<T> ctors).
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddTransient<DbSource<ExpandoObject>>();
+        var provider = services.BuildServiceProvider();
+
+        var source = provider.GetRequiredService<DbSource<ExpandoObject>>();
+
+        source.Should().NotBeNull();
+    }
+}

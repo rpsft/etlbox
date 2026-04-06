@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow;
 
@@ -17,6 +18,15 @@ public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string>
     private readonly ExpandoObjectConverter _converter = new();
 
     public KafkaJsonSource()
+    {
+        JsonSerializerOptions = new JsonSerializerOptions() { Converters = { _converter } };
+    }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    public KafkaJsonSource(ILogger<KafkaJsonSource<TOutput>> logger)
+        : base(logger)
     {
         JsonSerializerOptions = new JsonSerializerOptions() { Converters = { _converter } };
     }

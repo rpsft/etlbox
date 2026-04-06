@@ -1,4 +1,5 @@
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -33,6 +34,15 @@ namespace ALE.ETLBox.DataFlow
             JsonSerializer = new JsonSerializer();
         }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public JsonSource(ILogger<JsonSource<TOutput>> logger)
+            : base(logger)
+        {
+            JsonSerializer = new JsonSerializer();
+        }
+
         public JsonSource(string uri)
             : this()
         {
@@ -58,7 +68,7 @@ namespace ALE.ETLBox.DataFlow
 
             if (ErrorHandler.HasErrorBuffer)
             {
-                JsonSerializer.Error += (object _, ErrorEventArgs args) => 
+                JsonSerializer.Error += (object _, ErrorEventArgs args) =>
                 {
                     ErrorHandler.Send(args.ErrorContext.Error, args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
@@ -118,6 +128,12 @@ namespace ALE.ETLBox.DataFlow
     public sealed class JsonSource : JsonSource<ExpandoObject>
     {
         public JsonSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public JsonSource(ILogger<JsonSource> logger)
+            : base(logger) { }
 
         public JsonSource(string uri)
             : base(uri) { }

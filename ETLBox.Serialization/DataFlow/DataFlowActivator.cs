@@ -1,26 +1,21 @@
 using System;
-using System.Dynamic;
-using System.Globalization;
-using CsvHelper.Configuration;
+using JetBrains.Annotations;
 
 namespace ALE.ETLBox.Serialization.DataFlow;
 
+/// <summary>
+/// Static helper for creating data flow component instances.
+/// </summary>
+[PublicAPI]
+[Obsolete(
+    "Use IDataFlowActivator implementations (DefaultDataFlowActivator or ServiceProviderActivator) instead."
+)]
 public static class DataFlowActivator
 {
-    public static object? CreateInstance(Type type)
-    {
-        // Special cases for library classes without default constructors
-        if (type == typeof(CsvConfiguration))
-        {
-            return new CsvConfiguration(CultureInfo.InvariantCulture);
-        }
+    private static readonly DefaultDataFlowActivator Default = new();
 
-        var constructedType = type;
-        if (type.IsGenericType && type.IsGenericTypeDefinition)
-        {
-            constructedType = type.MakeGenericType(typeof(ExpandoObject));
-        }
-
-        return Activator.CreateInstance(constructedType);
-    }
+    /// <summary>
+    /// Creates an instance of the specified type using the default activator.
+    /// </summary>
+    public static object? CreateInstance(Type type) => Default.CreateInstance(type);
 }

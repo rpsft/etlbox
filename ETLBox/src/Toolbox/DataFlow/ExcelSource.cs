@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.Helper;
 using ETLBox.Primitives;
 using ExcelDataReader;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -40,6 +41,16 @@ namespace ALE.ETLBox.DataFlow
         private ExcelTypeInfo TypeInfo { get; set; }
 
         public ExcelSource()
+        {
+            TypeInfo = new ExcelTypeInfo(typeof(TOutput));
+            ResourceType = ResourceType.File;
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public ExcelSource(ILogger<ExcelSource<TOutput>> logger)
+            : base(logger)
         {
             TypeInfo = new ExcelTypeInfo(typeof(TOutput));
             ResourceType = ResourceType.File;
@@ -262,6 +273,12 @@ namespace ALE.ETLBox.DataFlow
     public class ExcelSource : ExcelSource<ExpandoObject>
     {
         public ExcelSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public ExcelSource(ILogger<ExcelSource> logger)
+            : base(logger) { }
 
         public ExcelSource(string uri)
             : base(uri) { }

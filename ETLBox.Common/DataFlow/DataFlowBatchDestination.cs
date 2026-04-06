@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-
 using ETLBox.Primitives;
-
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -13,6 +12,17 @@ namespace ALE.ETLBox.Common.DataFlow
         : DataFlowDestination<TInput[]>,
             IDataFlowBatchDestination<TInput>
     {
+        /// <summary>
+        /// Creates a new instance with no logger.
+        /// </summary>
+        protected DataFlowBatchDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        protected DataFlowBatchDestination(ILogger logger)
+            : base(logger) { }
+
         /// <summary>
         /// This function is called every time before a batch is inserted into the destination.
         /// It receives an array that represents the batch - you can modify the data itself if needed.

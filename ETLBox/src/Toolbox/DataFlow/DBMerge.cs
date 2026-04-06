@@ -6,6 +6,7 @@ using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -88,6 +89,12 @@ namespace ALE.ETLBox.DataFlow
 
         public DbMerge()
             : this(null, null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public DbMerge(ILogger<DbMerge<TInput>> logger)
+            : base(logger) { }
 
         public DbMerge(string tableName)
             : this(null, tableName) { }
@@ -477,6 +484,12 @@ namespace ALE.ETLBox.DataFlow
     {
         // for deserialization purposes
         public DbMerge() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public DbMerge(ILogger<DbMerge> logger)
+            : base(logger) { }
 
         public DbMerge(string tableName)
             : base(tableName) { }

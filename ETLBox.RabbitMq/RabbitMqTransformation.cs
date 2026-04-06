@@ -7,6 +7,7 @@ using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow.Models;
 using DotLiquid;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
 namespace ALE.ETLBox.DataFlow
@@ -45,6 +46,19 @@ namespace ALE.ETLBox.DataFlow
         /// .ctor
         /// </summary>
         public RabbitMqTransformation(Func<TInput, TOutput>? transformResultFunc)
+        {
+            TransformationFunc = Publish;
+            TransformResult = transformResultFunc;
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RabbitMqTransformation(
+            Func<TInput, TOutput>? transformResultFunc,
+            ILogger<RabbitMqTransformation<TInput, TOutput>> logger
+        )
+            : base(logger)
         {
             TransformationFunc = Publish;
             TransformResult = transformResultFunc;
@@ -224,6 +238,12 @@ namespace ALE.ETLBox.DataFlow
         /// </summary>
         public RabbitMqTransformation()
             : base(input => input) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RabbitMqTransformation(ILogger<RabbitMqTransformation> logger)
+            : base(input => input, logger) { }
 
         /// <summary>
         /// .ctor

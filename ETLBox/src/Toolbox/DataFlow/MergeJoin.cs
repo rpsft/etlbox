@@ -1,6 +1,7 @@
 ﻿using ALE.ETLBox.Common.ControlFlow;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -51,6 +52,18 @@ namespace ALE.ETLBox.DataFlow
         internal RowTransformation<Tuple<TInput1, TInput2>, TOutput> Transformation { get; set; }
 
         public MergeJoin()
+        {
+            Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
+            JoinBlock = new JoinBlock<TInput1, TInput2>();
+            Target1 = new MergeJoinTarget<TInput1>(this, JoinBlock.Target1);
+            Target2 = new MergeJoinTarget<TInput2>(this, JoinBlock.Target2);
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MergeJoin(ILogger<MergeJoin<TInput1, TInput2, TOutput>> logger)
+            : base(logger)
         {
             Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
             JoinBlock = new JoinBlock<TInput1, TInput2>();
@@ -165,6 +178,12 @@ namespace ALE.ETLBox.DataFlow
     {
         public MergeJoin() { }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MergeJoin(ILogger<MergeJoin<TInput>> logger)
+            : base(logger) { }
+
         public MergeJoin(Func<TInput, TInput, TInput> mergeJoinFunc)
             : base(mergeJoinFunc) { }
 
@@ -181,6 +200,12 @@ namespace ALE.ETLBox.DataFlow
     public class MergeJoin : MergeJoin<ExpandoObject, ExpandoObject, ExpandoObject>
     {
         public MergeJoin() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MergeJoin(ILogger<MergeJoin> logger)
+            : base(logger) { }
 
         public MergeJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject> mergeJoinFunc)
             : base(mergeJoinFunc) { }

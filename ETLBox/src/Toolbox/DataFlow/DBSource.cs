@@ -5,6 +5,7 @@ using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -76,6 +77,15 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public DbSource()
+        {
+            TypeInfo = new DBTypeInfo(typeof(TOutput));
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public DbSource(ILogger<DbSource<TOutput>> logger)
+            : base(logger)
         {
             TypeInfo = new DBTypeInfo(typeof(TOutput));
         }
@@ -297,6 +307,12 @@ namespace ALE.ETLBox.DataFlow
     public class DbSource : DbSource<ExpandoObject>
     {
         public DbSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public DbSource(ILogger<DbSource> logger)
+            : base(logger) { }
 
         public DbSource(string tableName)
             : base(tableName) { }

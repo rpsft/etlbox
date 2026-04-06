@@ -1,6 +1,7 @@
 using ALE.ETLBox.Common.DataFlow;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.Extensions.Logging;
 using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
@@ -27,6 +28,19 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
 
         public CsvDestination()
+        {
+            Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
+
+            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
+            ResourceType = ResourceType.File;
+            InitTargetAction();
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CsvDestination(ILogger<CsvDestination<TInput>> logger)
+            : base(logger)
         {
             Configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
 
@@ -150,6 +164,12 @@ namespace ALE.ETLBox.DataFlow
     public class CsvDestination : CsvDestination<ExpandoObject>
     {
         public CsvDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CsvDestination(ILogger<CsvDestination> logger)
+            : base(logger) { }
 
         public CsvDestination(string fileName)
             : base(fileName) { }

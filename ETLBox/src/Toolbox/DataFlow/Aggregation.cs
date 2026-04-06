@@ -1,6 +1,7 @@
 using System.Linq;
 using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -60,7 +61,7 @@ namespace ALE.ETLBox.DataFlow
         /// Store key action (optional).
         /// Finalizes the output row before writing it into the output buffer.
         /// Rewrites values in the grouping columns of output row object by
-        /// their respecitve keys as defined by the <see cref="GroupingFunc"/>.
+        /// their respective keys as defined by the <see cref="GroupingFunc"/>.
         /// </summary>
         public Action<object, TOutput> StoreKeyAction { get; set; }
 
@@ -89,6 +90,20 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public Aggregation()
+        {
+            OutputBuffer = new BufferBlock<TOutput>();
+            AggTypeInfo = new AggregationTypeInfo<TInput, TOutput>();
+
+            CheckTypeInfo();
+
+            InitAggregationAction();
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public Aggregation(ILogger<Aggregation<TInput, TOutput>> logger)
+            : base(logger)
         {
             OutputBuffer = new BufferBlock<TOutput>();
             AggTypeInfo = new AggregationTypeInfo<TInput, TOutput>();
@@ -147,24 +162,22 @@ namespace ALE.ETLBox.DataFlow
                     (null, AggregationMethod.Count) => 1,
                     (null, _) => inputVal,
                     (_, AggregationMethod.Sum)
-                        when aggVal is int or uint or decimal or long or double or float
-                        => Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
-                    (_, AggregationMethod.Max) when aggVal is IComparable
-                        => (
-                            Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable
-                        )?.CompareTo(aggVal) > 0
-                            ? inputVal
-                            : aggVal,
-                    (_, AggregationMethod.Min) when aggVal is IComparable
-                        => (
-                            Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable
-                        )?.CompareTo(aggVal) < 0
-                            ? inputVal
-                            : aggVal,
+                        when aggVal is int or uint or decimal or long or double or float =>
+                        Convert.ToDecimal(inputVal ?? 0) + Convert.ToDecimal(aggVal),
+                    (_, AggregationMethod.Max) when aggVal is IComparable => (
+                        Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable
+                    )?.CompareTo(aggVal) > 0
+                        ? inputVal
+                        : aggVal,
+                    (_, AggregationMethod.Min) when aggVal is IComparable => (
+                        Convert.ChangeType(inputVal, aggVal.GetType()) as IComparable
+                    )?.CompareTo(aggVal) < 0
+                        ? inputVal
+                        : aggVal,
                     (_, AggregationMethod.Count)
-                        when aggVal is int or uint or decimal or long or double or float
-                        => Convert.ToInt64(aggVal) + 1,
-                    (_, _) => null
+                        when aggVal is int or uint or decimal or long or double or float =>
+                        Convert.ToInt64(aggVal) + 1,
+                    (_, _) => null,
                 };
 
                 AggTypeInfo.SetOutputValueOrThrow(aggOutput, res, attributeMapping, true);
@@ -245,8 +258,8 @@ namespace ALE.ETLBox.DataFlow
 
             public override bool Equals(object obj) =>
                 obj is GroupingKey comp
-                && GroupingObjectsByProperty.All(
-                    map => map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true
+                && GroupingObjectsByProperty.All(map =>
+                    map.Value?.Equals(comp.GroupingObjectsByProperty[map.Key]) ?? true
                 );
         }
     }
@@ -256,7 +269,7 @@ namespace ALE.ETLBox.DataFlow
         Sum,
         Min,
         Max,
-        Count
+        Count,
     }
 
     /// <summary>
@@ -286,6 +299,12 @@ namespace ALE.ETLBox.DataFlow
         private Dictionary<string, InputAggregationField> _mappings;
 
         public Aggregation() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public Aggregation(ILogger<Aggregation> logger)
+            : base(logger) { }
 
         public Aggregation(Action<ExpandoObject, ExpandoObject> aggregationAction)
             : base(aggregationAction) { }

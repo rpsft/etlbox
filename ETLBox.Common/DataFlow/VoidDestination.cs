@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -24,6 +25,15 @@ namespace ALE.ETLBox.Common.DataFlow
         private CustomDestination<TInput> InternalVoidDestination { get; }
 
         public VoidDestination()
+        {
+            InternalVoidDestination = new CustomDestination<TInput>(this, _ => { });
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public VoidDestination(ILogger<VoidDestination<TInput>> logger)
+            : base(logger)
         {
             InternalVoidDestination = new CustomDestination<TInput>(this, _ => { });
         }

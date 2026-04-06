@@ -165,7 +165,7 @@ namespace ETLBox.Rest.Tests
             {
                 dest["exception"].Should().NotBeNull();
                 dest["exception"].Should().BeOfType<HttpStatusCodeException>();
-                HttpStatusCodeException exception = (HttpStatusCodeException)dest["exception"]!;
+                var exception = (HttpStatusCodeException)dest["exception"]!;
                 exception.Message.Should().Be(errorContent);
                 exception.HttpCode.Should().Be(httpStatusCode);
             }

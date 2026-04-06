@@ -68,10 +68,31 @@ namespace ETLBox.Rest
             : this(s_defaultHttpClientFactory) { }
 
         /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RestTransformation(ILogger<RestTransformation> logger)
+            : this(s_defaultHttpClientFactory, logger) { }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RestTransformation"/> class with a specified HTTP client factory.
         /// </summary>
         /// <param name="httpClientFactory">The factory method to create an instance of IHttpClient.</param>
         public RestTransformation(Func<IHttpClient> httpClientFactory)
+        {
+            TransformationFunc = source => RestMethodAsync(source).GetAwaiter().GetResult();
+            InitAction = () => _httpClient = httpClientFactory();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestTransformation"/> class with a specified HTTP client factory and an injected logger.
+        /// </summary>
+        /// <param name="httpClientFactory">The factory method to create an instance of IHttpClient.</param>
+        /// <param name="logger">The logger instance.</param>
+        public RestTransformation(
+            Func<IHttpClient> httpClientFactory,
+            ILogger<RestTransformation> logger
+        )
+            : base(logger)
         {
             TransformationFunc = source => RestMethodAsync(source).GetAwaiter().GetResult();
             InitAction = () => _httpClient = httpClientFactory();

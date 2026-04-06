@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow;
 
@@ -83,6 +84,15 @@ public abstract class RowBatchTransformation<TInput, TOutput>
     private BufferBlock<TOutput> _output = null!;
 
     protected RowBatchTransformation()
+    {
+        InitObjects(BatchSize);
+    }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    protected RowBatchTransformation(ILogger logger)
+        : base(logger)
     {
         InitObjects(BatchSize);
     }

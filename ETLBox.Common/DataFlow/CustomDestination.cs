@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -30,6 +31,12 @@ namespace ALE.ETLBox.Common.DataFlow
         private Action<TInput> _writeAction;
 
         public CustomDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CustomDestination(ILogger<CustomDestination<TInput>> logger)
+            : base(logger) { }
 
         public CustomDestination(Action<TInput> writeAction)
             : this()

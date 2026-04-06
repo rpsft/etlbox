@@ -7,12 +7,25 @@ using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
 using JetBrains.Annotations;
 using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Scripting;
 
 /// <inheritdoc />
 [PublicAPI]
-public class ScriptedTransformation : ScriptedRowTransformation<ExpandoObject, ExpandoObject> { }
+public class ScriptedTransformation : ScriptedRowTransformation<ExpandoObject, ExpandoObject>
+{
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    public ScriptedTransformation() { }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    public ScriptedTransformation(ILogger<ScriptedTransformation> logger)
+        : base(logger) { }
+}
 
 /// <summary>
 /// Transforms a row with a C# script expressions for each field.
@@ -48,6 +61,19 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     private readonly ConcurrentDictionary<string, ScriptRunner<object>?> _runnersCache = new();
 
     public ScriptedRowTransformation()
+    {
+        if (typeof(TInput).IsArray || typeof(TOutput).IsArray)
+            throw new ArgumentException(
+                "Array types are not supported. Use a singular object type instead."
+            );
+        TransformationFunc = ScriptedTransformation;
+    }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    public ScriptedRowTransformation(ILogger<ScriptedRowTransformation<TInput, TOutput>> logger)
+        : base(logger)
     {
         if (typeof(TInput).IsArray || typeof(TOutput).IsArray)
             throw new ArgumentException(

@@ -1,5 +1,6 @@
 ﻿using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -65,6 +66,16 @@ namespace ALE.ETLBox.DataFlow
             OutputBuffer = new BufferBlock<TOutput>();
         }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public BlockTransformation(ILogger<BlockTransformation<TInput, TOutput>> logger)
+            : base(logger)
+        {
+            InputData = new List<TInput>();
+            OutputBuffer = new BufferBlock<TOutput>();
+        }
+
         public BlockTransformation(Func<List<TInput>, List<TOutput>> blockTransformationFunc)
             : this()
         {
@@ -119,6 +130,12 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class BlockTransformation<TInput> : BlockTransformation<TInput, TInput>
     {
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public BlockTransformation(ILogger<BlockTransformation<TInput>> logger)
+            : base(logger) { }
+
         public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc)
             : base(blockTransformationFunc) { }
 
@@ -137,6 +154,12 @@ namespace ALE.ETLBox.DataFlow
     [PublicAPI]
     public class BlockTransformation : BlockTransformation<ExpandoObject>
     {
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public BlockTransformation(ILogger<BlockTransformation> logger)
+            : base(logger) { }
+
         public BlockTransformation(
             Func<List<ExpandoObject>, List<ExpandoObject>> blockTransformationFunc
         )

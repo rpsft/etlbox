@@ -4,12 +4,24 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
     [PublicAPI]
     public abstract class DataFlowSource<TOutput> : DataFlowTask, ILinkErrorSource
     {
+        /// <summary>
+        /// Creates a new instance with no logger.
+        /// </summary>
+        protected DataFlowSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        protected DataFlowSource(ILogger logger)
+            : base(logger) { }
+
         public ISourceBlock<TOutput> SourceBlock => Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new();
 

@@ -1,4 +1,5 @@
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -32,6 +33,17 @@ namespace ALE.ETLBox.DataFlow
             );
         }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowMultiplication(ILogger<RowMultiplication<TInput, TOutput>> logger)
+            : base(logger)
+        {
+            TransformBlock = new TransformManyBlock<TInput, TOutput>(
+                (Func<TInput, IEnumerable<TOutput>>)MultiplyRow
+            );
+        }
+
         private IEnumerable<TOutput> MultiplyRow(TInput row)
         {
             if (row is null)
@@ -59,6 +71,12 @@ namespace ALE.ETLBox.DataFlow
     {
         public RowMultiplication() { }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowMultiplication(ILogger<RowMultiplication> logger)
+            : base(logger) { }
+
         public RowMultiplication(Func<ExpandoObject, IEnumerable<ExpandoObject>> multiplicationFunc)
             : base(multiplicationFunc) { }
     }
@@ -68,6 +86,12 @@ namespace ALE.ETLBox.DataFlow
     public class RowMultiplication<TInput> : RowMultiplication<TInput, TInput>
     {
         public RowMultiplication() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowMultiplication(ILogger<RowMultiplication<TInput>> logger)
+            : base(logger) { }
 
         public RowMultiplication(Func<TInput, IEnumerable<TInput>> multiplicationFunc)
             : base(multiplicationFunc) { }

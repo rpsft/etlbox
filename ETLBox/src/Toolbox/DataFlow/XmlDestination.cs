@@ -2,6 +2,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
@@ -34,6 +35,18 @@ namespace ALE.ETLBox.DataFlow
         private XmlSerializerNamespaces Ns { get; set; }
 
         public XmlDestination()
+        {
+            TypeInfo = new XmlTypeInfo(typeof(TInput));
+            if (!TypeInfo.IsDynamic)
+                XmlSerializer = new XmlSerializer(typeof(TInput), "");
+            InitTargetAction();
+        }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public XmlDestination(ILogger<XmlDestination<TInput>> logger)
+            : base(logger)
         {
             TypeInfo = new XmlTypeInfo(typeof(TInput));
             if (!TypeInfo.IsDynamic)
@@ -108,6 +121,12 @@ namespace ALE.ETLBox.DataFlow
     public sealed class XmlDestination : XmlDestination<ExpandoObject>
     {
         public XmlDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public XmlDestination(ILogger<XmlDestination> logger)
+            : base(logger) { }
 
         public XmlDestination(string fileName)
             : base(fileName) { }
