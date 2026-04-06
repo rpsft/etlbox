@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 
 🔧 Internal
 
+- Removed `FluentAssertions` dependency from all test projects. All ~208 assertion calls across 9
+  files migrated to xUnit `Assert`, unifying on a single assertion style across the solution.
 - Refactored `DataFlowActivator` static class into `DefaultDataFlowActivator` implementing
   `IDataFlowActivator`
 - `DataFlowXmlReader` now accepts an optional `IDataFlowActivator` to control how types are
