@@ -101,14 +101,20 @@ test_job:
         CLICKHOUSE_USER: clickhouse
         CLICKHOUSE_PASSWORD: Qwe123456
         CLICKHOUSE_MAX_CONNECTIONS: 100
-    - name: krisgeus/docker-kafka
+    - name: apache/kafka:latest
       alias: kafka
       variables:
-        ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,INTERNAL://localhost:9093'
-        LISTENERS: 'PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:9093'
-        SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT'
-        INTER_BROKER: 'INTERNAL'
-        KAFKA_CREATE_TOPICS: 'cc-event:36:1'
+        KAFKA_NODE_ID: '1'
+        KAFKA_PROCESS_ROLES: 'broker,controller'
+        KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+        KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
+        KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+        KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: '1'
+        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
+        KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
+        CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
     - name: docker:24.0.5-dind
       alias: docker
       command: [ "dockerd", "--tls=false", "--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock" ]

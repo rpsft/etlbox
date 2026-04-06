@@ -13,7 +13,7 @@ namespace TestTransformations.UseCases
         public UpdateOnHashMatchTests(TransformationsDatabaseFixture fixture)
             : base(fixture) { }
 
-        private void CreateSourceTable(string tableName)
+        private static void CreateSourceTable(string tableName)
         {
             DropTableTask.DropIfExists(SqlConnection, tableName);
             var sourceTable = new TableDefinition(
@@ -22,7 +22,7 @@ namespace TestTransformations.UseCases
                 {
                     new("id", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                     new("name", "NVARCHAR(100)", allowNulls: false),
-                    new("age", "INT", allowNulls: false)
+                    new("age", "INT", allowNulls: false),
                 }
             );
             sourceTable.CreateTable(SqlConnection);
@@ -43,7 +43,7 @@ namespace TestTransformations.UseCases
             );
         }
 
-        private void CreateDestinationTable(string tableName)
+        private static void CreateDestinationTable(string tableName)
         {
             DropTableTask.DropIfExists(SqlConnection, tableName);
             var sourceTable = new TableDefinition(
@@ -53,7 +53,7 @@ namespace TestTransformations.UseCases
                     new("id", "INT", allowNulls: false, isPrimaryKey: true, isIdentity: true),
                     new("name", "NVARCHAR(100)", allowNulls: false),
                     new("age", "INT", allowNulls: false),
-                    new("hashcode", "CHAR(40)", allowNulls: false)
+                    new("hashcode", "CHAR(40)", allowNulls: false),
                 }
             );
             sourceTable.CreateTable(SqlConnection);
@@ -77,10 +77,7 @@ namespace TestTransformations.UseCases
             CreateDestinationTable("dbo.HashMatchDestination");
 
             //Act
-            var source = new DbSource<string[]>(
-                SqlConnection,
-                "dbo.HashMatchSource"
-            );
+            var source = new DbSource<string[]>(SqlConnection, "dbo.HashMatchSource");
 
             var trans = new RowTransformation<string[]>(row =>
             {
@@ -90,16 +87,13 @@ namespace TestTransformations.UseCases
             });
 
             var allEntriesInDestination = new List<string[]>();
-            var lookup = new LookupTransformation<
-                string[],
-                string[]
-            >(
+            var lookup = new LookupTransformation<string[], string[]>(
                 new DbSource<string[]>(SqlConnection, "dbo.HashMatchDestination"),
                 row =>
                 {
                     var firstRowClosureCopy = row[0];
-                    var matchingIdEntry = allEntriesInDestination.Find(
-                        destRow => destRow[0] == firstRowClosureCopy
+                    var matchingIdEntry = allEntriesInDestination.Find(destRow =>
+                        destRow[0] == firstRowClosureCopy
                     );
                     if (matchingIdEntry == null)
                         row = null;

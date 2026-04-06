@@ -46,7 +46,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             LogTask.Info("Info message");
         }
 
-        private void RunSubSequence()
+        private static void RunSubSequence()
         {
             Sequence.Execute(
                 "Test sub sequence 1.1",
@@ -132,7 +132,7 @@ namespace ALE.ETLBoxTests.NonParallel.Logging.LogTable
             Assert.Equal(expectedresult, jsonresult);
         }
 
-        private string NormalizeJsonResult(string jsonresult)
+        private static string NormalizeJsonResult(string jsonresult)
         {
             return RemoveLineEndings(RemoveHashes(RemoveDates(jsonresult.ToLower().Trim())));
         }

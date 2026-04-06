@@ -58,7 +58,7 @@ namespace ALE.ETLBoxTests.Performance
             );
         }
 
-        private void CreateDestinationTable(string tableName)
+        private static void CreateDestinationTable(string tableName)
         {
             DropTableTask.DropIfExists(SqlConnectionManager, tableName);
             CreateTableTask.Create(

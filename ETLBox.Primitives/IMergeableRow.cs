@@ -3,7 +3,7 @@
 namespace ETLBox.Primitives
 {
     /// <summary>
-    /// Represents table row in destination database for <see cref="ALE.ETLBox.DataFlow.DbMerge{TInput}"/>
+    /// Represents table row in destination database for Merge operations.
     /// </summary>
     public interface IMergeableRow
     {

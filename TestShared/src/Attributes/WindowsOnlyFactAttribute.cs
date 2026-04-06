@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace TestShared.Attributes
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class WindowsOnlyFactAttribute : FactAttribute
     {
         public WindowsOnlyFactAttribute()

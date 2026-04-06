@@ -31,9 +31,7 @@ namespace TestFlatFileConnectors.CsvSource
         public void SimpleFlowUsingClassMap()
         {
             //Arrange
-            var dest2Columns = new TwoColumnsTableFixture(
-                "CsvDestination2ColumnsClassMap"
-            );
+            var dest2Columns = new TwoColumnsTableFixture("CsvDestination2ColumnsClassMap");
             var dest = new DbDestination<MySimpleRow>(
                 SqlConnection,
                 "CsvDestination2ColumnsClassMap"
@@ -42,7 +40,7 @@ namespace TestFlatFileConnectors.CsvSource
             //Act
             var source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv")
             {
-                ClassMapType = typeof(ModelClassMap)
+                ClassMapType = typeof(ModelClassMap),
             };
             source.LinkTo(dest);
             source.Execute();
@@ -83,16 +81,14 @@ namespace TestFlatFileConnectors.CsvSource
             );
 
             //Act
-            var source = new CsvSource<MyExtendedRow>(
-                "res/CsvSource/FourColumnsInvalidHeader.csv"
-            )
+            var source = new CsvSource<MyExtendedRow>("res/CsvSource/FourColumnsInvalidHeader.csv")
             {
                 ClassMapType = typeof(ExtendedClassMap),
                 Configuration =
                 {
                     HasHeaderRecord = false,
-                    ShouldSkipRecord = ShouldSkipRecordDelegate
-                }
+                    ShouldSkipRecord = ShouldSkipRecordDelegate,
+                },
             };
             source.LinkTo(dest);
             source.Execute();
@@ -102,7 +98,7 @@ namespace TestFlatFileConnectors.CsvSource
             fourColumnsTableFixture.AssertTestData();
         }
 
-        private bool ShouldSkipRecordDelegate(ShouldSkipRecordArgs args)
+        private static bool ShouldSkipRecordDelegate(ShouldSkipRecordArgs args)
         {
             return args.Row.TryGetField<string>(0, out var field) && field!.Contains(".csv");
         }

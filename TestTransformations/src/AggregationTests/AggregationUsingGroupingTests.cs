@@ -33,51 +33,51 @@ namespace TestTransformations.AggregationTests
                     {
                         Id = 1,
                         ClassName = "Class1",
-                        DetailValue = 3.5
+                        DetailValue = 3.5,
                     },
                     new()
                     {
                         Id = 2,
                         ClassName = "Class1",
-                        DetailValue = 6.5
+                        DetailValue = 6.5,
                     },
                     new()
                     {
                         Id = 3,
                         ClassName = "Class2",
-                        DetailValue = 1.2
+                        DetailValue = 1.2,
                     },
                     new()
                     {
                         Id = 4,
                         ClassName = "Class2",
-                        DetailValue = 2.3
+                        DetailValue = 2.3,
                     },
                     new()
                     {
                         Id = 5,
                         ClassName = "Class2",
-                        DetailValue = 16.5
+                        DetailValue = 16.5,
                     },
                     new()
                     {
                         Id = 6,
                         ClassName = "Class3",
-                        DetailValue = 30.0
+                        DetailValue = 30.0,
                     },
                     new()
                     {
                         Id = 6,
                         ClassName = null,
-                        DetailValue = 14.5
+                        DetailValue = 14.5,
                     },
                     new()
                     {
                         Id = 6,
                         ClassName = null,
-                        DetailValue = 15.5
-                    }
-                }
+                        DetailValue = 15.5,
+                    },
+                },
             };
 
             Aggregation<MyRow, MyAggRow> agg = new Aggregation<MyRow, MyAggRow>(
@@ -97,10 +97,26 @@ namespace TestTransformations.AggregationTests
             //Assert
             Assert.Collection(
                 dest.Data,
-                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
-                ar => Assert.True(ar.AggValue == 20 && ar.GroupName == "Class2"),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == "Class3"),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == string.Empty)
+                ar =>
+                {
+                    Assert.Equal(10, ar.AggValue);
+                    Assert.Equal("Class1", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(20, ar.AggValue);
+                    Assert.Equal("Class2", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(30, ar.AggValue);
+                    Assert.Equal("Class3", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(30, ar.AggValue);
+                    Assert.Empty(ar.GroupName);
+                }
             );
         }
     }
