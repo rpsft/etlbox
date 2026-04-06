@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.16.0"></a>
+
+# 1.16.0
+
+✨ Features
+
+- New: DI-based activator mode for `DataFlowXmlReader`. Introduced `IDataFlowActivator` abstraction
+  with two implementations:
+  - `DefaultDataFlowActivator` (wraps existing `Activator.CreateInstance()` behavior)
+  - `ServiceProviderActivator` (resolves types via `IServiceProvider`, falling back to
+    `ActivatorUtilities.CreateInstance` for unregistered types)
+- New: `IServiceCollection` registration extensions for each ETLBox library:
+  - `AddEtlBoxCore()` — registers all core sources, transformations, and destinations (open generics
+    and non-generic shorthands)
+  - `AddEtlBoxJson()`, `AddEtlBoxKafka()`, `AddEtlBoxRabbitMq()`, `AddEtlBoxRest()`,
+    `AddEtlBoxScripting()`, `AddEtlBoxAI()`, `AddEtlBoxSerialization()`
+- New: `ILogger<T>` constructor overloads added to all data flow steps (sources, transformations,
+  destinations) across core and extension libraries. Base class hierarchy (`GenericTask` →
+  `DataFlowTask` → intermediate bases) forwards `ILogger` via optional parameter chaining. Enables
+  structured logging with proper log category resolution when components are resolved via DI.
+
+🔧 Internal
+
+- Refactored `DataFlowActivator` static class into `DefaultDataFlowActivator` implementing
+  `IDataFlowActivator`
+- `DataFlowXmlReader` now accepts an optional `IDataFlowActivator` to control how types are
+  instantiated during XML deserialization
+- Added `Microsoft.Extensions.DependencyInjection.Abstractions` dependency to `ETLBox.Common`
+  and `ETLBox.Serialization`
+
 <a name="1.15.5"></a>
 
 # 1.15.5
