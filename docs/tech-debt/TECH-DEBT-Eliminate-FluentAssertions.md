@@ -1,5 +1,7 @@
 # Tech Debt: Eliminate FluentAssertions from the Solution
 
+> **Status: COMPLETED** (2026-04-06)
+
 ## Summary
 
 Replace all FluentAssertions usage with xUnit's built-in `Assert` class and remove the

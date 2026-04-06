@@ -4,7 +4,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Serialization.DataFlow;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETLBox.Serialization.Tests;
@@ -23,7 +22,7 @@ public class DataFlowXmlReaderDITests
 
         var reader = new DataFlowXmlReader(dataFlow, serviceProvider: provider);
 
-        reader.Should().NotBeNull();
+        Assert.NotNull(reader);
     }
 
     [Fact]
@@ -33,7 +32,7 @@ public class DataFlowXmlReaderDITests
 
         var reader = new DataFlowXmlReader(dataFlow);
 
-        reader.Should().NotBeNull();
+        Assert.NotNull(reader);
     }
 
     [Fact]
@@ -44,7 +43,7 @@ public class DataFlowXmlReaderDITests
 
         var reader = new DataFlowXmlReader(dataFlow, activator);
 
-        reader.Should().NotBeNull();
+        Assert.NotNull(reader);
     }
 
     [Fact]
@@ -54,7 +53,8 @@ public class DataFlowXmlReaderDITests
 
         var act = () => new DataFlowXmlReader(dataFlow, (IDataFlowActivator)null!);
 
-        act.Should().Throw<ArgumentNullException>().WithParameterName("activator");
+        var ex = Assert.Throws<ArgumentNullException>(act);
+        Assert.Equal("activator", ex.ParamName);
     }
 
     [Fact]
@@ -75,10 +75,10 @@ public class DataFlowXmlReaderDITests
         var step = (EtlDataFlowStepWithDI)serializer.Deserialize(stream)!;
 
         // Assert
-        step.Should().NotBeNull();
-        step.Source.Should().NotBeNull();
-        step.Source.Should().BeAssignableTo<MemorySource<ExpandoObject>>();
-        step.Destinations.Should().HaveCount(1);
+        Assert.NotNull(step);
+        Assert.NotNull(step.Source);
+        Assert.IsAssignableFrom<MemorySource<ExpandoObject>>(step.Source);
+        Assert.Single(step.Destinations);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class DataFlowXmlReaderDITests
         reader.Read(xmlReader);
 
         // Assert
-        trackingActivator.CreatedTypes.Should().NotBeEmpty();
+        Assert.NotEmpty(trackingActivator.CreatedTypes);
     }
 
     [Fact]
@@ -127,8 +127,8 @@ public class DataFlowXmlReaderDITests
         var step = DataFlowXmlReader.Deserialize<EtlDataFlowStep>(xml, errorDest, provider);
 
         // Assert
-        step.Should().NotBeNull();
-        step.Source.Should().NotBeNull();
+        Assert.NotNull(step);
+        Assert.NotNull(step.Source);
     }
 
     [Fact]
@@ -150,8 +150,8 @@ public class DataFlowXmlReaderDITests
         var step = DataFlowXmlReader.Deserialize<EtlDataFlowStep>(xml, errorDest, null);
 
         // Assert
-        step.Should().NotBeNull();
-        step.Source.Should().NotBeNull();
+        Assert.NotNull(step);
+        Assert.NotNull(step.Source);
     }
 
     /// <summary>

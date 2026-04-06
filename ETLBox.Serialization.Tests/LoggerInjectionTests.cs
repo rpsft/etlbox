@@ -1,7 +1,6 @@
 using System.Dynamic;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +22,7 @@ public class LoggerInjectionTests
 
         var source = new DbSource<ExpandoObject>(logger);
 
-        source.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, source.Logger);
     }
 
     [Fact]
@@ -36,7 +35,7 @@ public class LoggerInjectionTests
 
         var source = new DbSource(logger);
 
-        source.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, source.Logger);
     }
 
     [Fact]
@@ -49,7 +48,7 @@ public class LoggerInjectionTests
 
         var dest = new DbDestination<ExpandoObject>(logger);
 
-        dest.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, dest.Logger);
     }
 
     [Fact]
@@ -64,7 +63,7 @@ public class LoggerInjectionTests
 
         var transform = new RowTransformation<ExpandoObject, ExpandoObject>(logger);
 
-        transform.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, transform.Logger);
     }
 
     [Fact]
@@ -77,7 +76,7 @@ public class LoggerInjectionTests
 
         var transform = new RowTransformation<ExpandoObject>(logger);
 
-        transform.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, transform.Logger);
     }
 
     [Fact]
@@ -90,7 +89,7 @@ public class LoggerInjectionTests
 
         var transform = new RowTransformation(logger);
 
-        transform.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, transform.Logger);
     }
 
     [Fact]
@@ -103,8 +102,8 @@ public class LoggerInjectionTests
 
         var source = new MemorySource<ExpandoObject>(logger);
 
-        source.Logger.Should().BeSameAs(logger);
-        source.Data.Should().NotBeNull(); // init code should still run
+        Assert.Same(logger, source.Logger);
+        Assert.NotNull(source.Data); // init code should still run
     }
 
     [Fact]
@@ -117,7 +116,7 @@ public class LoggerInjectionTests
 
         var dest = new MemoryDestination<ExpandoObject>(logger);
 
-        dest.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, dest.Logger);
     }
 
     [Fact]
@@ -130,7 +129,7 @@ public class LoggerInjectionTests
 
         var dest = new CustomDestination<ExpandoObject>(logger);
 
-        dest.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, dest.Logger);
     }
 
     [Fact]
@@ -143,7 +142,7 @@ public class LoggerInjectionTests
 
         var source = new CsvSource<ExpandoObject>(logger);
 
-        source.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, source.Logger);
     }
 
     [Fact]
@@ -156,7 +155,7 @@ public class LoggerInjectionTests
 
         var source = new JsonSource<ExpandoObject>(logger);
 
-        source.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, source.Logger);
     }
 
     [Fact]
@@ -169,7 +168,7 @@ public class LoggerInjectionTests
 
         var sort = new Sort<ExpandoObject>(logger);
 
-        sort.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, sort.Logger);
     }
 
     [Fact]
@@ -182,7 +181,7 @@ public class LoggerInjectionTests
 
         var multicast = new Multicast<ExpandoObject>(logger);
 
-        multicast.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, multicast.Logger);
     }
 
     [Fact]
@@ -195,7 +194,7 @@ public class LoggerInjectionTests
 
         var dest = new VoidDestination<ExpandoObject>(logger);
 
-        dest.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, dest.Logger);
     }
 
     [Fact]
@@ -208,7 +207,7 @@ public class LoggerInjectionTests
 
         var dest = new ErrorLogDestination(logger);
 
-        dest.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, dest.Logger);
     }
 
     [Fact]
@@ -223,7 +222,7 @@ public class LoggerInjectionTests
 
         var agg = new Aggregation<ExpandoObject, ExpandoObject>(logger);
 
-        agg.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, agg.Logger);
     }
 
     [Fact]
@@ -238,7 +237,7 @@ public class LoggerInjectionTests
 
         var block = new BlockTransformation<ExpandoObject, ExpandoObject>(logger);
 
-        block.Logger.Should().BeSameAs(logger);
+        Assert.Same(logger, block.Logger);
     }
 
     [Fact]
@@ -248,7 +247,7 @@ public class LoggerInjectionTests
         // (using the static ControlFlow.LoggerFactory fallback)
         var source = new MemorySource<ExpandoObject>();
 
-        source.Logger.Should().NotBeNull();
+        Assert.NotNull(source.Logger);
     }
 
     [Fact]
@@ -261,6 +260,6 @@ public class LoggerInjectionTests
 
         var source = provider.GetRequiredService<MemorySource>();
 
-        source.Should().NotBeNull();
+        Assert.NotNull(source);
     }
 }
