@@ -39,7 +39,7 @@
   - Create `IServiceCollection` registration extensions for each library (e.g., `AddEtlBoxCore()`, `AddEtlBoxCsv()`)
   - Add `ILogger` constructor overloads to all data flow steps for structured logging support
   - Enables extensibility: custom steps and services can be provided via DI container
-- ~~[Eliminate FluentAssertions from the Solution](docs/tech-debt/TECH-DEBT-Eliminate-FluentAssertions.md)~~ **Done**
+- ~~[Eliminate FluentAssertions from the Solution](docs/changelog/TECH-DEBT-Eliminate-FluentAssertions.md)~~ **Done**
 
 ## Other
 
