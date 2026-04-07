@@ -13,6 +13,7 @@ using DotLiquid;
 using ETLBox.AI.Models;
 using JetBrains.Annotations;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -73,6 +74,13 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     }
 
     public AIBatchTransformation()
+        : this(logger: null) { }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    public AIBatchTransformation(ILogger<AIBatchTransformation>? logger)
+        : base(logger)
     {
         BatchTransform = batch => InvokeAsync(batch).GetAwaiter().GetResult();
     }

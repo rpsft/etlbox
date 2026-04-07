@@ -12,6 +12,8 @@ using ALE.ETLBox.DataFlow;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
 
+#pragma warning disable CS0618 // Type or member is obsolete - DataFlowActivator backward compat
+
 namespace ALE.ETLBox.Serialization.DataFlow;
 
 /// <summary>
@@ -32,13 +34,17 @@ public sealed class DataFlowXmlReader
     // Check if the universal error destination was added to data flow
     private bool _allErrorsDestinationAdded;
 
+    // Activator used to create data flow component instances
+    private readonly IDataFlowActivator _activator;
+
     // Culture settings for deserialization
     public CultureInfo CurrentCulture { get; set; }
 
     public DataFlowXmlReader(
         IDataFlow dataFlow,
         CultureInfo? currentCulture = null,
-        IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null
+        IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null,
+        IServiceProvider? serviceProvider = null
     )
     {
         _linkAllErrorsTo = linkAllErrorsTo;
@@ -46,6 +52,10 @@ public sealed class DataFlowXmlReader
         _dataFlow.Destinations = new List<IDataFlowDestination<ExpandoObject>>();
         _dataFlow.ErrorDestinations = new List<IDataFlowDestination<ETLBoxError>>();
         CurrentCulture = currentCulture ?? CultureInfo.CurrentCulture;
+        _activator =
+            serviceProvider != null
+                ? new ServiceProviderActivator(serviceProvider)
+                : new DefaultDataFlowActivator();
 
         var types = new List<Type>();
         var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -78,6 +88,20 @@ public sealed class DataFlowXmlReader
         _types = types.ToArray();
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="DataFlowXmlReader"/> with a custom activator.
+    /// </summary>
+    public DataFlowXmlReader(
+        IDataFlow dataFlow,
+        IDataFlowActivator activator,
+        CultureInfo? currentCulture = null,
+        IDataFlowDestination<ETLBoxError>? linkAllErrorsTo = null
+    )
+        : this(dataFlow, currentCulture, linkAllErrorsTo)
+    {
+        _activator = activator ?? throw new ArgumentNullException(nameof(activator));
+    }
+
     public void Read(XmlReader reader)
     {
         reader.MoveToContent();
@@ -104,13 +128,22 @@ public sealed class DataFlowXmlReader
         }
     }
 
-    public static T Deserialize<T>(string xml, ErrorLogDestination errorLogDestination)
+    public static T Deserialize<T>(
+        string xml,
+        ErrorLogDestination errorLogDestination,
+        IServiceProvider? serviceProvider = null
+    )
         where T : IDataFlow, new()
     {
         using var stream = new MemoryStream(Encoding.Default.GetBytes(xml));
         using var xmlReader = XmlReader.Create(stream);
         var step = Activator.CreateInstance<T>();
-        var reader = new DataFlowXmlReader(step, CultureInfo.InvariantCulture, errorLogDestination);
+        var reader = new DataFlowXmlReader(
+            step,
+            CultureInfo.InvariantCulture,
+            errorLogDestination,
+            serviceProvider
+        );
         reader.Read(xmlReader);
         return step;
     }
@@ -259,7 +292,7 @@ public sealed class DataFlowXmlReader
                 $"Invalid configuration. Implementation for element type of array '{type}' not found"
             );
 
-        var list = DataFlowActivator.CreateInstance(type);
+        var list = _activator.CreateInstance(type);
         var set = type.GetMethod("Add");
         if (set == null)
             return list;
@@ -277,7 +310,7 @@ public sealed class DataFlowXmlReader
 
     private object? CreateInstance(Type type, XContainer node)
     {
-        var instance = DataFlowActivator.CreateInstance(type);
+        var instance = _activator.CreateInstance(type);
 
         if (instance is null)
         {

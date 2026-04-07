@@ -1,6 +1,7 @@
 using System.Threading;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -25,6 +26,13 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
 
         public MemorySource()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MemorySource([CanBeNull] ILogger<MemorySource<TOutput>> logger)
+            : base(logger)
         {
             Data = new List<TOutput>();
         }
@@ -62,6 +70,12 @@ namespace ALE.ETLBox.DataFlow
     public sealed class MemorySource : MemorySource<ExpandoObject>
     {
         public MemorySource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MemorySource(ILogger<MemorySource> logger)
+            : base(logger) { }
 
         public MemorySource(IList<ExpandoObject> data)
             : base(data) { }

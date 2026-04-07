@@ -34,7 +34,7 @@ namespace TestDatabaseConnectors
         protected static SqlConnectionManager SqlConnection =>
             Config.SqlConnection.ConnectionManager(SourceConfigSection);
 
-        protected AccessOdbcConnectionManager AccessOdbcConnection =>
+        protected static AccessOdbcConnectionManager AccessOdbcConnection =>
             Config.AccessOdbcConnection.ConnectionManager(OtherConfigSection);
 
         protected static SqlConnectionManager AzureSqlConnection =>
@@ -120,7 +120,7 @@ namespace TestDatabaseConnectors
             };
         }
 
-        protected bool IsIdentitySupported(IConnectionManager connection)
+        protected static bool IsIdentitySupported(IConnectionManager connection)
         {
             return connection.ConnectionManagerType != ConnectionManagerType.ClickHouse;
         }

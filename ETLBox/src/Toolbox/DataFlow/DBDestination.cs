@@ -3,6 +3,7 @@ using ALE.ETLBox.Common;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.ControlFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
@@ -48,6 +49,13 @@ namespace ALE.ETLBox.DataFlow
         private IConnectionManager _ownBulkInsertConnectionManager;
 
         public DbDestination()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public DbDestination(ILogger<DbDestination<TInput>> logger)
+            : base(logger)
         {
             // this internally calls InitObjects()
             BatchSize = DefaultBatchSize;
@@ -239,6 +247,12 @@ namespace ALE.ETLBox.DataFlow
     public class DbDestination : DbDestination<ExpandoObject>
     {
         public DbDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public DbDestination(ILogger<DbDestination> logger)
+            : base(logger) { }
 
         public DbDestination(int batchSize)
             : base(batchSize) { }

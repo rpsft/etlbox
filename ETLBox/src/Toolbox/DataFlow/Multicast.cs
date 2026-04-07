@@ -1,4 +1,5 @@
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
@@ -30,6 +31,13 @@ namespace ALE.ETLBox.DataFlow
         private ObjectCopy<TInput> ObjectCopy { get; set; }
 
         public Multicast()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public Multicast([CanBeNull] ILogger<Multicast<TInput>> logger)
+            : base(logger)
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
@@ -67,6 +75,12 @@ namespace ALE.ETLBox.DataFlow
     public class Multicast : Multicast<ExpandoObject>
     {
         public Multicast() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public Multicast(ILogger<Multicast> logger)
+            : base(logger) { }
 
         public Multicast(string name)
             : base(name) { }

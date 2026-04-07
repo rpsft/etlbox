@@ -1,6 +1,7 @@
 using System.Threading;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -35,6 +36,13 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public CrossJoin()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CrossJoin([CanBeNull] ILogger<CrossJoin<TInput1, TInput2, TOutput>> logger)
+            : base(logger)
         {
             InMemoryTarget = new MemoryDestination<TInput1>(this);
             PassingTarget = new CustomDestination<TInput2>(this, CrossJoinData)
@@ -107,6 +115,12 @@ namespace ALE.ETLBox.DataFlow
     {
         public CrossJoin() { }
 
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CrossJoin(ILogger<CrossJoin<TInput>> logger)
+            : base(logger) { }
+
         public CrossJoin(Func<TInput, TInput, TInput> crossJoinFunc)
             : base(crossJoinFunc) { }
     }
@@ -121,6 +135,12 @@ namespace ALE.ETLBox.DataFlow
     public class CrossJoin : CrossJoin<ExpandoObject, ExpandoObject, ExpandoObject>
     {
         public CrossJoin() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CrossJoin(ILogger<CrossJoin> logger)
+            : base(logger) { }
 
         public CrossJoin(Func<ExpandoObject, ExpandoObject, ExpandoObject> crossJoinFunc)
             : base(crossJoinFunc) { }

@@ -28,8 +28,8 @@ namespace TestTransformations.AggregationTests
                 {
                     new() { Id = 1, DetailValue = 3.5 },
                     new() { Id = 2, DetailValue = 4.5 },
-                    new() { Id = 3, DetailValue = 2.0 }
-                }
+                    new() { Id = 3, DetailValue = 2.0 },
+                },
             };
 
             var agg = new Aggregation<MyRow, MyAggRow>(
@@ -45,7 +45,7 @@ namespace TestTransformations.AggregationTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data, ar => Assert.True(ar.AggValue == 10));
+            Assert.Single(dest.Data, ar => Math.Abs(ar.AggValue - 10) < double.Epsilon);
         }
 
         [Serializable]
@@ -73,14 +73,13 @@ namespace TestTransformations.AggregationTests
                     new() { Id = 0, DetailValue = null },
                     new() { Id = 2, DetailValue = 4.5 },
                     new() { Id = 3, DetailValue = 2.0 },
-                    new() { Id = 4, DetailValue = null }
-                }
+                    new() { Id = 4, DetailValue = null },
+                },
             };
 
-            var agg = new Aggregation<
-                MyRowNullable,
-                MyAggRowNullable
-            >((row, aggRow) => aggRow.AggValue += row.DetailValue ?? 0);
+            var agg = new Aggregation<MyRowNullable, MyAggRowNullable>(
+                (row, aggRow) => aggRow.AggValue += row.DetailValue ?? 0
+            );
 
             var dest = new MemoryDestination<MyAggRowNullable>();
 
@@ -91,7 +90,8 @@ namespace TestTransformations.AggregationTests
             dest.Wait();
 
             //Assert
-            Assert.Collection(dest.Data, ar => Assert.True(ar.AggValue == 10));
+            Assert.Single(dest.Data, ar => ar.AggValue.HasValue);
+            Assert.Single(dest.Data, ar => Math.Abs(ar.AggValue!.Value - 10.0) < double.Epsilon);
         }
     }
 }

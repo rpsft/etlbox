@@ -46,8 +46,16 @@ namespace TestTransformations.AggregationTests
             //Assert
             Assert.Collection(
                 dest.Data,
-                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
-                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class2")
+                ar =>
+                {
+                    Assert.Equal(10, ar.AggValue);
+                    Assert.Equal("Class1", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(10, ar.AggValue);
+                    Assert.Equal("Class2", ar.GroupName);
+                }
             );
         }
 

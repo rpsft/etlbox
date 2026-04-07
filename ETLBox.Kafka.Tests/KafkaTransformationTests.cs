@@ -21,7 +21,7 @@ namespace ETLBox.Kafka.Tests
                 BootstrapServers = _fixture.BootstrapAddress,
                 GroupId = $"{topicName ?? TopicName}-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnablePartitionEof = enablePartitionEof
+                EnablePartitionEof = enablePartitionEof,
             };
         }
 
@@ -45,10 +45,10 @@ namespace ETLBox.Kafka.Tests
             {
                 ProducerConfig = new ProducerConfig
                 {
-                    BootstrapServers = _fixture.BootstrapAddress
+                    BootstrapServers = _fixture.BootstrapAddress,
                 },
                 MessageTemplate = "{\"NewMessage\": {\"TestValue\":\"{{TestName}}\"}}",
-                TopicName = TopicName
+                TopicName = TopicName,
             };
 
             var source = new MemorySource<ExpandoObject>(new ExpandoObject[] { data });

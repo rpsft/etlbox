@@ -5,6 +5,7 @@ using ALE.ETLBox.Common.DataFlow;
 using Confluent.Kafka;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow;
 
@@ -43,6 +44,17 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
         TKafkaValue kafkaValue,
         Action<Exception, string>? logRowOnError = null
     );
+
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    protected KafkaSource() { }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    protected KafkaSource(ILogger<KafkaSource<TOutput, TKafkaValue>>? logger)
+        : base(logger) { }
 
     /// <summary>
     /// Main execution method

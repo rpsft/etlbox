@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace ALE.ETLBox.Common.DataFlow;
@@ -27,9 +28,8 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
         /// <summary>
         /// Default constructor for deserialization
         /// </summary>
-        public Mapping() : this(string.Empty, string.Empty)
-        {
-        }
+        public Mapping()
+            : this(string.Empty, string.Empty) { }
 
         /// <summary>
         /// Maps JSON properties to a destination object
@@ -52,6 +52,13 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
     }
 
     public JsonTransformation()
+        : this(logger: null) { }
+
+    /// <summary>
+    /// Creates a new instance with an injected logger.
+    /// </summary>
+    public JsonTransformation(ILogger<JsonTransformation>? logger)
+        : base(logger)
     {
         TransformationFunc = TransformWithJsonPath;
     }
@@ -70,23 +77,29 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
         return res;
     }
 
-    private IReadOnlyDictionary<string, JObject> ParseJsonFields(IDictionary<string, object?> source) => Mappings.Values
-        .Where(m => !string.IsNullOrEmpty(m.Path))
-        .Select(x => x.Name)
-        .Distinct()
-        .Where(key => key != null && source.ContainsKey(key))
-        .ToDictionary(key => key, key => JObject.Parse(source[key]!.ToString()));
+    private IReadOnlyDictionary<string, JObject> ParseJsonFields(
+        IDictionary<string, object?> source
+    ) =>
+        Mappings
+            .Values.Where(m => !string.IsNullOrEmpty(m.Path))
+            .Select(x => x.Name)
+            .Distinct()
+            .Where(key => key != null && source.ContainsKey(key))
+            .ToDictionary(key => key, key => JObject.Parse(source[key]!.ToString()));
 
-    private static object? GetValue(IDictionary<string, object?> sourceObject,
+    private static object? GetValue(
+        IDictionary<string, object?> sourceObject,
         IReadOnlyDictionary<string, JObject> parsedJsonFields,
         Mapping mapping
     )
     {
         // If no path is specified, use the whole field
-        if (string.IsNullOrEmpty(mapping.Path)) return sourceObject[mapping.Name];
+        if (string.IsNullOrEmpty(mapping.Path))
+            return sourceObject[mapping.Name];
 
         // If the field is not a JSON object, return empty string
-        if (!parsedJsonFields.TryGetValue(mapping.Name, out JObject? jsonObj)) return string.Empty;
+        if (!parsedJsonFields.TryGetValue(mapping.Name, out JObject? jsonObj))
+            return string.Empty;
 
         // Use JSONPath to retrieve the value
         JToken value = jsonObj.SelectToken(mapping.Path!)!;
@@ -101,7 +114,7 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
             JTokenType.Date => value.ToObject<DateTime>(),
             JTokenType.Integer => value.ToObject<int>(),
             JTokenType.Float => value.ToObject<double>(),
-            _ => value.ToObject<string>()
+            _ => value.ToObject<string>(),
         };
     }
 }

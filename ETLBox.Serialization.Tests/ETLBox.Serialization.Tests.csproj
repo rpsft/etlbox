@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
@@ -25,8 +26,13 @@
   <ItemGroup>
     <ProjectReference Include="..\ETLBox.AI\ETLBox.AI.csproj" />
     <ProjectReference Include="..\ETLBox.Json\ETLBox.Json.csproj" />
+    <ProjectReference Include="..\ETLBox.Kafka\ETLBox.Kafka.csproj" />
     <ProjectReference Include="..\ETLBox.Primitives\ETLBox.Primitives.csproj" />
+    <ProjectReference Include="..\ETLBox.RabbitMq\ETLBox.RabbitMq.csproj" />
+    <ProjectReference Include="..\ETLBox.Rest\ETLBox.Rest.csproj" />
+    <ProjectReference Include="..\ETLBox.Scripting\ETLBox.Scripting.csproj" />
     <ProjectReference Include="..\ETLBox.Serialization\ETLBox.Serialization.csproj" />
+    <ProjectReference Include="..\ETLBox\ETLBox.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using ALE.ETLBox.DataFlow;
 
+// ReSharper disable ParameterOnlyUsedForPreconditionCheck.Local
+
 namespace TestTransformations.AggregationTests
 {
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
@@ -38,51 +40,51 @@ namespace TestTransformations.AggregationTests
                     {
                         Id = 1,
                         ClassName = "Class1",
-                        DetailValue = 3.5
+                        DetailValue = 3.5,
                     },
                     new()
                     {
                         Id = 2,
                         ClassName = "Class1",
-                        DetailValue = 6.5
+                        DetailValue = 6.5,
                     },
                     new()
                     {
                         Id = 3,
                         ClassName = "Class2",
-                        DetailValue = 1.2
+                        DetailValue = 1.2,
                     },
                     new()
                     {
                         Id = 4,
                         ClassName = "Class2",
-                        DetailValue = 2.3
+                        DetailValue = 2.3,
                     },
                     new()
                     {
                         Id = 5,
                         ClassName = "Class2",
-                        DetailValue = 16.5
+                        DetailValue = 16.5,
                     },
                     new()
                     {
                         Id = 6,
                         ClassName = "Class3",
-                        DetailValue = 30.0
+                        DetailValue = 30.0,
                     },
                     new()
                     {
                         Id = 6,
                         ClassName = null,
-                        DetailValue = 14.5
+                        DetailValue = 14.5,
                     },
                     new()
                     {
                         Id = 6,
                         ClassName = null,
-                        DetailValue = 15.5
-                    }
-                }
+                        DetailValue = 15.5,
+                    },
+                },
             };
 
             var agg = new Aggregation<MyRow, MyAggRow>();
@@ -98,10 +100,26 @@ namespace TestTransformations.AggregationTests
             //Assert
             Assert.Collection(
                 dest.Data,
-                ar => Assert.True(ar.AggValue == 10 && ar.GroupName == "Class1"),
-                ar => Assert.True(ar.AggValue == 20 && ar.GroupName == "Class2"),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == "Class3"),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupName == null)
+                ar =>
+                {
+                    Assert.Equal(10, ar.AggValue);
+                    Assert.Equal("Class1", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(20, ar.AggValue);
+                    Assert.Equal("Class2", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(30, ar.AggValue);
+                    Assert.Equal("Class3", ar.GroupName);
+                },
+                ar =>
+                {
+                    Assert.Equal(30, ar.AggValue);
+                    Assert.Null(ar.GroupName);
+                }
             );
         }
 
@@ -135,55 +153,54 @@ namespace TestTransformations.AggregationTests
                     {
                         Id = 1,
                         ClassId = 1,
-                        DetailValue = 3.5
+                        DetailValue = 3.5,
                     },
                     new()
                     {
                         Id = 2,
                         ClassId = 1,
-                        DetailValue = 6.5
+                        DetailValue = 6.5,
                     },
                     new()
                     {
                         Id = 3,
                         ClassId = 2,
-                        DetailValue = 1.2
+                        DetailValue = 1.2,
                     },
                     new()
                     {
                         Id = 4,
                         ClassId = 2,
-                        DetailValue = 2.3
+                        DetailValue = 2.3,
                     },
                     new()
                     {
                         Id = 5,
                         ClassId = 2,
-                        DetailValue = 16.5
+                        DetailValue = 16.5,
                     },
                     new()
                     {
                         Id = 6,
                         ClassId = 3,
-                        DetailValue = 30.0
+                        DetailValue = 30.0,
                     },
                     new()
                     {
                         Id = 6,
                         ClassId = null,
-                        DetailValue = 14.5
+                        DetailValue = 14.5,
                     },
                     new()
                     {
                         Id = 6,
                         ClassId = null,
-                        DetailValue = 15.5
-                    }
-                }
+                        DetailValue = 15.5,
+                    },
+                },
             };
 
-            var agg =
-                new Aggregation<MyRowNullable, MyAggRowNullable>();
+            var agg = new Aggregation<MyRowNullable, MyAggRowNullable>();
 
             var dest = new MemoryDestination<MyAggRowNullable>();
 
@@ -196,10 +213,26 @@ namespace TestTransformations.AggregationTests
             //Assert
             Assert.Collection(
                 dest.Data,
-                ar => Assert.True(ar.AggValue == 10 && ar.GroupId == 1),
-                ar => Assert.True(ar.AggValue == 20 && ar.GroupId == 2),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupId == 3),
-                ar => Assert.True(ar.AggValue == 30 && ar.GroupId == null)
+                ar =>
+                {
+                    Assert.Equal(10, ar.AggValue);
+                    Assert.Equal(1, ar.GroupId);
+                },
+                ar =>
+                {
+                    Assert.Equal(20, ar.AggValue);
+                    Assert.Equal(2, ar.GroupId);
+                },
+                ar =>
+                {
+                    Assert.Equal(30, ar.AggValue);
+                    Assert.Equal(3, ar.GroupId);
+                },
+                ar =>
+                {
+                    Assert.Equal(30, ar.AggValue);
+                    Assert.Null(ar.GroupId);
+                }
             );
         }
 
@@ -242,41 +275,40 @@ namespace TestTransformations.AggregationTests
                         Id = 1,
                         Class1Name = "Class",
                         Class2Name = "1",
-                        DetailValue1 = 4
+                        DetailValue1 = 4,
                     },
                     new()
                     {
                         Id = 2,
                         Class1Name = "Class",
                         Class2Name = "1",
-                        DetailValue1 = 6
+                        DetailValue1 = 6,
                     },
                     new()
                     {
                         Id = 3,
                         Class1Name = "Class2",
                         Class2Name = null,
-                        DetailValue1 = 3
+                        DetailValue1 = 3,
                     },
                     new()
                     {
                         Id = 4,
                         Class1Name = "Class2",
                         Class2Name = null,
-                        DetailValue1 = 7
+                        DetailValue1 = 7,
                     },
                     new()
                     {
                         Id = 5,
                         Class1Name = "Class",
                         Class2Name = "3",
-                        DetailValue1 = 10
-                    }
-                }
+                        DetailValue1 = 10,
+                    },
+                },
             };
 
-            var agg =
-                new Aggregation<MyRowMultiple, MyAggRowMultiple>();
+            var agg = new Aggregation<MyRowMultiple, MyAggRowMultiple>();
 
             var dest = new MemoryDestination<MyAggRowMultiple>();
 
@@ -290,26 +322,26 @@ namespace TestTransformations.AggregationTests
             Assert.Collection(
                 dest.Data,
                 ar =>
-                    Assert.True(
-                        ar.AggValue1 == 10
-                            && ar.AggValue2 == 2
-                            && ar.Group1Name == "Class"
-                            && ar.Group2Name == "1"
-                    ),
+                {
+                    Assert.Equal(10, ar.AggValue1);
+                    Assert.Equal(2, ar.AggValue2);
+                    Assert.Equal("Class", ar.Group1Name);
+                    Assert.Equal("1", ar.Group2Name);
+                },
                 ar =>
-                    Assert.True(
-                        ar.AggValue1 == 10
-                            && ar.AggValue2 == 2
-                            && ar.Group1Name == "Class2"
-                            && ar.Group2Name == null
-                    ),
+                {
+                    Assert.Equal(10, ar.AggValue1);
+                    Assert.Equal(2, ar.AggValue2);
+                    Assert.Equal("Class2", ar.Group1Name);
+                    Assert.Null(ar.Group2Name);
+                },
                 ar =>
-                    Assert.True(
-                        ar.AggValue1 == 10
-                            && ar.AggValue2 == 1
-                            && ar.Group1Name == "Class"
-                            && ar.Group2Name == "3"
-                    )
+                {
+                    Assert.Equal(10, ar.AggValue1);
+                    Assert.Equal(1, ar.AggValue2);
+                    Assert.Equal("Class", ar.Group1Name);
+                    Assert.Equal("3", ar.Group2Name);
+                }
             );
         }
     }

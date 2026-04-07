@@ -1,5 +1,4 @@
 using ALE.ETLBox.DataFlow;
-using FluentAssertions;
 using TestTransformations.Fixtures;
 
 namespace TestTransformations.SqlQueryTransformation
@@ -21,7 +20,7 @@ namespace TestTransformations.SqlQueryTransformation
             var query = new SqlQueryTransformation<TestSourceRecord, ExpandoObject>
             {
                 ConnectionManager = SqlConnection,
-                SqlTemplate = "select {{lastId}} as LastId"
+                SqlTemplate = "select {{lastId}} as LastId",
             };
 
             var dest = new MemoryDestination<ExpandoObject>();
@@ -34,9 +33,8 @@ namespace TestTransformations.SqlQueryTransformation
 
             //Assert
 
-            dest.Data.Should().HaveCount(1);
-            var data = dest.Data.First() as IDictionary<string, object>;
-            data["LastId"].Should().Be(obj.LastId);
+            var data = Assert.Single(dest.Data) as IDictionary<string, object>;
+            Assert.Equal(obj.LastId, data["LastId"]);
         }
 
         private record TestSourceRecord
@@ -56,7 +54,7 @@ namespace TestTransformations.SqlQueryTransformation
             var query = new ALE.ETLBox.DataFlow.SqlQueryTransformation
             {
                 ConnectionManager = SqlConnection,
-                SqlTemplate = "select {{lastId}} as LastId"
+                SqlTemplate = "select {{lastId}} as LastId",
             };
 
             var dest = new MemoryDestination<ExpandoObject>();
@@ -69,9 +67,8 @@ namespace TestTransformations.SqlQueryTransformation
 
             //Assert
 
-            dest.Data.Should().HaveCount(1);
-            var data = dest.Data.First() as IDictionary<string, object>;
-            data["LastId"].Should().Be(obj.LastId);
+            IDictionary<string, object> data = Assert.Single(dest.Data);
+            Assert.Equal(obj.LastId, data["LastId"]);
         }
 
         [Fact]
@@ -97,9 +94,9 @@ namespace TestTransformations.SqlQueryTransformation
                     new List<ALE.ETLBox.TableColumn>
                     {
                         new("id", "int"),
-                        new("value", "varchar(16)")
+                        new("value", "varchar(16)"),
                     }
-                )
+                ),
             };
 
             var dest = new MemoryDestination<ExpandoObject>();
@@ -112,10 +109,9 @@ namespace TestTransformations.SqlQueryTransformation
 
             //Assert
 
-            dest.Data.Should().HaveCount(1);
-            var data = dest.Data.First() as IDictionary<string, object>;
-            data["id"].Should().Be(1);
-            data["value"].Should().Be(obj.value);
+            IDictionary<string, object> data = Assert.Single(dest.Data);
+            Assert.Equal(1, data["id"]);
+            Assert.Equal(obj.value, data["value"]);
         }
     }
 }

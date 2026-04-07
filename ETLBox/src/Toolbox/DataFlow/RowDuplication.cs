@@ -1,4 +1,5 @@
 using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
@@ -24,6 +25,13 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
 
         public RowDuplication()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowDuplication([CanBeNull] ILogger<RowDuplication<TInput>> logger)
+            : base(logger)
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
             ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
@@ -80,6 +88,12 @@ namespace ALE.ETLBox.DataFlow
     public class RowDuplication : RowDuplication<ExpandoObject>
     {
         public RowDuplication() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public RowDuplication(ILogger<RowDuplication> logger)
+            : base(logger) { }
 
         public RowDuplication(int numberOfDuplicates)
             : base(numberOfDuplicates) { }

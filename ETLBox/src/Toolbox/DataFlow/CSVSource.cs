@@ -4,6 +4,7 @@ using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 using TypeInfo = ALE.ETLBox.Common.DataFlow.TypeInfo;
 
 namespace ALE.ETLBox.DataFlow
@@ -40,6 +41,13 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
 
         public CsvSource()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CsvSource([CanBeNull] ILogger<CsvSource<TOutput>> logger)
+            : base(logger)
         {
             Configuration = new CsvConfiguration(CsvDefaultCulture);
             TypeInfo = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
@@ -143,6 +151,12 @@ namespace ALE.ETLBox.DataFlow
     public class CsvSource : CsvSource<ExpandoObject>
     {
         public CsvSource() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public CsvSource(ILogger<CsvSource> logger)
+            : base(logger) { }
 
         public CsvSource(string fileName)
             : base(fileName) { }

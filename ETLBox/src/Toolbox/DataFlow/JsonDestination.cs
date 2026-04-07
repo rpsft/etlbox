@@ -1,4 +1,5 @@
 ﻿using ALE.ETLBox.Common.DataFlow;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ALE.ETLBox.DataFlow
@@ -24,6 +25,13 @@ namespace ALE.ETLBox.DataFlow
         private JsonTextWriter JsonTextWriter { get; set; }
 
         public JsonDestination()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public JsonDestination([CanBeNull] ILogger<JsonDestination<TInput>> logger)
+            : base(logger)
         {
             JsonSerializer = new JsonSerializer
             {
@@ -95,6 +103,12 @@ namespace ALE.ETLBox.DataFlow
     public class JsonDestination : JsonDestination<ExpandoObject>
     {
         public JsonDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public JsonDestination(ILogger<JsonDestination> logger)
+            : base(logger) { }
 
         public JsonDestination(string fileName)
             : base(fileName) { }

@@ -114,6 +114,7 @@ namespace TestDatabaseConnectors.DBTransformation
 
             source.Execute(CancellationToken.None);
             dest.Wait();
+            errorDest.Wait();
 
             Assert.Empty(dest.Data);
             Assert.NotEmpty(errorDest.Data);

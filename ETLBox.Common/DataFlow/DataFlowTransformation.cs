@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ETLBox.Primitives;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.Common.DataFlow
 {
@@ -13,6 +14,17 @@ namespace ALE.ETLBox.Common.DataFlow
             IDataFlowTransformation<TInput, TOutput>,
             ILinkErrorSource
     {
+        /// <summary>
+        /// Creates a new instance with no logger.
+        /// </summary>
+        protected DataFlowTransformation() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        protected DataFlowTransformation(ILogger logger)
+            : base(logger) { }
+
         /// <summary>
         /// Target for the previous component in the data flow.
         /// </summary>

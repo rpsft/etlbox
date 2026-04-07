@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using ALE.ETLBox.Common.DataFlow;
 using ETLBox.Primitives;
+using Microsoft.Extensions.Logging;
 
 namespace ALE.ETLBox.DataFlow
 {
@@ -18,6 +19,13 @@ namespace ALE.ETLBox.DataFlow
         public BlockingCollection<TInput> Data { get; set; } = new();
 
         public MemoryDestination()
+            : this(logger: null) { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MemoryDestination([CanBeNull] ILogger<MemoryDestination<TInput>> logger)
+            : base(logger)
         {
             TargetAction = new ActionBlock<TInput>(WriteRecord);
             SetCompletionTask();
@@ -52,5 +60,14 @@ namespace ALE.ETLBox.DataFlow
     /// </summary>
     /// <see cref="MemoryDestination{TInput}"/>
     [PublicAPI]
-    public sealed class MemoryDestination : MemoryDestination<ExpandoObject> { }
+    public sealed class MemoryDestination : MemoryDestination<ExpandoObject>
+    {
+        public MemoryDestination() { }
+
+        /// <summary>
+        /// Creates a new instance with an injected logger.
+        /// </summary>
+        public MemoryDestination(ILogger<MemoryDestination> logger)
+            : base(logger) { }
+    }
 }
