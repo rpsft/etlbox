@@ -164,7 +164,7 @@ public class ServiceCollectionExtensionsTests
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(DataFlowXmlReader));
         Assert.NotNull(descriptor);
-        Assert.Equal(ServiceLifetime.Transient, descriptor!.Lifetime);
+        Assert.Equal(ServiceLifetime.Transient, descriptor.Lifetime);
     }
 
     [Fact]

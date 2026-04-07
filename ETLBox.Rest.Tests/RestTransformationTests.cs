@@ -14,7 +14,6 @@ using ALE.ETLBox.Serialization.DataFlow;
 using CsvHelper.Configuration;
 using ETLBox.Primitives;
 using ETLBox.Rest.Models;
-using FluentAssertions;
 using Moq;
 
 namespace ETLBox.Rest.Tests
@@ -46,23 +45,19 @@ namespace ETLBox.Rest.Tests
 
             //Assert
             var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object?>;
-            dest.Should().NotBeNull();
-            dest.Should().BeOfType<ExpandoObject>();
+            Assert.NotNull(dest);
+            Assert.IsType<ExpandoObject>(dest);
             var hasException = dest!.TryGetValue("exception", out var exception);
-            exception.Should().BeNull();
-            hasException.Should().BeFalse();
-            dest.Should()
-                .BeEquivalentTo(
-                    new Dictionary<string, object?>
-                    {
-                        ["urlRouteParameter"] = "Tom",
-                        ["urlQueryParameter"] = 46,
-                        ["port"] = 90210,
-                        ["http_code"] = HttpStatusCode.OK,
-                        ["result"] = new Dictionary<string, object?> { ["jsonResponse"] = 100 },
-                        ["raw_response"] = "{ \"jsonResponse\" : 100 }",
-                    }
-                );
+            Assert.Null(exception);
+            Assert.False(hasException);
+            Assert.Equal("Tom", dest["urlRouteParameter"]);
+            Assert.Equal(46, dest["urlQueryParameter"]);
+            Assert.Equal(90210, dest["port"]);
+            Assert.Equal(HttpStatusCode.OK, dest["http_code"]);
+            Assert.Equal("{ \"jsonResponse\" : 100 }", dest["raw_response"]);
+            var result = dest["result"] as IDictionary<string, object?>;
+            Assert.NotNull(result);
+            Assert.Equal(100.0, result!["jsonResponse"]);
         }
 
         [Fact]
@@ -95,21 +90,17 @@ namespace ETLBox.Rest.Tests
 
             // Assert
             var resultingData = destination.Data?.FirstOrDefault() as IDictionary<string, object?>;
-            resultingData.Should().NotBeNull();
+            Assert.NotNull(resultingData);
             var dest = resultingData!["result"] as IDictionary<string, object>;
-            dest.Should().NotBeNull();
-            dest.Should()
-                .BeEquivalentTo(
-                    new Dictionary<string, object?>
-                    {
-                        ["name"] = "test",
-                        ["true"] = true,
-                        ["false"] = false,
-                        ["null"] = null,
-                        ["array"] = new[] { 1, 2, 3 },
-                        ["object"] = new Dictionary<string, object> { ["key"] = "value" },
-                    }
-                );
+            Assert.NotNull(dest);
+            Assert.Equal("test", dest!["name"]);
+            Assert.True((bool)dest!["true"]);
+            Assert.False((bool)dest["false"]);
+            Assert.Null(dest["null"]);
+            Assert.Equal(new object[] { 1.0, 2.0, 3.0 }, (object[])dest["array"]!);
+            var nestedObj = dest["object"] as IDictionary<string, object>;
+            Assert.NotNull(nestedObj);
+            Assert.Equal("value", nestedObj!["key"]);
         }
 
         [Theory]
@@ -150,28 +141,28 @@ namespace ETLBox.Rest.Tests
                 Times.Exactly(repeatCount)
             );
             var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object?>;
-            dest.Should().NotBeNull();
-            dest!["http_code"].Should().Be(httpStatusCode);
-            dest["raw_response"].Should().Be(errorContent);
+            Assert.NotNull(dest);
+            Assert.Equal(httpStatusCode, dest!["http_code"]);
+            Assert.Equal(errorContent, dest["raw_response"]);
             if (expectExpandoObjectOnResult)
             {
                 var result = dest!["result"] as IDictionary<string, object?>;
-                result.Should().NotBeNull();
-                result.Should().BeOfType<ExpandoObject>();
-                result!["code"].Should().Be("OK");
+                Assert.NotNull(result);
+                Assert.IsType<ExpandoObject>(result);
+                Assert.Equal("OK", result!["code"]);
             }
 
             if (expectException)
             {
-                dest["exception"].Should().NotBeNull();
-                dest["exception"].Should().BeOfType<HttpStatusCodeException>();
+                Assert.NotNull(dest["exception"]);
+                Assert.IsType<HttpStatusCodeException>(dest["exception"]);
                 var exception = (HttpStatusCodeException)dest["exception"]!;
-                exception.Message.Should().Be(errorContent);
-                exception.HttpCode.Should().Be(httpStatusCode);
+                Assert.Equal(errorContent, exception.Message);
+                Assert.Equal(httpStatusCode, exception.HttpCode);
             }
             else
             {
-                dest.Should().NotContainKey("exception");
+                Assert.False(dest.ContainsKey("exception"));
             }
         }
 
@@ -229,12 +220,12 @@ namespace ETLBox.Rest.Tests
 
             var dest = destination.Data?.FirstOrDefault() as IDictionary<string, object>;
 
-            dest.Should().NotBeNull();
+            Assert.NotNull(dest);
             var res = dest!["result"] as IDictionary<string, object>;
 
-            res.Should().NotBeNull();
+            Assert.NotNull(res);
 
-            res!["errorMessage"].Should().Be("NotFound");
+            Assert.Equal("NotFound", res!["errorMessage"]);
         }
 
         private static string GetCsv()

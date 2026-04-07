@@ -17,8 +17,8 @@ public class ServiceProviderActivatorTests
         var result = activator.CreateInstance(typeof(TestService));
 
         Assert.NotNull(result);
-        var service = Assert.IsType<TestService>(result);
-        Assert.Equal("injected", service.Name);
+        Assert.IsType<TestService>(result);
+        Assert.Equal("injected", ((TestService)result!).Name);
     }
 
     [Fact]
@@ -45,8 +45,8 @@ public class ServiceProviderActivatorTests
         var result = activator.CreateInstance(typeof(ClassWithDependency));
 
         Assert.NotNull(result);
-        var obj = Assert.IsType<ClassWithDependency>(result);
-        Assert.Equal("fromDI", obj.Service.Name);
+        Assert.IsType<ClassWithDependency>(result);
+        Assert.Equal("fromDI", ((ClassWithDependency)result!).Service.Name);
     }
 
     [Fact]
@@ -78,7 +78,9 @@ public class ServiceProviderActivatorTests
     [Fact]
     public void Constructor_NullServiceProvider_ShouldThrowArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() => new ServiceProviderActivator(null!));
+        var act = () => new ServiceProviderActivator(null!);
+
+        var ex = Assert.Throws<ArgumentNullException>(act);
         Assert.Equal("serviceProvider", ex.ParamName);
     }
 

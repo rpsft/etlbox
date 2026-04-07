@@ -24,7 +24,8 @@ public class DefaultDataFlowActivatorTests
         var result = _activator.CreateInstance(typeof(CsvConfiguration));
 
         Assert.NotNull(result);
-        var config = Assert.IsType<CsvConfiguration>(result);
+        Assert.IsType<CsvConfiguration>(result);
+        var config = (CsvConfiguration)result!;
         Assert.Equal(CultureInfo.InvariantCulture, config.CultureInfo);
     }
 

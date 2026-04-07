@@ -1,4 +1,5 @@
 using System.Dynamic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -52,9 +53,9 @@ public class DataFlowXmlReaderDITests
     {
         using var dataFlow = new EtlDataFlowStep();
 
-        var ex = Assert.Throws<ArgumentNullException>(
-            () => new DataFlowXmlReader(dataFlow, (IDataFlowActivator)null!)
-        );
+        var act = () => new DataFlowXmlReader(dataFlow, (IDataFlowActivator)null!);
+
+        var ex = Assert.Throws<ArgumentNullException>(act);
         Assert.Equal("activator", ex.ParamName);
     }
 
@@ -163,10 +164,11 @@ public class DataFlowXmlReaderDITests
         // ServiceProviderActivator can resolve it during XML deserialization.
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddEtlBoxCore();
+        services.AddEtlBoxCore(CultureInfo.InvariantCulture);
         var provider = services.BuildServiceProvider();
         var errorDest = new ErrorLogDestination();
 
+        // language=xml
         var xml =
             @"<EtlDataFlowStep>
                 <CsvSource>

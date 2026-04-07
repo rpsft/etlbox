@@ -39,10 +39,7 @@
   - Create `IServiceCollection` registration extensions for each library (e.g., `AddEtlBoxCore()`, `AddEtlBoxCsv()`)
   - Add `ILogger` constructor overloads to all data flow steps for structured logging support
   - Enables extensibility: custom steps and services can be provided via DI container
-- [Eliminate FluentAssertions from the Solution](docs/tech-debt/TECH-DEBT-Eliminate-FluentAssertions.md)
-  - Replace ~208 FluentAssertions calls across 9 files with xUnit `Assert` equivalents
-  - Remove `FluentAssertions` package from 5 test projects
-  - Unify on xUnit `Assert` as the single assertion style (already used in ~1000 calls across 12 projects)
+- ~~[Eliminate FluentAssertions from the Solution](docs/changelog/TECH-DEBT-Eliminate-FluentAssertions.md)~~ **Done**
 
 ## Other
 

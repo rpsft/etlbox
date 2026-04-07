@@ -33,7 +33,8 @@ namespace TestTransformations.SqlQueryTransformation
 
             //Assert
 
-            var data = Assert.Single(dest.Data) as IDictionary<string, object>;
+            Assert.Single(dest.Data);
+            var data = dest.Data.First() as IDictionary<string, object>;
             Assert.Equal(obj.LastId, data["LastId"]);
         }
 
@@ -67,7 +68,8 @@ namespace TestTransformations.SqlQueryTransformation
 
             //Assert
 
-            IDictionary<string, object> data = Assert.Single(dest.Data);
+            Assert.Single(dest.Data);
+            var data = dest.Data.First() as IDictionary<string, object>;
             Assert.Equal(obj.LastId, data["LastId"]);
         }
 
@@ -109,9 +111,10 @@ namespace TestTransformations.SqlQueryTransformation
 
             //Assert
 
-            IDictionary<string, object> data = Assert.Single(dest.Data);
+            Assert.Single(dest.Data);
+            var data = dest.Data.First() as IDictionary<string, object>;
             Assert.Equal(1, data["id"]);
-            Assert.Equal(obj.value, data["value"]);
+            Assert.Equal((object)obj.value, data["value"]);
         }
     }
 }
