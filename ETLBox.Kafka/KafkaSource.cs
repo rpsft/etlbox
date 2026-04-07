@@ -53,7 +53,7 @@ public abstract class KafkaSource<TOutput, TKafkaValue>
     /// <summary>
     /// Creates a new instance with an injected logger.
     /// </summary>
-    protected KafkaSource(ILogger<KafkaSource<TOutput, TKafkaValue>> logger)
+    protected KafkaSource(ILogger<KafkaSource<TOutput, TKafkaValue>>? logger)
         : base(logger) { }
 
     /// <summary>

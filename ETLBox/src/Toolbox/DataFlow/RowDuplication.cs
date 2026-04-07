@@ -25,18 +25,12 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
 
         public RowDuplication()
-        {
-            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
-            ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
-            TransformBlock = new TransformManyBlock<TInput, TInput>(
-                (Func<TInput, IEnumerable<TInput>>)DuplicateRow
-            );
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public RowDuplication(ILogger<RowDuplication<TInput>> logger)
+        public RowDuplication([CanBeNull] ILogger<RowDuplication<TInput>> logger)
             : base(logger)
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();

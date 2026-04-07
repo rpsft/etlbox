@@ -51,15 +51,14 @@ namespace ALE.ETLBox.DataFlow
         private LookupTypeInfo TypeInfo { get; set; }
 
         public LookupTransformation()
-        {
-            LookupBuffer = new CustomDestination<TSourceOutput>(this, FillBuffer);
-            DefaultInitWithMatchRetrieveAttributes();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public LookupTransformation(ILogger<LookupTransformation<TInput, TSourceOutput>> logger)
+        public LookupTransformation(
+            [CanBeNull] ILogger<LookupTransformation<TInput, TSourceOutput>> logger
+        )
             : base(logger)
         {
             LookupBuffer = new CustomDestination<TSourceOutput>(this, FillBuffer);

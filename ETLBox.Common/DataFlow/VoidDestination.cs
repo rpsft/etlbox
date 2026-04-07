@@ -25,14 +25,12 @@ namespace ALE.ETLBox.Common.DataFlow
         private CustomDestination<TInput> InternalVoidDestination { get; }
 
         public VoidDestination()
-        {
-            InternalVoidDestination = new CustomDestination<TInput>(this, _ => { });
-        }
+            : this(null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public VoidDestination(ILogger<VoidDestination<TInput>> logger)
+        public VoidDestination([CanBeNull] ILogger<VoidDestination<TInput>> logger)
             : base(logger)
         {
             InternalVoidDestination = new CustomDestination<TInput>(this, _ => { });

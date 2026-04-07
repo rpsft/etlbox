@@ -13,15 +13,12 @@ namespace ALE.ETLBox.DataFlow
         public BlockingCollection<ETLBoxError> Errors { get; set; } = new();
 
         public ErrorLogDestination()
-        {
-            TargetAction = new ActionBlock<ETLBoxError>(WriteRecord);
-            SetCompletionTask();
-        }
+            : this(null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public ErrorLogDestination(ILogger<ErrorLogDestination> logger)
+        public ErrorLogDestination([CanBeNull] ILogger<ErrorLogDestination> logger)
             : base(logger)
         {
             TargetAction = new ActionBlock<ETLBoxError>(WriteRecord);

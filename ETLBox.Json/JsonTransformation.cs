@@ -52,14 +52,12 @@ public sealed class JsonTransformation : RowTransformation<ExpandoObject>
     }
 
     public JsonTransformation()
-    {
-        TransformationFunc = TransformWithJsonPath;
-    }
+        : this(logger: null) { }
 
     /// <summary>
     /// Creates a new instance with an injected logger.
     /// </summary>
-    public JsonTransformation(ILogger<JsonTransformation> logger)
+    public JsonTransformation(ILogger<JsonTransformation>? logger)
         : base(logger)
     {
         TransformationFunc = TransformWithJsonPath;

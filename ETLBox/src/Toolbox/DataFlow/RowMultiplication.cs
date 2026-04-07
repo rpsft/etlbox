@@ -27,16 +27,12 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public RowMultiplication()
-        {
-            TransformBlock = new TransformManyBlock<TInput, TOutput>(
-                (Func<TInput, IEnumerable<TOutput>>)MultiplyRow
-            );
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public RowMultiplication(ILogger<RowMultiplication<TInput, TOutput>> logger)
+        public RowMultiplication([CanBeNull] ILogger<RowMultiplication<TInput, TOutput>> logger)
             : base(logger)
         {
             TransformBlock = new TransformManyBlock<TInput, TOutput>(

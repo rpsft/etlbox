@@ -90,19 +90,12 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public Aggregation()
-        {
-            OutputBuffer = new BufferBlock<TOutput>();
-            AggTypeInfo = new AggregationTypeInfo<TInput, TOutput>();
-
-            CheckTypeInfo();
-
-            InitAggregationAction();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public Aggregation(ILogger<Aggregation<TInput, TOutput>> logger)
+        public Aggregation([CanBeNull] ILogger<Aggregation<TInput, TOutput>> logger)
             : base(logger)
         {
             OutputBuffer = new BufferBlock<TOutput>();

@@ -25,19 +25,12 @@ namespace ALE.ETLBox.DataFlow
         private JsonTextWriter JsonTextWriter { get; set; }
 
         public JsonDestination()
-        {
-            JsonSerializer = new JsonSerializer
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented,
-            };
-            InitTargetAction();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public JsonDestination(ILogger<JsonDestination<TInput>> logger)
+        public JsonDestination([CanBeNull] ILogger<JsonDestination<TInput>> logger)
             : base(logger)
         {
             JsonSerializer = new JsonSerializer

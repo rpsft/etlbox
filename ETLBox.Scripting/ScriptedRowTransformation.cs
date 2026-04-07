@@ -61,18 +61,12 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     private readonly ConcurrentDictionary<string, ScriptRunner<object>?> _runnersCache = new();
 
     public ScriptedRowTransformation()
-    {
-        if (typeof(TInput).IsArray || typeof(TOutput).IsArray)
-            throw new ArgumentException(
-                "Array types are not supported. Use a singular object type instead."
-            );
-        TransformationFunc = ScriptedTransformation;
-    }
+        : this(logger: null) { }
 
     /// <summary>
     /// Creates a new instance with an injected logger.
     /// </summary>
-    public ScriptedRowTransformation(ILogger<ScriptedRowTransformation<TInput, TOutput>> logger)
+    public ScriptedRowTransformation(ILogger<ScriptedRowTransformation<TInput, TOutput>>? logger)
         : base(logger)
     {
         if (typeof(TInput).IsArray || typeof(TOutput).IsArray)

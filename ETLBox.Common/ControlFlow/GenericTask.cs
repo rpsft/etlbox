@@ -16,6 +16,7 @@ namespace ALE.ETLBox.Common.ControlFlow
         }
         public virtual string TaskName { get; set; } = "N/A";
 
+        [CanBeNull]
         private ILogger _logger;
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace ALE.ETLBox.Common.ControlFlow
         /// Creates a new instance with an injected logger.
         /// </summary>
         /// <param name="logger">Optional logger instance. If null, falls back to static LoggerFactory.</param>
-        protected GenericTask(ILogger logger)
+        protected GenericTask([CanBeNull] ILogger logger)
         {
             _logger = logger;
         }

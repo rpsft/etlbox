@@ -77,14 +77,12 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public DbSource()
-        {
-            TypeInfo = new DBTypeInfo(typeof(TOutput));
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public DbSource(ILogger<DbSource<TOutput>> logger)
+        public DbSource([CanBeNull] ILogger<DbSource<TOutput>> logger)
             : base(logger)
         {
             TypeInfo = new DBTypeInfo(typeof(TOutput));

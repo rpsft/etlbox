@@ -38,16 +38,12 @@ namespace ALE.ETLBox.DataFlow
         private XmlTypeInfo TypeInfo { get; set; }
 
         public XmlSource()
-        {
-            TypeInfo = new XmlTypeInfo(typeof(TOutput));
-            if (!TypeInfo.IsDynamic)
-                XmlSerializer = new XmlSerializer(typeof(TOutput));
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public XmlSource(ILogger<XmlSource<TOutput>> logger)
+        public XmlSource([CanBeNull] ILogger<XmlSource<TOutput>> logger)
             : base(logger)
         {
             TypeInfo = new XmlTypeInfo(typeof(TOutput));

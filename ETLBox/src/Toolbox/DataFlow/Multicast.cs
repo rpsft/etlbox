@@ -31,16 +31,12 @@ namespace ALE.ETLBox.DataFlow
         private ObjectCopy<TInput> ObjectCopy { get; set; }
 
         public Multicast()
-        {
-            TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();
-            ObjectCopy = new ObjectCopy<TInput>(TypeInfo);
-            BroadcastBlock = new BroadcastBlock<TInput>(Clone);
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public Multicast(ILogger<Multicast<TInput>> logger)
+        public Multicast([CanBeNull] ILogger<Multicast<TInput>> logger)
             : base(logger)
         {
             TypeInfo = new TypeInfo(typeof(TInput)).GatherTypeInfo();

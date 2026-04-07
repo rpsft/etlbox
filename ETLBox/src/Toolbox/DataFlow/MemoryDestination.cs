@@ -19,15 +19,12 @@ namespace ALE.ETLBox.DataFlow
         public BlockingCollection<TInput> Data { get; set; } = new();
 
         public MemoryDestination()
-        {
-            TargetAction = new ActionBlock<TInput>(WriteRecord);
-            SetCompletionTask();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public MemoryDestination(ILogger<MemoryDestination<TInput>> logger)
+        public MemoryDestination([CanBeNull] ILogger<MemoryDestination<TInput>> logger)
             : base(logger)
         {
             TargetAction = new ActionBlock<TInput>(WriteRecord);

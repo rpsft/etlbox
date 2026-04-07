@@ -35,17 +35,12 @@ namespace ALE.ETLBox.DataFlow
         private XmlSerializerNamespaces Ns { get; set; }
 
         public XmlDestination()
-        {
-            TypeInfo = new XmlTypeInfo(typeof(TInput));
-            if (!TypeInfo.IsDynamic)
-                XmlSerializer = new XmlSerializer(typeof(TInput), "");
-            InitTargetAction();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public XmlDestination(ILogger<XmlDestination<TInput>> logger)
+        public XmlDestination([CanBeNull] ILogger<XmlDestination<TInput>> logger)
             : base(logger)
         {
             TypeInfo = new XmlTypeInfo(typeof(TInput));

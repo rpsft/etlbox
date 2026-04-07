@@ -50,16 +50,12 @@ namespace ALE.ETLBox.DataFlow
         /// Default constructor
         /// </summary>
         protected KafkaTransformation()
-        {
-            TransformationFunc = SendToKafka;
-            InitAction = () =>
-                _producer ??= new ProducerBuilder<Null, TKafkaValue>(ProducerConfig).Build();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        protected KafkaTransformation(ILogger<KafkaTransformation<TInput, TKafkaValue>> logger)
+        protected KafkaTransformation(ILogger<KafkaTransformation<TInput, TKafkaValue>>? logger)
             : base(logger)
         {
             TransformationFunc = SendToKafka;

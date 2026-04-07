@@ -74,14 +74,12 @@ public sealed class AIBatchTransformation : RowBatchTransformation<ExpandoObject
     }
 
     public AIBatchTransformation()
-    {
-        BatchTransform = batch => InvokeAsync(batch).GetAwaiter().GetResult();
-    }
+        : this(logger: null) { }
 
     /// <summary>
     /// Creates a new instance with an injected logger.
     /// </summary>
-    public AIBatchTransformation(ILogger<AIBatchTransformation> logger)
+    public AIBatchTransformation(ILogger<AIBatchTransformation>? logger)
         : base(logger)
     {
         BatchTransform = batch => InvokeAsync(batch).GetAwaiter().GetResult();

@@ -17,7 +17,7 @@ namespace ALE.ETLBox.Common.DataFlow
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        protected DataFlowTask(ILogger logger)
+        protected DataFlowTask([CanBeNull] ILogger logger)
             : base(logger) { }
 
         private int? _loggingThresholdRows;

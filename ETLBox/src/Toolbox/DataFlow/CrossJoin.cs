@@ -36,18 +36,12 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public CrossJoin()
-        {
-            InMemoryTarget = new MemoryDestination<TInput1>(this);
-            PassingTarget = new CustomDestination<TInput2>(this, CrossJoinData)
-            {
-                OnCompletion = () => Buffer.Complete(),
-            };
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public CrossJoin(ILogger<CrossJoin<TInput1, TInput2, TOutput>> logger)
+        public CrossJoin([CanBeNull] ILogger<CrossJoin<TInput1, TInput2, TOutput>> logger)
             : base(logger)
         {
             InMemoryTarget = new MemoryDestination<TInput1>(this);

@@ -30,14 +30,12 @@ namespace ALE.ETLBox.DataFlow
         private JsonTextReader JsonTextReader { get; set; }
 
         public JsonSource()
-        {
-            JsonSerializer = new JsonSerializer();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public JsonSource(ILogger<JsonSource<TOutput>> logger)
+        public JsonSource([CanBeNull] ILogger<JsonSource<TOutput>> logger)
             : base(logger)
         {
             JsonSerializer = new JsonSerializer();

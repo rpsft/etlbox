@@ -49,10 +49,7 @@ namespace ALE.ETLBox.DataFlow
         private IConnectionManager _ownBulkInsertConnectionManager;
 
         public DbDestination()
-        {
-            // this internally calls InitObjects()
-            BatchSize = DefaultBatchSize;
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.

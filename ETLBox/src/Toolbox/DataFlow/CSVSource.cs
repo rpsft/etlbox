@@ -41,16 +41,12 @@ namespace ALE.ETLBox.DataFlow
         private TypeInfo TypeInfo { get; set; }
 
         public CsvSource()
-        {
-            Configuration = new CsvConfiguration(CsvDefaultCulture);
-            TypeInfo = new TypeInfo(typeof(TOutput)).GatherTypeInfo();
-            ResourceType = ResourceType.File;
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public CsvSource(ILogger<CsvSource<TOutput>> logger)
+        public CsvSource([CanBeNull] ILogger<CsvSource<TOutput>> logger)
             : base(logger)
         {
             Configuration = new CsvConfiguration(CsvDefaultCulture);

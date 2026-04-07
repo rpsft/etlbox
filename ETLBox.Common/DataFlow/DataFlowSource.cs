@@ -19,7 +19,7 @@ namespace ALE.ETLBox.Common.DataFlow
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        protected DataFlowSource(ILogger logger)
+        protected DataFlowSource([CanBeNull] ILogger logger)
             : base(logger) { }
 
         public ISourceBlock<TOutput> SourceBlock => Buffer;

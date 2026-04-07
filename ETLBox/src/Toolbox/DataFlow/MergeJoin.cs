@@ -52,17 +52,12 @@ namespace ALE.ETLBox.DataFlow
         internal RowTransformation<Tuple<TInput1, TInput2>, TOutput> Transformation { get; set; }
 
         public MergeJoin()
-        {
-            Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);
-            JoinBlock = new JoinBlock<TInput1, TInput2>();
-            Target1 = new MergeJoinTarget<TInput1>(this, JoinBlock.Target1);
-            Target2 = new MergeJoinTarget<TInput2>(this, JoinBlock.Target2);
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public MergeJoin(ILogger<MergeJoin<TInput1, TInput2, TOutput>> logger)
+        public MergeJoin([CanBeNull] ILogger<MergeJoin<TInput1, TInput2, TOutput>> logger)
             : base(logger)
         {
             Transformation = new RowTransformation<Tuple<TInput1, TInput2>, TOutput>(this);

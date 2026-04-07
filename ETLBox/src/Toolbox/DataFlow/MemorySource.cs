@@ -26,14 +26,12 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
 
         public MemorySource()
-        {
-            Data = new List<TOutput>();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public MemorySource(ILogger<MemorySource<TOutput>> logger)
+        public MemorySource([CanBeNull] ILogger<MemorySource<TOutput>> logger)
             : base(logger)
         {
             Data = new List<TOutput>();

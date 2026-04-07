@@ -61,15 +61,12 @@ namespace ALE.ETLBox.DataFlow
         private List<TOutput> OutputData { get; set; }
 
         public BlockTransformation()
-        {
-            InputData = new List<TInput>();
-            OutputBuffer = new BufferBlock<TOutput>();
-        }
+            : this(logger: null) { }
 
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public BlockTransformation(ILogger<BlockTransformation<TInput, TOutput>> logger)
+        public BlockTransformation([CanBeNull] ILogger<BlockTransformation<TInput, TOutput>> logger)
             : base(logger)
         {
             InputData = new List<TInput>();
@@ -133,7 +130,7 @@ namespace ALE.ETLBox.DataFlow
         /// <summary>
         /// Creates a new instance with an injected logger.
         /// </summary>
-        public BlockTransformation(ILogger<BlockTransformation<TInput>> logger)
+        public BlockTransformation([CanBeNull] ILogger<BlockTransformation<TInput>> logger)
             : base(logger) { }
 
         public BlockTransformation(Func<List<TInput>, List<TInput>> blockTransformationFunc)

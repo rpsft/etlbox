@@ -18,14 +18,12 @@ public class KafkaJsonSource<TOutput> : KafkaSource<TOutput, string>
     private readonly ExpandoObjectConverter _converter = new();
 
     public KafkaJsonSource()
-    {
-        JsonSerializerOptions = new JsonSerializerOptions() { Converters = { _converter } };
-    }
+        : this(logger: null) { }
 
     /// <summary>
     /// Creates a new instance with an injected logger.
     /// </summary>
-    public KafkaJsonSource(ILogger<KafkaJsonSource<TOutput>> logger)
+    public KafkaJsonSource(ILogger<KafkaJsonSource<TOutput>>? logger)
         : base(logger)
     {
         JsonSerializerOptions = new JsonSerializerOptions() { Converters = { _converter } };
