@@ -3,7 +3,6 @@ using System.Text;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Serialization.DataFlow;
-using FluentAssertions;
 using JetBrains.Annotations;
 
 namespace ETLBox.Serialization.Tests
@@ -112,80 +111,85 @@ namespace ETLBox.Serialization.Tests
             step.Invoke(CancellationToken.None);
 
             //Assert
-            step.Should().NotBeNull();
-            step.ReferenceId.Should().Be(referenceId);
-            step.Name.Should().Be(name);
-            step.TimeoutMilliseconds.Should().Be(ms);
+            Assert.NotNull(step);
+            Assert.Equal(referenceId, step.ReferenceId);
+            Assert.Equal(name, step.Name);
+            Assert.Equal(ms, step.TimeoutMilliseconds);
 
-            step.Source.Should().BeOfType<CustomCsvSource>();
+            Assert.IsType<CustomCsvSource>(step.Source);
             var customCsvSource = (CustomCsvSource)step.Source;
-            customCsvSource.Uri.Should().Be(_csvUri);
-            customCsvSource.Guid.Should().Be(referenceId);
-            customCsvSource.NullGuid.Should().Be(referenceId);
-            customCsvSource.Configuration.Delimiter.Should().Be(";");
-            customCsvSource.Configuration.Escape.Should().Be('#');
-            customCsvSource.Strings.Should().NotBeNullOrEmpty();
+            Assert.Equal(_csvUri, customCsvSource.Uri);
+            Assert.Equal(referenceId, customCsvSource.Guid);
+            Assert.Equal(referenceId, customCsvSource.NullGuid);
+            Assert.Equal(";", customCsvSource.Configuration.Delimiter);
+            Assert.Equal('#', customCsvSource.Configuration.Escape);
+            Assert.NotNull(customCsvSource.Strings);
+            Assert.NotEmpty(customCsvSource.Strings);
 
             var strings = customCsvSource.Strings.ToArray();
-            strings.Should().HaveCount(3);
-            strings[0].Should().Be("test");
-            strings[1].Should().Be("test<!\"\">");
-            strings[2].Should().Be("test1<!\"\">test2<!\"\">");
-            customCsvSource.Stream.Should().NotBeNull();
-            customCsvSource.Stream.Should().BeOfType<MemoryStream>();
-            customCsvSource.Enum.Should().Be(CustomCsvSource.EnumType.Value2);
-            customCsvSource.NullEnum.Should().Be(CustomCsvSource.EnumType.Value1);
-            customCsvSource.IntegerList.Should().NotBeNullOrEmpty();
-            customCsvSource.IntegerList.Should().BeEquivalentTo(new[] { 1, 2, 3 });
+            Assert.Equal(3, strings.Length);
+            Assert.Equal("test", strings[0]);
+            Assert.Equal("test<!\"\">", strings[1]);
+            Assert.Equal("test1<!\"\">test2<!\"\">", strings[2]);
+            Assert.NotNull(customCsvSource.Stream);
+            Assert.IsType<MemoryStream>(customCsvSource.Stream);
+            Assert.Equal(CustomCsvSource.EnumType.Value2, customCsvSource.Enum);
+            Assert.Equal(CustomCsvSource.EnumType.Value1, customCsvSource.NullEnum);
+            Assert.NotNull(customCsvSource.IntegerList);
+            Assert.NotEmpty(customCsvSource.IntegerList);
+            Assert.Equal(new[] { 1, 2, 3 }, customCsvSource.IntegerList);
 
             // Verify Metadata (IDictionary<string, object?>) deserialization
-            customCsvSource.Metadata.Should().NotBeNull();
-            customCsvSource.Metadata.Should().HaveCount(3);
-            customCsvSource.Metadata.Should().ContainKey("Source");
-            customCsvSource.Metadata.Should().ContainKey("Version");
-            customCsvSource.Metadata.Should().ContainKey("Settings");
-            customCsvSource.Metadata!["Source"].Should().Be("TestSystem");
-            customCsvSource.Metadata["Version"].Should().Be("1.0");
+            Assert.NotNull(customCsvSource.Metadata);
+            Assert.Equal(3, customCsvSource.Metadata!.Count);
+            Assert.True(customCsvSource.Metadata.ContainsKey("Source"));
+            Assert.True(customCsvSource.Metadata.ContainsKey("Version"));
+            Assert.True(customCsvSource.Metadata.ContainsKey("Settings"));
+            Assert.Equal("TestSystem", customCsvSource.Metadata["Source"]);
+            Assert.Equal("1.0", customCsvSource.Metadata["Version"]);
 
             var settings = customCsvSource.Metadata["Settings"] as IDictionary<string, object?>;
-            settings.Should().NotBeNull();
-            settings!.Should().ContainKey("Timeout");
-            settings.Should().ContainKey("Retries");
-            settings!["Timeout"].Should().Be("30");
-            settings["Retries"].Should().Be("3");
+            Assert.NotNull(settings);
+            Assert.True(settings!.ContainsKey("Timeout"));
+            Assert.True(settings.ContainsKey("Retries"));
+            Assert.Equal("30", settings["Timeout"]);
+            Assert.Equal("3", settings["Retries"]);
 
-            customCsvSource.Char.Should().Be('#');
-            customCsvSource.Byte.Should().Be(1);
-            customCsvSource.Int.Should().Be(-1);
-            customCsvSource.Uint.Should().Be(1);
-            customCsvSource.NullInt.Should().Be(-1);
-            customCsvSource.Long.Should().Be(-1);
-            customCsvSource.Ulong.Should().Be(1);
-            customCsvSource.NullLong.Should().Be(-1);
-            customCsvSource.Double.Should().Be(1.0);
-            customCsvSource.NullDouble.Should().Be(-1.0);
-            customCsvSource.NullDouble.Should().BeOfType(typeof(double));
+            Assert.Equal('#', customCsvSource.Char);
+            Assert.Equal((byte)1, customCsvSource.Byte);
+            Assert.Equal(-1, customCsvSource.Int);
+            Assert.Equal((uint)1, customCsvSource.Uint);
+            Assert.Equal(-1, customCsvSource.NullInt);
+            Assert.Equal(-1L, customCsvSource.Long);
+            Assert.Equal((ulong)1, customCsvSource.Ulong);
+            Assert.Equal(-1L, customCsvSource.NullLong);
+            Assert.Equal(1.0, customCsvSource.Double);
+            Assert.Equal(-1.0, customCsvSource.NullDouble);
+            Assert.IsType<double>(customCsvSource.NullDouble);
 
-            step.Destinations.Should().NotBeNull();
-            step.Destinations.Should().NotBeEmpty();
-            step.Destinations.Should().AllBeAssignableTo<MemoryDestination<ExpandoObject>>();
-            step.Destinations.Should().HaveCount(1);
+            Assert.NotNull(step.Destinations);
+            Assert.NotEmpty(step.Destinations);
+            Assert.All(
+                step.Destinations,
+                d => Assert.IsAssignableFrom<MemoryDestination<ExpandoObject>>(d)
+            );
+            Assert.Single(step.Destinations);
 
             var dest = (MemoryDestination<ExpandoObject>)step.Destinations[0];
-            dest.Data.Should().NotBeNull();
-            dest.Data.Should().NotBeEmpty();
-            dest.Data.Should().HaveCount(3);
+            Assert.NotNull(dest.Data);
+            Assert.NotEmpty(dest.Data);
+            Assert.Equal(3, dest.Data.Count);
 
             dynamic col = new ExpandoObject();
             col.Col1 = 1;
             col.Col2 = "Test1";
-            dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
+            Assert.Contains(dest.Data, d => ExpandoEquals(d, (ExpandoObject)col));
             col.Col1 = 2;
             col.Col2 = "Test2";
-            dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
+            Assert.Contains(dest.Data, d => ExpandoEquals(d, (ExpandoObject)col));
             col.Col1 = 3;
             col.Col2 = "Test3";
-            dest.Data.Should().ContainEquivalentOf((ExpandoObject)col);
+            Assert.Contains(dest.Data, d => ExpandoEquals(d, (ExpandoObject)col));
         }
 
         [Fact]
@@ -228,38 +232,38 @@ namespace ETLBox.Serialization.Tests
             var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
 
             //Assert
-            step.Should().NotBeNull();
-            step.ReferenceId.Should().Be(referenceId);
-            step.Name.Should().Be(name);
+            Assert.NotNull(step);
+            Assert.Equal(referenceId, step.ReferenceId);
+            Assert.Equal(name, step.Name);
 
-            step.Source.Should().BeOfType<CustomCsvSource>();
+            Assert.IsType<CustomCsvSource>(step.Source);
             var customCsvSource = (CustomCsvSource)step.Source;
-            customCsvSource.NullBool.Should().BeNull();
-            customCsvSource.NullBool.HasValue.Should().BeFalse();
-            customCsvSource.NullChar.Should().BeNull();
-            customCsvSource.NullChar.HasValue.Should().BeFalse();
-            customCsvSource.NullByte.Should().BeNull();
-            customCsvSource.NullByte.HasValue.Should().BeFalse();
-            customCsvSource.NullDateTime.Should().BeNull();
-            customCsvSource.NullDateTime.HasValue.Should().BeFalse();
-            customCsvSource.NullGuid.Should().BeNull();
-            customCsvSource.NullGuid.HasValue.Should().BeFalse();
-            customCsvSource.NullEnum.Should().BeNull();
-            customCsvSource.NullEnum.HasValue.Should().BeFalse();
-            customCsvSource.NullShort.Should().BeNull();
-            customCsvSource.NullShort.HasValue.Should().BeFalse();
-            customCsvSource.NullUshort.Should().BeNull();
-            customCsvSource.NullUshort.HasValue.Should().BeFalse();
-            customCsvSource.NullInt.Should().BeNull();
-            customCsvSource.NullInt.HasValue.Should().BeFalse();
-            customCsvSource.NullUint.Should().BeNull();
-            customCsvSource.NullUint.HasValue.Should().BeFalse();
-            customCsvSource.NullLong.Should().BeNull();
-            customCsvSource.NullLong.HasValue.Should().BeFalse();
-            customCsvSource.NullUlong.Should().BeNull();
-            customCsvSource.NullUlong.HasValue.Should().BeFalse();
-            customCsvSource.NullDouble.Should().BeNull();
-            customCsvSource.NullDouble.HasValue.Should().BeFalse();
+            Assert.Null(customCsvSource.NullBool);
+            Assert.False(customCsvSource.NullBool.HasValue);
+            Assert.Null(customCsvSource.NullChar);
+            Assert.False(customCsvSource.NullChar.HasValue);
+            Assert.Null(customCsvSource.NullByte);
+            Assert.False(customCsvSource.NullByte.HasValue);
+            Assert.Null(customCsvSource.NullDateTime);
+            Assert.False(customCsvSource.NullDateTime.HasValue);
+            Assert.Null(customCsvSource.NullGuid);
+            Assert.False(customCsvSource.NullGuid.HasValue);
+            Assert.Null(customCsvSource.NullEnum);
+            Assert.False(customCsvSource.NullEnum.HasValue);
+            Assert.Null(customCsvSource.NullShort);
+            Assert.False(customCsvSource.NullShort.HasValue);
+            Assert.Null(customCsvSource.NullUshort);
+            Assert.False(customCsvSource.NullUshort.HasValue);
+            Assert.Null(customCsvSource.NullInt);
+            Assert.False(customCsvSource.NullInt.HasValue);
+            Assert.Null(customCsvSource.NullUint);
+            Assert.False(customCsvSource.NullUint.HasValue);
+            Assert.Null(customCsvSource.NullLong);
+            Assert.False(customCsvSource.NullLong.HasValue);
+            Assert.Null(customCsvSource.NullUlong);
+            Assert.False(customCsvSource.NullUlong.HasValue);
+            Assert.Null(customCsvSource.NullDouble);
+            Assert.False(customCsvSource.NullDouble.HasValue);
         }
 
         [Fact]
@@ -307,9 +311,12 @@ namespace ETLBox.Serialization.Tests
             step.Invoke(CancellationToken.None);
 
             // Assert
-            step.ErrorDestinations.Should().NotBeNull();
-            step.ErrorDestinations.Should().HaveCount(1);
-            step.ErrorDestinations.Should().AllBeAssignableTo<ErrorLogDestination>();
+            Assert.NotNull(step.ErrorDestinations);
+            Assert.Single(step.ErrorDestinations);
+            Assert.All(
+                step.ErrorDestinations,
+                d => Assert.IsAssignableFrom<ErrorLogDestination>(d)
+            );
 
             var errorDestination = (ErrorLogDestination)step.ErrorDestinations[0];
 
@@ -402,13 +409,15 @@ namespace ETLBox.Serialization.Tests
             step.Invoke(CancellationToken.None);
 
             // Assert - Verify basic deserialization
-            step.Source.Should().NotBeNull().And.BeOfType<CustomCsvSource>();
-            step.Destinations.Should().NotBeNull().And.HaveCountGreaterThan(0);
+            Assert.NotNull(step.Source);
+            Assert.IsType<CustomCsvSource>(step.Source);
+            Assert.NotNull(step.Destinations);
+            Assert.NotEmpty(step.Destinations);
 
             // Verify ErrorDestinations structure
-            step.ErrorDestinations.Should().NotBeNull();
-            step.ErrorDestinations.Should().HaveCount(1);
-            step.ErrorDestinations[0].Should().BeOfType<ErrorLogDestination>();
+            Assert.NotNull(step.ErrorDestinations);
+            Assert.Single(step.ErrorDestinations);
+            Assert.IsType<ErrorLogDestination>(step.ErrorDestinations[0]);
         }
 
         [Theory]
@@ -439,9 +448,12 @@ namespace ETLBox.Serialization.Tests
             var step = (EtlDataFlowStep)serializer.Deserialize(stream)!;
 
             // Assert
-            step.ErrorDestinations.Should().NotBeNull();
-            step.ErrorDestinations.Should().HaveCount(1);
-            step.ErrorDestinations.Should().AllBeAssignableTo<ErrorLogDestination>();
+            Assert.NotNull(step.ErrorDestinations);
+            Assert.Single(step.ErrorDestinations);
+            Assert.All(
+                step.ErrorDestinations,
+                d => Assert.IsAssignableFrom<ErrorLogDestination>(d)
+            );
         }
 
         [Fact]
@@ -462,9 +474,12 @@ namespace ETLBox.Serialization.Tests
             );
 
             // Assert
-            step.ErrorDestinations.Should().NotBeNull();
-            step.ErrorDestinations.Should().HaveCount(1);
-            step.ErrorDestinations.Should().AllBeAssignableTo<ErrorLogDestination>();
+            Assert.NotNull(step.ErrorDestinations);
+            Assert.Single(step.ErrorDestinations);
+            Assert.All(
+                step.ErrorDestinations,
+                d => Assert.IsAssignableFrom<ErrorLogDestination>(d)
+            );
         }
 
         [Fact]
@@ -501,10 +516,26 @@ namespace ETLBox.Serialization.Tests
             step.Invoke(CancellationToken.None);
 
             //Assert
-            step.Should().NotBeNull();
-            step.ReferenceId.Should().Be(referenceId);
-            step.Name.Should().Be(name);
-            step.ConnectionManagerCount().Should().Be(1);
+            Assert.NotNull(step);
+            Assert.Equal(referenceId, step.ReferenceId);
+            Assert.Equal(name, step.Name);
+            Assert.Equal(1, step.ConnectionManagerCount());
+        }
+
+        private static bool ExpandoEquals(ExpandoObject a, ExpandoObject b)
+        {
+            var dictA = (IDictionary<string, object?>)a;
+            var dictB = (IDictionary<string, object?>)b;
+            if (dictA.Count != dictB.Count)
+                return false;
+            foreach (var pair in dictA)
+            {
+                if (!dictB.TryGetValue(pair.Key, out var val))
+                    return false;
+                if (!Equals(pair.Value, val))
+                    return false;
+            }
+            return true;
         }
 
         private static string GetCsv()

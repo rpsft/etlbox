@@ -1,6 +1,5 @@
 using System.Dynamic;
 using ALE.ETLBox.Serialization.DataFlow;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETLBox.Serialization.Tests;
@@ -17,9 +16,9 @@ public class ServiceProviderActivatorTests
 
         var result = activator.CreateInstance(typeof(TestService));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<TestService>();
-        ((TestService)result!).Name.Should().Be("injected");
+        Assert.NotNull(result);
+        var service = Assert.IsType<TestService>(result);
+        Assert.Equal("injected", service.Name);
     }
 
     [Fact]
@@ -31,8 +30,8 @@ public class ServiceProviderActivatorTests
 
         var result = activator.CreateInstance(typeof(SimpleClass));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<SimpleClass>();
+        Assert.NotNull(result);
+        Assert.IsType<SimpleClass>(result);
     }
 
     [Fact]
@@ -45,9 +44,9 @@ public class ServiceProviderActivatorTests
 
         var result = activator.CreateInstance(typeof(ClassWithDependency));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<ClassWithDependency>();
-        ((ClassWithDependency)result!).Service.Name.Should().Be("fromDI");
+        Assert.NotNull(result);
+        var obj = Assert.IsType<ClassWithDependency>(result);
+        Assert.Equal("fromDI", obj.Service.Name);
     }
 
     [Fact]
@@ -59,8 +58,8 @@ public class ServiceProviderActivatorTests
 
         var result = activator.CreateInstance(typeof(List<>));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<List<ExpandoObject>>();
+        Assert.NotNull(result);
+        Assert.IsType<List<ExpandoObject>>(result);
     }
 
     [Fact]
@@ -72,16 +71,15 @@ public class ServiceProviderActivatorTests
 
         var result = activator.CreateInstance(typeof(List<int>));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<List<int>>();
+        Assert.NotNull(result);
+        Assert.IsType<List<int>>(result);
     }
 
     [Fact]
     public void Constructor_NullServiceProvider_ShouldThrowArgumentNullException()
     {
-        var act = () => new ServiceProviderActivator(null!);
-
-        act.Should().Throw<ArgumentNullException>().WithParameterName("serviceProvider");
+        var ex = Assert.Throws<ArgumentNullException>(() => new ServiceProviderActivator(null!));
+        Assert.Equal("serviceProvider", ex.ParamName);
     }
 
     public class TestService

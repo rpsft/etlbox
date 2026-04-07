@@ -1,9 +1,10 @@
+using System.Globalization;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Extensions;
 using ALE.ETLBox.Serialization.DataFlow;
 using ALE.ETLBox.Serialization.Extensions;
-using FluentAssertions;
+using CsvHelper.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETLBox.Serialization.Tests;
@@ -76,6 +77,8 @@ public class ServiceCollectionExtensionsTests
         AssertRegistered<DbSource>(services);
         AssertRegistered<CsvSource>(services);
         AssertRegistered<JsonSource>(services);
+        AssertRegistered<XmlSource>(services);
+        AssertRegistered<ExcelSource>(services);
         AssertRegistered<MemorySource>(services);
         AssertRegistered<CustomSource>(services);
         AssertRegistered<CrossJoin>(services);
@@ -83,7 +86,16 @@ public class ServiceCollectionExtensionsTests
         AssertRegistered<BlockTransformation>(services);
         AssertRegistered<Multicast>(services);
         AssertRegistered<Sort>(services);
+        AssertRegistered<RowDuplication>(services);
+        AssertRegistered<RowMultiplication>(services);
+        AssertRegistered<Aggregation>(services);
+        AssertRegistered<LookupTransformation>(services);
+        AssertRegistered<MergeJoin>(services);
+        AssertRegistered<DbMerge>(services);
         AssertRegistered<DbDestination>(services);
+        AssertRegistered<CsvDestination>(services);
+        AssertRegistered<JsonDestination>(services);
+        AssertRegistered<XmlDestination>(services);
         AssertRegistered<MemoryDestination>(services);
         AssertRegistered<ErrorLogDestination>(services);
     }
@@ -98,13 +110,13 @@ public class ServiceCollectionExtensionsTests
 
         // These types were never explicitly registered — open generics resolve them
         var source = provider.GetRequiredService<DbSource<MyCustomRow>>();
-        source.Should().NotBeNull();
+        Assert.NotNull(source);
 
         var dest = provider.GetRequiredService<DbDestination<MyCustomRow>>();
-        dest.Should().NotBeNull();
+        Assert.NotNull(dest);
 
         var sort = provider.GetRequiredService<Sort<MyCustomRow>>();
-        sort.Should().NotBeNull();
+        Assert.NotNull(sort);
     }
 
     [Fact]
@@ -117,7 +129,7 @@ public class ServiceCollectionExtensionsTests
 
         // RowTransformation<TInput, TOutput> with different input/output types
         var transform = provider.GetRequiredService<RowTransformation<MyCustomRow, AnotherRow>>();
-        transform.Should().NotBeNull();
+        Assert.NotNull(transform);
     }
 
     [Fact]
@@ -129,7 +141,7 @@ public class ServiceCollectionExtensionsTests
         var provider = services.BuildServiceProvider();
 
         var source = provider.GetRequiredService<DbSource<MyCustomRow>>();
-        source.Logger.Should().NotBeNull();
+        Assert.NotNull(source.Logger);
     }
 
     [Fact]
@@ -140,7 +152,7 @@ public class ServiceCollectionExtensionsTests
         services.AddEtlBoxCore();
 
         var descriptor = services.First(d => d.ServiceType == typeof(DbSource<>));
-        descriptor.Lifetime.Should().Be(ServiceLifetime.Transient);
+        Assert.Equal(ServiceLifetime.Transient, descriptor.Lifetime);
     }
 
     [Fact]
@@ -151,8 +163,33 @@ public class ServiceCollectionExtensionsTests
         services.AddEtlBoxSerialization();
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(DataFlowXmlReader));
-        descriptor.Should().NotBeNull();
-        descriptor!.Lifetime.Should().Be(ServiceLifetime.Transient);
+        Assert.NotNull(descriptor);
+        Assert.Equal(ServiceLifetime.Transient, descriptor!.Lifetime);
+    }
+
+    [Fact]
+    public void AddEtlBoxCore_ShouldRegisterCsvConfigurationWithInvariantCultureByDefault()
+    {
+        var services = new ServiceCollection();
+        services.AddEtlBoxCore();
+        var provider = services.BuildServiceProvider();
+
+        var config = provider.GetRequiredService<CsvConfiguration>();
+
+        Assert.Equal(CultureInfo.InvariantCulture, config.CultureInfo);
+    }
+
+    [Fact]
+    public void AddEtlBoxCore_ShouldRegisterCsvConfigurationWithCustomCulture()
+    {
+        var services = new ServiceCollection();
+        var french = CultureInfo.GetCultureInfo("fr-FR");
+        services.AddEtlBoxCore(csvCultureInfo: french);
+        var provider = services.BuildServiceProvider();
+
+        var config = provider.GetRequiredService<CsvConfiguration>();
+
+        Assert.Equal(french, config.CultureInfo);
     }
 
     [Fact]
@@ -162,7 +199,7 @@ public class ServiceCollectionExtensionsTests
 
         var result = services.AddEtlBoxCore();
 
-        result.Should().BeSameAs(services);
+        Assert.Same(services, result);
     }
 
     [Fact]
@@ -172,7 +209,7 @@ public class ServiceCollectionExtensionsTests
 
         var result = services.AddEtlBoxSerialization();
 
-        result.Should().BeSameAs(services);
+        Assert.Same(services, result);
     }
 
     public class MyCustomRow
@@ -188,10 +225,12 @@ public class ServiceCollectionExtensionsTests
 
     private static void AssertRegistered<T>(IServiceCollection services)
     {
-        services
-            .Any(d => d.ServiceType == typeof(T) && d.Lifetime == ServiceLifetime.Transient)
-            .Should()
-            .BeTrue($"{typeof(T).Name} should be registered as transient");
+        Assert.True(
+            services.Any(d =>
+                d.ServiceType == typeof(T) && d.Lifetime == ServiceLifetime.Transient
+            ),
+            $"{typeof(T).Name} should be registered as transient"
+        );
     }
 
     private static void AssertOpenGenericRegistered(
@@ -199,9 +238,11 @@ public class ServiceCollectionExtensionsTests
         Type openGenericType
     )
     {
-        services
-            .Any(d => d.ServiceType == openGenericType && d.Lifetime == ServiceLifetime.Transient)
-            .Should()
-            .BeTrue($"{openGenericType.Name} should be registered as open generic transient");
+        Assert.True(
+            services.Any(d =>
+                d.ServiceType == openGenericType && d.Lifetime == ServiceLifetime.Transient
+            ),
+            $"{openGenericType.Name} should be registered as open generic transient"
+        );
     }
 }

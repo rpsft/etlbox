@@ -2,7 +2,6 @@ using System.Dynamic;
 using System.Globalization;
 using ALE.ETLBox.Serialization.DataFlow;
 using CsvHelper.Configuration;
-using FluentAssertions;
 
 namespace ETLBox.Serialization.Tests;
 
@@ -15,8 +14,8 @@ public class DefaultDataFlowActivatorTests
     {
         var result = _activator.CreateInstance(typeof(List<string>));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<List<string>>();
+        Assert.NotNull(result);
+        Assert.IsType<List<string>>(result);
     }
 
     [Fact]
@@ -24,10 +23,9 @@ public class DefaultDataFlowActivatorTests
     {
         var result = _activator.CreateInstance(typeof(CsvConfiguration));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<CsvConfiguration>();
-        var config = (CsvConfiguration)result!;
-        config.CultureInfo.Should().Be(CultureInfo.InvariantCulture);
+        Assert.NotNull(result);
+        var config = Assert.IsType<CsvConfiguration>(result);
+        Assert.Equal(CultureInfo.InvariantCulture, config.CultureInfo);
     }
 
     [Fact]
@@ -35,8 +33,8 @@ public class DefaultDataFlowActivatorTests
     {
         var result = _activator.CreateInstance(typeof(List<>));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<List<ExpandoObject>>();
+        Assert.NotNull(result);
+        Assert.IsType<List<ExpandoObject>>(result);
     }
 
     [Fact]
@@ -44,8 +42,8 @@ public class DefaultDataFlowActivatorTests
     {
         var result = _activator.CreateInstance(typeof(List<int>));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<List<int>>();
+        Assert.NotNull(result);
+        Assert.IsType<List<int>>(result);
     }
 
     [Fact]
@@ -53,7 +51,7 @@ public class DefaultDataFlowActivatorTests
     {
         var result = _activator.CreateInstance(typeof(ExpandoObject));
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<ExpandoObject>();
+        Assert.NotNull(result);
+        Assert.IsType<ExpandoObject>(result);
     }
 }

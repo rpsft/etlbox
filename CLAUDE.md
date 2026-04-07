@@ -77,6 +77,10 @@ Rules:
 - No trailing period or whitespace
 - Hook auto-appends `Changelog:` trailer (feat->added, fix->fixed, perf->performance, other->other)
 
+## Testing
+
+- **Do NOT use FluentAssertions.** Use xUnit's built-in `Assert.*` methods instead.
+
 ## Code Quality
 
 - Warnings treated as errors (except CS0618, CS1574)

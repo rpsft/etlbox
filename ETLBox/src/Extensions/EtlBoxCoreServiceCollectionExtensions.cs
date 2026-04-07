@@ -1,5 +1,6 @@
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
+using CsvHelper.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ALE.ETLBox.Extensions;
@@ -15,8 +16,19 @@ public static class EtlBoxCoreServiceCollectionExtensions
     /// Components can be resolved for any type argument without explicit per-type registration.
     /// Also registers non-generic shorthand types (e.g. <see cref="DbSource"/>).
     /// </summary>
-    public static IServiceCollection AddEtlBoxCore(this IServiceCollection services)
+    /// <param name="services">The service collection.</param>
+    /// <param name="csvCultureInfo">
+    /// The culture info used for <see cref="CsvConfiguration"/> instances resolved from the container.
+    /// Defaults to <see cref="CultureInfo.InvariantCulture"/> when not specified.
+    /// </param>
+    public static IServiceCollection AddEtlBoxCore(
+        this IServiceCollection services,
+        [CanBeNull] CultureInfo csvCultureInfo = null
+    )
     {
+        var culture = csvCultureInfo ?? CultureInfo.InvariantCulture;
+        services.AddTransient(_ => new CsvConfiguration(culture));
+
         // Sources (open generics — resolve for any T)
         services.AddTransient(typeof(DbSource<>));
         services.AddTransient(typeof(CsvSource<>));
