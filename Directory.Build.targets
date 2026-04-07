@@ -33,6 +33,11 @@
     <Exec Command="dotnet husky install" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="High" StandardErrorImportance="High"/>
   </Target>
 
+  <PropertyGroup Condition=" '$(IsTestProject)' != 'true' ">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
     <NoWarn>$(NoWarn);1591</NoWarn>
     <SignAssembly>false</SignAssembly>
