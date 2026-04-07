@@ -158,10 +158,10 @@ namespace ETLBox.Serialization.Tests
             Assert.Equal('#', customCsvSource.Char);
             Assert.Equal((byte)1, customCsvSource.Byte);
             Assert.Equal(-1, customCsvSource.Int);
-            Assert.Equal((uint)1, customCsvSource.Uint);
+            Assert.Equal(1u, customCsvSource.Uint);
             Assert.Equal(-1, customCsvSource.NullInt);
             Assert.Equal(-1L, customCsvSource.Long);
-            Assert.Equal((ulong)1, customCsvSource.Ulong);
+            Assert.Equal(1ul, customCsvSource.Ulong);
             Assert.Equal(-1L, customCsvSource.NullLong);
             Assert.Equal(1.0, customCsvSource.Double);
             Assert.Equal(-1.0, customCsvSource.NullDouble);
@@ -173,9 +173,9 @@ namespace ETLBox.Serialization.Tests
                 step.Destinations,
                 d => Assert.IsAssignableFrom<MemoryDestination<ExpandoObject>>(d)
             );
-            Assert.Single(step.Destinations);
+            var destItem = Assert.Single(step.Destinations);
 
-            var dest = (MemoryDestination<ExpandoObject>)step.Destinations[0];
+            var dest = (MemoryDestination<ExpandoObject>)destItem;
             Assert.NotNull(dest.Data);
             Assert.NotEmpty(dest.Data);
             Assert.Equal(3, dest.Data.Count);
@@ -183,13 +183,13 @@ namespace ETLBox.Serialization.Tests
             dynamic col = new ExpandoObject();
             col.Col1 = 1;
             col.Col2 = "Test1";
-            Assert.Contains(dest.Data, d => ExpandoEquals(d, (ExpandoObject)col));
+            Assert.Contains(dest.Data, item => ExpandoEquals(item, (ExpandoObject)col));
             col.Col1 = 2;
             col.Col2 = "Test2";
-            Assert.Contains(dest.Data, d => ExpandoEquals(d, (ExpandoObject)col));
+            Assert.Contains(dest.Data, item => ExpandoEquals(item, (ExpandoObject)col));
             col.Col1 = 3;
             col.Col2 = "Test3";
-            Assert.Contains(dest.Data, d => ExpandoEquals(d, (ExpandoObject)col));
+            Assert.Contains(dest.Data, item => ExpandoEquals(item, (ExpandoObject)col));
         }
 
         [Fact]
@@ -312,13 +312,8 @@ namespace ETLBox.Serialization.Tests
 
             // Assert
             Assert.NotNull(step.ErrorDestinations);
-            Assert.Single(step.ErrorDestinations);
-            Assert.All(
-                step.ErrorDestinations,
-                d => Assert.IsAssignableFrom<ErrorLogDestination>(d)
-            );
-
-            var errorDestination = (ErrorLogDestination)step.ErrorDestinations[0];
+            var errorDestinationItem = Assert.Single(step.ErrorDestinations);
+            var errorDestination = Assert.IsType<ErrorLogDestination>(errorDestinationItem);
 
             Assert.Collection(
                 errorDestination.Errors,
@@ -416,8 +411,8 @@ namespace ETLBox.Serialization.Tests
 
             // Verify ErrorDestinations structure
             Assert.NotNull(step.ErrorDestinations);
-            Assert.Single(step.ErrorDestinations);
-            Assert.IsType<ErrorLogDestination>(step.ErrorDestinations[0]);
+            var errorDest = Assert.Single(step.ErrorDestinations);
+            Assert.IsType<ErrorLogDestination>(errorDest);
         }
 
         [Theory]
@@ -449,11 +444,8 @@ namespace ETLBox.Serialization.Tests
 
             // Assert
             Assert.NotNull(step.ErrorDestinations);
-            Assert.Single(step.ErrorDestinations);
-            Assert.All(
-                step.ErrorDestinations,
-                d => Assert.IsAssignableFrom<ErrorLogDestination>(d)
-            );
+            var singleErrorDest = Assert.Single(step.ErrorDestinations);
+            Assert.IsAssignableFrom<ErrorLogDestination>(singleErrorDest);
         }
 
         [Fact]
@@ -475,11 +467,8 @@ namespace ETLBox.Serialization.Tests
 
             // Assert
             Assert.NotNull(step.ErrorDestinations);
-            Assert.Single(step.ErrorDestinations);
-            Assert.All(
-                step.ErrorDestinations,
-                d => Assert.IsAssignableFrom<ErrorLogDestination>(d)
-            );
+            var singleErrorDest = Assert.Single(step.ErrorDestinations);
+            Assert.IsAssignableFrom<ErrorLogDestination>(singleErrorDest);
         }
 
         [Fact]
@@ -528,11 +517,11 @@ namespace ETLBox.Serialization.Tests
             var dictB = (IDictionary<string, object?>)b;
             if (dictA.Count != dictB.Count)
                 return false;
-            foreach (var pair in dictA)
+            foreach (var pair in dictB)
             {
-                if (!dictB.TryGetValue(pair.Key, out var val))
+                if (!dictA.TryGetValue(pair.Key, out var value))
                     return false;
-                if (!Equals(pair.Value, val))
+                if (!Equals(value, pair.Value))
                     return false;
             }
             return true;
