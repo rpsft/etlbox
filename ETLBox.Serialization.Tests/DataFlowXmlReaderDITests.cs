@@ -1,8 +1,10 @@
 using System.Dynamic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using ALE.ETLBox.DataFlow;
+using ALE.ETLBox.Extensions;
 using ALE.ETLBox.Serialization.DataFlow;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -152,6 +154,46 @@ public class DataFlowXmlReaderDITests
         // Assert
         Assert.NotNull(step);
         Assert.NotNull(step.Source);
+    }
+
+    [Fact]
+    public void Deserialize_WithServiceProvider_CsvSourceWithConfiguration_ShouldDeserializeCorrectly()
+    {
+        // Arrange — CsvConfiguration has no parameterless constructor (requires CultureInfo).
+        // AddEtlBoxCore registers a factory for CsvConfiguration so that
+        // ServiceProviderActivator can resolve it during XML deserialization.
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddEtlBoxCore(CultureInfo.InvariantCulture);
+        var provider = services.BuildServiceProvider();
+        var errorDest = new ErrorLogDestination();
+
+        // language=xml
+        var xml =
+            @"<EtlDataFlowStep>
+                <CsvSource>
+                    <Configuration>
+                        <Delimiter>;</Delimiter>
+                        <Escape>#</Escape>
+                        <Quote>$</Quote>
+                    </Configuration>
+                    <LinkTo>
+                        <MemoryDestination />
+                    </LinkTo>
+                </CsvSource>
+            </EtlDataFlowStep>";
+
+        // Act
+        var step = DataFlowXmlReader.Deserialize<EtlDataFlowStep>(xml, errorDest, provider);
+
+        // Assert
+        Assert.NotNull(step);
+        Assert.NotNull(step.Source);
+        var csvSource = Assert.IsAssignableFrom<CsvSource<ExpandoObject>>(step.Source);
+        Assert.NotNull(csvSource.Configuration);
+        Assert.Equal(";", csvSource.Configuration.Delimiter);
+        Assert.Equal('#', csvSource.Configuration.Escape);
+        Assert.Equal('$', csvSource.Configuration.Quote);
     }
 
     /// <summary>

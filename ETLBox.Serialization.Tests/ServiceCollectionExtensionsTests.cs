@@ -1,8 +1,10 @@
+using System.Globalization;
 using ALE.ETLBox.Common.DataFlow;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.Extensions;
 using ALE.ETLBox.Serialization.DataFlow;
 using ALE.ETLBox.Serialization.Extensions;
+using CsvHelper.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETLBox.Serialization.Tests;
@@ -75,6 +77,8 @@ public class ServiceCollectionExtensionsTests
         AssertRegistered<DbSource>(services);
         AssertRegistered<CsvSource>(services);
         AssertRegistered<JsonSource>(services);
+        AssertRegistered<XmlSource>(services);
+        AssertRegistered<ExcelSource>(services);
         AssertRegistered<MemorySource>(services);
         AssertRegistered<CustomSource>(services);
         AssertRegistered<CrossJoin>(services);
@@ -82,7 +86,16 @@ public class ServiceCollectionExtensionsTests
         AssertRegistered<BlockTransformation>(services);
         AssertRegistered<Multicast>(services);
         AssertRegistered<Sort>(services);
+        AssertRegistered<RowDuplication>(services);
+        AssertRegistered<RowMultiplication>(services);
+        AssertRegistered<Aggregation>(services);
+        AssertRegistered<LookupTransformation>(services);
+        AssertRegistered<MergeJoin>(services);
+        AssertRegistered<DbMerge>(services);
         AssertRegistered<DbDestination>(services);
+        AssertRegistered<CsvDestination>(services);
+        AssertRegistered<JsonDestination>(services);
+        AssertRegistered<XmlDestination>(services);
         AssertRegistered<MemoryDestination>(services);
         AssertRegistered<ErrorLogDestination>(services);
     }
@@ -151,7 +164,32 @@ public class ServiceCollectionExtensionsTests
 
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(DataFlowXmlReader));
         Assert.NotNull(descriptor);
-        Assert.Equal(ServiceLifetime.Transient, descriptor!.Lifetime);
+        Assert.Equal(ServiceLifetime.Transient, descriptor.Lifetime);
+    }
+
+    [Fact]
+    public void AddEtlBoxCore_ShouldRegisterCsvConfigurationWithInvariantCultureByDefault()
+    {
+        var services = new ServiceCollection();
+        services.AddEtlBoxCore();
+        var provider = services.BuildServiceProvider();
+
+        var config = provider.GetRequiredService<CsvConfiguration>();
+
+        Assert.Equal(CultureInfo.InvariantCulture, config.CultureInfo);
+    }
+
+    [Fact]
+    public void AddEtlBoxCore_ShouldRegisterCsvConfigurationWithCustomCulture()
+    {
+        var services = new ServiceCollection();
+        var french = CultureInfo.GetCultureInfo("fr-FR");
+        services.AddEtlBoxCore(csvCultureInfo: french);
+        var provider = services.BuildServiceProvider();
+
+        var config = provider.GetRequiredService<CsvConfiguration>();
+
+        Assert.Equal(french, config.CultureInfo);
     }
 
     [Fact]
