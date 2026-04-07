@@ -39,32 +39,21 @@ workflow:
 default:
   image: mcr.microsoft.com/dotnet/sdk:8.0
 
-stages:
-  - build
-  - test
-  - deploy
-
 build_job:
+  needs: []
   variables:
     PACKAGE_VERSION: ${GitVersion_SemVer}
-  stage: build
   script:
     - echo "Building version $PACKAGE_VERSION"
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
-  cache:
-    key: dotnet-packages-cache
-    paths:
-      - .nuget/packages/
-      - .tools/
-    unprotect: true
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - "$NUPKG_FOLDER/"
 
 test_job:
-  stage: test
+  needs: []
   services:
     - name: mysql/mysql-server
       alias: localmysql
@@ -124,12 +113,6 @@ test_job:
     - cat .coverage/Summary.txt
     - echo 'End Summary'
   coverage: /Line coverage:[\s\S].+%/
-  cache:
-    key: dotnet-packages-cache
-    paths:
-      - .nuget/packages/
-      - .tools/
-    unprotect: true
   artifacts:
     when: always
     paths:
@@ -145,7 +128,6 @@ test_job:
 publish:internal:
   variables:
     PACKAGE_VERSION: ${GitVersion_SemVer}
-  stage: deploy
   script:
     - echo "Publishing version $PACKAGE_VERSION internally to $NUGET_SOURCE"
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGET_SOURCE --api-key $NUGET_API_KEY
@@ -156,7 +138,6 @@ publish:internal:
 # Please see [Release CI/CD examples](https://docs.gitlab.com/ee/user/project/releases/release_cicd_examples.html) for many rich examples for triggering a release only on specific conditions.
 release_job:
   needs:
-    - get_unique_semversion
     - build_job
     - test_job
   image: registry.gitlab.com/gitlab-org/cli:latest
@@ -177,7 +158,6 @@ publish:nuget-org:
   variables:
     PACKAGE_VERSION: ${GitVersion_SemVer}
   interruptible: true
-  stage: deploy
   script:
     - echo "Publishing version $PACKAGE_VERSION to nuget.org..."
     - dotnet nuget push "$NUPKG_FOLDER/*.nupkg" --source $NUGETORG_SOURCE --api-key $NUGET_ORG_API_KEY
