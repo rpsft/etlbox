@@ -32,15 +32,6 @@
   data in the table).
 - CreateTableTask: Function for adding test data into table (depending on table definition)
 
-## Tech Debt
-
-- [DI-based Activator Mode for DataFlowXmlReader](docs/tech-debt/TECH-DEBT-DI-ServiceProvider-Activator.md)
-  - Implement alternative activation mode using MS DI `IServiceProvider` instead of `Activator.CreateInstance()`
-  - Create `IServiceCollection` registration extensions for each library (e.g., `AddEtlBoxCore()`, `AddEtlBoxCsv()`)
-  - Add `ILogger` constructor overloads to all data flow steps for structured logging support
-  - Enables extensibility: custom steps and services can be provided via DI container
-- ~~[Eliminate FluentAssertions from the Solution](docs/changelog/TECH-DEBT-Eliminate-FluentAssertions.md)~~ **Done**
-
 ## Other
 
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from `GetTableDefinitionFrom`
