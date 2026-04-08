@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ALE.ETLBox.Serialization</RootNamespace>
-    <LangVersion>10</LangVersion>
     <PackageId>ETLBox.Classic.Serialization</PackageId>
     <Nullable>enable</Nullable>
     <Description>
