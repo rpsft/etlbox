@@ -24,18 +24,15 @@ variables:
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9].*/
-      when: never
-    - if: $CI_COMMIT_MESSAGE =~ /^chore\(version bump\).*/
-      when: never
+    # Run for merge request commits
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    # Avoid duplicate pipelines in merges
+    # Avoid duplicates for merge requests
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "develop")
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^release\/[a-zA-Z0-9]+.*/
+    # Launch for any branch commit
+    - if: $CI_COMMIT_BRANCH
+    # Launch for properly formatted version tags
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 default:
   image: mcr.microsoft.com/dotnet/sdk:8.0
@@ -60,12 +57,12 @@ test_job:
   services:
     - name: mysql/mysql-server
       alias: localmysql
-      variables: 
+      variables:
         MYSQL_ROOT_HOST: '%'
         MYSQL_ROOT_PASSWORD: 'etlboxpassword'
     - name: postgres
       alias: localpostgres
-      variables: 
+      variables:
         POSTGRES_PASSWORD: 'etlboxpassword'
         LANG: en_US.utf8
     - name: mcr.microsoft.com/azure-sql-edge
@@ -76,7 +73,7 @@ test_job:
         MSSQL_PID: 'Developer'
     - name: clickhouse/clickhouse-server
       alias: localclickhouse
-      variables: 
+      variables:
         CLICKHOUSE_USER: clickhouse
         CLICKHOUSE_PASSWORD: Qwe123456
         CLICKHOUSE_MAX_CONNECTIONS: 100
