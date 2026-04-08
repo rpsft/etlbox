@@ -51,17 +51,8 @@
       },
       {
         "files": [
-          "articles/**/**.md",
-          "articles/toc.yml",
           "toc.yml",
           "index.md"
-        ]
-      }
-    ],
-    "resource": [
-      {
-        "files": [
-          "images/**"
         ]
       }
     ],

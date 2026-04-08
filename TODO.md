@@ -18,7 +18,6 @@
 
 ## Update Documentation
 
-- Rebuild documentation with [DocFx](https://github.com/dotnet/docfx)
 - Improving Lookup with new set of attributes to define matching and retrieving properties. Also a
   new `Aggregation` component that simplifies creating aggregates (e.g. to calculate SUM, MIN, MAX
   or Count or any other custom defined calculation).
@@ -34,12 +33,16 @@
 
 ## Tech Debt
 
+- [XML Documentation Coverage — 59% → 95%](docs/tech-debt/TECH-DEBT-XML-Documentation-Coverage.md)
+  - Phase 1: Core interfaces in ETLBox.Primitives (14 types)
+  - Phase 2: Abstract base classes in ETLBox.Common + main library (13 types)
+  - Phase 3: Fully undocumented projects — ClickHouse, Logging.Database (5 types)
+  - Phase 4: Remaining main library gaps — enums, attributes, models, transforms (42 types)
 - [DI-based Activator Mode for DataFlowXmlReader](docs/tech-debt/TECH-DEBT-DI-ServiceProvider-Activator.md)
   - Implement alternative activation mode using MS DI `IServiceProvider` instead of `Activator.CreateInstance()`
   - Create `IServiceCollection` registration extensions for each library (e.g., `AddEtlBoxCore()`, `AddEtlBoxCsv()`)
   - Add `ILogger` constructor overloads to all data flow steps for structured logging support
   - Enables extensibility: custom steps and services can be provided via DI container
-- ~~[Eliminate FluentAssertions from the Solution](docs/changelog/TECH-DEBT-Eliminate-FluentAssertions.md)~~ **Done**
 
 ## Other
 

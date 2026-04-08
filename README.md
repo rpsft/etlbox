@@ -16,6 +16,11 @@ ETLBox.Classic was aiming at keeping original 1.x branch up to date with .Net an
 > "EtlBox.Classic" to "EtlKit". We expect migration to 2.0 to be as easy as updating Nuget references and changing
 > namespaces. Our best guess on the timing of the transition is somewhere in 2025.
 
+## Documentation
+
+- [Guides and tutorials](docs/README.md) — `docs/` contains hand-written guides and tutorials, browsable directly in the repo
+- [API Reference](https://rpsft.github.io/etlbox/) — `docfx/` contains the DocFx config that generates the hosted API reference from XML comments
+
 ## Installation
 
 You can use EtlBox.Classic within any .NET or .NET core project that supports .NET Standard 2.0. (Basically all latest versions

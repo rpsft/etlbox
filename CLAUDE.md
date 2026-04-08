@@ -90,6 +90,12 @@ Rules:
 - `[PublicAPI]` attribute (JetBrains.Annotations) marks public API surface
 - Custom dictionary at `.directory.dic` for spell checker
 
+## Project Tracking
+
+- `TODO.md` tracks open work items only. Completed items must be **moved** to `docs/changelog/`, not
+  left in TODO with strikethrough.
+- Tech debt plans live in `docs/tech-debt/` as detailed markdown documents, referenced from TODO.md.
+
 ## Versioning
 
 Version comes from `.version.yml` (`PACKAGE_RELEASE` + `PACKAGE_POSTFIX`). Local builds without this
