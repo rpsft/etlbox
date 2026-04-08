@@ -194,3 +194,4 @@ pages:
     # Allow manual docs generation on any branch
     - if: $CI_COMMIT_BRANCH != "master"
       when: manual
+      allow_failure: true
