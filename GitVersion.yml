@@ -1,0 +1,56 @@
+# GitVersion configuration for ETLBox
+# Branching strategy: GitFlow (see Confluence: "Процесс разработки в Git")
+#
+# Branch types and their version increment:
+#   hotfix/*       — bug fix on master/support    → Patch  (built-in default)
+#   bugfix/*       — bug fix on develop/release   → Patch  (configured below)
+#   feature/*      — new feature from develop     → Minor  (built-in default)
+#   dev/*          — subtask branch from feature  → Inherit from feature (configured below)
+#   release/*      — release branch from develop  → Minor  (built-in default)
+#   support/*      — old-version support branch   → Patch  (built-in default)
+#   documentation/* — docs branch from develop/feature → Inherit (configured below)
+
+branches:
+  bugfix:
+    mode: ManualDeployment
+    label: '{BranchName}'
+    increment: Patch
+    prevent-increment:
+      when-current-commit-tagged: false
+    regex: ^bugfix(es)?[/-](?<BranchName>.+)
+    source-branches:
+    - main
+    - develop
+    - release
+    - support
+    is-source-branch-for: []
+    is-main-branch: false
+    pre-release-weight: 30000
+
+  dev:
+    mode: ManualDeployment
+    label: '{BranchName}'
+    increment: Inherit
+    prevent-increment:
+      when-current-commit-tagged: false
+    regex: ^dev[/-](?<BranchName>.+)
+    source-branches:
+    - feature
+    - develop
+    is-source-branch-for: []
+    is-main-branch: false
+    pre-release-weight: 30000
+
+  documentation:
+    mode: ManualDeployment
+    label: '{BranchName}'
+    increment: Inherit
+    prevent-increment:
+      when-current-commit-tagged: false
+    regex: ^documentation[/-](?<BranchName>.+)
+    source-branches:
+    - develop
+    - feature
+    is-source-branch-for: []
+    is-main-branch: false
+    pre-release-weight: 30000
