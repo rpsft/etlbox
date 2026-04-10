@@ -67,7 +67,18 @@ namespace ALE.ETLBox.DataFlow
 
         private bool _useTruncateMethod;
 
-        public int BatchSize { get; set; }
+        private int _batchSize = DbDestination.DefaultBatchSize;
+
+        public int BatchSize
+        {
+            get => _batchSize;
+            set
+            {
+                _batchSize = value;
+                if (DestinationTable != null)
+                    DestinationTable.BatchSize = value;
+            }
+        }
 
         public MergeProperties MergeProperties { get; set; } = new();
 
