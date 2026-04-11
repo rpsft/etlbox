@@ -11,7 +11,6 @@
       filter, aggregate, validate and clean your data
     </Description>
     <RootNamespace>ALE.ETLBox</RootNamespace>
-    <LangVersion>default</LangVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

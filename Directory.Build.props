@@ -35,7 +35,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SvSoft.MSBuild.CheckUnnecessaryUsings" Version="1.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

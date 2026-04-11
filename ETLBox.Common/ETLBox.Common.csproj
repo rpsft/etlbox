@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ALE.ETLBox.Common</RootNamespace>
-    <LangVersion>default</LangVersion>
     <PackageId>EtlBox.Classic.Common</PackageId>
     <Description>
       EtlBox.Classic is a fully open-source 1.x version fork from original etlbox (etlbox.net).

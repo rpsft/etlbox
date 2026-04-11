@@ -7,11 +7,11 @@ variables:
   # Opt out of telemetry (turbo and others), see https://consoledonottrack.com/
   DO_NOT_TRACK: 1
   # Enable debug services
-  CI_DEBUG_SERVICES: "true"
+  CI_DEBUG_SERVICES: 'true'
   # Enable service network
-  FF_NETWORK_PER_BUILD: "true"
+  FF_NETWORK_PER_BUILD: 'true'
   # Nupkg folder
-  NUPKG_FOLDER: ".packages"
+  NUPKG_FOLDER: '.packages'
   NUGET_SOURCE: https://nuget.rapidsoft.ru/nuget/Rapidsoft-Nuget/v3/index.json
   NUGETORG_SOURCE: https://api.nuget.org/v3/index.json
   # All console out of dotnet should be in English
@@ -47,9 +47,9 @@ build_job:
     - dotnet build --packages .nuget/packages/ -c Release -p:Version=$PACKAGE_VERSION
     - dotnet pack --no-build -c Release -p:Version=$PACKAGE_VERSION -o $NUPKG_FOLDER --include-symbols --include-source
   artifacts:
-    expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
+    expire_in: 1 week # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
-      - "$NUPKG_FOLDER/"
+      - '$NUPKG_FOLDER/'
 
 test_job:
   needs:
@@ -57,12 +57,12 @@ test_job:
   services:
     - name: mysql/mysql-server
       alias: localmysql
-      variables: 
+      variables:
         MYSQL_ROOT_HOST: '%'
         MYSQL_ROOT_PASSWORD: 'etlboxpassword'
     - name: postgres
       alias: localpostgres
-      variables: 
+      variables:
         POSTGRES_PASSWORD: 'etlboxpassword'
         LANG: en_US.utf8
     - name: mcr.microsoft.com/azure-sql-edge
@@ -73,7 +73,7 @@ test_job:
         MSSQL_PID: 'Developer'
     - name: clickhouse/clickhouse-server
       alias: localclickhouse
-      variables: 
+      variables:
         CLICKHOUSE_USER: clickhouse
         CLICKHOUSE_PASSWORD: Qwe123456
         CLICKHOUSE_MAX_CONNECTIONS: 100
@@ -93,7 +93,13 @@ test_job:
         CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
     - name: docker:24.0.5-dind
       alias: docker
-      command: [ "dockerd", "--tls=false", "--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock" ]
+      command:
+        [
+          'dockerd',
+          '--tls=false',
+          '--host=tcp://0.0.0.0:2375',
+          '--host=unix:///var/run/docker.sock',
+        ]
   variables:
     DOCKER_HOST: tcp://docker:2375
     PACKAGE_VERSION: ${GitVersion_SemVer}
@@ -123,7 +129,6 @@ test_job:
       coverage_report:
         coverage_format: cobertura
         path: ./**/coverage.cobertura.xml
-
 
 publish:internal:
   needs:
@@ -170,3 +175,23 @@ publish:nuget-org:
   rules:
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/
       when: manual
+
+pages:
+  needs:
+    - get_unique_semversion
+    - build_job
+  variables:
+    PACKAGE_VERSION: ${GitVersion_SemVer}
+  script:
+    - dotnet tool restore
+    - dotnet docfx docfx/docfx.json
+    - mv _site public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+    # Allow manual docs generation on any branch
+    - if: $CI_COMMIT_BRANCH != "master"
+      when: manual
+      allow_failure: true
