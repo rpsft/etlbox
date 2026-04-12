@@ -640,6 +640,7 @@ public sealed class DataFlowXmlReader
         if (
             method.GetParameters().Length != 1
             || !method.GetParameters()[0].ParameterType.IsInterface
+            || !method.GetParameters()[0].ParameterType.IsGenericType
             || !typeof(IDataFlowLinkTarget<>).IsAssignableFrom(
                 method.GetParameters()[0].ParameterType.GetGenericTypeDefinition()
             )
@@ -694,7 +695,7 @@ public sealed class DataFlowXmlReader
         Type? type = null;
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
-            var types = assembly.GetTypes().Where(t => t.Name == typeName);
+            var types = SafeGetTypes(assembly).Where(t => t.Name == typeName);
             if (baseType is { IsInterface: true })
             {
                 types = types.Where(t => Array.Exists(t.GetInterfaces(), i => i == baseType));
@@ -812,31 +813,38 @@ public sealed class DataFlowXmlReader
 
     private static IEnumerable<Type> GetDataFlowTypes(Assembly assembly)
     {
+        return SafeGetTypes(assembly)
+            .Where(t =>
+                t.IsClass
+                && Array.Exists(
+                    t.GetInterfaces(),
+                    i =>
+                        i.IsGenericType
+                        && (
+                            i.GetGenericTypeDefinition().FullName
+                                == typeof(IDataFlowLinkSource<>).FullName
+                            || i.GetGenericTypeDefinition().FullName
+                                == typeof(IDataFlowLinkTarget<>).FullName
+                            || i.GetGenericTypeDefinition().FullName
+                                == typeof(IDataFlowTransformation<,>).FullName
+                        )
+                )
+            );
+    }
+
+    /// <summary>
+    /// Safely retrieves types from an assembly, handling <see cref="ReflectionTypeLoadException"/>
+    /// that occurs when the assembly references types from unavailable dependencies.
+    /// </summary>
+    private static Type[] SafeGetTypes(Assembly assembly)
+    {
         try
         {
-            return assembly
-                .GetTypes()
-                .Where(t =>
-                    t.IsClass
-                    && Array.Exists(
-                        t.GetInterfaces(),
-                        i =>
-                            i.IsGenericType
-                            && (
-                                i.GetGenericTypeDefinition().FullName
-                                    == typeof(IDataFlowLinkSource<>).FullName
-                                || i.GetGenericTypeDefinition().FullName
-                                    == typeof(IDataFlowLinkTarget<>).FullName
-                                || i.GetGenericTypeDefinition().FullName
-                                    == typeof(IDataFlowTransformation<,>).FullName
-                            )
-                    )
-                );
+            return assembly.GetTypes();
         }
-        catch
+        catch (ReflectionTypeLoadException ex)
         {
-            // Could not read types - continue with next assembly
-            return Enumerable.Empty<Type>();
+            return ex.Types.Where(t => t is not null).ToArray()!;
         }
     }
 }
