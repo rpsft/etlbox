@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.16.1"></a>
+
+# 1.16.1
+
+🐛 Bug Fixes
+
+- Fixed: `ArgumentOutOfRangeException` during XML deserialization of `DbMerge` when using
+  `ServiceProviderActivator`. When `ILogger` was registered in DI, `ServiceProviderActivator`
+  resolved `DbMerge` via the `DbMerge(ILogger)` constructor which left `BatchSize = 0`. The subsequent
+  `set_TableName` immediately created an internal `DbDestination(batchSize: 0)`, which triggered
+  `BatchBlock` creation with `BoundedCapacity = 0 * 3 = 0`, causing the exception.
+    - `DataFlowBatchDestination.BatchSize` setter now treats `value <= 0` as "not set" (stores `null`),
+      so `InitObjects` uses `DefaultBatchSize = 1000`
+    - Same fix applied to `RowBatchTransformation.BatchSize` (same vulnerable pattern)
+    - `DbMerge.BatchSize` changed from auto-property to backing-field property initialized to
+      `DefaultBatchSize`; setting `BatchSize` after `TableName` now propagates to internal `DestinationTable`
+
 <a name="1.16.0"></a>
 
 # 1.16.0

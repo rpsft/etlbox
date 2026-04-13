@@ -49,8 +49,8 @@ namespace ALE.ETLBox.Common.DataFlow
             get => _batchSize ?? DefaultBatchSize;
             set
             {
-                _batchSize = value;
-                InitObjects(value);
+                _batchSize = value > 0 ? value : (int?)null;
+                InitObjects(_batchSize ?? DefaultBatchSize);
             }
         }
         private int? _batchSize;

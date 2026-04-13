@@ -43,8 +43,8 @@ public abstract class RowBatchTransformation<TInput, TOutput>
         get => _batchSize ?? DefaultBatchSize;
         set
         {
-            _batchSize = value;
-            InitObjects(value);
+            _batchSize = value > 0 ? value : (int?)null;
+            InitObjects(_batchSize ?? DefaultBatchSize);
         }
     }
 
