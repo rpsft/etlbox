@@ -19,6 +19,13 @@
 - CreateTableTask.CreateOrAlter(): add functionality to alter a table (with migration if there is data in the table).
 - CreateTableTask: Function for adding test data into table (depending on table definition)
 
+## Tech Debt
+
+- [FieldLookupTransformation — declarative field-name-based lookup with XML serialization support](docs/tech-debt/field-lookup-transformation-roadmap.md)
+  - New component alongside `LookupTransformation` with serializable `MatchColumns`/`RetrieveColumns` POCO lists
+  - `DictionarySource: IDataFlowSource<T>` property deserialized via existing `DataFlowXmlReader` mechanism (no reader changes)
+  - Optional `ScriptedFieldLookupTransformation` in `ETLBox.Scripting` with Roslyn enrichment script string
+
 ## Other
 - PrimaryKeyConstrainName now is part of TableDefinition, but not read from `GetTableDefinitionFrom`
 - in order to have these tests fully working, add something like MaxBufferSize as  DataFlow parameter for all DataFlowTasks and use this when creating DF components  - also have a static DefaultMaxBufferSize as Fallback value
