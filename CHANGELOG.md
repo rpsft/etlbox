@@ -8,11 +8,28 @@ All notable changes to this project will be documented in this file.
 
 ✨ Features
 
-- New: `PassThrough` property on `ScriptedRowTransformation<TInput, TOutput>` (and the non-generic
-  `ScriptedTransformation` alias). When set to `true`, all input fields are copied to the output
-  before `Mappings` are applied — so unmapped fields survive unchanged. `Mappings` may still add new
-  fields or override copied ones. When `false` (default), only the fields listed in `Mappings`
-  appear in the output, preserving existing behaviour.
+- Новое: свойство `PassThrough` в `ScriptedRowTransformation<TInput, TOutput>` (и в не-generic
+  псевдониме `ScriptedTransformation`). При значении `true` все поля входной записи копируются в
+  выходную запись до применения `Mappings` — таким образом, не перечисленные в `Mappings` поля
+  сохраняются без изменений. `Mappings` по-прежнему может добавлять новые поля или перезаписывать
+  скопированные. При значении `false` (по умолчанию) в выходной записи присутствуют только поля,
+  явно указанные в `Mappings`.
+
+  Пример использования в XML (режим `PassThrough`):
+  ```xml
+  <ScriptedTransformation>
+    <PassThrough>true</PassThrough>
+    <Mappings>
+      <!-- Добавляет новое поле FullName, исходные поля FirstName и LastName сохраняются -->
+      <FullName>$"{FirstName} {LastName}"</FullName>
+      <!-- Перезаписывает существующее поле Amount -->
+      <Amount>Amount * 1.2</Amount>
+    </Mappings>
+    <LinkTo>
+      <MemoryDestination />
+    </LinkTo>
+  </ScriptedTransformation>
+  ```
 
 <a name="1.16.1"></a>
 
