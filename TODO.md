@@ -43,6 +43,10 @@
   - Create `IServiceCollection` registration extensions for each library (e.g., `AddEtlBoxCore()`, `AddEtlBoxCsv()`)
   - Add `ILogger` constructor overloads to all data flow steps for structured logging support
   - Enables extensibility: custom steps and services can be provided via DI container
+- [FieldLookupTransformation — declarative field-name-based lookup with XML serialization support](docs/tech-debt/field-lookup-transformation-roadmap.md)
+  - New component alongside `LookupTransformation` with serializable `MatchColumns`/`RetrieveColumns` POCO lists
+  - `DictionarySource: IDataFlowSource<T>` property deserialized via existing `DataFlowXmlReader` mechanism (no reader changes)
+  - Optional `ScriptedFieldLookupTransformation` in `ETLBox.Scripting` with Roslyn enrichment script string
 
 ## Other
 
