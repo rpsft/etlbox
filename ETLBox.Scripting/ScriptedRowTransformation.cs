@@ -57,6 +57,13 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     /// </summary>
     public bool FailOnMissingField { get; set; } = true;
 
+    /// <summary>
+    /// When true, all input fields are copied to the output before applying Mappings.
+    /// Mappings may add new fields or override existing ones. When false (default),
+    /// only the fields listed in Mappings appear in the output.
+    /// </summary>
+    public bool PassThrough { get; set; } = false;
+
     private IEnumerable<Assembly> _additionalAssemblies = Array.Empty<Assembly>();
     private readonly ConcurrentDictionary<string, ScriptRunner<object>?> _runnersCache = new();
 
@@ -90,6 +97,13 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type '{typeof(TOutput).FullName}'. This may be caused by a missing parameterless constructor."
             );
+
+        if (PassThrough)
+        {
+            var outputDict = (IDictionary<string, object?>)output;
+            foreach (var pair in arg)
+                outputDict[pair.Key] = pair.Value;
+        }
 
         var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
 
@@ -128,6 +142,17 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             ?? throw new InvalidOperationException(
                 $"Could not create instance of output type {typeof(TOutput).FullName}. This may be caused by a missing parameterless constructor."
             );
+
+        if (PassThrough && typeof(TInput) == typeof(TOutput))
+        {
+            foreach (
+                var prop in typeof(TInput)
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.CanRead && p.CanWrite)
+            )
+                prop.SetValue(output, prop.GetValue(arg));
+        }
+
         var builder = ScriptBuilder.Default.ForType<TInput>();
         foreach (var key in Mappings.Keys)
         {

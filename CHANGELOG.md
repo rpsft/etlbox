@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+<a name="1.17.0"></a>
+
+# 1.17.0
+
+✨ Features
+
+- New: `PassThrough` property on `ScriptedRowTransformation<TInput, TOutput>` (and the non-generic
+  `ScriptedTransformation` alias). When set to `true`, all input fields are copied to the output
+  before `Mappings` are applied — so unmapped fields survive unchanged. `Mappings` may still add new
+  fields or override copied ones. When `false` (default), only the fields listed in `Mappings`
+  appear in the output, preserving existing behaviour.
+
 <a name="1.16.1"></a>
 
 # 1.16.1
@@ -27,14 +39,14 @@ All notable changes to this project will be documented in this file.
 
 - New: DI-based activator mode for `DataFlowXmlReader`. Introduced `IDataFlowActivator` abstraction
   with two implementations:
-  - `DefaultDataFlowActivator` (wraps existing `Activator.CreateInstance()` behavior)
-  - `ServiceProviderActivator` (resolves types via `IServiceProvider`, falling back to
-    `ActivatorUtilities.CreateInstance` for unregistered types)
+    - `DefaultDataFlowActivator` (wraps existing `Activator.CreateInstance()` behavior)
+    - `ServiceProviderActivator` (resolves types via `IServiceProvider`, falling back to
+      `ActivatorUtilities.CreateInstance` for unregistered types)
 - New: `IServiceCollection` registration extensions for each ETLBox library:
-  - `AddEtlBoxCore()` — registers all core sources, transformations, and destinations (open generics
-    and non-generic shorthands)
-  - `AddEtlBoxJson()`, `AddEtlBoxKafka()`, `AddEtlBoxRabbitMq()`, `AddEtlBoxRest()`,
-    `AddEtlBoxScripting()`, `AddEtlBoxAI()`, `AddEtlBoxSerialization()`
+    - `AddEtlBoxCore()` — registers all core sources, transformations, and destinations (open generics
+      and non-generic shorthands)
+    - `AddEtlBoxJson()`, `AddEtlBoxKafka()`, `AddEtlBoxRabbitMq()`, `AddEtlBoxRest()`,
+      `AddEtlBoxScripting()`, `AddEtlBoxAI()`, `AddEtlBoxSerialization()`
 - New: `ILogger<T>` constructor overloads added to all data flow steps (sources, transformations,
   destinations) across core and extension libraries. Base class hierarchy (`GenericTask` →
   `DataFlowTask` → intermediate bases) forwards `ILogger` via optional parameter chaining. Enables
@@ -58,7 +70,7 @@ All notable changes to this project will be documented in this file.
 ✨ Features
 
 - Refactoring: Moved `DataFlowBatchDestination` from EtlBox.Classic to EtlBox.Classic.Common for
-  third-party developers to create batched transformations. 
+  third-party developers to create batched transformations.
 
 <a name="1.15.4"></a>
 
