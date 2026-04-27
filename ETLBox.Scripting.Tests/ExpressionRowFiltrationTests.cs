@@ -388,6 +388,72 @@ public class ExpressionRowFiltrationTests
         public int Age { get; set; }
     }
 
+    // --- Generic ExpressionRowFiltration<TInput> over typed POCO ---
+
+    private sealed class ChangeRatioRow
+    {
+        public decimal AdminReserveRatio { get; set; }
+        public decimal AdminReserveRatioPrevious { get; set; }
+    }
+
+    [Fact]
+    public void TypedPoco_FilterByPropertyChange()
+    {
+        var rows = new[]
+        {
+            new ChangeRatioRow { AdminReserveRatio = 25, AdminReserveRatioPrevious = 25 }, // dropped
+            new ChangeRatioRow { AdminReserveRatio = 25, AdminReserveRatioPrevious = 30 }, // passes
+            new ChangeRatioRow { AdminReserveRatio = 30, AdminReserveRatioPrevious = 25 }, // passes
+        };
+
+        var source = new MemorySource<ChangeRatioRow>();
+        foreach (var row in rows)
+            source.DataAsList.Add(row);
+
+        var filtration = new ExpressionRowFiltration<ChangeRatioRow>(
+            "AdminReserveRatioPrevious != AdminReserveRatio"
+        );
+        var dest = new MemoryDestination<ChangeRatioRow>();
+
+        source.LinkTo(filtration);
+        filtration.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        Assert.Equal(2, dest.Data.Count);
+        Assert.All(
+            dest.Data,
+            row => Assert.NotEqual(row.AdminReserveRatio, row.AdminReserveRatioPrevious)
+        );
+    }
+
+    [Fact]
+    public void TypedPoco_FilterByArithmetic()
+    {
+        var rows = new[]
+        {
+            new ChangeRatioRow { AdminReserveRatio = 25, AdminReserveRatioPrevious = 10 }, // 25 - 10 = 15 > 0 -> passes
+            new ChangeRatioRow { AdminReserveRatio = 5, AdminReserveRatioPrevious = 30 }, // 5 - 30 = -25 -> dropped
+        };
+
+        var source = new MemorySource<ChangeRatioRow>();
+        foreach (var row in rows)
+            source.DataAsList.Add(row);
+
+        var filtration = new ExpressionRowFiltration<ChangeRatioRow>(
+            "AdminReserveRatio - AdminReserveRatioPrevious > 0"
+        );
+        var dest = new MemoryDestination<ChangeRatioRow>();
+
+        source.LinkTo(filtration);
+        filtration.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        Assert.Single(dest.Data);
+        Assert.Equal(25, dest.Data.First().AdminReserveRatio);
+    }
+
     // --- Collection of nested dicts: Any(predicate) ---
 
     [Fact]

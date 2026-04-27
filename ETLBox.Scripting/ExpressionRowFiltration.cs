@@ -11,22 +11,22 @@ namespace ALE.ETLBox.Scripting;
 /// <summary>
 /// Filters data rows based on a string expression evaluated via System.Linq.Dynamic.Core.
 /// Supports field comparisons, arithmetic, logical operators, null checks.
-/// Nested ExpandoObject / IDictionary fields are mapped recursively, custom classes
-/// are resolved through PropertyInfo, homogeneous collections become typed List&lt;T&gt;
-/// (enabling Any(predicate), Count(), Sum(selector), Contains(...) in expressions).
-/// Heterogeneous collections (items with different shapes) are not supported.
+/// Generic version for typed POCOs - properties are resolved through PropertyInfo
+/// directly, no runtime type generation needed.
 /// </summary>
+/// <typeparam name="TInput">Row type. Properties referenced in FilterExpression
+/// must be public.</typeparam>
 [PublicAPI]
-public class ExpressionRowFiltration : RowFiltration<ExpandoObject>
+public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
 {
     // ConvertObjectToSupportComparison enables operators on properties typed as object
-    // (null-valued fields fall back to typeof(object); also handles mixed numeric literals).
-    private static readonly ParsingConfig s_parsingConfig =
+    // (handles null-valued fields and mixed numeric literals like "X > 0" with X=decimal).
+    protected static readonly ParsingConfig s_parsingConfig =
         new() { ConvertObjectToSupportComparison = true };
 
     /// <summary>
     /// String expression to evaluate for each row.
-    /// Field names are resolved from ExpandoObject properties.
+    /// Field names are resolved from TInput properties.
     /// Supports: ==, !=, >, &lt;, >=, &lt;=, &amp;&amp;, ||, !, +, -, *, /, %
     /// </summary>
     public string FilterExpression { get; set; } = string.Empty;
@@ -42,13 +42,43 @@ public class ExpressionRowFiltration : RowFiltration<ExpandoObject>
         FilterExpression = filterExpression;
     }
 
-    public ExpressionRowFiltration([CanBeNull] ILogger<ExpressionRowFiltration> logger)
+    public ExpressionRowFiltration([CanBeNull] ILogger<ExpressionRowFiltration<TInput>> logger)
         : base(logger)
     {
         PredicateFunc = EvaluateExpression;
     }
 
-    private bool EvaluateExpression(ExpandoObject row)
+    protected virtual bool EvaluateExpression(TInput row)
+    {
+        if (string.IsNullOrWhiteSpace(FilterExpression))
+            throw new InvalidOperationException("FilterExpression is not set.");
+
+        // For typed TInput "new[] { row }" preserves the compile-time element type,
+        // AsQueryable sees TInput, Dynamic LINQ resolves properties via PropertyInfo.
+        return new[] { row }.AsQueryable().Any(s_parsingConfig, FilterExpression);
+    }
+}
+
+/// <summary>
+/// Filters ExpandoObject rows by a string expression.
+/// Nested ExpandoObject / IDictionary fields are mapped recursively, custom classes
+/// are resolved through PropertyInfo, homogeneous collections become typed List&lt;T&gt;
+/// (enabling Any(predicate), Count(), Sum(selector), Contains(...) in expressions).
+/// Heterogeneous collections (items with different shapes) are not supported.
+/// </summary>
+/// <see cref="ExpressionRowFiltration{TInput}"/>
+[PublicAPI]
+public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
+{
+    public ExpressionRowFiltration() { }
+
+    public ExpressionRowFiltration(string filterExpression)
+        : base(filterExpression) { }
+
+    public ExpressionRowFiltration([CanBeNull] ILogger<ExpressionRowFiltration> logger)
+        : base(logger) { }
+
+    protected override bool EvaluateExpression(ExpandoObject row)
     {
         if (string.IsNullOrWhiteSpace(FilterExpression))
             throw new InvalidOperationException("FilterExpression is not set.");
