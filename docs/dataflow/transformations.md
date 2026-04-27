@@ -166,6 +166,38 @@ source.LinkTo(multiplication);
 multiplication.LinkTo(dest);
 ```
 
+### RowFiltration
+
+The RowFiltration component drops rows from the flow based on a predicate. It accepts an input type and a `Func<TInput, bool>`. Rows for which the predicate returns true are forwarded to the output, the rest are silently discarded. RowFiltration is a non-blocking transformation. If the predicate throws and an error destination is linked via `LinkErrorTo`, the failing row is sent there; otherwise the exception propagates.
+
+```csharp
+DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("SourceTable");
+RowFiltration<MySimpleRow> filtration = new RowFiltration<MySimpleRow>(row => row.Col1 > 0);
+DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DestTable");
+
+source.LinkTo(filtration);
+filtration.LinkTo(dest);
+```
+
+For dynamic rows (`ExpandoObject`) use the non-generic version:
+
+```csharp
+RowFiltration filtration = new RowFiltration(row => ((dynamic)row).Col1 > 0);
+```
+
+### ExpressionRowFiltration
+
+Available in `ETLBox.Scripting`. Filters `ExpandoObject` rows by a string predicate evaluated via `System.Linq.Dynamic.Core`. Useful in XML-defined data flows where the predicate must be configurable from the package without recompiling.
+
+```csharp
+ExpressionRowFiltration filtration = new ExpressionRowFiltration(
+    "Reserve > 0 && Type == \"Day\"");
+```
+
+Supported in the expression: comparisons (`==`, `!=`, `>`, `<`, `>=`, `<=`), logical operators (`&&`, `||`, `!`), arithmetic (`+`, `-`, `*`, `/`, `%`), member access on nested `ExpandoObject` and on custom class fields, null checks, and LINQ-style methods on homogeneous collections (`Items.Any(predicate)`, `Items.Count()`, `Items.Sum(selector)`, `Items.Contains(value)`).
+
+Heterogeneous collections (items with different field sets or types in the same collection) are not supported and raise an exception when encountered.
+
 ### Splitting data
 
 In some of your data flow you may want to split the data and have it processed differently in the further flow.
