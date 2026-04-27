@@ -33,6 +33,10 @@
 
 ## Tech Debt
 
+- [Pipeline component — flat XML sequence sugar for DataFlowXmlReader](docs/tech-debt/TECH-DEBT-Pipeline-XmlSequence.md)
+  - New `Pipeline<TIn, TOut>` (transformation) and `Pipeline` (ExpandoObject source) classes
+  - `IDataFlowXmlSerializable` extension point so any component can self-describe its XML format
+  - Eliminates deep `<LinkTo>` nesting in XML pipeline configs
 - [XML Documentation Coverage — 59% → 95%](docs/tech-debt/TECH-DEBT-XML-Documentation-Coverage.md)
   - Phase 1: Core interfaces in ETLBox.Primitives (14 types)
   - Phase 2: Abstract base classes in ETLBox.Common + main library (13 types)
