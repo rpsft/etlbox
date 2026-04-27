@@ -42,13 +42,21 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
     public Dictionary<string, string> Mappings { get; set; } = new();
 
     /// <summary>
-    /// Additional assembly FullName string to load for the script
+    /// Additional assembly names or file paths to load for the script.
+    /// Accepts a runtime assembly name (e.g. <c>System.Text.Json</c>) or a file path
+    /// (e.g. <c>Files/MyLib.dll</c>).
     /// </summary>
     public IEnumerable<string> AdditionalAssemblyNames
     {
         get => _additionalAssemblies.Select(x => x.GetName().FullName);
-        set => _additionalAssemblies = value.Select(Assembly.LoadFrom);
+        set => _additionalAssemblies = value.Select(LoadAssembly);
     }
+
+    /// <summary>
+    /// Additional namespace imports for the C# script expressions in <see cref="Mappings"/>.
+    /// Each entry is a namespace string such as <c>"System.Text.Json"</c>.
+    /// </summary>
+    public IEnumerable<string> AdditionalImports { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// Indicates if transformation should fail when missing mapping field on source.
@@ -121,7 +129,10 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
                 outputDict[pair.Key] = pair.Value;
         }
 
-        var type = ScriptBuilder.Default.ForType(arg).WithReferences(_additionalAssemblies);
+        var type = ScriptBuilder
+            .Default.ForType(arg)
+            .WithReferences(_additionalAssemblies)
+            .WithImports(AdditionalImports);
 
         foreach (var key in Mappings.Keys)
         {
@@ -171,7 +182,10 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
             );
         }
 
-        var builder = ScriptBuilder.Default.ForType<TInput>();
+        var builder = ScriptBuilder
+            .Default.ForType<TInput>()
+            .WithReferences(_additionalAssemblies)
+            .WithImports(AdditionalImports);
         foreach (var key in Mappings.Keys)
         {
             var runner = GetScriptRunner(key, builder);
@@ -199,6 +213,21 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         }
 
         return output;
+    }
+
+    private static Assembly LoadAssembly(string nameOrPath)
+    {
+        try
+        {
+            return Assembly.Load(nameOrPath);
+        }
+        catch
+        {
+            // Fall back to file-path loading when the name is not a valid assembly name.
+#pragma warning disable S3885 // Replace this call to 'Assembly.LoadFrom' with 'Assembly.Load'. File load for plugins is legitimate
+            return Assembly.LoadFrom(nameOrPath);
+#pragma warning restore S3885
+        }
     }
 
     private ScriptRunner<object>? GetScriptRunner(string key, TypedScriptBuilder builder) =>
