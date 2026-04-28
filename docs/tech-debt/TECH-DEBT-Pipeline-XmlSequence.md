@@ -184,7 +184,7 @@ In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each s
 
 | File | Change |
 |------|--------|
-| `ETLBox.Serialization/DataFlow/IDataFlowXmlContext.cs` | New |
+| `ETLBox.Serialization/DataFlow/IDataFlowXmlContext.cs` | New (base interface + `IExpandoXmlContext`) |
 | `ETLBox.Serialization/DataFlow/IDataFlowXmlSerializable.cs` | New |
 | `ETLBox.Serialization/DataFlow/Pipeline.cs` | New (both classes) |
 | `ETLBox.Serialization/DataFlow/DataFlowXmlReader.cs` | Modify — implement context + delegate |
@@ -193,16 +193,28 @@ In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each s
 
 ## Step 1 — `IDataFlowXmlContext`
 
+`IDataFlowXmlContext` contains only members that are not coupled to any specific row type.
+ExpandoObject-specific members live in the derived `IExpandoXmlContext` so that
+`Pipeline<TIn, TOut>` can use the base interface without encountering `ExpandoObject` hardcoding.
+
 ```csharp
 public interface IDataFlowXmlContext
 {
     object? CreateStep(string typeName, XElement element);
+    bool TryInvokeMethod(object instance, XElement element);
+}
+
+public interface IExpandoXmlContext : IDataFlowXmlContext
+{
     void RegisterDestination(IDataFlowDestination<ExpandoObject> destination);
     void RegisterErrorDestination(IDataFlowDestination<ETLBoxError> destination);
     IList<IDataFlowDestination<ExpandoObject>> Destinations { get; }
-    bool TryInvokeMethod(object instance, XElement element);
 }
 ```
+
+`DataFlowXmlReader` implements `IExpandoXmlContext`. `Pipeline<TIn, TOut>.ReadXml` accepts
+`IDataFlowXmlContext`; `Pipeline.ReadXml` casts to `IExpandoXmlContext` for the ExpandoObject
+registration calls.
 
 ## Step 2 — `IDataFlowXmlSerializable`
 
@@ -369,7 +381,10 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
 
     public override void ReadXml(XElement element, IDataFlowXmlContext context)
     {
-        _destinationsList = context.Destinations;
+        var expandoCtx = context as IExpandoXmlContext
+            ?? throw new InvalidOperationException(
+                "Pipeline requires an IExpandoXmlContext implementation.");
+        _destinationsList = expandoCtx.Destinations;
         var children = element.Elements().ToList();
         if (children.Count == 0) return;
 
@@ -418,9 +433,9 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
             }
 
             if (step is IDataFlowDestination<ExpandoObject> dest)
-                context.RegisterDestination(dest);
+                expandoCtx.RegisterDestination(dest);
             if (step is IDataFlowDestination<ETLBoxError> err)
-                context.RegisterErrorDestination(err);
+                expandoCtx.RegisterErrorDestination(err);
             if (step is IDataFlowLinkSource<ExpandoObject> nextTail)
                 tail = nextTail;
         }
@@ -440,19 +455,11 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
 ### 5a — Implement `IDataFlowXmlContext`
 
 ```csharp
-public sealed class DataFlowXmlReader : IDataFlowXmlContext
+public sealed class DataFlowXmlReader : IExpandoXmlContext
 {
-    IList<IDataFlowDestination<ExpandoObject>> IDataFlowXmlContext.Destinations
-        => _dataFlow.Destinations;
-
+    // IDataFlowXmlContext
     object? IDataFlowXmlContext.CreateStep(string typeName, XElement element) =>
         CreateObject(GetTypeByName(_types, typeName), element);
-
-    void IDataFlowXmlContext.RegisterDestination(IDataFlowDestination<ExpandoObject> dest) =>
-        _dataFlow.Destinations.Add(dest);
-
-    void IDataFlowXmlContext.RegisterErrorDestination(IDataFlowDestination<ETLBoxError> err) =>
-        _dataFlow.ErrorDestinations.Add(err);
 
     bool IDataFlowXmlContext.TryInvokeMethod(object instance, XElement element)
     {
@@ -460,6 +467,16 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
         TryInvokeSourceMethod(instance, element);
         return true;
     }
+
+    // IExpandoXmlContext
+    IList<IDataFlowDestination<ExpandoObject>> IExpandoXmlContext.Destinations
+        => _dataFlow.Destinations;
+
+    void IExpandoXmlContext.RegisterDestination(IDataFlowDestination<ExpandoObject> dest) =>
+        _dataFlow.Destinations.Add(dest);
+
+    void IExpandoXmlContext.RegisterErrorDestination(IDataFlowDestination<ETLBoxError> err) =>
+        _dataFlow.ErrorDestinations.Add(err);
 }
 ```
 
