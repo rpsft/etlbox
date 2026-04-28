@@ -4,6 +4,26 @@
 **Origin:** review feedback on MR !116 — notes 84243 ("benchmark would be good") and 84246 ("Dynamic LINQ in mappings?").
 **Tracking issue:** [TECH-DEBT-Expression-Engine-Unification.md](../docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md).
 
+## TL;DR
+
+For the predicate use case, Dynamic LINQ is the better default and Roslyn is a
+specialised tool. On a single cold compile the smoke run shows Roslyn roughly
+**10× slower** and **70–160× heavier on allocations** than either Dynamic LINQ
+path. The gap is driven by `CSharpCompilation` + `Assembly.Load(bytes)` per
+shape, which Dynamic LINQ avoids by reusing a shared persistent
+`AssemblyBuilder`. On many shapes the gap is expected to widen further
+(linear in N for Roslyn, near-flat for Dynamic LINQ); the `ManyShapes`
+benchmark to confirm that quantitatively is in place but not yet executed.
+
+The capability gap is also narrower than the review note implied. Dynamic LINQ
+already supports static methods and instance methods on framework types
+(`string.Format`, `DateTime.AddDays`, `string.Length` — all verified). The
+remaining gap is method calls on **user** types without registration, and that
+gap closes via `ParsingConfig.CustomTypeProvider`. Roslyn keeps a clear use
+case where multi-statement bodies, async, or unregistered user-type method
+calls are needed; that case is orthogonal to filtering by predicate in
+XML-defined flows.
+
 ## Run summary
 
 | Field | Value |
@@ -95,17 +115,132 @@ Specifically:
 
 These sections will be filled in once the full run completes.
 
-## Preliminary conclusions (subject to full run)
+## Conclusions
 
-Direction confirmed by smoke data, to be re-stated with statistical confidence after full BDN run:
+Direction confirmed by smoke data; numbers will be re-stated with statistical
+confidence after the full BDN run.
 
-1. **Cold compile cost gap is real and large** — the order of magnitude separating Roslyn from Dynamic LINQ in both time and allocation matches our Round-1 hypothesis. Even one cold compile of Roslyn allocates ~9.7 MB, which on N distinct shapes will accumulate quickly.
+### Quick takeaways
 
-2. **Capability gap is narrower than the review note suggested** — Dynamic LINQ supports static methods and instance methods on framework types out of the box. The remaining gap is method calls on user types, addressable through `IDynamicLinqCustomTypeProvider` registration.
+1. **Cold compile cost gap is real and large.** Roughly 10× in time and 70–160×
+   in allocation per shape, even on a single iteration. The order matches the
+   Round-1 hypothesis about Roslyn's `Assembly.Load(bytes)` per shape.
 
-3. **The two engines are not "two languages" in the strong sense** — for the predicate use case the surface is mostly the same. The pragmatic split is "Roslyn when you need user-type method calls without registering them, Dynamic LINQ otherwise". This is the wording we should reinforce in `docs/dataflow/row-filtration.md`.
+2. **Capability gap is narrower than note 84243 suggested.** Dynamic LINQ
+   already covers static methods and instance methods on framework types out
+   of the box. The remaining gap is method calls on user types, addressable
+   via `IDynamicLinqCustomTypeProvider`.
 
-These are inputs for the architectural decision tracked in [TECH-DEBT-Expression-Engine-Unification.md](../docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md), not the decision itself.
+3. **The two engines are not "two languages" in the strong sense.** For the
+   predicate use case the surface is mostly the same. The pragmatic split is
+   "Roslyn when you need user-type method calls without registering them,
+   multi-statement bodies or async; Dynamic LINQ otherwise."
+
+The rest of this section unpacks each takeaway with the mechanism behind the
+numbers. Skip to "Bottom line" if the three points above are enough.
+
+### What is better, what is worse, and why
+
+**Cold compile time.** Dynamic LINQ wins by an order of magnitude on a single
+shape (≈170 ms vs ≈1,750 ms in the smoke run, on this hardware). The
+mechanism: Dynamic LINQ parses the expression into a `LambdaExpression` and
+calls `Expression.Compile()`, which JITs into a delegate without emitting a
+new assembly. Roslyn runs the full C# compilation pipeline
+(`CSharpSyntaxTree.ParseText` → `CSharpCompilation.Create` → `Emit` → an
+in-memory PE → `Assembly.Load(bytes)`) so even a one-line predicate carries
+the cost of a full compilation unit.
+
+**Allocations per cold compile.** Dynamic LINQ allocates ≈60–135 KB per call;
+Roslyn allocates ≈9.7 MB per call. The two-orders-of-magnitude gap is the
+serialised assembly bytes, the loaded `Assembly` object, the `MetadataReference`
+collection it pins for compilation, and the cached `Script` object — all
+unavoidable on Roslyn's path. Dynamic LINQ pays only for the expression tree
+nodes plus the JIT-compiled delegate.
+
+**Behaviour on many shapes.** Roslyn caches per shape inside `ScriptBuilder`
+(`ConcurrentDictionary<int, GlobalsTypeInfo>`) but never unloads. Each new
+shape adds another `Assembly` to the AppDomain, and the assembly bytes
+themselves are pinned in the cached `MetadataReference`. Dynamic LINQ on
+ExpandoObject takes a different path: shapes are emitted into a single shared
+persistent `AssemblyBuilder` via `DynamicClassFactory.CreateType`, which
+Reflection.Emit deduplicates by property signature. The expected curve is
+linear-in-N memory for Roslyn vs near-flat for Dynamic LINQ; the
+`ManyShapesBenchmarks` `GlobalCleanup` probe will quantify both axes once it
+runs (loaded-assembly delta and total-managed-memory delta).
+
+**Hot evaluation.** Both engines compile to a delegate and dispatch through it
+on subsequent calls, so the steady-state cost is similar. We did not measure
+this directly (HotEvaluation is intentionally Phase 2, agreed in advance), but
+it is not where the architectural choice is made.
+
+**Capability surface.** The "two languages in one package" framing in note
+84243 is technically correct but practically narrow. Dynamic LINQ already
+covers comparisons, arithmetic, logical operators, member access, null
+checks, LINQ-style methods on collections, instance methods on framework
+types (`string.Length`, `DateTime.AddDays`), and static methods on framework
+types (`string.Format`). The asymmetry is method calls on **user** types
+without registration. That gap is real, and a JsonNode-style scenario does
+hit it. The escape hatch is `ParsingConfig.CustomTypeProvider` — register the
+type, instance methods become callable. Documented in
+`docs/dataflow/row-filtration.md`; the production wiring is part of the
+follow-up work tracked in `TECH-DEBT-Expression-Engine-Unification.md`.
+
+**Head-to-head with the RowMultiplication-based variant.** Not yet executed.
+Expected outcome: identical runtime cost (both reduce to the same
+`TransformManyBlock` underneath), making the case for the dedicated
+`RowFiltration` component a readability decision rather than a performance
+one. This is the answer to Q1 once the numbers are in.
+
+### Bottom line
+
+For predicates in XML-defined ETL packages — the original target of the MR —
+Dynamic LINQ via `ExpressionRowFiltration` is the right default. The cost
+delta with Roslyn is large enough on cold compile and on many shapes that the
+choice is not symmetric. Roslyn keeps a place where its language surface is
+genuinely needed (user-type method calls without registration, multi-statement
+bodies, async). The two coexist because they answer different questions, not
+because they are interchangeable.
+
+These are inputs for the architectural decision tracked in
+[TECH-DEBT-Expression-Engine-Unification.md](../docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md),
+not the decision itself.
+
+## Suggested response to Q2 (English draft)
+
+For the MR thread on Q2 (notes 84243 / 84246). Adapt to taste; numbers above
+hardware-specific.
+
+> Smoke benchmark is in place (ETLBox.Scripting.Benchmarks project,
+> BenchmarkDotNet 0.14.0, --job Dry for now; full run with warmup pending).
+> Headline numbers on a single fresh-shape cold compile, Intel i5-10300H,
+> .NET 8.0.25:
+>
+> - Roslyn: ≈1,750 ms, ≈9.7 MB allocated per shape
+> - Dynamic LINQ (typed POCO): ≈165 ms, ≈60 KB allocated
+> - Dynamic LINQ (ExpandoObject): ≈175 ms, ≈130 KB allocated
+>
+> So Roslyn is roughly 10× slower and 70–160× heavier per cold compile.
+> Direction matches the Round-1 hypothesis; the ManyShapes run with the
+> assembly-count probe is in place and will tighten the numbers.
+>
+> On capabilities, the gap turned out narrower than I'd assumed. Dynamic LINQ
+> covers static methods on framework types (string.Format works out of the
+> box), instance methods on framework types (Type.Length, Date.AddDays), and
+> all the predicate algebra we need. The remaining gap is method calls on
+> user types — that one needs ParsingConfig.CustomTypeProvider registration.
+> So a JsonNode → string scenario is solvable, just with explicit setup. 8/8
+> feature-parity tests in ETLBox.Scripting.Tests/FeatureParity/ assert this
+> matrix.
+>
+> Position on "two languages in one package": for the predicate use case —
+> filtering rows in XML-defined flows — Dynamic LINQ is the better default.
+> Roslyn keeps a clear use case for richer logic (user-type method calls
+> without registration, multi-statement bodies, async) that is genuinely
+> orthogonal to predicates. The boundary is now stated explicitly in
+> docs/dataflow/row-filtration.md; the broader unification question (drop one
+> engine, extend the other, apply Dynamic LINQ in mappings per note 84246) is
+> tracked separately in docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md.
+> I'd close it as a follow-up task rather than expand the scope of this MR.
 
 ## How to reproduce
 
