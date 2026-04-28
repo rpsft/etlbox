@@ -158,16 +158,25 @@ private void EnsureOutputBound()
 `IDataFlowXmlContext`. It is a list reference, not the full context, so holding it at runtime
 is appropriate.
 
-#### Error linking in XML — `<LinkErrorTo>` inside `<Pipeline>`
+#### `<LinkTo>` and `<LinkErrorTo>` as direct children of `<Pipeline>`
 
-`<LinkErrorTo>` is not a step type — it is a method invocation. `Pipeline.ReadXml` detects it
-by element name and calls `this.LinkErrorTo(target)`, which already forwards to **all** steps
-via the `LinkErrorTo` override in `Pipeline<TIn, TOut>`. Placement (first, last, middle) has no
-effect: one `<LinkErrorTo>` inside `<Pipeline>` always covers every internal step.
+Both are method invocations, not step types. `Pipeline.ReadXml` delegates to
+`context.TryInvokeMethod(this, child)` before attempting `context.CreateStep`. This mirrors
+the approach already used by `DataFlowXmlReader` for all method-like XML elements — no
+element names are hardcoded in `Pipeline`.
+
+- **`<LinkTo>`** — calls `this.LinkTo(target)`, connecting Pipeline's output to the next
+  component. Works identically to `<LinkTo>` on any other ETLBox component.
+- **`<LinkErrorTo>`** — calls `this.LinkErrorTo(target)`, which forwards to **all** internal
+  steps via the `LinkErrorTo` override in `Pipeline<TIn, TOut>`. Placement has no effect.
+
+Elements inside the internal steps (e.g. `<JsonTransformation><LinkTo>…`) are **forbidden** —
+`context.CreateStep` creates each step from its own `XElement` without following its link
+children. If a step's XML contains `<LinkTo>` or `<LinkErrorTo>`, `ReadXml` throws
+`InvalidDataException`.
 
 In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each step during
-`CreateInstance`, so an explicit `<LinkErrorTo>` inside `<Pipeline>` is usually not needed —
-it is supported for parity with the top-level XML syntax.
+`CreateInstance`, so an explicit `<LinkErrorTo>` inside `<Pipeline>` is usually not needed.
 
 ---
 
@@ -191,6 +200,7 @@ public interface IDataFlowXmlContext
     void RegisterDestination(IDataFlowDestination<ExpandoObject> destination);
     void RegisterErrorDestination(IDataFlowDestination<ETLBoxError> destination);
     IList<IDataFlowDestination<ExpandoObject>> Destinations { get; }
+    bool TryInvokeMethod(object instance, XElement element);
 }
 ```
 
@@ -237,6 +247,9 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
 
         foreach (var child in children)
         {
+            // Delegate method-like elements (LinkTo, LinkErrorTo, etc.) to context.
+            if (context.TryInvokeMethod(this, child)) continue;
+
             var step = context.CreateStep(child.Name.LocalName, child)
                        ?? throw new InvalidOperationException($"...");
             Steps.Add(step);
@@ -380,14 +393,8 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
         {
             var child = children[i];
 
-            // <LinkErrorTo> is a method invocation, not a step type.
-            // Calls this.LinkErrorTo(target) which forwards to ALL internal steps regardless
-            // of where <LinkErrorTo> appears among the children.
-            if (child.Name.LocalName == "LinkErrorTo")
-            {
-                ProcessLinkErrorTo(child, context); // resolves target type, calls this.LinkErrorTo
-                continue;
-            }
+            // Delegate method-like elements (LinkTo, LinkErrorTo, etc.) to context.
+            if (context.TryInvokeMethod(this, child)) continue;
 
             var step = context.CreateStep(child.Name.LocalName, child)
                        ?? throw new InvalidOperationException($"...");
@@ -446,6 +453,13 @@ public sealed class DataFlowXmlReader : IDataFlowXmlContext
 
     void IDataFlowXmlContext.RegisterErrorDestination(IDataFlowDestination<ETLBoxError> err) =>
         _dataFlow.ErrorDestinations.Add(err);
+
+    bool IDataFlowXmlContext.TryInvokeMethod(object instance, XElement element)
+    {
+        if (GetMethod(instance, element) is null) return false;
+        TryInvokeSourceMethod(instance, element);
+        return true;
+    }
 }
 ```
 
