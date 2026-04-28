@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ALE.ETLBox.Common.DataFlow;
@@ -221,9 +222,9 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         {
             return Assembly.Load(nameOrPath);
         }
-        catch
+        catch (FileNotFoundException)
         {
-            // Fall back to file-path loading when the name is not a valid assembly name.
+            // nameOrPath is not a valid assembly identity — treat it as a file path.
 #pragma warning disable S3885 // Replace this call to 'Assembly.LoadFrom' with 'Assembly.Load'. File load for plugins is legitimate
             return Assembly.LoadFrom(nameOrPath);
 #pragma warning restore S3885

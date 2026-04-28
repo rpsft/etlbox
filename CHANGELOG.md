@@ -18,6 +18,13 @@ All notable changes to this project will be documented in this file.
   Previously only file paths were supported, making it impossible to reference system assemblies
   already loaded in the process.
 
+🐛 Bug Fixes
+
+- Fixed: `AdditionalAssemblyNames` was silently ignored when using typed `TInput`/`TOutput` (i.e.
+  any non-`ExpandoObject` pair). Additional assemblies were only passed to the script compiler on the
+  dynamic path; the typed path omitted the `WithReferences` call, so scripts referencing types from
+  external assemblies would fail to compile.
+
 - New: `PassThrough` property on `ScriptedRowTransformation<TInput, TOutput>` (and the non-generic
   alias `ScriptedTransformation`). When `true`, all input fields are copied to the output before
   `Mappings` are applied — fields not listed in `Mappings` are preserved unchanged. `Mappings` can

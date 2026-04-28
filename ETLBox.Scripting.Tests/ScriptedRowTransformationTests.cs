@@ -380,7 +380,7 @@ public class ScriptedRowTransformationTests
     }
 
     [Fact]
-    public void PassThrough_Typed_SubtypeInput_CopiesBaseProperties()
+    public void PassThrough_Typed_DerivedInput_CopiesBaseProperties()
     {
         // Arrange — MyDerivedRowType extends MyRowType, which extends MyOutputBaseType
         var memorySource = new MemorySource<MyDerivedRowType>();
@@ -436,6 +436,31 @@ public class ScriptedRowTransformationTests
         Assert.Single(memoryDestination.Data);
         var row = (IDictionary<string, object?>)memoryDestination.Data.First();
         Assert.Equal("1", row["Json"]);
+    }
+
+    [Fact]
+    public void ShouldLoadSystemAssemblyByName_Typed()
+    {
+        // Arrange — AdditionalAssemblyNames only, no AdditionalImports: verifies WithReferences works in typed path
+        var memorySource = new MemorySource<MyRowType>();
+        memorySource.DataAsList.Add(new MyRowType { Id = 7, Name = "x" });
+        var script = new ScriptedRowTransformation<MyRowType, MyRowType>
+        {
+            FailOnMissingField = true,
+        };
+        script.Mappings.Add("Name", "System.Text.Json.JsonSerializer.Serialize(Name)");
+        script.AdditionalAssemblyNames = ["System.Text.Json"];
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
+        // Act
+        memorySource.Execute(CancellationToken.None);
+        memoryDestination.Wait();
+
+        // Assert
+        Assert.Single(memoryDestination.Data);
+        Assert.Equal("\"x\"", memoryDestination.Data.First().Name);
     }
 
     [Fact]
