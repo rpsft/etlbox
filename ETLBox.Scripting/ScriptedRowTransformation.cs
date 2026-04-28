@@ -222,7 +222,7 @@ public class ScriptedRowTransformation<TInput, TOutput> : RowTransformation<TInp
         {
             return Assembly.Load(nameOrPath);
         }
-        catch (FileNotFoundException)
+        catch (Exception e) when (e is FileNotFoundException or FileLoadException)
         {
             // nameOrPath is not a valid assembly identity — treat it as a file path.
 #pragma warning disable S3885 // Replace this call to 'Assembly.LoadFrom' with 'Assembly.Load'. File load for plugins is legitimate
