@@ -105,8 +105,8 @@ This file documents the question. The decision is intentionally deferred:
 
 Full report:
 [`ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md`](../../ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md).
-Status: ColdCompile + HeadToHead — final BenchmarkDotNet numbers below.
-ManyShapes — re-running after a benchmark-code fix.
+Status: final. All three benchmarks completed with full BenchmarkDotNet
+warmup + iterations.
 
 ### ColdCompile
 
@@ -138,6 +138,23 @@ Shipped `ExpressionRowFiltration` vs `ExpressionRowMultiplicationPrototype`
 Statistically indistinguishable — the dedicated component carries no runtime
 cost over the `RowMultiplication` form. The case for it is call-site
 readability only.
+
+### ManyShapes (the central measurement for Q2)
+
+Compile and evaluate a predicate on N distinct shapes per BenchmarkDotNet
+iteration. `[GlobalCleanup]` probe captures the loaded-assembly count delta
+and the managed-memory delta:
+
+| Engine | N=10 Mean | N=100 Mean | Allocated N=100 | **Assembly delta N=10 / 50 / 100** |
+|--------|----------:|-----------:|----------------:|-----------------------------------:|
+| Roslyn | 660 ms | 7,522 ms | **969.81 MB** | **+768 / +11,328 / +22,628** |
+| Dynamic LINQ Expando | 832 ms | 14,153 ms | 9.12 MB | +33 / +33 / +33 |
+
+**Roslyn loaded-assembly count grows linearly with the number of distinct
+shapes** and the assemblies are not unloadable. Dynamic LINQ on
+ExpandoObject stays at exactly +33 regardless of N — `DynamicClassFactory`
+emits new shape types into the same shared persistent `AssemblyBuilder`.
+The Round-1 assembly-leak hypothesis is supported quantitatively.
 
 Feature parity matrix (full xUnit run, 8/8 PASS):
 
