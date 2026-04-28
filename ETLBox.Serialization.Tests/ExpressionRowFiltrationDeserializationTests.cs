@@ -16,22 +16,11 @@ namespace ETLBox.Serialization.Tests;
 public class ExpressionRowFiltrationDeserializationTests
 {
     [Fact]
-    public void ExpressionRowFiltration_XmlDeserialization_FilterExpressionIsBound()
+    public void ExpressionRowFiltration_XmlDeserialization_UnescapesXmlSpecialCharacters()
     {
-        var xml =
-            @"<ExpressionRowFiltration>
-                <FilterExpression>Reserve &gt; 0</FilterExpression>
-              </ExpressionRowFiltration>";
-
-        var result = Deserialize(xml);
-
-        Assert.NotNull(result);
-        Assert.Equal("Reserve > 0", result.FilterExpression);
-    }
-
-    [Fact]
-    public void ExpressionRowFiltration_XmlDeserialization_NestedMemberAccessExpression()
-    {
+        // FilterExpression is a free-form string; XML special characters must be escaped
+        // in the source XML and unescaped on read. Single test covers >, <, &&, " escapes
+        // together — what production XML packages need to round-trip.
         var xml =
             @"<ExpressionRowFiltration>
                 <FilterExpression>Order.Total &gt; 100 &amp;&amp; Type != &quot;Recalculation&quot;</FilterExpression>

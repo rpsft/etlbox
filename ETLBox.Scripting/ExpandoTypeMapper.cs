@@ -8,12 +8,42 @@ using System.Linq.Dynamic.Core;
 namespace ALE.ETLBox.Scripting;
 
 /// <summary>
-/// Maps an <see cref="ExpandoObject"/> to a runtime DynamicClass instance with typed properties.
-/// Recursively handles nested IDictionary, homogeneous collections (lists of dicts or scalars),
-/// custom classes (kept as-is via PropertyInfo) and null values (typed as object).
+/// Maps an <see cref="ExpandoObject"/> to a runtime DynamicClass instance with typed
+/// properties so that <c>System.Linq.Dynamic.Core</c> can resolve property names
+/// against a real CLR type.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Recursively handles nested <see cref="IDictionary{TKey,TValue}"/>, homogeneous
+/// collections (lists of dictionaries or scalars), custom classes (kept as-is and
+/// resolved via <c>PropertyInfo</c>) and <c>null</c> values (typed as <c>object</c>).
+/// </para>
+/// <para>
+/// Types are emitted into a shared persistent <c>AssemblyBuilder</c> via
+/// <c>DynamicClassFactory</c> and cached by property signature. Repeated rows of the
+/// same shape reuse the same emitted type, so the amortised cost is low. There is no
+/// <c>Assembly.Load(bytes)</c> per shape.
+/// </para>
+/// <para>
+/// <c>string</c> and <c>byte[]</c> are deliberately treated as scalar values rather
+/// than as <c>IEnumerable</c> collections. Heterogeneous collections (items with
+/// different field sets or types) throw <see cref="InvalidOperationException"/>.
+/// </para>
+/// <para>
+/// Internal API — used by <see cref="ExpressionRowFiltration"/>. Not part of the
+/// public surface.
+/// </para>
+/// </remarks>
 internal static class ExpandoTypeMapper
 {
+    /// <summary>
+    /// Builds a runtime DynamicClass type for the row and returns an instance populated
+    /// from the row values.
+    /// </summary>
+    /// <param name="row">Row to map. Field values may be scalars, nested
+    /// <c>IDictionary&lt;string, object&gt;</c>, custom classes or homogeneous
+    /// collections.</param>
+    /// <returns>The emitted runtime type and an instance with all fields assigned.</returns>
     public static (Type Type, object Instance) Map(ExpandoObject row) =>
         MapToTyped((IDictionary<string, object>)row);
 

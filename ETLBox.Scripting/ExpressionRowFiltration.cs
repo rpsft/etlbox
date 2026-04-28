@@ -9,13 +9,46 @@ using Microsoft.Extensions.Logging;
 namespace ALE.ETLBox.Scripting;
 
 /// <summary>
-/// Filters data rows based on a string expression evaluated via System.Linq.Dynamic.Core.
-/// Supports field comparisons, arithmetic, logical operators, null checks.
-/// Generic version for typed POCOs - properties are resolved through PropertyInfo
-/// directly, no runtime type generation needed.
+/// Filters rows by a string expression parsed and compiled by
+/// <c>System.Linq.Dynamic.Core</c>. Suited for XML-defined flows where the predicate
+/// is configured in the package, not in C# code. No Roslyn, no per-shape assembly
+/// emission, no <c>Assembly.Load</c>.
 /// </summary>
-/// <typeparam name="TInput">Row type. Properties referenced in FilterExpression
-/// must be public.</typeparam>
+/// <typeparam name="TInput">
+/// Row type. Properties referenced in <see cref="FilterExpression"/> must be public.
+/// For typed <c>TInput</c> property names are resolved through <c>PropertyInfo</c>
+/// directly; no runtime type generation is needed.
+/// </typeparam>
+/// <remarks>
+/// <para>
+/// Supported in the expression: comparisons (<c>==</c>, <c>!=</c>, <c>&gt;</c>, <c>&lt;</c>,
+/// <c>&gt;=</c>, <c>&lt;=</c>), logical operators (<c>&amp;&amp;</c>, <c>||</c>, <c>!</c>),
+/// arithmetic (<c>+</c>, <c>-</c>, <c>*</c>, <c>/</c>, <c>%</c>), member access on nested
+/// objects, null checks, and LINQ-style methods on homogeneous collections
+/// (<c>Items.Any(predicate)</c>, <c>Items.Count()</c>, <c>Items.Sum(selector)</c>,
+/// <c>Items.Contains(value)</c>).
+/// </para>
+/// <para>
+/// For the broader picture — when to pick this over <c>ScriptedRowTransformation</c>,
+/// limitations on heterogeneous collections, internals of the
+/// <see cref="ExpressionRowFiltration"/> non-generic form, supported value types — see
+/// <c>docs/dataflow/row-filtration.md</c>.
+/// </para>
+/// <para>
+/// The <see cref="ParsingConfig.ConvertObjectToSupportComparison"/> flag is enabled so
+/// comparison operators work on properties typed as <c>object</c> (null-valued fields
+/// and mixed numeric literals such as <c>Reserve &gt; 0</c> when <c>Reserve</c> is
+/// <c>decimal</c>).
+/// </para>
+/// </remarks>
+/// <example>
+/// <code>
+/// ExpressionRowFiltration&lt;ChangeRatioRow&gt; filtration = new ExpressionRowFiltration&lt;ChangeRatioRow&gt;(
+///     "AdminReserveRatioPrevious != AdminReserveRatio");
+/// source.LinkTo(filtration);
+/// filtration.LinkTo(destination);
+/// </code>
+/// </example>
 [PublicAPI]
 public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
 {
@@ -60,13 +93,44 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
 }
 
 /// <summary>
-/// Filters ExpandoObject rows by a string expression.
-/// Nested ExpandoObject / IDictionary fields are mapped recursively, custom classes
-/// are resolved through PropertyInfo, homogeneous collections become typed List&lt;T&gt;
-/// (enabling Any(predicate), Count(), Sum(selector), Contains(...) in expressions).
-/// Heterogeneous collections (items with different shapes) are not supported.
+/// Non-generic <see cref="ExpressionRowFiltration{TInput}"/> bound to
+/// <see cref="ExpandoObject"/>. Used by the XML reader and by flows on dynamic rows.
 /// </summary>
-/// <see cref="ExpressionRowFiltration{TInput}"/>
+/// <remarks>
+/// <para>
+/// Each row is mapped to a runtime DynamicClass before evaluation: nested
+/// <c>IDictionary&lt;string, object&gt;</c> fields are mapped recursively, custom
+/// classes are kept as-is and resolved through <c>PropertyInfo</c>, homogeneous
+/// collections become typed <c>List&lt;T&gt;</c> (enabling
+/// <c>Any(predicate)</c>, <c>Count()</c>, <c>Sum(selector)</c>, <c>Contains(...)</c>
+/// in expressions). The mapping is performed by <see cref="ExpandoTypeMapper"/>.
+/// </para>
+/// <para>
+/// The mapped instance is wrapped in an array via <c>Array.CreateInstance(type, 1)</c>
+/// — required because <c>new[] { instance }</c> would give <c>object[]</c> and
+/// <c>AsQueryable()</c> would lose the runtime element type, breaking property
+/// resolution in the parsed expression.
+/// </para>
+/// <para>
+/// Heterogeneous collections (items with different field sets or types) throw at
+/// evaluation time. See <c>docs/dataflow/row-filtration.md</c> for the full list of
+/// limitations.
+/// </para>
+/// </remarks>
+/// <example>
+/// XML form:
+/// <code language="xml">
+/// &lt;ExpressionRowFiltration&gt;
+///     &lt;FilterExpression&gt;Reserve &amp;gt; 0 &amp;amp;&amp;amp; Type == &amp;quot;Day&amp;quot;&lt;/FilterExpression&gt;
+/// &lt;/ExpressionRowFiltration&gt;
+/// </code>
+/// Programmatic form:
+/// <code>
+/// ExpressionRowFiltration filtration = new ExpressionRowFiltration(
+///     "Reserve > 0 &amp;&amp; Type == \"Day\"");
+/// </code>
+/// </example>
+/// <seealso cref="ExpressionRowFiltration{TInput}"/>
 [PublicAPI]
 public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
 {
