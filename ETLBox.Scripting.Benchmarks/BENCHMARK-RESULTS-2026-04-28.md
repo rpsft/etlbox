@@ -29,13 +29,15 @@ XML-defined flows.
 | Field | Value |
 |-------|-------|
 | Date | 2026-04-28 |
-| Machine | Intel Core i5-10300H @ 2.50 GHz, 1 CPU, 8 logical / 4 physical cores |
-| OS | Windows 10 22H2 (10.0.19045.6456) |
-| .NET SDK | 8.0.411 |
-| Runtime | .NET 8.0.25 (8.0.2526.11203), X64 RyuJIT AVX2 |
+| Architecture | x64 |
+| Runtime | .NET 8.0, RyuJIT |
 | BenchmarkDotNet | 0.14.0 |
 | Dynamic LINQ | System.Linq.Dynamic.Core 1.6.7 |
 | Roslyn scripting | Microsoft.CodeAnalysis.CSharp.Scripting 4.8.0 |
+
+> Numbers are order-of-magnitude indicators rather than absolute claims.
+> Re-run on a different machine should reproduce the **ratios** between
+> engines; absolute timings will vary.
 
 What ran on this date:
 
@@ -207,13 +209,12 @@ not the decision itself.
 
 ## Suggested response to Q2 (English draft)
 
-For the MR thread on Q2 (notes 84243 / 84246). Adapt to taste; numbers above
-hardware-specific.
+For the MR thread on Q2 (notes 84243 / 84246). Adapt to taste; absolute
+timings depend on hardware — what matters is the ratio between engines.
 
 > Smoke benchmark is in place (ETLBox.Scripting.Benchmarks project,
 > BenchmarkDotNet 0.14.0, --job Dry for now; full run with warmup pending).
-> Headline numbers on a single fresh-shape cold compile, Intel i5-10300H,
-> .NET 8.0.25:
+> Headline numbers on a single fresh-shape cold compile, .NET 8.0:
 >
 > - Roslyn: ≈1,750 ms, ≈9.7 MB allocated per shape
 > - Dynamic LINQ (typed POCO): ≈165 ms, ≈60 KB allocated

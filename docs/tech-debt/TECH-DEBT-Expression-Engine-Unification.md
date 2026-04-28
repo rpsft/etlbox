@@ -109,7 +109,8 @@ Status: smoke run (`--job Dry`, 1 iteration) plus full feature-parity matrix.
 Full BDN run with warmup, ManyShapes and HeadToHead pending.
 
 Headline numbers from the smoke run on the ColdCompile benchmark
-(Intel i5-10300H, .NET 8.0.25, BenchmarkDotNet 0.14.0):
+(x64, .NET 8.0, BenchmarkDotNet 0.14.0). Absolute timings vary
+across machines; the ratio between engines is what reproduces:
 
 | Engine | Mean (Composite) | Allocated per shape | Ratio to Roslyn |
 |--------|---------------:|---------------:|----:|
