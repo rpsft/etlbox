@@ -76,10 +76,27 @@ when needed.
 #### Special case A — source as first child
 
 If the first child resolves to `IDataFlowSource<ExpandoObject>`, the Pipeline stores it as
-`_source`, uses the **second** child as `_head`, and internally calls `_source.LinkTo(_head)`.
-The Pipeline's external `TargetBlock` (from `_head`) still accepts external input, so data from
-both the internal source and any external upstream components merges naturally into the same
-transformation chain.
+`_source` and uses the **second** child as `_head`.
+
+**Completion wiring (important):** `_source` must NOT be linked via ETLBox's `LinkTo` —
+doing so would register `_source.SourceBlock.Completion` in `_head.PredecessorCompletions`,
+not in `pipeline.PredecessorCompletions`. If an external upstream is also connected,
+`_head.CheckCompleteAction()` would fire as soon as `_source` alone finishes, closing
+`_head.TargetBlock` before the external data arrives.
+
+Instead, wire `_source` at the raw TPL Dataflow level and register its completion in
+Pipeline's own predecessor list:
+
+```csharp
+// Raw TPL link — bypasses ETLBox completion registration on _head
+_source.SourceBlock.LinkTo(_head.TargetBlock);
+// Register in Pipeline's predecessor list so CheckCompleteAction waits for both
+AddPredecessorCompletion(_source.SourceBlock.Completion);
+```
+
+`pipeline.CheckCompleteAction()` then calls `Task.WhenAll(PredecessorCompletions)`, which
+includes both the external upstream completion and `_source.SourceBlock.Completion`.
+`_head.TargetBlock.Complete()` is called only after **all** sources are done.
 
 ```xml
 <!-- Pipeline at root level with internal source -->
@@ -109,13 +126,16 @@ If the last step implements `IDataFlowLinkSource<ExpandoObject>` and no external
 been bound, `Execute()` automatically links a `VoidDestination<ExpandoObject>` and registers it
 in `_dataFlow.Destinations` so the execution loop can wait for completion.
 
-Tracking mechanism: override all six `LinkTo` overloads to set `_outputBound = true` before
-delegating to base. At `Execute()` time, call `EnsureOutputBound()`:
+Tracking mechanism: shadow all six `LinkTo` overloads with `new` to set `_outputBound = true`
+before delegating to base. `LinkTo` in `DataFlowTransformation<TIn, TOut>` is not `virtual`, so
+`override` is not available. Shadowing is safe here because `Pipeline` is `sealed` and all
+callers hold a `Pipeline` reference — static dispatch always resolves to the shadowing method.
+At `Execute()` time, call `EnsureOutputBound()`:
 
 ```csharp
 private bool _outputBound;
 
-public override IDataFlowLinkSource<ExpandoObject> LinkTo(
+public new IDataFlowLinkSource<ExpandoObject> LinkTo(
     IDataFlowLinkTarget<ExpandoObject> target)
 {
     _outputBound = true;
@@ -140,12 +160,14 @@ is appropriate.
 
 #### Error linking in XML — `<LinkErrorTo>` inside `<Pipeline>`
 
-`Pipeline.ReadXml` iterates children as steps. `<LinkErrorTo>` is not a type name — it is a
-method invocation. The reader must detect it by element name and handle it via the same logic as
-`TryInvokeSourceMethod`, calling `LinkErrorTo` on `_tail` (or all steps, depending on placement).
+`<LinkErrorTo>` is not a step type — it is a method invocation. `Pipeline.ReadXml` detects it
+by element name and calls `this.LinkErrorTo(target)`, which already forwards to **all** steps
+via the `LinkErrorTo` override in `Pipeline<TIn, TOut>`. Placement (first, last, middle) has no
+effect: one `<LinkErrorTo>` inside `<Pipeline>` always covers every internal step.
 
-In XML mode, `_linkAllErrorsTo` already auto-wires each step during `CreateInstance`, so the
-universal error destination covers all steps without any explicit XML required.
+In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each step during
+`CreateInstance`, so an explicit `<LinkErrorTo>` inside `<Pipeline>` is usually not needed —
+it is supported for parity with the top-level XML syntax.
 
 ---
 
@@ -207,10 +229,80 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
 
     public virtual void ReadXml(XElement element, IDataFlowXmlContext context)
     {
-        // First child must implement IDataFlowLinkTarget<TIn> (head)
-        // Last child must implement IDataFlowLinkSource<TOut> (tail)
-        // Middle children linked via IDataFlowLinkTarget / IDataFlowLinkSource
-        // Validate types form a TIn → ... → TOut chain and call SetHeadAndTail
+        var children = element.Elements().ToList();
+        if (children.Count == 0) return;
+
+        object? prev = null;
+        Type? prevOutputType = null;
+
+        foreach (var child in children)
+        {
+            var step = context.CreateStep(child.Name.LocalName, child)
+                       ?? throw new InvalidOperationException($"...");
+            Steps.Add(step);
+
+            // Validate that step accepts the output type of the previous step.
+            // GetLinkTargetInputType() finds IDataFlowLinkTarget<T> via reflection and returns T.
+            var inputType = GetLinkTargetInputType(step);
+            if (prevOutputType != null && inputType != prevOutputType)
+                throw new InvalidDataException(
+                    $"Type mismatch at '{child.Name.LocalName}': " +
+                    $"expected IDataFlowLinkTarget<{prevOutputType.Name}>, got IDataFlowLinkTarget<{inputType?.Name}>");
+
+            // Link previous step to this one via TPL (type-erased) and register completion.
+            if (prev != null && prevOutputType != null)
+                LinkSteps(prev, prevOutputType, step); // reflection helper
+
+            // GetLinkSourceOutputType() finds IDataFlowLinkSource<T> and returns T.
+            prevOutputType = GetLinkSourceOutputType(step);
+            prev = step;
+        }
+
+        // Validate head and tail match TIn / TOut.
+        var head = Steps[0] as IDataFlowLinkTarget<TIn>
+                   ?? throw new InvalidDataException(
+                       $"First step must implement IDataFlowLinkTarget<{typeof(TIn).Name}>");
+        var tail = Steps[^1] as IDataFlowLinkSource<TOut>
+                   ?? throw new InvalidDataException(
+                       $"Last step must implement IDataFlowLinkSource<{typeof(TOut).Name}>");
+        SetHeadAndTail(head, tail);
+    }
+
+    // Extracts T from IDataFlowLinkTarget<T> via reflection.
+    private static Type? GetLinkTargetInputType(object step) =>
+        step.GetType().GetInterfaces()
+            .FirstOrDefault(i => i.IsGenericType &&
+                                 i.GetGenericTypeDefinition() == typeof(IDataFlowLinkTarget<>))
+            ?.GetGenericArguments()[0];
+
+    // Extracts T from IDataFlowLinkSource<T> via reflection.
+    private static Type? GetLinkSourceOutputType(object step) =>
+        step.GetType().GetInterfaces()
+            .FirstOrDefault(i => i.IsGenericType &&
+                                 i.GetGenericTypeDefinition() == typeof(IDataFlowLinkSource<>))
+            ?.GetGenericArguments()[0];
+
+    // Links source.SourceBlock → target.TargetBlock via TPL using reflection (type-erased).
+    // Registers target.AddPredecessorCompletion so CheckCompleteAction works correctly.
+    private static void LinkSteps(object source, Type itemType, object target)
+    {
+        // Equivalent to (at runtime):
+        //   var sourceBlock = ((IDataFlowLinkSource<T>)source).SourceBlock;
+        //   var targetBlock = ((IDataFlowLinkTarget<T>)target).TargetBlock;
+        //   sourceBlock.LinkTo(targetBlock);
+        //   ((IDataFlowLinkTarget<T>)target).AddPredecessorCompletion(sourceBlock.Completion);
+        var linkSourceType = typeof(IDataFlowLinkSource<>).MakeGenericType(itemType);
+        var linkTargetType = typeof(IDataFlowLinkTarget<>).MakeGenericType(itemType);
+        var sourceBlock = linkSourceType.GetProperty("SourceBlock")!.GetValue(source);
+        var targetBlock = linkTargetType.GetProperty("TargetBlock")!.GetValue(target);
+        // ISourceBlock<T>.LinkTo(ITargetBlock<T>) via reflection
+        typeof(DataflowBlock)
+            .GetMethod("LinkTo", new[] { typeof(ISourceBlock<>).MakeGenericType(itemType),
+                                        typeof(ITargetBlock<>).MakeGenericType(itemType) })!
+            .Invoke(null, new[] { sourceBlock, targetBlock });
+        // Register completion
+        var completion = sourceBlock!.GetType().GetProperty("Completion")!.GetValue(sourceBlock);
+        linkTargetType.GetMethod("AddPredecessorCompletion")!.Invoke(target, new[] { completion });
     }
 }
 ```
@@ -240,8 +332,10 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
                 "Pipeline has no internal source. Drive it by linking an external source.");
     }
 
-    // Override all 6 LinkTo overloads to set _outputBound
-    public override IDataFlowLinkSource<ExpandoObject> LinkTo(
+    // Shadow all 6 LinkTo overloads with `new` to set _outputBound.
+    // `LinkTo` in DataFlowTransformation<TIn,TOut> is not virtual, so override is unavailable.
+    // Shadowing is safe: Pipeline is sealed, all callers hold a Pipeline reference.
+    public new IDataFlowLinkSource<ExpandoObject> LinkTo(
         IDataFlowLinkTarget<ExpandoObject> target)
     {
         _outputBound = true;
@@ -279,16 +373,19 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
             stepStart = 1;
         }
 
-        // Wire remaining children as transformation/destination steps
-        IDataFlowLinkSource<ExpandoObject>? tail = _source;
+        // Wire remaining children as transformation/destination steps.
+        // tail starts as null — _source is linked via raw TPL (see below), not via LinkTo.
+        IDataFlowLinkSource<ExpandoObject>? tail = null;
         for (int i = stepStart; i < children.Count; i++)
         {
             var child = children[i];
 
-            // Special case: <LinkErrorTo> is a method invocation, not a step type
+            // <LinkErrorTo> is a method invocation, not a step type.
+            // Calls this.LinkErrorTo(target) which forwards to ALL internal steps regardless
+            // of where <LinkErrorTo> appears among the children.
             if (child.Name.LocalName == "LinkErrorTo")
             {
-                ProcessLinkErrorTo(child, tail, context);
+                ProcessLinkErrorTo(child, context); // resolves target type, calls this.LinkErrorTo
                 continue;
             }
 
@@ -299,7 +396,19 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
             if (step is not IDataFlowLinkTarget<ExpandoObject> linkTarget)
                 throw new InvalidDataException($"...");
 
-            tail?.LinkTo(linkTarget);
+            if (tail != null)
+            {
+                tail.LinkTo(linkTarget);
+            }
+            else if (_source != null)
+            {
+                // Raw TPL link: bypasses ETLBox completion registration on _head so that
+                // _source.SourceBlock.Completion goes into Pipeline's PredecessorCompletions,
+                // not into _head.PredecessorCompletions. This prevents the race condition where
+                // _head closes before an external upstream finishes.
+                _source.SourceBlock.LinkTo(linkTarget.TargetBlock);
+                AddPredecessorCompletion(_source.SourceBlock.Completion);
+            }
 
             if (step is IDataFlowDestination<ExpandoObject> dest)
                 context.RegisterDestination(dest);
