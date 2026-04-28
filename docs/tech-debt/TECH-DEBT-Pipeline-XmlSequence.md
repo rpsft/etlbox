@@ -42,12 +42,18 @@ level, with the reader wiring `LinkTo` calls automatically.
 ### Extension-point interfaces (new, in `ETLBox.Serialization`)
 
 ```
-IDataFlowXmlContext        — exposes CreateStep, RegisterDestination, RegisterErrorDestination
+IDataFlowXmlContext        — exposes CreateStep (DI-aware), TryInvokeMethod
+IExpandoXmlContext         — extends the above with RegisterDestination, RegisterErrorDestination, Destinations
 IDataFlowXmlSerializable   — void ReadXml(XElement element, IDataFlowXmlContext context)
 ```
 
-`DataFlowXmlReader` implements `IDataFlowXmlContext`. In `CreateInstance`, one generic `if` block
+`DataFlowXmlReader` implements `IExpandoXmlContext`. In `CreateInstance`, one generic `if` block
 checks for `IDataFlowXmlSerializable` and delegates — no hard-coded name checks, fully extensible.
+
+The main purpose of passing `IDataFlowXmlContext` to `ReadXml` is **DI propagation**: the reader
+holds an `IDataFlowActivator` (optionally backed by `IServiceProvider`), and `context.CreateStep`
+routes through it. Composite components like `Pipeline` must always use `context.CreateStep` to
+instantiate their children so that injected services are resolved correctly.
 
 ### Class hierarchy
 
@@ -197,9 +203,21 @@ In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each s
 ExpandoObject-specific members live in the derived `IExpandoXmlContext` so that
 `Pipeline<TIn, TOut>` can use the base interface without encountering `ExpandoObject` hardcoding.
 
+**DI wiring:** `DataFlowXmlReader` holds an `IDataFlowActivator` (backed by an optional
+`IServiceProvider`). `CreateStep` delegates to `DataFlowXmlReader.CreateObject`, which calls
+`_activator.CreateInstance(type)`. This means all sub-steps created via `context.CreateStep`
+inside `ReadXml` are resolved through the same DI container as every other component in the
+flow — **this is the primary reason `IDataFlowXmlContext` is passed to `ReadXml` at all**.
+Any `ReadXml` implementation **must** use `context.CreateStep` for all sub-step instantiation;
+using `new` or `Activator.CreateInstance` directly bypasses DI.
+
 ```csharp
 public interface IDataFlowXmlContext
 {
+    /// <summary>
+    /// Creates a step using the reader's activator (DI-aware). Always use this instead of
+    /// new/Activator.CreateInstance to preserve dependency injection for sub-steps.
+    /// </summary>
     object? CreateStep(string typeName, XElement element);
     bool TryInvokeMethod(object instance, XElement element);
 }
