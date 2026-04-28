@@ -71,7 +71,9 @@ public class ManyShapesBenchmarks
         var passed = 0;
         for (var i = 0; i < N; i++)
         {
-            var shapeId = _iterationOffset * 100_000 + i;
+            // +1 to avoid shapeId=0, which makes ExpandoFactory.NewShape produce
+            // unsuffixed field names while the expression below uses "_S0" suffix.
+            var shapeId = _iterationOffset * 100_000 + i + 1;
             var row = ExpandoFactory.NewShape(shapeId);
             var dict = (IDictionary<string, object?>)row;
             var suffix = $"_S{shapeId}";
@@ -95,7 +97,9 @@ public class ManyShapesBenchmarks
         var passed = 0;
         for (var i = 0; i < N; i++)
         {
-            var shapeId = _iterationOffset * 100_000 + i;
+            // +1 to avoid shapeId=0, which makes ExpandoFactory.NewShape produce
+            // unsuffixed field names while the expression below uses "_S0" suffix.
+            var shapeId = _iterationOffset * 100_000 + i + 1;
             var row = ExpandoFactory.NewShape(shapeId);
             var suffix = $"_S{shapeId}";
             var expression = $"Reserve{suffix} > 0";

@@ -101,26 +101,43 @@ This file documents the question. The decision is intentionally deferred:
 5. Mapping-expression idea (note 84246) is a separate design discussion; track it as
    its own task once the engine question is settled.
 
-## Benchmark Results (preliminary, 2026-04-28)
+## Benchmark Results (2026-04-28)
 
 Full report:
 [`ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md`](../../ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md).
-Status: smoke run (`--job Dry`, 1 iteration) plus full feature-parity matrix.
-Full BDN run with warmup, ManyShapes and HeadToHead pending.
+Status: ColdCompile + HeadToHead — final BenchmarkDotNet numbers below.
+ManyShapes — re-running after a benchmark-code fix.
 
-Headline numbers from the smoke run on the ColdCompile benchmark
-(x64, .NET 8.0, BenchmarkDotNet 0.14.0). Absolute timings vary
-across machines; the ratio between engines is what reproduces:
+### ColdCompile
+
+Full BDN with warmup (x64, .NET 8.0, BenchmarkDotNet 0.14.0). Absolute timings
+vary across machines; the ratio between engines is what reproduces:
 
 | Engine | Mean (Composite) | Allocated per shape | Ratio to Roslyn |
 |--------|---------------:|---------------:|----:|
-| Roslyn (ScriptBuilder) | 1,831 ms | 9,776 KB | 1.00 |
-| Dynamic LINQ (typed POCO) | 172 ms | 67 KB | 0.09 |
-| Dynamic LINQ (ExpandoObject) | 183 ms | 135 KB | 0.10 |
+| Roslyn (ScriptBuilder) | 121 ms | 9,758 KB | 1.00 |
+| Dynamic LINQ (typed POCO) | 1.04 ms | 67 KB | 0.009 |
+| Dynamic LINQ (ExpandoObject) | 2.82 ms | 134 KB | 0.025 |
 
-Direction: cold compile cost is roughly **10× smaller** and per-shape allocation
-roughly **70-160× smaller** for Dynamic LINQ. The assembly-accumulation claim
-will be re-stated with statistical confidence once the ManyShapes run completes.
+Cold compile cost is roughly **40-120× smaller** and per-shape allocation
+roughly **73-146× smaller** for Dynamic LINQ. The Q2 hypothesis about
+per-shape `Assembly.Load(bytes)` is supported quantitatively at the
+single-shape level. ManyShapes will quantify the linear-in-N curve directly.
+
+### HeadToHead (answers Q1)
+
+Shipped `ExpressionRowFiltration` vs `ExpressionRowMultiplicationPrototype`
+(variant inheriting from `RowMultiplication`, same Dynamic LINQ logic):
+
+| Variant | RowCount=10,000 Mean | Allocated |
+|---------|---------------------:|----------:|
+| ExpressionRowFiltration | 5,689 ms | 330.72 MB |
+| ExpressionRowMultiplication prototype | 5,718 ms | 330.68 MB |
+| Ratio | 1.01× | 1.00× |
+
+Statistically indistinguishable — the dedicated component carries no runtime
+cost over the `RowMultiplication` form. The case for it is call-site
+readability only.
 
 Feature parity matrix (full xUnit run, 8/8 PASS):
 

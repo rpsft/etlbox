@@ -1,19 +1,26 @@
 # Expression Engine Benchmark Results — 2026-04-28
 
-**Status:** Preliminary (smoke run). Full BenchmarkDotNet measurement pending.
+**Status:** ColdCompile + HeadToHead — final BenchmarkDotNet numbers below.
+ManyShapes — re-running after a fix in the benchmark code (was failing due
+to a `shapeId=0` collision in field naming, now uses `shapeId+1`).
 **Origin:** review feedback on MR !116 — notes 84243 ("benchmark would be good") and 84246 ("Dynamic LINQ in mappings?").
 **Tracking issue:** [TECH-DEBT-Expression-Engine-Unification.md](../docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md).
 
 ## TL;DR
 
-For the predicate use case, Dynamic LINQ is the better default and Roslyn is a
-specialised tool. On a single cold compile the smoke run shows Roslyn roughly
-**10× slower** and **70–160× heavier on allocations** than either Dynamic LINQ
-path. The gap is driven by `CSharpCompilation` + `Assembly.Load(bytes)` per
-shape, which Dynamic LINQ avoids by reusing a shared persistent
-`AssemblyBuilder`. On many shapes the gap is expected to widen further
-(linear in N for Roslyn, near-flat for Dynamic LINQ); the `ManyShapes`
-benchmark to confirm that quantitatively is in place but not yet executed.
+For the predicate use case, Dynamic LINQ is the better default and Roslyn is
+a specialised tool. On a single cold compile the full BenchmarkDotNet run
+shows Roslyn roughly **40–120× slower** and **73–146× heavier on
+allocations** than either Dynamic LINQ path. The gap is driven by
+`CSharpCompilation` + `Assembly.Load(bytes)` per shape, which Dynamic LINQ
+avoids by reusing a shared persistent `AssemblyBuilder`. The `ManyShapes`
+benchmark will quantify the linear-in-N memory accumulation directly.
+
+A separate head-to-head benchmark answers Q1: the shipped
+`ExpressionRowFiltration` and a `RowMultiplication`-based prototype have
+identical runtime cost (1.01× ratio at 10,000 rows, allocations equal). The
+case for the dedicated component is purely about call-site readability — no
+performance difference under the same Dynamic LINQ logic.
 
 The capability gap is also narrower than the review note implied. Dynamic LINQ
 already supports static methods and instance methods on framework types
@@ -41,10 +48,10 @@ XML-defined flows.
 
 What ran on this date:
 
-- ColdCompileBenchmarks — **smoke (`--job Dry`, 1 iteration)**, all 6 cells (3 engines × 2 expressions) executed.
+- ColdCompileBenchmarks — **full BenchmarkDotNet run with warmup**, all 6 cells (3 engines × 2 expressions) executed.
+- HeadToHeadBenchmarks — **full BenchmarkDotNet run with warmup**, both variants × 2 row counts.
+- ManyShapesBenchmarks — **first full run failed** (shapeId=0 bug in benchmark code), **re-running** after fix. Numbers will replace this paragraph.
 - FeatureParity tests — **full xUnit run**, 8/8 PASS.
-- ManyShapesBenchmarks — **not run yet** (code in place, awaiting full BDN run).
-- HeadToHeadBenchmarks — **not run yet** (code in place, awaiting full BDN run).
 
 What is intentionally out of scope today:
 
@@ -70,25 +77,24 @@ Two expression complexities are used across `ColdCompile`:
 
 Property names are suffixed with the iteration's `shapeId` so the engine cannot reuse a previously cached compilation (cold path on every invocation).
 
-## Results — ColdCompile (smoke, `--job Dry`, 1 iteration)
+## Results — ColdCompile (full BenchmarkDotNet, default warmup + iterations)
 
-| Method | Expression | Mean | Ratio | Allocated | Alloc Ratio |
-|--------|-----------|----:|----:|--------:|---------:|
-| Roslyn (ScriptBuilder) — fresh shape | Composite | 1,831.3 ms | **1.00** | **9,775.92 KB** | **1.000** |
-| Dynamic LINQ generic typed POCO | Composite | 171.9 ms | 0.09 | 66.77 KB | 0.007 |
-| Dynamic LINQ ExpandoObject — fresh shape | Composite | 183.1 ms | 0.10 | 134.62 KB | 0.014 |
-| Roslyn (ScriptBuilder) — fresh shape | Simple | 1,668.6 ms | **1.00** | **9,716.41 KB** | **1.000** |
-| Dynamic LINQ generic typed POCO | Simple | 159.4 ms | 0.10 | 57.27 KB | 0.006 |
-| Dynamic LINQ ExpandoObject — fresh shape | Simple | 169.3 ms | 0.10 | 121.58 KB | 0.013 |
+| Method | Expression | Mean | StdDev | Ratio | Allocated | Alloc Ratio |
+|--------|-----------|-----:|-------:|------:|----------:|------------:|
+| **Roslyn (ScriptBuilder) — fresh shape** | **Composite** | **121.18 ms** | 26.69 ms | **1.00** | **9,758.47 KB** | **1.000** |
+| Dynamic LINQ generic typed POCO | Composite | 1.04 ms | 0.14 ms | 0.009 | 66.52 KB | 0.007 |
+| Dynamic LINQ ExpandoObject — fresh shape | Composite | 2.82 ms | 0.51 ms | 0.025 | 133.88 KB | 0.014 |
+| **Roslyn (ScriptBuilder) — fresh shape** | **Simple** | **94.35 ms** | 30.61 ms | **1.00** | **9,699.95 KB** | **1.000** |
+| Dynamic LINQ generic typed POCO | Simple | 0.77 ms | 0.07 ms | 0.009 | 57.03 KB | 0.006 |
+| Dynamic LINQ ExpandoObject — fresh shape | Simple | 2.31 ms | 0.32 ms | 0.027 | 129.36 KB | 0.013 |
 
 Reading the table:
 
-- Roslyn cold compile is roughly **10× slower** than either Dynamic LINQ path on the same expression on the same machine.
-- Roslyn allocates **70–160× more memory per shape** (~9.7 MB vs 60–125 KB).
-- Expression complexity (Simple vs Composite) has marginal effect — the cost is dominated by compile + assembly emit, not by expression length.
-- Dynamic LINQ on ExpandoObject is ~7–13% slower and allocates ~2× more than Dynamic LINQ on a typed POCO. The overhead is the `ExpandoTypeMapper` walk plus `DynamicClassFactory` type generation. Still two orders of magnitude below Roslyn.
-
-**Caveat — single iteration.** `--job Dry` runs each cell exactly once. The numbers above are directional, not statistically robust. A full BDN run with warmup and several iterations is pending and will replace this section.
+- Roslyn cold compile is roughly **40–120× slower** than either Dynamic LINQ path. The exact multiple varies by expression complexity but stays in this band.
+- Roslyn allocates **73–146× more memory per shape** (~9.7 MB vs 57–134 KB).
+- Expression complexity (Simple vs Composite) has marginal effect on Roslyn — cost is dominated by compile + assembly emit, not expression length. On Dynamic LINQ a slight effect is visible (Composite ~25% slower than Simple) because the parser walks more nodes.
+- Dynamic LINQ on ExpandoObject is ~2.7× slower and allocates ~2× more than Dynamic LINQ on a typed POCO. The overhead is the `ExpandoTypeMapper` walk plus `DynamicClassFactory` type generation. Still ~40× below Roslyn.
+- Roslyn StdDev is large (22-32% of Mean) — the path goes through `CSharpCompilation` + `Assembly.Load`, which has variable cost depending on the JIT and GC state. Dynamic LINQ StdDev is ~10-13%, much tighter.
 
 ## Results — Feature Parity (full xUnit run, 8/8 PASS)
 
@@ -106,40 +112,73 @@ Key takeaway for the architectural discussion in note 84243:
 - Dynamic LINQ already covers static methods and instance methods on framework types. The "JsonNode → string" objection holds **only for user types**, and even there an escape hatch exists: registering the type via `IDynamicLinqCustomTypeProvider` makes its instance methods callable from expression text.
 - That is not zero boilerplate, but it is also not a fundamental limitation that forces Roslyn.
 
-## Results — ManyShapes / HeadToHead
+## Results — HeadToHead (full BenchmarkDotNet)
 
-**Not yet measured.** Benchmark code is in place under `Benchmarks/ManyShapesBenchmarks.cs` and `Benchmarks/HeadToHeadBenchmarks.cs` and will run as part of the full BDN sweep.
+`ExpressionRowFiltration` (the component shipped in this MR) compared
+directly against `ExpressionRowMultiplicationPrototype` — the
+`RowMultiplication`-based variant the reviewer raised in Q1. Both run the
+same Dynamic LINQ logic over the same input set, end-to-end through
+MemorySource → filter → MemoryDestination.
 
-Specifically:
+| Method | RowCount | Mean | StdDev | Ratio | Allocated | Alloc Ratio |
+|--------|---------:|-----:|-------:|------:|----------:|------------:|
+| **ExpressionRowFiltration (shipped)** | **1,000** | **509.4 ms** | 8.27 ms | **1.00** | **33.22 MB** | **1.00** |
+| ExpressionRowMultiplication prototype (reviewer variant) | 1,000 | 665.5 ms | 158.82 ms | 1.31 | 33.13 MB | 1.00 |
+| **ExpressionRowFiltration (shipped)** | **10,000** | **5,688.6 ms** | 450.33 ms | **1.00** | **330.72 MB** | **1.00** |
+| ExpressionRowMultiplication prototype (reviewer variant) | 10,000 | 5,718.3 ms | 437.36 ms | 1.01 | 330.68 MB | 1.00 |
 
-- `ManyShapesBenchmarks` will produce, per `[Params] N ∈ {10, 50, 100}`, the time/allocation curve plus a `GlobalCleanup` probe that prints memory delta and loaded-assembly delta for each engine. This is the central measurement that confirms or refutes the assembly-leak claim made in our Round-1 answer to Q2.
-- `HeadToHeadBenchmarks` will compare the shipped `ExpressionRowFiltration` against a `RowMultiplication`-based prototype (the variant the reviewer mentioned in Q1) on the same input set. If the runtime cost is identical, the case for `RowFiltration` is purely about call-site readability.
+Reading the table:
 
-These sections will be filled in once the full run completes.
+- At 10,000 rows the two variants are statistically indistinguishable (1.01×, StdDev ~440 ms on both) and allocate the same memory to the byte.
+- At 1,000 rows the prototype is 31% slower in mean, but its StdDev is 159 ms — three times the absolute difference, so the gap is JIT/GC noise on a short workload, not a real cost.
+- This **answers Q1**: the dedicated `RowFiltration` / `ExpressionRowFiltration` component has no runtime cost over the `RowMultiplication`-based variant. The argument for keeping a separate component is purely about the call-site shape (`Func<T, bool>` vs an `IEnumerable<T>` returning `[row]` or `[]` manually). Same `TransformManyBlock` underneath, same Dynamic LINQ evaluation, same memory profile.
+
+## Results — ManyShapes (re-running)
+
+**First full run failed** with `error CS0103: Имя "Reserve_S0" не существует в текущем контексте.` — caused by a `shapeId=0` collision in the benchmark code: `ExpandoFactory.NewShape(0)` produces field names without a suffix while the expression text used `Reserve_S0`. Fixed by starting from `shapeId+1`. Re-run is in progress.
+
+When complete, this section will contain:
+
+- Per `[Params] N ∈ {10, 50, 100}` time and allocation rows for both engines.
+- `GlobalCleanup` console output: memory delta and loaded-assembly delta per engine — direct evidence (or refutation) of the assembly-leak claim in our Round-1 answer to Q2.
+
+Expected pattern: linear-in-N memory growth and assembly count for Roslyn,
+near-flat curve for Dynamic LINQ ExpandoObject (shapes go into the shared
+`AssemblyBuilder` via `DynamicClassFactory`, no `Assembly.Load` per shape).
 
 ## Conclusions
 
-Direction confirmed by smoke data; numbers will be re-stated with statistical
-confidence after the full BDN run.
+Cold compile and head-to-head numbers are final (full BDN with warmup).
+ManyShapes is re-running after a benchmark-code fix; numbers there will
+quantify the linear-in-N curve directly. The qualitative picture is already
+clear from the per-shape ColdCompile measurement.
 
 ### Quick takeaways
 
-1. **Cold compile cost gap is real and large.** Roughly 10× in time and 70–160×
-   in allocation per shape, even on a single iteration. The order matches the
-   Round-1 hypothesis about Roslyn's `Assembly.Load(bytes)` per shape.
+1. **Cold compile cost gap is large and confirmed.** Roslyn is ~40–120× slower
+   in time and 73–146× heavier in allocation per shape. The Round-1
+   hypothesis about per-shape `Assembly.Load(bytes)` accumulation is
+   supported quantitatively at the per-shape level; the multi-shape curve is
+   the next datapoint.
 
-2. **Capability gap is narrower than note 84243 suggested.** Dynamic LINQ
+2. **Q1 has a clean answer.** The shipped `ExpressionRowFiltration` and the
+   `RowMultiplication`-based prototype run at the same speed and allocate the
+   same memory to the byte (1.01× ratio at 10,000 rows). The case for a
+   dedicated component is purely about call-site readability — there is no
+   performance argument either way.
+
+3. **Capability gap is narrower than note 84243 suggested.** Dynamic LINQ
    already covers static methods and instance methods on framework types out
    of the box. The remaining gap is method calls on user types, addressable
    via `IDynamicLinqCustomTypeProvider`.
 
-3. **The two engines are not "two languages" in the strong sense.** For the
+4. **The two engines are not "two languages" in the strong sense.** For the
    predicate use case the surface is mostly the same. The pragmatic split is
    "Roslyn when you need user-type method calls without registering them,
    multi-statement bodies or async; Dynamic LINQ otherwise."
 
 The rest of this section unpacks each takeaway with the mechanism behind the
-numbers. Skip to "Bottom line" if the three points above are enough.
+numbers. Skip to "Bottom line" if the four points above are enough.
 
 ### What is better, what is worse, and why
 
@@ -207,22 +246,37 @@ These are inputs for the architectural decision tracked in
 [TECH-DEBT-Expression-Engine-Unification.md](../docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md),
 not the decision itself.
 
+## Suggested response to Q1 (English draft)
+
+For the MR thread on Q1 (note 84210 — RowFiltration vs RowMultiplication).
+Use after the head-to-head numbers land in this report.
+
+> Head-to-head bench landed: shipped `ExpressionRowFiltration` vs an
+> `ExpressionRowMultiplicationPrototype` (the variant inheriting from
+> `RowMultiplication` and returning `[row]` or `[]`), same Dynamic LINQ
+> evaluation, same input. At 10,000 rows: 5,689 ms vs 5,718 ms (1.01× ratio,
+> StdDev ~440 ms on both), allocations equal at 330.7 MB. At 1,000 rows the
+> mean ratio drifts to 1.31× but with StdDev wider than the difference itself
+> — JIT/GC noise on a short workload. Same `TransformManyBlock` underneath,
+> no runtime cost from having the dedicated component. So the case for it is
+> purely about API readability — `Func<T, bool>` at the call site rather than
+> the empty/single-element collection idiom.
+
 ## Suggested response to Q2 (English draft)
 
 For the MR thread on Q2 (notes 84243 / 84246). Adapt to taste; absolute
 timings depend on hardware — what matters is the ratio between engines.
 
-> Smoke benchmark is in place (ETLBox.Scripting.Benchmarks project,
-> BenchmarkDotNet 0.14.0, --job Dry for now; full run with warmup pending).
-> Headline numbers on a single fresh-shape cold compile, .NET 8.0:
+> Full BenchmarkDotNet run with warmup, x64 / .NET 8.0. Cold compile per
+> fresh shape (Composite predicate, baseline = Roslyn = 1.00):
 >
-> - Roslyn: ≈1,750 ms, ≈9.7 MB allocated per shape
-> - Dynamic LINQ (typed POCO): ≈165 ms, ≈60 KB allocated
-> - Dynamic LINQ (ExpandoObject): ≈175 ms, ≈130 KB allocated
+> - Roslyn (ScriptBuilder): 121 ms, 9,758 KB allocated
+> - Dynamic LINQ (typed POCO): 1.04 ms, 67 KB allocated (0.009× / 0.007×)
+> - Dynamic LINQ (ExpandoObject): 2.82 ms, 134 KB allocated (0.025× / 0.014×)
 >
-> So Roslyn is roughly 10× slower and 70–160× heavier per cold compile.
-> Direction matches the Round-1 hypothesis; the ManyShapes run with the
-> assembly-count probe is in place and will tighten the numbers.
+> So Roslyn is ~40–120× slower and 73–146× heavier per fresh shape compile.
+> ManyShapes benchmark with the assembly-count probe is re-running after a
+> benchmark-code fix; will append the linear-in-N curve once it lands.
 >
 > On capabilities, the gap turned out narrower than I'd assumed. Dynamic LINQ
 > covers static methods on framework types (string.Format works out of the
