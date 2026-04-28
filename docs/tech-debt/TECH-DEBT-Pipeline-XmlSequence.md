@@ -42,18 +42,21 @@ level, with the reader wiring `LinkTo` calls automatically.
 ### Extension-point interfaces (new, in `ETLBox.Serialization`)
 
 ```
-IDataFlowXmlContext        — exposes CreateStep (DI-aware), TryInvokeMethod
-IExpandoXmlContext         — extends the above with RegisterDestination, RegisterErrorDestination, Destinations
+IDataFlowXmlContext        — exposes CreateObject (DI-aware only — no method invocation)
 IDataFlowXmlSerializable   — void ReadXml(XElement element, IDataFlowXmlContext context)
 ```
 
-`DataFlowXmlReader` implements `IExpandoXmlContext`. In `CreateInstance`, one generic `if` block
+`DataFlowXmlReader` implements `IDataFlowXmlContext`. In `CreateInstance`, one generic `if` block
 checks for `IDataFlowXmlSerializable` and delegates — no hard-coded name checks, fully extensible.
 
-The main purpose of passing `IDataFlowXmlContext` to `ReadXml` is **DI propagation**: the reader
-holds an `IDataFlowActivator` (optionally backed by `IServiceProvider`), and `context.CreateStep`
-routes through it. Composite components like `Pipeline` must always use `context.CreateStep` to
-instantiate their children so that injected services are resolved correctly.
+**Separation of concerns:**
+- `IDataFlowXmlContext` is solely a DI-aware object factory. The reader holds an `IDataFlowActivator`
+  (optionally backed by `IServiceProvider`) and `context.CreateObject` routes through it. Components
+  implementing `IDataFlowXmlSerializable` must use `context.CreateObject` for all object creation.
+- Method invocation (`<LinkTo>`, `<LinkErrorTo>`) is entirely the component's own responsibility
+  inside `ReadXml`. The context has no knowledge of methods; it only creates objects. `Pipeline`
+  handles method-like XML elements with a private reflection helper that finds methods by element
+  name on `this` and calls them — the context is not involved.
 
 ### Class hierarchy
 
@@ -156,20 +159,21 @@ private void EnsureOutputBound()
 
     var sink = new VoidDestination<ExpandoObject>();
     _tail.LinkTo(sink);
-    _destinationsList.Add(sink); // stored reference from ReadXml
+    _outputBound = true;
 }
 ```
 
-`_destinationsList` is `IDataFlow.Destinations` — a reference stored during `ReadXml` via
-`IDataFlowXmlContext`. It is a list reference, not the full context, so holding it at runtime
-is appropriate.
+`Pipeline` manages this tracking entirely on its own — it does not register anything with the
+outer `DataFlow`. When Pipeline is used standalone, `DataFlowXmlReader` treats it as an
+`IDataFlowSource` and calls `Execute()` on it; Pipeline's own `SourceBlock.Completion` signals
+when the internal chain is done.
 
 #### `<LinkTo>` and `<LinkErrorTo>` as direct children of `<Pipeline>`
 
-Both are method invocations, not step types. `Pipeline.ReadXml` delegates to
-`context.TryInvokeMethod(this, child)` before attempting `context.CreateStep`. This mirrors
-the approach already used by `DataFlowXmlReader` for all method-like XML elements — no
-element names are hardcoded in `Pipeline`.
+Both are method invocations, not step types. `Pipeline.ReadXml` calls
+`TryInvokeXmlMethod(child, context)` before attempting `context.CreateObject`. This helper
+(on `Pipeline<TIn,TOut>`) finds methods by element name via reflection on `this` — no element
+names are hardcoded, and the context is not involved in method dispatch.
 
 - **`<LinkTo>`** — calls `this.LinkTo(target)`, connecting Pipeline's output to the next
   component. Works identically to `<LinkTo>` on any other ETLBox component.
@@ -177,7 +181,7 @@ element names are hardcoded in `Pipeline`.
   steps via the `LinkErrorTo` override in `Pipeline<TIn, TOut>`. Placement has no effect.
 
 Elements inside the internal steps (e.g. `<JsonTransformation><LinkTo>…`) are **forbidden** —
-`context.CreateStep` creates each step from its own `XElement` without following its link
+`context.CreateObject` creates each step from its own `XElement` without following its link
 children. If a step's XML contains `<LinkTo>` or `<LinkErrorTo>`, `ReadXml` throws
 `InvalidDataException`.
 
@@ -190,7 +194,7 @@ In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each s
 
 | File | Change |
 |------|--------|
-| `ETLBox.Serialization/DataFlow/IDataFlowXmlContext.cs` | New (base interface + `IExpandoXmlContext`) |
+| `ETLBox.Serialization/DataFlow/IDataFlowXmlContext.cs` | New |
 | `ETLBox.Serialization/DataFlow/IDataFlowXmlSerializable.cs` | New |
 | `ETLBox.Serialization/DataFlow/Pipeline.cs` | New (both classes) |
 | `ETLBox.Serialization/DataFlow/DataFlowXmlReader.cs` | Modify — implement context + delegate |
@@ -199,40 +203,37 @@ In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each s
 
 ## Step 1 — `IDataFlowXmlContext`
 
-`IDataFlowXmlContext` contains only members that are not coupled to any specific row type.
-ExpandoObject-specific members live in the derived `IExpandoXmlContext` so that
-`Pipeline<TIn, TOut>` can use the base interface without encountering `ExpandoObject` hardcoding.
+`IDataFlowXmlContext` is purely a DI-aware object factory — no method invocation, no
+ExpandoObject coupling. `Pipeline` manages its own execution and completion via
+`IDataFlowSource`; it has no need to register objects back into the outer DataFlow.
 
-**DI wiring:** `DataFlowXmlReader` holds an `IDataFlowActivator` (backed by an optional
-`IServiceProvider`). `CreateStep` delegates to `DataFlowXmlReader.CreateObject`, which calls
-`_activator.CreateInstance(type)`. This means all sub-steps created via `context.CreateStep`
-inside `ReadXml` are resolved through the same DI container as every other component in the
-flow — **this is the primary reason `IDataFlowXmlContext` is passed to `ReadXml` at all**.
-Any `ReadXml` implementation **must** use `context.CreateStep` for all sub-step instantiation;
+`DataFlowXmlReader` holds an `IDataFlowActivator` (backed by an optional `IServiceProvider`).
+`context.CreateObject` delegates to `DataFlowXmlReader.CreateObject` → `_activator.CreateInstance(type)`,
+so all objects resolved via `context.CreateObject` inside `ReadXml` share the same DI container
+as the rest of the flow. This is the primary reason `IDataFlowXmlContext` is passed to `ReadXml`.
+
+Any `ReadXml` implementation **must** use `context.CreateObject` for all object instantiation;
 using `new` or `Activator.CreateInstance` directly bypasses DI.
 
 ```csharp
 public interface IDataFlowXmlContext
 {
     /// <summary>
-    /// Creates a step using the reader's activator (DI-aware). Always use this instead of
-    /// new/Activator.CreateInstance to preserve dependency injection for sub-steps.
+    /// Resolves a registered type by name without creating an instance.
+    /// Used for type inspection (e.g. checking if the first child is a source) before
+    /// committing to object creation.
     /// </summary>
-    object? CreateStep(string typeName, XElement element);
-    bool TryInvokeMethod(object instance, XElement element);
-}
+    Type? ResolveType(string typeName);
 
-public interface IExpandoXmlContext : IDataFlowXmlContext
-{
-    void RegisterDestination(IDataFlowDestination<ExpandoObject> destination);
-    void RegisterErrorDestination(IDataFlowDestination<ETLBoxError> destination);
-    IList<IDataFlowDestination<ExpandoObject>> Destinations { get; }
+    /// <summary>
+    /// Creates an object using the reader's activator (DI-aware). Always use this instead of
+    /// new/Activator.CreateInstance to preserve dependency injection.
+    /// </summary>
+    object? CreateObject(string typeName, XElement element);
 }
 ```
 
-`DataFlowXmlReader` implements `IExpandoXmlContext`. `Pipeline<TIn, TOut>.ReadXml` accepts
-`IDataFlowXmlContext`; `Pipeline.ReadXml` casts to `IExpandoXmlContext` for the ExpandoObject
-registration calls.
+`DataFlowXmlReader` implements `IDataFlowXmlContext`.
 
 ## Step 2 — `IDataFlowXmlSerializable`
 
@@ -267,20 +268,24 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
                 src.LinkErrorTo(target);
     }
 
-    public virtual void ReadXml(XElement element, IDataFlowXmlContext context)
+    // Processes children[startIndex..] as pipeline steps, linking them in sequence.
+    // New steps are appended to the shared Steps list. Head/Tail are set via SetHeadAndTail.
+    // Subclasses override ReadXml and call ReadSteps to share the wiring loop without duplication.
+    protected void ReadSteps(IList<XElement> children, int startIndex, IDataFlowXmlContext context)
     {
-        var children = element.Elements().ToList();
-        if (children.Count == 0) return;
-
+        int stepsStartIndex = Steps.Count;
         object? prev = null;
         Type? prevOutputType = null;
 
-        foreach (var child in children)
+        for (int i = startIndex; i < children.Count; i++)
         {
-            // Delegate method-like elements (LinkTo, LinkErrorTo, etc.) to context.
-            if (context.TryInvokeMethod(this, child)) continue;
+            var child = children[i];
+            // Method-like elements (LinkTo, LinkErrorTo, etc.) are invoked on this via reflection.
+            // The context is not involved — it only creates objects; method dispatch is Pipeline's
+            // own responsibility.
+            if (TryInvokeXmlMethod(child, context)) continue;
 
-            var step = context.CreateStep(child.Name.LocalName, child)
+            var step = context.CreateObject(child.Name.LocalName, child)
                        ?? throw new InvalidOperationException($"...");
             Steps.Add(step);
 
@@ -301,14 +306,24 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
             prev = step;
         }
 
+        if (Steps.Count == stepsStartIndex) return;
+
         // Validate head and tail match TIn / TOut.
-        var head = Steps[0] as IDataFlowLinkTarget<TIn>
+        // stepsStartIndex points to the first step added by this call (not necessarily Steps[0]).
+        var head = Steps[stepsStartIndex] as IDataFlowLinkTarget<TIn>
                    ?? throw new InvalidDataException(
                        $"First step must implement IDataFlowLinkTarget<{typeof(TIn).Name}>");
         var tail = Steps[^1] as IDataFlowLinkSource<TOut>
                    ?? throw new InvalidDataException(
                        $"Last step must implement IDataFlowLinkSource<{typeof(TOut).Name}>");
         SetHeadAndTail(head, tail);
+    }
+
+    public virtual void ReadXml(XElement element, IDataFlowXmlContext context)
+    {
+        var children = element.Elements().ToList();
+        if (children.Count == 0) return;
+        ReadSteps(children, 0, context);
     }
 
     // Extracts T from IDataFlowLinkTarget<T> via reflection.
@@ -324,6 +339,26 @@ public class Pipeline<TIn, TOut> : DataFlowTransformation<TIn, TOut>, IDataFlowX
             .FirstOrDefault(i => i.IsGenericType &&
                                  i.GetGenericTypeDefinition() == typeof(IDataFlowLinkSource<>))
             ?.GetGenericArguments()[0];
+
+    // Finds the method on this whose name matches element.Name.LocalName, creates each child
+    // element as a step via context.CreateObject (DI-aware), and invokes the method with it.
+    // Returns false if no matching method exists (element is a step, not a method call).
+    // This is Pipeline's own responsibility — the context is not involved in method dispatch.
+    private bool TryInvokeXmlMethod(XElement element, IDataFlowXmlContext context)
+    {
+        var method = GetType().GetMethods()
+            .Where(m => m.Name == element.Name.LocalName && m.GetParameters().Length == 1)
+            .FirstOrDefault();
+        if (method is null) return false;
+
+        foreach (var childEl in element.Elements())
+        {
+            var target = context.CreateObject(childEl.Name.LocalName, childEl)
+                         ?? throw new InvalidOperationException($"...");
+            method.Invoke(this, new[] { target });
+        }
+        return true;
+    }
 
     // Links source.SourceBlock → target.TargetBlock via TPL using reflection (type-erased).
     // Registers target.AddPredecessorCompletion so CheckCompleteAction works correctly.
@@ -358,7 +393,6 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
 {
     private IDataFlowSource<ExpandoObject>? _source;
     private bool _outputBound;
-    private IList<IDataFlowDestination<ExpandoObject>>? _destinationsList;
 
     // IDataFlowSource
     public void Execute(CancellationToken cancellationToken = default)
@@ -393,76 +427,37 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
 
         var sink = new VoidDestination<ExpandoObject>();
         Tail.LinkTo(sink);
-        _destinationsList?.Add(sink);
         _outputBound = true;
     }
 
     public override void ReadXml(XElement element, IDataFlowXmlContext context)
     {
-        var expandoCtx = context as IExpandoXmlContext
-            ?? throw new InvalidOperationException(
-                "Pipeline requires an IExpandoXmlContext implementation.");
-        _destinationsList = expandoCtx.Destinations;
         var children = element.Elements().ToList();
         if (children.Count == 0) return;
 
-        var firstType = GetTypeByName(children[0]);  // resolved via context
         int stepStart = 0;
-
-        // Special case A: first child is a source
-        if (IsSourceType(firstType))
+        var firstType = context.ResolveType(children[0].Name.LocalName);
+        if (firstType != null && typeof(IDataFlowSource<ExpandoObject>).IsAssignableFrom(firstType))
         {
-            _source = context.CreateStep(children[0].Name.LocalName, children[0])
-                          as IDataFlowSource<ExpandoObject>
-                      ?? throw new InvalidDataException("...");
+            _source = context.CreateObject(children[0].Name.LocalName, children[0])
+                as IDataFlowSource<ExpandoObject>
+                ?? throw new InvalidDataException(
+                    $"'{children[0].Name.LocalName}' resolved as source type but could not be cast to IDataFlowSource<ExpandoObject>.");
             Steps.Add(_source);
             stepStart = 1;
         }
 
-        // Wire remaining children as transformation/destination steps.
-        // tail starts as null — _source is linked via raw TPL (see below), not via LinkTo.
-        IDataFlowLinkSource<ExpandoObject>? tail = null;
-        for (int i = stepStart; i < children.Count; i++)
-        {
-            var child = children[i];
-
-            // Delegate method-like elements (LinkTo, LinkErrorTo, etc.) to context.
-            if (context.TryInvokeMethod(this, child)) continue;
-
-            var step = context.CreateStep(child.Name.LocalName, child)
-                       ?? throw new InvalidOperationException($"...");
-            Steps.Add(step);
-
-            if (step is not IDataFlowLinkTarget<ExpandoObject> linkTarget)
-                throw new InvalidDataException($"...");
-
-            if (tail != null)
-            {
-                tail.LinkTo(linkTarget);
-            }
-            else if (_source != null)
-            {
-                // Raw TPL link: bypasses ETLBox completion registration on _head so that
-                // _source.SourceBlock.Completion goes into Pipeline's PredecessorCompletions,
-                // not into _head.PredecessorCompletions. This prevents the race condition where
-                // _head closes before an external upstream finishes.
-                _source.SourceBlock.LinkTo(linkTarget.TargetBlock);
-                AddPredecessorCompletion(_source.SourceBlock.Completion);
-            }
-
-            if (step is IDataFlowDestination<ExpandoObject> dest)
-                expandoCtx.RegisterDestination(dest);
-            if (step is IDataFlowDestination<ETLBoxError> err)
-                expandoCtx.RegisterErrorDestination(err);
-            if (step is IDataFlowLinkSource<ExpandoObject> nextTail)
-                tail = nextTail;
-        }
-
         if (stepStart < children.Count)
+            ReadSteps(children, stepStart, context);
+
+        // Raw TPL link: bypasses ETLBox completion registration on Head so that
+        // _source.SourceBlock.Completion goes into Pipeline's PredecessorCompletions,
+        // not into Head.PredecessorCompletions. This prevents the race condition where
+        // Head closes before an external upstream finishes.
+        if (_source != null && Head != null)
         {
-            var head = Steps[stepStart] as IDataFlowLinkTarget<ExpandoObject>
-                       ?? throw new InvalidDataException("...");
-            SetHeadAndTail(head, tail!);
+            _source.SourceBlock.LinkTo(Head.TargetBlock);
+            AddPredecessorCompletion(_source.SourceBlock.Completion);
         }
     }
 }
@@ -473,28 +468,15 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
 ### 5a — Implement `IDataFlowXmlContext`
 
 ```csharp
-public sealed class DataFlowXmlReader : IExpandoXmlContext
+public sealed class DataFlowXmlReader : IDataFlowXmlContext
 {
-    // IDataFlowXmlContext
-    object? IDataFlowXmlContext.CreateStep(string typeName, XElement element) =>
+    // Type resolution without instantiation — used by Pipeline.ReadXml for source detection.
+    Type? IDataFlowXmlContext.ResolveType(string typeName) =>
+        GetTypeByName(_types, typeName);
+
+    // DI-aware object creation — delegates to the existing CreateObject/GetTypeByName machinery.
+    object? IDataFlowXmlContext.CreateObject(string typeName, XElement element) =>
         CreateObject(GetTypeByName(_types, typeName), element);
-
-    bool IDataFlowXmlContext.TryInvokeMethod(object instance, XElement element)
-    {
-        if (GetMethod(instance, element) is null) return false;
-        TryInvokeSourceMethod(instance, element);
-        return true;
-    }
-
-    // IExpandoXmlContext
-    IList<IDataFlowDestination<ExpandoObject>> IExpandoXmlContext.Destinations
-        => _dataFlow.Destinations;
-
-    void IExpandoXmlContext.RegisterDestination(IDataFlowDestination<ExpandoObject> dest) =>
-        _dataFlow.Destinations.Add(dest);
-
-    void IExpandoXmlContext.RegisterErrorDestination(IDataFlowDestination<ETLBoxError> err) =>
-        _dataFlow.ErrorDestinations.Add(err);
 }
 ```
 
