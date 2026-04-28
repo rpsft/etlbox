@@ -100,6 +100,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.AI", "ETLBox.AI\ETLB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.AI.Tests", "ETLBox.AI.Tests\ETLBox.AI.Tests.csproj", "{538736F5-39FF-C7A7-94F8-9BB1A6E4D780}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETLBox.Scripting.Benchmarks", "ETLBox.Scripting.Benchmarks\ETLBox.Scripting.Benchmarks.csproj", "{B78D3E95-60CD-4BE3-B444-7B206EBF2943}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -222,6 +224,10 @@ Global
 		{538736F5-39FF-C7A7-94F8-9BB1A6E4D780}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{538736F5-39FF-C7A7-94F8-9BB1A6E4D780}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{538736F5-39FF-C7A7-94F8-9BB1A6E4D780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B78D3E95-60CD-4BE3-B444-7B206EBF2943}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

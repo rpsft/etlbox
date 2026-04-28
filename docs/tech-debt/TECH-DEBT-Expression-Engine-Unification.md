@@ -100,3 +100,35 @@ This file documents the question. The decision is intentionally deferred:
    Roslyn-based filter to mirror `ScriptedRowTransformation`).
 5. Mapping-expression idea (note 84246) is a separate design discussion; track it as
    its own task once the engine question is settled.
+
+## Benchmark Results (preliminary, 2026-04-28)
+
+Full report:
+[`ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md`](../../ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md).
+Status: smoke run (`--job Dry`, 1 iteration) plus full feature-parity matrix.
+Full BDN run with warmup, ManyShapes and HeadToHead pending.
+
+Headline numbers from the smoke run on the ColdCompile benchmark
+(Intel i5-10300H, .NET 8.0.25, BenchmarkDotNet 0.14.0):
+
+| Engine | Mean (Composite) | Allocated per shape | Ratio to Roslyn |
+|--------|---------------:|---------------:|----:|
+| Roslyn (ScriptBuilder) | 1,831 ms | 9,776 KB | 1.00 |
+| Dynamic LINQ (typed POCO) | 172 ms | 67 KB | 0.09 |
+| Dynamic LINQ (ExpandoObject) | 183 ms | 135 KB | 0.10 |
+
+Direction: cold compile cost is roughly **10× smaller** and per-shape allocation
+roughly **70-160× smaller** for Dynamic LINQ. The assembly-accumulation claim
+will be re-stated with statistical confidence once the ManyShapes run completes.
+
+Feature parity matrix (full xUnit run, 8/8 PASS):
+
+| Scenario | Roslyn | Dynamic LINQ |
+|----------|:------:|:------------:|
+| Built-in instance method on string / DateTime | works | works |
+| Static method on built-in type (`string.Format`) | works | **works (out of the box)** |
+| Instance method on user type | works | needs `ParsingConfig.CustomTypeProvider` |
+
+The "JsonNode → string" objection from note 84243 narrows from "Dynamic LINQ
+cannot do method calls" to "Dynamic LINQ cannot do user-type method calls
+without registration". The escape hatch is `IDynamicLinqCustomTypeProvider`.

@@ -14,6 +14,7 @@ ar
 args
 aspx
 Async
+Auth
 attr
 behaviour
 BFEF
@@ -116,6 +117,7 @@ lk
 lkup
 logtask
 LONGTEXT
+Linq
 Lookups
 Lorem
 lp
