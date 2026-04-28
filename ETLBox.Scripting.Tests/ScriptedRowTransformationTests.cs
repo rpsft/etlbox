@@ -356,9 +356,9 @@ public class ScriptedRowTransformationTests
     }
 
     [Fact]
-    public void PassThrough_Typed_DifferentInputOutputTypes_DoesNotCopyProperties()
+    public void PassThrough_Typed_IncompatibleTypes_ThrowsInvalidOperationException()
     {
-        // Arrange — PassThrough only copies when TInput == TOutput (by design)
+        // Arrange — TInput (MyRowType) is not assignable to TOutput (MyOtherRowType)
         var memorySource = new MemorySource<MyRowType>();
         memorySource.DataAsList.Add(new MyRowType { Id = 3, Name = "Bob" });
         var script = new ScriptedRowTransformation<MyRowType, MyOtherRowType>
@@ -370,14 +370,45 @@ public class ScriptedRowTransformationTests
         memorySource.LinkTo(script);
         script.LinkTo(memoryDestination);
 
+        // Act & Assert — InvalidOperationException propagates as AggregateException from Wait()
+        Assert.Throws<AggregateException>(() =>
+        {
+            memorySource.Execute(CancellationToken.None);
+            memoryDestination.Wait();
+        });
+    }
+
+    [Fact]
+    public void PassThrough_Typed_SubtypeInput_CopiesBaseProperties()
+    {
+        // Arrange — MyDerivedRowType extends MyRowType, which extends MyOutputBaseType
+        var memorySource = new MemorySource<MyDerivedRowType>();
+        memorySource.DataAsList.Add(
+            new MyDerivedRowType
+            {
+                Id = 7,
+                Name = "Charlie",
+                Extra = "ignored",
+            }
+        );
+        var script = new ScriptedRowTransformation<MyDerivedRowType, MyRowType>
+        {
+            PassThrough = true,
+        };
+        script.Mappings.Add("Id", "Id * 3");
+        var memoryDestination = new MemoryDestination<MyRowType>();
+        memorySource.LinkTo(script);
+        script.LinkTo(memoryDestination);
+
         // Act
         memorySource.Execute(CancellationToken.None);
         memoryDestination.Wait();
 
-        // Assert — only mapped field is set; no cross-type copy occurs
+        // Assert — base properties are copied; mapping overrides Id; Extra is not on TOutput
         Assert.Single(memoryDestination.Data);
         var row = memoryDestination.Data.First();
-        Assert.Equal(30, row.Value);
+        Assert.Equal(21, row.Id);
+        Assert.Equal("Charlie", row.Name);
     }
 
     private static ExpandoObject CreateTestDataItem(int id, string name)
@@ -399,5 +430,11 @@ public class ScriptedRowTransformationTests
     public class MyOtherRowType
     {
         public int Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    public class MyDerivedRowType : MyRowType
+    {
+        public string? Extra { get; set; }
     }
 }
