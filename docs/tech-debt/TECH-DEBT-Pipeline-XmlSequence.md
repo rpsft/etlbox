@@ -135,16 +135,29 @@ If the last step implements `IDataFlowLinkSource<ExpandoObject>` and no external
 been bound, `Execute()` automatically links a `VoidDestination<ExpandoObject>` and registers it
 in `_dataFlow.Destinations` so the execution loop can wait for completion.
 
-Tracking mechanism: shadow all six `LinkTo` overloads with `new` to set `_outputBound = true`
-before delegating to base. `LinkTo` in `DataFlowTransformation<TIn, TOut>` is not `virtual`, so
-`override` is not available. Shadowing is safe here because `Pipeline` is `sealed` and all
-callers hold a `Pipeline` reference — static dispatch always resolves to the shadowing method.
+Tracking mechanism: override all six `LinkTo` overloads to set `_outputBound = true` before
+delegating to base. This requires marking `LinkTo` (and `LinkErrorTo`, see below) as `virtual`
+in `DataFlowTransformation<TIn, TOut>` — a one-keyword non-breaking change to the base class.
+
+`override` (rather than `new`/shadow) is essential: it makes tracking dispatch-path-independent.
+A shadow-based approach would silently bypass `_outputBound` when the call went through the
+interface or a base-class reference, e.g.
+
+```csharp
+IDataFlowLinkSource<ExpandoObject> src = pipeline;
+src.LinkTo(dest); // shadow not invoked → _outputBound stays false
+```
+
+`EnsureOutputBound` would then add a `VoidDestination` while `dest` was already linked, producing
+a silent duplicate-output bug. With `virtual`/`override`, every dispatch path (interface,
+base ref, derived ref, reflection) routes through Pipeline's tracking method.
+
 At `Execute()` time, call `EnsureOutputBound()`:
 
 ```csharp
 private bool _outputBound;
 
-public new IDataFlowLinkSource<ExpandoObject> LinkTo(
+public override IDataFlowLinkSource<ExpandoObject> LinkTo(
     IDataFlowLinkTarget<ExpandoObject> target)
 {
     _outputBound = true;
@@ -194,6 +207,7 @@ In XML mode, `_linkAllErrorsTo` on `DataFlowXmlReader` already auto-wires each s
 
 | File | Change |
 |------|--------|
+| `ETLBox.Common/DataFlow/DataFlowTransformation.cs` | Modify — mark all 6 `LinkTo` overloads and `LinkErrorTo` as `virtual` |
 | `ETLBox.Serialization/DataFlow/IDataFlowXmlContext.cs` | New |
 | `ETLBox.Serialization/DataFlow/IDataFlowXmlSerializable.cs` | New |
 | `ETLBox.Serialization/DataFlow/Pipeline.cs` | New (both classes) |
@@ -409,10 +423,12 @@ public sealed class Pipeline : Pipeline<ExpandoObject, ExpandoObject>, IDataFlow
                 "Pipeline has no internal source. Drive it by linking an external source.");
     }
 
-    // Shadow all 6 LinkTo overloads with `new` to set _outputBound.
-    // `LinkTo` in DataFlowTransformation<TIn,TOut> is not virtual, so override is unavailable.
-    // Shadowing is safe: Pipeline is sealed, all callers hold a Pipeline reference.
-    public new IDataFlowLinkSource<ExpandoObject> LinkTo(
+    // Override all 6 LinkTo overloads to set _outputBound.
+    // Requires LinkTo to be `virtual` in DataFlowTransformation<TIn,TOut> — base-class change.
+    // `override` (not `new`/shadow) is required so calls via interface, base-class reference,
+    // or reflection also hit this method; a shadow would silently bypass tracking on those paths
+    // and produce a duplicate-output bug (VoidDestination + real target).
+    public override IDataFlowLinkSource<ExpandoObject> LinkTo(
         IDataFlowLinkTarget<ExpandoObject> target)
     {
         _outputBound = true;
