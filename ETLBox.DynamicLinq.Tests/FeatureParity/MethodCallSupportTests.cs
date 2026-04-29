@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.DynamicLinq;
 using ALE.ETLBox.Scripting;
+using ETLBox.Primitives;
 using Xunit;
 
 namespace ETLBox.DynamicLinq.Tests.FeatureParity;
@@ -101,28 +104,61 @@ public class MethodCallSupportTests
     }
 
     [Fact]
-    public void DynamicLinq_UserTypeMethod_DoesNotWork_OutOfBox()
+    public void DynamicLinq_UserTypeMethod_DoesNotWork_WithoutCustomTypes()
     {
-        // Without ParsingConfig.CustomTypeProvider, calling a user type method
-        // throws ParseException. Documents the reviewer's concern that Dynamic
-        // LINQ needs explicit registration.
-        var row = MakeRow(("Box", (object)new SimpleBox(42)));
-        var (type, instance) = ExpandoTypeMapper.Map(row);
-        var array = Array.CreateInstance(type, 1);
-        array.SetValue(instance, 0);
+        // Without registered custom types, calling a user type method throws.
+        // "User type" here = type defined outside System / framework BCL; Dynamic LINQ
+        // recognizes BCL types out of the box (string, DateTime, int, byte[]), but not
+        // user-defined classes. SimpleBox stands in for any such type.
+        var filtration = new ExpressionRowFiltration<RowWithBox>("Box.ToText() == \"box(42)\"");
+        var rows = new[] { new RowWithBox { Box = new SimpleBox(42) } };
+        var source = new MemorySource<RowWithBox>();
+        foreach (var row in rows)
+            source.DataAsList.Add(row);
+        var dest = new MemoryDestination<RowWithBox>();
+        var errorDest = new MemoryDestination<ETLBoxError>();
+        source.LinkTo(filtration);
+        filtration.LinkTo(dest);
+        filtration.LinkErrorTo(errorDest);
+        source.Execute();
+        dest.Wait();
+        errorDest.Wait();
 
-        Assert.ThrowsAny<Exception>(
-            () => array.AsQueryable().Any(s_parsingConfig, "Box.ToText() == \"box(42)\"")
-        );
+        // Without RegisterCustomTypes, the parse fails per row, error goes to error buffer.
+        Assert.Empty(dest.Data);
+        Assert.Single(errorDest.Data);
     }
 
-    // Note on escape hatch: Dynamic LINQ exposes IDynamicLinqCustomTypeProvider on
-    // ParsingConfig.CustomTypeProvider. Registering a user type there makes its
-    // instance methods callable from expression text - this is the answer to the
-    // reviewer's "JsonNode -> string" objection (note 84243). The mechanism exists,
-    // it just requires explicit setup per type. Concrete usage example belongs in
-    // docs/dataflow/row-filtration.md if we decide to document the path; not asserted
-    // here because the construction shape varies between Dynamic LINQ versions.
+    [Fact]
+    public void DynamicLinq_UserTypeMethod_Works_AfterRegisterCustomTypes()
+    {
+        // After RegisterCustomTypes(typeof(SimpleBox)), the user type is visible to
+        // Dynamic LINQ's parser and its instance methods become callable from the
+        // expression text. This closes the feature gap raised in note 84400.
+        var filtration = new ExpressionRowFiltration<RowWithBox>("Box.ToText() == \"box(42)\"");
+        filtration.RegisterCustomTypes(typeof(SimpleBox));
+        var rows = new[]
+        {
+            new RowWithBox { Box = new SimpleBox(42) }, // passes
+            new RowWithBox { Box = new SimpleBox(99) }, // dropped
+        };
+        var source = new MemorySource<RowWithBox>();
+        foreach (var row in rows)
+            source.DataAsList.Add(row);
+        var dest = new MemoryDestination<RowWithBox>();
+        source.LinkTo(filtration);
+        filtration.LinkTo(dest);
+        source.Execute();
+        dest.Wait();
+
+        Assert.Single(dest.Data);
+        Assert.Equal(42, dest.Data.First().Box!.Value);
+    }
+
+    private sealed class RowWithBox
+    {
+        public SimpleBox? Box { get; set; }
+    }
 
     // ---- Static method call ------------------------------------------------
 

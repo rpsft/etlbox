@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Expressions;
+using System.Reflection;
 using ALE.ETLBox.DataFlow;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
@@ -52,9 +56,18 @@ namespace ALE.ETLBox.DynamicLinq;
 [PublicAPI]
 public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
 {
-    // ConvertObjectToSupportComparison enables operators on properties typed as object
-    // (handles null-valued fields and mixed numeric literals like "X > 0" with X=decimal).
-    protected static readonly ParsingConfig s_parsingConfig =
+    /// <summary>
+    /// Parser configuration applied to every <see cref="FilterExpression"/> evaluation.
+    /// Default has <see cref="ParsingConfig.ConvertObjectToSupportComparison"/> = true
+    /// (enables operators on properties typed as <c>object</c>, handles null-valued
+    /// fields and mixed numeric literals like <c>"X &gt; 0"</c> when <c>X</c> is decimal).
+    /// </summary>
+    /// <remarks>
+    /// Mutate this instance to register additional types or change parser flags. For
+    /// the typical "let me call methods on my types" case use <see cref="RegisterCustomTypes"/>.
+    /// Reassigning the property to a fresh <see cref="ParsingConfig"/> is also supported.
+    /// </remarks>
+    public ParsingConfig ParsingConfig { get; set; } =
         new() { ConvertObjectToSupportComparison = true };
 
     /// <summary>
@@ -81,14 +94,106 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
         PredicateFunc = EvaluateExpression;
     }
 
+    /// <summary>
+    /// Register user types so their public instance methods become callable from
+    /// <see cref="FilterExpression"/>. Without this, expressions like
+    /// <c>"MyDto.SomeMethod() == 1"</c> fail to parse on user-defined types.
+    /// Built-in types (<c>string</c>, <c>DateTime</c>, framework types) work without
+    /// registration.
+    /// </summary>
+    /// <remarks>
+    /// Combines with any types already registered on <see cref="ParsingConfig"/>;
+    /// existing <c>CustomTypeProvider</c> is replaced with one that exposes the union.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// var filtration = new ExpressionRowFiltration&lt;Order&gt;("Customer.IsPremium() &amp;&amp; Total &gt; 100");
+    /// filtration.RegisterCustomTypes(typeof(Customer));
+    /// </code>
+    /// </example>
+    public void RegisterCustomTypes(params Type[] types)
+    {
+        if (types is null || types.Length == 0)
+            return;
+
+        var existing = ParsingConfig.CustomTypeProvider?.GetCustomTypes() ?? new HashSet<Type>();
+        var merged = new HashSet<Type>(existing);
+        foreach (var t in types.Where(t => t is not null))
+            merged.Add(t);
+
+        ParsingConfig.CustomTypeProvider = new InlineCustomTypeProvider(merged);
+
+        // Type provider change invalidates the compiled cache - any registered type
+        // could change how an expression resolves.
+        InvalidateCompiledCache();
+    }
+
+    // Compiled-delegate cache. Holds the last successful Compile() output for
+    // FilterExpression + ParsingConfig pair. The TInput-typed path produces a
+    // direct Func<TInput, bool>; subsequent EvaluateExpression calls invoke the
+    // delegate without re-parsing or building a Queryable per row.
+    private Func<TInput, bool>? _compiledPredicate;
+    private string? _compiledForExpression;
+    private ParsingConfig? _compiledForConfig;
+
+    /// <summary>
+    /// Drops the cached compiled delegate, forcing a recompile on the next
+    /// <see cref="EvaluateExpression"/> call. Useful when the user mutates
+    /// <see cref="ParsingConfig"/> in place; reassigning the property is
+    /// detected automatically.
+    /// </summary>
+    public void InvalidateCompiledCache()
+    {
+        _compiledPredicate = null;
+        _compiledForExpression = null;
+        _compiledForConfig = null;
+    }
+
     protected virtual bool EvaluateExpression(TInput row)
     {
         if (string.IsNullOrWhiteSpace(FilterExpression))
             throw new InvalidOperationException("FilterExpression is not set.");
 
-        // For typed TInput "new[] { row }" preserves the compile-time element type,
-        // AsQueryable sees TInput, Dynamic LINQ resolves properties via PropertyInfo.
-        return new[] { row }.AsQueryable().Any(s_parsingConfig, FilterExpression);
+        EnsureCompiled();
+        return _compiledPredicate!(row);
+    }
+
+    private void EnsureCompiled()
+    {
+        if (
+            _compiledPredicate is not null
+            && _compiledForExpression == FilterExpression
+            && ReferenceEquals(_compiledForConfig, ParsingConfig)
+        )
+        {
+            return;
+        }
+
+        var lambda = DynamicExpressionParser.ParseLambda<TInput, bool>(
+            ParsingConfig,
+            createParameterCtor: false,
+            FilterExpression
+        );
+        _compiledPredicate = lambda.Compile();
+        _compiledForExpression = FilterExpression;
+        _compiledForConfig = ParsingConfig;
+    }
+
+    private sealed class InlineCustomTypeProvider : IDynamicLinqCustomTypeProvider
+    {
+        private readonly HashSet<Type> _types;
+
+        public InlineCustomTypeProvider(HashSet<Type> types) => _types = types;
+
+        public HashSet<Type> GetCustomTypes() => _types;
+
+        public Dictionary<Type, List<MethodInfo>> GetExtensionMethods() => new();
+
+        public Type? ResolveType(string typeName) =>
+            _types.FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
+
+        public Type? ResolveTypeBySimpleName(string simpleTypeName) =>
+            _types.FirstOrDefault(t => t.Name == simpleTypeName);
     }
 }
 
@@ -134,6 +239,16 @@ public class ExpressionRowFiltration<TInput> : RowFiltration<TInput>
 [PublicAPI]
 public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
 {
+    // Compiled-delegate cache for the ExpandoObject path. The cache key is
+    // (FilterExpression, ParsingConfig, mapped DynamicClass type). When a row
+    // arrives with the same shape as the cached one, we skip the parse/wrap
+    // step and invoke the previously compiled delegate on the freshly mapped
+    // instance.
+    private Func<object, bool>? _expandoCompiledPredicate;
+    private string? _expandoCompiledForExpression;
+    private ParsingConfig? _expandoCompiledForConfig;
+    private Type? _expandoCompiledForType;
+
     public ExpressionRowFiltration() { }
 
     public ExpressionRowFiltration(string filterExpression)
@@ -149,11 +264,34 @@ public class ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>
 
         var (type, instance) = ExpandoTypeMapper.Map(row);
 
-        // Typed array so AsQueryable sees the runtime element type.
-        // "new[] { instance }" gives object[] and Where() loses property typing.
-        var array = Array.CreateInstance(type, 1);
-        array.SetValue(instance, 0);
+        if (
+            _expandoCompiledPredicate is null
+            || _expandoCompiledForExpression != FilterExpression
+            || !ReferenceEquals(_expandoCompiledForConfig, ParsingConfig)
+            || _expandoCompiledForType != type
+        )
+        {
+            // Build a Func<object, bool> wrapper around the type-specific lambda
+            // so we can invoke it without DynamicInvoke (slow) and without
+            // wrapping each row in an Array.CreateInstance + AsQueryable per call.
+            var lambda = DynamicExpressionParser.ParseLambda(
+                ParsingConfig,
+                type,
+                typeof(bool),
+                FilterExpression
+            );
+            var paramObj = Expression.Parameter(typeof(object), "o");
+            var wrapped = Expression.Lambda<Func<object, bool>>(
+                Expression.Invoke(lambda, Expression.Convert(paramObj, type)),
+                paramObj
+            );
 
-        return array.AsQueryable().Any(s_parsingConfig, FilterExpression);
+            _expandoCompiledPredicate = wrapped.Compile();
+            _expandoCompiledForExpression = FilterExpression;
+            _expandoCompiledForConfig = ParsingConfig;
+            _expandoCompiledForType = type;
+        }
+
+        return _expandoCompiledPredicate(instance);
     }
 }

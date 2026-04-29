@@ -1,9 +1,10 @@
 # Tech Debt: Expression Engine Unification
 
-**Status:** Split applied (2026-04-29). Unification question still open.
+**Status:** Split applied (2026-04-29). Feature parity practically achievable
+(Round 5 / note 84400 closed). Full unification still open as a separate task.
 **Created:** 2026-04-28
 **Priority:** Medium
-**Origin:** review feedback on MR !116 (RowFiltration / ExpressionRowFiltration), notes 84243 and 84246
+**Origin:** review feedback on MR !116 (RowFiltration / ExpressionRowFiltration), notes 84243, 84246, 84400-84404
 
 ## Problem
 
@@ -12,12 +13,21 @@ Two different engines exist for evaluating user-supplied expressions on a row:
 | Component | Package | Engine | What it can express |
 |-----------|---------|--------|---------------------|
 | `ScriptedRowTransformation` | `ETLBox.Scripting` | Roslyn | Full C# inside the body — method calls, async, statement blocks, custom helper types |
-| `ExpressionRowFiltration`   | `ETLBox.DynamicLinq` | `System.Linq.Dynamic.Core` | Comparisons, arithmetic, logical operators, member access, null checks, LINQ-style collection methods. No method calls on user types, no statements |
+| `ExpressionRowFiltration`   | `ETLBox.DynamicLinq` | `System.Linq.Dynamic.Core` | Comparisons, arithmetic, logical operators, member access, null checks, LINQ-style collection methods, **method calls on user types via `RegisterCustomTypes`** (added in Round 5) |
 
 As of 2026-04-29 the two engines live in **separate NuGet packages** so consumers
 who need only predicate filtration pull `ETLBox.DynamicLinq` and avoid the transitive
-Roslyn cost. The deeper question — whether one engine can subsume the other — is
-still open and tracked below.
+Roslyn cost.
+
+**After Round 5** (commit adding `RegisterCustomTypes` and exposing `ParsingConfig`):
+the practical capability gap is narrow. Dynamic LINQ now handles user-type method
+calls after a one-line registration. The remaining engine difference applies to
+non-predicate scenarios: multi-statement bodies, async, automatic type discovery
+without registration. None of these are blocking for the filtration use case the
+DynamicLinq package is positioned for.
+
+The deeper question — whether one engine can subsume the other for the full
+ETLBox surface — is still open and tracked below.
 
 ## Why both exist today
 
@@ -196,14 +206,148 @@ ExpandoObject stays at exactly +33 regardless of N — `DynamicClassFactory`
 emits new shape types into the same shared persistent `AssemblyBuilder`.
 The Round-1 assembly-leak hypothesis is supported quantitatively.
 
-Feature parity matrix (full xUnit run, 8/8 PASS):
+Feature parity matrix (full xUnit run, 9/9 PASS after Round 5):
 
 | Scenario | Roslyn | Dynamic LINQ |
 |----------|:------:|:------------:|
 | Built-in instance method on string / DateTime | works | works |
 | Static method on built-in type (`string.Format`) | works | **works (out of the box)** |
-| Instance method on user type | works | needs `ParsingConfig.CustomTypeProvider` |
+| Instance method on user type, no setup | works | does not work |
+| Instance method on user type, after `RegisterCustomTypes(typeof(T))` | works | **works** |
 
-The "JsonNode → string" objection from note 84243 narrows from "Dynamic LINQ
-cannot do method calls" to "Dynamic LINQ cannot do user-type method calls
-without registration". The escape hatch is `IDynamicLinqCustomTypeProvider`.
+The "JsonNode → string" objection from note 84243 is **practically closed** after
+Round 5 (note 84400): `ExpressionRowFiltration<TInput>` exposes
+`RegisterCustomTypes(params Type[])` as a convenience layer over
+`ParsingConfig.CustomTypeProvider`. User-type method calls work after a single
+registration line:
+
+```csharp
+filtration.RegisterCustomTypes(typeof(JsonNode));
+filtration.FilterExpression = "Payload.ToJsonString().Length > 100";
+```
+
+For deeper customization (extension methods, alternative type resolution, parser
+flags) the underlying `ParsingConfig` is also exposed as a public property.
+
+This narrows the engine difference from "Roslyn supports method calls, Dynamic
+LINQ does not" to "Roslyn discovers user types automatically, Dynamic LINQ
+requires a single registration call". The remaining capability gap is in
+multi-statement bodies, async, and unregistered method discovery — none of which
+apply to the predicate filtration use case this MR ships.
+
+## Hot path optimization roadmap (Round 5)
+
+Per-row evaluation cost is a separate dimension from cold compile cost. The
+initial Round 5 HotEvaluation benchmark exposed a per-row gap where Roslyn was
+significantly faster than the shipped `ExpressionRowFiltration` because the
+latter re-parsed the predicate and rebuilt the `Queryable` wrapper on every
+row. Three layered optimizations are tracked here, in order of complexity vs.
+expected payoff.
+
+### Optimization 1 — cached compiled delegate (applied 2026-04-29)
+
+**Implemented in `ExpressionRowFiltration<TInput>` and the non-generic
+`ExpressionRowFiltration : ExpressionRowFiltration<ExpandoObject>`.**
+
+Both code paths now parse the predicate once via
+`DynamicExpressionParser.ParseLambda` and cache the compiled delegate. The
+non-generic ExpandoObject path additionally builds a `Func<object, bool>`
+wrapper around the typed lambda using `Expression.Lambda + Expression.Invoke +
+Expression.Convert`, so per-row evaluation skips both re-parse and the
+`Array.CreateInstance + AsQueryable` wrap. Cache key:
+`(FilterExpression, ParsingConfig reference, mapped DynamicClass type)` — any
+change invalidates and recompiles. `RegisterCustomTypes` and
+`InvalidateCompiledCache` participate in invalidation.
+
+Risk: low. Behavior is unchanged — same parser, same lambda, just retained.
+
+Limits: cache scoped to the filtration instance, not shared across instances.
+For long-running flows that recreate the filtration per pipeline build, the
+cache effectively rebuilds on each construction. This matches the existing
+component lifecycle and is not a regression.
+
+Prospects: the typed `TInput` path is now the cheapest case (pure
+`Func<TInput, bool>` invocation, no mapping per row). The ExpandoObject path
+still pays `ExpandoTypeMapper.Map(row)` per row, which is what Optimization 2
+addresses.
+
+### Optimization 2 — fast row mapping for the ExpandoObject path (deferred)
+
+`ExpandoTypeMapper.Map(row)` does the per-row work today: walk the dictionary,
+emit (or look up) a `DynamicClass` shape type, and copy values into a fresh
+instance. Two known mitigations:
+
+- **Reuse mapped instances** — reset properties on a thread-local instance per
+  shape instead of allocating a new `DynamicClass` per row. Saves the per-row
+  allocation but keeps the property-by-property copy.
+- **Direct dictionary access** — bypass `DynamicClass` entirely and bind
+  parameter access in the parsed lambda to `IDictionary<string, object?>`
+  indexer calls. The lambda then operates on the raw `ExpandoObject`'s backing
+  dictionary, no shape type, no per-row copy.
+
+Risks:
+- Shape stability across rows is currently guaranteed only by accident in
+  homogeneous flows. Reusing a thread-local instance is unsafe if the same
+  filtration is used across heterogeneous shapes — the cache invalidates per
+  type, but the reused instance would carry stale slots.
+- Direct dictionary access changes the parser surface: nested
+  `IDictionary<string, object>` fields, homogeneous collections (`Items.Any(...)`,
+  `Items.Sum(...)`), and the `ConvertObjectToSupportComparison` flag interact
+  with the current `DynamicClass` projection. A direct-dict implementation has
+  to re-derive each of those behaviors and reproduce them, which is where most
+  of the work is.
+
+Limits: only worthwhile if hot path remains the bottleneck after Optimization 1
+in real flows. The typed `TInput` path is unaffected — this optimization only
+applies to dynamic/Expando inputs.
+
+Prospects: typed POCO already meets steady-state cost parity with Roslyn after
+Optimization 1; the ExpandoObject case is the open one. If the dictionary
+binding lands cleanly it would also remove the dependency on
+`DynamicClassFactory` for the filtration code path, which simplifies the
+ExpandoObject story (mapping logic stops being load-bearing).
+
+### Optimization 3 — bypass DynamicClass for typed POCO with property cache (deferred)
+
+For `ExpressionRowFiltration<TInput>` where `TInput` is a closed type known
+at compile time, the parser already binds against `TInput`'s properties via
+`PropertyInfo`. The `DynamicClass` machinery is not on this path. The
+remaining cost is in the parser + lambda compile — bounded by the predicate
+shape, not the row. Optimization 1 already pins this cost to once per
+`(FilterExpression, ParsingConfig)` pair.
+
+A further step would be to skip the parser entirely for the simplest predicate
+forms (`Field op Constant`, `Field op Field`, conjunctions/disjunctions of the
+above) by recognizing the AST and emitting a `Func<TInput, bool>` directly via
+`Expression.Property + Expression.Compare`. This is the path Roslyn doesn't
+have access to — it would put the typed path well below Roslyn's per-row cost.
+
+Risks:
+- The hand-rolled emitter must reproduce the parser's null-handling,
+  type-conversion, and member-resolution semantics exactly. Anywhere it
+  diverges is a silent behavior change for users who already depend on the
+  parser.
+- Maintenance — the predicate language grows. A separate fast-path emitter
+  doubles the surface area to keep in sync with parser changes.
+
+Limits: only applies to predicate shapes the fast-path recognizes. Anything
+else falls back to the parsed-and-cached lambda from Optimization 1.
+
+Prospects: probably not worth doing unless real workloads on typed `TInput`
+show a measurable bottleneck after Optimization 1 lands. Documented here so
+the option is on the table when (or if) that data appears.
+
+### Decision criteria
+
+Apply optimizations in order. After Optimization 1 (shipped), re-measure
+HotEvaluation:
+
+- Typed `TInput` cached path within ~2× of Roslyn → close. Optimization 3 stays
+  in tech debt.
+- ExpandoObject cached path within ~2× of Roslyn → close. Optimization 2 stays
+  in tech debt.
+- Either path still ≥10× behind Roslyn → escalate to the corresponding
+  optimization with the measured gap as the justification.
+
+The 2× threshold is a practical boundary: differences below that get lost in
+warmup and GC noise on real flows; differences above are user-visible.

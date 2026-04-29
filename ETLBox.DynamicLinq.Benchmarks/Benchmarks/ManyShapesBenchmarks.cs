@@ -26,7 +26,7 @@ namespace ETLBox.DynamicLinq.Benchmarks.Benchmarks;
 [MemoryDiagnoser]
 public class ManyShapesBenchmarks
 {
-    [Params(10, 50, 100)]
+    [Params(1, 5, 10)]
     public int N { get; set; }
 
     private static readonly ParsingConfig s_parsingConfig =

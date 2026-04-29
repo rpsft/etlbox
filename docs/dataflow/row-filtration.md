@@ -126,12 +126,46 @@ Supported value types: `decimal`, `int`, `string`, `bool`, `DateTime`, `Guid`, `
 
 The two are complementary, not interchangeable. A future iteration may consolidate them; see [`docs/tech-debt/TECH-DEBT-Expression-Engine-Unification.md`](../tech-debt/TECH-DEBT-Expression-Engine-Unification.md).
 
+### Calling user-type methods
+
+`System.Linq.Dynamic.Core` resolves method calls on framework types (`string`, `DateTime`, `int`, `byte[]`, `List<T>` and other BCL) out of the box. **User-defined types** (your DTOs, domain objects) are not visible to the parser by default - an expression like `MyDto.SomeMethod() == 1` fails with a parse error.
+
+To make instance methods on a user type callable from `FilterExpression`, register the type via `RegisterCustomTypes`:
+
+```csharp
+public sealed class Customer
+{
+    public bool IsPremium() => /* business rule */;
+}
+
+var filtration = new ExpressionRowFiltration<Order>(
+    "Customer.IsPremium() && Total > 100");
+filtration.RegisterCustomTypes(typeof(Customer));
+```
+
+The same pattern handles the `JsonNode -> string` case and any other "call a method on my type" scenario:
+
+```csharp
+filtration.RegisterCustomTypes(typeof(JsonNode));
+filtration.FilterExpression = "Payload.ToJsonString().Length > 100";
+```
+
+For finer control over the parser - including extension methods, alternative type resolution, parser flags - mutate `ParsingConfig` directly:
+
+```csharp
+filtration.ParsingConfig.CustomTypeProvider = new MyCustomTypeProvider();
+filtration.ParsingConfig.AllowEqualsAndToStringMethodsOnObject = true;
+```
+
+`RegisterCustomTypes` is a convenience layer over `ParsingConfig.CustomTypeProvider` for the common case; using `ParsingConfig` directly remains supported for advanced configuration.
+
 ### Limitations
 
 - **Heterogeneous collections** — collections whose elements have different field sets or types throw `InvalidOperationException`. Each element in `Items` must have the same shape.
 - **Empty collection with `.Any(predicate)`** — when the source `ExpandoObject` collection is empty its element type cannot be inferred, so it falls back to `List<object>`. `.Count()` and `.Any()` (no predicate) work; `.Any(predicate)` does not because there are no element properties to bind to.
 - **Cyclic references** — runtime types are emitted by `DynamicClassFactory` and cannot reference themselves. ETL row data does not normally contain cycles, but if it does the mapping fails.
 - **`byte[]` and `string`** — treated as scalar values, not as enumerable collections. `Tags.Contains("Premium")` works on `List<string>`; it does not work on a `string` field treated as a sequence of characters.
+- **User-type method calls without registration** — calling a method on a user-defined class (not a framework type) requires `RegisterCustomTypes` (see "Calling user-type methods" above). Built-in types work without registration.
 
 ---
 
@@ -141,7 +175,7 @@ This section describes the moving parts inside `ExpressionRowFiltration` for con
 
 ### Generic path (typed `TInput`)
 
-`new[] { row }.AsQueryable().Any(s_parsingConfig, FilterExpression)`
+`new[] { row }.AsQueryable().Any(ParsingConfig, FilterExpression)`
 
 The compile-time element type of the array is `TInput`, so `AsQueryable()` returns `IQueryable<TInput>` and `System.Linq.Dynamic.Core` resolves field names through `PropertyInfo` of `TInput`. No runtime type generation.
 
@@ -152,7 +186,7 @@ The compile-time element type of the array is `TInput`, so `AsQueryable()` retur
 1. `ExpandoTypeMapper.Map(row)` walks the dictionary recursively. For nested `IDictionary<string, object>` it generates a nested DynamicClass; for a homogeneous collection it generates a `List<TElement>`; for a scalar or custom class it keeps the `GetType()` of the value.
 2. `DynamicClassFactory.CreateType(properties)` emits the type into a persistent `AssemblyBuilder` and caches it by property signature. Repeated rows of the same shape reuse the same type — amortised cost is low.
 3. The instance is wrapped in a typed array via `Array.CreateInstance(type, 1)`. This is required: `new[] { instance }` would give `object[]` because `Activator.CreateInstance` returns `object`, and `AsQueryable()` would lose the element type.
-4. `array.AsQueryable().Any(s_parsingConfig, FilterExpression)` parses the string into an expression tree, compiles to a delegate, and evaluates it.
+4. `array.AsQueryable().Any(ParsingConfig, FilterExpression)` parses the string into an expression tree, compiles to a delegate, and evaluates it.
 
 `ParsingConfig.ConvertObjectToSupportComparison = true` lets comparison operators work on properties typed as `object` — needed for null-valued fields and for mixed numeric literals such as `Reserve > 0` when `Reserve` is `decimal`.
 
