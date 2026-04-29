@@ -4,9 +4,9 @@ using System.Linq.Dynamic.Core;
 using ALE.ETLBox.DynamicLinq;
 using ALE.ETLBox.Scripting;
 using BenchmarkDotNet.Attributes;
-using ETLBox.Scripting.Benchmarks.TestData;
+using ETLBox.DynamicLinq.Benchmarks.TestData;
 
-namespace ETLBox.Scripting.Benchmarks.Benchmarks;
+namespace ETLBox.DynamicLinq.Benchmarks.Benchmarks;
 
 /// <summary>
 /// Measures the cost of "first call on a new shape": parse the expression, build

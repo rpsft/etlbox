@@ -111,8 +111,9 @@ What landed:
   `ETLBox.Scripting.Tests`.
 - `ETLBox.Serialization.Tests/ExpressionRowFiltrationDeserializationTests.cs`
   references `ALE.ETLBox.DynamicLinq` instead of `ALE.ETLBox.Scripting`.
-- `ETLBox.Scripting.Benchmarks` references both packages — Roslyn comparisons
-  through `ETLBox.Scripting` and Dynamic LINQ paths through `ETLBox.DynamicLinq`.
+- `ETLBox.DynamicLinq.Benchmarks` (renamed from `ETLBox.Scripting.Benchmarks`)
+  references both packages — Roslyn comparisons through `ETLBox.Scripting` and
+  Dynamic LINQ paths through `ETLBox.DynamicLinq`.
 
 Test counts after split:
 
@@ -143,7 +144,7 @@ ScriptedRowTransformation").
 ## Benchmark Results (2026-04-28)
 
 Full report:
-[`ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md`](../../ETLBox.Scripting.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md).
+[`ETLBox.DynamicLinq.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md`](../../ETLBox.DynamicLinq.Benchmarks/BENCHMARK-RESULTS-2026-04-28.md).
 Status: final. All three benchmarks completed with full BenchmarkDotNet
 warmup + iterations.
 

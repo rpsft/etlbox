@@ -1,4 +1,4 @@
-namespace ETLBox.Scripting.Benchmarks.TestData;
+namespace ETLBox.DynamicLinq.Benchmarks.TestData;
 
 /// <summary>
 /// Typed POCO for the generic <c>ExpressionRowFiltration&lt;TInput&gt;</c> path.

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="ETLBox.Scripting.Benchmarks"/>
+    <InternalsVisibleTo Include="ETLBox.DynamicLinq.Benchmarks"/>
     <InternalsVisibleTo Include="ETLBox.Scripting.Tests"/>
   </ItemGroup>
 </Project>

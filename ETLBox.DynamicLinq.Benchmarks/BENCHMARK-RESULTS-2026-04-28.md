@@ -379,18 +379,18 @@ From the etl-box repo root:
 
 ```sh
 # Build the benchmarks project
-dotnet build ETLBox.Scripting.Benchmarks/ETLBox.Scripting.Benchmarks.csproj -c Release
+dotnet build ETLBox.DynamicLinq.Benchmarks/ETLBox.DynamicLinq.Benchmarks.csproj -c Release
 
 # Smoke run (single iteration per cell, fast)
-dotnet run --project ETLBox.Scripting.Benchmarks/ETLBox.Scripting.Benchmarks.csproj -c Release \
+dotnet run --project ETLBox.DynamicLinq.Benchmarks/ETLBox.DynamicLinq.Benchmarks.csproj -c Release \
     --no-build -- --filter "*ColdCompileBenchmarks*" --job Dry
 
 # Full BDN run for one benchmark class
-dotnet run --project ETLBox.Scripting.Benchmarks/ETLBox.Scripting.Benchmarks.csproj -c Release \
+dotnet run --project ETLBox.DynamicLinq.Benchmarks/ETLBox.DynamicLinq.Benchmarks.csproj -c Release \
     --no-build -- --filter "*ColdCompileBenchmarks*"
 
 # All benchmarks (long: estimated 30-60 minutes)
-dotnet run --project ETLBox.Scripting.Benchmarks/ETLBox.Scripting.Benchmarks.csproj -c Release \
+dotnet run --project ETLBox.DynamicLinq.Benchmarks/ETLBox.DynamicLinq.Benchmarks.csproj -c Release \
     --no-build -- --filter "*"
 
 # Feature parity tests
@@ -399,7 +399,7 @@ dotnet test ETLBox.DynamicLinq.Tests/ETLBox.DynamicLinq.Tests.csproj \
 ```
 
 BDN artefacts (per-benchmark markdown reports, CSV, raw logs) are written to
-`ETLBox.Scripting.Benchmarks/BenchmarkDotNet.Artifacts/results/`. That folder is
+`ETLBox.DynamicLinq.Benchmarks/BenchmarkDotNet.Artifacts/results/`. That folder is
 gitignored — copy the relevant tables into this report when filling in the
 ManyShapes / HeadToHead sections after the full run.
 

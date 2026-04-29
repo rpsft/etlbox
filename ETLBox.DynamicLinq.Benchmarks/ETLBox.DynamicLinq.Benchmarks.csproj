@@ -5,8 +5,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>ETLBox.Scripting.Benchmarks</AssemblyName>
-    <RootNamespace>ETLBox.Scripting.Benchmarks</RootNamespace>
+    <AssemblyName>ETLBox.DynamicLinq.Benchmarks</AssemblyName>
+    <RootNamespace>ETLBox.DynamicLinq.Benchmarks</RootNamespace>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <IsPackable>false</IsPackable>
     <!-- Benchmark project: identifier-style analyzers (e.g. WeCantSpell SP3110)

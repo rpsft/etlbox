@@ -4,9 +4,9 @@ using System.Linq.Dynamic.Core;
 using ALE.ETLBox.DataFlow;
 using ALE.ETLBox.DynamicLinq;
 using BenchmarkDotNet.Attributes;
-using ETLBox.Scripting.Benchmarks.TestData;
+using ETLBox.DynamicLinq.Benchmarks.TestData;
 
-namespace ETLBox.Scripting.Benchmarks.Benchmarks;
+namespace ETLBox.DynamicLinq.Benchmarks.Benchmarks;
 
 /// <summary>
 /// Direct head-to-head: <see cref="ExpressionRowFiltration"/> (the component shipped

@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Running;
 
-namespace ETLBox.Scripting.Benchmarks;
+namespace ETLBox.DynamicLinq.Benchmarks;
 
 public static class Program
 {

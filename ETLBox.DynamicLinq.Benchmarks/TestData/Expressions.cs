@@ -1,4 +1,4 @@
-namespace ETLBox.Scripting.Benchmarks.TestData;
+namespace ETLBox.DynamicLinq.Benchmarks.TestData;
 
 /// <summary>
 /// Centralised filter expressions used across benchmarks. Two complexity levels:

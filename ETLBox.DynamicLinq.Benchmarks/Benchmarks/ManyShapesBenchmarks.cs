@@ -4,9 +4,9 @@ using System.Reflection;
 using ALE.ETLBox.DynamicLinq;
 using ALE.ETLBox.Scripting;
 using BenchmarkDotNet.Attributes;
-using ETLBox.Scripting.Benchmarks.TestData;
+using ETLBox.DynamicLinq.Benchmarks.TestData;
 
-namespace ETLBox.Scripting.Benchmarks.Benchmarks;
+namespace ETLBox.DynamicLinq.Benchmarks.Benchmarks;
 
 /// <summary>
 /// Compiles and evaluates a predicate on N distinct shapes per iteration. Measures

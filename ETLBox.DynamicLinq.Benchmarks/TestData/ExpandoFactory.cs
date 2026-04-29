@@ -1,6 +1,6 @@
 using System.Dynamic;
 
-namespace ETLBox.Scripting.Benchmarks.TestData;
+namespace ETLBox.DynamicLinq.Benchmarks.TestData;
 
 /// <summary>
 /// Builds <see cref="ExpandoObject"/> instances with controlled "shape".
